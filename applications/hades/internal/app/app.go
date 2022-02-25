@@ -20,6 +20,11 @@ type Commands struct {
 	CancelAccountClubSupporterSubscription                 command.CancelAccountClubSupporterSubscriptionHandler
 	DeleteAccountSavedPaymentMethod                        command.DeleteAccountSavedPaymentMethodHandler
 	VoidOrRefundAccountClubSupporterSubscription           command.VoidOrRefundAccountClubSupporterSubscriptionHandler
+	ExtendAccountClubSupporterSubscription                 command.ExtendAccountClubSupporterSubscriptionHandler
+
+	CreateCancellationReason           command.CreateCancellationReasonHandler
+	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
+	UpdateCancellationReasonTitle      command.UpdateCancellationReasonTitleHandler
 }
 
 type Queries struct {
@@ -30,4 +35,7 @@ type Queries struct {
 	CCBillSubscriptionDetails          query.CCBillSubscriptionDetailsHandler
 	ClubSupporterPricing               query.ClubSupporterPricingHandler
 	ClubSupporterSubscriptionFinalized query.ClubSupporterSubscriptionFinalizedHandler
+
+	CancellationReasons    query.CancellationReasonsHandler
+	CancellationReasonById query.CancellationReasonById
 }

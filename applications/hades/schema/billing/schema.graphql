@@ -452,6 +452,9 @@ type AccountClubSupporterSubscription {
 
   """When this subscription was last updated."""
   updatedAt: Time!
+
+  """The reason this subscription was cancelled, if there is one."""
+  cancellationReason: CancellationReason @goField(forceResolver: true)
 }
 
 enum AccountClubSupporterSubscriptionStatus {
@@ -634,6 +637,18 @@ type DeleteAccountSavedPaymentMethodPayload {
 input CancelAccountClubSupporterSubscriptionInput {
   """The chosen club supporter subscription id."""
   clubSupporterSubscriptionId: ID!
+
+  """The cancellation reason for this subscription."""
+  cancellationReasonId: ID!
+}
+
+"""Extend account club supporter subscription input."""
+input ExtendAccountClubSupporterSubscriptionInput {
+  """The chosen club supporter subscription id."""
+  clubSupporterSubscriptionId: ID!
+
+  """The amount of days to extend it for."""
+  days: Int!
 }
 
 """Generate a refund amount."""
@@ -681,6 +696,12 @@ type VoidOrRefundAccountClubSupporterSubscriptionPayload {
 
 """Payload for cancelling the account club supporter."""
 type CancelAccountClubSupporterSubscriptionPayload {
+  """The new subscription."""
+  clubSupporterSubscription: AccountClubSupporterSubscription
+}
+
+"""Payload for extending the account club supporter."""
+type ExtendAccountClubSupporterSubscriptionPayload {
   """The new subscription."""
   clubSupporterSubscription: AccountClubSupporterSubscription
 }
@@ -772,6 +793,29 @@ extend type Mutation {
   cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload
 
   """
+  Void or refund an account club supporter subscription.
+
+  Will void if the subscription is still processing, or issue a refund for the specified amount.
+
+  Staff+ only.
+  """
+  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
+
+  """
+  Extend an account club supporter subscription for an X amount of days, so basically delay their billing date for x days.
+
+  Staff+ only.
+  """
+  extendAccountClubSupporterSubscription(input: ExtendAccountClubSupporterSubscriptionInput!): ExtendAccountClubSupporterSubscriptionPayload
+
+  """
+  Generate a prorated refund amount for a given account club supporter subscription.
+
+  Staff+ only.
+  """
+  generateRefundAmountForAccountClubSupporterSubscription(input: GenerateRefundAmountForAccountClubSupporterSubscriptionInput!): GenerateRefundAmountForAccountClubSupporterSubscriptionPayload!
+
+  """
   Delete an account saved payment method
   """
   deleteAccountSavedPaymentMethod(input: DeleteAccountSavedPaymentMethodInput!): DeleteAccountSavedPaymentMethodPayload
@@ -782,22 +826,6 @@ extend type Mutation {
   Note: can only be generated on "NEW" and "INVOICE" transactions.
   """
   generateClubSupporterReceiptFromAccountTransactionHistory(input: GenerateClubSupporterReceiptFromAccountTransactionHistoryInput!): GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload
-
-  """
-  Void or refund an account club supporter subscription.
-
-  Will void if the subscription is still processing, or issue a refund for the specified amount.
-
-  Staff+ only.
-  """
-  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
-
-  """
-  Generate a prorated refund amount for a given account club supporter subscription.
-
-  Staff+ only.
-  """
-  generateRefundAmountForAccountClubSupporterSubscription(input: GenerateRefundAmountForAccountClubSupporterSubscriptionInput!): GenerateRefundAmountForAccountClubSupporterSubscriptionPayload!
 }
 
 extend type Query {

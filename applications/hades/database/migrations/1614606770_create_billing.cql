@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS cancellation_reasons
+(
+    bucket     int,
+    id         text,
+    title      map<text, text>,
+    deprecated boolean,
+    primary key ( bucket, id ),
+) WITH CLUSTERING ORDER BY (id DESC);
+
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
 (
     account_id               text,
@@ -17,6 +26,8 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     ccbill_subscription_id   text,
 
     updated_at               timestamp,
+
+    cancellation_reason_id   text,
 
     primary key ( account_id, club_id, id )
 );

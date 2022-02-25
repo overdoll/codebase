@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"strconv"
 	"time"
 )
 
@@ -166,6 +167,7 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 }
 
 func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refund *ccbill.VoidOrRefund) error {
+
 	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
 
 	if err != nil {
@@ -201,6 +203,45 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 
 	if result.Results != 1 {
 		return fmt.Errorf("failed to void or refund subscription: %s", result.Results)
+	}
+
+	return nil
+}
+
+func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubscriptionId string, days int) error {
+
+	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
+
+	if err != nil {
+		return err
+	}
+
+	// add credentials
+	addDatalinkCredentialsToRequest(req)
+
+	req.URL.Query().Add("subscriptionId", ccbillSubscriptionId)
+	req.URL.Query().Add("action", "extendSubscription")
+	req.URL.Query().Add("extendLength", strconv.Itoa(days))
+
+	resp, err := r.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	var body []byte
+	if _, err := resp.Body.Read(body); err != nil {
+		return err
+	}
+
+	var result response
+
+	if err := xml.Unmarshal(body, &result); err != nil {
+		return err
+	}
+
+	if result.Results != 1 {
+		return fmt.Errorf("failed to extend subscription: %s", result.Results)
 	}
 
 	return nil

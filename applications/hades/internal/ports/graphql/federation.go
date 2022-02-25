@@ -63,6 +63,21 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			list[i] = entity
 			return nil
 
+		case "CancellationReason":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindCancellationReasonByID(ctx,
+				id0)
+			if err != nil {
+				return err
+			}
+
+			list[i] = entity
+			return nil
+
 		case "Club":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {

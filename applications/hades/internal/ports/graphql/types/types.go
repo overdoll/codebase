@@ -105,6 +105,8 @@ type AccountClubSupporterSubscription struct {
 	CcbillSubscription *CCBillSubscription `json:"ccbillSubscription"`
 	// When this subscription was last updated.
 	UpdatedAt time.Time `json:"updatedAt"`
+	// The reason this subscription was cancelled, if there is one.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
 // Connection of the account club supporter subscription
@@ -433,12 +435,43 @@ type CCBillSubscriptionTransaction struct {
 type CancelAccountClubSupporterSubscriptionInput struct {
 	// The chosen club supporter subscription id.
 	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
+	// The cancellation reason for this subscription.
+	CancellationReasonID relay.ID `json:"cancellationReasonId"`
 }
 
 // Payload for cancelling the account club supporter.
 type CancelAccountClubSupporterSubscriptionPayload struct {
 	// The new subscription.
 	ClubSupporterSubscription *AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
+}
+
+// Cancellation reason.
+type CancellationReason struct {
+	// ID of the reason.
+	ID relay.ID `json:"id"`
+	// Reference of the reason. Should be used for single lookups.
+	Reference string `json:"reference"`
+	// The title for this reason.
+	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*Translation `json:"titleTranslations"`
+	// If this reason is deprecated.
+	Deprecated bool `json:"deprecated"`
+}
+
+func (CancellationReason) IsNode()   {}
+func (CancellationReason) IsEntity() {}
+
+// Connection of the reason
+type CancellationReasonConnection struct {
+	Edges    []*CancellationReasonEdge `json:"edges"`
+	PageInfo *relay.PageInfo           `json:"pageInfo"`
+}
+
+// Edge of the reason
+type CancellationReasonEdge struct {
+	Node   *CancellationReason `json:"node"`
+	Cursor string              `json:"cursor"`
 }
 
 // Represents a card.
@@ -459,6 +492,18 @@ type Club struct {
 
 func (Club) IsEntity() {}
 
+// Create a new cancellation reason input.
+type CreateCancellationReasonInput struct {
+	// The title.
+	Title string `json:"title"`
+}
+
+// Updated cancellation reason.
+type CreateCancellationReasonPayload struct {
+	// The updated cancellation reason.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
+}
+
 // Delete an account saved payment method input.
 type DeleteAccountSavedPaymentMethodInput struct {
 	// The chosen saved payment method id.
@@ -469,6 +514,20 @@ type DeleteAccountSavedPaymentMethodInput struct {
 type DeleteAccountSavedPaymentMethodPayload struct {
 	// The deleted saved payment method.
 	DeletedAccountSavedPaymentMethodID relay.ID `json:"deletedAccountSavedPaymentMethodId"`
+}
+
+// Extend account club supporter subscription input.
+type ExtendAccountClubSupporterSubscriptionInput struct {
+	// The chosen club supporter subscription id.
+	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
+	// The amount of days to extend it for.
+	Days int `json:"days"`
+}
+
+// Payload for extending the account club supporter.
+type ExtendAccountClubSupporterSubscriptionPayload struct {
+	// The new subscription.
+	ClubSupporterSubscription *AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
 }
 
 // Generate ccbill club supporter payment link.
@@ -557,6 +616,36 @@ type Translation struct {
 	Language *Language `json:"language"`
 	// The translation text.
 	Text string `json:"text"`
+}
+
+// Update reason.
+type UpdateCancellationReasonDeprecatedInput struct {
+	// The cancellation reason to update.
+	CancellationReasonID relay.ID `json:"cancellationReasonId"`
+	// The deprecated status.
+	Deprecated bool `json:"deprecated"`
+}
+
+// Updated reason.
+type UpdateCancellationReasonDeprecatedPayload struct {
+	// The updated reason.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
+}
+
+// Update cancellation reason.
+type UpdateCancellationReasonTitleInput struct {
+	// The reason to update.
+	CancellationReasonID relay.ID `json:"cancellationReasonId"`
+	// The title to update
+	Title string `json:"title"`
+	// The localization for this title.
+	Locale string `json:"locale"`
+}
+
+// Updated reason.
+type UpdateCancellationReasonTitlePayload struct {
+	// The updated reason.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
 // Void or refund account club supporter subscription.

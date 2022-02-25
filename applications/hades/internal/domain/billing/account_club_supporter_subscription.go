@@ -2,6 +2,7 @@ package billing
 
 import (
 	"errors"
+	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -35,6 +36,8 @@ type AccountClubSupporterSubscription struct {
 	paymentMethod *PaymentMethod
 
 	ccbillSubscriptionId string
+
+	cancellationReasonId *string
 }
 
 func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
@@ -72,6 +75,10 @@ func (c *AccountClubSupporterSubscription) AccountId() string {
 
 func (c *AccountClubSupporterSubscription) ClubId() string {
 	return c.clubId
+}
+
+func (c *AccountClubSupporterSubscription) CancellationReasonId() *string {
+	return c.cancellationReasonId
 }
 
 func (c *AccountClubSupporterSubscription) UpdatedAt() time.Time {
@@ -137,12 +144,24 @@ func (c *AccountClubSupporterSubscription) RequestVoidOrRefund(requester *princi
 	return c.MarkCancelled(time.Now())
 }
 
-func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal) error {
+func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
+	if err := requester.BelongsToAccount(c.accountId); err != nil {
+		return err
+	}
+	id := cancellationReason.ID()
+	c.cancellationReasonId = &id
+
+	return c.MarkCancelled(time.Now())
+}
+
+func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Principal, days int) error {
 	if err := requester.BelongsToAccount(c.accountId); err != nil {
 		return err
 	}
 
-	return c.MarkCancelled(time.Now())
+	c.nextBillingDate = c.nextBillingDate.Add(time.Hour * 24 * time.Duration(days))
+
+	return nil
 }
 
 func (c *AccountClubSupporterSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
@@ -161,7 +180,7 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
 }
 
-func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time, updatedAt time.Time) *AccountClubSupporterSubscription {
+func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupporterSubscription{
@@ -178,6 +197,7 @@ func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		updatedAt:            updatedAt,
+		cancellationReasonId: cancellationReasonId,
 	}
 }
 

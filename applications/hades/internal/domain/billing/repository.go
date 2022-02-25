@@ -24,6 +24,7 @@ type Repository interface {
 	UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
 	HasExistingAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, accountId, clubId string) (*AccountClubSupporterSubscription, error)
 	HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*AccountClubSupporterSubscription, error)
+	UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
 
 	CreateAccountSavedPaymentMethodOperator(ctx context.Context, savedPaymentMethod *SavedPaymentMethod) error
 	GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*SavedPaymentMethod, error)

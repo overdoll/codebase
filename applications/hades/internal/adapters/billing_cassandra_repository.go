@@ -78,6 +78,8 @@ var accountClubSupporterSubscriptionsTable = table.New(table.Metadata{
 		"ccbill_subscription_id",
 
 		"updated_at",
+
+		"cancellation_reason_id",
 	},
 	PartKey: []string{"account_id"},
 	SortKey: []string{"club_id", "id"},
@@ -97,6 +99,7 @@ type accountClubSupporterSubscription struct {
 	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
 	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
 	UpdatedAt              time.Time  `db:"updated_at"`
+	CancellationReasonId   *string    `db:"cancellation_reason_id"`
 }
 
 var accountTransactionHistoryByAccountTable = table.New(table.Metadata{
@@ -315,6 +318,7 @@ func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountCl
 		Id:                     accountClubSupp.Id(),
 		CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
 		UpdatedAt:              accountClubSupp.UpdatedAt(),
+		CancellationReasonId:   accountClubSupp.CancellationReasonId(),
 	}, nil
 }
 
@@ -618,6 +622,7 @@ func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptionByIdOpera
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
 		accountClubSupported.UpdatedAt,
+		accountClubSupported.CancellationReasonId,
 	), nil
 }
 
@@ -658,6 +663,37 @@ func (r BillingCassandraRepository) updateAccountClubSupporterSubscription(ctx c
 
 	if err := r.session.
 		Query(accountClubSupporterSubscriptionsTable.Update(columns...)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
+	}
+
+	return subscription, nil
+}
+
+func (r BillingCassandraRepository) UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, accountId, clubId, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+
+	subscription, err := r.GetAccountClubSupporterSubscriptionById(ctx, requester, accountId, clubId, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalAccountClubSubscriptionToDatabase(subscription)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(accountClubSupporterSubscriptionsTable.Update("cancellation_reason_id")).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
@@ -736,6 +772,7 @@ func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionO
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
 		accountClubSupported.UpdatedAt,
+		accountClubSupported.CancellationReasonId,
 	), nil
 }
 
@@ -788,6 +825,7 @@ func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptions(ctx con
 			support.CCBillSubscriptionId,
 			support.CancelledAt,
 			support.UpdatedAt,
+			support.CancellationReasonId,
 		)
 
 		supportItem.Node = paging.NewNode(support.ClubId)

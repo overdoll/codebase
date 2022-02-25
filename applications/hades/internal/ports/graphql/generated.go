@@ -41,6 +41,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Account() AccountResolver
+	AccountClubSupporterSubscription() AccountClubSupporterSubscriptionResolver
 	Club() ClubResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
@@ -85,6 +86,7 @@ type ComplexityRoot struct {
 		Account            func(childComplexity int) int
 		BillingAmount      func(childComplexity int) int
 		BillingCurrency    func(childComplexity int) int
+		CancellationReason func(childComplexity int) int
 		CancelledAt        func(childComplexity int) int
 		CcbillSubscription func(childComplexity int) int
 		Club               func(childComplexity int) int
@@ -282,6 +284,24 @@ type ComplexityRoot struct {
 		ClubSupporterSubscription func(childComplexity int) int
 	}
 
+	CancellationReason struct {
+		Deprecated        func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Reference         func(childComplexity int) int
+		Title             func(childComplexity int) int
+		TitleTranslations func(childComplexity int) int
+	}
+
+	CancellationReasonConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	CancellationReasonEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
 	Card struct {
 		Expiration func(childComplexity int) int
 		Last4      func(childComplexity int) int
@@ -293,13 +313,22 @@ type ComplexityRoot struct {
 		SupporterSubscriptionPrice func(childComplexity int) int
 	}
 
+	CreateCancellationReasonPayload struct {
+		CancellationReason func(childComplexity int) int
+	}
+
 	DeleteAccountSavedPaymentMethodPayload struct {
 		DeletedAccountSavedPaymentMethodID func(childComplexity int) int
 	}
 
 	Entity struct {
-		FindAccountByID func(childComplexity int, id relay.ID) int
-		FindClubByID    func(childComplexity int, id relay.ID) int
+		FindAccountByID            func(childComplexity int, id relay.ID) int
+		FindCancellationReasonByID func(childComplexity int, id relay.ID) int
+		FindClubByID               func(childComplexity int, id relay.ID) int
+	}
+
+	ExtendAccountClubSupporterSubscriptionPayload struct {
+		ClubSupporterSubscription func(childComplexity int) int
 	}
 
 	GenerateCCBillClubSupporterPaymentLinkPayload struct {
@@ -327,10 +356,14 @@ type ComplexityRoot struct {
 	Mutation struct {
 		BecomeClubSupporterWithAccountSavedPaymentMethod          func(childComplexity int, input types.BecomeClubSupporterWithAccountSavedPaymentMethodInput) int
 		CancelAccountClubSupporterSubscription                    func(childComplexity int, input types.CancelAccountClubSupporterSubscriptionInput) int
+		CreateCancellationReason                                  func(childComplexity int, input types.CreateCancellationReasonInput) int
 		DeleteAccountSavedPaymentMethod                           func(childComplexity int, input types.DeleteAccountSavedPaymentMethodInput) int
+		ExtendAccountClubSupporterSubscription                    func(childComplexity int, input types.ExtendAccountClubSupporterSubscriptionInput) int
 		GenerateCCBillClubSupporterPaymentLink                    func(childComplexity int, input types.GenerateCCBillClubSupporterPaymentLinkInput) int
 		GenerateClubSupporterReceiptFromAccountTransactionHistory func(childComplexity int, input types.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput) int
 		GenerateRefundAmountForAccountClubSupporterSubscription   func(childComplexity int, input types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput) int
+		UpdateCancellationReasonDeprecated                        func(childComplexity int, input types.UpdateCancellationReasonDeprecatedInput) int
+		UpdateCancellationReasonTitle                             func(childComplexity int, input types.UpdateCancellationReasonTitleInput) int
 		VoidOrRefundAccountClubSupporterSubscription              func(childComplexity int, input types.VoidOrRefundAccountClubSupporterSubscriptionInput) int
 	}
 
@@ -354,6 +387,8 @@ type ComplexityRoot struct {
 
 	Query struct {
 		AccountClubSupporterSubscriptionFinalized func(childComplexity int, locker string) int
+		CancellationReason                        func(childComplexity int, reference string) int
+		CancellationReasons                       func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		CcbillSubscriptionDetails                 func(childComplexity int, ccbillSubscriptionID string) int
 		__resolve__service                        func(childComplexity int) int
 		__resolve_entities                        func(childComplexity int, representations []map[string]interface{}) int
@@ -370,6 +405,14 @@ type ComplexityRoot struct {
 		Text     func(childComplexity int) int
 	}
 
+	UpdateCancellationReasonDeprecatedPayload struct {
+		CancellationReason func(childComplexity int) int
+	}
+
+	UpdateCancellationReasonTitlePayload struct {
+		CancellationReason func(childComplexity int) int
+	}
+
 	VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
 		Validation func(childComplexity int) int
 	}
@@ -384,23 +427,33 @@ type AccountResolver interface {
 	SavedPaymentMethods(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSavedPaymentMethodConnection, error)
 	TransactionHistory(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, startDate time.Time, endDate *time.Time) (*types.AccountTransactionHistoryConnection, error)
 }
+type AccountClubSupporterSubscriptionResolver interface {
+	CancellationReason(ctx context.Context, obj *types.AccountClubSupporterSubscription) (*types.CancellationReason, error)
+}
 type ClubResolver interface {
 	SupporterSubscriptionPrice(ctx context.Context, obj *types.Club) (*types.LocalizedPricingPoint, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
+	FindCancellationReasonByID(ctx context.Context, id relay.ID) (*types.CancellationReason, error)
 	FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error)
 }
 type MutationResolver interface {
 	GenerateCCBillClubSupporterPaymentLink(ctx context.Context, input types.GenerateCCBillClubSupporterPaymentLinkInput) (*types.GenerateCCBillClubSupporterPaymentLinkPayload, error)
 	BecomeClubSupporterWithAccountSavedPaymentMethod(ctx context.Context, input types.BecomeClubSupporterWithAccountSavedPaymentMethodInput) (*types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload, error)
 	CancelAccountClubSupporterSubscription(ctx context.Context, input types.CancelAccountClubSupporterSubscriptionInput) (*types.CancelAccountClubSupporterSubscriptionPayload, error)
+	VoidOrRefundAccountClubSupporterSubscription(ctx context.Context, input types.VoidOrRefundAccountClubSupporterSubscriptionInput) (*types.VoidOrRefundAccountClubSupporterSubscriptionPayload, error)
+	ExtendAccountClubSupporterSubscription(ctx context.Context, input types.ExtendAccountClubSupporterSubscriptionInput) (*types.ExtendAccountClubSupporterSubscriptionPayload, error)
+	GenerateRefundAmountForAccountClubSupporterSubscription(ctx context.Context, input types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput) (*types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, input types.DeleteAccountSavedPaymentMethodInput) (*types.DeleteAccountSavedPaymentMethodPayload, error)
 	GenerateClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, input types.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput) (*types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload, error)
-	VoidOrRefundAccountClubSupporterSubscription(ctx context.Context, input types.VoidOrRefundAccountClubSupporterSubscriptionInput) (*types.VoidOrRefundAccountClubSupporterSubscriptionPayload, error)
-	GenerateRefundAmountForAccountClubSupporterSubscription(ctx context.Context, input types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput) (*types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload, error)
+	CreateCancellationReason(ctx context.Context, input types.CreateCancellationReasonInput) (*types.CreateCancellationReasonPayload, error)
+	UpdateCancellationReasonTitle(ctx context.Context, input types.UpdateCancellationReasonTitleInput) (*types.UpdateCancellationReasonTitlePayload, error)
+	UpdateCancellationReasonDeprecated(ctx context.Context, input types.UpdateCancellationReasonDeprecatedInput) (*types.UpdateCancellationReasonDeprecatedPayload, error)
 }
 type QueryResolver interface {
+	CancellationReason(ctx context.Context, reference string) (*types.CancellationReason, error)
+	CancellationReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.CancellationReasonConnection, error)
 	CcbillSubscriptionDetails(ctx context.Context, ccbillSubscriptionID string) (*types.CCBillSubscriptionDetails, error)
 	AccountClubSupporterSubscriptionFinalized(ctx context.Context, locker string) (*types.AccountClubSupporterSubscription, error)
 }
@@ -595,6 +648,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountClubSupporterSubscription.BillingCurrency(childComplexity), true
+
+	case "AccountClubSupporterSubscription.cancellationReason":
+		if e.complexity.AccountClubSupporterSubscription.CancellationReason == nil {
+			break
+		}
+
+		return e.complexity.AccountClubSupporterSubscription.CancellationReason(childComplexity), true
 
 	case "AccountClubSupporterSubscription.cancelledAt":
 		if e.complexity.AccountClubSupporterSubscription.CancelledAt == nil {
@@ -1520,6 +1580,69 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CancelAccountClubSupporterSubscriptionPayload.ClubSupporterSubscription(childComplexity), true
 
+	case "CancellationReason.deprecated":
+		if e.complexity.CancellationReason.Deprecated == nil {
+			break
+		}
+
+		return e.complexity.CancellationReason.Deprecated(childComplexity), true
+
+	case "CancellationReason.id":
+		if e.complexity.CancellationReason.ID == nil {
+			break
+		}
+
+		return e.complexity.CancellationReason.ID(childComplexity), true
+
+	case "CancellationReason.reference":
+		if e.complexity.CancellationReason.Reference == nil {
+			break
+		}
+
+		return e.complexity.CancellationReason.Reference(childComplexity), true
+
+	case "CancellationReason.title":
+		if e.complexity.CancellationReason.Title == nil {
+			break
+		}
+
+		return e.complexity.CancellationReason.Title(childComplexity), true
+
+	case "CancellationReason.titleTranslations":
+		if e.complexity.CancellationReason.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.CancellationReason.TitleTranslations(childComplexity), true
+
+	case "CancellationReasonConnection.edges":
+		if e.complexity.CancellationReasonConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.CancellationReasonConnection.Edges(childComplexity), true
+
+	case "CancellationReasonConnection.pageInfo":
+		if e.complexity.CancellationReasonConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.CancellationReasonConnection.PageInfo(childComplexity), true
+
+	case "CancellationReasonEdge.cursor":
+		if e.complexity.CancellationReasonEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.CancellationReasonEdge.Cursor(childComplexity), true
+
+	case "CancellationReasonEdge.node":
+		if e.complexity.CancellationReasonEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.CancellationReasonEdge.Node(childComplexity), true
+
 	case "Card.expiration":
 		if e.complexity.Card.Expiration == nil {
 			break
@@ -1555,6 +1678,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.SupporterSubscriptionPrice(childComplexity), true
 
+	case "CreateCancellationReasonPayload.cancellationReason":
+		if e.complexity.CreateCancellationReasonPayload.CancellationReason == nil {
+			break
+		}
+
+		return e.complexity.CreateCancellationReasonPayload.CancellationReason(childComplexity), true
+
 	case "DeleteAccountSavedPaymentMethodPayload.deletedAccountSavedPaymentMethodId":
 		if e.complexity.DeleteAccountSavedPaymentMethodPayload.DeletedAccountSavedPaymentMethodID == nil {
 			break
@@ -1574,6 +1704,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindAccountByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "Entity.findCancellationReasonByID":
+		if e.complexity.Entity.FindCancellationReasonByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findCancellationReasonByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindCancellationReasonByID(childComplexity, args["id"].(relay.ID)), true
+
 	case "Entity.findClubByID":
 		if e.complexity.Entity.FindClubByID == nil {
 			break
@@ -1585,6 +1727,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindClubByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "ExtendAccountClubSupporterSubscriptionPayload.clubSupporterSubscription":
+		if e.complexity.ExtendAccountClubSupporterSubscriptionPayload.ClubSupporterSubscription == nil {
+			break
+		}
+
+		return e.complexity.ExtendAccountClubSupporterSubscriptionPayload.ClubSupporterSubscription(childComplexity), true
 
 	case "GenerateCCBillClubSupporterPaymentLinkPayload.paymentLink":
 		if e.complexity.GenerateCCBillClubSupporterPaymentLinkPayload.PaymentLink == nil {
@@ -1659,6 +1808,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CancelAccountClubSupporterSubscription(childComplexity, args["input"].(types.CancelAccountClubSupporterSubscriptionInput)), true
 
+	case "Mutation.createCancellationReason":
+		if e.complexity.Mutation.CreateCancellationReason == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createCancellationReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateCancellationReason(childComplexity, args["input"].(types.CreateCancellationReasonInput)), true
+
 	case "Mutation.deleteAccountSavedPaymentMethod":
 		if e.complexity.Mutation.DeleteAccountSavedPaymentMethod == nil {
 			break
@@ -1670,6 +1831,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteAccountSavedPaymentMethod(childComplexity, args["input"].(types.DeleteAccountSavedPaymentMethodInput)), true
+
+	case "Mutation.extendAccountClubSupporterSubscription":
+		if e.complexity.Mutation.ExtendAccountClubSupporterSubscription == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_extendAccountClubSupporterSubscription_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ExtendAccountClubSupporterSubscription(childComplexity, args["input"].(types.ExtendAccountClubSupporterSubscriptionInput)), true
 
 	case "Mutation.generateCCBillClubSupporterPaymentLink":
 		if e.complexity.Mutation.GenerateCCBillClubSupporterPaymentLink == nil {
@@ -1706,6 +1879,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.GenerateRefundAmountForAccountClubSupporterSubscription(childComplexity, args["input"].(types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput)), true
+
+	case "Mutation.updateCancellationReasonDeprecated":
+		if e.complexity.Mutation.UpdateCancellationReasonDeprecated == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCancellationReasonDeprecated_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCancellationReasonDeprecated(childComplexity, args["input"].(types.UpdateCancellationReasonDeprecatedInput)), true
+
+	case "Mutation.updateCancellationReasonTitle":
+		if e.complexity.Mutation.UpdateCancellationReasonTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCancellationReasonTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCancellationReasonTitle(childComplexity, args["input"].(types.UpdateCancellationReasonTitleInput)), true
 
 	case "Mutation.voidOrRefundAccountClubSupporterSubscription":
 		if e.complexity.Mutation.VoidOrRefundAccountClubSupporterSubscription == nil {
@@ -1794,6 +1991,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AccountClubSupporterSubscriptionFinalized(childComplexity, args["locker"].(string)), true
 
+	case "Query.cancellationReason":
+		if e.complexity.Query.CancellationReason == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cancellationReason_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CancellationReason(childComplexity, args["reference"].(string)), true
+
+	case "Query.cancellationReasons":
+		if e.complexity.Query.CancellationReasons == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cancellationReasons_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CancellationReasons(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool)), true
+
 	case "Query.ccbillSubscriptionDetails":
 		if e.complexity.Query.CcbillSubscriptionDetails == nil {
 			break
@@ -1859,6 +2080,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Translation.Text(childComplexity), true
+
+	case "UpdateCancellationReasonDeprecatedPayload.cancellationReason":
+		if e.complexity.UpdateCancellationReasonDeprecatedPayload.CancellationReason == nil {
+			break
+		}
+
+		return e.complexity.UpdateCancellationReasonDeprecatedPayload.CancellationReason(childComplexity), true
+
+	case "UpdateCancellationReasonTitlePayload.cancellationReason":
+		if e.complexity.UpdateCancellationReasonTitlePayload.CancellationReason == nil {
+			break
+		}
+
+		return e.complexity.UpdateCancellationReasonTitlePayload.CancellationReason(childComplexity), true
 
 	case "VoidOrRefundAccountClubSupporterSubscriptionPayload.validation":
 		if e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.Validation == nil {
@@ -2392,6 +2627,9 @@ type AccountClubSupporterSubscription {
 
   """When this subscription was last updated."""
   updatedAt: Time!
+
+  """The reason this subscription was cancelled, if there is one."""
+  cancellationReason: CancellationReason @goField(forceResolver: true)
 }
 
 enum AccountClubSupporterSubscriptionStatus {
@@ -2574,6 +2812,18 @@ type DeleteAccountSavedPaymentMethodPayload {
 input CancelAccountClubSupporterSubscriptionInput {
   """The chosen club supporter subscription id."""
   clubSupporterSubscriptionId: ID!
+
+  """The cancellation reason for this subscription."""
+  cancellationReasonId: ID!
+}
+
+"""Extend account club supporter subscription input."""
+input ExtendAccountClubSupporterSubscriptionInput {
+  """The chosen club supporter subscription id."""
+  clubSupporterSubscriptionId: ID!
+
+  """The amount of days to extend it for."""
+  days: Int!
 }
 
 """Generate a refund amount."""
@@ -2621,6 +2871,12 @@ type VoidOrRefundAccountClubSupporterSubscriptionPayload {
 
 """Payload for cancelling the account club supporter."""
 type CancelAccountClubSupporterSubscriptionPayload {
+  """The new subscription."""
+  clubSupporterSubscription: AccountClubSupporterSubscription
+}
+
+"""Payload for extending the account club supporter."""
+type ExtendAccountClubSupporterSubscriptionPayload {
   """The new subscription."""
   clubSupporterSubscription: AccountClubSupporterSubscription
 }
@@ -2712,6 +2968,29 @@ extend type Mutation {
   cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload
 
   """
+  Void or refund an account club supporter subscription.
+
+  Will void if the subscription is still processing, or issue a refund for the specified amount.
+
+  Staff+ only.
+  """
+  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
+
+  """
+  Extend an account club supporter subscription for an X amount of days, so basically delay their billing date for x days.
+
+  Staff+ only.
+  """
+  extendAccountClubSupporterSubscription(input: ExtendAccountClubSupporterSubscriptionInput!): ExtendAccountClubSupporterSubscriptionPayload
+
+  """
+  Generate a prorated refund amount for a given account club supporter subscription.
+
+  Staff+ only.
+  """
+  generateRefundAmountForAccountClubSupporterSubscription(input: GenerateRefundAmountForAccountClubSupporterSubscriptionInput!): GenerateRefundAmountForAccountClubSupporterSubscriptionPayload!
+
+  """
   Delete an account saved payment method
   """
   deleteAccountSavedPaymentMethod(input: DeleteAccountSavedPaymentMethodInput!): DeleteAccountSavedPaymentMethodPayload
@@ -2722,22 +3001,6 @@ extend type Mutation {
   Note: can only be generated on "NEW" and "INVOICE" transactions.
   """
   generateClubSupporterReceiptFromAccountTransactionHistory(input: GenerateClubSupporterReceiptFromAccountTransactionHistoryInput!): GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload
-
-  """
-  Void or refund an account club supporter subscription.
-
-  Will void if the subscription is still processing, or issue a refund for the specified amount.
-
-  Staff+ only.
-  """
-  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
-
-  """
-  Generate a prorated refund amount for a given account club supporter subscription.
-
-  Staff+ only.
-  """
-  generateRefundAmountForAccountClubSupporterSubscription(input: GenerateRefundAmountForAccountClubSupporterSubscriptionInput!): GenerateRefundAmountForAccountClubSupporterSubscriptionPayload!
 }
 
 extend type Query {
@@ -2755,6 +3018,125 @@ extend type Query {
   Pass in the locker string returned from a FlexFroms redirect or a saved payment method.
   """
   accountClubSupporterSubscriptionFinalized(locker: String!): AccountClubSupporterSubscription
+}
+`, BuiltIn: false},
+	{Name: "schema/cancellation/schema.graphql", Input: `"""Cancellation reason."""
+type CancellationReason implements Node @key(fields: "id") {
+  """ID of the reason."""
+  id: ID!
+
+  """Reference of the reason. Should be used for single lookups."""
+  reference: String!
+
+  """The title for this reason."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
+}
+
+"""Edge of the reason"""
+type CancellationReasonEdge {
+  node: CancellationReason!
+  cursor: String!
+}
+
+"""Connection of the reason"""
+type CancellationReasonConnection {
+  edges: [CancellationReasonEdge!]!
+  pageInfo: PageInfo!
+}
+
+type Query {
+  """
+  Get a cancellation reason by reference.
+  """
+  cancellationReason(reference: String!): CancellationReason
+
+  """
+  Get all reasons for the site.
+  """
+  cancellationReasons(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
+  ): CancellationReasonConnection!
+}
+
+"""Create a new cancellation reason input."""
+input CreateCancellationReasonInput {
+  """The title."""
+  title: String!
+}
+
+"""Updated cancellation reason."""
+type CreateCancellationReasonPayload {
+  """The updated cancellation reason."""
+  cancellationReason: CancellationReason
+}
+
+"""Update cancellation reason."""
+input UpdateCancellationReasonTitleInput {
+  """The reason to update."""
+  cancellationReasonId: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated reason."""
+type UpdateCancellationReasonTitlePayload {
+  """The updated reason."""
+  cancellationReason: CancellationReason
+}
+
+"""Update reason."""
+input UpdateCancellationReasonDeprecatedInput {
+  """The cancellation reason to update."""
+  cancellationReasonId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Updated reason."""
+type UpdateCancellationReasonDeprecatedPayload {
+  """The updated reason."""
+  cancellationReason: CancellationReason
+}
+
+extend type Mutation {
+  """
+  Create a new reason.
+  """
+  createCancellationReason(input: CreateCancellationReasonInput!): CreateCancellationReasonPayload
+
+  """
+  Update a reason title.
+  """
+  updateCancellationReasonTitle(input: UpdateCancellationReasonTitleInput!): UpdateCancellationReasonTitlePayload
+
+  """
+  Update a reason deprecation.
+  """
+  updateCancellationReasonDeprecated(input: UpdateCancellationReasonDeprecatedInput!): UpdateCancellationReasonDeprecatedPayload
 }
 `, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `extend type Club @key(fields: "id")  {
@@ -2820,11 +3202,12 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Club
+union _Entity = Account | CancellationReason | Club
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
+	findCancellationReasonByID(id: ID!,): CancellationReason!
 	findClubByID(id: ID!,): Club!
 
 }
@@ -3019,6 +3402,21 @@ func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Entity_findCancellationReasonByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Entity_findClubByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3064,6 +3462,21 @@ func (ec *executionContext) field_Mutation_cancelAccountClubSupporterSubscriptio
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createCancellationReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateCancellationReasonInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateCancellationReasonInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCancellationReasonInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_deleteAccountSavedPaymentMethod_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3071,6 +3484,21 @@ func (ec *executionContext) field_Mutation_deleteAccountSavedPaymentMethod_args(
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteAccountSavedPaymentMethodInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_extendAccountClubSupporterSubscription_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.ExtendAccountClubSupporterSubscriptionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNExtendAccountClubSupporterSubscriptionInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐExtendAccountClubSupporterSubscriptionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3116,6 +3544,36 @@ func (ec *executionContext) field_Mutation_generateRefundAmountForAccountClubSup
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNGenerateRefundAmountForAccountClubSupporterSubscriptionInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateRefundAmountForAccountClubSupporterSubscriptionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCancellationReasonDeprecated_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCancellationReasonDeprecatedInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCancellationReasonDeprecatedInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonDeprecatedInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCancellationReasonTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCancellationReasonTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCancellationReasonTitleInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonTitleInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3181,6 +3639,72 @@ func (ec *executionContext) field_Query_accountClubSupporterSubscriptionFinalize
 		}
 	}
 	args["locker"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cancellationReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cancellationReasons_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 bool
+	if tmp, ok := rawArgs["deprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+		arg4, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["deprecated"] = arg4
 	return args, nil
 }
 
@@ -4405,6 +4929,38 @@ func (ec *executionContext) _AccountClubSupporterSubscription_updatedAt(ctx cont
 	res := resTmp.(time.Time)
 	fc.Result = res
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountClubSupporterSubscription_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscription) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountClubSupporterSubscription",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.AccountClubSupporterSubscription().CancellationReason(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountClubSupporterSubscriptionConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscriptionConnection) (ret graphql.Marshaler) {
@@ -8590,6 +9146,321 @@ func (ec *executionContext) _CancelAccountClubSupporterSubscriptionPayload_clubS
 	return ec.marshalOAccountClubSupporterSubscription2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CancellationReason_id(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReason_reference(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReason_title(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReason_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReason_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReason",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Deprecated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReasonConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReasonConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReasonConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.CancellationReasonEdge)
+	fc.Result = res
+	return ec.marshalNCancellationReasonEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReasonConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReasonConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReasonConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReasonEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReasonEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReasonEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalNCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancellationReasonEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReasonEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancellationReasonEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Card_last4(ctx context.Context, field graphql.CollectedField, obj *types.Card) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8765,6 +9636,38 @@ func (ec *executionContext) _Club_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateCancellationReasonPayload_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.CreateCancellationReasonPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateCancellationReasonPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CancellationReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _DeleteAccountSavedPaymentMethodPayload_deletedAccountSavedPaymentMethodId(ctx context.Context, field graphql.CollectedField, obj *types.DeleteAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8842,6 +9745,48 @@ func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field g
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Entity_findCancellationReasonByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findCancellationReasonByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindCancellationReasonByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalNCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8882,6 +9827,38 @@ func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field grap
 	res := resTmp.(*types.Club)
 	fc.Result = res
 	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ExtendAccountClubSupporterSubscriptionPayload_clubSupporterSubscription(ctx context.Context, field graphql.CollectedField, obj *types.ExtendAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ExtendAccountClubSupporterSubscriptionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubSupporterSubscription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountClubSupporterSubscription)
+	fc.Result = res
+	return ec.marshalOAccountClubSupporterSubscription2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GenerateCCBillClubSupporterPaymentLinkPayload_paymentLink(ctx context.Context, field graphql.CollectedField, obj *types.GenerateCCBillClubSupporterPaymentLinkPayload) (ret graphql.Marshaler) {
@@ -9240,6 +10217,126 @@ func (ec *executionContext) _Mutation_cancelAccountClubSupporterSubscription(ctx
 	return ec.marshalOCancelAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_voidOrRefundAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_voidOrRefundAccountClubSupporterSubscription_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().VoidOrRefundAccountClubSupporterSubscription(rctx, args["input"].(types.VoidOrRefundAccountClubSupporterSubscriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.VoidOrRefundAccountClubSupporterSubscriptionPayload)
+	fc.Result = res
+	return ec.marshalOVoidOrRefundAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_extendAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_extendAccountClubSupporterSubscription_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ExtendAccountClubSupporterSubscription(rctx, args["input"].(types.ExtendAccountClubSupporterSubscriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ExtendAccountClubSupporterSubscriptionPayload)
+	fc.Result = res
+	return ec.marshalOExtendAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐExtendAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_generateRefundAmountForAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_generateRefundAmountForAccountClubSupporterSubscription_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GenerateRefundAmountForAccountClubSupporterSubscription(rctx, args["input"].(types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload)
+	fc.Result = res
+	return ec.marshalNGenerateRefundAmountForAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateRefundAmountForAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_deleteAccountSavedPaymentMethod(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9318,7 +10415,7 @@ func (ec *executionContext) _Mutation_generateClubSupporterReceiptFromAccountTra
 	return ec.marshalOGenerateClubSupporterReceiptFromAccountTransactionHistoryPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateClubSupporterReceiptFromAccountTransactionHistoryPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_voidOrRefundAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_createCancellationReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9335,7 +10432,7 @@ func (ec *executionContext) _Mutation_voidOrRefundAccountClubSupporterSubscripti
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_voidOrRefundAccountClubSupporterSubscription_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_createCancellationReason_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -9343,7 +10440,7 @@ func (ec *executionContext) _Mutation_voidOrRefundAccountClubSupporterSubscripti
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().VoidOrRefundAccountClubSupporterSubscription(rctx, args["input"].(types.VoidOrRefundAccountClubSupporterSubscriptionInput))
+		return ec.resolvers.Mutation().CreateCancellationReason(rctx, args["input"].(types.CreateCancellationReasonInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9352,12 +10449,12 @@ func (ec *executionContext) _Mutation_voidOrRefundAccountClubSupporterSubscripti
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.VoidOrRefundAccountClubSupporterSubscriptionPayload)
+	res := resTmp.(*types.CreateCancellationReasonPayload)
 	fc.Result = res
-	return ec.marshalOVoidOrRefundAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
+	return ec.marshalOCreateCancellationReasonPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCancellationReasonPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_generateRefundAmountForAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_updateCancellationReasonTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9374,7 +10471,7 @@ func (ec *executionContext) _Mutation_generateRefundAmountForAccountClubSupporte
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_generateRefundAmountForAccountClubSupporterSubscription_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_updateCancellationReasonTitle_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -9382,21 +10479,57 @@ func (ec *executionContext) _Mutation_generateRefundAmountForAccountClubSupporte
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateRefundAmountForAccountClubSupporterSubscription(rctx, args["input"].(types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput))
+		return ec.resolvers.Mutation().UpdateCancellationReasonTitle(rctx, args["input"].(types.UpdateCancellationReasonTitleInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload)
+	res := resTmp.(*types.UpdateCancellationReasonTitlePayload)
 	fc.Result = res
-	return ec.marshalNGenerateRefundAmountForAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateRefundAmountForAccountClubSupporterSubscriptionPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateCancellationReasonTitlePayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateCancellationReasonDeprecated(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateCancellationReasonDeprecated_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCancellationReasonDeprecated(rctx, args["input"].(types.UpdateCancellationReasonDeprecatedInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCancellationReasonDeprecatedPayload)
+	fc.Result = res
+	return ec.marshalOUpdateCancellationReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonDeprecatedPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
@@ -9700,6 +10833,87 @@ func (ec *executionContext) _Price_currency(ctx context.Context, field graphql.C
 	res := resTmp.(types.Currency)
 	fc.Result = res
 	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_cancellationReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cancellationReason_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CancellationReason(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_cancellationReasons(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cancellationReasons_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CancellationReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["deprecated"].(bool))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReasonConnection)
+	fc.Result = res
+	return ec.marshalNCancellationReasonConnection2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_ccbillSubscriptionDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -10101,6 +11315,70 @@ func (ec *executionContext) _Translation_text(ctx context.Context, field graphql
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCancellationReasonDeprecatedPayload_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCancellationReasonDeprecatedPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCancellationReasonDeprecatedPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CancellationReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateCancellationReasonTitlePayload_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCancellationReasonTitlePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateCancellationReasonTitlePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CancellationReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancellationReason)
+	fc.Result = res
+	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.VoidOrRefundAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
@@ -11352,6 +12630,37 @@ func (ec *executionContext) unmarshalInputCancelAccountClubSupporterSubscription
 			if err != nil {
 				return it, err
 			}
+		case "cancellationReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cancellationReasonId"))
+			it.CancellationReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateCancellationReasonInput(ctx context.Context, obj interface{}) (types.CreateCancellationReasonInput, error) {
+	var it types.CreateCancellationReasonInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -11372,6 +12681,37 @@ func (ec *executionContext) unmarshalInputDeleteAccountSavedPaymentMethodInput(c
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("savedPaymentMethodId"))
 			it.SavedPaymentMethodID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputExtendAccountClubSupporterSubscriptionInput(ctx context.Context, obj interface{}) (types.ExtendAccountClubSupporterSubscriptionInput, error) {
+	var it types.ExtendAccountClubSupporterSubscriptionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubSupporterSubscriptionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSupporterSubscriptionId"))
+			it.ClubSupporterSubscriptionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "days":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("days"))
+			it.Days, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11457,6 +12797,76 @@ func (ec *executionContext) unmarshalInputGenerateRefundAmountForAccountClubSupp
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSupporterSubscriptionId"))
 			it.ClubSupporterSubscriptionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCancellationReasonDeprecatedInput(ctx context.Context, obj interface{}) (types.UpdateCancellationReasonDeprecatedInput, error) {
+	var it types.UpdateCancellationReasonDeprecatedInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "cancellationReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cancellationReasonId"))
+			it.CancellationReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "deprecated":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("deprecated"))
+			it.Deprecated, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCancellationReasonTitleInput(ctx context.Context, obj interface{}) (types.UpdateCancellationReasonTitleInput, error) {
+	var it types.UpdateCancellationReasonTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "cancellationReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cancellationReasonId"))
+			it.CancellationReasonID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11649,6 +13059,13 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case types.CancellationReason:
+		return ec._CancellationReason(ctx, sel, &obj)
+	case *types.CancellationReason:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._CancellationReason(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -11665,6 +13082,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Account(ctx, sel, obj)
+	case types.CancellationReason:
+		return ec._CancellationReason(ctx, sel, &obj)
+	case *types.CancellationReason:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._CancellationReason(ctx, sel, obj)
 	case types.Club:
 		return ec._Club(ctx, sel, &obj)
 	case *types.Club:
@@ -11977,7 +13401,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "account":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -11987,7 +13411,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "club":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -11997,7 +13421,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "status":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12007,7 +13431,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "supporterSince":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12017,7 +13441,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "lastBillingDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12027,7 +13451,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "nextBillingDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12037,7 +13461,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "cancelledAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12054,7 +13478,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "billingCurrency":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12064,7 +13488,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "paymentMethod":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12074,7 +13498,7 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "ccbillSubscription":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -12091,8 +13515,25 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "cancellationReason":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccountClubSupporterSubscription_cancellationReason(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13678,6 +15119,159 @@ func (ec *executionContext) _CancelAccountClubSupporterSubscriptionPayload(ctx c
 	return out
 }
 
+var cancellationReasonImplementors = []string{"CancellationReason", "Node", "_Entity"}
+
+func (ec *executionContext) _CancellationReason(ctx context.Context, sel ast.SelectionSet, obj *types.CancellationReason) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancellationReasonImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CancellationReason")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReason_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reference":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReason_reference(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReason_title(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "titleTranslations":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReason_titleTranslations(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReason_deprecated(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cancellationReasonConnectionImplementors = []string{"CancellationReasonConnection"}
+
+func (ec *executionContext) _CancellationReasonConnection(ctx context.Context, sel ast.SelectionSet, obj *types.CancellationReasonConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancellationReasonConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CancellationReasonConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReasonConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReasonConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cancellationReasonEdgeImplementors = []string{"CancellationReasonEdge"}
+
+func (ec *executionContext) _CancellationReasonEdge(ctx context.Context, sel ast.SelectionSet, obj *types.CancellationReasonEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancellationReasonEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CancellationReasonEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReasonEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancellationReasonEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var cardImplementors = []string{"Card"}
 
 func (ec *executionContext) _Card(ctx context.Context, sel ast.SelectionSet, obj *types.Card) graphql.Marshaler {
@@ -13780,6 +15374,34 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
+var createCancellationReasonPayloadImplementors = []string{"CreateCancellationReasonPayload"}
+
+func (ec *executionContext) _CreateCancellationReasonPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateCancellationReasonPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createCancellationReasonPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateCancellationReasonPayload")
+		case "cancellationReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CreateCancellationReasonPayload_cancellationReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var deleteAccountSavedPaymentMethodPayloadImplementors = []string{"DeleteAccountSavedPaymentMethodPayload"}
 
 func (ec *executionContext) _DeleteAccountSavedPaymentMethodPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountSavedPaymentMethodPayload) graphql.Marshaler {
@@ -13853,6 +15475,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "findCancellationReasonByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findCancellationReasonByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "findClubByID":
 			field := field
 
@@ -13876,6 +15521,34 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var extendAccountClubSupporterSubscriptionPayloadImplementors = []string{"ExtendAccountClubSupporterSubscriptionPayload"}
+
+func (ec *executionContext) _ExtendAccountClubSupporterSubscriptionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.ExtendAccountClubSupporterSubscriptionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, extendAccountClubSupporterSubscriptionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ExtendAccountClubSupporterSubscriptionPayload")
+		case "clubSupporterSubscription":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ExtendAccountClubSupporterSubscriptionPayload_clubSupporterSubscription(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14096,23 +15769,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "deleteAccountSavedPaymentMethod":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteAccountSavedPaymentMethod(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-		case "generateClubSupporterReceiptFromAccountTransactionHistory":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateClubSupporterReceiptFromAccountTransactionHistory(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
 		case "voidOrRefundAccountClubSupporterSubscription":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_voidOrRefundAccountClubSupporterSubscription(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "extendAccountClubSupporterSubscription":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_extendAccountClubSupporterSubscription(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -14127,6 +15793,41 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "deleteAccountSavedPaymentMethod":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteAccountSavedPaymentMethod(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "generateClubSupporterReceiptFromAccountTransactionHistory":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_generateClubSupporterReceiptFromAccountTransactionHistory(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "createCancellationReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createCancellationReason(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCancellationReasonTitle":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCancellationReasonTitle(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateCancellationReasonDeprecated":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCancellationReasonDeprecated(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14298,6 +15999,49 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "cancellationReason":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cancellationReason(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "cancellationReasons":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cancellationReasons(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "ccbillSubscriptionDetails":
 			field := field
 
@@ -14490,6 +16234,62 @@ func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCancellationReasonDeprecatedPayloadImplementors = []string{"UpdateCancellationReasonDeprecatedPayload"}
+
+func (ec *executionContext) _UpdateCancellationReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCancellationReasonDeprecatedPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCancellationReasonDeprecatedPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCancellationReasonDeprecatedPayload")
+		case "cancellationReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCancellationReasonDeprecatedPayload_cancellationReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCancellationReasonTitlePayloadImplementors = []string{"UpdateCancellationReasonTitlePayload"}
+
+func (ec *executionContext) _UpdateCancellationReasonTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCancellationReasonTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCancellationReasonTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCancellationReasonTitlePayload")
+		case "cancellationReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateCancellationReasonTitlePayload_cancellationReason(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -15176,6 +16976,88 @@ func (ec *executionContext) unmarshalNCancelAccountClubSupporterSubscriptionInpu
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNCancellationReason2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx context.Context, sel ast.SelectionSet, v types.CancellationReason) graphql.Marshaler {
+	return ec._CancellationReason(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx context.Context, sel ast.SelectionSet, v *types.CancellationReason) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CancellationReason(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCancellationReasonConnection2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonConnection(ctx context.Context, sel ast.SelectionSet, v types.CancellationReasonConnection) graphql.Marshaler {
+	return ec._CancellationReasonConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCancellationReasonConnection2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonConnection(ctx context.Context, sel ast.SelectionSet, v *types.CancellationReasonConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CancellationReasonConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCancellationReasonEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.CancellationReasonEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCancellationReasonEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCancellationReasonEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReasonEdge(ctx context.Context, sel ast.SelectionSet, v *types.CancellationReasonEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._CancellationReasonEdge(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCard2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCard(ctx context.Context, sel ast.SelectionSet, v *types.Card) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -15210,6 +17092,11 @@ func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋhadesᚋin
 	return ec._Club(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCreateCancellationReasonInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCancellationReasonInput(ctx context.Context, v interface{}) (types.CreateCancellationReasonInput, error) {
+	res, err := ec.unmarshalInputCreateCancellationReasonInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, v interface{}) (types.Currency, error) {
 	var res types.Currency
 	err := res.UnmarshalGQL(v)
@@ -15222,6 +17109,11 @@ func (ec *executionContext) marshalNCurrency2overdollᚋapplicationsᚋhadesᚋi
 
 func (ec *executionContext) unmarshalNDeleteAccountSavedPaymentMethodInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodInput(ctx context.Context, v interface{}) (types.DeleteAccountSavedPaymentMethodInput, error) {
 	res, err := ec.unmarshalInputDeleteAccountSavedPaymentMethodInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNExtendAccountClubSupporterSubscriptionInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐExtendAccountClubSupporterSubscriptionInput(ctx context.Context, v interface{}) (types.ExtendAccountClubSupporterSubscriptionInput, error) {
+	res, err := ec.unmarshalInputExtendAccountClubSupporterSubscriptionInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -15420,6 +17312,70 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Translation) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *types.Translation) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Translation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUpdateCancellationReasonDeprecatedInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonDeprecatedInput(ctx context.Context, v interface{}) (types.UpdateCancellationReasonDeprecatedInput, error) {
+	res, err := ec.unmarshalInputUpdateCancellationReasonDeprecatedInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCancellationReasonTitleInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonTitleInput(ctx context.Context, v interface{}) (types.UpdateCancellationReasonTitleInput, error) {
+	res, err := ec.unmarshalInputUpdateCancellationReasonTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNVoidOrRefundAccountClubSupporterSubscriptionInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionInput(ctx context.Context, v interface{}) (types.VoidOrRefundAccountClubSupporterSubscriptionInput, error) {
@@ -15894,6 +17850,13 @@ func (ec *executionContext) marshalOCancelAccountClubSupporterSubscriptionPayloa
 	return ec._CancelAccountClubSupporterSubscriptionPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx context.Context, sel ast.SelectionSet, v *types.CancellationReason) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CancellationReason(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -15901,11 +17864,25 @@ func (ec *executionContext) marshalOClub2ᚖoverdollᚋapplicationsᚋhadesᚋin
 	return ec._Club(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCreateCancellationReasonPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateCancellationReasonPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateCancellationReasonPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateCancellationReasonPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalODeleteAccountSavedPaymentMethodPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountSavedPaymentMethodPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._DeleteAccountSavedPaymentMethodPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOExtendAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐExtendAccountClubSupporterSubscriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.ExtendAccountClubSupporterSubscriptionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ExtendAccountClubSupporterSubscriptionPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOGenerateCCBillClubSupporterPaymentLinkPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateCCBillClubSupporterPaymentLinkPayload) graphql.Marshaler {
@@ -15997,6 +17974,20 @@ func (ec *executionContext) marshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalOUpdateCancellationReasonDeprecatedPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCancellationReasonDeprecatedPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCancellationReasonDeprecatedPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCancellationReasonTitlePayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCancellationReasonTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCancellationReasonTitlePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOVoidOrRefundAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.VoidOrRefundAccountClubSupporterSubscriptionPayload) graphql.Marshaler {
