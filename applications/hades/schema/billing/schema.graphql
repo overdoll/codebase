@@ -370,7 +370,7 @@ type CCBillSubscriptionDetails {
   voidsIssued: Int!
 
   """The signup date."""
-  signupDate: Time
+  signupDate: Time!
 
   """If this subscription was cancelled, the expiration date."""
   expirationDate: Time
@@ -692,6 +692,9 @@ enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
 type VoidOrRefundAccountClubSupporterSubscriptionPayload {
   """Validation for voiding or refunding the subscription."""
   validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
+
+  """The id of the subscription, deleted."""
+  deletedClubSupporterSubscriptionId: ID!
 }
 
 """Payload for cancelling the account club supporter."""

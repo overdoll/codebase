@@ -7,7 +7,7 @@ import (
 
 type RefundAmount struct {
 	proratedAmount float64
-	amount         float64
+	maxAmount      float64
 	currency       Currency
 }
 
@@ -22,12 +22,24 @@ func NewRefundAmountWithProrated(originalAmount float64, currency Currency, last
 	// get percentage difference, so maybe 0.4
 	difference := daysDifferenceCurrent / daysDifferenceBilling
 
-	// our final prorated amount, rounded down to 2 decimal places
+	// our final prorated maxAmount, rounded down to 2 decimal places
 	proratedAmount := math.Floor(originalAmount*difference*100) / 100
 
 	return &RefundAmount{
-		amount:         originalAmount,
+		maxAmount:      originalAmount,
 		proratedAmount: proratedAmount,
 		currency:       currency,
 	}, nil
+}
+
+func (r *RefundAmount) ProratedAmount() float64 {
+	return r.proratedAmount
+}
+
+func (r *RefundAmount) MaxAmount() float64 {
+	return r.maxAmount
+}
+
+func (r *RefundAmount) Currency() Currency {
+	return r.currency
 }

@@ -8,6 +8,7 @@ import (
 
 type GenerateProratedRefundAmountForAccountClubSubscription struct {
 	Principal                          *principal.Principal
+	AccountId                          string
 	ClubId                             string
 	AccountClubSupporterSubscriptionId string
 }
@@ -22,7 +23,7 @@ func NewGenerateProratedRefundAmountForAccountClubSubscriptionHandler(br billing
 
 func (h GenerateProratedRefundAmountForAccountClubSubscriptionHandler) Handle(ctx context.Context, cmd GenerateProratedRefundAmountForAccountClubSubscription) (*billing.RefundAmount, error) {
 
-	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.Principal.AccountId(), cmd.ClubId, cmd.AccountClubSupporterSubscriptionId)
+	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.AccountId, cmd.ClubId, cmd.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
 		return nil, err

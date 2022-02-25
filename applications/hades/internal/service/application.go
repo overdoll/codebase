@@ -64,14 +64,30 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	pricingRepo := adapters.NewBillingPricingRepository(session)
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
+	cancelRepo := adapters.NewCancellationCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			GenerateCCBillClubSupporterPaymentLink: command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),
-			ProcessCCBillWebhook:                   command.NewProcessCCBillWebhookHandler(eventRepo),
+			GenerateCCBillClubSupporterPaymentLink:                    command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),
+			ProcessCCBillWebhook:                                      command.NewProcessCCBillWebhookHandler(eventRepo),
+			GenerateProratedRefundAmountForAccountClubSubscription:    command.NewGenerateProratedRefundAmountForAccountClubSubscriptionHandler(billingRepo),
+			BecomeClubSupporterWithAccountSavedPaymentMethod:          command.NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(billingRepo, pricingRepo, ccbillRepo, stella, eva),
+			CancelAccountClubSupporterSubscription:                    command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, ccbillRepo, cancelRepo),
+			DeleteAccountSavedPaymentMethod:                           command.NewDeleteAccountSavedPaymentMethodHandler(billingRepo),
+			VoidOrRefundAccountClubSupporterSubscription:              command.NewVoidOrRefundAccountClubSupporterSubscriptionHandler(billingRepo, ccbillRepo),
+			ExtendAccountClubSupporterSubscription:                    command.NewExtendAccountClubSupporterSubscription(billingRepo, ccbillRepo),
+			GenerateClubSupporterReceiptFromAccountTransactionHistory: command.NewGenerateClubSupporterReceiptFromAccountTransactionHistory(billingRepo, billingFileRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById: query.NewPrincipalByIdHandler(eva),
+			PrincipalById:                      query.NewPrincipalByIdHandler(eva),
+			AccountClubSupporterSubscriptions:  query.NewAccountClubSupporterSubscriptionsHandler(billingRepo),
+			AccountSavedPaymentMethods:         query.NewAccountSavedPaymentMethodsHandler(billingRepo),
+			AccountTransactionHistory:          query.NewAccountTransactionHistoryHandler(billingRepo),
+			CCBillSubscriptionDetails:          query.NewCCBillSubscriptionDetailsHandler(billingRepo, ccbillRepo),
+			ClubSupporterPricing:               query.NewClubSupporterPricingHandler(pricingRepo, eva),
+			ClubSupporterSubscriptionFinalized: query.NewClubSupporterSubscriptionFinalized(billingRepo),
+			CancellationReasonById:             query.NewCancellationReasonByIdHandler(cancelRepo),
+			CancellationReasons:                query.NewCancellationReasonsHandler(cancelRepo),
 		},
 		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella),
 	}

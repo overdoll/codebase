@@ -13,14 +13,15 @@ type Application struct {
 }
 
 type Commands struct {
-	GenerateCCBillClubSupporterPaymentLink                 command.GenerateCCBillClubSupportPaymentLinkHandler
-	ProcessCCBillWebhook                                   command.ProcessCCBillWebhookHandler
-	GenerateProratedRefundAmountForAccountClubSubscription command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
-	BecomeClubSupporterWithAccountSavedPaymentMethod       command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
-	CancelAccountClubSupporterSubscription                 command.CancelAccountClubSupporterSubscriptionHandler
-	DeleteAccountSavedPaymentMethod                        command.DeleteAccountSavedPaymentMethodHandler
-	VoidOrRefundAccountClubSupporterSubscription           command.VoidOrRefundAccountClubSupporterSubscriptionHandler
-	ExtendAccountClubSupporterSubscription                 command.ExtendAccountClubSupporterSubscriptionHandler
+	GenerateCCBillClubSupporterPaymentLink                    command.GenerateCCBillClubSupportPaymentLinkHandler
+	ProcessCCBillWebhook                                      command.ProcessCCBillWebhookHandler
+	GenerateProratedRefundAmountForAccountClubSubscription    command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
+	BecomeClubSupporterWithAccountSavedPaymentMethod          command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
+	CancelAccountClubSupporterSubscription                    command.CancelAccountClubSupporterSubscriptionHandler
+	DeleteAccountSavedPaymentMethod                           command.DeleteAccountSavedPaymentMethodHandler
+	VoidOrRefundAccountClubSupporterSubscription              command.VoidOrRefundAccountClubSupporterSubscriptionHandler
+	ExtendAccountClubSupporterSubscription                    command.ExtendAccountClubSupporterSubscriptionHandler
+	GenerateClubSupporterReceiptFromAccountTransactionHistory command.GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler
 
 	CreateCancellationReason           command.CreateCancellationReasonHandler
 	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
@@ -28,7 +29,8 @@ type Commands struct {
 }
 
 type Queries struct {
-	PrincipalById                      query.PrincipalByIdHandler
+	PrincipalById query.PrincipalByIdHandler
+
 	AccountClubSupporterSubscriptions  query.AccountClubSupporterSubscriptionsHandler
 	AccountSavedPaymentMethods         query.AccountSavedPaymentMethodsHandler
 	AccountTransactionHistory          query.AccountTransactionHistoryHandler
@@ -37,5 +39,5 @@ type Queries struct {
 	ClubSupporterSubscriptionFinalized query.ClubSupporterSubscriptionFinalizedHandler
 
 	CancellationReasons    query.CancellationReasonsHandler
-	CancellationReasonById query.CancellationReasonById
+	CancellationReasonById query.CancellationReasonByIdHandler
 }

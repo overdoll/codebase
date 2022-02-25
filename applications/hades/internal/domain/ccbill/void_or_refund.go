@@ -4,6 +4,10 @@ import (
 	"errors"
 )
 
+var (
+	ErrInvalidRefundAmount = errors.New("refund amount invalid")
+)
+
 type VoidOrRefund struct {
 	amount         *float64
 	subscriptionId string
@@ -12,7 +16,7 @@ type VoidOrRefund struct {
 func NewVoidOrRefundWithCustomAmount(subscriptionId string, customAmount float64, actualAmount float64) (*VoidOrRefund, error) {
 
 	if customAmount > actualAmount {
-		return nil, errors.New("refund amount too high")
+		return nil, ErrInvalidRefundAmount
 	}
 
 	return &VoidOrRefund{

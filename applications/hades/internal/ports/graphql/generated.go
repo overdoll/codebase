@@ -414,7 +414,8 @@ type ComplexityRoot struct {
 	}
 
 	VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
-		Validation func(childComplexity int) int
+		DeletedClubSupporterSubscriptionID func(childComplexity int) int
+		Validation                         func(childComplexity int) int
 	}
 
 	_Service struct {
@@ -2095,6 +2096,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateCancellationReasonTitlePayload.CancellationReason(childComplexity), true
 
+	case "VoidOrRefundAccountClubSupporterSubscriptionPayload.deletedClubSupporterSubscriptionId":
+		if e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.DeletedClubSupporterSubscriptionID == nil {
+			break
+		}
+
+		return e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.DeletedClubSupporterSubscriptionID(childComplexity), true
+
 	case "VoidOrRefundAccountClubSupporterSubscriptionPayload.validation":
 		if e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.Validation == nil {
 			break
@@ -2545,7 +2553,7 @@ type CCBillSubscriptionDetails {
   voidsIssued: Int!
 
   """The signup date."""
-  signupDate: Time
+  signupDate: Time!
 
   """If this subscription was cancelled, the expiration date."""
   expirationDate: Time
@@ -2867,6 +2875,9 @@ enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
 type VoidOrRefundAccountClubSupporterSubscriptionPayload {
   """Validation for voiding or refunding the subscription."""
   validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
+
+  """The id of the subscription, deleted."""
+  deletedClubSupporterSubscriptionId: ID!
 }
 
 """Payload for cancelling the account club supporter."""
@@ -8941,11 +8952,14 @@ func (ec *executionContext) _CCBillSubscriptionDetails_signupDate(ctx context.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_expirationDate(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -11411,6 +11425,41 @@ func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload
 	res := resTmp.(*types.VoidOrRefundAccountClubSupporterSubscriptionValidation)
 	fc.Result = res
 	return ec.marshalOVoidOrRefundAccountClubSupporterSubscriptionValidation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload_deletedClubSupporterSubscriptionId(ctx context.Context, field graphql.CollectedField, obj *types.VoidOrRefundAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "VoidOrRefundAccountClubSupporterSubscriptionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedClubSupporterSubscriptionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -15018,6 +15067,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails(ctx context.Context, sel 
 
 			out.Values[i] = innerFunc(ctx)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "expirationDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CCBillSubscriptionDetails_expirationDate(ctx, field, obj)
@@ -16318,6 +16370,16 @@ func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload
 
 			out.Values[i] = innerFunc(ctx)
 
+		case "deletedClubSupporterSubscriptionId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._VoidOrRefundAccountClubSupporterSubscriptionPayload_deletedClubSupporterSubscriptionId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

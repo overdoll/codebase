@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/hades/internal/ports/graphql/entities"
 	"overdoll/applications/hades/internal/ports/graphql/mutations"
 	"overdoll/applications/hades/internal/ports/graphql/queries"
+	"overdoll/applications/hades/internal/ports/graphql/resolvers"
 )
 
 type Resolver struct {
@@ -29,6 +30,24 @@ func (r *Resolver) Query() QueryResolver {
 
 func (r *Resolver) Entity() EntityResolver {
 	return &entities.EntityResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Account() AccountResolver {
+	return &resolvers.AccountResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Club() ClubResolver {
+	return &resolvers.ClubResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountClubSupporterSubscription() AccountClubSupporterSubscriptionResolver {
+	return &resolvers.AccountClubSupporterSubscription{
 		App: r.app,
 	}
 }

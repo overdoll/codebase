@@ -416,7 +416,7 @@ type CCBillSubscriptionDetails struct {
 	// The amount of voids issued.
 	VoidsIssued int `json:"voidsIssued"`
 	// The signup date.
-	SignupDate *time.Time `json:"signupDate"`
+	SignupDate time.Time `json:"signupDate"`
 	// If this subscription was cancelled, the expiration date.
 	ExpirationDate *time.Time `json:"expirationDate"`
 	// If this subscription was cancelled, the date it occurred.
@@ -660,6 +660,8 @@ type VoidOrRefundAccountClubSupporterSubscriptionInput struct {
 type VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
 	// Validation for voiding or refunding the subscription.
 	Validation *VoidOrRefundAccountClubSupporterSubscriptionValidation `json:"validation"`
+	// The id of the subscription, deleted.
+	DeletedClubSupporterSubscriptionID relay.ID `json:"deletedClubSupporterSubscriptionId"`
 }
 
 type AccountClubSupporterSubscriptionStatus string

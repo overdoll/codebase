@@ -9,9 +9,10 @@ import (
 
 type VoidOrRefundAccountClubSupporterSubscription struct {
 	Principal                          *principal.Principal
+	AccountId                          string
 	ClubId                             string
 	AccountClubSupporterSubscriptionId string
-	Amount                             *float64
+	Amount                             float64
 }
 
 type VoidOrRefundAccountClubSupporterSubscriptionHandler struct {
@@ -23,40 +24,33 @@ func NewVoidOrRefundAccountClubSupporterSubscriptionHandler(br billing.Repositor
 	return VoidOrRefundAccountClubSupporterSubscriptionHandler{br: br, cr: cr}
 }
 
-func (h VoidOrRefundAccountClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd VoidOrRefundAccountClubSupporterSubscription) (*billing.AccountClubSupporterSubscription, error) {
+func (h VoidOrRefundAccountClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd VoidOrRefundAccountClubSupporterSubscription) error {
 
-	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.Principal.AccountId(), cmd.ClubId, cmd.AccountClubSupporterSubscriptionId)
+	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.AccountId, cmd.ClubId, cmd.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := clubSupporterSubscription.RequestVoidOrRefund(cmd.Principal); err != nil {
-		return nil, err
+		return err
 	}
 
 	var voidOrRefund *ccbill.VoidOrRefund
 
-	if cmd.Amount != nil {
-		// create a voidOrRefund object which will calculate the correct amount, if one was passed in
-		voidOrRefund, err = ccbill.NewVoidOrRefundWithCustomAmount(
-			clubSupporterSubscription.CCBillSubscriptionId(),
-			*cmd.Amount,
-			clubSupporterSubscription.BillingAmount(),
-		)
-	} else {
-		voidOrRefund, err = ccbill.NewVoidOrRefundWithoutAmount(
-			clubSupporterSubscription.CCBillSubscriptionId(),
-		)
-	}
+	voidOrRefund, err = ccbill.NewVoidOrRefundWithCustomAmount(
+		clubSupporterSubscription.CCBillSubscriptionId(),
+		cmd.Amount,
+		clubSupporterSubscription.BillingAmount(),
+	)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := h.cr.VoidOrRefundSubscription(ctx, voidOrRefund); err != nil {
-		return nil, err
+		return err
 	}
 
-	return clubSupporterSubscription, nil
+	return nil
 }

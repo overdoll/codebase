@@ -8,7 +8,7 @@ import (
 
 type DeleteAccountSavedPaymentMethod struct {
 	Principal                   *principal.Principal
-	ClubId                      string
+	AccountId                   string
 	AccountSavedPaymentMethodId string
 }
 
@@ -22,7 +22,7 @@ func NewDeleteAccountSavedPaymentMethodHandler(br billing.Repository) DeleteAcco
 
 func (h DeleteAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd DeleteAccountSavedPaymentMethod) error {
 
-	if err := h.br.DeleteAccountSavedPaymentMethod(ctx, cmd.Principal, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId); err != nil {
+	if err := h.br.DeleteAccountSavedPaymentMethod(ctx, cmd.Principal, cmd.AccountId, cmd.AccountSavedPaymentMethodId); err != nil {
 		return err
 	}
 	return nil
