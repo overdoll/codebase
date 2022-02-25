@@ -2,7 +2,9 @@ package gen
 
 import (
 	"overdoll/applications/hades/internal/app"
+	"overdoll/applications/hades/internal/ports/graphql/entities"
 	"overdoll/applications/hades/internal/ports/graphql/mutations"
+	"overdoll/applications/hades/internal/ports/graphql/queries"
 )
 
 type Resolver struct {
@@ -19,14 +21,14 @@ func (r *Resolver) Mutation() MutationResolver {
 	}
 }
 
-//func (r *Resolver) Query() QueryResolver {
-//	return &queries.QueryResolver{
-//		App: r.app,
-//	}
-//}
-//
-//func (r *Resolver) Entity() EntityResolver {
-//	return &entities.EntityResolver{
-//		App: r.app,
-//	}
-//}
+func (r *Resolver) Query() QueryResolver {
+	return &queries.QueryResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Entity() EntityResolver {
+	return &entities.EntityResolver{
+		App: r.app,
+	}
+}

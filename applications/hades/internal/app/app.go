@@ -13,10 +13,21 @@ type Application struct {
 }
 
 type Commands struct {
-	GenerateCCBillClubSupporterPaymentLink command.GenerateCCBillClubSupportPaymentLinkHandler
-	ProcessCCBillWebhook                   command.ProcessCCBillWebhookHandler
+	GenerateCCBillClubSupporterPaymentLink                 command.GenerateCCBillClubSupportPaymentLinkHandler
+	ProcessCCBillWebhook                                   command.ProcessCCBillWebhookHandler
+	GenerateProratedRefundAmountForAccountClubSubscription command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
+	BecomeClubSupporterWithAccountSavedPaymentMethod       command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
+	CancelAccountClubSupporterSubscription                 command.CancelAccountClubSupporterSubscriptionHandler
+	DeleteAccountSavedPaymentMethod                        command.DeleteAccountSavedPaymentMethodHandler
+	VoidOrRefundAccountClubSupporterSubscription           command.VoidOrRefundAccountClubSupporterSubscriptionHandler
 }
 
 type Queries struct {
-	PrincipalById query.PrincipalByIdHandler
+	PrincipalById                      query.PrincipalByIdHandler
+	AccountClubSupporterSubscriptions  query.AccountClubSupporterSubscriptionsHandler
+	AccountSavedPaymentMethods         query.AccountSavedPaymentMethodsHandler
+	AccountTransactionHistory          query.AccountTransactionHistoryHandler
+	CCBillSubscriptionDetails          query.CCBillSubscriptionDetailsHandler
+	ClubSupporterPricing               query.ClubSupporterPricingHandler
+	ClubSupporterSubscriptionFinalized query.ClubSupporterSubscriptionFinalizedHandler
 }

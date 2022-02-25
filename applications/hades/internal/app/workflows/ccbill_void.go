@@ -33,7 +33,7 @@ func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
 		return err
 	}
 
-	// create refund record
+	// create void record
 	if err := workflow.ExecuteActivity(ctx, a.CreateVoidClubSubscriptionAccountTransactionRecord,
 		activities.CreateVoidClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
@@ -44,27 +44,6 @@ func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
 			Currency:             payload.Currency,
 			Amount:               payload.Amount,
 			Reason:               payload.Reason,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	// remove account club support
-	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
-		activities.RemoveAccountClubSupportSubscription{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	// remove account club support - external
-	if err := workflow.ExecuteActivity(ctx, a.RemoveClubSupporter,
-		activities.RemoveClubSupporter{
-			AccountId: subscriptionDetails.AccountId,
-			ClubId:    subscriptionDetails.ClubId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -57,26 +57,5 @@ func CCBillRefund(ctx workflow.Context, payload CCBillRefundPayload) error {
 		return err
 	}
 
-	// remove account club support
-	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
-		activities.RemoveAccountClubSupportSubscription{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	// remove account club support - external
-	if err := workflow.ExecuteActivity(ctx, a.RemoveClubSupporter,
-		activities.RemoveClubSupporter{
-			AccountId: subscriptionDetails.AccountId,
-			ClubId:    subscriptionDetails.ClubId,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
 	return nil
 }

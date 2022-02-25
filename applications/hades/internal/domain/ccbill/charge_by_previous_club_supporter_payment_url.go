@@ -39,7 +39,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) AccountId() string {
 	return c.accountId
 }
 
-func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, error) {
+func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string, error) {
 
 	ccbillClientAccnum := os.Getenv("CCBILL_ACCOUNT_NUMBER")
 	ccbillClientSubacc := os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER")
@@ -69,7 +69,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, error) 
 	encrypted, err := encryptCCBillPayment(paymentLink)
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	query := "https://bill.ccbill.com/jpost/billingApi.cgi?" +
@@ -88,5 +88,5 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, error) 
 		"&overdollLocker=" + *encrypted +
 		"&returnXML=1"
 
-	return query, nil
+	return query, encrypted, nil
 }

@@ -217,7 +217,7 @@ type chargeByPreviousResult struct {
 
 func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) (*ccbill.TransactionDetails, error) {
 
-	url, err := chargeByPrevious.GenerateUrl()
+	url, paymentLink, err := chargeByPrevious.GenerateUrl()
 
 	if err != nil {
 		return nil, err
@@ -256,5 +256,5 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		return nil, err
 	}
 
-	return ccbill.UnmarshalTransactionDetailsFromDatabase(chargeByPrevious.CCBillSubscriptionId(), chargeByPrevious.ClubId(), realResult.Approved == 1, realResult.DeclineCode, realResult.DeclineText), nil
+	return ccbill.UnmarshalTransactionDetailsFromDatabase(chargeByPrevious.CCBillSubscriptionId(), chargeByPrevious.ClubId(), realResult.Approved == 1, realResult.DeclineCode, realResult.DeclineText, paymentLink), nil
 }
