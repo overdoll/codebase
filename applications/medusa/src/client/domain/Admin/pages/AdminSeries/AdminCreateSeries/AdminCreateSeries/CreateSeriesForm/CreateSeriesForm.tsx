@@ -23,16 +23,10 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import useSequence from '@//:modules/content/HookedComponents/Sequence/hooks/useSequence'
-import ValueResolver from '@//:modules/content/HookedComponents/Sequence/resolver/ValueResolver'
 
 type Props = ConnectionProp
 
 type SeriesValues = TagTitle & TagSlug
-
-interface SequenceProps {
-  test: string
-}
 
 const Mutation = graphql`
   mutation CreateSeriesFormMutation($input: CreateSeriesInput!, $connections: [ID!]!) {

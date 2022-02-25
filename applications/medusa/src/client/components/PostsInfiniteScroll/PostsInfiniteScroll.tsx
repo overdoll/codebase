@@ -15,7 +15,7 @@ import { ReactNode, useState } from 'react'
 import { Trans } from '@lingui/macro'
 
 interface Props {
-  query: PostsInfiniteScrollFragment$key | null
+  query: PostsInfiniteScrollFragment$key
   viewerQuery: PostsInfiniteScrollViewerFragment$key | null
   hasNext: boolean
   loadNext: (number, options) => {}
@@ -62,7 +62,7 @@ export default function PostsInfiniteScroll ({
 
   const onSlideChange = (swiper): void => {
     const activeIndex = swiper.activeIndex as number
-    const currentLength = data?.edges.length as number
+    const currentLength = data?.edges.length
 
     if (activeIndex + 3 >= currentLength && !isLoadingNext && hasNext) {
       loadNext(10, { onComplete: onCompleteLoaded })

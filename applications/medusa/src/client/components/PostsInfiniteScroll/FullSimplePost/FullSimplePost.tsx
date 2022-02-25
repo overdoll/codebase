@@ -17,7 +17,7 @@ import JoinClubButton from '../../../domain/ManageClub/components/JoinClubButton
 
 interface Props {
   query: FullSimplePostFragment$key
-  viewerQuery: FullSimplePostViewerFragment$key
+  viewerQuery: FullSimplePostViewerFragment$key | null
 }
 
 const PostFragment = graphql`

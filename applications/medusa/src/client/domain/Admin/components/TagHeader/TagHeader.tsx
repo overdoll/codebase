@@ -1,4 +1,4 @@
-import { Text, useDisclosure } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {

@@ -4,9 +4,6 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
-import PostSearchButton from '../../../../../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
-import PageFixedHeader from '../../../../../../../components/PageFixedHeader/PageFixedHeader'
-import { PostOrderButton } from '../../../../../../../components/PostsSearch'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPostsQuery>

@@ -7,8 +7,7 @@ import { PostPreviewContent } from '@//:modules/content/Posts'
 import type { PostsHorizontalPreviewFragment$key } from '@//:artifacts/PostsHorizontalPreviewFragment.graphql'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { ClickableTile, GridTile, GridWrap, LinkTile } from '@//:modules/content/ContentSelection'
-import { Link } from '@//:modules/routing'
+import { GridTile, GridWrap, LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {
   query: PostsHorizontalPreviewFragment$key | null

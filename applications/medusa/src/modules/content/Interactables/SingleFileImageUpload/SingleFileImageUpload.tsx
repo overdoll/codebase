@@ -38,8 +38,6 @@ export default function SingleFileImageUpload ({
 
   const [response, setResponse] = useState<string | undefined>(undefined)
 
-  const [fileUrl, setFileUrl] = useState<string | undefined>(undefined)
-
   const notify = useToast()
 
   const removeUpload = (): void => {
@@ -56,7 +54,6 @@ export default function SingleFileImageUpload ({
       const fileId = url.substring(url.lastIndexOf('/') + 1)
       setResponse(fileId)
       setFile(file)
-      setFileUrl(url)
       onChange(fileId)
       setProgress(undefined)
     })

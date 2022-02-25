@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
@@ -9,7 +9,7 @@ import { formatDistanceStrict, isPast } from 'date-fns'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
-import { Collapse, CollapseBody, CollapseButton } from '../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 const UsernameQueryGQL = graphql`
   query UsernamesQuery {
@@ -37,11 +37,6 @@ export default function Usernames (props: Props): JSX.Element | null {
   )
 
   const data = useFragment<UsernamesSettingsFragment$key>(UsernameFragmentGQL, queryData.viewer)
-
-  const {
-    isOpen: isFormOpen,
-    onToggle: onToggleForm
-  } = useDisclosure()
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)

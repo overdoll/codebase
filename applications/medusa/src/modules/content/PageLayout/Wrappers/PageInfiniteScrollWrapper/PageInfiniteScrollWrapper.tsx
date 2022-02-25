@@ -5,9 +5,7 @@ interface Props {
   children: ReactNode
 }
 
-export default function PageInfiniteScrollWrapper ({
-  children,
-}: Props): JSX.Element {
+export default function PageInfiniteScrollWrapper ({ children }: Props): JSX.Element {
   return (
     <Center>
       <Box

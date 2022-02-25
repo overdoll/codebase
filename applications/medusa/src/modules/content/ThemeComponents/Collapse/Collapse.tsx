@@ -1,10 +1,4 @@
-import {
-  ButtonProps,
-  Collapse as ChakraCollapse,
-  useDisclosure,
-  UseDisclosureProps,
-  UseDisclosureReturn
-} from '@chakra-ui/react'
+import { ButtonProps, Collapse as ChakraCollapse, useDisclosure, UseDisclosureProps } from '@chakra-ui/react'
 import { createContext, ReactNode, useContext } from 'react'
 import Button from '../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
@@ -16,7 +10,7 @@ interface DisclosureProps {
   onToggle: () => void
 }
 
-interface CollapseProps extends CollapseOptions{
+interface CollapseProps extends CollapseOptions {
   children: ReactNode
 }
 

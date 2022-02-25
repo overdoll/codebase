@@ -1,4 +1,3 @@
-export { default as SingleSelector } from './components/SingleSelector/SingleSelector'
 export { default as StackTile } from './components/StackTile/StackTile'
 export { default as GridWrap } from './components/GridWrap/GridWrap'
 export { default as GridTile } from './components/GridTile/GridTile'
