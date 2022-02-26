@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "billing.go",
         "cancellation.go",
+        "ccbill.go",
         "resolvers.go",
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/queries",

@@ -38,7 +38,7 @@ func NewTransactionDetailsFromEncryptedToken(request *principal.Principal, token
 	if decrypted.CcbillTransactionDenied != nil {
 		approved = false
 		declineCode = &decrypted.CcbillTransactionDenied.Code
-		declineText = &decrypted.CcbillTransactionDenied.Code
+		declineText = &decrypted.CcbillTransactionDenied.Reason
 		id = decrypted.CcbillTransactionDenied.Id
 	}
 

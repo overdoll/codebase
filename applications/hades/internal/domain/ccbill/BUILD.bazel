@@ -9,6 +9,7 @@ go_library(
         "ccbill_transaction.go",
         "ccbill_transaction_details.go",
         "charge_by_previous_club_supporter_payment_url.go",
+        "charge_by_previous_result.go",
         "club_supporter_payment_link.go",
         "flexforms_payment_link.go",
         "payment_flow_callback_template.go",

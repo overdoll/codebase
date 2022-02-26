@@ -17,7 +17,7 @@ func PaymentFlow(app *app.Application) gin.HandlerFunc {
 
 		if err != nil {
 			if err == ccbill.ErrFlexFormsPaymentLinkExpired {
-				c.Redirect(http.StatusFound, "/api/ccbill/callback?overdollError=expired_token")
+				c.Data(http.StatusBadRequest, "text", []byte("expired link"))
 				return
 			}
 		}

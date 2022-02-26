@@ -285,8 +285,8 @@ type AccountSavedPaymentMethod struct {
 
 // Connection of the account saved payment method
 type AccountSavedPaymentMethodConnection struct {
-	Edges    []*AccountClubSupporterSubscriptionEdge `json:"edges"`
-	PageInfo *relay.PageInfo                         `json:"pageInfo"`
+	Edges    []*AccountSavedPaymentMethodEdge `json:"edges"`
+	PageInfo *relay.PageInfo                  `json:"pageInfo"`
 }
 
 // Edge of the account saved payment method
@@ -297,8 +297,8 @@ type AccountSavedPaymentMethodEdge struct {
 
 // Connection of the account transaction history.
 type AccountTransactionHistoryConnection struct {
-	Edges    []*AccountClubSupporterSubscriptionEdge `json:"edges"`
-	PageInfo *relay.PageInfo                         `json:"pageInfo"`
+	Edges    []*AccountTransactionHistoryEdge `json:"edges"`
+	PageInfo *relay.PageInfo                  `json:"pageInfo"`
 }
 
 // Edge of the the account transaction history.
@@ -432,6 +432,8 @@ type CCBillTransactionDetails struct {
 	Approved bool `json:"approved"`
 	// The error from CCBill, if the transaction was not approved.
 	DeclineError *CCBillDeclineError `json:"declineError"`
+	// The decline code from CCBill.
+	DeclineCode *string `json:"declineCode"`
 	// The decline text from CCBill.
 	DeclineText *string `json:"declineText"`
 	// If this transaction was approved, poll this field to until this is not null anymore.

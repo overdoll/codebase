@@ -1,4 +1,4 @@
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, PreloadedQuery, useMutation } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
 import {
   ButtonGroup,
@@ -11,7 +11,9 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { TestPaymentFlowMutation } from '@//:artifacts/TestPaymentFlowMutation.graphql'
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import TestPaymentFlowTransaction from './TestPaymentFlowTransaction'
+import { TestPaymentFlowTransactionQuery } from '@//:artifacts/TestPaymentFlowTransactionQuery.graphql'
 
 const TestPaymentFlowGQL = graphql`
   mutation TestPaymentFlowMutation($input: GenerateCCBillClubSupporterPaymentLinkInput!) {
@@ -21,13 +23,19 @@ const TestPaymentFlowGQL = graphql`
   }
 `
 
+interface Props {
+  prepared: {
+    testPaymentFlowTransactionQuery: PreloadedQuery<TestPaymentFlowTransactionQuery>
+  }
+}
+
 let timer: any = null
 
 // poll every 500ms for a window close
 const pollCloseMS = 500
 
 // SAMPLE PAYMENT FLOW WITH WINDOW.OPEN
-export default function TestPaymentFlow (): JSX.Element {
+export default function TestPaymentFlow ({ prepared }: Props): JSX.Element {
   const [commit, isInFlight] = useMutation<TestPaymentFlowMutation>(TestPaymentFlowGQL)
   const [origin, updateOrigin] = useState('')
   const windowReference = useRef<Window | null>(null)
@@ -69,9 +77,7 @@ export default function TestPaymentFlow (): JSX.Element {
 
   // grab the actual origin of our link
   const updateOriginFormatted = (link: string): void => {
-    console.log(link)
     const url = new URL(link)
-    console.log(url.origin)
     updateOrigin(url.origin)
   }
 
@@ -87,7 +93,7 @@ export default function TestPaymentFlow (): JSX.Element {
     }
 
     // our new token
-    updateTransactionToken(event.data.token)
+    updateTransactionToken(event.data.payload.token)
     closeWindow()
   }
 
@@ -167,7 +173,12 @@ export default function TestPaymentFlow (): JSX.Element {
         {transactionToken !== ''
           ? (
             <div>
-              transaction finished
+              <Suspense fallback='loading transaction details...'>
+                <TestPaymentFlowTransaction
+                  token={transactionToken}
+                  preloadedQuery={prepared.testPaymentFlowTransactionQuery}
+                />
+              </Suspense>
             </div>
             )
           : (

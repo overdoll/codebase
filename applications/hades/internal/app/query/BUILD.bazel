@@ -9,6 +9,7 @@ go_library(
         "cancellation_reason_by_id.go",
         "cancellation_reasons.go",
         "ccbill_subscription_details.go",
+        "ccbill_transaction_details.go",
         "club_supporter_pricing.go",
         "club_supporter_subscription_finalized.go",
         "principal_by_id.go",

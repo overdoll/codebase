@@ -173,7 +173,19 @@ const routes: Route[] = [
           await import(
             './domain/TestPaymentFlow/TestPaymentFlow'
           )
-        )
+        ),
+        prepare: () => {
+          const TestPaymentFlowTransaction = require('@//:artifacts/TestPaymentFlowTransactionQuery.graphql')
+          return {
+            testPaymentFlowTransactionQuery: {
+              query: TestPaymentFlowTransaction,
+              variables: { token: '' },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/join',

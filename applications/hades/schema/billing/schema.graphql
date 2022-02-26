@@ -566,7 +566,7 @@ type AccountSavedPaymentMethodEdge {
 
 """Connection of the account saved payment method"""
 type AccountSavedPaymentMethodConnection {
-  edges: [AccountClubSupporterSubscriptionEdge!]!
+  edges: [AccountSavedPaymentMethodEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -578,7 +578,7 @@ type AccountTransactionHistoryEdge {
 
 """Connection of the account transaction history."""
 type AccountTransactionHistoryConnection {
-  edges: [AccountClubSupporterSubscriptionEdge!]!
+  edges: [AccountTransactionHistoryEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -621,6 +621,9 @@ type CCBillTransactionDetails {
 
   """The error from CCBill, if the transaction was not approved."""
   declineError: CCBillDeclineError
+
+  """The decline code from CCBill."""
+  declineCode: String
 
   """The decline text from CCBill."""
   declineText: String

@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account.go",
         "account_club_supporter_subscription.go",
+        "ccbill_transaction_details.go",
         "club.go",
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/resolvers",
@@ -12,6 +13,7 @@ go_library(
     deps = [
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/query",
+        "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/ports/graphql/types",
         "//libraries/paging",
         "//libraries/passport",

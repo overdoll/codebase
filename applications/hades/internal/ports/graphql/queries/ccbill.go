@@ -15,6 +15,10 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 		return nil, err
 	}
 
+	if token == "" {
+		return nil, nil
+	}
+
 	result, err := r.App.Queries.CCBillTransactionDetails.Handle(ctx, query.CCBillTransactionDetails{
 		Principal: principal.FromContext(ctx),
 		Token:     token,
@@ -37,5 +41,6 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 		Approved:     result.Approved(),
 		DeclineError: declineError,
 		DeclineText:  result.DeclineText(),
+		DeclineCode:  result.DeclineCode(),
 	}, nil
 }

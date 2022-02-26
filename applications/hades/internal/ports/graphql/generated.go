@@ -280,6 +280,7 @@ type ComplexityRoot struct {
 
 	CCBillTransactionDetails struct {
 		Approved                               func(childComplexity int) int
+		DeclineCode                            func(childComplexity int) int
 		DeclineError                           func(childComplexity int) int
 		DeclineText                            func(childComplexity int) int
 		ID                                     func(childComplexity int) int
@@ -1569,6 +1570,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CCBillTransactionDetails.Approved(childComplexity), true
 
+	case "CCBillTransactionDetails.declineCode":
+		if e.complexity.CCBillTransactionDetails.DeclineCode == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.DeclineCode(childComplexity), true
+
 	case "CCBillTransactionDetails.declineError":
 		if e.complexity.CCBillTransactionDetails.DeclineError == nil {
 			break
@@ -2772,7 +2780,7 @@ type AccountSavedPaymentMethodEdge {
 
 """Connection of the account saved payment method"""
 type AccountSavedPaymentMethodConnection {
-  edges: [AccountClubSupporterSubscriptionEdge!]!
+  edges: [AccountSavedPaymentMethodEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -2784,7 +2792,7 @@ type AccountTransactionHistoryEdge {
 
 """Connection of the account transaction history."""
 type AccountTransactionHistoryConnection {
-  edges: [AccountClubSupporterSubscriptionEdge!]!
+  edges: [AccountTransactionHistoryEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -2827,6 +2835,9 @@ type CCBillTransactionDetails {
 
   """The error from CCBill, if the transaction was not approved."""
   declineError: CCBillDeclineError
+
+  """The decline code from CCBill."""
+  declineCode: String
 
   """The decline text from CCBill."""
   declineText: String
@@ -7198,9 +7209,9 @@ func (ec *executionContext) _AccountSavedPaymentMethodConnection_edges(ctx conte
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.AccountClubSupporterSubscriptionEdge)
+	res := resTmp.([]*types.AccountSavedPaymentMethodEdge)
 	fc.Result = res
-	return ec.marshalNAccountClubSupporterSubscriptionEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscriptionEdgeᚄ(ctx, field.Selections, res)
+	return ec.marshalNAccountSavedPaymentMethodEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSavedPaymentMethodEdgeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSavedPaymentMethodConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountSavedPaymentMethodConnection) (ret graphql.Marshaler) {
@@ -7338,9 +7349,9 @@ func (ec *executionContext) _AccountTransactionHistoryConnection_edges(ctx conte
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.AccountClubSupporterSubscriptionEdge)
+	res := resTmp.([]*types.AccountTransactionHistoryEdge)
 	fc.Result = res
-	return ec.marshalNAccountClubSupporterSubscriptionEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscriptionEdgeᚄ(ctx, field.Selections, res)
+	return ec.marshalNAccountTransactionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionHistoryEdgeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransactionHistoryConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransactionHistoryConnection) (ret graphql.Marshaler) {
@@ -9169,6 +9180,38 @@ func (ec *executionContext) _CCBillTransactionDetails_declineError(ctx context.C
 	res := resTmp.(*types.CCBillDeclineError)
 	fc.Result = res
 	return ec.marshalOCCBillDeclineError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillDeclineError(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_declineCode(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeclineCode, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillTransactionDetails_declineText(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
@@ -15263,6 +15306,13 @@ func (ec *executionContext) _CCBillTransactionDetails(ctx context.Context, sel a
 
 			out.Values[i] = innerFunc(ctx)
 
+		case "declineCode":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillTransactionDetails_declineCode(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "declineText":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CCBillTransactionDetails_declineText(ctx, field, obj)
@@ -17106,6 +17156,60 @@ func (ec *executionContext) marshalNAccountSavedPaymentMethodConnection2ᚖoverd
 	return ec._AccountSavedPaymentMethodConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNAccountSavedPaymentMethodEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSavedPaymentMethodEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountSavedPaymentMethodEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAccountSavedPaymentMethodEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSavedPaymentMethodEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNAccountSavedPaymentMethodEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountSavedPaymentMethodEdge(ctx context.Context, sel ast.SelectionSet, v *types.AccountSavedPaymentMethodEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccountSavedPaymentMethodEdge(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNAccountTransactionHistory2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionHistory(ctx context.Context, sel ast.SelectionSet, v types.AccountTransactionHistory) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -17128,6 +17232,60 @@ func (ec *executionContext) marshalNAccountTransactionHistoryConnection2ᚖoverd
 		return graphql.Null
 	}
 	return ec._AccountTransactionHistoryConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNAccountTransactionHistoryEdge2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionHistoryEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountTransactionHistoryEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAccountTransactionHistoryEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionHistoryEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNAccountTransactionHistoryEdge2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionHistoryEdge(ctx context.Context, sel ast.SelectionSet, v *types.AccountTransactionHistoryEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccountTransactionHistoryEdge(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNAccountTransactionType2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionType(ctx context.Context, v interface{}) (types.AccountTransactionType, error) {
