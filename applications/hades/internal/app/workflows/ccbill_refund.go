@@ -42,7 +42,6 @@ func CCBillRefund(ctx workflow.Context, payload CCBillRefundPayload) error {
 	if err := workflow.ExecuteActivity(ctx, a.CreateRefundClubSubscriptionAccountTransactionRecord,
 		activities.CreateRefundClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,

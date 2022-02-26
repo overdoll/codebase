@@ -11,32 +11,41 @@ import (
 // bucketing logic stolen from https://blog.discord.com/how-discord-stores-billions-of-messages-7fa6ec7ee4c7 :)
 
 const (
-	OverdollEpoch = 1420070400000
-	BucketSize    = 1000 * 60 * 60 * 24 * 7
+	overdollEpoch = 1420070400000
+	weekSize      = 1000 * 60 * 60 * 24 * 7
+	monthSize     = 1000 * 60 * 60 * 24 * 7 * 4
 )
 
-func timestampToBucket(timestamp int) int {
-	return timestamp / BucketSize
+func timestampToWeekBucket(timestamp int) int {
+	return timestamp / weekSize
 }
 
-func MakeBucketFromTimestamp(tm time.Time) int {
-	return timestampToBucket(int(tm.Unix()))
+func timestampToMonthBucket(timestamp int) int {
+	return timestamp / monthSize
 }
 
-func MakeBucketFromKSUID(target string) (int, error) {
+func MakeWeeklyBucketFromTimestamp(tm time.Time) int {
+	return timestampToWeekBucket(int(tm.Unix()))
+}
+
+func MakeMonthlyBucketFromTimestamp(tm time.Time) int {
+	return timestampToMonthBucket(int(tm.Unix()))
+}
+
+func MakeWeeklyBucketFromKSUID(target string) (int, error) {
 	id, err := ksuid.Parse(target)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return timestampToBucket(int(id.Time().Unix())), nil
+	return timestampToWeekBucket(int(id.Time().Unix())), nil
 }
 
 func MakeBucketsFromTimeRange(from, to time.Time) []int {
 
-	startBucket := MakeBucketFromTimestamp(from)
-	endBucket := MakeBucketFromTimestamp(to)
+	startBucket := MakeWeeklyBucketFromTimestamp(from)
+	endBucket := MakeWeeklyBucketFromTimestamp(to)
 
 	var rng []int
 
@@ -48,19 +57,19 @@ func MakeBucketsFromTimeRange(from, to time.Time) []int {
 }
 
 func MakeBucket() int {
-	return timestampToBucket(int(time.Now().Unix())*1000 - OverdollEpoch)
+	return timestampToWeekBucket(int(time.Now().Unix())*1000 - overdollEpoch)
 }
 
 func GetBuckets(start, end string) ([]int, error) {
 	var buckets []int
 
-	startId, err := MakeBucketFromKSUID(start)
+	startId, err := MakeWeeklyBucketFromKSUID(start)
 
 	if err != nil {
 		return nil, err
 	}
 
-	endId, err := MakeBucketFromKSUID(end)
+	endId, err := MakeWeeklyBucketFromKSUID(end)
 
 	if err != nil {
 		return nil, err

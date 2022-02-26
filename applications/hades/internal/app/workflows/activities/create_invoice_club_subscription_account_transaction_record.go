@@ -11,7 +11,6 @@ type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
 	AccountId string
 
 	CCBillSubscriptionId string
-	CCBillTransactionId  string
 
 	ClubId    string
 	Timestamp string
@@ -77,7 +76,6 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
-		request.CCBillTransactionId,
 		timestamp,
 		billedAtDate,
 		nextBillingDate,

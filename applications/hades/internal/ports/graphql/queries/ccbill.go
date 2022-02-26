@@ -28,7 +28,28 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 		return nil, err
 	}
 
-	var declineError *types.CCBillDeclineError
+	var declineError types.CCBillDeclineError
+
+	if result.DeclineCode() != nil {
+		switch *result.DeclineCode() {
+		case "11":
+			declineError = types.CCBillDeclineErrorTransactionDeclined
+		case "24":
+			declineError = types.CCBillDeclineErrorTransactionDeniedOrRefusedByBank
+		case "29":
+			declineError = types.CCBillDeclineErrorCardExpired
+		case "31":
+			declineError = types.CCBillDeclineErrorInsufficientFunds
+		case "38":
+			declineError = types.CCBillDeclineErrorTransactionDeniedOrRefusedByBank
+		case "39":
+			declineError = types.CCBillDeclineErrorRateLimitError
+		case "45":
+			declineError = types.CCBillDeclineErrorTransactionApprovalRequired
+		default:
+			declineError = types.CCBillDeclineErrorGeneralSystemError
+		}
+	}
 
 	var id relay.ID
 
@@ -39,7 +60,7 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 	return &types.CCBillTransactionDetails{
 		ID:           id,
 		Approved:     result.Approved(),
-		DeclineError: declineError,
+		DeclineError: &declineError,
 		DeclineText:  result.DeclineText(),
 		DeclineCode:  result.DeclineCode(),
 	}, nil

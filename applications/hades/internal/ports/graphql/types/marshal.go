@@ -358,7 +358,6 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	id := relay.NewID(AccountNewTransactionHistory{}, result.Id())
 
 	subscriptionDetails := &CCBillSubscriptionTransaction{
-		CcbillTransactionID:  result.CCBillTransactionId(),
 		CcbillSubscriptionID: result.CCBillSubscriptionId(),
 	}
 

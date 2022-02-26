@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/bucket"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -131,7 +132,6 @@ var accountTransactionHistoryByAccountTable = table.New(table.Metadata{
 		"ccbill_error_code",
 		"ccbill_reason",
 		"ccbill_subscription_id",
-		"ccbill_transaction_id",
 	},
 	PartKey: []string{"account_id", "bucket"},
 	SortKey: []string{"id"},
@@ -167,7 +167,6 @@ var accountTransactionHistoryTable = table.New(table.Metadata{
 		"ccbill_error_code",
 		"ccbill_reason",
 		"ccbill_subscription_id",
-		"ccbill_transaction_id",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -199,7 +198,6 @@ type accountTransactionHistory struct {
 	CCBillErrorCode      *string `db:"ccbill_error_code"`
 	CCBillReason         *string `db:"ccbill_reason"`
 	CCBillSubscriptionId string  `db:"ccbill_subscription_id"`
-	CCBillTransactionId  *string `db:"ccbill_transaction_id"`
 }
 
 var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
@@ -275,7 +273,7 @@ func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
 
 	encryptedPaymentMethod, err := crypt.Encrypt(string(u))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to encrypt payment method: %v", err)
 	}
 
 	return encryptedPaymentMethod, nil
@@ -389,7 +387,7 @@ func (r BillingCassandraRepository) CreateAccountSavedPaymentMethodOperator(ctx 
 		Query(accountSavedPaymentMethodTable.Insert()).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return err
+		return fmt.Errorf("failed to create saved payment method: %v", err)
 	}
 
 	return nil
@@ -534,7 +532,7 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 		Query(accountSavedPaymentMethodTable.Insert()).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return err
+		return fmt.Errorf("failed to create account club supporter subscription: %v", err)
 	}
 
 	return nil
@@ -845,7 +843,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx
 			Id: transactionHistoryId,
 		}).
 		Get(&transaction); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to account transaction history: %v", err)
 	}
 
 	var paymentMethod *billing.PaymentMethod
@@ -874,7 +872,6 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx
 		transaction.BilledAtDate,
 		transaction.NextBillingDate,
 		transaction.CCBillSubscriptionId,
-		transaction.CCBillTransactionId,
 		transaction.CCBillErrorText,
 		transaction.CCBillErrorCode,
 		transaction.CCBillReason,
@@ -898,7 +895,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context
 
 func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
 
-	var encrypted *string
+	var encrypted string
 
 	if accountHistory.PaymentMethod() != nil {
 
@@ -908,7 +905,26 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 			return err
 		}
 
-		encrypted = &enc
+		encrypted = enc
+	} else {
+
+		// new/invoice transactions - grab billing details from ccbill (these details are not added automatically)
+		if accountHistory.CCBillSubscriptionId() != "" && (accountHistory.Transaction() == billing.New || accountHistory.Transaction() == billing.Invoice) {
+
+			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, accountHistory.CCBillSubscriptionId())
+
+			if err != nil {
+				return err
+			}
+
+			enc, err := encryptPaymentMethod(ccbill.PaymentMethod())
+
+			if err != nil {
+				return err
+			}
+
+			encrypted = enc
+		}
 	}
 
 	var currency *string
@@ -920,11 +936,11 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 
 	transactionHistory := &accountTransactionHistory{
 		AccountId:               accountHistory.AccountId(),
-		Bucket:                  0,
+		Bucket:                  bucket.MakeMonthlyBucketFromTimestamp(time.Now()),
 		Id:                      accountHistory.Id(),
 		TransactionType:         accountHistory.Transaction().String(),
 		SupportedClubId:         accountHistory.SupportedClubId(),
-		EncryptedPaymentMethod:  encrypted,
+		EncryptedPaymentMethod:  &encrypted,
 		Amount:                  accountHistory.Amount(),
 		Currency:                currency,
 		Timestamp:               accountHistory.Timestamp(),
@@ -936,12 +952,12 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		CCBillErrorCode:         accountHistory.CCBillErrorCode(),
 		CCBillReason:            accountHistory.CCBillReason(),
 		CCBillSubscriptionId:    accountHistory.CCBillSubscriptionId(),
-		CCBillTransactionId:     accountHistory.CCBillTransactionId(),
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	stmt, _ := accountTransactionHistoryTable.Insert()
+
 	batch.Query(stmt,
 		transactionHistory.Id,
 		transactionHistory.AccountId,
@@ -960,7 +976,6 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		transactionHistory.CCBillErrorCode,
 		transactionHistory.CCBillReason,
 		transactionHistory.CCBillSubscriptionId,
-		transactionHistory.CCBillTransactionId,
 	)
 
 	stmt, _ = accountTransactionHistoryByAccountTable.Insert()
@@ -983,12 +998,11 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		transactionHistory.CCBillErrorCode,
 		transactionHistory.CCBillReason,
 		transactionHistory.CCBillSubscriptionId,
-		transactionHistory.CCBillTransactionId,
 	)
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return err
+		return fmt.Errorf("failed to insert transaction history: %v", err)
 	}
 
 	return nil
@@ -1000,64 +1014,79 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 		return nil, err
 	}
 
-	var accountTransactions []*accountTransactionHistory
-
-	builder := accountTransactionHistoryByAccountTable.SelectBuilder()
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	if err := builder.Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountTransactionHistory{
-			AccountId: filters.AccountId(),
-			Bucket:    0,
-		}).
-		Select(&accountTransactions); err != nil {
-		return nil, fmt.Errorf("failed to get account transaction history: %v", err)
-	}
-
 	var accountTransactionsMorphed []*billing.AccountTransactionHistory
 
-	for _, transaction := range accountTransactions {
+	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(filters.From())
 
-		var paymentMethod *billing.PaymentMethod
+	endingBucket := 0
 
-		if transaction.EncryptedPaymentMethod != nil {
-			decrypt, err := decryptPaymentMethod(*transaction.EncryptedPaymentMethod)
+	if filters.To() != nil {
+		endingBucket = bucket.MakeMonthlyBucketFromTimestamp(*filters.To())
+	}
 
-			if err != nil {
+	// iterate through all buckets starting from x bucket until we have enough values
+	for bucketId := startingBucket; bucketId > endingBucket; bucketId-- {
+
+		var accountTransactions []*accountTransactionHistory
+
+		builder := accountTransactionHistoryByAccountTable.SelectBuilder()
+
+		if cursor != nil {
+			if err := cursor.BuildCassandra(builder, "id", true); err != nil {
 				return nil, err
 			}
-
-			paymentMethod = decrypt
 		}
 
-		transactionItem := billing.UnmarshalAccountTransactionHistoryFromDatabase(
-			transaction.AccountId,
-			transaction.Id,
-			transaction.Timestamp,
-			transaction.TransactionType,
-			transaction.SupportedClubId,
-			paymentMethod,
-			transaction.Amount,
-			transaction.Currency,
-			transaction.IsRecurring,
-			transaction.BillingFailureRetryDate,
-			transaction.BilledAtDate,
-			transaction.NextBillingDate,
-			transaction.CCBillSubscriptionId,
-			transaction.CCBillTransactionId,
-			transaction.CCBillErrorText,
-			transaction.CCBillErrorCode,
-			transaction.CCBillReason,
-		)
+		if err := builder.Query(r.session).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(&accountTransactionHistory{
+				AccountId: filters.AccountId(),
+				Bucket:    bucketId,
+			}).
+			Select(&accountTransactions); err != nil {
+			return nil, fmt.Errorf("failed to get account transaction history: %v", err)
+		}
 
-		transactionItem.Node = paging.NewNode(transaction.Id)
-		accountTransactionsMorphed = append(accountTransactionsMorphed, transactionItem)
+		for _, transaction := range accountTransactions {
+
+			var paymentMethod *billing.PaymentMethod
+
+			if transaction.EncryptedPaymentMethod != nil {
+				decrypt, err := decryptPaymentMethod(*transaction.EncryptedPaymentMethod)
+
+				if err != nil {
+					return nil, err
+				}
+
+				paymentMethod = decrypt
+			}
+
+			transactionItem := billing.UnmarshalAccountTransactionHistoryFromDatabase(
+				transaction.AccountId,
+				transaction.Id,
+				transaction.Timestamp,
+				transaction.TransactionType,
+				transaction.SupportedClubId,
+				paymentMethod,
+				transaction.Amount,
+				transaction.Currency,
+				transaction.IsRecurring,
+				transaction.BillingFailureRetryDate,
+				transaction.BilledAtDate,
+				transaction.NextBillingDate,
+				transaction.CCBillSubscriptionId,
+				transaction.CCBillErrorText,
+				transaction.CCBillErrorCode,
+				transaction.CCBillReason,
+			)
+
+			transactionItem.Node = paging.NewNode(transaction.Id)
+			accountTransactionsMorphed = append(accountTransactionsMorphed, transactionItem)
+		}
+
+		if cursor.GetLimit() == len(accountTransactionsMorphed) {
+			break
+		}
 	}
 
 	return accountTransactionsMorphed, nil

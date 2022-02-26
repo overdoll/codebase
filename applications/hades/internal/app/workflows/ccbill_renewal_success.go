@@ -43,7 +43,6 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransactionRecord,
 		activities.CreateInvoiceClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,

@@ -42,7 +42,6 @@ func CCBillChargeback(ctx workflow.Context, payload CCBillChargebackPayload) err
 	if err := workflow.ExecuteActivity(ctx, a.CreateChargebackClubSubscriptionAccountTransactionRecord,
 		activities.CreateChargebackClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,

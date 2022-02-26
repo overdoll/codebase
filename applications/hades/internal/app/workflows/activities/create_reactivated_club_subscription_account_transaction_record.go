@@ -12,9 +12,7 @@ type CreateReactivatedClubSubscriptionAccountTransactionRecord struct {
 	Timestamp string
 
 	CCBillSubscriptionId string
-	CCBillTransactionId  string
-
-	NextBillingDate string
+	NextBillingDate      string
 }
 
 func (h *Activities) CreateReactivatedClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateReactivatedClubSubscriptionAccountTransactionRecord) error {
@@ -35,7 +33,6 @@ func (h *Activities) CreateReactivatedClubSubscriptionAccountTransactionRecord(c
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
-		request.CCBillTransactionId,
 		timestamp,
 		nextBillingDate,
 	)

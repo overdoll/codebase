@@ -11,7 +11,6 @@ type CreateRefundClubSubscriptionAccountTransactionRecord struct {
 	AccountId string
 
 	CCBillSubscriptionId string
-	CCBillTransactionId  string
 
 	ClubId    string
 	Timestamp string
@@ -55,7 +54,6 @@ func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx co
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
-		request.CCBillTransactionId,
 		timestamp,
 		amount,
 		request.Currency,

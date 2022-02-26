@@ -148,13 +148,13 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
 		activities.CreateNewClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
 			Timestamp:            payload.Timestamp,
 			Amount:               payload.BilledRecurringPrice,
 			Currency:             payload.BilledCurrency,
 			NextBillingDate:      payload.NextRenewalDate,
+			BillingDate:          payload.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -178,7 +178,6 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
 
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
 			NextRenewalDate:      payload.NextRenewalDate,

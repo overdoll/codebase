@@ -37,7 +37,6 @@ func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
 	if err := workflow.ExecuteActivity(ctx, a.CreateVoidClubSubscriptionAccountTransactionRecord,
 		activities.CreateVoidClubSubscriptionAccountTransactionRecord{
 			CCBillSubscriptionId: payload.SubscriptionId,
-			CCBillTransactionId:  payload.TransactionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,

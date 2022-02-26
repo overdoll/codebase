@@ -25,7 +25,6 @@ go_library(
         "unravel_ccbill_payment.go",
         "update_account_club_support_billing_date.go",
         "update_ccbill_subscription_details.go",
-        "validate_ccbill_digest.go",
         "void_or_refund_ccbill_subscription.go",
     ],
     importpath = "overdoll/applications/hades/internal/app/workflows/activities",

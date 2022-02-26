@@ -13,7 +13,6 @@ type CreateAccountClubSupportSubscription struct {
 	AccountId            string
 	ClubId               string
 	CCBillSubscriptionId string
-	CCBillTransactionId  string
 
 	Timestamp string
 

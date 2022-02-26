@@ -275,7 +275,6 @@ type ComplexityRoot struct {
 
 	CCBillSubscriptionTransaction struct {
 		CcbillSubscriptionID func(childComplexity int) int
-		CcbillTransactionID  func(childComplexity int) int
 	}
 
 	CCBillTransactionDetails struct {
@@ -1556,13 +1555,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CCBillSubscriptionTransaction.CcbillSubscriptionID(childComplexity), true
 
-	case "CCBillSubscriptionTransaction.ccbillTransactionId":
-		if e.complexity.CCBillSubscriptionTransaction.CcbillTransactionID == nil {
-			break
-		}
-
-		return e.complexity.CCBillSubscriptionTransaction.CcbillTransactionID(childComplexity), true
-
 	case "CCBillTransactionDetails.approved":
 		if e.complexity.CCBillTransactionDetails.Approved == nil {
 			break
@@ -2224,7 +2216,6 @@ var sources = []*ast.Source{
 
 """Represents a CCBill transaction, which may or may not contain these fields."""
 type CCBillSubscriptionTransaction {
-  ccbillTransactionId: String
   ccbillSubscriptionId: String!
 }
 
@@ -9013,38 +9004,6 @@ func (ec *executionContext) _CCBillSubscriptionDetails_updatedAt(ctx context.Con
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CCBillSubscriptionTransaction_ccbillTransactionId(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionTransaction) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "CCBillSubscriptionTransaction",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CcbillTransactionID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _CCBillSubscriptionTransaction_ccbillSubscriptionId(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionTransaction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -15241,13 +15200,6 @@ func (ec *executionContext) _CCBillSubscriptionTransaction(ctx context.Context, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CCBillSubscriptionTransaction")
-		case "ccbillTransactionId":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CCBillSubscriptionTransaction_ccbillTransactionId(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "ccbillSubscriptionId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CCBillSubscriptionTransaction_ccbillSubscriptionId(ctx, field, obj)

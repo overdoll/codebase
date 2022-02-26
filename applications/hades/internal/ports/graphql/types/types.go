@@ -421,8 +421,7 @@ type CCBillSubscriptionDetails struct {
 
 // Represents a CCBill transaction, which may or may not contain these fields.
 type CCBillSubscriptionTransaction struct {
-	CcbillTransactionID  *string `json:"ccbillTransactionId"`
-	CcbillSubscriptionID string  `json:"ccbillSubscriptionId"`
+	CcbillSubscriptionID string `json:"ccbillSubscriptionId"`
 }
 
 type CCBillTransactionDetails struct {

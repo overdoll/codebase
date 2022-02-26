@@ -11,7 +11,6 @@ type CreateChargebackClubSubscriptionAccountTransactionRecord struct {
 	AccountId string
 
 	CCBillSubscriptionId string
-	CCBillTransactionId  string
 
 	ClubId    string
 	Timestamp string
@@ -55,7 +54,6 @@ func (h *Activities) CreateChargebackClubSubscriptionAccountTransactionRecord(ct
 		request.AccountId,
 		request.ClubId,
 		request.CCBillSubscriptionId,
-		request.CCBillTransactionId,
 		timestamp,
 		request.Reason,
 		amount,

@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"github.com/oschwald/geoip2-golang"
+	"net"
 	"overdoll/applications/eva/internal/domain/location"
 )
 
@@ -15,40 +16,39 @@ func NewLocationMaxmindRepository(reader *geoip2.Reader) LocationMaxmindReposito
 }
 
 func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip string) (*location.Location, error) {
-	//fmt.Println(net.ParseIP(ip))
-	//record, err := r.reader.City(net.ParseIP(ip))
-	//
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//subdivision := ""
-	//
-	//if len(record.Subdivisions) > 0 {
-	//	subdivision = record.Subdivisions[0].IsoCode
-	//}
-	//
-	//city := record.City.Names["en"]
-	//country := record.Country.IsoCode
-	//
-	////if subdivision == "" {
-	////	subdivision = "Unknown"
-	////}
-	////
-	////if city == "" {
-	////	city = "Unknown"
-	////}
-	////
-	////if country == "" {
-	////	country = "Unknown"
-	////}
+	record, err := r.reader.City(net.ParseIP(ip))
+
+	if err != nil {
+		return nil, err
+	}
+
+	subdivision := ""
+
+	if len(record.Subdivisions) > 0 {
+		subdivision = record.Subdivisions[0].IsoCode
+	}
+
+	city := record.City.Names["en"]
+	country := record.Country.IsoCode
+
+	if subdivision == "" {
+		subdivision = "Unknown"
+	}
+
+	if city == "" {
+		city = "Unknown"
+	}
+
+	if country == "" {
+		country = "Unknown"
+	}
 
 	return location.UnmarshalLocationFromDatabase(
-		"city",
-		"country",
-		"record.Postal.Code",
-		"subdivision",
-		0,
-		0,
+		city,
+		country,
+		record.Postal.Code,
+		subdivision,
+		record.Location.Latitude,
+		record.Location.Longitude,
 	), nil
 }

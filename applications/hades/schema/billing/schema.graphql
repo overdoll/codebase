@@ -10,7 +10,6 @@ union AccountTransactionHistory = AccountNewTransactionHistory
 
 """Represents a CCBill transaction, which may or may not contain these fields."""
 type CCBillSubscriptionTransaction {
-  ccbillTransactionId: String
   ccbillSubscriptionId: String!
 }
 

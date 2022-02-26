@@ -83,7 +83,7 @@ func NewReportCassandraRepository(session gocqlx.Session) ReportCassandraReposit
 
 func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error) {
 
-	buck, err := bucket.MakeBucketFromKSUID(report.ID())
+	buck, err := bucket.MakeWeeklyBucketFromKSUID(report.ID())
 
 	if err != nil {
 		return nil, err

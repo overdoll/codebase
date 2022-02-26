@@ -75,7 +75,6 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     ccbill_error_code          text,
     ccbill_reason              text,
     ccbill_subscription_id     text,
-    ccbill_transaction_id      text,
 
     primary key ( id )
 );
@@ -108,7 +107,6 @@ CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
     ccbill_error_code          text,
     ccbill_reason              text,
     ccbill_subscription_id     text,
-    ccbill_transaction_id      text,
 
     primary key ( (account_id, bucket), id )
 );

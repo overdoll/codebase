@@ -39,7 +39,7 @@ func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMembe
 
 	member, err := club.NewMember(cmd.Principal, clb, ships)
 
-	if err := h.cr.CreateClubMember(ctx, cmd.Principal, member); err != nil {
+	if err := h.cr.CreateClubMember(ctx, member); err != nil {
 		return nil, err
 	}
 
