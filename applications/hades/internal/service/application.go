@@ -61,7 +61,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session)
-	pricingRepo := adapters.NewBillingPricingRepository(session)
+	pricingRepo := adapters.NewBillingPricingRepository()
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	cancelRepo := adapters.NewCancellationCassandraRepository(session)

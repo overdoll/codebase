@@ -2,9 +2,7 @@ package activities
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
-	"os"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type ValidateCCBillDigest struct {
@@ -13,14 +11,5 @@ type ValidateCCBillDigest struct {
 }
 
 func (h *Activities) ValidateCCBillDigest(ctx context.Context, request ValidateCCBillDigest) (bool, error) {
-
-	ccbillSubscriptionDigestBuilder := md5.New()
-	ccbillSubscriptionDigestBuilder.Write([]byte(request.CCBillSubscriptionId))
-	ccbillSubscriptionDigestBuilder.Write([]byte("1"))
-
-	ccbillSubscriptionDigestBuilder.Write([]byte(os.Getenv("CCBILL_SALT_KEY")))
-
-	digestToCompareAgainst := hex.EncodeToString(ccbillSubscriptionDigestBuilder.Sum(nil)[:])
-
-	return digestToCompareAgainst == request.DynamicPricingValidationDigest, nil
+	return ccbill.ValidateCCBillTransactionAuthorized(request.DynamicPricingValidationDigest, request.CCBillSubscriptionId), nil
 }

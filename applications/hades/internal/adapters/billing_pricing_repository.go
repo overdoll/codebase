@@ -7,11 +7,10 @@ import (
 )
 
 type BillingPricingRepository struct {
-	session gocqlx.Session
 }
 
-func NewBillingPricingRepository(session gocqlx.Session) BillingPricingRepository {
-	return BillingPricingRepository{session: session}
+func NewBillingPricingRepository() BillingPricingRepository {
+	return BillingPricingRepository{}
 }
 
 func (r BillingPricingRepository) GetClubSupporterPricingForLocation(ctx context.Context, location *location.Location, clubId string) (*billing.Price, error) {

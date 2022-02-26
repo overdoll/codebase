@@ -22,7 +22,14 @@ func NewParseCCBillFlexFormsResponseAndGenerateTemplate() ParseCCBillFlexFormsRe
 
 func (h ParseCCBillFlexFormsResponseAndGenerateTemplateHandler) Handle(ctx context.Context, cmd ParseCCBillFlexFormsResponseAndGenerateTemplate) (*string, error) {
 
-	tm, err := ccbill.NewPaymentFlowCallbackTemplate()
+	tm, err := ccbill.NewPaymentFlowCallbackTemplate(
+		cmd.PaymentToken,
+		cmd.CCBillSubscriptionId,
+		cmd.CCBillResponseDigest,
+		cmd.CCBillDenialId,
+		cmd.CCBillDeclineCode,
+		cmd.CCBillDeclineReason,
+	)
 
 	if err != nil {
 		return nil, err

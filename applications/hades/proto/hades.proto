@@ -31,9 +31,25 @@ message CCBillFlexFormsDetails {
   string digest = 7;
 }
 
+message CCBillTransactionDenied {
+  string id = 1;
+  string code = 2;
+  string reason = 3;
+}
+
+message CCBillTransactionAuthorized {
+  string subscriptionId = 1;
+}
+
 message CCBillPayment {
   HeaderConfiguration headerConfiguration = 1;
   CCBillClubSupporter ccbillClubSupporter = 2;
   CCBillFlexFormsDetails ccbillFlexFormsDetails = 3;
   AccountInitiator accountInitiator = 4;
+}
+
+message CCBillTransaction {
+  CCBillPayment ccbillPayment = 1;
+  optional CCBillTransactionDenied ccbillTransactionDenied = 2;
+  optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 3;
 }

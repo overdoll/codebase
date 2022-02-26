@@ -2,9 +2,12 @@
 <html lang='en'>
 <head>
     <meta charset='utf-8'>
-    <title>hello</title>
+    <title>Redirecting...</title>
 </head>
-<body>
-hello
-</body>
+<script>
+  window.opener.postMessage({
+    payload: { token: "{{ .Token }}" },
+    source: 'overdoll-ccbill-flexforms-payment-flow'
+  }, "{{ .Origin }}")
+</script>
 </html>

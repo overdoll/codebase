@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/command"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 func PaymentFlowCallback(app *app.Application) gin.HandlerFunc {
@@ -26,20 +27,18 @@ func PaymentFlowCallback(app *app.Application) gin.HandlerFunc {
 		)
 
 		if err != nil {
+
+			if err == ccbill.ErrSignatureCheckFailed {
+				c.Data(http.StatusBadRequest, "text", []byte("bad signature"))
+				return
+			}
+
 			fmt.Println(err.Error())
-			c.JSON(http.StatusInternalServerError, "error")
+			c.Data(http.StatusInternalServerError, "text", []byte("error"))
 			return
 		}
 
-		c.Writer.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-		if _, err := c.Writer.Write([]byte(*templatedString)); err != nil {
-			fmt.Println(err.Error())
-			c.JSON(http.StatusInternalServerError, "error")
-			return
-		}
-
-		c.JSON(http.StatusOK, nil)
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(*templatedString))
 		return
 	}
 }

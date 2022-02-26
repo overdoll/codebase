@@ -321,14 +321,10 @@ func (m *Club) CanBecomeSupporter(requester *principal.Principal, clubMembership
 		return false, nil
 	}
 
-	if requester.AccountId() == m.ownerAccountId {
-		return false, nil
-	}
-
 	foundClub := false
 
 	for _, membership := range clubMemberships {
-		if membership.clubId == m.id {
+		if membership.clubId == m.id && membership.isSupporter {
 			foundClub = true
 			break
 		}

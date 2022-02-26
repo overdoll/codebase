@@ -38,7 +38,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	}
 
 	if !allowed {
-		return nil, errors.New("cannot generate a link - club not accessible")
+		return nil, errors.New("cannot become supporter - club not accessible")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination

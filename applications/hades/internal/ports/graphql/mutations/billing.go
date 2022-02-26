@@ -23,6 +23,7 @@ func (r *MutationResolver) GenerateCCBillClubSupporterPaymentLink(ctx context.Co
 				Principal:           principal.FromContext(ctx),
 				ClubId:              input.ClubID.GetID(),
 				SavePaymentForLater: input.SavePaymentDetailsForLater,
+				Currency:            input.Currency.String(),
 			},
 		)
 
