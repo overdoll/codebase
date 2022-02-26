@@ -1,7 +1,6 @@
 package workflows
 
 import (
-	"errors"
 	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
@@ -61,10 +60,10 @@ type CCBillNewSaleSuccessPayload struct {
 	RecurringPriceDescription string `json:"recurringPriceDescription"`
 	ReferringUrl              string `json:"referringUrl"`
 
-	SubscriptionTypeId string `json:"subscriptionTypeId"`
-	XFormDigest        string `json:"X-formDigest"`
-	XCurrencyCode      string `json:"X-currencyCode"`
-	XOverdollLocker    string `json:"X-overdollLocker"`
+	SubscriptionTypeId    string `json:"subscriptionTypeId"`
+	XFormDigest           string `json:"X-formDigest"`
+	XCurrencyCode         string `json:"X-currencyCode"`
+	XOverdollPaymentToken string `json:"X-overdollPaymentToken"`
 }
 
 func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayload) error {
@@ -73,25 +72,10 @@ func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayl
 
 	var a *activities.Activities
 
-	var validDigest bool
-
-	if err := workflow.ExecuteActivity(ctx, a.ValidateCCBillDigest,
-		activities.ValidateCCBillDigest{
-			CCBillSubscriptionId:           payload.SubscriptionId,
-			DynamicPricingValidationDigest: payload.DynamicPricingValidationDigest,
-		},
-	).Get(ctx, &validDigest); err != nil {
-		return err
-	}
-
-	if !validDigest {
-		return errors.New("invalid pricing digest")
-	}
-
 	var details *hades.CCBillPayment
 
 	// unravel payment details
-	if err := workflow.ExecuteActivity(ctx, a.UnravelCCBillPaymentLink, payload.XOverdollLocker).Get(ctx, &details); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.UnravelCCBillPaymentLink, payload.XOverdollPaymentToken).Get(ctx, &details); err != nil {
 		return err
 	}
 

@@ -312,7 +312,7 @@ func (r ClubCassandraRepository) getNextClosestEmptyClubMembersPartition(ctx con
 	return targetPartition, nil
 }
 
-func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, requester *principal.Principal, member *club.Member) error {
+func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, member *club.Member) error {
 
 	// get the next partition that is valid
 	partition, err := r.getNextClosestEmptyClubMembersPartition(ctx, member.ClubId())

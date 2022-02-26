@@ -85,13 +85,15 @@ func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, err
 			AccountId: c.accountId,
 		},
 		CcbillFlexFormsDetails: &hades.CCBillFlexFormsDetails{
+			PricingDigest: ccbillFormDigest,
+		},
+		CcbillPricingDetails: &hades.CCBillPricingDetails{
 			InitialPrice:    billInitialPrice,
 			InitialPeriod:   billInitialPeriod,
 			RecurringPrice:  billRecurringPrice,
 			RecurringPeriod: billRecurringPeriod,
 			NumRebills:      billNumberRebills,
 			CurrencyCode:    billCurrencyCode,
-			Digest:          ccbillFormDigest,
 		},
 	}
 

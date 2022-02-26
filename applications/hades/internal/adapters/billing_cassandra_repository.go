@@ -113,7 +113,7 @@ var accountTransactionHistoryByAccountTable = table.New(table.Metadata{
 
 		"transaction_type",
 
-		"supporting_club_id",
+		"supported_club_id",
 
 		"amount",
 		"currency",
@@ -149,7 +149,7 @@ var accountTransactionHistoryTable = table.New(table.Metadata{
 
 		"transaction_type",
 
-		"supporting_club_id",
+		"supported_club_id",
 
 		"amount",
 		"currency",
@@ -203,7 +203,7 @@ type accountTransactionHistory struct {
 }
 
 var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
-	Name: "ccbill_subscriptions",
+	Name: "ccbill_subscription_details",
 	Columns: []string{
 		"ccbill_subscription_id",
 		"supporting_club_id",
@@ -1065,7 +1065,7 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 
 func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*billing.CCBillSubscriptionDetails, error) {
 
-	var ccbillSubscription *ccbillSubscriptionDetails
+	var ccbillSubscription ccbillSubscriptionDetails
 
 	if err := r.session.
 		Query(ccbillSubscriptionDetailsTable.Get()).
@@ -1074,6 +1074,11 @@ func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsByIdOperator(ctx
 			CCBillSubscriptionId: ccbillSubscriptionId,
 		}).
 		Get(&ccbillSubscription); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrCCBillSubscriptionNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get ccbill subscription: %v", err)
 	}
 

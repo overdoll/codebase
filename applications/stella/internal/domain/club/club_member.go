@@ -26,6 +26,14 @@ type Member struct {
 	supporterSince *time.Time
 }
 
+func NewMemberOperator(accountId, clubId string) (*Member, error) {
+	return &Member{
+		accountId: accountId,
+		clubId:    clubId,
+		joinedAt:  time.Now(),
+	}, nil
+}
+
 func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Member) (*Member, error) {
 
 	if requester.IsLocked() {

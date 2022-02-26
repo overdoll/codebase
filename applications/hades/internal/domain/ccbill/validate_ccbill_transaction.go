@@ -18,10 +18,10 @@ func validateCCBillTransaction(hash, id string, val string) bool {
 	return digestToCompareAgainst == hash
 }
 
-func ValidateCCBillTransactionAuthorized(responseDigest string, ccbillSubscriptionId string) bool {
+func validateCCBillTransactionAuthorized(responseDigest string, ccbillSubscriptionId string) bool {
 	return validateCCBillTransaction(responseDigest, ccbillSubscriptionId, "1")
 }
 
-func ValidateCCBillTransactionDenied(responseDigest string, ccbillDenialId string) bool {
+func validateCCBillTransactionDenied(responseDigest string, ccbillDenialId string) bool {
 	return validateCCBillTransaction(responseDigest, ccbillDenialId, "0")
 }

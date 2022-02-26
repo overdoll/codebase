@@ -26,13 +26,16 @@ message HeaderConfiguration {
 }
 
 message CCBillFlexFormsDetails {
+  string pricingDigest = 1;
+}
+
+message CCBillPricingDetails {
   string initialPrice = 1;
   string initialPeriod = 2;
   string recurringPrice = 3;
   string recurringPeriod = 4;
   string numRebills = 5;
   string currencyCode = 6;
-  string digest = 7;
 }
 
 message CCBillTransactionDenied {
@@ -47,9 +50,10 @@ message CCBillTransactionAuthorized {
 
 message CCBillPayment {
   HeaderConfiguration headerConfiguration = 1;
-  CCBillClubSupporter ccbillClubSupporter = 2;
-  CCBillFlexFormsDetails ccbillFlexFormsDetails = 3;
-  AccountInitiator accountInitiator = 4;
+  optional CCBillClubSupporter ccbillClubSupporter = 2;
+  optional CCBillFlexFormsDetails ccbillFlexFormsDetails = 3;
+  CCBillPricingDetails ccbillPricingDetails = 4;
+  AccountInitiator accountInitiator = 5;
 }
 
 message CCBillTransaction {

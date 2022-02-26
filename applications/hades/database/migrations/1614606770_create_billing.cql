@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     club_id                  text,
     status                   text,
     supporter_since          timestamp,
-    last_billing_date        timestamp,
-    next_billing_date        timestamp,
-    billing_amount           float,
+    last_billing_date        date,
+    next_billing_date        date,
+    billing_amount           double,
     billing_currency         text,
 
     cancelled_at             timestamp,
@@ -61,15 +61,15 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
 
     encrypted_payment_method   text,
 
-    amount                     float,
+    amount                     double,
     currency                   text,
 
     is_recurring               boolean,
 
-    billing_failure_retry_date timestamp,
+    billing_failure_retry_date date,
 
-    billed_at_date             timestamp,
-    next_billing_date          timestamp,
+    billed_at_date             date,
+    next_billing_date          date,
 
     ccbill_error_text          text,
     ccbill_error_code          text,
@@ -94,15 +94,15 @@ CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
 
     encrypted_payment_method   text,
 
-    amount                     float,
+    amount                     double,
     currency                   text,
 
     is_recurring               boolean,
 
-    billing_failure_retry_date timestamp,
+    billing_failure_retry_date date,
 
-    billed_at_date             timestamp,
-    next_billing_date          timestamp,
+    billed_at_date             date,
+    next_billing_date          date,
 
     ccbill_error_text          text,
     ccbill_error_code          text,
@@ -124,16 +124,16 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 
     updated_at                   timestamp,
 
-    subscription_initial_price   float,
-    subscription_recurring_price float,
+    subscription_initial_price   double,
+    subscription_recurring_price double,
     subscription_currency        text,
 
-    billed_initial_price         float,
-    billed_recurring_price       float,
+    billed_initial_price         double,
+    billed_recurring_price       double,
     billed_currency              text,
 
-    accounting_initial_price     float,
-    accounting_recurring_price   float,
+    accounting_initial_price     double,
+    accounting_recurring_price   double,
     accounting_currency          text,
 
     idempotency_key              text,

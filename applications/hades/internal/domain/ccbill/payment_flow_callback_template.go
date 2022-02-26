@@ -58,7 +58,7 @@ func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) 
 	if t.ccbillDenialId != "" {
 
 		// verify digest before creating it
-		if !ValidateCCBillTransactionDenied(t.ccbillResponseDigest, t.ccbillDenialId) {
+		if !validateCCBillTransactionDenied(t.ccbillResponseDigest, t.ccbillDenialId) {
 			return nil, ErrSignatureCheckFailed
 		}
 
@@ -73,7 +73,7 @@ func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) 
 	if t.ccbillSubscriptionId != "" {
 
 		// verify subscription ID digest
-		if !ValidateCCBillTransactionAuthorized(t.ccbillResponseDigest, t.ccbillSubscriptionId) {
+		if !validateCCBillTransactionAuthorized(t.ccbillResponseDigest, t.ccbillSubscriptionId) {
 			return nil, ErrSignatureCheckFailed
 		}
 

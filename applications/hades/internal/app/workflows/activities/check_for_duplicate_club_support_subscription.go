@@ -171,6 +171,10 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
+	if err := h.billing.CreateCCBillSubscriptionDetailsOperator(ctx, ccbillSubscription); err != nil {
+		return nil, err
+	}
+
 	// new ccbill subscription record was created
 	return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
 		DuplicateSupportSameSubscription:      false,

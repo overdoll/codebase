@@ -40,15 +40,16 @@ func NewFlexFormsPaymentLinkFromEncryptedPaymentToken(paymentToken string) (*Fle
 func (c *FlexFormsPaymentLink) GenerateFlexFormsPaymentUrl() string {
 
 	ccbillFlexFormsDetails := c.paymentToken.CcbillFlexFormsDetails
+	ccbillPricingDetails := c.paymentToken.CcbillPricingDetails
 
 	return os.Getenv("CCBILL_FLEXFORMS_URL") +
 		"?clientSubacc=" + os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER") +
-		"&initialPrice=" + ccbillFlexFormsDetails.InitialPrice +
-		"&initialPeriod=" + ccbillFlexFormsDetails.InitialPeriod +
-		"&recurringPrice=" + ccbillFlexFormsDetails.RecurringPrice +
-		"&recurringPeriod=" + ccbillFlexFormsDetails.RecurringPeriod +
-		"&numRebills=" + ccbillFlexFormsDetails.NumRebills +
-		"&currencyCode=" + ccbillFlexFormsDetails.CurrencyCode +
-		"&formDigest=" + ccbillFlexFormsDetails.Digest +
+		"&initialPrice=" + ccbillPricingDetails.InitialPrice +
+		"&initialPeriod=" + ccbillPricingDetails.InitialPeriod +
+		"&recurringPrice=" + ccbillPricingDetails.RecurringPrice +
+		"&recurringPeriod=" + ccbillPricingDetails.RecurringPeriod +
+		"&numRebills=" + ccbillPricingDetails.NumRebills +
+		"&currencyCode=" + ccbillPricingDetails.CurrencyCode +
+		"&formDigest=" + ccbillFlexFormsDetails.PricingDigest +
 		"&overdollPaymentToken=" + c.encryptedString
 }

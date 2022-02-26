@@ -24,9 +24,9 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 		ID:        "CCBillNewSaleSuccess_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillNewSaleSuccessPayload
+	var ccbillPayload workflows.CCBillNewSaleSuccessPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -44,9 +44,9 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 		ID:        "CCBillRenewalSuccess_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillRenewalSuccessPayload
+	var ccbillPayload workflows.CCBillRenewalSuccessPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -64,9 +64,9 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 		ID:        "CCBillChargeback_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillChargebackPayload
+	var ccbillPayload workflows.CCBillChargebackPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -84,9 +84,9 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 		ID:        "CCBillRefund_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillRefundPayload
+	var ccbillPayload workflows.CCBillRefundPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -104,9 +104,9 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 		ID:        "CCBillVoid_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillVoidPayload
+	var ccbillPayload workflows.CCBillVoidPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -124,9 +124,9 @@ func (r EventTemporalRepository) CCBillCancellation(ctx context.Context, payload
 		ID:        "CCBillCancellation_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillCancellationPayload
+	var ccbillPayload workflows.CCBillCancellationPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -144,9 +144,9 @@ func (r EventTemporalRepository) CCBillExpiration(ctx context.Context, payload [
 		ID:        "CCBillExpiration_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillExpirationPayload
+	var ccbillPayload workflows.CCBillExpirationPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -164,9 +164,9 @@ func (r EventTemporalRepository) CCBillUserReactivation(ctx context.Context, pay
 		ID:        "CCBillUserReactivation_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillUserReactivationPayload
+	var ccbillPayload workflows.CCBillUserReactivationPayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -184,9 +184,9 @@ func (r EventTemporalRepository) CCBillBillingDateChange(ctx context.Context, pa
 		ID:        "CCBillBillingDateChange_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillBillingDateChangePayload
+	var ccbillPayload workflows.CCBillBillingDateChangePayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -204,9 +204,9 @@ func (r EventTemporalRepository) CCBillCustomerDataUpdate(ctx context.Context, p
 		ID:        "CCBillCustomerDataUpdate_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillCustomerDataUpdatePayload
+	var ccbillPayload workflows.CCBillCustomerDataUpdatePayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
@@ -224,9 +224,9 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 		ID:        "CCBillRenewalFailure_" + uuid.New().String(),
 	}
 
-	var ccbillPayload *workflows.CCBillRenewalFailurePayload
+	var ccbillPayload workflows.CCBillRenewalFailurePayload
 
-	if err := json.Unmarshal(payload, ccbillPayload); err != nil {
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 

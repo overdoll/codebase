@@ -22,6 +22,11 @@ func AddClubSupporter(ctx workflow.Context, clubId, accountId string, supportedA
 
 	// was not already a member, update total count
 	if !alreadyAMember {
+		// adds the member to the list - the account's own list and the club's list
+		if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList, clubId, accountId).Get(ctx, nil); err != nil {
+			return err
+		}
+
 		// spawn a child workflow asynchronously to count the total club member count
 		// will also ensure we only have 1 of this workflow running at any time
 		childWorkflowOptions := workflow.ChildWorkflowOptions{

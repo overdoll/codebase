@@ -63,6 +63,14 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 		AccountInitiator: &hades.AccountInitiator{
 			AccountId: c.accountId,
 		},
+		CcbillPricingDetails: &hades.CCBillPricingDetails{
+			InitialPrice:    billInitialPrice,
+			InitialPeriod:   billInitialPeriod,
+			RecurringPrice:  billRecurringPrice,
+			RecurringPeriod: billRecurringPeriod,
+			NumRebills:      billNumberRebills,
+			CurrencyCode:    billCurrencyCode,
+		},
 	}
 
 	// create an encrypted ccbill payment link that will be passed to other services

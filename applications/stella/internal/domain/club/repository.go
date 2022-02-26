@@ -26,7 +26,7 @@ type Repository interface {
 	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
 
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
-	CreateClubMember(ctx context.Context, requester *principal.Principal, member *Member) error
+	CreateClubMember(ctx context.Context, member *Member) error
 	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error
 	RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error
 	AddClubMemberToList(ctx context.Context, clubId, accountId string) error

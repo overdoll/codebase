@@ -13,12 +13,21 @@ func (h *Activities) AddClubMemberIfNotExists(ctx context.Context, clubId, accou
 		return false, err
 	}
 
-	// club member is nil, create one
 	if clubMember == nil {
-		if err := h.cr.AddClubMemberToList(ctx, clubId, accountId); err != nil {
+
+		clubMember, err = club.NewMemberOperator(accountId, clubId)
+
+		if err != nil {
 			return false, err
 		}
+
+		// club member is nil, create one
+		if err := h.cr.CreateClubMember(ctx, clubMember); err != nil {
+			return false, err
+		}
+
+		return true, nil
 	}
 
-	return clubMember != nil, nil
+	return false, nil
 }
