@@ -21,16 +21,36 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillNewSaleSuccess_" + uuid.New().String(),
+		ID:        "CCBillNewSaleOrUpSaleSuccess_" + uuid.New().String(),
 	}
 
-	var ccbillPayload workflows.CCBillNewSaleSuccessPayload
+	var ccbillPayload workflows.CCBillNewSaleOrUpsaleSuccessPayload
 
 	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
 		return err
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleSuccess, ccbillPayload); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleOrUpSaleSuccess, ccbillPayload); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) CCBillUpSaleSuccess(ctx context.Context, payload []byte) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "CCBillNewSaleOrUpSaleSuccess_" + uuid.New().String(),
+	}
+
+	var ccbillPayload workflows.CCBillNewSaleOrUpsaleSuccessPayload
+
+	if err := json.Unmarshal(payload, &ccbillPayload); err != nil {
+		return err
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleOrUpSaleSuccess, ccbillPayload); err != nil {
 		return err
 	}
 

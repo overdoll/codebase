@@ -7,7 +7,7 @@ import (
 	hades "overdoll/applications/hades/proto"
 )
 
-type CCBillNewSaleSuccessPayload struct {
+type CCBillNewSaleOrUpsaleSuccessPayload struct {
 	AccountingCurrency       string `json:"accountingCurrency"`
 	AccountingCurrencyCode   string `json:"accountingCurrencyCode"`
 	AccountingInitialPrice   string `json:"accountingInitialPrice"`
@@ -66,7 +66,7 @@ type CCBillNewSaleSuccessPayload struct {
 	XOverdollPaymentToken string `json:"X-overdollPaymentToken"`
 }
 
-func CCBillNewSaleSuccess(ctx workflow.Context, payload CCBillNewSaleSuccessPayload) error {
+func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, payload CCBillNewSaleOrUpsaleSuccessPayload) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 

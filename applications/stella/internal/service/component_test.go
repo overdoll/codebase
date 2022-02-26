@@ -114,7 +114,7 @@ func startService() bool {
 
 	client := clients.NewTemporalClient(context.Background())
 
-	srv := ports.NewHttpServer(&application, client)
+	srv := ports.NewHttpServer(&application)
 
 	go bootstrap.InitializeHttpServer(StellaHttpAddr, srv, func() {})
 

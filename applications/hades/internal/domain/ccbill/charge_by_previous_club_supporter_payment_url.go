@@ -82,7 +82,6 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 
 	query := "https://bill.ccbill.com/jpost/billingApi.cgi?" +
 		"clientAccnum=" + ccbillClientAccnum +
-		"&clientSubacc=" + ccbillClientSubacc +
 		"&username=" + ccbillUsername +
 		"&password=" + ccbillPassword +
 		"&action=chargeByPreviousTransactionId" +
@@ -93,6 +92,9 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 		"&rebills=" + billNumberRebills +
 		"&subscriptionId=" + c.ccbillSubscriptionId +
 		"&currencyCode=" + billCurrencyCode +
+		"&newClientAccnum=" + ccbillClientAccnum +
+		"&newClientSubacc=" + ccbillClientSubacc +
+		"&sharedAuthentication=1" +
 		"&overdollPaymentToken=" + *encrypted +
 		"&returnXML=1"
 

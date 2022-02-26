@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"go.temporal.io/sdk/client"
 	"net/http"
 	"os"
 	"overdoll/applications/hades/internal/adapters"
@@ -9,6 +10,7 @@ import (
 	"overdoll/applications/hades/internal/app/command"
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/libraries/mocks"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
@@ -22,9 +24,16 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
+	ccbillClient := &http.Client{}
+
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStellaGrpc(stellaClient),
+			ccbillClient,
+			clients.NewTemporalClient(ctx),
+			func(app app.Application) {
+
+			},
 		),
 		func() {
 			cleanup()
@@ -38,26 +47,29 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 
+	temporalClient := &mocks.TemporalClientMock{}
+
 	return createApplication(ctx,
 			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			StellaServiceMock{},
+			MockCCBillHttpClient{},
+			temporalClient,
+			func(app app.Application) {
+				temporalClient.Activities = app.Activities
+			},
 		),
 		func() {
 			cleanup()
 		}
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, ccbillClient adapters.CCBillHttpClient, client client.Client, post func(app app.Application)) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
-	client := clients.NewTemporalClient(ctx)
-
 	awsSession := bootstrap.InitializeAWSSession()
-
-	ccbillClient := &http.Client{}
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session)
@@ -66,7 +78,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	cancelRepo := adapters.NewCancellationCassandraRepository(session)
 
-	return app.Application{
+	newApp := app.Application{
 		Commands: app.Commands{
 			GenerateCCBillFlexFormsPaymentLink:                        command.NewGenerateCCBillFlexFormsPaymentLink(),
 			ParseCCBillFlexFormsResponseAndGenerateTemplate:           command.NewParseCCBillFlexFormsResponseAndGenerateTemplate(),
@@ -94,4 +106,8 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 		},
 		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella),
 	}
+
+	post(newApp)
+
+	return newApp
 }

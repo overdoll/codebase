@@ -11,12 +11,16 @@ import (
 	"time"
 )
 
+type CCBillHttpClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type CCBillHttpRepository struct {
-	client *http.Client
+	client CCBillHttpClient
 }
 
 // NewCCBillHttpRepository https://ccbill.com/doc/ccbill-api-guide docs
-func NewCCBillHttpRepository(client *http.Client) CCBillHttpRepository {
+func NewCCBillHttpRepository(client CCBillHttpClient) CCBillHttpRepository {
 	return CCBillHttpRepository{client: client}
 }
 

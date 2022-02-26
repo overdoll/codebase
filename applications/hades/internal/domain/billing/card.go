@@ -16,10 +16,11 @@ func NewCard(bin, btype, last4, expiration string) (*Card, error) {
 	}
 
 	return &Card{
-		bin:        bin,
-		btype:      parsedType,
-		last4:      last4,
-		expiration: expiration,
+		bin:   bin,
+		btype: parsedType,
+		last4: last4,
+		// format expiration date correctly
+		expiration: expiration[:2] + "/" + "20" + expiration[2:],
 	}, nil
 }
 

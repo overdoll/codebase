@@ -3,6 +3,7 @@ package event
 import "context"
 
 type Repository interface {
+	CCBillUpSaleSuccess(ctx context.Context, payload []byte) error
 	CCBillNewSaleSuccess(ctx context.Context, payload []byte) error
 	CCBillRenewalSuccess(ctx context.Context, payload []byte) error
 	CCBillChargeback(ctx context.Context, payload []byte) error
