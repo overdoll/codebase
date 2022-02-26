@@ -584,17 +584,8 @@ type AccountTransactionHistoryConnection {
 
 """Payload for a new club supporter"""
 type BecomeClubSupporterWithAccountSavedPaymentMethodPayload {
-  """The club that was supported."""
-  club: Club
-
-  """The locker string which can be used to poll club supporter subscription status."""
-  locker: String
-
-  """Whether or not the transaction was approved."""
-  approved: Boolean
-
-  """The error from CCBill, if there is one."""
-  ccbillDeclineError: CCBillDeclineError
+  """CCBill Transaction Token, if this was a ccbill transaction. Used to query more details about this transaction."""
+  ccbillTransactionToken: String
 }
 
 """Generate ccbill club supporter payment link."""
@@ -619,6 +610,29 @@ input BecomeClubSupporterWithAccountSavedPaymentMethodInput {
 
   """The chosen saved payment method."""
   savedPaymentMethodId: ID!
+}
+
+type CCBillTransactionDetails {
+  """An ID uniquely identifying this transaction."""
+  id: ID!
+
+  """Whether or not the transaction was approved."""
+  approved: Boolean!
+
+  """The error from CCBill, if the transaction was not approved."""
+  declineError: CCBillDeclineError
+
+  """The decline text from CCBill."""
+  declineText: String
+
+  """
+  If this transaction was approved, poll this field to until this is not null anymore.
+
+  This signifies that the transaction has processed successfully (on our end),
+
+  and the supporter benefits are now available.
+  """
+  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
 }
 
 """Delete an account saved payment method input."""
@@ -840,10 +854,10 @@ extend type Query {
   ccbillSubscriptionDetails(ccbillSubscriptionId: String!): CCBillSubscriptionDetails
 
   """
-  After using a CCBill FlexForms link or charging a consumer with a saved payment method, this query should be used to "wait"
-  until the subscription appears (since the system uses webhooks, it doesn't arrive "instantly").
+  After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),
+  use the returned token in this query to grab the current state of the transaction.
 
-  Pass in the locker string returned from a FlexFroms redirect or a saved payment method.
+  It will tell you if the transaction was approved or denied, as well as having the ability to poll until a subscription is finalized.
   """
-  accountClubSupporterSubscriptionFinalized(locker: String!): AccountClubSupporterSubscription
+  ccbillTransactionDetails(token: String!): CCBillTransactionDetails
 }

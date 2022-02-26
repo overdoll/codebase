@@ -31,6 +31,7 @@ export default function TestPaymentFlow (): JSX.Element {
   const [commit, isInFlight] = useMutation<TestPaymentFlowMutation>(TestPaymentFlowGQL)
   const [origin, updateOrigin] = useState('')
   const windowReference = useRef<Window | null>(null)
+  const [transactionToken, updateTransactionToken] = useState('')
 
   const {
     isOpen,
@@ -64,11 +65,13 @@ export default function TestPaymentFlow (): JSX.Element {
     return () => {
       window.removeEventListener('message', messageEvent)
     }
-  }, [])
+  }, [origin])
 
   // grab the actual origin of our link
   const updateOriginFormatted = (link: string): void => {
+    console.log(link)
     const url = new URL(link)
+    console.log(url.origin)
     updateOrigin(url.origin)
   }
 
@@ -77,7 +80,15 @@ export default function TestPaymentFlow (): JSX.Element {
     if (event.origin !== origin) {
       return
     }
-    console.log(event)
+
+    // listen for overdoll ccbill flexform event only
+    if (event.data.source !== 'overdoll-ccbill-flexforms-payment-flow') {
+      return
+    }
+
+    // our new token
+    updateTransactionToken(event.data.token)
+    closeWindow()
   }
 
   const focusWindow = (): void => {
@@ -153,7 +164,15 @@ export default function TestPaymentFlow (): JSX.Element {
         </ModalContent>
       </Modal>
       <Center w='100%' h='300px'>
-        <Button disabled={isInFlight} onClick={onClick}>pay with ccbill</Button>
+        {transactionToken !== ''
+          ? (
+            <div>
+              transaction finished
+            </div>
+            )
+          : (
+            <Button disabled={isInFlight} onClick={onClick}>pay with ccbill</Button>
+            )}
       </Center>
     </>
   )

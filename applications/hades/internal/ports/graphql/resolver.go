@@ -47,7 +47,13 @@ func (r *Resolver) Club() ClubResolver {
 }
 
 func (r *Resolver) AccountClubSupporterSubscription() AccountClubSupporterSubscriptionResolver {
-	return &resolvers.AccountClubSupporterSubscription{
+	return &resolvers.AccountClubSupporterSubscriptionResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) CCBillTransactionDetails() CCBillTransactionDetailsResolver {
+	return &resolvers.CCBillTransactionDetailsResolver{
 		App: r.app,
 	}
 }

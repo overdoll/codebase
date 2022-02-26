@@ -71,26 +71,3 @@ func (r QueryResolver) CcbillSubscriptionDetails(ctx context.Context, ccbillSubs
 		UpdatedAt:                  result.UpdatedAt(),
 	}, nil
 }
-
-func (r QueryResolver) AccountClubSupporterSubscriptionFinalized(ctx context.Context, locker string) (*types.AccountClubSupporterSubscription, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	result, err := r.App.Queries.ClubSupporterSubscriptionFinalized.Handle(ctx, query.ClubSupporterSubscriptionFinalized{
-		Principal: principal.FromContext(ctx),
-		Locker:    locker,
-	})
-
-	if err != nil {
-
-		if err == billing.ErrAccountClubSupportSubscriptionNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalAccountClubSupporterSubscriptionToGraphQL(ctx, result), nil
-}

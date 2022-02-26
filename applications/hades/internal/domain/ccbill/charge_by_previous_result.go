@@ -1,49 +1,34 @@
 package ccbill
 
 import (
-	"bytes"
 	_ "embed"
 	"errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"html/template"
-	"os"
 	hades "overdoll/applications/hades/proto"
 	"time"
 )
 
-//go:embed payment_flow_callback.gohtml
-var paymentFlowCallbackTemplate string
-
-var (
-	ErrSignatureCheckFailed = errors.New("signature check failed")
-)
-
-type paymentFlowCallbackTemplateVariables struct {
-	Token  string
-	Origin string
-}
-
-type PaymentFlowCallbackTemplate struct {
+type ChargeByPreviousResult struct {
 	paymentToken         string
 	ccbillSubscriptionId string
-	ccbillResponseDigest string
 	ccbillDenialId       string
 	ccbillDeclineCode    string
 	ccbillDeclineReason  string
+	approved             bool
 }
 
-func NewPaymentFlowCallbackTemplate(paymentToken, ccbillSubscriptionId, ccbillResponseDigest, ccbillDenialId, ccbillDeclineCode, ccbillDeclineReason string) (*PaymentFlowCallbackTemplate, error) {
-	return &PaymentFlowCallbackTemplate{
+func NewChargeByPreviousResult(paymentToken, ccbillSubscriptionId, ccbillDenialId, ccbillDeclineCode, ccbillDeclineReason string, approved bool) (*ChargeByPreviousResult, error) {
+	return &ChargeByPreviousResult{
 		paymentToken:         paymentToken,
 		ccbillSubscriptionId: ccbillSubscriptionId,
-		ccbillResponseDigest: ccbillResponseDigest,
 		ccbillDenialId:       ccbillDenialId,
 		ccbillDeclineCode:    ccbillDeclineCode,
 		ccbillDeclineReason:  ccbillDeclineReason,
+		approved:             approved,
 	}, nil
 }
 
-func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) {
+func (t *ChargeByPreviousResult) GenerateTransactionToken() (*string, error) {
 
 	parsedToken, err := DecryptCCBillPayment(t.paymentToken)
 
@@ -55,13 +40,7 @@ func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) 
 	var ccbillTransactionAuthorized *hades.CCBillTransactionAuthorized
 
 	// transaction denied
-	if t.ccbillDenialId != "" {
-
-		// verify digest before creating it
-		if !ValidateCCBillTransactionDenied(t.ccbillResponseDigest, t.ccbillDenialId) {
-			return nil, ErrSignatureCheckFailed
-		}
-
+	if !t.approved {
 		ccbillTransactionDenied = &hades.CCBillTransactionDenied{
 			Id:     t.ccbillDenialId,
 			Code:   t.ccbillDeclineCode,
@@ -70,13 +49,7 @@ func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) 
 	}
 
 	// transaction not denied, successful
-	if t.ccbillSubscriptionId != "" {
-
-		// verify subscription ID digest
-		if !ValidateCCBillTransactionAuthorized(t.ccbillResponseDigest, t.ccbillSubscriptionId) {
-			return nil, ErrSignatureCheckFailed
-		}
-
+	if t.approved {
 		ccbillTransactionAuthorized = &hades.CCBillTransactionAuthorized{
 			SubscriptionId: t.ccbillSubscriptionId,
 		}
@@ -101,22 +74,5 @@ func (t *PaymentFlowCallbackTemplate) GenerateTemplateString() (*string, error) 
 		return nil, err
 	}
 
-	te, err := template.New("payment_flow_callback").Parse(paymentFlowCallbackTemplate)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var tpl bytes.Buffer
-
-	if err := te.Execute(&tpl, paymentFlowCallbackTemplateVariables{
-		Token:  *encrypted,
-		Origin: os.Getenv("APP_URL"),
-	}); err != nil {
-		return nil, err
-	}
-
-	res := tpl.String()
-
-	return &res, nil
+	return encrypted, nil
 }

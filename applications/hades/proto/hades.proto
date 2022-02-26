@@ -15,6 +15,10 @@ message AccountInitiator {
   string accountId = 1;
 }
 
+message TransactionHeader {
+  google.protobuf.Timestamp createdAt = 1;
+}
+
 // any extra details in the header
 message HeaderConfiguration {
   bool savePaymentDetails = 1;
@@ -49,7 +53,8 @@ message CCBillPayment {
 }
 
 message CCBillTransaction {
-  CCBillPayment ccbillPayment = 1;
-  optional CCBillTransactionDenied ccbillTransactionDenied = 2;
-  optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 3;
+  TransactionHeader transactionHeader = 1;
+  CCBillPayment ccbillPayment = 2;
+  optional CCBillTransactionDenied ccbillTransactionDenied = 3;
+  optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 4;
 }

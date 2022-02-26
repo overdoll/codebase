@@ -29,7 +29,7 @@ func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repos
 	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella, eva: eva}
 }
 
-func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*ccbill.TransactionDetails, error) {
+func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*string, error) {
 
 	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
 
@@ -77,11 +77,11 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	}
 
 	// charge by previous transaction
-	ccbillTransaction, err := h.cr.ChargeByPreviousTransactionId(ctx, paymentUrl)
+	ccbillTransactionToken, err := h.cr.ChargeByPreviousTransactionId(ctx, paymentUrl)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return ccbillTransaction, nil
+	return ccbillTransactionToken, nil
 }

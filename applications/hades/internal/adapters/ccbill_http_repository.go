@@ -252,13 +252,13 @@ type chargeByPreviousResult struct {
 	Approved       int      `xml:"approved"`
 	SubscriptionId string   `xml:"subscriptionId"`
 	DenialId       string   `xml:"denialId"`
-	DeclineCode    int      `xml:"declineCode"`
+	DeclineCode    string   `xml:"declineCode"`
 	DeclineText    string   `xml:"declineText"`
 }
 
-func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) (*ccbill.TransactionDetails, error) {
+func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context, chargeByPrevious *ccbill.ChargeByPreviousClubSupporterPaymentUrl) (*string, error) {
 
-	url, paymentLink, err := chargeByPrevious.GenerateUrl()
+	url, paymentToken, err := chargeByPrevious.GenerateUrl()
 
 	if err != nil {
 		return nil, err
@@ -297,5 +297,18 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		return nil, err
 	}
 
-	return ccbill.UnmarshalTransactionDetailsFromDatabase(chargeByPrevious.CCBillSubscriptionId(), chargeByPrevious.ClubId(), realResult.Approved == 1, realResult.DeclineCode, realResult.DeclineText, paymentLink), nil
+	token, err := ccbill.NewChargeByPreviousResult(
+		*paymentToken,
+		realResult.SubscriptionId,
+		realResult.DenialId,
+		realResult.DeclineCode,
+		realResult.DeclineText,
+		realResult.Approved == 1,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return token.GenerateTransactionToken()
 }

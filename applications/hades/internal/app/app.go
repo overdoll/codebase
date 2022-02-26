@@ -34,10 +34,12 @@ type Commands struct {
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
 
+	CCBillSubscriptionDetails query.CCBillSubscriptionDetailsHandler
+	CCBillTransactionDetails  query.CCBillTransactionDetailsHandler
+
 	AccountClubSupporterSubscriptions  query.AccountClubSupporterSubscriptionsHandler
 	AccountSavedPaymentMethods         query.AccountSavedPaymentMethodsHandler
 	AccountTransactionHistory          query.AccountTransactionHistoryHandler
-	CCBillSubscriptionDetails          query.CCBillSubscriptionDetailsHandler
 	ClubSupporterPricing               query.ClubSupporterPricingHandler
 	ClubSupporterSubscriptionFinalized query.ClubSupporterSubscriptionFinalizedHandler
 

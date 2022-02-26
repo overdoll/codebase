@@ -344,14 +344,8 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodInput struct {
 
 // Payload for a new club supporter
 type BecomeClubSupporterWithAccountSavedPaymentMethodPayload struct {
-	// The club that was supported.
-	Club *Club `json:"club"`
-	// The locker string which can be used to poll club supporter subscription status.
-	Locker *string `json:"locker"`
-	// Whether or not the transaction was approved.
-	Approved *bool `json:"approved"`
-	// The error from CCBill, if there is one.
-	CcbillDeclineError *CCBillDeclineError `json:"ccbillDeclineError"`
+	// CCBill Transaction Token, if this was a ccbill transaction. Used to query more details about this transaction.
+	CcbillTransactionToken *string `json:"ccbillTransactionToken"`
 }
 
 // Represents a billing address.
@@ -429,6 +423,23 @@ type CCBillSubscriptionDetails struct {
 type CCBillSubscriptionTransaction struct {
 	CcbillTransactionID  *string `json:"ccbillTransactionId"`
 	CcbillSubscriptionID string  `json:"ccbillSubscriptionId"`
+}
+
+type CCBillTransactionDetails struct {
+	// An ID uniquely identifying this transaction.
+	ID relay.ID `json:"id"`
+	// Whether or not the transaction was approved.
+	Approved bool `json:"approved"`
+	// The error from CCBill, if the transaction was not approved.
+	DeclineError *CCBillDeclineError `json:"declineError"`
+	// The decline text from CCBill.
+	DeclineText *string `json:"declineText"`
+	// If this transaction was approved, poll this field to until this is not null anymore.
+	//
+	// This signifies that the transaction has processed successfully (on our end),
+	//
+	// and the supporter benefits are now available.
+	LinkedAccountClubSupporterSubscription *AccountClubSupporterSubscription `json:"linkedAccountClubSupporterSubscription"`
 }
 
 // Cancel account club supporter subscription input.

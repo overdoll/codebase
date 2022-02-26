@@ -7,11 +7,11 @@ import (
 	"overdoll/applications/hades/internal/ports/graphql/types"
 )
 
-type AccountClubSupporterSubscription struct {
+type AccountClubSupporterSubscriptionResolver struct {
 	App *app.Application
 }
 
-func (r AccountClubSupporterSubscription) CancellationReason(ctx context.Context, obj *types.AccountClubSupporterSubscription) (*types.CancellationReason, error) {
+func (r AccountClubSupporterSubscriptionResolver) CancellationReason(ctx context.Context, obj *types.AccountClubSupporterSubscription) (*types.CancellationReason, error) {
 
 	if obj.CancellationReason == nil {
 		return nil, nil

@@ -42,6 +42,7 @@ type Config struct {
 type ResolverRoot interface {
 	Account() AccountResolver
 	AccountClubSupporterSubscription() AccountClubSupporterSubscriptionResolver
+	CCBillTransactionDetails() CCBillTransactionDetailsResolver
 	Club() ClubResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
@@ -222,10 +223,7 @@ type ComplexityRoot struct {
 	}
 
 	BecomeClubSupporterWithAccountSavedPaymentMethodPayload struct {
-		Approved           func(childComplexity int) int
-		CcbillDeclineError func(childComplexity int) int
-		Club               func(childComplexity int) int
-		Locker             func(childComplexity int) int
+		CcbillTransactionToken func(childComplexity int) int
 	}
 
 	BillingAddress struct {
@@ -278,6 +276,14 @@ type ComplexityRoot struct {
 	CCBillSubscriptionTransaction struct {
 		CcbillSubscriptionID func(childComplexity int) int
 		CcbillTransactionID  func(childComplexity int) int
+	}
+
+	CCBillTransactionDetails struct {
+		Approved                               func(childComplexity int) int
+		DeclineError                           func(childComplexity int) int
+		DeclineText                            func(childComplexity int) int
+		ID                                     func(childComplexity int) int
+		LinkedAccountClubSupporterSubscription func(childComplexity int) int
 	}
 
 	CancelAccountClubSupporterSubscriptionPayload struct {
@@ -386,12 +392,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AccountClubSupporterSubscriptionFinalized func(childComplexity int, locker string) int
-		CancellationReason                        func(childComplexity int, reference string) int
-		CancellationReasons                       func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
-		CcbillSubscriptionDetails                 func(childComplexity int, ccbillSubscriptionID string) int
-		__resolve__service                        func(childComplexity int) int
-		__resolve_entities                        func(childComplexity int, representations []map[string]interface{}) int
+		CancellationReason        func(childComplexity int, reference string) int
+		CancellationReasons       func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
+		CcbillSubscriptionDetails func(childComplexity int, ccbillSubscriptionID string) int
+		CcbillTransactionDetails  func(childComplexity int, token string) int
+		__resolve__service        func(childComplexity int) int
+		__resolve_entities        func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	RefundAmount struct {
@@ -431,6 +437,9 @@ type AccountResolver interface {
 type AccountClubSupporterSubscriptionResolver interface {
 	CancellationReason(ctx context.Context, obj *types.AccountClubSupporterSubscription) (*types.CancellationReason, error)
 }
+type CCBillTransactionDetailsResolver interface {
+	LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (*types.AccountClubSupporterSubscription, error)
+}
 type ClubResolver interface {
 	SupporterSubscriptionPrice(ctx context.Context, obj *types.Club) (*types.LocalizedPricingPoint, error)
 }
@@ -456,7 +465,7 @@ type QueryResolver interface {
 	CancellationReason(ctx context.Context, reference string) (*types.CancellationReason, error)
 	CancellationReasons(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.CancellationReasonConnection, error)
 	CcbillSubscriptionDetails(ctx context.Context, ccbillSubscriptionID string) (*types.CCBillSubscriptionDetails, error)
-	AccountClubSupporterSubscriptionFinalized(ctx context.Context, locker string) (*types.AccountClubSupporterSubscription, error)
+	CcbillTransactionDetails(ctx context.Context, token string) (*types.CCBillTransactionDetails, error)
 }
 
 type executableSchema struct {
@@ -1287,33 +1296,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountVoidTransactionHistory.Type(childComplexity), true
 
-	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.approved":
-		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Approved == nil {
+	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.ccbillTransactionToken":
+		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillTransactionToken == nil {
 			break
 		}
 
-		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Approved(childComplexity), true
-
-	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.ccbillDeclineError":
-		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillDeclineError == nil {
-			break
-		}
-
-		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillDeclineError(childComplexity), true
-
-	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.club":
-		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Club == nil {
-			break
-		}
-
-		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Club(childComplexity), true
-
-	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.locker":
-		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Locker == nil {
-			break
-		}
-
-		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.Locker(childComplexity), true
+		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillTransactionToken(childComplexity), true
 
 	case "BillingAddress.AddressLine1":
 		if e.complexity.BillingAddress.AddressLine1 == nil {
@@ -1573,6 +1561,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CCBillSubscriptionTransaction.CcbillTransactionID(childComplexity), true
+
+	case "CCBillTransactionDetails.approved":
+		if e.complexity.CCBillTransactionDetails.Approved == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.Approved(childComplexity), true
+
+	case "CCBillTransactionDetails.declineError":
+		if e.complexity.CCBillTransactionDetails.DeclineError == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.DeclineError(childComplexity), true
+
+	case "CCBillTransactionDetails.declineText":
+		if e.complexity.CCBillTransactionDetails.DeclineText == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.DeclineText(childComplexity), true
+
+	case "CCBillTransactionDetails.id":
+		if e.complexity.CCBillTransactionDetails.ID == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.ID(childComplexity), true
+
+	case "CCBillTransactionDetails.linkedAccountClubSupporterSubscription":
+		if e.complexity.CCBillTransactionDetails.LinkedAccountClubSupporterSubscription == nil {
+			break
+		}
+
+		return e.complexity.CCBillTransactionDetails.LinkedAccountClubSupporterSubscription(childComplexity), true
 
 	case "CancelAccountClubSupporterSubscriptionPayload.clubSupporterSubscription":
 		if e.complexity.CancelAccountClubSupporterSubscriptionPayload.ClubSupporterSubscription == nil {
@@ -1980,18 +2003,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Price.Currency(childComplexity), true
 
-	case "Query.accountClubSupporterSubscriptionFinalized":
-		if e.complexity.Query.AccountClubSupporterSubscriptionFinalized == nil {
-			break
-		}
-
-		args, err := ec.field_Query_accountClubSupporterSubscriptionFinalized_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.AccountClubSupporterSubscriptionFinalized(childComplexity, args["locker"].(string)), true
-
 	case "Query.cancellationReason":
 		if e.complexity.Query.CancellationReason == nil {
 			break
@@ -2027,6 +2038,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CcbillSubscriptionDetails(childComplexity, args["ccbillSubscriptionId"].(string)), true
+
+	case "Query.ccbillTransactionDetails":
+		if e.complexity.Query.CcbillTransactionDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Query_ccbillTransactionDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CcbillTransactionDetails(childComplexity, args["token"].(string)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -2767,17 +2790,8 @@ type AccountTransactionHistoryConnection {
 
 """Payload for a new club supporter"""
 type BecomeClubSupporterWithAccountSavedPaymentMethodPayload {
-  """The club that was supported."""
-  club: Club
-
-  """The locker string which can be used to poll club supporter subscription status."""
-  locker: String
-
-  """Whether or not the transaction was approved."""
-  approved: Boolean
-
-  """The error from CCBill, if there is one."""
-  ccbillDeclineError: CCBillDeclineError
+  """CCBill Transaction Token, if this was a ccbill transaction. Used to query more details about this transaction."""
+  ccbillTransactionToken: String
 }
 
 """Generate ccbill club supporter payment link."""
@@ -2802,6 +2816,29 @@ input BecomeClubSupporterWithAccountSavedPaymentMethodInput {
 
   """The chosen saved payment method."""
   savedPaymentMethodId: ID!
+}
+
+type CCBillTransactionDetails {
+  """An ID uniquely identifying this transaction."""
+  id: ID!
+
+  """Whether or not the transaction was approved."""
+  approved: Boolean!
+
+  """The error from CCBill, if the transaction was not approved."""
+  declineError: CCBillDeclineError
+
+  """The decline text from CCBill."""
+  declineText: String
+
+  """
+  If this transaction was approved, poll this field to until this is not null anymore.
+
+  This signifies that the transaction has processed successfully (on our end),
+
+  and the supporter benefits are now available.
+  """
+  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
 }
 
 """Delete an account saved payment method input."""
@@ -3023,12 +3060,12 @@ extend type Query {
   ccbillSubscriptionDetails(ccbillSubscriptionId: String!): CCBillSubscriptionDetails
 
   """
-  After using a CCBill FlexForms link or charging a consumer with a saved payment method, this query should be used to "wait"
-  until the subscription appears (since the system uses webhooks, it doesn't arrive "instantly").
+  After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),
+  use the returned token in this query to grab the current state of the transaction.
 
-  Pass in the locker string returned from a FlexFroms redirect or a saved payment method.
+  It will tell you if the transaction was approved or denied, as well as having the ability to poll until a subscription is finalized.
   """
-  accountClubSupporterSubscriptionFinalized(locker: String!): AccountClubSupporterSubscription
+  ccbillTransactionDetails(token: String!): CCBillTransactionDetails
 }
 `, BuiltIn: false},
 	{Name: "schema/cancellation/schema.graphql", Input: `"""Cancellation reason."""
@@ -3638,21 +3675,6 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_accountClubSupporterSubscriptionFinalized_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["locker"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locker"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["locker"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_cancellationReason_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3731,6 +3753,21 @@ func (ec *executionContext) field_Query_ccbillSubscriptionDetails_args(ctx conte
 		}
 	}
 	args["ccbillSubscriptionId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_ccbillTransactionDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["token"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("token"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["token"] = arg0
 	return args, nil
 }
 
@@ -7717,7 +7754,7 @@ func (ec *executionContext) _AccountVoidTransactionHistory_timestamp(ctx context
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPayload_ccbillTransactionToken(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7735,39 +7772,7 @@ func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPay
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Club)
-	fc.Result = res
-	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPayload_locker(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BecomeClubSupporterWithAccountSavedPaymentMethodPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Locker, nil
+		return obj.CcbillTransactionToken, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7779,70 +7784,6 @@ func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPay
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPayload_approved(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BecomeClubSupporterWithAccountSavedPaymentMethodPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Approved, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPayload_ccbillDeclineError(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BecomeClubSupporterWithAccountSavedPaymentMethodPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CcbillDeclineError, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.CCBillDeclineError)
-	fc.Result = res
-	return ec.marshalOCCBillDeclineError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillDeclineError(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BillingAddress_AddressLine1(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
@@ -9126,6 +9067,172 @@ func (ec *executionContext) _CCBillSubscriptionTransaction_ccbillSubscriptionId(
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_id(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_approved(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Approved, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_declineError(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeclineError, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CCBillDeclineError)
+	fc.Result = res
+	return ec.marshalOCCBillDeclineError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillDeclineError(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_declineText(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeclineText, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillTransactionDetails_linkedAccountClubSupporterSubscription(ctx context.Context, field graphql.CollectedField, obj *types.CCBillTransactionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillTransactionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CCBillTransactionDetails().LinkedAccountClubSupporterSubscription(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountClubSupporterSubscription)
+	fc.Result = res
+	return ec.marshalOAccountClubSupporterSubscription2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CancelAccountClubSupporterSubscriptionPayload_clubSupporterSubscription(ctx context.Context, field graphql.CollectedField, obj *types.CancelAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
@@ -10966,7 +11073,7 @@ func (ec *executionContext) _Query_ccbillSubscriptionDetails(ctx context.Context
 	return ec.marshalOCCBillSubscriptionDetails2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillSubscriptionDetails(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_accountClubSupporterSubscriptionFinalized(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_ccbillTransactionDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10983,7 +11090,7 @@ func (ec *executionContext) _Query_accountClubSupporterSubscriptionFinalized(ctx
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_accountClubSupporterSubscriptionFinalized_args(ctx, rawArgs)
+	args, err := ec.field_Query_ccbillTransactionDetails_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -10991,7 +11098,7 @@ func (ec *executionContext) _Query_accountClubSupporterSubscriptionFinalized(ctx
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AccountClubSupporterSubscriptionFinalized(rctx, args["locker"].(string))
+		return ec.resolvers.Query().CcbillTransactionDetails(rctx, args["token"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11000,9 +11107,9 @@ func (ec *executionContext) _Query_accountClubSupporterSubscriptionFinalized(ctx
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountClubSupporterSubscription)
+	res := resTmp.(*types.CCBillTransactionDetails)
 	fc.Result = res
-	return ec.marshalOAccountClubSupporterSubscription2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
+	return ec.marshalOCCBillTransactionDetails2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillTransactionDetails(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -14638,30 +14745,9 @@ func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPay
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BecomeClubSupporterWithAccountSavedPaymentMethodPayload")
-		case "club":
+		case "ccbillTransactionToken":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BecomeClubSupporterWithAccountSavedPaymentMethodPayload_club(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "locker":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BecomeClubSupporterWithAccountSavedPaymentMethodPayload_locker(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "approved":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BecomeClubSupporterWithAccountSavedPaymentMethodPayload_approved(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "ccbillDeclineError":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BecomeClubSupporterWithAccountSavedPaymentMethodPayload_ccbillDeclineError(ctx, field, obj)
+				return ec._BecomeClubSupporterWithAccountSavedPaymentMethodPayload_ccbillTransactionToken(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -15129,6 +15215,78 @@ func (ec *executionContext) _CCBillSubscriptionTransaction(ctx context.Context, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cCBillTransactionDetailsImplementors = []string{"CCBillTransactionDetails"}
+
+func (ec *executionContext) _CCBillTransactionDetails(ctx context.Context, sel ast.SelectionSet, obj *types.CCBillTransactionDetails) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cCBillTransactionDetailsImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CCBillTransactionDetails")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillTransactionDetails_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "approved":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillTransactionDetails_approved(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "declineError":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillTransactionDetails_declineError(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "declineText":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillTransactionDetails_declineText(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "linkedAccountClubSupporterSubscription":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CCBillTransactionDetails_linkedAccountClubSupporterSubscription(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -16108,7 +16266,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "accountClubSupporterSubscriptionFinalized":
+		case "ccbillTransactionDetails":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -16117,7 +16275,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_accountClubSupporterSubscriptionFinalized(ctx, field)
+				res = ec._Query_ccbillTransactionDetails(ctx, field)
 				return res
 			}
 
@@ -17897,6 +18055,13 @@ func (ec *executionContext) marshalOCCBillSubscriptionTransaction2ᚖoverdollᚋ
 		return graphql.Null
 	}
 	return ec._CCBillSubscriptionTransaction(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCCBillTransactionDetails2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillTransactionDetails(ctx context.Context, sel ast.SelectionSet, v *types.CCBillTransactionDetails) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CCBillTransactionDetails(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCancelAccountClubSupporterSubscriptionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountClubSupporterSubscriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.CancelAccountClubSupporterSubscriptionPayload) graphql.Marshaler {

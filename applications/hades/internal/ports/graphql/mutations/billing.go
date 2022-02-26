@@ -50,7 +50,7 @@ func (r *MutationResolver) BecomeClubSupporterWithAccountSavedPaymentMethod(ctx 
 		return nil, err
 	}
 
-	_, err := r.App.Commands.BecomeClubSupporterWithAccountSavedPaymentMethod.
+	ccbillTransactionToken, err := r.App.Commands.BecomeClubSupporterWithAccountSavedPaymentMethod.
 		Handle(
 			ctx,
 			command.BecomeClubSupporterWithAccountSavedPaymentMethod{
@@ -66,7 +66,9 @@ func (r *MutationResolver) BecomeClubSupporterWithAccountSavedPaymentMethod(ctx 
 		return nil, err
 	}
 
-	return &types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload{}, nil
+	return &types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload{
+		CcbillTransactionToken: ccbillTransactionToken,
+	}, nil
 }
 
 func (r *MutationResolver) CancelAccountClubSupporterSubscription(ctx context.Context, input types.CancelAccountClubSupporterSubscriptionInput) (*types.CancelAccountClubSupporterSubscriptionPayload, error) {

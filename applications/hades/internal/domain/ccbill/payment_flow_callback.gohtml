@@ -5,9 +5,22 @@
     <title>Redirecting...</title>
 </head>
 <script>
-  window.opener.postMessage({
-    payload: { token: "{{ .Token }}" },
-    source: 'overdoll-ccbill-flexforms-payment-flow'
-  }, "{{ .Origin }}")
+
+  const send = function () {
+    window.opener.postMessage(
+      {
+        payload: { token: "{{ .Token }}" },
+        source: 'overdoll-ccbill-flexforms-payment-flow'
+      },
+      "{{ .Origin }}"
+    )
+  }
+
+  send()
+
+  setTimeout(function () {
+    send()
+  }, 1000)
+
 </script>
 </html>

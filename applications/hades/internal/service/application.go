@@ -90,6 +90,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			ClubSupporterSubscriptionFinalized: query.NewClubSupporterSubscriptionFinalized(billingRepo),
 			CancellationReasonById:             query.NewCancellationReasonByIdHandler(cancelRepo),
 			CancellationReasons:                query.NewCancellationReasonsHandler(cancelRepo),
+			CCBillTransactionDetails:           query.NewCCBillTransactionDetailsHandler(),
 		},
 		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella),
 	}

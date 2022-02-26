@@ -85,7 +85,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 		"&rebills=" + billNumberRebills +
 		"&subscriptionId=" + c.ccbillSubscriptionId +
 		"&currencyCode=" + billCurrencyCode +
-		"&overdollLocker=" + *encrypted +
+		"&overdollPaymentToken=" + *encrypted +
 		"&returnXML=1"
 
 	return query, encrypted, nil
