@@ -24,6 +24,8 @@ func (h ProcessCCBillWebhookHandler) Handle(ctx context.Context, cmd ProcessCCBi
 	switch cmd.EventType {
 	case "NewSaleSuccess": // new subscription - success
 		return h.event.CCBillNewSaleSuccess(ctx, cmd.Payload)
+	case "UpSaleSuccess": // new subscription - success
+		return h.event.CCBillUpSaleSuccess(ctx, cmd.Payload)
 	case "RenewalSuccess": // renewal
 		return h.event.CCBillRenewalSuccess(ctx, cmd.Payload)
 	case "Chargeback": // card chargeback
