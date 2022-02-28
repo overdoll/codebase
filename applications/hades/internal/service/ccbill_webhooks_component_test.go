@@ -12,7 +12,25 @@ import (
 )
 
 func ccbillNewSaleSuccessWebhook(t *testing.T, accountId, ccbillSubscriptionId, clubId string) {
-	payload := map[string]string{
+	t.Parallel()
+
+	// generate a new unique payment token
+	encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
+		HeaderConfiguration: &hades.HeaderConfiguration{
+			SavePaymentDetails: true,
+			CreatedAt:          timestamppb.Now(),
+		},
+		CcbillClubSupporter: &hades.CCBillClubSupporter{
+			ClubId: clubId,
+		},
+		AccountInitiator: &hades.AccountInitiator{
+			AccountId: accountId,
+		},
+	})
+
+	require.NoError(t, err, "no error encrypting a new token")
+
+	runWebhookAction(t, "NewSaleSuccess", map[string]string{
 		"accountingCurrency":             "USD",
 		"accountingCurrencyCode":         "840",
 		"accountingInitialPrice":         "6.99",
@@ -61,33 +79,16 @@ func ccbillNewSaleSuccessWebhook(t *testing.T, accountId, ccbillSubscriptionId, 
 		"threeDSecure":                   "NOT_APPLICABLE",
 		"X-formDigest":                   "5e118a92ac1ff6cec8bbe64e13acb7c5",
 		"X-currencyCode":                 "840",
-	}
-
-	// generate a new unique payment token
-	encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
-		HeaderConfiguration: &hades.HeaderConfiguration{
-			SavePaymentDetails: true,
-			CreatedAt:          timestamppb.Now(),
-		},
-		CcbillClubSupporter: &hades.CCBillClubSupporter{
-			ClubId: clubId,
-		},
-		AccountInitiator: &hades.AccountInitiator{
-			AccountId: accountId,
-		},
+		"subscriptionId":                 ccbillSubscriptionId,
+		"X-overdollPaymentToken":         *encrypted,
 	})
+}
 
-	require.NoError(t, err, "no error encrypting a new token")
-
-	// set our new token for this test
-	payload["X-overdollPaymentToken"] = *encrypted
-	// set a custom ccbill subscription
-	payload["subscriptionId"] = ccbillSubscriptionId
-
+func runWebhookAction(t *testing.T, event string, payload interface{}) {
 	res, err := json.Marshal(payload)
 	require.NoError(t, err, "no error marshalling payload")
 
-	req, err := http.NewRequest("POST", HadesHttpCCBillWebhookAddr+"?eventType=NewSaleSuccess", bytes.NewBuffer(res))
+	req, err := http.NewRequest("POST", HadesHttpCCBillWebhookAddr+"?eventType="+event, bytes.NewBuffer(res))
 	require.NoError(t, err, "no error creating a new request")
 
 	cl := http.Client{}

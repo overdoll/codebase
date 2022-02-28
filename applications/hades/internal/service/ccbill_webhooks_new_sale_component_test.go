@@ -11,23 +11,6 @@ import (
 	"time"
 )
 
-type AccountSavedPaymentMethods struct {
-	Entities []struct {
-		Account struct {
-			Id                  relay.ID
-			SavedPaymentMethods struct {
-				Edges []*struct {
-					Node struct {
-						CcbillSubscription *types.CCBillSubscription
-						Id                 relay.ID
-						PaymentMethod      types.PaymentMethod
-					}
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
 type AccountTransactionHistoryNew struct {
 	Entities []struct {
 		Account struct {
@@ -52,6 +35,7 @@ type AccountTransactionHistoryNew struct {
 
 // test a bunch of webhooks at the same time
 func TestBillingFlow_NewSale(t *testing.T) {
+	t.Parallel()
 
 	accountId := uuid.New().String()
 	ccbillSubscriptionId := uuid2.New().String()
@@ -77,19 +61,7 @@ func TestBillingFlow_NewSale(t *testing.T) {
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscription.Node.PaymentMethod)
 
-	// check for saved payment methods
-	var accountSavedPayments AccountSavedPaymentMethods
-
-	err := gqlClient.Query(context.Background(), &accountSavedPayments, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(accountId),
-			},
-		},
-	})
-
-	require.NoError(t, err, "no error grabbing saved payment methods")
+	accountSavedPayments := getAccountSavedPaymentMethods(t, gqlClient, accountId)
 
 	require.Len(t, accountSavedPayments.Entities[0].Account.SavedPaymentMethods.Edges, 1, "should have 1 saved payment method available")
 
@@ -118,13 +90,14 @@ func TestBillingFlow_NewSale(t *testing.T) {
 
 	var accountTransactions AccountTransactionHistoryNew
 
-	err = gqlClient.Query(context.Background(), &accountTransactions, map[string]interface{}{
+	err := gqlClient.Query(context.Background(), &accountTransactions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
 				"id":         convertAccountIdToRelayId(accountId),
 			},
 		},
+		"startDate": time.Now(),
 	})
 
 	require.NoError(t, err, "no error grabbing account transaction history")
@@ -136,6 +109,7 @@ func TestBillingFlow_NewSale(t *testing.T) {
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)
 
+	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
 	require.Equal(t, transaction.Amount, "6.99", "correct amount")
 	require.Equal(t, transaction.Currency, types.CurrencyUsd, "correct currency")
 	require.Equal(t, transaction.NextBillingDate, "2022-03-28 00:00:00 +0000 UTC", "correct next billing date")

@@ -1,0 +1,93 @@
+package service_test
+
+import (
+	"context"
+	uuid2 "github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/uuid"
+	"testing"
+	"time"
+)
+
+type AccountTransactionHistoryChargeback struct {
+	Entities []struct {
+		Account struct {
+			Id                 relay.ID
+			TransactionHistory struct {
+				Edges []*struct {
+					Node struct {
+						Id                            relay.ID
+						Transaction                   types.AccountTransactionType
+						CCBillReason                  string
+						Amount                        float64
+						Currency                      types.Currency
+						PaymentMethod                 types.PaymentMethod
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						Timestamp                     time.Time
+					} `graphql:"... on AccountChargebackTransactionHistory"`
+				}
+			} `graphql:"transactionHistory(startDate: $startDate)"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+// test a bunch of webhooks at the same time
+func TestBillingFlow_Chargeback(t *testing.T) {
+	t.Parallel()
+
+	accountId := uuid.New().String()
+	ccbillSubscriptionId := uuid2.New().String()
+	clubId := uuid.New().String()
+
+	ccbillNewSaleSuccessWebhook(t, accountId, ccbillSubscriptionId, clubId)
+
+	// run webhook - cancellation
+	runWebhookAction(t, "Chargeback", map[string]string{
+		"accountingCurrency":     "USD",
+		"accountingCurrencyCode": "840",
+		"accountingAmount":       "6.99",
+		"currency":               "USD",
+		"currencyCode":           "840",
+		"amount":                 "6.99",
+		"bin":                    "411111",
+		"cardType":               "VISA",
+		"expDate":                "0423",
+		"last4":                  "1111",
+		"reason":                 "IDK LOL",
+		"timestamp":              "2022-02-26 08:21:49",
+		"subscriptionId":         ccbillSubscriptionId,
+	})
+
+	// initialize gql client and make sure all the above variables exist
+	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	var accountTransactionsChargeback AccountTransactionHistoryChargeback
+
+	err := gqlClient.Query(context.Background(), &accountTransactionsChargeback, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+		"startDate": time.Now(),
+	})
+
+	require.NoError(t, err, "no error grabbing account transaction history")
+
+	require.Len(t, accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
+	transaction := accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges[0].Node
+
+	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
+	require.Equal(t, transaction.Timestamp, "2022-02-26 08:21:49 +0000 UTC", "correct timestamp")
+	require.Equal(t, transaction.Amount, "6.99", "correct amount")
+	require.Equal(t, transaction.Currency, types.CurrencyUsd, "correct currency")
+	require.Equal(t, transaction.CCBillReason, "IDK LOL", "correct reason")
+	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+
+	require.Equal(t, transaction.PaymentMethod.Card.Last4, "1111", "correct last 4 digits on the card")
+	require.Equal(t, transaction.PaymentMethod.Card.Type, types.CardTypeVisa, "is a VISA card")
+	require.Equal(t, transaction.PaymentMethod.Card.Expiration, "04/2023", "correct expiration date")
+}

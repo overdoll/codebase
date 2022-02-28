@@ -19,6 +19,8 @@ import (
 
 const HadesHttpAddr = ":6666"
 const HadesHttpCCBillWebhookAddr = "http://:6666/api/ccbill/webhook"
+const HadesHttpCCBillPaymentFlowAddr = "http://:6666/api/ccbill/payment-flow"
+const HadesHttpCCBillPaymentFlowCallbackAddr = "http://:6666/api/ccbill/payment-flow/callback"
 
 const HadesGraphqlClientAddr = "http://:6666/api/graphql"
 

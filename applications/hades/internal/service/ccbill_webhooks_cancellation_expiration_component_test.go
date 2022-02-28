@@ -1,0 +1,136 @@
+package service_test
+
+import (
+	"context"
+	uuid2 "github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/uuid"
+	"testing"
+	"time"
+)
+
+type AccountTransactionHistoryCancelled struct {
+	Entities []struct {
+		Account struct {
+			Id                 relay.ID
+			TransactionHistory struct {
+				Edges []*struct {
+					Node struct {
+						Id                            relay.ID
+						Transaction                   types.AccountTransactionType
+						CCBillReason                  string
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						Timestamp                     time.Time
+					} `graphql:"... on AccountCancelledTransactionHistory"`
+				}
+			} `graphql:"transactionHistory(startDate: $startDate)"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountTransactionHistoryExpired struct {
+	Entities []struct {
+		Account struct {
+			Id                 relay.ID
+			TransactionHistory struct {
+				Edges []*struct {
+					Node struct {
+						Id                            relay.ID
+						Transaction                   types.AccountTransactionType
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						Timestamp                     time.Time
+					} `graphql:"... on AccountExpiredTransactionHistory"`
+				}
+			} `graphql:"transactionHistory(startDate: $startDate)"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+// test a bunch of webhooks at the same time
+func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
+	t.Parallel()
+
+	accountId := uuid.New().String()
+	ccbillSubscriptionId := uuid2.New().String()
+	clubId := uuid.New().String()
+
+	ccbillNewSaleSuccessWebhook(t, accountId, ccbillSubscriptionId, clubId)
+
+	// run webhook - cancellation
+	runWebhookAction(t, "Cancellation", map[string]string{
+		"clientAccnum":   "951492",
+		"clientSubacc":   "0101",
+		"reason":         "Transaction Voided",
+		"source":         "webAdmin",
+		"subscriptionId": ccbillSubscriptionId,
+		"timestamp":      "2022-02-24 14:24:41",
+	})
+
+	// initialize gql client and make sure all the above variables exist
+	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	// get club supporter subscriptions
+	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+
+	require.Equal(t, subscriptions.Edges[0].Node.Status, types.AccountClubSupporterSubscriptionStatusCancelled, "subscription is cancelled now")
+
+	var accountTransactionsCancelled AccountTransactionHistoryCancelled
+
+	err := gqlClient.Query(context.Background(), &accountTransactionsCancelled, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+		"startDate": time.Now(),
+	})
+
+	require.NoError(t, err, "no error grabbing account transaction history")
+
+	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
+
+	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
+
+	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
+	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:41 +0000 UTC", "correct timestamp")
+	require.Equal(t, transaction.CCBillReason, "Transaction Voided", "correct reason")
+	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+
+	// run webhook - expiration
+	runWebhookAction(t, "Cancelled", map[string]string{
+		"clientAccnum":   "951492",
+		"clientSubacc":   "0101",
+		"subscriptionId": ccbillSubscriptionId,
+		"timestamp":      "2022-02-24 14:24:41",
+	})
+
+	// get club supporter subscriptions
+	subscriptions = getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Edges, 0, "should no longer have the subscription")
+
+	var accountTransactionsExpired AccountTransactionHistoryExpired
+
+	err = gqlClient.Query(context.Background(), &accountTransactionsExpired, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+		"startDate": time.Now(),
+	})
+
+	require.NoError(t, err, "no error grabbing account transaction history")
+
+	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 3, "3 transaction items")
+
+	transaction = accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
+
+	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
+	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:41 +0000 UTC", "correct timestamp")
+	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+}

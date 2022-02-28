@@ -364,7 +364,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.New {
 		accountTransactionHistory = AccountNewTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			Amount:                        *result.Amount(),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
@@ -380,7 +380,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Invoice {
 		accountTransactionHistory = AccountInvoiceTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			Amount:                        *result.Amount(),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
@@ -396,7 +396,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Void {
 		accountTransactionHistory = AccountVoidTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			Amount:                        *result.Amount(),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
@@ -410,7 +410,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Chargeback {
 		accountTransactionHistory = AccountChargebackTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			Amount:                        *result.Amount(),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
@@ -424,7 +424,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Cancel {
 		accountTransactionHistory = AccountCancelledTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			SupportedClub:                 club,
 			CcbillReason:                  result.CCBillReason(),
@@ -436,7 +436,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Expired {
 		accountTransactionHistory = AccountExpiredTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			SupportedClub:                 club,
 			CcbillSubscriptionTransaction: subscriptionDetails,
@@ -447,7 +447,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Refund {
 		accountTransactionHistory = AccountRefundTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			Amount:                        *result.Amount(),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
@@ -462,7 +462,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Failed {
 		accountTransactionHistory = AccountFailedTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			NextRetryDate:                 *result.BillingFailureNextRetryDate(),
 			SupportedClub:                 club,
@@ -476,7 +476,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	if result.Transaction() == billing.Reactivate {
 		accountTransactionHistory = AccountReactivatedTransactionHistory{
 			ID:                            id,
-			Type:                          tp,
+			Transaction:                   tp,
 			Account:                       account,
 			NextBillingDate:               *result.NextBillingDate(),
 			SupportedClub:                 club,

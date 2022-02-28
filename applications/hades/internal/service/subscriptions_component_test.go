@@ -83,6 +83,42 @@ func getAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, 
 	return accountClubSupporterSubscriptions.Entities[0].Account.ClubSupporterSubscriptions
 }
 
+type AccountSavedPaymentMethods struct {
+	Entities []struct {
+		Account struct {
+			Id                  relay.ID
+			SavedPaymentMethods struct {
+				Edges []*struct {
+					Node struct {
+						CcbillSubscription *types.CCBillSubscription
+						Id                 relay.ID
+						PaymentMethod      types.PaymentMethod
+					}
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func getAccountSavedPaymentMethods(t *testing.T, client *graphql.Client, accountId string) AccountSavedPaymentMethods {
+
+	// check for saved payment methods
+	var accountSavedPayments AccountSavedPaymentMethods
+
+	err := client.Query(context.Background(), &accountSavedPayments, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing saved payment methods")
+
+	return accountSavedPayments
+}
+
 func getCCBillSubscriptionDetails(t *testing.T, client *graphql.Client, id string) *CCBillSubscriptionDetailsCustom {
 
 	var ccbillSubscriptionDetails CCBillSubscriptionDetails

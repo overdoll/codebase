@@ -68,7 +68,7 @@ type ComplexityRoot struct {
 		ID                            func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountChargebackTransactionHistory struct {
@@ -80,7 +80,7 @@ type ComplexityRoot struct {
 		PaymentMethod                 func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountClubSupporterSubscription struct {
@@ -116,7 +116,7 @@ type ComplexityRoot struct {
 		ID                            func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountFailedTransactionHistory struct {
@@ -128,7 +128,7 @@ type ComplexityRoot struct {
 		NextRetryDate                 func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountInvoiceTransactionHistory struct {
@@ -142,7 +142,7 @@ type ComplexityRoot struct {
 		PaymentMethod                 func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountNewTransactionHistory struct {
@@ -156,7 +156,7 @@ type ComplexityRoot struct {
 		PaymentMethod                 func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountReactivatedTransactionHistory struct {
@@ -166,7 +166,7 @@ type ComplexityRoot struct {
 		NextBillingDate               func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountRefundTransactionHistory struct {
@@ -179,7 +179,7 @@ type ComplexityRoot struct {
 		PaymentMethod                 func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	AccountSavedPaymentMethod struct {
@@ -219,7 +219,7 @@ type ComplexityRoot struct {
 		ID                            func(childComplexity int) int
 		SupportedClub                 func(childComplexity int) int
 		Timestamp                     func(childComplexity int) int
-		Type                          func(childComplexity int) int
+		Transaction                   func(childComplexity int) int
 	}
 
 	BecomeClubSupporterWithAccountSavedPaymentMethodPayload struct {
@@ -568,12 +568,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountCancelledTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountCancelledTransactionHistory.type":
-		if e.complexity.AccountCancelledTransactionHistory.Type == nil {
+	case "AccountCancelledTransactionHistory.transaction":
+		if e.complexity.AccountCancelledTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountCancelledTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountCancelledTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountChargebackTransactionHistory.account":
 		if e.complexity.AccountChargebackTransactionHistory.Account == nil {
@@ -631,12 +631,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountChargebackTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountChargebackTransactionHistory.type":
-		if e.complexity.AccountChargebackTransactionHistory.Type == nil {
+	case "AccountChargebackTransactionHistory.transaction":
+		if e.complexity.AccountChargebackTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountChargebackTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountChargebackTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountClubSupporterSubscription.account":
 		if e.complexity.AccountClubSupporterSubscription.Account == nil {
@@ -799,12 +799,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountExpiredTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountExpiredTransactionHistory.type":
-		if e.complexity.AccountExpiredTransactionHistory.Type == nil {
+	case "AccountExpiredTransactionHistory.transaction":
+		if e.complexity.AccountExpiredTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountExpiredTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountExpiredTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountFailedTransactionHistory.account":
 		if e.complexity.AccountFailedTransactionHistory.Account == nil {
@@ -862,12 +862,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountFailedTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountFailedTransactionHistory.type":
-		if e.complexity.AccountFailedTransactionHistory.Type == nil {
+	case "AccountFailedTransactionHistory.transaction":
+		if e.complexity.AccountFailedTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountFailedTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountFailedTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountInvoiceTransactionHistory.account":
 		if e.complexity.AccountInvoiceTransactionHistory.Account == nil {
@@ -939,12 +939,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountInvoiceTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountInvoiceTransactionHistory.type":
-		if e.complexity.AccountInvoiceTransactionHistory.Type == nil {
+	case "AccountInvoiceTransactionHistory.transaction":
+		if e.complexity.AccountInvoiceTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountInvoiceTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountInvoiceTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountNewTransactionHistory.account":
 		if e.complexity.AccountNewTransactionHistory.Account == nil {
@@ -1016,12 +1016,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountNewTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountNewTransactionHistory.type":
-		if e.complexity.AccountNewTransactionHistory.Type == nil {
+	case "AccountNewTransactionHistory.transaction":
+		if e.complexity.AccountNewTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountNewTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountNewTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountReactivatedTransactionHistory.account":
 		if e.complexity.AccountReactivatedTransactionHistory.Account == nil {
@@ -1065,12 +1065,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountReactivatedTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountReactivatedTransactionHistory.type":
-		if e.complexity.AccountReactivatedTransactionHistory.Type == nil {
+	case "AccountReactivatedTransactionHistory.transaction":
+		if e.complexity.AccountReactivatedTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountReactivatedTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountReactivatedTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountRefundTransactionHistory.account":
 		if e.complexity.AccountRefundTransactionHistory.Account == nil {
@@ -1135,12 +1135,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountRefundTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountRefundTransactionHistory.type":
-		if e.complexity.AccountRefundTransactionHistory.Type == nil {
+	case "AccountRefundTransactionHistory.transaction":
+		if e.complexity.AccountRefundTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountRefundTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountRefundTransactionHistory.Transaction(childComplexity), true
 
 	case "AccountSavedPaymentMethod.account":
 		if e.complexity.AccountSavedPaymentMethod.Account == nil {
@@ -1289,12 +1289,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountVoidTransactionHistory.Timestamp(childComplexity), true
 
-	case "AccountVoidTransactionHistory.type":
-		if e.complexity.AccountVoidTransactionHistory.Type == nil {
+	case "AccountVoidTransactionHistory.transaction":
+		if e.complexity.AccountVoidTransactionHistory.Transaction == nil {
 			break
 		}
 
-		return e.complexity.AccountVoidTransactionHistory.Type(childComplexity), true
+		return e.complexity.AccountVoidTransactionHistory.Transaction(childComplexity), true
 
 	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.ccbillTransactionToken":
 		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillTransactionToken == nil {
@@ -2228,7 +2228,7 @@ interface IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2249,7 +2249,7 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2285,7 +2285,7 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2321,7 +2321,7 @@ type AccountReactivatedTransactionHistory implements IAccountTransactionHistory 
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2345,7 +2345,7 @@ type AccountFailedTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2373,7 +2373,7 @@ type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2394,7 +2394,7 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2427,7 +2427,7 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2457,7 +2457,7 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -2487,7 +2487,7 @@ type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -4022,7 +4022,7 @@ func (ec *executionContext) _AccountCancelledTransactionHistory_id(ctx context.C
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountCancelledTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountCancelledTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountCancelledTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountCancelledTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4040,7 +4040,7 @@ func (ec *executionContext) _AccountCancelledTransactionHistory_type(ctx context
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4258,7 +4258,7 @@ func (ec *executionContext) _AccountChargebackTransactionHistory_id(ctx context.
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountChargebackTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountChargebackTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountChargebackTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountChargebackTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4276,7 +4276,7 @@ func (ec *executionContext) _AccountChargebackTransactionHistory_type(ctx contex
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5188,7 +5188,7 @@ func (ec *executionContext) _AccountExpiredTransactionHistory_id(ctx context.Con
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountExpiredTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5206,7 +5206,7 @@ func (ec *executionContext) _AccountExpiredTransactionHistory_type(ctx context.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5392,7 +5392,7 @@ func (ec *executionContext) _AccountFailedTransactionHistory_id(ctx context.Cont
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountFailedTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountFailedTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountFailedTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountFailedTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5410,7 +5410,7 @@ func (ec *executionContext) _AccountFailedTransactionHistory_type(ctx context.Co
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5695,7 +5695,7 @@ func (ec *executionContext) _AccountInvoiceTransactionHistory_id(ctx context.Con
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInvoiceTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountInvoiceTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountInvoiceTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountInvoiceTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5713,7 +5713,7 @@ func (ec *executionContext) _AccountInvoiceTransactionHistory_type(ctx context.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6074,7 +6074,7 @@ func (ec *executionContext) _AccountNewTransactionHistory_id(ctx context.Context
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountNewTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountNewTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountNewTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountNewTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6092,7 +6092,7 @@ func (ec *executionContext) _AccountNewTransactionHistory_type(ctx context.Conte
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6453,7 +6453,7 @@ func (ec *executionContext) _AccountReactivatedTransactionHistory_id(ctx context
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountReactivatedTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountReactivatedTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountReactivatedTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountReactivatedTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6471,7 +6471,7 @@ func (ec *executionContext) _AccountReactivatedTransactionHistory_type(ctx conte
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6692,7 +6692,7 @@ func (ec *executionContext) _AccountRefundTransactionHistory_id(ctx context.Cont
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountRefundTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountRefundTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountRefundTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountRefundTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6710,7 +6710,7 @@ func (ec *executionContext) _AccountRefundTransactionHistory_type(ctx context.Co
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7485,7 +7485,7 @@ func (ec *executionContext) _AccountVoidTransactionHistory_id(ctx context.Contex
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountVoidTransactionHistory_type(ctx context.Context, field graphql.CollectedField, obj *types.AccountVoidTransactionHistory) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountVoidTransactionHistory_transaction(ctx context.Context, field graphql.CollectedField, obj *types.AccountVoidTransactionHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7503,7 +7503,7 @@ func (ec *executionContext) _AccountVoidTransactionHistory_type(ctx context.Cont
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Transaction, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13371,9 +13371,9 @@ func (ec *executionContext) _AccountCancelledTransactionHistory(ctx context.Cont
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountCancelledTransactionHistory_type(ctx, field, obj)
+				return ec._AccountCancelledTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13453,9 +13453,9 @@ func (ec *executionContext) _AccountChargebackTransactionHistory(ctx context.Con
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountChargebackTransactionHistory_type(ctx, field, obj)
+				return ec._AccountChargebackTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13802,9 +13802,9 @@ func (ec *executionContext) _AccountExpiredTransactionHistory(ctx context.Contex
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountExpiredTransactionHistory_type(ctx, field, obj)
+				return ec._AccountExpiredTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13877,9 +13877,9 @@ func (ec *executionContext) _AccountFailedTransactionHistory(ctx context.Context
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountFailedTransactionHistory_type(ctx, field, obj)
+				return ec._AccountFailedTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -13976,9 +13976,9 @@ func (ec *executionContext) _AccountInvoiceTransactionHistory(ctx context.Contex
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInvoiceTransactionHistory_type(ctx, field, obj)
+				return ec._AccountInvoiceTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14101,9 +14101,9 @@ func (ec *executionContext) _AccountNewTransactionHistory(ctx context.Context, s
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountNewTransactionHistory_type(ctx, field, obj)
+				return ec._AccountNewTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14226,9 +14226,9 @@ func (ec *executionContext) _AccountReactivatedTransactionHistory(ctx context.Co
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountReactivatedTransactionHistory_type(ctx, field, obj)
+				return ec._AccountReactivatedTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14311,9 +14311,9 @@ func (ec *executionContext) _AccountRefundTransactionHistory(ctx context.Context
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountRefundTransactionHistory_type(ctx, field, obj)
+				return ec._AccountRefundTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14655,9 +14655,9 @@ func (ec *executionContext) _AccountVoidTransactionHistory(ctx context.Context, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "type":
+		case "transaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountVoidTransactionHistory_type(ctx, field, obj)
+				return ec._AccountVoidTransactionHistory_transaction(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
