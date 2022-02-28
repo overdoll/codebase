@@ -36,7 +36,7 @@ type AccountCancelledTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The club that was supported as part of this transaction history.
@@ -57,7 +57,7 @@ type AccountChargebackTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged back.
@@ -126,7 +126,7 @@ type AccountExpiredTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The club that was supported as part of this transaction history.
@@ -145,7 +145,7 @@ type AccountFailedTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The next retry date for this transaction.
@@ -169,7 +169,7 @@ type AccountInvoiceTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged.
@@ -198,7 +198,7 @@ type AccountNewTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged.
@@ -227,7 +227,7 @@ type AccountReactivatedTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The next billing date for this subscription.
@@ -248,7 +248,7 @@ type AccountRefundTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount refunded.
@@ -312,7 +312,7 @@ type AccountVoidTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// The type of account transaction history, or what it belongs to.
-	Type AccountTransactionType `json:"type"`
+	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount voided.

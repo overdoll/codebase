@@ -29,7 +29,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return principal.NewPrincipal(s, nil, false, false), nil
+				return principal.NewPrincipal(s, []string{"staff"}, false, false), nil
 			}
 		}
 

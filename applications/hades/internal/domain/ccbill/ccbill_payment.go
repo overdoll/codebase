@@ -11,7 +11,7 @@ import (
 	hades "overdoll/applications/hades/proto"
 )
 
-func encryptCCBillPayment(payment *hades.CCBillPayment) (*string, error) {
+func EncryptCCBillPayment(payment *hades.CCBillPayment) (*string, error) {
 
 	secretKeyBytes := []byte(os.Getenv("OVERDOLL_CCBILL_ENCRYPTION_SECRET"))
 

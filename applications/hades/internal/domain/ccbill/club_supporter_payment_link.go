@@ -98,7 +98,7 @@ func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, err
 	}
 
 	// create an encrypted ccbill payment link that will be passed to other services
-	encrypted, err := encryptCCBillPayment(paymentToken)
+	encrypted, err := EncryptCCBillPayment(paymentToken)
 
 	if err != nil {
 		return nil, err

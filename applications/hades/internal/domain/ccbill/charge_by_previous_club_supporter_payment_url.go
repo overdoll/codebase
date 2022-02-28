@@ -74,7 +74,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 	}
 
 	// create an encrypted ccbill payment link that will be passed to other services
-	encrypted, err := encryptCCBillPayment(paymentLink)
+	encrypted, err := EncryptCCBillPayment(paymentLink)
 
 	if err != nil {
 		return "", nil, err

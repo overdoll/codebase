@@ -22,7 +22,7 @@ interface IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -43,7 +43,7 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -79,7 +79,7 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -115,7 +115,7 @@ type AccountReactivatedTransactionHistory implements IAccountTransactionHistory 
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -139,7 +139,7 @@ type AccountFailedTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -167,7 +167,7 @@ type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -188,7 +188,7 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -221,7 +221,7 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -251,7 +251,7 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
@@ -281,7 +281,7 @@ type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
   id: ID!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 
   """The account linked to this transaction history."""
   account: Account!
