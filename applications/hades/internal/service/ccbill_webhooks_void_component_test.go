@@ -70,8 +70,8 @@ func TestBillingFlow_Void(t *testing.T) {
 	require.Len(t, accountTransactionsVoid.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 	transaction := accountTransactionsVoid.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:14 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.CCBillReason, "Income issues", "correct reason")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-24 14:24:14 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "Income issues", transaction.CCBillReason, "correct reason")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }

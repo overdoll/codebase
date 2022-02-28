@@ -80,14 +80,14 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	require.Len(t, accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 	transaction := accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-26 08:21:49 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.Amount, "6.99", "correct amount")
-	require.Equal(t, transaction.Currency, types.CurrencyUsd, "correct currency")
-	require.Equal(t, transaction.CCBillReason, "IDK LOL", "correct reason")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-26 08:21:49 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "6.99", transaction.Amount, "correct amount")
+	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
+	require.Equal(t, "IDK LOL", transaction.CCBillReason, "correct reason")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
-	require.Equal(t, transaction.PaymentMethod.Card.Last4, "1111", "correct last 4 digits on the card")
-	require.Equal(t, transaction.PaymentMethod.Card.Type, types.CardTypeVisa, "is a VISA card")
-	require.Equal(t, transaction.PaymentMethod.Card.Expiration, "04/2023", "correct expiration date")
+	require.Equal(t, "1111", transaction.PaymentMethod.Card.Last4, "correct last 4 digits on the card")
+	require.Equal(t, types.CardTypeVisa, transaction.PaymentMethod.Card.Type, "is a VISA card")
+	require.Equal(t, "04/2023", transaction.PaymentMethod.Card.Expiration, "correct expiration date")
 }

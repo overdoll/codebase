@@ -73,10 +73,10 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	require.Len(t, accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 	transaction := accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:14 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.NextRetryDate, "2012-08-20 00:00:00 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.CCBillErrorText, "Invalid Input.", "correct reason")
-	require.Equal(t, transaction.CCBillErrorCode, "BE-140", "correct code")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-24 14:24:14 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "2012-08-20 00:00:00 +0000 UTC", transaction.NextRetryDate, "correct timestamp")
+	require.Equal(t, "Invalid Input.", transaction.CCBillErrorText, "correct reason")
+	require.Equal(t, "BE-140", transaction.CCBillErrorCode, "correct code")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }

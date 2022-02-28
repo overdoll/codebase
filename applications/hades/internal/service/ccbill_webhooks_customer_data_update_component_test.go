@@ -62,17 +62,17 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 }
 
 func assertCustomerDataUpdateCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {
-	require.Equal(t, paymentMethod.Card.Last4, "5555", "correct last 4 digits on the card")
-	require.Equal(t, paymentMethod.Card.Type, types.CardTypeVisa, "is a VISA card")
-	require.Equal(t, paymentMethod.Card.Expiration, "01/2023", "correct expiration date")
+	require.Equal(t, "5555", paymentMethod.Card.Last4, "correct last 4 digits on the card")
+	require.Equal(t, types.CardTypeVisa, paymentMethod.Card.Type, "is a VISA card")
+	require.Equal(t, "01/2023", paymentMethod.Card.Expiration, "correct expiration date")
 
-	require.Equal(t, paymentMethod.BillingContact.Email, "nikita2@overdoll.com", "correct billing contact")
-	require.Equal(t, paymentMethod.BillingContact.FirstName, "TTTT", "correct first name")
-	require.Equal(t, paymentMethod.BillingContact.LastName, "AAAAAA", "correct last name")
+	require.Equal(t, "nikita2@overdoll.com", paymentMethod.BillingContact.Email, "correct billing contact")
+	require.Equal(t, "TTTT", paymentMethod.BillingContact.FirstName, "correct first name")
+	require.Equal(t, "AAAAAA", paymentMethod.BillingContact.LastName, "correct last name")
 
-	require.Equal(t, paymentMethod.BillingAddress.AddressLine1, "Test Address 2", "correct address")
-	require.Equal(t, paymentMethod.BillingAddress.PostalCode, "M6G2V1", "correct postal code")
-	require.Equal(t, paymentMethod.BillingAddress.Country, "CA", "correct country")
-	require.Equal(t, paymentMethod.BillingAddress.State, "ON", "correct state")
-	require.Equal(t, paymentMethod.BillingAddress.City, "Test City 2", "correct city")
+	require.Equal(t, "Test Address 2", paymentMethod.BillingAddress.AddressLine1, "correct address")
+	require.Equal(t, "M6G2V1", paymentMethod.BillingAddress.PostalCode, "correct postal code")
+	require.Equal(t, "CA", paymentMethod.BillingAddress.Country, "correct country")
+	require.Equal(t, "ON", paymentMethod.BillingAddress.State, "correct state")
+	require.Equal(t, "Test City 2", paymentMethod.BillingAddress.City, "correct city")
 }

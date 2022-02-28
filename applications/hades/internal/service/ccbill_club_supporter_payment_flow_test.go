@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"github.com/PuerkitoBio/goquery"
+	uuid2 "github.com/google/uuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
@@ -20,10 +21,13 @@ type GenerateCCBillClubSupporterPaymentLink struct {
 
 type CCBillTransactionDetails struct {
 	CCBillTransactionDetails *struct {
-		Approved     bool
-		DeclineError *types.CCBillDeclineError
-		DeclineCode  *string
-		DeclineText  *string
+		Approved                               bool
+		DeclineError                           *types.CCBillDeclineError
+		DeclineCode                            *string
+		DeclineText                            *string
+		LinkedAccountClubSupporterSubscription *struct {
+			Id relay.ID
+		}
 	} `graphql:"ccbillTransactionDetails(token: $token)"`
 }
 
@@ -31,6 +35,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	ccbillSubscriptionId := uuid2.New().String()
 
 	httpClient := http.Client{}
 
@@ -100,6 +105,60 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	require.Equal(t, "Timeout", ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineText, "correct decline text")
 	require.Equal(t, types.CCBillDeclineErrorGeneralSystemError, ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "correct decline reason")
 
+	// send a success webhook
+	runWebhookAction(t, "NewSaleSuccess", map[string]string{
+		"accountingCurrency":             "USD",
+		"accountingCurrencyCode":         "840",
+		"accountingInitialPrice":         "6.99",
+		"accountingRecurringPrice":       "6.99",
+		"address1":                       "Test Address",
+		"avsResponse":                    "Y",
+		"billedCurrency":                 "USD",
+		"billedCurrencyCode":             "840",
+		"billedInitialPrice":             "6.99",
+		"billedRecurringPrice":           "6.99",
+		"bin":                            "411111",
+		"cardType":                       "VISA",
+		"city":                           "Test City",
+		"clientAccnum":                   "951492",
+		"clientSubacc":                   "0101",
+		"country":                        "CA",
+		"cvv2Response":                   "M",
+		"dynamicPricingValidationDigest": "5e118a92ac1ff6cec8bbe64e13acb7c5",
+		"email":                          "nikita@overdoll.com",
+		"expDate":                        "0423",
+		"firstName":                      "Test",
+		"flexId":                         "d09af907-c198-44f2-b14e-eb9e1533cb45",
+		"formName":                       "101 102",
+		"initialPeriod":                  "30",
+		"ipAddress":                      "192.168.1.1",
+		"last4":                          "1111",
+		"lastName":                       "Person",
+		"nextRenewalDate":                "2022-03-28",
+		"paymentAccount":                 "693a3b8d0d888c3d04800000004bacd",
+		"paymentType":                    "CREDIT",
+		"postalCode":                     "M4N5S1",
+		"prePaid":                        "0",
+		"priceDescription":               "$6.99(USD) for 30 days then $6.99(USD) recurring every 30 days",
+		"rebills":                        "99",
+		"recurringPeriod":                "30",
+		"recurringPriceDescription":      "$6.99(USD) recurring every 30 days",
+		"referringUrl":                   "none",
+		"state":                          "NT",
+		"subscriptionCurrency":           "USD",
+		"subscriptionCurrencyCode":       "840",
+		"subscriptionInitialPrice":       "6.99",
+		"subscriptionRecurringPrice":     "6.99",
+		"subscriptionTypeId":             "0000001458",
+		"timestamp":                      "2022-02-26 08:21:49",
+		"transactionId":                  "0222057601000107735",
+		"threeDSecure":                   "NOT_APPLICABLE",
+		"X-formDigest":                   "5e118a92ac1ff6cec8bbe64e13acb7c5",
+		"X-currencyCode":                 "840",
+		"subscriptionId":                 ccbillSubscriptionId,
+		"X-overdollPaymentToken":         queryParameterPaymentToken,
+	})
+
 	// now, do a success callback
 	callbackSuccessAddressUrl, err := url.Parse(HadesHttpCCBillPaymentFlowCallbackAddr)
 	require.NoError(t, err, "no error generating payment callback url")
@@ -129,7 +188,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	require.True(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.Approved, "should be approved")
 	require.Nil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.DeclineText, "no decline text")
 	require.Nil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "no decline reason")
-
+	require.NotNil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.LinkedAccountClubSupporterSubscription, "a subscription record also now exists")
 }
 
 func getTokenResponseFromDocument(doc *goquery.Document) string {

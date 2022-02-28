@@ -74,11 +74,11 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	subscription := subscriptions.Edges[0]
 
-	require.Equal(t, subscription.Node.Status, types.AccountClubSupporterSubscriptionStatusActive, "subscription is active")
-	require.Equal(t, subscription.Node.BillingCurrency, types.CurrencyUsd, "USD currency is used")
-	require.Equal(t, subscription.Node.BillingAmount, 6.99, "correct billing amount")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
+	require.Equal(t, types.CurrencyUsd, subscription.Node.BillingCurrency, "USD currency is used")
+	require.Equal(t, 6.99, subscription.Node.BillingAmount, "correct billing amount")
 	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
-	require.Equal(t, subscription.Node.NextBillingDate, "2024-03-28 00:00:00 +0000 UTC", "correct next billing date")
+	require.Equal(t, "2024-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate, "correct next billing date")
 
 	var accountTransactionsInvoice AccountTransactionHistoryInvoice
 
@@ -97,11 +97,11 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	require.Len(t, accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 	transaction := accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-26 08:21:49 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.Amount, "6.99", "correct amount")
-	require.Equal(t, transaction.Currency, types.CurrencyUsd, "correct currency")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-26 08:21:49 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)

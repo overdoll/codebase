@@ -52,11 +52,11 @@ func TestBillingFlow_NewSale(t *testing.T) {
 
 	subscription := subscriptions.Edges[0]
 
-	require.Equal(t, subscription.Node.Status, types.AccountClubSupporterSubscriptionStatusActive, "subscription is active")
-	require.Equal(t, subscription.Node.BillingCurrency, types.CurrencyUsd, "USD currency is used")
-	require.Equal(t, subscription.Node.BillingAmount, 6.99, "correct billing amount")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
+	require.Equal(t, types.CurrencyUsd, subscription.Node.BillingCurrency, "USD currency is used")
+	require.Equal(t, 6.99, subscription.Node.BillingAmount, "correct billing amount")
 	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
-	require.Equal(t, subscription.Node.NextBillingDate, "2022-03-28 00:00:00 +0000 UTC", "correct next billing date")
+	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate, "correct next billing date")
 
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscription.Node.PaymentMethod)
@@ -67,26 +67,26 @@ func TestBillingFlow_NewSale(t *testing.T) {
 
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, accountSavedPayments.Entities[0].Account.SavedPaymentMethods.Edges[0].Node.PaymentMethod)
-	require.Equal(t, accountSavedPayments.Entities[0].Account.SavedPaymentMethods.Edges[0].Node.CcbillSubscription.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription id")
+	require.Equal(t, ccbillSubscriptionId, accountSavedPayments.Entities[0].Account.SavedPaymentMethods.Edges[0].Node.CcbillSubscription.CcbillSubscriptionID, "correct ccbill subscription id")
 
 	ccbillSubscriptionDetails := getCCBillSubscriptionDetails(t, gqlClient, ccbillSubscriptionId)
 
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, ccbillSubscriptionDetails.PaymentMethod)
 
-	require.Equal(t, ccbillSubscriptionDetails.Status, types.AccountClubSupporterSubscriptionStatusActive, "subscription should be active")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, ccbillSubscriptionDetails.Status, "subscription should be active")
 
-	require.Equal(t, ccbillSubscriptionDetails.SubscriptionInitialPrice, "6.99", "s: correct initial price")
-	require.Equal(t, ccbillSubscriptionDetails.SubscriptionRecurringPrice, "6.99", "s: correct recurring price")
-	require.Equal(t, ccbillSubscriptionDetails.SubscriptionCurrency, types.CurrencyUsd, "s: correct usd currency")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.SubscriptionInitialPrice, "s: correct initial price")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.SubscriptionRecurringPrice, "s: correct recurring price")
+	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.SubscriptionCurrency, "s: correct usd currency")
 
-	require.Equal(t, ccbillSubscriptionDetails.BilledInitialPrice, "6.99", "b: correct initial price")
-	require.Equal(t, ccbillSubscriptionDetails.BilledRecurringPrice, "6.99", "b: correct recurring price")
-	require.Equal(t, ccbillSubscriptionDetails.BilledCurrency, types.CurrencyUsd, "b: correct usd currency")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.BilledInitialPrice, "b: correct initial price")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.BilledRecurringPrice, "b: correct recurring price")
+	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.BilledCurrency, "b: correct usd currency")
 
-	require.Equal(t, ccbillSubscriptionDetails.AccountingInitialPrice, "6.99", "a: correct initial price")
-	require.Equal(t, ccbillSubscriptionDetails.AccountingRecurringPrice, "6.99", "a: correct recurring price")
-	require.Equal(t, ccbillSubscriptionDetails.AccountingCurrency, types.CurrencyUsd, "a: correct usd currency")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.AccountingInitialPrice, "a: correct initial price")
+	require.Equal(t, "6.99", ccbillSubscriptionDetails.AccountingRecurringPrice, "a: correct recurring price")
+	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.AccountingCurrency, "a: correct usd currency")
 
 	var accountTransactions AccountTransactionHistoryNew
 
@@ -109,25 +109,25 @@ func TestBillingFlow_NewSale(t *testing.T) {
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Amount, "6.99", "correct amount")
-	require.Equal(t, transaction.Currency, types.CurrencyUsd, "correct currency")
-	require.Equal(t, transaction.NextBillingDate, "2022-03-28 00:00:00 +0000 UTC", "correct next billing date")
-	require.Equal(t, transaction.BilledAtDate, "2022-02-26 00:00:00 +0000 UTC", "correct billing date")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
+	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate, "correct next billing date")
+	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate, "correct billing date")
 }
 
 func assertNewSaleSuccessCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {
-	require.Equal(t, paymentMethod.Card.Last4, "1111", "correct last 4 digits on the card")
-	require.Equal(t, paymentMethod.Card.Type, types.CardTypeVisa, "is a VISA card")
-	require.Equal(t, paymentMethod.Card.Expiration, "04/2024", "correct expiration date")
+	require.Equal(t, "1111", paymentMethod.Card.Last4, "correct last 4 digits on the card")
+	require.Equal(t, types.CardTypeVisa, paymentMethod.Card.Type, "is a VISA card")
+	require.Equal(t, "04/2024", paymentMethod.Card.Expiration, "correct expiration date")
 
-	require.Equal(t, paymentMethod.BillingContact.Email, "nikita@overdoll.com", "correct billing contact")
-	require.Equal(t, paymentMethod.BillingContact.FirstName, "Test", "correct first name")
-	require.Equal(t, paymentMethod.BillingContact.LastName, "Person", "correct last name")
+	require.Equal(t, "nikita@overdoll.com", paymentMethod.BillingContact.Email, "correct billing contact")
+	require.Equal(t, "Test", paymentMethod.BillingContact.FirstName, "correct first name")
+	require.Equal(t, "Person", paymentMethod.BillingContact.LastName, "correct last name")
 
-	require.Equal(t, paymentMethod.BillingAddress.AddressLine1, "Test Address", "correct address")
-	require.Equal(t, paymentMethod.BillingAddress.PostalCode, "TM4N5S1", "correct postal code")
-	require.Equal(t, paymentMethod.BillingAddress.Country, "CA", "correct country")
-	require.Equal(t, paymentMethod.BillingAddress.State, "NT", "correct state")
-	require.Equal(t, paymentMethod.BillingAddress.City, "Test City", "correct city")
+	require.Equal(t, "Test Address", paymentMethod.BillingAddress.AddressLine1, "correct address")
+	require.Equal(t, "TM4N5S1", paymentMethod.BillingAddress.PostalCode, "correct postal code")
+	require.Equal(t, "CA", paymentMethod.BillingAddress.Country, "correct country")
+	require.Equal(t, "NT", paymentMethod.BillingAddress.State, "correct state")
+	require.Equal(t, "Test City", paymentMethod.BillingAddress.City, "correct city")
 }

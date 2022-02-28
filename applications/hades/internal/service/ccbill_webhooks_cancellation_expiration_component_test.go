@@ -75,7 +75,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
 	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
 
-	require.Equal(t, subscriptions.Edges[0].Node.Status, types.AccountClubSupporterSubscriptionStatusCancelled, "subscription is cancelled now")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusCancelled, subscriptions.Edges[0].Node.Status, "subscription is cancelled now")
 
 	var accountTransactionsCancelled AccountTransactionHistoryCancelled
 
@@ -95,10 +95,10 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:41 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.CCBillReason, "Transaction Voided", "correct reason")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-24 14:24:41 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "Transaction Voided", transaction.CCBillReason, "correct reason")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
 	// run webhook - expiration
 	runWebhookAction(t, "Cancelled", map[string]string{
@@ -130,7 +130,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	transaction = accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
 
-	require.Equal(t, transaction.Transaction, types.AccountTransactionTypeClubSupporterSubscription, "correct transaction type")
-	require.Equal(t, transaction.Timestamp, "2022-02-24 14:24:41 +0000 UTC", "correct timestamp")
-	require.Equal(t, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, ccbillSubscriptionId, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-24 14:24:41 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }
