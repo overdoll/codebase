@@ -73,12 +73,20 @@ export default {
       include: ['src/client/domain/Moderation/Moderation.tsx']
     },
     {
-      path: 'src/client/domain/Moderation/History/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/History']
+      path: 'src/client/domain/Moderation/pages/History/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/History']
     },
     {
-      path: 'src/client/domain/Moderation/Queue/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/Queue']
+      path: 'src/client/domain/Moderation/pages/Queue/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/Queue']
+    },
+    {
+      path: 'src/client/domain/Moderation/pages/Reports/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/Reports']
+    },
+    {
+      path: 'src/client/domain/Moderation/pages/ModerationPost/__locale__/{locale}/index',
+      include: ['src/client/domain/Moderation/pages/ModerationPost']
     },
     {
       path: 'src/client/domain/PublicPost/__locale__/{locale}/index',
@@ -127,6 +135,74 @@ export default {
     {
       path: 'src/client/domain/Help/__locale__/{locale}/index',
       include: ['src/client/domain/Help']
+    },
+    {
+      path: 'src/client/domain/Admin/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAudience/AdminViewAudience']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCategory/AdminViewCategory']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminRules/AdminSearchRules/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminRules/AdminSearchRules']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminRules/AdminCreateRule/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminRules/AdminCreateRule']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminSeries/AdminViewSeries']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAccount/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccount']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminClub/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminClub']
     }
   ],
   format: 'po',

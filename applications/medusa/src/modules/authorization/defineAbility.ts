@@ -7,16 +7,24 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
     build
   } = new AbilityBuilder(App)
 
+  can('interact', ['Club', 'Post'])
+
   if (data != null) {
-    can('manage', 'Account')
+    can('configure', ['Account', 'Club'])
 
     if (!data.isLocked) {
-      can('create', 'Post')
+      can('create', ['Club', 'Post'])
     }
 
     if (data.isModerator) {
       if (!data.isLocked) {
         can('moderate', 'Post')
+      }
+    }
+
+    if (data.isStaff) {
+      if (!data.isLocked) {
+        can('admin', ['Tags', 'Club', 'Account', 'Post'])
       }
     }
   }

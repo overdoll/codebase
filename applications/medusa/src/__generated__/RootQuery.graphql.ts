@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0151810f68424387215cc8d3f22747ea>>
- * @relayHash 6f502e2db75a94c63a502d025e203b9e
+ * @generated SignedSource<<a49d3595314b627b5ac6a92f178f3d93>>
+ * @relayHash 775f932a661cdda889330be5549a4094
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6f502e2db75a94c63a502d025e203b9e
+// @relayRequestID 775f932a661cdda889330be5549a4094
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type RootQuery$variables = {};
 export type RootQueryVariables = RootQuery$variables;
 export type RootQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment" | "LockedAccountBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment">;
   } | null;
   readonly language: {
     readonly locale: string;
@@ -52,6 +52,13 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 };
@@ -79,11 +86,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "UniversalNavigatorFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -120,13 +122,6 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "__typename",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
                 "storageKey": null
               }
             ],
@@ -176,13 +171,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -193,12 +182,24 @@ return {
                 ],
                 "storageKey": null
               },
-              (v1/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v1/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
           (v0/*: any*/),
-          (v1/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       },
@@ -206,7 +207,7 @@ return {
     ]
   },
   "params": {
-    "id": "6f502e2db75a94c63a502d025e203b9e",
+    "id": "775f932a661cdda889330be5549a4094",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -215,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "4a182eb0eb5dbeddf86cde10eadc74b2";
+(node as any).hash = "bda40d2084b2bd911210478cd6c0a3cb";
 
 export default node;

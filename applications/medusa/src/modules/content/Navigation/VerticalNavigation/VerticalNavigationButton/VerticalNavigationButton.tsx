@@ -6,7 +6,7 @@ interface Props {
   title: ReactNode
   to: string
   exact?: boolean
-  icon: FunctionComponent<any>
+  icon?: FunctionComponent<any> | undefined
   colorScheme?: string
   strict?: boolean
   buttonType?: 'primary' | 'secondary'

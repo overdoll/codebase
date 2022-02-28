@@ -1,15 +1,16 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
-import { ClickableTile, GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
+import { GridTile, GridWrap, LoadMoreGridTile } from '../../../../../../modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
-import PostPreviewContent
-  from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
-import { Link } from '@//:modules/routing'
-import generatePath from '@//:modules/routing/generatePath'
-import { useParams } from '@//:modules/routing/useParams'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import DraftPost from './DraftPost/DraftPost'
+import PublishedPost from './PublishedPost/PublishedPost'
+import PostPreviewContent
+  from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+import ReviewPost from './ReviewPost/ReviewPost'
+import RejectedPost from './RejectedPost/RejectedPost'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -37,9 +38,12 @@ const Fragment = graphql`
     @connection (key: "ClubPosts_posts") {
       edges {
         node {
-          reference
           state
           ...PostPreviewContentFragment
+          ...DraftPostFragment
+          ...PostReviewFragment
+          ...ReviewPostFragment
+          ...RejectedPostFragment
         }
       }
     }
@@ -62,8 +66,6 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     queryData.viewer
   )
 
-  const match = useParams()
-
   if (queryData?.club == null) {
     return <NotFoundClub />
   }
@@ -81,44 +83,27 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
   return (
     <GridWrap>
       {data.posts.edges.map((item, index) => {
-        const draftPostPath = (): string => {
-          if (match?.slug == null) return ''
-
-          return generatePath('/club/:slug/:entity', {
-            slug: match?.slug,
-            entity: 'create-post'
-          })
-        }
-
         switch (item.node.state) {
           case 'DRAFT':
             return (
-              <GridTile key={index}>
-                <Link to={`${draftPostPath()}?post=${item.node.reference as string}`}>
-                  {({ isPending }) => (
-                    <ClickableTile isPending={isPending}>
-                      <PostPreviewContent query={item.node} />
-                    </ClickableTile>
-                  )}
-                </Link>
-              </GridTile>
+              <DraftPost key={index} query={item.node} />
             )
           case 'PUBLISHED':
             return (
-              <GridTile key={index}>
-                <Link to={`/p/${item.node.reference as string}`}>
-                  {({ isPending }) => (
-                    <ClickableTile isPending={isPending}>
-                      <PostPreviewContent query={item.node} />
-                    </ClickableTile>
-                  )}
-                </Link>
-              </GridTile>
+              <PublishedPost key={index} query={item.node} />
+            )
+          case 'REVIEW':
+            return (
+              <ReviewPost key={index} query={item.node} />
+            )
+          case 'REJECTED':
+            return (
+              <RejectedPost key={index} query={item.node} />
             )
           default:
             return (
-              <GridTile key={index}>
-                <PostPreviewContent query={item.node} />
+              <GridTile>
+                <PostPreviewContent key={index} query={data} />
               </GridTile>
             )
         }

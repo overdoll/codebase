@@ -11,3 +11,7 @@ export interface ForwardRefProp {
 export interface ConnectionProp {
   connectionId: string
 }
+
+export interface InputPlaceholder {
+  placeholder: string
+}

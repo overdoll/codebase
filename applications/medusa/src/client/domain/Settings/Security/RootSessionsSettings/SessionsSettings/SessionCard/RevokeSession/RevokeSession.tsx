@@ -1,10 +1,9 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { RevokeSessionMutation } from '@//:artifacts/RevokeSessionMutation.graphql'
-import { useToast } from '@chakra-ui/react'
 import type { RevokeSessionFragment$key } from '@//:artifacts/RevokeSessionFragment.graphql'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   connectionID: string
   session: RevokeSessionFragment$key
@@ -46,15 +45,13 @@ export default function RevokeSession ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Session successfully revoked`,
-          isClosable: true
+          title: t`Session successfully revoked`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error revoking the session`,
-          isClosable: true
+          title: t`There was an error revoking the session`
         })
       }
     }

@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-02-17 14:53-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: cs\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
+msgid "BCP 47 Locale Code"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:57
+msgid "Change Character Name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:40
+msgid "Change Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:32
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:111
+msgid "Character Name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:29
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:104
+msgid "Character Thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:116
+msgid "Enter a name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:93
+msgid "Error updating character name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
+msgid "Locale"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:80
+msgid "Successfully updated character thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:86
+msgid "There was an error updating the character thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:87
+msgid "Updated character name to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:43
+msgid "View Translations"
+msgstr ""

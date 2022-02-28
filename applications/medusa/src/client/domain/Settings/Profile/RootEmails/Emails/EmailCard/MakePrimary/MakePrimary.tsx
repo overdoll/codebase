@@ -1,10 +1,10 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql'
 import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql'
-import { useToast } from '@chakra-ui/react'
 import { SmallMenuItem } from '@//:modules/content/PageLayout'
 import { SettingWrench } from '@//:assets/icons/navigation'
 import { t, Trans } from '@lingui/macro'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: MakePrimaryFragment$key
@@ -53,15 +53,13 @@ export default function MakePrimary ({ query }: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`${data.email} was set as your Primary email`,
-          isClosable: true
+          title: t`${data.email} was set as your Primary email`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error setting ${data.email} to Primary`,
-          isClosable: true
+          title: t`There was an error setting ${data.email} to Primary`
         })
       }
     })

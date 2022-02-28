@@ -13,10 +13,9 @@ import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsI
 import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { ReactNode, useState } from 'react'
 import { Trans } from '@lingui/macro'
-import PageSectionChildrenWrapper from '../PageSectionScroller/PageSectionChildrenWrapper/PageSectionChildrenWrapper'
 
 interface Props {
-  query: PostsInfiniteScrollFragment$key | null
+  query: PostsInfiniteScrollFragment$key
   viewerQuery: PostsInfiniteScrollViewerFragment$key | null
   hasNext: boolean
   loadNext: (number, options) => {}
@@ -63,7 +62,7 @@ export default function PostsInfiniteScroll ({
 
   const onSlideChange = (swiper): void => {
     const activeIndex = swiper.activeIndex as number
-    const currentLength = data?.edges.length as number
+    const currentLength = data?.edges.length
 
     if (activeIndex + 3 >= currentLength && !isLoadingNext && hasNext) {
       loadNext(10, { onComplete: onCompleteLoaded })
@@ -72,14 +71,11 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <PageSectionChildrenWrapper>
-        <SmallBackgroundBox>
-          <Trans>
-            No posts found
-          </Trans>
-        </SmallBackgroundBox>
-      </PageSectionChildrenWrapper>
-
+      <SmallBackgroundBox>
+        <Trans>
+          No posts found
+        </Trans>
+      </SmallBackgroundBox>
     )
   }
 
@@ -91,11 +87,11 @@ export default function PostsInfiniteScroll ({
         scrollbar={{ hide: true }}
         style={{ height: 'calc(100vh - 54px)' }}
         mousewheel
-        slidesOffsetBefore={10}
+        slidesOffsetBefore={50}
         virtual={{
           cache: true,
-          addSlidesBefore: 7,
-          addSlidesAfter: 7
+          addSlidesBefore: 12,
+          addSlidesAfter: 12
         }}
         spaceBetween={20}
         slidesPerView={1.1}

@@ -28,7 +28,7 @@ export default function ClickableTile ({
         <Box
           position='absolute'
           top={0}
-          left={0}
+          right={0}
           margin={2}
         >
           <Flex bg='dimmers.500' borderRadius='full' p={1}>

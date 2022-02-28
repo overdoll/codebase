@@ -54,10 +54,10 @@ export default function Link ({
     router.preload(to)
   }, [to, router])
 
-  if (disabled) {
+  if (disabled || isPending) {
     return (
       <span>
-        {children}
+        {runIfFunction(children, { isPending })}
       </span>
     )
   }

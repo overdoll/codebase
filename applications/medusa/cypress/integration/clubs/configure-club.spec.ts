@@ -19,12 +19,13 @@ describe('Club - Configure', () => {
     pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
   })
 
-  beforeEach(() => {
+  before(() => {
     cy.joinWithNewAccount(username, email)
+    createClubWithName(clubName)
   })
 
-  it('create club', () => {
-    createClubWithName(clubName)
+  beforeEach(() => {
+    cy.joinWithNewAccount(username, email)
   })
 
   it('visit club settings and change them', () => {
@@ -47,10 +48,14 @@ describe('Club - Configure', () => {
     cy.get('button[aria-label="Open Menu"]').click()
     cy.findByText(/Remove Alias/iu).should('be.visible').click()
     cy.findByText(/clubName/iu).should('not.exist')
+    cy.findByRole('button', { name: /Add Club Link Alias/iu }).click()
+    cy.findByPlaceholderText(/Enter a new club link/).should('not.be.visible')
 
     // add new logo
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Club Thumbnail/iu }).should('not.be.disabled').click({ force: true }))
     cy.findByText(/Drag and drop or/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
+    cy.findByText(/Remove upload/iu).should('exist')
+    cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
     cy.findByText(/updated your club thumbnail/iu).should('be.visible')
   })
 
@@ -72,8 +77,11 @@ describe('Club - Configure', () => {
   })
 
   it('visit club public page', () => {
-    // TODO test joining club from here when it's fixed
     cy.visit(`/${newClubName}`)
     cy.findByText(newClubName).should('exist')
+    cy.findByRole('button', { name: /Join/iu }).should('not.be.disabled').click()
+    cy.findByText(/You are now a member of/iu).should('be.visible')
+    cy.findByRole('button', { name: /Leave/iu }).should('not.be.disabled').click()
+    cy.findByRole('button', { name: /Join/iu }).should('exist')
   })
 })

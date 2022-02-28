@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f929b831cb0827053b4fb3c76f0cda01>>
- * @relayHash 5eeb31bcbc0c237c25997ac4519aa21a
+ * @generated SignedSource<<bc990a85439e2084d0ff0923aed2c56c>>
+ * @relayHash aaa6cd8cc790b55e09bf19b139b4ad4e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,24 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5eeb31bcbc0c237c25997ac4519aa21a
+// @relayRequestID aaa6cd8cc790b55e09bf19b139b4ad4e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type MainMenuButtonCreatePostQuery$variables = {};
+export type MainMenuButtonCreatePostQuery$variables = {
+  first?: number | null;
+  after?: string | null;
+};
 export type MainMenuButtonCreatePostQueryVariables = MainMenuButtonCreatePostQuery$variables;
 export type MainMenuButtonCreatePostQuery$data = {
   readonly viewer: {
     readonly clubsCount: number;
     readonly clubs: {
+      readonly __id: string;
       readonly edges: ReadonlyArray<{
         readonly node: {
+          readonly id: string;
           readonly slug: string;
+          readonly name: string;
         };
       }>;
     };
@@ -34,24 +40,20 @@ export type MainMenuButtonCreatePostQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "clubsCount",
-  "storageKey": null
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
 },
-v1 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 1
-  }
-],
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "first"
+},
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "clubsCount",
   "storageKey": null
 },
 v3 = {
@@ -60,10 +62,115 @@ v3 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ClubEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "slug",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cursor",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "kind": "LinkedField",
+    "name": "pageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "endCursor",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hasNextPage",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "kind": "ClientExtension",
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "__id",
+        "storageKey": null
+      }
+    ]
+  }
+],
+v5 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "first"
+  }
+];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "MainMenuButtonCreatePostQuery",
@@ -76,40 +183,16 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v2/*: any*/),
           {
-            "alias": null,
-            "args": (v1/*: any*/),
+            "alias": "clubs",
+            "args": null,
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
-            "name": "clubs",
+            "name": "__CreateClubListener_clubs_connection",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": "clubs(first:1)"
+            "selections": (v4/*: any*/),
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -120,7 +203,10 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "MainMenuButtonCreatePostQuery",
     "selections": [
@@ -132,41 +218,25 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v5/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": "clubs(first:1)"
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v5/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "CreateClubListener_clubs",
+            "kind": "LinkedHandle",
+            "name": "clubs"
           },
           (v3/*: any*/)
         ],
@@ -175,8 +245,20 @@ return {
     ]
   },
   "params": {
-    "id": "5eeb31bcbc0c237c25997ac4519aa21a",
-    "metadata": {},
+    "id": "aaa6cd8cc790b55e09bf19b139b4ad4e",
+    "metadata": {
+      "connection": [
+        {
+          "count": "first",
+          "cursor": "after",
+          "direction": "forward",
+          "path": [
+            "viewer",
+            "clubs"
+          ]
+        }
+      ]
+    },
     "name": "MainMenuButtonCreatePostQuery",
     "operationKind": "query",
     "text": null
@@ -184,6 +266,6 @@ return {
 };
 })();
 
-(node as any).hash = "48b514c81c819c326bd3cf18ca33564c";
+(node as any).hash = "bedab0ed6c46a76328fdbc9d935e3478";
 
 export default node;

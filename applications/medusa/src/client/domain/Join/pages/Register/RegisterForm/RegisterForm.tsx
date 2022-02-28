@@ -1,11 +1,18 @@
 import Joi from 'joi'
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
-import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import Username from '@//:modules/validation/Username'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
+import { useLingui } from '@lingui/react'
 
 interface RegisterValues {
   username: string
@@ -20,60 +27,37 @@ export default function RegisterForm ({
   onSubmit,
   loading
 }: Props): JSX.Element {
+  const { i18n } = useLingui()
+
   const schema = Joi.object({
     username: Username()
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<RegisterValues>({
+  const methods = useForm<RegisterValues>({
     resolver: joiResolver(
       schema
     )
   })
 
-  const success = isDirty && (errors.username == null) && isSubmitted
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={6}>
-        <FormControl
-          isInvalid={errors.username != null}
+        <FormInput
+          size='xl'
           id='username'
         >
-          <FormLabel
-            htmlFor='username'
-            variant='float'
-            zIndex={1}
-            color={!success
-              ? (errors.username != null)
-                  ? 'orange.500'
-                  : 'gray.200'
-              : 'green.600'}
-          >
+          <InputHeader>
             <Trans>
               Username
             </Trans>
-          </FormLabel>
-          <StyledInput
-            size='xl'
-            register={register('username')}
-            success={success}
-            error={errors.username != null}
-            placeholder={t`Enter a username`}
-            errorMessage={errors.username?.message}
-          />
-        </FormControl>
-        <Button
+          </InputHeader>
+          <InputBody>
+            <TextInput placeholder={i18n._(t`Enter a username`)} />
+          </InputBody>
+        </FormInput>
+        <FormSubmitButton
           size='xl'
           variant='outline'
-          type='submit'
           isLoading={loading}
           colorScheme='green'
           w='100%'
@@ -81,8 +65,8 @@ export default function RegisterForm ({
           <Trans>
             Register
           </Trans>
-        </Button>
+        </FormSubmitButton>
       </Stack>
-    </form>
+    </Form>
   )
 }

@@ -1,9 +1,10 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
-import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: PreloadedQuery<MultiFactorTotpHeaderQuery>

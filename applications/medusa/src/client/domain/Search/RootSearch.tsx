@@ -4,11 +4,16 @@ import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import type { SearchQuery as SearchQueryType } from '@//:artifacts/SearchQuery.graphql'
 import SearchQuery from '@//:artifacts/SearchQuery.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import Search from './Search/Search'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import useSearchButtonQueryArguments
-  from '../../components/FloatingGeneralSearchButton/helpers/useSearchButtonQueryArguments'
+import useGeneralSearchArguments from '../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import { PostOrderButton, PostSearchButton } from '../../components/PostsSearch'
+import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
+import PageInfiniteScrollWrapper
+  from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+import FixedHeaderWrapper from '../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import { Flex, HStack } from '@chakra-ui/react'
+import LockedAccountTrigger from '../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 
 interface Props {
   prepared: {
@@ -22,21 +27,32 @@ export default function RootSearch (props: Props): JSX.Element {
     props.prepared.query
   )
 
-  const loadQueryWithParams = useSearchButtonQueryArguments({
-    queryLoader: loadQuery,
-    extraParams: {}
-  })
+  useGeneralSearchArguments((params) => loadQuery(params))
 
   return (
     <>
       <Helmet title='search' />
-      <PageWrapper fillPage>
-        <QueryErrorBoundary loadQuery={loadQueryWithParams}>
+      <PageFixedHeader>
+        <FixedHeaderWrapper>
+          <Flex justify='space-between'>
+            <PostOrderButton />
+            <HStack spacing={2}>
+              <LockedAccountTrigger />
+              <PostSearchButton routeTo='/search' />
+            </HStack>
+          </Flex>
+        </FixedHeaderWrapper>
+      </PageFixedHeader>
+      <PageInfiniteScrollWrapper>
+        <QueryErrorBoundary loadQuery={() => loadQuery({
+          sortBy: 'TOP'
+        })}
+        >
           <Suspense fallback={<SkeletonPost />}>
             <Search query={queryRef as PreloadedQuery<SearchQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageInfiniteScrollWrapper>
     </>
   )
 }

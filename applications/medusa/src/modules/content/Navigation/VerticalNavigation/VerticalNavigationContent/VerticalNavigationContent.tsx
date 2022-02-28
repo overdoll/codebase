@@ -1,5 +1,7 @@
 import { Box, Center, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { ReactNode, useContext } from 'react'
+import { VerticalNavigationContext } from '../VerticalNavigation'
+import { LargeBackgroundBox, PageWrapper } from '../../../PageLayout'
 
 interface Props {
   children: ReactNode
@@ -8,6 +10,34 @@ interface Props {
 }
 
 export default function VerticalNavigationContent (props: Props): JSX.Element {
+  const { isExtended } = useContext(VerticalNavigationContext)
+
+  if (isExtended) {
+    return (
+      <PageWrapper>
+        <LargeBackgroundBox>
+          <Stack spacing={2}>
+            <Stack spacing={1}>
+              {props.title != null &&
+                <Flex justify='center' align='center' px={2} pt={2}>
+                  <Heading fontSize='xl' color='gray.00'>
+                    {props.title}
+                  </Heading>
+                </Flex>}
+              {props.outsideElements != null &&
+                <Box px={2}>
+                  {props.outsideElements}
+                </Box>}
+            </Stack>
+            <Stack spacing={3}>
+              {props.children}
+            </Stack>
+          </Stack>
+        </LargeBackgroundBox>
+      </PageWrapper>
+    )
+  }
+
   return (
     <>
       <Center

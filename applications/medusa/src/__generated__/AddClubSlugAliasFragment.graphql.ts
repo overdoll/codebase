@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b2779b80c4745352ee064c7bd06e8d85>>
+ * @generated SignedSource<<b789e863fb47254f51a81483e5b63cc5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type AddClubSlugAliasFragment$data = {
   readonly id: string;
   readonly slug: string;
-  readonly slugAliases: ReadonlyArray<{
-    readonly __typename: string;
-  }>;
-  readonly slugAliasesLimit: number;
   readonly " $fragmentType": "AddClubSlugAliasFragment";
 };
 export type AddClubSlugAliasFragment = AddClubSlugAliasFragment$data;
@@ -44,37 +40,12 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "slug",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ClubSlugAlias",
-      "kind": "LinkedField",
-      "name": "slugAliases",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "slugAliasesLimit",
-      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "1961a61402df94890848debcd801e8db";
+(node as any).hash = "4f851998905adff36bde147639e892cb";
 
 export default node;

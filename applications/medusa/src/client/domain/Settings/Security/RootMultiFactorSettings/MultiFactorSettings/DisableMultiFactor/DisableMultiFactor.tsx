@@ -8,8 +8,7 @@ import {
   Flex,
   Text,
   Tooltip,
-  useDisclosure,
-  useToast
+  useDisclosure
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
@@ -17,6 +16,7 @@ import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiF
 import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
 import { useRef } from 'react'
 import { t, Trans } from '@lingui/macro'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   data: DisableMultiFactorFragment$key

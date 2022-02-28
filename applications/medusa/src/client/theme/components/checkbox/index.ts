@@ -104,7 +104,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
 
 const defaultProps = {
   size: 'md',
-  colorScheme: 'blue'
+  colorScheme: 'teal'
 }
 
 export default {

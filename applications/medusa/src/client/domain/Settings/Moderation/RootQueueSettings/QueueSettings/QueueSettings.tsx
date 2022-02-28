@@ -1,4 +1,4 @@
-import { Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
 import Switch from '@//:modules/form/Switch/Switch'
@@ -6,6 +6,7 @@ import { t, Trans } from '@lingui/macro'
 import type { QueueSettingsAddMutation } from '@//:artifacts/QueueSettingsAddMutation.graphql'
 import type { QueueSettingsRemoveMutation } from '@//:artifacts/QueueSettingsRemoveMutation.graphql'
 import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: PreloadedQuery<QueueSettingsQueryType>
@@ -88,15 +89,13 @@ export default function QueueSettings (props: Props): JSX.Element {
         onCompleted () {
           notify({
             status: 'success',
-            title: t`You are no longer in the Moderator Posts Queue`,
-            isClosable: true
+            title: t`You are no longer in the Moderator Posts Queue`
           })
         },
         onError () {
           notify({
             status: 'error',
-            title: t`There was an error changing your Queue status to Off`,
-            isClosable: true
+            title: t`There was an error changing your Queue status to Off`
           })
         }
       })
@@ -112,15 +111,13 @@ export default function QueueSettings (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`You are now active in the Moderator Posts Queue`,
-          isClosable: true
+          title: t`You are now active in the Moderator Posts Queue`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error changing your Queue status to On`,
-          isClosable: true
+          title: t`There was an error changing your Queue status to On`
         })
       }
     })

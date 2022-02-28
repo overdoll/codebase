@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Alert, AlertDescription, AlertIcon, Stack, useToast } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
@@ -9,7 +9,8 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -93,8 +94,7 @@ export default function Join ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error with joining`,
-          isClosable: true
+          title: t`There was an error with joining`
         })
       }
     })
@@ -124,7 +124,7 @@ export default function Join ({
                   The login code has previously expired or is no longer valid. Try again?
                 </Trans>
               </AlertDescription>
-              <CloseButton
+              <AlertCloseButton
                 position='absolute'
                 size='sm'
                 right={2}

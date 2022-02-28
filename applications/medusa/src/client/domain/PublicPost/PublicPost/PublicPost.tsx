@@ -7,7 +7,6 @@ import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/Obser
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
 import { Trans } from '@lingui/macro'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 
 interface Props {
@@ -21,7 +20,7 @@ const Query = graphql`
       ...FullDetailedPostFragment
       ...PublicPostFragment
     }
-    viewer {
+    viewer @required(action: THROW) {
       ...FullDetailedPostViewerFragment
       ...PostsInfiniteScrollViewerFragment
     }
@@ -63,9 +62,7 @@ export default function PublicPost (props: Props): JSX.Element {
 
   if (queryData?.post == null) {
     return (
-      <PageWrapper>
-        <NotFoundPublicPost />
-      </PageWrapper>
+      <NotFoundPublicPost />
     )
   }
 

@@ -88,7 +88,7 @@ export default function StyledInput ({
           placeholder={placeholder}
           {...rest}
         />
-        {(error || success || isLoading) && (
+        {(error ?? success ?? isLoading) && (
           <InputRightElement
             p={determinePadding()}
             mr={0}

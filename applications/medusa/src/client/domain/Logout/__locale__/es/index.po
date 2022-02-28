@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Logout/Logout.tsx:49
+#: src/client/domain/Logout/Logout.tsx:48
 msgid "There was an error logging out"
 msgstr ""
 

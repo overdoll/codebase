@@ -1,12 +1,19 @@
 import Joi from 'joi'
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
-import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Email from '@//:modules/validation/Email'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface JoinValues {
   email: string
@@ -25,15 +32,7 @@ export default function JoinForm ({
     email: Email()
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<JoinValues>({
+  const methods = useForm<JoinValues>({
     resolver: joiResolver(
       schema
     )
@@ -41,44 +40,29 @@ export default function JoinForm ({
 
   const { i18n } = useLingui()
 
-  const success = isDirty && (errors.email == null) && isSubmitted
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={onSubmit} {...methods}>
       <Stack spacing={6}>
-        <FormControl
-          isInvalid={errors.email != null}
+        <FormInput
           id='email'
+          size='xl'
         >
-          <FormLabel
-            zIndex={1}
-            htmlFor='email'
-            variant='float'
-            color={!success
-              ? (errors.email != null)
-                  ? 'orange.500'
-                  : 'gray.200'
-              : 'green.600'}
-          >
+          <InputHeader>
             <Trans>
               Email
             </Trans>
-          </FormLabel>
-          <StyledInput
-            register={register('email')}
-            success={success}
-            error={errors.email != null}
-            placeholder={
+          </InputHeader>
+          <InputBody>
+            <TextInput placeholder={
               i18n._(t`Enter an email`)
             }
-            errorMessage={errors.email?.message}
-            size='xl'
-          />
-        </FormControl>
-        <Button
+            />
+          </InputBody>
+          <InputFeedback />
+        </FormInput>
+        <FormSubmitButton
           size='xl'
           variant='outline'
-          type='submit'
           isLoading={loading}
           colorScheme='primary'
           w='100%'
@@ -86,8 +70,8 @@ export default function JoinForm ({
           <Trans>
             Continue
           </Trans>
-        </Button>
+        </FormSubmitButton>
       </Stack>
-    </form>
+    </Form>
   )
 }

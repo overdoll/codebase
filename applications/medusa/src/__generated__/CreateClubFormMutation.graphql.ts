@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b2ed6eb299a8baa166068f17d47ac917>>
- * @relayHash f87375f46093693974320541c25ad564
+ * @generated SignedSource<<8b7ae9d3f32c0faca1232eb088170e26>>
+ * @relayHash 74b60af6ff7abe2e65d9e1ba5d359ded
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f87375f46093693974320541c25ad564
+// @relayRequestID 74b60af6ff7abe2e65d9e1ba5d359ded
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateClubValidation = "SLUG_TAKEN" | "%future added value";
-export type CreateClubFormMutation$variables = {
+export type CreateClubInput = {
   name: string;
   slug: string;
+};
+export type CreateClubFormMutation$variables = {
+  input: CreateClubInput;
   connections: ReadonlyArray<string>;
 };
 export type CreateClubFormMutationVariables = CreateClubFormMutation$variables;
@@ -47,39 +50,23 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "name"
+  "name": "input"
 },
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "slug"
-},
-v3 = [
+v2 = [
   {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "name",
-        "variableName": "name"
-      },
-      {
-        "kind": "Variable",
-        "name": "slug",
-        "variableName": "slug"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "input"
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "Club",
@@ -87,7 +74,7 @@ v5 = {
   "name": "club",
   "plural": false,
   "selections": [
-    (v4/*: any*/),
+    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -110,14 +97,14 @@ v5 = {
       "name": "owner",
       "plural": false,
       "selections": [
-        (v4/*: any*/)
+        (v3/*: any*/)
       ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -128,8 +115,7 @@ return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
+      (v1/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -137,14 +123,14 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "CreateClubPayload",
         "kind": "LinkedField",
         "name": "createClub",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/)
+          (v4/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -156,7 +142,6 @@ return {
   "operation": {
     "argumentDefinitions": [
       (v1/*: any*/),
-      (v2/*: any*/),
       (v0/*: any*/)
     ],
     "kind": "Operation",
@@ -164,13 +149,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "CreateClubPayload",
         "kind": "LinkedField",
         "name": "createClub",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -192,14 +177,14 @@ return {
               }
             ]
           },
-          (v6/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "f87375f46093693974320541c25ad564",
+    "id": "74b60af6ff7abe2e65d9e1ba5d359ded",
     "metadata": {},
     "name": "CreateClubFormMutation",
     "operationKind": "mutation",
@@ -208,6 +193,6 @@ return {
 };
 })();
 
-(node as any).hash = "030f1a6bd72a51940a30905dcaafc1f9";
+(node as any).hash = "33855a7d8a07256d44cdffbcea7321fc";
 
 export default node;

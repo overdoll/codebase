@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d3f50231ce0233884ae704c58c2d1e88>>
- * @relayHash 981e731224211b846846b46ca64e7b11
+ * @generated SignedSource<<5b8ced8c76932f923ac1c27908b061a6>>
+ * @relayHash 67aaeff3b44ab0d804da7ce2aef04525
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 981e731224211b846846b46ca64e7b11
+// @relayRequestID 67aaeff3b44ab0d804da7ce2aef04525
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,6 +23,7 @@ export type ProfileQuery$data = {
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment">;
   } | null;
 };
 export type ProfileQueryResponse = ProfileQuery$data;
@@ -54,6 +55,13 @@ v2 = {
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -91,6 +99,11 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ProfileMenuFragment"
           }
         ],
         "storageKey": null
@@ -137,13 +150,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -154,18 +161,30 @@ return {
                 ],
                 "storageKey": null
               },
-              (v3/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "981e731224211b846846b46ca64e7b11",
+    "id": "67aaeff3b44ab0d804da7ce2aef04525",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",
@@ -174,6 +193,6 @@ return {
 };
 })();
 
-(node as any).hash = "91bfc273d715f29c7c87fd2f9611478e";
+(node as any).hash = "99d2c624dd26865ea635bc1de377971e";
 
 export default node;

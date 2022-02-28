@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Collapse, Flex, useDisclosure, useToast } from '@chakra-ui/react'
+import { Flex, Stack } from '@chakra-ui/react'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import EmailCard from './EmailCard/EmailCard'
@@ -10,6 +10,8 @@ import { usePaginationFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
 import { EmailsSettingsPaginationQuery } from '@//:artifacts/EmailsSettingsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
+import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
+import { Collapse, CollapseBody, CollapseButton } from '../../../../../../modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: PreloadedQuery<EmailsQuery>
@@ -64,11 +66,6 @@ export default function Emails (props: Props): JSX.Element {
 
   const disableEmailAdd = queryData?.viewer != null && currentEmails.length >= queryData?.viewer?.emailsLimit
 
-  const {
-    isOpen: isFormOpen,
-    onToggle: onToggleForm
-  } = useDisclosure()
-
   const emailsConnectionID = data?.emails?.__id
 
   const {
@@ -87,7 +84,6 @@ export default function Emails (props: Props): JSX.Element {
       notify({
         status: 'error',
         duration: 10000,
-        isClosable: true,
         title: confirmationError
       })
       flush('confirmation.error')
@@ -96,7 +92,6 @@ export default function Emails (props: Props): JSX.Element {
     if (confirmationSuccess != null) {
       notify({
         status: 'success',
-        isClosable: true,
         title: confirmationSuccess
       })
       flush('confirmation.success')
@@ -129,18 +124,28 @@ export default function Emails (props: Props): JSX.Element {
             </Trans>
           </Button>
         </Flex>}
-      <Button
-        variant='solid'
-        colorScheme='gray'
-        onClick={onToggleForm}
-        size='sm'
-      >
-        <Trans>
-          Add Email
-        </Trans>
-      </Button>
-      <Collapse in={isFormOpen} animateOpacity>
-        <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+      <Collapse>
+        <CollapseButton>
+          <Trans>
+            Add Email
+          </Trans>
+        </CollapseButton>
+        <CollapseBody>
+          <Stack spacing={2}>
+            {disableEmailAdd &&
+              <Alert mb={2} status='warning'>
+                <AlertIcon />
+                <AlertDescription fontSize='sm'>
+                  <Trans>
+                    You have added the maximum amount of confirmed emails. You'll have to remove at least one email to
+                    be
+                    able to add another.
+                  </Trans>
+                </AlertDescription>
+              </Alert>}
+            <AddEmailForm isDisabled={disableEmailAdd} connectionId={emailsConnectionID} />
+          </Stack>
+        </CollapseBody>
       </Collapse>
     </ListSpacer>
   )

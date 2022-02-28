@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Stack, useToast } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
@@ -13,6 +13,7 @@ import { t } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useFlash } from '@//:modules/flash'
 import { useLingui } from '@lingui/react'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   queryRef: RegisterFragment$key

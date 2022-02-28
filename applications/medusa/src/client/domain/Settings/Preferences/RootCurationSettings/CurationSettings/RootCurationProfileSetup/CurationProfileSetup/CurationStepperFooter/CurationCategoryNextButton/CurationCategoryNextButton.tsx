@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { useContext } from 'react'
-import { DispatchContext, StateContext } from '@//:modules/hooks/useReducerBuilder/context'
-import { HStack, useToast } from '@chakra-ui/react'
+import { HStack } from '@chakra-ui/react'
 import type { CurationCategoryNextButtonFragment$key } from '@//:artifacts/CurationCategoryNextButtonFragment.graphql'
 import { compareTwoArrays } from '@//:modules/support'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   nextStep: () => void
@@ -46,20 +46,22 @@ export default function CurationCategoryNextButton ({
 
   const [updateCategory, isUpdatingCategory] = useMutation(Mutation)
 
-  const state = useContext(StateContext)
-  const dispatch = useContext(DispatchContext)
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const notify = useToast()
 
   const currentCategoryIds = data?.categories.map((item) => item.id) ?? []
 
-  const saveCondition = Object.keys(state.category.value).length > 0 &&
-    compareTwoArrays(Object.keys(state.category.value), currentCategoryIds) === false
+  const saveCondition = Object.keys(state.category).length > 0 &&
+    compareTwoArrays(Object.keys(state.category), currentCategoryIds) === false
 
   const onUpdateCategory = (): void => {
     updateCategory({
       variables: {
-        categoryIds: Object.keys(state.category.value),
+        categoryIds: Object.keys(state.category),
         skipped: false
       },
       onCompleted () {
@@ -67,8 +69,7 @@ export default function CurationCategoryNextButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the categories`,
-          isClosable: true
+          title: t`There was an error saving the categories`
         })
       }
     })
@@ -83,19 +84,18 @@ export default function CurationCategoryNextButton ({
       onCompleted () {
         dispatch({
           type: 'category',
-          value: {}
+          value: {},
+          transform: 'SET'
         })
         notify({
           status: 'info',
-          title: t`Category preference was skipped`,
-          isClosable: true
+          title: t`Category preference was skipped`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error skipping the categories`,
-          isClosable: true
+          title: t`There was an error skipping the categories`
         })
       }
     })

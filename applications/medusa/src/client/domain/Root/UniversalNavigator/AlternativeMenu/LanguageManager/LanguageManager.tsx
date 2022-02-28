@@ -1,7 +1,6 @@
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import { LanguageManagerQuery } from '@//:artifacts/LanguageManagerQuery.graphql'
 import { ChangeEvent, useEffect } from 'react'
-import { useToast } from '@chakra-ui/react'
 import { LanguageManagerMutation } from '@//:artifacts/LanguageManagerMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import { useFragment } from 'react-relay'
@@ -9,7 +8,7 @@ import { LanguageManagerAccountMutation } from '@//:artifacts/LanguageManagerAcc
 import { LanguageManagerFragment$key } from '@//:artifacts/LanguageManagerFragment.graphql'
 import { t } from '@lingui/macro'
 import Select from '@//:modules/form/Select/Select'
-
+import { useToast } from '@//:modules/content/ThemeComponents'
 interface Props {
   queryRef: LanguageManagerFragment$key | null
 }
@@ -73,7 +72,7 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
     if (data != null) {
       if (data?.language?.locale !== query?.language?.locale) {
         notify({
-          status: 'warning',
+          status: 'info',
           title: t`Changing to your preferred language...`
         })
 

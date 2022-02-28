@@ -1,12 +1,15 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { ManageClubSlugAliasesFragment$key } from '@//:artifacts/ManageClubSlugAliasesFragment.graphql'
 import { ListSpacer, SmallBackgroundBox, SmallMenuButton, SmallMenuItem } from '@//:modules/content/PageLayout'
-import { Badge, Flex, Text, useToast } from '@chakra-ui/react'
+import { Badge, Flex, Text } from '@chakra-ui/react'
 import { CheckMark, DeleteBin } from '@//:assets/icons/interface'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { ManageClubSlugAliasesRemoveMutation } from '@//:artifacts/ManageClubSlugAliasesRemoveMutation.graphql'
+import { ManageClubSlugAliasesPromoteMutation } from '@//:artifacts/ManageClubSlugAliasesPromoteMutation.graphql'
+
 import { useHistory } from '@//:modules/routing'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: ManageClubSlugAliasesFragment$key | null
@@ -39,7 +42,6 @@ const PromoteClubSlugMutationGQL = graphql`
   mutation ManageClubSlugAliasesPromoteMutation ($id: ID!, $slug: String!) {
     promoteClubSlugAliasToDefault(input: {id: $id, slug: $slug}) {
       club {
-        id
         slug
         slugAliases {
           slug
@@ -54,7 +56,7 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
 
   const [removeSlug, isRemovingSlug] = useMutation<ManageClubSlugAliasesRemoveMutation>(RemoveClubSlugMutationGQL)
 
-  const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesRemoveMutation>(PromoteClubSlugMutationGQL)
+  const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesPromoteMutation>(PromoteClubSlugMutationGQL)
 
   const history = useHistory()
 
@@ -73,15 +75,13 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Successfully removed the link alias ${slug}. You can no longer use this link.`,
-          isClosable: true
+          title: t`Successfully removed the link alias ${slug}. You can no longer use this link.`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error removing the link alias`,
-          isClosable: true
+          title: t`There was an error removing the link alias`
         })
       }
     }
@@ -102,18 +102,25 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
           title: t`Successfully promoted the link alias ${slug} to default`,
           isClosable: true
         })
-        history.push(`/club/${slug as string}/settings`)
+        history.replace(`/club/${slug as string}/settings`)
       },
-      onError () {
+      updater: (store, payload) => {
+        const node = store.get(data.id)
+        if (node != null) {
+          const newSlug = payload?.promoteClubSlugAliasToDefault?.club?.slug
+          node.setValue(newSlug, 'slug')
+        }
+      },
+      onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error promoting the link alias to default`,
-          isClosable: true
+          title: t`There was an error promoting the link alias to default`
         })
       }
     }
     )
   }
+  //
 
   return (
     <ListSpacer>
