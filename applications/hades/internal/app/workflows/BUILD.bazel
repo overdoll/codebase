@@ -8,7 +8,7 @@ go_library(
         "ccbill_chargeback.go",
         "ccbill_customer_data_update.go",
         "ccbill_expiration.go",
-        "ccbill_new_sale_success.go",
+        "ccbill_new_sale_or_upsale_success.go",
         "ccbill_refund.go",
         "ccbill_renewal_failure.go",
         "ccbill_renewal_success.go",

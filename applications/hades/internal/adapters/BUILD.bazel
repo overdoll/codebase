@@ -21,6 +21,7 @@ go_library(
         "//applications/hades/internal/domain/cancellation",
         "//applications/hades/internal/domain/ccbill",
         "//applications/stella/proto:v1_go_proto",
+        "//libraries/bucket",
         "//libraries/crypt",
         "//libraries/localization",
         "//libraries/location",
