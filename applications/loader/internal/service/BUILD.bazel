@@ -43,6 +43,7 @@ go_test(
         "//libraries/testing_tools",
         "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
+        "@com_github_corona10_goimagehash//:go_default_library",
         "@com_github_eventials_go_tus//:go-tus",
         "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_shurcool_graphql//:graphql",

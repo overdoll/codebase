@@ -431,6 +431,9 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 			return errors.New("content was not found as part of post. must send IDs already part of post")
 		}
 	}
+
+	p.content = reorderedContent
+
 	return nil
 }
 

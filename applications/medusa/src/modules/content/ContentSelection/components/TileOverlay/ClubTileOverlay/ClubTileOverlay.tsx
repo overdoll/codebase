@@ -19,7 +19,9 @@ const Fragment = graphql`
       edges {
         node {
           content {
-            ...ResourceItemFragment
+            resource {
+              ...ResourceItemFragment
+            }
           }
         }
       }
@@ -33,9 +35,10 @@ export default function ClubTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={
-      <ResourceItem h='100%' query={data.posts?.edges[0]?.node?.content[0]} />
-    }
+    <TileOverlay
+      backdrop={
+        <ResourceItem h='100%' query={data.posts?.edges[0]?.node?.content[0].resource} />
+      }
     >
       <Stack w='100%' spacing={4} h='100%' align='center' justify='center'>
         <Stack w='100%' align='center' justify='center' spacing={2}>

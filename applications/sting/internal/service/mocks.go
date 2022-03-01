@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/sting/internal/adapters"
@@ -64,8 +65,13 @@ func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, cl
 type LoaderServiceMock struct{}
 
 func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
-	//TODO implement me
-	panic("implement me")
+	var newContent []*post.NewContent
+
+	for _, n := range resourceIds {
+		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, ksuid.New().String()))
+	}
+
+	return newContent, nil
 }
 
 func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error) {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c308390154f99a5665bdc19512e0d538>>
- * @relayHash 3b05d60cb87b7d567624a529e061c950
+ * @generated SignedSource<<124a869a2f699b5f28a92a867ec01406>>
+ * @relayHash e4facdac7df23a1ca3073d9f47deb698
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b05d60cb87b7d567624a529e061c950
+// @relayRequestID e4facdac7df23a1ca3073d9f47deb698
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -79,42 +79,40 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "url",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
-  (v3/*: any*/)
-],
-v5 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v5/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -228,7 +226,23 @@ return {
                                 "kind": "LinkedField",
                                 "name": "thumbnail",
                                 "plural": false,
-                                "selections": (v4/*: any*/),
+                                "selections": [
+                                  (v4/*: any*/),
+                                  (v6/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ResourceUrl",
+                                    "kind": "LinkedField",
+                                    "name": "videoThumbnail",
+                                    "plural": false,
+                                    "selections": [
+                                      (v5/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
+                                  (v3/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -242,7 +256,7 @@ return {
                             "kind": "LinkedField",
                             "name": "audience",
                             "plural": false,
-                            "selections": (v5/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -261,7 +275,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v5/*: any*/),
+                                "selections": (v7/*: any*/),
                                 "storageKey": null
                               },
                               (v3/*: any*/)
@@ -275,7 +289,7 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v5/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -300,7 +314,11 @@ return {
                                 "kind": "LinkedField",
                                 "name": "resource",
                                 "plural": false,
-                                "selections": (v4/*: any*/),
+                                "selections": [
+                                  (v4/*: any*/),
+                                  (v6/*: any*/),
+                                  (v3/*: any*/)
+                                ],
                                 "storageKey": null
                               },
                               (v3/*: any*/)
@@ -391,7 +409,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b05d60cb87b7d567624a529e061c950",
+    "id": "e4facdac7df23a1ca3073d9f47deb698",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

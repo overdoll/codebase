@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4d0f8028b47b2f544e17837493e1c1b8>>
- * @relayHash 84a1c2f5b854bf2fae2c8764743a4eef
+ * @generated SignedSource<<24298987647daf1ebf3ca647d5cca2e3>>
+ * @relayHash f883ef3a645a9a9db60adb6785b6fb09
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 84a1c2f5b854bf2fae2c8764743a4eef
+// @relayRequestID f883ef3a645a9a9db60adb6785b6fb09
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -43,7 +43,7 @@ export type ClubPublicPageQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment" | "ClubMenuFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
@@ -107,10 +107,17 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v7 = [
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -126,13 +133,7 @@ v7 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "url",
-        "storageKey": null
-      },
+      (v6/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -143,9 +144,21 @@ v7 = [
     ],
     "storageKey": null
   },
-  (v6/*: any*/)
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "videoThumbnail",
+    "plural": false,
+    "selections": [
+      (v6/*: any*/)
+    ],
+    "storageKey": null
+  },
+  (v7/*: any*/)
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "PostContent",
@@ -160,19 +173,19 @@ v8 = {
       "kind": "LinkedField",
       "name": "resource",
       "plural": false,
-      "selections": (v7/*: any*/),
+      "selections": (v8/*: any*/),
       "storageKey": null
     },
-    (v6/*: any*/)
+    (v7/*: any*/)
   ],
   "storageKey": null
 },
-v9 = {
+v10 = {
   "kind": "Literal",
   "name": "first",
-  "value": 5
+  "value": 10
 },
-v10 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -196,8 +209,8 @@ v10 = [
             "name": "reference",
             "storageKey": null
           },
-          (v8/*: any*/),
-          (v6/*: any*/)
+          (v9/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -361,6 +374,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPublicPageTopPostsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubMenuFragment"
           }
         ],
         "storageKey": null
@@ -440,14 +458,14 @@ return {
                             "kind": "LinkedField",
                             "name": "avatar",
                             "plural": false,
-                            "selections": (v7/*: any*/),
+                            "selections": (v8/*: any*/),
                             "storageKey": null
                           },
-                          (v6/*: any*/)
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v6/*: any*/)
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -481,8 +499,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/),
-                      (v6/*: any*/)
+                      (v9/*: any*/),
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -506,10 +524,10 @@ return {
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
-          (v6/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -525,14 +543,14 @@ return {
                 "name": "__typename",
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": "newPosts",
             "args": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -543,13 +561,13 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v10/*: any*/),
-            "storageKey": "posts(first:5,sortBy:\"NEW\")"
+            "selections": (v11/*: any*/),
+            "storageKey": "posts(first:10,sortBy:\"NEW\")"
           },
           {
             "alias": "topPosts",
             "args": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -560,8 +578,8 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v10/*: any*/),
-            "storageKey": "posts(first:5,sortBy:\"TOP\")"
+            "selections": (v11/*: any*/),
+            "storageKey": "posts(first:10,sortBy:\"TOP\")"
           }
         ],
         "storageKey": null
@@ -588,14 +606,14 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v6/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "84a1c2f5b854bf2fae2c8764743a4eef",
+    "id": "f883ef3a645a9a9db60adb6785b6fb09",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -604,6 +622,6 @@ return {
 };
 })();
 
-(node as any).hash = "3401b139d35e1d28ac07b9963b670b54";
+(node as any).hash = "003662d9344147bf6c0a2a19295fcc37";
 
 export default node;

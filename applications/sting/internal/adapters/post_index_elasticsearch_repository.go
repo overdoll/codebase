@@ -444,7 +444,12 @@ func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Cont
 		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	if err := cursor.BuildElasticsearch(builder, post.NewSort.String(), "id", true); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
+		return nil, err
+	}
+
+	clubMembershipIds, err := r.stella.GetClubMembershipsForAccount(ctx, requester.AccountId())
+	if err != nil {
 		return nil, err
 	}
 
@@ -458,7 +463,10 @@ func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Cont
 		return nil, err
 	}
 
-	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)))
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		Must(elastic.NewTermsQueryFromStrings("club_id", clubMembershipIds...)).
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)),
+	)
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String(), post.Full.String()))
 

@@ -70,11 +70,13 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-24 14:24:41",
 	})
 
-	args := temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflows.CCBillCancellation), nil)
+	workflow := workflows.CCBillCancellation
+
+	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflows.CCBillCancellation, args)
+	env.ExecuteWorkflow(workflow, args)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -118,12 +120,12 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-24 14:24:41",
 	})
 
-	workflow := workflows.CCBillExpiration
+	newWorkflow := workflows.CCBillExpiration
 
-	args = temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflow), nil)
+	args = testing_tools.GetArgumentsForMethodCallFromMockCalls(t, newWorkflow, temporalClientMock.Calls)
 	env = getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(newWorkflow, args)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

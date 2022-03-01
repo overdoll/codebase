@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1f107fdbe7f73c4b046ca666f92997d3>>
- * @relayHash c995fee26d1b6d033bfec99227702b53
+ * @generated SignedSource<<57cda5d9415a6001904c7e08d43711b7>>
+ * @relayHash 81373e6bb7863b7138d6337ac141d519
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c995fee26d1b6d033bfec99227702b53
+// @relayRequestID 81373e6bb7863b7138d6337ac141d519
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -95,73 +95,87 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "url",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
-  (v6/*: any*/)
-],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v8/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v7/*: any*/),
+  "selections": [
+    (v7/*: any*/),
+    (v9/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ResourceUrl",
+      "kind": "LinkedField",
+      "name": "videoThumbnail",
+      "plural": false,
+      "selections": [
+        (v8/*: any*/)
+      ],
+      "storageKey": null
+    },
+    (v6/*: any*/)
+  ],
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v12 = [
+v14 = [
   (v5/*: any*/),
   (v6/*: any*/)
 ];
@@ -269,7 +283,11 @@ return {
                         "kind": "LinkedField",
                         "name": "resource",
                         "plural": false,
-                        "selections": (v7/*: any*/),
+                        "selections": [
+                          (v7/*: any*/),
+                          (v9/*: any*/),
+                          (v6/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       (v6/*: any*/)
@@ -284,9 +302,9 @@ return {
                     "name": "categories",
                     "plural": true,
                     "selections": [
-                      (v8/*: any*/),
-                      (v9/*: any*/),
                       (v10/*: any*/),
+                      (v11/*: any*/),
+                      (v12/*: any*/),
                       (v6/*: any*/)
                     ],
                     "storageKey": null
@@ -299,8 +317,8 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v11/*: any*/),
-                      (v8/*: any*/),
+                      (v13/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -309,12 +327,12 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
-                          (v9/*: any*/),
+                          (v11/*: any*/),
                           (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v10/*: any*/),
+                      (v12/*: any*/),
                       (v6/*: any*/)
                     ],
                     "storageKey": null
@@ -326,7 +344,7 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v12/*: any*/),
+                    "selections": (v14/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -344,9 +362,9 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v11/*: any*/),
-                      (v8/*: any*/),
+                      (v13/*: any*/),
                       (v10/*: any*/),
+                      (v12/*: any*/),
                       (v6/*: any*/),
                       {
                         "alias": null,
@@ -355,7 +373,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerMember",
                         "plural": false,
-                        "selections": (v12/*: any*/),
+                        "selections": (v14/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -438,7 +456,7 @@ return {
     ]
   },
   "params": {
-    "id": "c995fee26d1b6d033bfec99227702b53",
+    "id": "81373e6bb7863b7138d6337ac141d519",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",

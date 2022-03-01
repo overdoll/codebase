@@ -10,7 +10,10 @@ go_library(
 go_library(
     name = "testing_tools",
     srcs = [
+        "file.go",
+        "function.go",
         "mailing.go",
+        "mocks.go",
         "wait.go",
     ],
     importpath = "overdoll/libraries/testing_tools",
@@ -18,5 +21,7 @@ go_library(
     deps = [
         "//libraries/bootstrap",
         "@com_github_go_redis_redis_v8//:redis",
+        "@com_github_stretchr_testify//mock",
+        "@com_github_stretchr_testify//require",
     ],
 )

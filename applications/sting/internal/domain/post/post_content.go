@@ -22,23 +22,11 @@ func (m *Content) Id() string {
 
 func (m *Content) ResourceIdRequest(p *Post) string {
 
-	if p.state != Published {
-		return m.resourceId
+	if !m.canView(p) {
+		return m.resourceIdHidden
 	}
 
-	if !m.isSupporterOnly {
-		return m.resourceId
-	}
-
-	if m.isSupporterOnly && m.canViewSupporterOnly {
-		return m.resourceId
-	}
-
-	if m.requester != nil && m.requester.IsStaff() {
-		return m.resourceId
-	}
-
-	return m.resourceIdHidden
+	return m.resourceId
 }
 
 func (m *Content) ResourceId() string {
@@ -58,11 +46,27 @@ func (m *Content) IsSupporterOnly() bool {
 	return m.isSupporterOnly
 }
 
-func (m *Content) CanViewSupporterOnly() bool {
+func (m *Content) canView(p *Post) bool {
+
+	if p.state != Published {
+		return true
+	}
+
+	if !m.isSupporterOnly {
+		return true
+	}
+
+	if m.isSupporterOnly && m.canViewSupporterOnly {
+		return true
+	}
 
 	if m.requester != nil && m.requester.IsStaff() {
 		return true
 	}
 
-	return m.canViewSupporterOnly
+	return false
+}
+
+func (m *Content) CanViewSupporterOnly(p *Post) bool {
+	return m.canView(p)
 }

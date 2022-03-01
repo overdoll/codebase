@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "adapters",
@@ -38,5 +38,22 @@ go_library(
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
         "@org_golang_google_protobuf//types/known/timestamppb",
+    ],
+)
+
+go_test(
+    name = "adapters_test",
+    srcs = [
+        "ccbill_http_repository_test.go",
+        "repository_test.go",
+    ],
+    deps = [
+        ":adapters",
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/ccbill",
+        "//libraries/config",
+        "//libraries/principal",
+        "@com_github_segmentio_ksuid//:ksuid",
+        "@com_github_stretchr_testify//require",
     ],
 )

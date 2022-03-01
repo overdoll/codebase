@@ -46,7 +46,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 
 	workflow := workflows.CCBillCustomerDataUpdate
 
-	args := temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflow), nil)
+	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be

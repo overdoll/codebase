@@ -30,7 +30,7 @@ func (s StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, acc
 }
 
 func (s StellaServiceMock) CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error) {
-	return false, nil
+	return true, nil
 }
 
 func (s StellaServiceMock) GetSuspendedClubs(ctx context.Context) ([]string, error) {
@@ -38,7 +38,7 @@ func (s StellaServiceMock) GetSuspendedClubs(ctx context.Context) ([]string, err
 }
 
 func (s StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error) {
-	return false, nil
+	return true, nil
 }
 
 func (s StellaServiceMock) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {

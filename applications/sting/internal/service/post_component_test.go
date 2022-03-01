@@ -191,13 +191,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Len(t, addPostContent.AddPostContent.Post.Content, 2, "should have 2 content")
+	require.Len(t, addPostContent.AddPostContent.Post.Content, 3, "should have 3 content")
 
 	require.False(t, addPostContent.AddPostContent.Post.Content[0].IsSupporterOnly, "should not be supporter only content #1")
 	require.False(t, addPostContent.AddPostContent.Post.Content[1].IsSupporterOnly, "should not be supporter only content #2")
 
 	require.True(t, addPostContent.AddPostContent.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
-	require.True(t, addPostContent.AddPostContent.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+	require.True(t, addPostContent.AddPostContent.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #2")
 
 	// quickly reverse the list
 	var reversedContentIds []relay.ID
@@ -220,12 +220,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err, "no error updating the order")
 
-	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 2, "should have 2 content")
+	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 3, "should have 3 content")
 
 	var newContentIds []relay.ID
 
 	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[0].ID)
 	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[1].ID)
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[2].ID)
 
 	require.Equal(t, reversedContentIds, newContentIds, "list should still be reversed")
 
@@ -260,7 +261,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Len(t, removePostContent.RemovePostContent.Post.Content, 1, "should have 1 content")
+	require.Len(t, removePostContent.RemovePostContent.Post.Content, 2, "should have 2 content")
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories

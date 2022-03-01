@@ -19,6 +19,7 @@ import type { ClubPublicPageNewPostsFragment$key } from '@//:artifacts/ClubPubli
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import ClubMenu from './ClubMenu/ClubMenu'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -44,7 +45,9 @@ const Query = graphql`
         edges {
           node {
             content {
-              ...ResourceItemFragment
+              resource {
+                ...ResourceItemFragment
+              }
             }
           }
         }
@@ -136,7 +139,10 @@ export default function ClubPublicPage (props: Props): JSX.Element {
       <Stack spacing={2}>
         <Box h={140}>
           <TileOverlay
-            backdrop={<ResourceItem query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0] ?? null} />}
+            backdrop={(
+              <ResourceItem
+                query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
+              />)}
           >
             <LargeClubHeader query={queryData?.club} />
           </TileOverlay>
