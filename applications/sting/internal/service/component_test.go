@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/segmentio/ksuid"
+	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
 
@@ -27,6 +28,10 @@ import (
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
+)
+
+var (
+	temporalClientMock *mocks.Client
 )
 
 const StingHttpAddr = ":6666"
@@ -156,7 +161,7 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _ := service.NewComponentTestApplication(context.Background())
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(newApp.Activities)
 
 	return env
@@ -165,7 +170,9 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 func startService() bool {
 	config.Read("applications/sting")
 
-	application, _ := service.NewComponentTestApplication(context.Background())
+	application, _, newTClient := service.NewComponentTestApplication(context.Background())
+
+	temporalClientMock = newTClient
 
 	srv := ports.NewHttpServer(&application)
 

@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"github.com/segmentio/ksuid"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -350,8 +351,9 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
 	require.Equal(t, true, submitPost.SubmitPost.InReview, "expected post submitted to be in review")
 
-	env := getWorkflowEnvironment(t)
 	postId := submitPost.SubmitPost.Post.Reference
+
+	env := getWorkflowEnvironment(t)
 
 	// we need to submit the post, in which our tests will do an action
 	env.RegisterDelayedCallback(func() {
@@ -404,8 +406,12 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		require.NoError(t, newEnv.GetWorkflowError())
 	}, time.Hour*24)
 
-	env.ExecuteWorkflow(workflows.SubmitPost, postId)
+	workflow := workflows.SubmitPost
 
+	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
+
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
