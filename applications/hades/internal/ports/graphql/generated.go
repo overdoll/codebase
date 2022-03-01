@@ -421,7 +421,6 @@ type ComplexityRoot struct {
 
 	VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
 		DeletedClubSupporterSubscriptionID func(childComplexity int) int
-		Validation                         func(childComplexity int) int
 	}
 
 	_Service struct {
@@ -2126,13 +2125,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.DeletedClubSupporterSubscriptionID(childComplexity), true
 
-	case "VoidOrRefundAccountClubSupporterSubscriptionPayload.validation":
-		if e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.Validation == nil {
-			break
-		}
-
-		return e.complexity.VoidOrRefundAccountClubSupporterSubscriptionPayload.Validation(childComplexity), true
-
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
 			break
@@ -2906,15 +2898,8 @@ type GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload {
   link: URI
 }
 
-enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
-  INVALID_AMOUNT
-}
-
 """Payload for voiding or refunding account club supporter subscription."""
 type VoidOrRefundAccountClubSupporterSubscriptionPayload {
-  """Validation for voiding or refunding the subscription."""
-  validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
-
   """The id of the subscription, deleted."""
   deletedClubSupporterSubscriptionId: ID!
 }
@@ -11501,38 +11486,6 @@ func (ec *executionContext) _UpdateCancellationReasonTitlePayload_cancellationRe
 	return ec.marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.VoidOrRefundAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "VoidOrRefundAccountClubSupporterSubscriptionPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Validation, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.VoidOrRefundAccountClubSupporterSubscriptionValidation)
-	fc.Result = res
-	return ec.marshalOVoidOrRefundAccountClubSupporterSubscriptionValidation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionValidation(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload_deletedClubSupporterSubscriptionId(ctx context.Context, field graphql.CollectedField, obj *types.VoidOrRefundAccountClubSupporterSubscriptionPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -16517,13 +16470,6 @@ func (ec *executionContext) _VoidOrRefundAccountClubSupporterSubscriptionPayload
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("VoidOrRefundAccountClubSupporterSubscriptionPayload")
-		case "validation":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._VoidOrRefundAccountClubSupporterSubscriptionPayload_validation(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "deletedClubSupporterSubscriptionId":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._VoidOrRefundAccountClubSupporterSubscriptionPayload_deletedClubSupporterSubscriptionId(ctx, field, obj)
@@ -18326,22 +18272,6 @@ func (ec *executionContext) marshalOVoidOrRefundAccountClubSupporterSubscription
 		return graphql.Null
 	}
 	return ec._VoidOrRefundAccountClubSupporterSubscriptionPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOVoidOrRefundAccountClubSupporterSubscriptionValidation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionValidation(ctx context.Context, v interface{}) (*types.VoidOrRefundAccountClubSupporterSubscriptionValidation, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(types.VoidOrRefundAccountClubSupporterSubscriptionValidation)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOVoidOrRefundAccountClubSupporterSubscriptionValidation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐVoidOrRefundAccountClubSupporterSubscriptionValidation(ctx context.Context, sel ast.SelectionSet, v *types.VoidOrRefundAccountClubSupporterSubscriptionValidation) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

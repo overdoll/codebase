@@ -35,6 +35,10 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
 }
 
+func convertClubIdIdToRelayId(clubId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
+}
+
 func startService() bool {
 	config.Read("applications/hades")
 

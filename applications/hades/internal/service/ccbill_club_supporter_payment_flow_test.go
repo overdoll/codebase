@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/PuerkitoBio/goquery"
 	uuid2 "github.com/google/uuid"
-	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/url"
@@ -17,18 +16,6 @@ import (
 
 type GenerateCCBillClubSupporterPaymentLink struct {
 	GenerateCCBillClubSupporterPaymentLink *types.GenerateCCBillClubSupporterPaymentLinkPayload `graphql:"generateCCBillClubSupporterPaymentLink(input: $input)"`
-}
-
-type CCBillTransactionDetails struct {
-	CCBillTransactionDetails *struct {
-		Approved                               bool
-		DeclineError                           *types.CCBillDeclineError
-		DeclineCode                            *string
-		DeclineText                            *string
-		LinkedAccountClubSupporterSubscription *struct {
-			Id relay.ID
-		}
-	} `graphql:"ccbillTransactionDetails(token: $token)"`
 }
 
 func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
@@ -98,7 +85,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 
 	callbackFailedToken := getTokenResponseFromDocument(callbackFailedDocument)
 
-	ccbillTransactionDetailsFailure := getTransactionDetails(t, gqlClient, callbackFailedToken)
+	ccbillTransactionDetailsFailure := getCCBillTransactionDetails(t, gqlClient, callbackFailedToken)
 
 	require.False(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.Approved, "should not be approved")
 	require.Equal(t, "BE-111", ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineCode, "correct decline code")
@@ -182,7 +169,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 
 	callbackSuccessToken := getTokenResponseFromDocument(callbackSuccessDocument)
 
-	ccbillTransactionDetailsSuccess := getTransactionDetails(t, gqlClient, callbackSuccessToken)
+	ccbillTransactionDetailsSuccess := getCCBillTransactionDetails(t, gqlClient, callbackSuccessToken)
 
 	require.Nil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.DeclineCode, "no error")
 	require.True(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.Approved, "should be approved")
@@ -202,17 +189,4 @@ func getTokenResponseFromDocument(doc *goquery.Document) string {
 	})
 
 	return token
-}
-
-func getTransactionDetails(t *testing.T, gqlClient *graphql.Client, token string) CCBillTransactionDetails {
-	var ccbillTransactionDetailsFailure CCBillTransactionDetails
-
-	err := gqlClient.Query(context.Background(), &ccbillTransactionDetailsFailure, map[string]interface{}{
-		"token": graphql.String(token),
-	})
-
-	require.NoError(t, err, "no error grabbing transaction details token")
-	require.NotNil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails, "transaction details exists")
-
-	return ccbillTransactionDetailsFailure
 }

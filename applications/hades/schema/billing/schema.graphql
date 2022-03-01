@@ -700,15 +700,8 @@ type GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload {
   link: URI
 }
 
-enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
-  INVALID_AMOUNT
-}
-
 """Payload for voiding or refunding account club supporter subscription."""
 type VoidOrRefundAccountClubSupporterSubscriptionPayload {
-  """Validation for voiding or refunding the subscription."""
-  validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
-
   """The id of the subscription, deleted."""
   deletedClubSupporterSubscriptionId: ID!
 }

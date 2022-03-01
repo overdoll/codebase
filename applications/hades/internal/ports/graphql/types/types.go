@@ -670,8 +670,6 @@ type VoidOrRefundAccountClubSupporterSubscriptionInput struct {
 
 // Payload for voiding or refunding account club supporter subscription.
 type VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
-	// Validation for voiding or refunding the subscription.
-	Validation *VoidOrRefundAccountClubSupporterSubscriptionValidation `json:"validation"`
 	// The id of the subscription, deleted.
 	DeletedClubSupporterSubscriptionID relay.ID `json:"deletedClubSupporterSubscriptionId"`
 }
@@ -948,44 +946,5 @@ func (e *Currency) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Currency) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type VoidOrRefundAccountClubSupporterSubscriptionValidation string
-
-const (
-	VoidOrRefundAccountClubSupporterSubscriptionValidationInvalidAmount VoidOrRefundAccountClubSupporterSubscriptionValidation = "INVALID_AMOUNT"
-)
-
-var AllVoidOrRefundAccountClubSupporterSubscriptionValidation = []VoidOrRefundAccountClubSupporterSubscriptionValidation{
-	VoidOrRefundAccountClubSupporterSubscriptionValidationInvalidAmount,
-}
-
-func (e VoidOrRefundAccountClubSupporterSubscriptionValidation) IsValid() bool {
-	switch e {
-	case VoidOrRefundAccountClubSupporterSubscriptionValidationInvalidAmount:
-		return true
-	}
-	return false
-}
-
-func (e VoidOrRefundAccountClubSupporterSubscriptionValidation) String() string {
-	return string(e)
-}
-
-func (e *VoidOrRefundAccountClubSupporterSubscriptionValidation) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = VoidOrRefundAccountClubSupporterSubscriptionValidation(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid VoidOrRefundAccountClubSupporterSubscriptionValidation", str)
-	}
-	return nil
-}
-
-func (e VoidOrRefundAccountClubSupporterSubscriptionValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

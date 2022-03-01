@@ -34,7 +34,7 @@ type AccountTransactionHistoryNew struct {
 }
 
 // test a bunch of webhooks at the same time
-func TestBillingFlow_NewSale(t *testing.T) {
+func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()

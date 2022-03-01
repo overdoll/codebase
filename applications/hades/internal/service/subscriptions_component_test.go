@@ -35,34 +35,6 @@ type AccountClubSupporterSubscriptions struct {
 	}
 }
 
-type CCBillSubscriptionDetailsCustom struct {
-	Id            relay.ID
-	Status        types.CCBillSubscriptionStatus
-	PaymentMethod types.PaymentMethod
-
-	SubscriptionInitialPrice   float64
-	SubscriptionRecurringPrice float64
-	SubscriptionCurrency       types.Currency
-
-	BilledInitialPrice   float64
-	BilledRecurringPrice float64
-	BilledCurrency       types.Currency
-
-	AccountingInitialPrice   float64
-	AccountingRecurringPrice float64
-	AccountingCurrency       types.Currency
-
-	IsRecurring       bool
-	TimesRebilled     int
-	ChargebacksIssued int
-	RefundsIssued     int
-	VoidsIssued       int
-}
-
-type CCBillSubscriptionDetails struct {
-	CCBillSubscriptionDetails *CCBillSubscriptionDetailsCustom `graphql:"ccbillSubscriptionDetails(ccbillSubscriptionId: $ccbillSubscriptionId)"`
-}
-
 type _Any map[string]interface{}
 
 func getAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, accountId string) ClubSupporterSubscriptionsEdges {
@@ -119,6 +91,34 @@ func getAccountSavedPaymentMethods(t *testing.T, client *graphql.Client, account
 	return accountSavedPayments
 }
 
+type CCBillSubscriptionDetailsCustom struct {
+	Id            relay.ID
+	Status        types.CCBillSubscriptionStatus
+	PaymentMethod types.PaymentMethod
+
+	SubscriptionInitialPrice   float64
+	SubscriptionRecurringPrice float64
+	SubscriptionCurrency       types.Currency
+
+	BilledInitialPrice   float64
+	BilledRecurringPrice float64
+	BilledCurrency       types.Currency
+
+	AccountingInitialPrice   float64
+	AccountingRecurringPrice float64
+	AccountingCurrency       types.Currency
+
+	IsRecurring       bool
+	TimesRebilled     int
+	ChargebacksIssued int
+	RefundsIssued     int
+	VoidsIssued       int
+}
+
+type CCBillSubscriptionDetails struct {
+	CCBillSubscriptionDetails *CCBillSubscriptionDetailsCustom `graphql:"ccbillSubscriptionDetails(ccbillSubscriptionId: $ccbillSubscriptionId)"`
+}
+
 func getCCBillSubscriptionDetails(t *testing.T, client *graphql.Client, id string) *CCBillSubscriptionDetailsCustom {
 
 	var ccbillSubscriptionDetails CCBillSubscriptionDetails
@@ -131,4 +131,29 @@ func getCCBillSubscriptionDetails(t *testing.T, client *graphql.Client, id strin
 	require.NotNil(t, ccbillSubscriptionDetails.CCBillSubscriptionDetails, "should exist")
 
 	return ccbillSubscriptionDetails.CCBillSubscriptionDetails
+}
+
+type CCBillTransactionDetails struct {
+	CCBillTransactionDetails *struct {
+		Approved                               bool
+		DeclineError                           *types.CCBillDeclineError
+		DeclineCode                            *string
+		DeclineText                            *string
+		LinkedAccountClubSupporterSubscription *struct {
+			Id relay.ID
+		}
+	} `graphql:"ccbillTransactionDetails(token: $token)"`
+}
+
+func getCCBillTransactionDetails(t *testing.T, gqlClient *graphql.Client, token string) CCBillTransactionDetails {
+	var ccbillTransactionDetailsFailure CCBillTransactionDetails
+
+	err := gqlClient.Query(context.Background(), &ccbillTransactionDetailsFailure, map[string]interface{}{
+		"token": graphql.String(token),
+	})
+
+	require.NoError(t, err, "no error grabbing transaction details token")
+	require.NotNil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails, "transaction details exists")
+
+	return ccbillTransactionDetailsFailure
 }

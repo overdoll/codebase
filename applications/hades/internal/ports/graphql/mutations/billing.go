@@ -3,7 +3,6 @@ package mutations
 import (
 	"context"
 	"overdoll/applications/hades/internal/app/command"
-	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/passport"
@@ -115,14 +114,6 @@ func (r *MutationResolver) VoidOrRefundAccountClubSupporterSubscription(ctx cont
 				Amount:                             input.Amount,
 			},
 		); err != nil {
-
-		if err == ccbill.ErrInvalidRefundAmount {
-			validation := types.VoidOrRefundAccountClubSupporterSubscriptionValidationInvalidAmount
-			return &types.VoidOrRefundAccountClubSupporterSubscriptionPayload{
-				Validation: &validation,
-			}, nil
-		}
-
 		return nil, err
 	}
 

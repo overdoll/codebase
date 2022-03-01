@@ -13,11 +13,11 @@ const (
 var (
 	clubSupporterPricingRatios = map[Currency]float64{
 		USD: 1,
-		CAD: 1,
-		AUD: 1,
-		JPY: 1,
-		GBP: 1,
-		EUR: 1,
+		CAD: 1.45,
+		AUD: 1.55,
+		JPY: 129.40,
+		GBP: 0.90,
+		EUR: 1.10,
 	}
 )
 
