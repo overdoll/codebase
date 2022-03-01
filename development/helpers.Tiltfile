@@ -60,6 +60,10 @@ def build_applications(applications, dependencies):
                 "development/service",
                 name=item,
                 values=["development/services/" + item + ".yaml"],
+                set=[
+                    "toleration="+os.getenv("OVERDOLL_DEV_NAMESPACE", ""),
+                    "node="+os.getenv("OVERDOLL_DEV_NODE", ""),
+                ]
             ),
             allow_duplicates=True,
         )
