@@ -18,6 +18,23 @@ spec:
     {{- include "default-service.selectorLabels" . | nindent 8 }}
     spec:
       # mount data from host
+      {{- if .Values.toleration }}
+      tolerations:
+        - key: {{ .Values.toleration | quote }}
+          operator: "Exists"
+          effect: "NoSchedule"
+      {{- end }}
+      {{- if .Values.node }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - {{ .Values.node }}
+      {{- end }}
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
