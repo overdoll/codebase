@@ -1,0 +1,31 @@
+import { FormErrorMessage } from '@chakra-ui/react'
+import { useContext } from 'react'
+import { determineTextSizing, FormInputContext } from '../FormInput'
+import { useFormContext } from 'react-hook-form'
+
+interface Props {
+  children?: JSX.Element | undefined
+}
+
+export default function InputFooter ({
+  children
+}: Props): JSX.Element {
+  const {
+    size = 'md',
+    id
+  } = useContext(FormInputContext)
+
+  const { formState: { errors } } = useFormContext()
+
+  const error = errors[id]
+
+  if (error?.message == null) {
+    return children != null ? children : <></>
+  }
+
+  return (
+    <FormErrorMessage fontSize={determineTextSizing(size)}>
+      {error.message}
+    </FormErrorMessage>
+  )
+}

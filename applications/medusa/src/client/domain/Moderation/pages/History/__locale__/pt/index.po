@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-12-20 20:48-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Moderation/pages/History/History.tsx:37
+msgid "Any moderation actions you take will appear here."
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/History.tsx:53
+msgid "Club"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/History.tsx:46
+msgid "Date Posted"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/AuditLogs/AuditLogs.tsx:90
+msgid "Load More"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/History.tsx:32
+msgid "Moderation History"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/AuditLogs/AuditLogs.tsx:75
+msgid "No audit logs were found"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/AuditLogs/AuditLogs.tsx:97
+msgid "Only the last 7 days of logs are available"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/History/History.tsx:60
+msgid "Status"
+msgstr ""

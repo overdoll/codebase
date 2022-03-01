@@ -5,7 +5,7 @@ import { ClickableBox, Icon } from '../../../../PageLayout'
 
 interface Props {
   title: ReactNode
-  icon: FunctionComponent<any>
+  icon?: FunctionComponent<any> | undefined
   colorScheme?: string
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
@@ -37,6 +37,10 @@ export default function VerticalNavigationButtonBody ({
           color={color}
         />
       )
+    }
+
+    if (icon == null) {
+      return <></>
     }
 
     return (

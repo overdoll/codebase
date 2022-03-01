@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:131
+#: src/client/domain/VerifyToken/VerifyToken.tsx:132
 msgid "Back to the Join page"
 msgstr ""
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:229
+#: src/client/domain/VerifyToken/VerifyToken.tsx:230
 msgid "I closed the original tab"
 msgstr ""
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:241
+#: src/client/domain/VerifyToken/VerifyToken.tsx:242
 msgid "If you closed the original tab, just open it back up in the same url!"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Please confirm that you are attempting to login from the following device & location"
 msgstr ""
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:119
+#: src/client/domain/VerifyToken/VerifyToken.tsx:120
 msgid "The login link you are using is either invalid or expired"
 msgstr ""
 
@@ -41,11 +41,11 @@ msgstr ""
 msgid "Yes, this is me"
 msgstr ""
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:190
+#: src/client/domain/VerifyToken/VerifyToken.tsx:191
 msgid "You have been successfully logged in to the requested device"
 msgstr ""
 
-#: src/client/domain/VerifyToken/VerifyToken.tsx:215
+#: src/client/domain/VerifyToken/VerifyToken.tsx:216
 msgid "You may safely close this window"
 msgstr ""
 

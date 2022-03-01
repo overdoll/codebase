@@ -12,3 +12,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfileMenu.tsx:27
+msgid "Admin"
+msgstr ""

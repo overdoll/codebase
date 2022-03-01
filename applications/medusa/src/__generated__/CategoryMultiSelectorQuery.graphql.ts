@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3f3fc625341e1f0e7e6e3d1a10f25b28>>
- * @relayHash eb9ae2e5abc564fa8b6954a9c42cb48d
+ * @generated SignedSource<<0ba50d5dea14693ae85edf21a9a0e465>>
+ * @relayHash e0c0cea10a5eacd761ce19fcdd174408
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eb9ae2e5abc564fa8b6954a9c42cb48d
+// @relayRequestID e0c0cea10a5eacd761ce19fcdd174408
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -51,6 +51,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -130,13 +137,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "url",
-                            "storageKey": null
-                          },
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -144,6 +145,18 @@ return {
                             "name": "mimeType",
                             "storageKey": null
                           }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ResourceUrl",
+                        "kind": "LinkedField",
+                        "name": "videoThumbnail",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -213,7 +226,7 @@ return {
     ]
   },
   "params": {
-    "id": "eb9ae2e5abc564fa8b6954a9c42cb48d",
+    "id": "e0c0cea10a5eacd761ce19fcdd174408",
     "metadata": {},
     "name": "CategoryMultiSelectorQuery",
     "operationKind": "query",

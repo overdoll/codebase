@@ -22,8 +22,8 @@ import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
 
 interface Props {
-  query: FullDetailedPostFragment$key | null
-  viewerQuery: FullDetailedPostViewerFragment$key | null
+  query: FullDetailedPostFragment$key
+  viewerQuery: FullDetailedPostViewerFragment$key
 }
 
 const PostFragment = graphql`
@@ -75,7 +75,7 @@ export default function FullDetailedPost ({
         rightItem={<PostMenu query={data} />}
       />
       <CopyLinkToClipboard w='100%'>
-        {`https://overdoll.com/p/${data?.reference as string}`}
+        {`https://overdoll.com/p/${data?.reference}`}
       </CopyLinkToClipboard>
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />

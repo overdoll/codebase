@@ -1,6 +1,6 @@
 import { generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
-import { searchForTerm } from '../../support/user_actions'
+import { clickOnTile, searchForTerm } from '../../support/user_actions'
 import { createClubWithName } from '../../support/artist_actions'
 import ChanceJS from 'chance'
 import { arrowDown, space } from '../../support/key_codes'
@@ -56,19 +56,16 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
-  const clickOnGrid = (text: string): void => {
-    cy.findByText(text).should('not.be.disabled').click()
-  }
+  before(() => {
+    cy.joinWithNewAccount(username, email)
+    createClubWithName(clubName)
+  })
 
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
   })
 
-  it('can create club and go to post upload page', () => {
-    createClubWithName(clubName)
-  })
-
-  it('can add audience, categories, characters, and go to review step', () => {
+  it('can add audience, categories, characters, and submit post', () => {
     gotoClubCreatePost()
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
     isOnStep('arrange')
@@ -79,32 +76,32 @@ describe('Club - Create a Post', () => {
     // adding and removing audiences
     isOnStep('audience')
     nextStepIsDisabled()
-    clickOnGrid(postAudience)
-    clickOnGrid('Non-Standard Audience')
-    clickOnGrid(postAudience)
+    clickOnTile(postAudience)
+    clickOnTile('Non-Standard Audience')
+    clickOnTile(postAudience)
     saveCurrentStep()
 
     // adding and removing categories
     isOnStep('category')
     nextStepIsDisabled()
     searchForTerm('Search for a category', postCategories[0])
-    clickOnGrid(postCategories[0])
+    clickOnTile(postCategories[0])
     // test removing category by the label
     cy.get('button[aria-label="close"]').should('not.be.disabled').click()
     cy.get('button[aria-label="close"]').should('not.exist')
-    clickOnGrid(postCategories[0])
+    clickOnTile(postCategories[0])
     // test removing category by selecting it again
     cy.findByRole('button', { name: postCategories[0] }).click()
     cy.get('button[aria-label="close"]').should('not.exist')
-    clickOnGrid(postCategories[0])
+    clickOnTile(postCategories[0])
     // add second category
     searchForTerm('Search for a category', postCategories[1])
-    clickOnGrid(postCategories[1])
+    clickOnTile(postCategories[1])
     // test button is still disabled if there are two categories
     nextStepIsDisabled()
     // add third category
     searchForTerm('Search for a category', postCategories[2])
-    clickOnGrid(postCategories[2])
+    clickOnTile(postCategories[2])
     // button is enabled after 3 categories added
     saveCurrentStep()
 
@@ -112,14 +109,14 @@ describe('Club - Create a Post', () => {
     isOnStep('character')
     nextStepIsDisabled()
     searchForTerm('Search for a character by name', postCharacter)
-    clickOnGrid(postCharacter)
+    clickOnTile(postCharacter)
     saveCurrentStep()
     isOnStep('review')
 
     // test refresh to save progress as well as URL working for resuming progress and post page for drafts
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    clickOnGrid('2')
+    clickOnTile('2')
     isOnStep('arrange')
     gotoNextStep()
     isOnStep('audience')

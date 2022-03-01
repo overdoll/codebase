@@ -16,7 +16,7 @@ import {
 import JoinClubButton from '../../../domain/ManageClub/components/JoinClubButton/JoinClubButton'
 
 interface Props {
-  query: FullSimplePostFragment$key | null
+  query: FullSimplePostFragment$key
   viewerQuery: FullSimplePostViewerFragment$key | null
 }
 

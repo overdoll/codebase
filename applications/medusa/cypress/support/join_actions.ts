@@ -30,7 +30,7 @@ export const join = (email: string): void => {
     startTimestamp = Date.now() - 5000
   })
 
-  cy.findByRole('textbox', { name: /email/iu })
+  cy.findByPlaceholderText(/Enter an email/iu)
     .type(email)
 
   cy.findByRole('button', { name: /Continue/iu })

@@ -2,8 +2,6 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPostsQuery } from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import FloatingGeneralSearchButton
-  from '../../../../../../../components/FloatingGeneralSearchButton/FloatingGeneralSearchButton'
 import PostsInfiniteScroll from '../../../../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 
@@ -71,9 +69,6 @@ export default function ClubPublicPosts (props: Props): JSX.Element {
 
   return (
     <GlobalVideoManagerProvider>
-      <FloatingGeneralSearchButton
-        routeTo={`/${queryData?.club?.slug}/posts`}
-      />
       <PostsInfiniteScroll
         hasNext={hasNext}
         isLoadingNext={isLoadingNext}

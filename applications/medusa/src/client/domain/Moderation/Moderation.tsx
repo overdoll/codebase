@@ -2,8 +2,9 @@ import Redirect from '@//:modules/routing/Redirect'
 import { useLocation } from '@//:modules/routing'
 import { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { FileMultiple, TimeHourGlass } from '@//:assets/icons/navigation'
+import { FileMultiple, FlagReport, TimeHourGlass } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import Can from '@//:modules/authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -40,6 +41,18 @@ export default function Moderation ({ children }: Props): JSX.Element {
           }
           icon={TimeHourGlass}
         />
+        <Can I='admin' a='Post'>
+          <VerticalNavigation.Button
+            to='/moderation/reports'
+            colorScheme='purple'
+            title={
+              <Trans>
+                Reports
+              </Trans>
+            }
+            icon={FlagReport}
+          />
+        </Can>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}

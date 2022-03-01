@@ -1,28 +1,29 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { AddClubSlugAliasFragment$key } from '@//:artifacts/AddClubSlugAliasFragment.graphql'
 import { AddClubSlugAliasMutation } from '@//:artifacts/AddClubSlugAliasMutation.graphql'
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  FormControl,
-  FormLabel,
-  HStack,
-  InputLeftAddon,
-  useToast
-} from '@chakra-ui/react'
+import { HStack, InputLeftAddon } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import Button from '@//:modules/form/Button/Button'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFeedback,
+  InputFooter,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface Props {
-  query: AddClubSlugAliasFragment$key | null
+  query: AddClubSlugAliasFragment$key
+  isDisabled: boolean
 }
 
 interface ClubSlugValues {
@@ -33,20 +34,17 @@ const Fragment = graphql`
   fragment AddClubSlugAliasFragment on Club {
     id
     slug
-    slugAliases {
-      __typename
-    }
-    slugAliasesLimit
   }
 `
 
 const Mutation = graphql`
-  mutation AddClubSlugAliasMutation ($id: ID!, $slug: String!) {
-    addClubSlugAlias(input: {id: $id, slug: $slug}) {
+  mutation AddClubSlugAliasMutation ($input: AddClubSlugAliasInput!) {
+    addClubSlugAlias(input: $input) {
       club {
         id
         slug
         slugAliases {
+          __id
           slug
         }
       }
@@ -55,44 +53,34 @@ const Mutation = graphql`
   }
 `
 
-export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
+export default function AddClubSlugAlias ({ query, isDisabled }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [addSlug, isAddingSlug] = useMutation<AddClubSlugAliasMutation>(Mutation)
+  const [commit, isInFlight] = useMutation<AddClubSlugAliasMutation>(Mutation)
 
   const schema = Joi.object({
     slug: ClubSlug()
   })
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<ClubSlugValues>({
+  const methods = useForm<ClubSlugValues>({
     resolver: joiResolver(
       schema
     )
   })
 
+  const { setError } = methods
+
   const { i18n } = useLingui()
 
   const notify = useToast()
 
-  const success = isDirty && (errors.slug == null) && isSubmitted
-
-  const disableSlugAdd = data?.slugAliases.length === data?.slugAliasesLimit
-
-  const onAddSlug = (formData): void => {
-    if (data?.id == null) return
-    addSlug({
+  const onSubmit = (formData): void => {
+    commit({
       variables: {
-        id: data.id,
-        slug: formData.slug
+        input: {
+          id: data.id,
+          ...formData
+        }
       },
       onCompleted (data) {
         if (data?.addClubSlugAlias?.validation != null) {
@@ -104,15 +92,14 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
         }
         notify({
           status: 'success',
-          title: t`Successfully added the link alias ${formData.slug}`,
-          isClosable: true
+          title: t`Successfully added the link alias ${formData.slug}`
         })
       },
+
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error adding a link alias`,
-          isClosable: true
+          title: t`There was an error adding a link alias`
         })
       }
     }
@@ -120,55 +107,35 @@ export default function AddClubSlugAlias ({ query }: Props): JSX.Element {
   }
 
   return (
-    <>
-      {disableSlugAdd && (
-        <Alert mb={2} status='warning'>
-          <AlertIcon />
-          <AlertDescription fontSize='sm'>
-            <Trans>
-              You have added the maximum amount of aliases. You'll have to remove at least one alias to be
-              able to add another.
-            </Trans>
-          </AlertDescription>
-        </Alert>)}
-      <form noValidate onSubmit={handleSubmit(onAddSlug)}>
-        <FormControl isInvalid={errors.slug != null} id='email'>
-          <FormLabel fontSize='sm'>
-            <Trans>
-              Enter a new club link
-            </Trans>
-          </FormLabel>
-          <HStack align='flex-start'>
-            <StyledInput
-              inputLeftAddon={
-                <InputLeftAddon>
-                  <Trans>
-                    overdoll.com/
-                  </Trans>
-                </InputLeftAddon>
-              }
-              size='sm'
-              register={register('slug')}
-              success={success}
-              error={errors.slug != null}
-              placeholder={i18n._(t`Enter a new club link`)}
-              errorMessage={errors?.slug?.message}
-            />
-            <Button
-              size='sm'
-              variant='solid'
-              type='submit'
-              colorScheme='gray'
-              isDisabled={(errors.slug != null) || disableSlugAdd}
-              isLoading={isAddingSlug}
-            >
+    <Form {...methods} onSubmit={onSubmit}>
+
+      <FormInput
+        size='sm'
+        id='slug'
+      >
+        <InputHeader>
+          <Trans>
+            Enter a new club link
+          </Trans>
+        </InputHeader>
+        <HStack spacing={2}>
+          <InputBody>
+            <InputLeftAddon>
               <Trans>
-                Submit
+                overdoll.com/
               </Trans>
-            </Button>
-          </HStack>
-        </FormControl>
-      </form>
-    </>
+            </InputLeftAddon>
+            <TextInput placeholder={i18n._(t`Enter a new club link`)} />
+            <InputFeedback />
+          </InputBody>
+          <FormSubmitButton isDisabled={isDisabled} size='sm' isLoading={isInFlight}>
+            <Trans>
+              Submit
+            </Trans>
+          </FormSubmitButton>
+        </HStack>
+        <InputFooter />
+      </FormInput>
+    </Form>
   )
 }

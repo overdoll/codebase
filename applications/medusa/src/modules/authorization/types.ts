@@ -8,7 +8,17 @@ interface Account {
   kind: 'Account'
 }
 
-type Abilities = ['create' | 'moderate', InferSubjects<Post>] | ['manage', InferSubjects<Account>]
+interface Club {
+  kind: 'Club'
+}
+
+interface Tags {
+  kind: 'Tags'
+}
+
+type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
+['configure', InferSubjects<Account> | InferSubjects<Club>] |
+['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post>]
 
 export type AppAbility = Ability<Abilities>
 export const App = Ability as AbilityClass<AppAbility>

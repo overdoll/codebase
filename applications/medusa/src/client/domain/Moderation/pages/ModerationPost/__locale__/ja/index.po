@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-02-23 17:37-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ja\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:65
+msgid "Club"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:75
+msgid "Contributor"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/RootModerationPost.tsx:35
+msgid "Moderate Post"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:70
+msgid "No reports found"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:85
+msgid "Reports"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:82
+msgid "Rule"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:77
+msgid "Username"
+msgstr ""

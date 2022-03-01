@@ -5,7 +5,3 @@ extend type AuthenticationToken {
 type Count {
   categories: Int!
 }
-
-extend type Query {
-  counts: Count
-}

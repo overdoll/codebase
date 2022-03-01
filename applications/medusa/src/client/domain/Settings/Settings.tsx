@@ -6,6 +6,7 @@ import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navig
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
+import LockedAccountBanner from '../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 
 interface Props {
   children: ReactNode
@@ -66,6 +67,7 @@ export default function Settings ({ children }: Props): JSX.Element {
         </Can>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
+        <LockedAccountBanner />
         {location.pathname === '/settings' ? <Redirect to='/settings/profile' /> : children}
       </VerticalNavigation.Page>
     </VerticalNavigation>

@@ -19,7 +19,7 @@ describe('Join', () => {
 
     cy.waitUntil(() => cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled'))
 
-    cy.findByRole('textbox', { name: /username/iu })
+    cy.findByPlaceholderText(/Username/iu)
       .type(username)
 
     cy.findByRole('button', { name: /Register/iu })
@@ -35,7 +35,7 @@ describe('Join', () => {
 
     cy.visit('/join')
 
-    cy.findByRole('textbox', { name: /email/iu })
+    cy.findByPlaceholderText(/Enter an email/iu)
       .type(email)
 
     cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')).click()

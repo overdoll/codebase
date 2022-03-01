@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fe2d032ccb5ddf495f7d926ba8b6e46d>>
- * @relayHash 0aefab520747be1f8be91e3cdf899b53
+ * @generated SignedSource<<059353096f72a0492e5b596f83245047>>
+ * @relayHash f7a440c496ee826fc2481b4dbcec26be
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0aefab520747be1f8be91e3cdf899b53
+// @relayRequestID f7a440c496ee826fc2481b4dbcec26be
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -52,6 +52,13 @@ v2 = {
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -131,13 +138,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -148,18 +149,30 @@ return {
                 ],
                 "storageKey": null
               },
-              (v3/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "videoThumbnail",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "0aefab520747be1f8be91e3cdf899b53",
+    "id": "f7a440c496ee826fc2481b4dbcec26be",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

@@ -1,15 +1,22 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpActivationFormMutation } from '@//:artifacts/TotpActivationFormMutation.graphql'
-import { FormControl, HStack, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
+import { HStack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
 import { t, Trans } from '@lingui/macro'
 import Totp from '@//:modules/validation/Totp'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFooter,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface CodeValues {
   code: string
@@ -40,20 +47,13 @@ export default function TotpActivationForm (props: Props): JSX.Element {
     code: Totp()
   })
 
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<CodeValues>({
+  const methods = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
   })
+
+  const { setError } = methods
 
   const notify = useToast()
 
@@ -61,8 +61,8 @@ export default function TotpActivationForm (props: Props): JSX.Element {
     submitTotp({
       variables: {
         input: {
-          code: formData.code,
-          id: props.id
+          id: props.id,
+          ...formData
         }
       },
       onCompleted (data) {
@@ -97,38 +97,25 @@ export default function TotpActivationForm (props: Props): JSX.Element {
     })
   }
 
-  const success = isDirty && (errors.code == null) && isSubmitted
-
   return (
-    <form noValidate onSubmit={handleSubmit(submitTotpCode)}>
-      <FormControl
-        isInvalid={errors.code != null}
-      >
+    <Form {...methods} onSubmit={submitTotpCode}>
+      <FormInput size='md' id='code'>
         <HStack align='flex-start'>
-          <StyledInput
-            register={register('code')}
-            success={success}
-            error={errors.code != null}
-            size='md'
-            variant='outline'
-            placeholder='123456'
-            errorMessage={errors?.code?.message}
-          />
-          <Button
-            size='md'
-            variant='solid'
-            type='submit'
-            ml={2}
-            colorScheme='green'
-            disabled={errors.code != null}
+          <InputBody>
+            <TextInput placeholder='123456' />
+          </InputBody>
+          <FormSubmitButton
             isLoading={isSubmittingTotp}
+            size='md'
+            colorScheme='green'
           >
             <Trans>
               Activate
             </Trans>
-          </Button>
+          </FormSubmitButton>
         </HStack>
-      </FormControl>
-    </form>
+        <InputFooter />
+      </FormInput>
+    </Form>
   )
 }

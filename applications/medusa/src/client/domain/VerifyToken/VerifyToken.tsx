@@ -1,7 +1,7 @@
 import CenteredSpinner from '@//:modules/content/Placeholder/Loading/CenteredSpinner/CenteredSpinner'
 import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useQueryParam } from 'use-query-params'
@@ -15,6 +15,7 @@ import { Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   prepared: {

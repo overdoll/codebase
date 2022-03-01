@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<732998cd56811a866af4c9e4429fd4bb>>
- * @relayHash ce7c88a1aded1e560f92299ae6186fe3
+ * @generated SignedSource<<7736de3d111aad0c64e3427aa9b797aa>>
+ * @relayHash 2d767cb4f31fad132502d70b0104b34f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ce7c88a1aded1e560f92299ae6186fe3
+// @relayRequestID 2d767cb4f31fad132502d70b0104b34f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ManageClubSlugAliasesPromoteMutation$variables = {
@@ -20,7 +20,6 @@ export type ManageClubSlugAliasesPromoteMutationVariables = ManageClubSlugAliase
 export type ManageClubSlugAliasesPromoteMutation$data = {
   readonly promoteClubSlugAliasToDefault: {
     readonly club: {
-      readonly id: string;
       readonly slug: string;
       readonly slugAliases: ReadonlyArray<{
         readonly slug: string;
@@ -47,64 +46,68 @@ var v0 = [
     "name": "slug"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "id",
+        "variableName": "id"
+      },
+      {
+        "kind": "Variable",
+        "name": "slug",
+        "variableName": "slug"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "fields": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "id"
-          },
-          {
-            "kind": "Variable",
-            "name": "slug",
-            "variableName": "slug"
-          }
-        ],
-        "kind": "ObjectValue",
-        "name": "input"
-      }
-    ],
-    "concreteType": "PromoteClubSlugAliasToDefaultPayload",
-    "kind": "LinkedField",
-    "name": "promoteClubSlugAliasToDefault",
-    "plural": false,
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ClubSlugAlias",
+  "kind": "LinkedField",
+  "name": "slugAliases",
+  "plural": true,
+  "selections": [
+    (v2/*: any*/)
+  ],
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ManageClubSlugAliasesPromoteMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Club",
+        "args": (v1/*: any*/),
+        "concreteType": "PromoteClubSlugAliasToDefaultPayload",
         "kind": "LinkedField",
-        "name": "club",
+        "name": "promoteClubSlugAliasToDefault",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubSlugAlias",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "slugAliases",
-            "plural": true,
+            "name": "club",
+            "plural": false,
             "selections": [
-              (v1/*: any*/)
+              (v2/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           }
@@ -112,16 +115,6 @@ v2 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ManageClubSlugAliasesPromoteMutation",
-    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -130,10 +123,42 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ManageClubSlugAliasesPromoteMutation",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "PromoteClubSlugAliasToDefaultPayload",
+        "kind": "LinkedField",
+        "name": "promoteClubSlugAliasToDefault",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "ce7c88a1aded1e560f92299ae6186fe3",
+    "id": "2d767cb4f31fad132502d70b0104b34f",
     "metadata": {},
     "name": "ManageClubSlugAliasesPromoteMutation",
     "operationKind": "mutation",
@@ -142,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "30974501e54fc16b0d0d6c74907ab424";
+(node as any).hash = "af37738dedf2cef669b436efeef34ba7";
 
 export default node;

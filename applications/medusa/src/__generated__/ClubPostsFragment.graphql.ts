@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc56a2e2f83a14087b37e38f832d2f52>>
+ * @generated SignedSource<<885667c81793d7011b437b13af736e56>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,8 @@ export type ClubPostsFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly reference: string;
         readonly state: PostState;
-        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "DraftPostFragment" | "PostReviewFragment" | "ReviewPostFragment" | "RejectedPostFragment">;
       };
     }>;
   };
@@ -113,13 +112,6 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "reference",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "state",
                   "storageKey": null
                 },
@@ -127,6 +119,26 @@ return {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "PostPreviewContentFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "DraftPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PostReviewFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ReviewPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "RejectedPostFragment"
                 },
                 {
                   "alias": null,
@@ -189,6 +201,6 @@ return {
 };
 })();
 
-(node as any).hash = "68da1604e0337fcc0251faf004e47f2f";
+(node as any).hash = "448bf9d7d3a1487720703445098bab9f";
 
 export default node;

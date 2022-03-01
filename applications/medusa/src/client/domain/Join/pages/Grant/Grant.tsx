@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
+import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../helpers/support'
@@ -9,6 +9,7 @@ import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -62,15 +63,13 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           notify({
             status: 'error',
-            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation)),
-            isClosable: true
+            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
           })
           return
         }
         notify({
           status: 'success',
-          title: t`Welcome back!`,
-          isClosable: true
+          title: t`Welcome back!`
         })
       },
       updater: (store) => {
@@ -82,8 +81,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error logging you in`,
-          isClosable: true
+          title: t`There was an error logging you in`
         })
       }
     })

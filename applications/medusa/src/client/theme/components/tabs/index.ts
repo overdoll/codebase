@@ -210,7 +210,7 @@ const variants = {
 const defaultProps = {
   size: 'md',
   variant: 'line',
-  colorScheme: 'blue'
+  colorScheme: 'teal'
 }
 
 export default {

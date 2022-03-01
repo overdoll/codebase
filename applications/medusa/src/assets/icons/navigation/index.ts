@@ -25,3 +25,7 @@ export { default as NavigationMenuHorizontal } from './normal-bold/navigation-me
 export { default as ClubPeopleGroup } from './normal-bold/club-people-group.svg'
 export { default as SafetyFloat } from './normal-bold/safety-float.svg'
 export { default as SearchBar } from './normal-bold/search-bar.svg'
+export { default as RisingGraph } from './mini-bold/rising-graph.svg'
+export { default as FreshLeaf } from './mini-bold/fresh-leaf.svg'
+export { default as SearchSmall } from './mini-bold/search-small.svg'
+export { default as FlagReport } from './mini-bold/flag-report.svg'
