@@ -25,7 +25,7 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 	subdivision := ""
 
 	if len(record.Subdivisions) > 0 {
-		subdivision = record.Subdivisions[0].IsoCode
+		subdivision = record.Subdivisions[0].Names["en"]
 	}
 
 	city := record.City.Names["en"]

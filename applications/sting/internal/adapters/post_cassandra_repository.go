@@ -101,7 +101,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts, supportedClubIds []string) (*post.Post, error) {
+func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts, requester *principal.Principal, supportedClubIds []string) (*post.Post, error) {
 
 	likes, err := r.getLikesForPost(ctx, postPending.Id)
 
@@ -127,6 +127,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.CreatedAt,
 		postPending.PostedAt,
 		postPending.ReassignmentAt,
+		requester,
 		supportedClubIds,
 	), nil
 }
@@ -205,7 +206,7 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 	}
 
 	for _, b := range postsModels {
-		p, err := r.unmarshalPost(ctx, *b, supportedClubIds)
+		p, err := r.unmarshalPost(ctx, *b, requester, supportedClubIds)
 		if err != nil {
 			return nil, err
 		}
@@ -243,7 +244,7 @@ func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id st
 		return nil, err
 	}
 
-	return r.unmarshalPost(ctx, *postPending, nil)
+	return r.unmarshalPost(ctx, *postPending, nil, nil)
 }
 
 func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
@@ -263,7 +264,7 @@ func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *pr
 		}
 	}
 
-	pst, err := r.unmarshalPost(ctx, *postPending, supportedClubIds)
+	pst, err := r.unmarshalPost(ctx, *postPending, requester, supportedClubIds)
 
 	if err != nil {
 		return nil, err

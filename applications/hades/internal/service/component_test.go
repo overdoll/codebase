@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/shurcooL/graphql"
+	"go.temporal.io/sdk/mocks"
+	"go.temporal.io/sdk/testsuite"
 	"log"
 	"os"
 	"overdoll/applications/hades/internal/ports"
@@ -24,6 +26,10 @@ const HadesHttpCCBillPaymentFlowCallbackAddr = "http://:6666/api/ccbill/payment-
 
 const HadesGraphqlClientAddr = "http://:6666/api/graphql"
 
+var (
+	temporalClientMock *mocks.Client
+)
+
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
 	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
@@ -39,10 +45,21 @@ func convertClubIdIdToRelayId(clubId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
 }
 
+func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+
+	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(newApp.Activities)
+
+	return env
+}
+
 func startService() bool {
 	config.Read("applications/hades")
 
-	application, _ := service.NewComponentTestApplication(context.Background())
+	application, _, temporalClient := service.NewComponentTestApplication(context.Background())
+
+	temporalClientMock = temporalClient
 
 	srv := ports.NewHttpServer(&application)
 

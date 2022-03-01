@@ -79,7 +79,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		name:                lc,
 		slugAliases:         []string{},
 		thumbnailResourceId: "",
-		membersCount:        0,
+		membersCount:        1,
 		ownerAccountId:      requester.AccountId(),
 	}, nil
 }

@@ -4,8 +4,10 @@ import (
 	"context"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -41,7 +43,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessWebhook(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Chargeback", map[string]string{
@@ -59,6 +61,15 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 		"timestamp":              "2022-02-26 08:21:49",
 		"subscriptionId":         ccbillSubscriptionId,
 	})
+
+	workflow := workflows.CCBillChargeback
+
+	args := temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflow), nil)
+	env := getWorkflowEnvironment(t)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)

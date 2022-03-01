@@ -65,7 +65,7 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, supportedClubIds []string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -87,6 +87,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
 			isSupporterOnly:      contentSupporterOnly[resourceId],
 			canViewSupporterOnly: requesterIsSupporter,
+			requester:            requester,
 		})
 	}
 

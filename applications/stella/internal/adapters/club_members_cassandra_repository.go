@@ -144,9 +144,11 @@ func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx conte
 
 		if i == 0 {
 			firstPartition = tm
+			batch.Query(stmt, clubId, tm, tm, 1, maxClubMembersPerPartition)
+		} else {
+			batch.Query(stmt, clubId, tm, tm, 0, maxClubMembersPerPartition)
 		}
 
-		batch.Query(stmt, clubId, tm, tm, 0, maxClubMembersPerPartition)
 	}
 
 	// also return the first partition to be used

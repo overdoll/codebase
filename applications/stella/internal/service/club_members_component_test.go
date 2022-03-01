@@ -21,12 +21,14 @@ type ClubMemberModifiedNoAccount struct {
 		ID        string
 		Reference string
 	}
+	IsSupporter bool
 }
 
 type ClubMemberModified struct {
-	ID       string
-	JoinedAt time.Time
-	Account  struct {
+	ID          string
+	JoinedAt    time.Time
+	IsSupporter bool
+	Account     struct {
 		ID                   string
 		ClubMembershipsCount int
 		ClubMemberships      struct {
@@ -128,6 +130,47 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.Len(t, res.ClubIds, 1, "should have 1 club id")
 
 	require.Equal(t, clubId, res.ClubIds[0], "should have a matching club ID")
+
+	// now, make this member a supporter
+	canBecomeSupporter, err := grpcClient.CanAccountBecomeClubSupporter(context.Background(), &stella.CanAccountBecomeClubSupporterRequest{
+		AccountId: testingAccountId,
+	})
+	require.NoError(t, err, "no error getting permission for supporter")
+	require.True(t, canBecomeSupporter.Allowed, "allowed to become a supporter")
+
+	// now, make this member a supporter
+	_, err = grpcClient.AddClubSupporter(context.Background(), &stella.AddClubSupporterRequest{
+		AccountId: testingAccountId,
+	})
+	require.NoError(t, err, "no error making a club member a supporter")
+
+	// run supporter method
+	env = getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflows.AddClubSupporter, clb.ID(), testingAccountId, time.Now())
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	clubViewer = getClubViewer(t, client, clb.Slug())
+	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
+
+	// now, make this member a supporter
+	_, err = grpcClient.RemoveClubSupporter(context.Background(), &stella.RemoveClubSupporterRequest{
+		AccountId: testingAccountId,
+	})
+	require.NoError(t, err, "no error making a club member a supporter")
+
+	// run supporter method
+	env = getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflows.RemoveClubSupporter, clb.ID(), testingAccountId)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	clubViewer = getClubViewer(t, client, clb.Slug())
+	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
 
 	// withdraw club membership
 	var withdrawClubMembership WithdrawClubMembership

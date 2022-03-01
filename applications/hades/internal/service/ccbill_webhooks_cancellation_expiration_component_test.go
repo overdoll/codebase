@@ -4,8 +4,10 @@ import (
 	"context"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -56,7 +58,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessWebhook(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Cancellation", map[string]string{
@@ -67,6 +69,14 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"subscriptionId": ccbillSubscriptionId,
 		"timestamp":      "2022-02-24 14:24:41",
 	})
+
+	args := temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflows.CCBillCancellation), nil)
+
+	env := getWorkflowEnvironment(t)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflows.CCBillCancellation, args)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -101,12 +111,21 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
 	// run webhook - expiration
-	runWebhookAction(t, "Cancelled", map[string]string{
+	runWebhookAction(t, "Expired", map[string]string{
 		"clientAccnum":   "951492",
 		"clientSubacc":   "0101",
 		"subscriptionId": ccbillSubscriptionId,
 		"timestamp":      "2022-02-24 14:24:41",
 	})
+
+	workflow := workflows.CCBillExpiration
+
+	args = temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflow), nil)
+	env = getWorkflowEnvironment(t)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 
 	// get club supporter subscriptions
 	subscriptions = getAccountClubSupporterSubscriptions(t, gqlClient, accountId)

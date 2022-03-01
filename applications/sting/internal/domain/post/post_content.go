@@ -1,5 +1,7 @@
 package post
 
+import "overdoll/libraries/principal"
+
 type Content struct {
 	id string
 
@@ -10,6 +12,8 @@ type Content struct {
 	isSupporterOnly bool
 
 	canViewSupporterOnly bool
+
+	requester *principal.Principal
 }
 
 func (m *Content) Id() string {
@@ -27,6 +31,10 @@ func (m *Content) ResourceIdRequest(p *Post) string {
 	}
 
 	if m.isSupporterOnly && m.canViewSupporterOnly {
+		return m.resourceId
+	}
+
+	if m.requester != nil && m.requester.IsStaff() {
 		return m.resourceId
 	}
 
@@ -51,5 +59,10 @@ func (m *Content) IsSupporterOnly() bool {
 }
 
 func (m *Content) CanViewSupporterOnly() bool {
+
+	if m.requester != nil && m.requester.IsStaff() {
+		return true
+	}
+
 	return m.canViewSupporterOnly
 }

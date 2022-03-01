@@ -112,7 +112,7 @@ func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx
 	return PostsIndexElasticSearchRepository{client: client, session: session, stella: stella}
 }
 
-func unmarshalPostDocument(hit *elastic.SearchHit, supportedClubIds []string) (*post.Post, error) {
+func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principal, supportedClubIds []string) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -179,6 +179,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit, supportedClubIds []string) (*
 		time.Unix(createdAt, 0),
 		postedAtTime,
 		reassignmentAtTime,
+		requester,
 		supportedClubIds,
 	)
 
@@ -484,7 +485,7 @@ func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -575,7 +576,7 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -699,7 +700,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit, supportedClubIds)
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
 
 		if err != nil {
 			return nil, err

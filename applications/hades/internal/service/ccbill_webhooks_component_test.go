@@ -6,12 +6,13 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"net/http"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	hades "overdoll/applications/hades/proto"
 	"testing"
 )
 
-func ccbillNewSaleSuccessWebhook(t *testing.T, accountId, ccbillSubscriptionId, clubId string) {
+func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, clubId string) {
 	t.Parallel()
 
 	// generate a new unique payment token
@@ -30,7 +31,10 @@ func ccbillNewSaleSuccessWebhook(t *testing.T, accountId, ccbillSubscriptionId, 
 
 	require.NoError(t, err, "no error encrypting a new token")
 
-	runWebhookAction(t, "NewSaleSuccess", map[string]string{
+	env := getWorkflowEnvironment(t)
+
+	// execute a new sale success workflow so we can seed data for this test
+	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, map[string]string{
 		"accountingCurrency":             "USD",
 		"accountingCurrencyCode":         "840",
 		"accountingInitialPrice":         "6.99",
@@ -82,6 +86,9 @@ func ccbillNewSaleSuccessWebhook(t *testing.T, accountId, ccbillSubscriptionId, 
 		"subscriptionId":                 ccbillSubscriptionId,
 		"X-overdollPaymentToken":         *encrypted,
 	})
+
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 }
 
 func runWebhookAction(t *testing.T, event string, payload interface{}) {

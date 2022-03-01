@@ -4,8 +4,13 @@ import (
 	"context"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"overdoll/applications/hades/internal/app/workflows"
+	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -41,7 +46,84 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessWebhook(t, accountId, ccbillSubscriptionId, clubId)
+	// generate a new unique payment token
+	encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
+		HeaderConfiguration: &hades.HeaderConfiguration{
+			SavePaymentDetails: true,
+			CreatedAt:          timestamppb.Now(),
+		},
+		CcbillClubSupporter: &hades.CCBillClubSupporter{
+			ClubId: clubId,
+		},
+		AccountInitiator: &hades.AccountInitiator{
+			AccountId: accountId,
+		},
+	})
+
+	require.NoError(t, err, "no error encrypting a new token")
+
+	runWebhookAction(t, "NewSaleSuccess", map[string]string{
+		"accountingCurrency":             "USD",
+		"accountingCurrencyCode":         "840",
+		"accountingInitialPrice":         "6.99",
+		"accountingRecurringPrice":       "6.99",
+		"address1":                       "Test Address",
+		"avsResponse":                    "Y",
+		"billedCurrency":                 "USD",
+		"billedCurrencyCode":             "840",
+		"billedInitialPrice":             "6.99",
+		"billedRecurringPrice":           "6.99",
+		"bin":                            "411111",
+		"cardType":                       "VISA",
+		"city":                           "Test City",
+		"clientAccnum":                   "951492",
+		"clientSubacc":                   "0101",
+		"country":                        "CA",
+		"cvv2Response":                   "M",
+		"dynamicPricingValidationDigest": "5e118a92ac1ff6cec8bbe64e13acb7c5",
+		"email":                          "nikita@overdoll.com",
+		"expDate":                        "0423",
+		"firstName":                      "Test",
+		"flexId":                         "d09af907-c198-44f2-b14e-eb9e1533cb45",
+		"formName":                       "101 102",
+		"initialPeriod":                  "30",
+		"ipAddress":                      "192.168.1.1",
+		"last4":                          "1111",
+		"lastName":                       "Person",
+		"nextRenewalDate":                "2022-03-28",
+		"paymentAccount":                 "693a3b8d0d888c3d04800000004bacd",
+		"paymentType":                    "CREDIT",
+		"postalCode":                     "M4N5S1",
+		"prePaid":                        "0",
+		"priceDescription":               "$6.99(USD) for 30 days then $6.99(USD) recurring every 30 days",
+		"rebills":                        "99",
+		"recurringPeriod":                "30",
+		"recurringPriceDescription":      "$6.99(USD) recurring every 30 days",
+		"referringUrl":                   "none",
+		"state":                          "NT",
+		"subscriptionCurrency":           "USD",
+		"subscriptionCurrencyCode":       "840",
+		"subscriptionInitialPrice":       "6.99",
+		"subscriptionRecurringPrice":     "6.99",
+		"subscriptionTypeId":             "0000001458",
+		"timestamp":                      "2022-02-26 08:21:49",
+		"transactionId":                  "0222057601000107735",
+		"threeDSecure":                   "NOT_APPLICABLE",
+		"X-formDigest":                   "5e118a92ac1ff6cec8bbe64e13acb7c5",
+		"X-currencyCode":                 "840",
+		"subscriptionId":                 ccbillSubscriptionId,
+		"X-overdollPaymentToken":         *encrypted,
+	})
+
+	workflow := workflows.CCBillNewSaleOrUpSaleSuccess
+
+	args := temporalClientMock.MethodCalled(testing_tools.GetFunctionName(workflow), nil)
+
+	env := getWorkflowEnvironment(t)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -90,7 +172,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	var accountTransactions AccountTransactionHistoryNew
 
-	err := gqlClient.Query(context.Background(), &accountTransactions, map[string]interface{}{
+	err = gqlClient.Query(context.Background(), &accountTransactions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
