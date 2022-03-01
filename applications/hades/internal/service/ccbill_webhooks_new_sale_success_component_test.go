@@ -3,6 +3,8 @@ package service_test
 import (
 	"context"
 	uuid2 "github.com/google/uuid"
+	"github.com/jung-kurt/gofpdf"
+	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -36,6 +38,10 @@ type AccountTransactionHistoryNew struct {
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
+}
+
+type GenerateClubSupporterReceiptFromAccountTransactionHistory struct {
+	GenerateClubSupporterReceiptFromAccountTransactionHistory *types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload `graphql:"generateClubSupporterReceiptFromAccountTransactionHistory(input: $input)"`
 }
 
 // test a bunch of webhooks at the same time
@@ -196,6 +202,36 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate, "correct next billing date")
 	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate, "correct billing date")
+
+	var generateReceipt GenerateClubSupporterReceiptFromAccountTransactionHistory
+
+	err = gqlClient.Mutate(context.Background(), &generateReceipt, map[string]interface{}{
+		"input": types.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput{
+			TransactionHistoryID: transaction.Id,
+		},
+	})
+
+	require.NoError(t, err, "no error generating a receipt from transaction history")
+
+	newWorkflow := workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory
+
+	args = temporalClientMock.MethodCalled(testing_tools.GetFunctionName(newWorkflow), nil)
+
+	env = getWorkflowEnvironment(t)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(newWorkflow, args)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	fileUrl := generateReceipt.GenerateClubSupporterReceiptFromAccountTransactionHistory.Link.String()
+	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
+
+	fileName := ksuid.New().String() + ".png"
+	err = testing_tools.DownloadFile(fileName, fileUrl)
+	require.NoError(t, err, "no error downloading the file")
+
+	err = gofpdf.ComparePDFFiles(fileName, "applications/hades/internal/service/file_fixtures/generated_transaction_receipt.pdf", false)
+	require.NoError(t, err, "no error comparing the 2 pdf files - generated file is identical")
 }
 
 func assertNewSaleSuccessCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {

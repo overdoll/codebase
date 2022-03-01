@@ -23,7 +23,7 @@ func newClubSupportReceiptPdf() *ClubSupportReceiptPdf {
 }
 
 // Build pdf document from data provided
-func (doc *ClubSupportReceiptPdf) Build() (*gofpdf.Fpdf, error) {
+func (doc *ClubSupportReceiptPdf) Build(history *AccountTransactionHistory) (*gofpdf.Fpdf, error) {
 
 	// Build base doc
 	doc.pdf.SetMargins(BaseMargin, BaseMarginTop, BaseMargin)
@@ -33,6 +33,14 @@ func (doc *ClubSupportReceiptPdf) Build() (*gofpdf.Fpdf, error) {
 		35,
 		35,
 	)
+
+	doc.pdf.AddPage()
+	doc.pdf.SetFont("Arial", "B", 16)
+
+	doc.pdf.Cell(40, 10, history.accountId)
+
+	doc.pdf.SetCreationDate(history.Timestamp())
+	doc.pdf.SetCatalogSort(true)
 
 	return doc.pdf, nil
 }

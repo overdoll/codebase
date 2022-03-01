@@ -1,6 +1,8 @@
 package billing
 
-import "github.com/segmentio/ksuid"
+import (
+	"github.com/segmentio/ksuid"
+)
 
 type ClubSupporterReceiptBuilder struct {
 	history *AccountTransactionHistory
@@ -23,9 +25,10 @@ func (c *ClubSupporterReceiptBuilder) FileName() string {
 }
 
 func (c *ClubSupporterReceiptBuilder) BuildPDF() error {
+
 	doc := newClubSupportReceiptPdf()
 
-	pdf, err := doc.Build()
+	pdf, err := doc.Build(c.history)
 
 	if err != nil {
 		return err
