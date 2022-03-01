@@ -11,6 +11,7 @@ require (
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/corona10/goimagehash v1.0.3 // indirect
 	github.com/disintegration/gift v1.2.1
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/frankban/quicktest v1.13.0 // indirect

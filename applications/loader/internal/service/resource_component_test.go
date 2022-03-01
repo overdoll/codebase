@@ -4,14 +4,17 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
+	"github.com/corona10/goimagehash"
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
+	"image/png"
 	"os"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/support"
+	"overdoll/libraries/testing_tools"
 	"strings"
 	"testing"
 	"time"
@@ -29,7 +32,7 @@ func convertResourceIdToRelayId(itemId, resourceId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Resource{}, itemId, resourceId))))
 }
 
-func TestUploadResourcesAndProcessPrivate(t *testing.T) {
+func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	// create an item ID to associate the resources with
 	itemId := ksuid.New().String()
 
@@ -97,7 +100,57 @@ func TestUploadResourcesAndProcessPrivate(t *testing.T) {
 	require.NoError(t, err, "no error signing url")
 
 	// validate signed url is equal to our above signed url
-	require.Equal(t, signedURL, string(newResources.Entities[0].Resource.Urls[0].URL))
+	targetUrl := string(newResources.Entities[0].Resource.Urls[0].URL)
+	require.Equal(t, signedURL, targetUrl)
+	require.True(t, testing_tools.FileExists(targetUrl), "file exists in bucket")
+
+	// now, apply a filter
+	copyResourceResults, err := grpcClient.CopyResourcesAndApplyFilter(
+		context.Background(), &loader.CopyResourcesAndApplyFilterRequest{Resources: nil, Private: false, Filters: &loader.Filters{Pixelate: &loader.PixelateFilter{Size: 100}}})
+
+	require.NoError(t, err, "no error copying resources")
+
+	require.Len(t, copyResourceResults.Resources, 1, "should have 1 filtered resource")
+
+	newResourceItemId := copyResourceResults.Resources[0].NewResource.ItemId
+	newResourceId := copyResourceResults.Resources[0].NewResource.Id
+
+	var filteredResources Resources
+
+	// query our resources through graphql
+	err = client.Query(context.Background(), &filteredResources, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Resource",
+				"id":         convertResourceIdToRelayId(newResourceItemId, newResourceId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing new filtered resource")
+	require.Len(t, filteredResources.Entities[0].Resource.Urls, 1, "only should have 1 url")
+
+	downloadUrl := filteredResources.Entities[0].Resource.Urls[0].URL.String()
+	fileName := ksuid.New().String() + ".png"
+
+	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+newResourceItemId+"/"+newResourceId+".png", downloadUrl, "correct, non-private URL")
+
+	err = testing_tools.DownloadFile(fileName, downloadUrl)
+	require.NoError(t, err, "no error downloading the file")
+
+	file1, _ := os.Open("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
+	file2, _ := os.Open(fileName)
+	defer file1.Close()
+	defer file2.Close()
+
+	img1, _ := png.Decode(file1)
+	img2, _ := png.Decode(file2)
+
+	hash1, _ := goimagehash.AverageHash(img1)
+	hash2, _ := goimagehash.AverageHash(img2)
+	distance, _ := hash1.Distance(hash2)
+
+	require.Equal(t, 14123, distance, "should have exactly x distance")
 }
 
 func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
@@ -198,9 +251,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// expected image resource
 	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+imageFileId, string(newImageResource.Urls[0].URL))
+	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[0].URL)), "image uploaded file exists in bucket")
 
 	// expected video resource
 	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+videoFileId, string(newVideoResource.Urls[0].URL))
+	require.True(t, testing_tools.FileExists(string(newVideoResource.Urls[0].URL)), "video uploaded file exists in bucket")
 
 	// finally, run the processing workflow. we will query our resources one more time to check that the proper formats and URLs are now available
 	env := getWorkflowEnvironment(t)
@@ -267,8 +322,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Len(t, newImageResource.Urls, 2)
 	// expected first image to be webp
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
+	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[0].URL)), "image webp file exists in bucket")
+
 	// expected second image to be a png
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
+	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[1].URL)), "image png file exists in bucket")
 
 	// correct dimensions
 	require.Equal(t, 532, newImageResource.Height, "should be the correct height")
@@ -278,9 +336,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Len(t, newVideoResource.Urls, 1)
 	// expected video resource
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
+	require.True(t, testing_tools.FileExists(string(newVideoResource.Urls[0].URL)), "video mp4 file exists in bucket")
 
 	// correct thumbnail
 	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/t-"+videoResource.ProcessedId+".png", string(newVideoResource.VideoThumbnail.URL))
+	require.True(t, testing_tools.FileExists(string(newVideoResource.VideoThumbnail.URL)), "video thumbnail png file exists in bucket")
 
 	// correct dimensions
 	require.Equal(t, 360, newVideoResource.Height, "should be the correct height")
