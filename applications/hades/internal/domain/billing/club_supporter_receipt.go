@@ -23,7 +23,7 @@ func UnmarshalClubSupporterReceiptFromDatabase(link string) *ClubSupporterReceip
 
 func CanCreateClubSupporterReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransactionHistory) error {
 
-	if transaction.transaction != New || transaction.transaction != Invoice {
+	if transaction.transaction != New && transaction.transaction != Invoice {
 		return errors.New("can only generate a receipt from a new or invoice transaction type")
 	}
 

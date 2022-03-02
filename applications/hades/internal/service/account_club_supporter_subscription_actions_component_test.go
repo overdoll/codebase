@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/ports/graphql/types"
@@ -51,11 +52,12 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	clubId := uuid.New().String()
 
 	// once again, do another new sale success webhook, since this sets up everything we need for the following test
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	// club ID will be a different ID because that's what the subscription is for
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, uuid.New().String(), nil)
 
 	// since we know internally how these IDs are created, we create the ID here without having to grab it through an API call
-	savedPaymentMethodId := relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId)
-	accountClubSupporterSubscriptionId := relay.NewID(types.AccountClubSupporterSubscription{}, accountId, clubId, ccbillSubscriptionId)
+	savedPaymentMethodId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId))))
+	accountClubSupporterSubscriptionId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountClubSupporterSubscription{}, accountId, clubId, ccbillSubscriptionId))))
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -64,7 +66,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 
 	err := gqlClient.Mutate(context.Background(), &becomeSupporter, map[string]interface{}{
 		"input": types.BecomeClubSupporterWithAccountSavedPaymentMethodInput{
-			ClubID:               relay.NewID(types.Club{}, clubId),
+			ClubID:               convertClubIdIdToRelayId(clubId),
 			Currency:             types.CurrencyUsd,
 			SavedPaymentMethodID: savedPaymentMethodId,
 		},
@@ -78,7 +80,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	// now, delete our saved payment method
 	var deleteSavedPayment DeleteAccountSavedPaymentMethod
 
-	err = gqlClient.Mutate(context.Background(), &becomeSupporter, map[string]interface{}{
+	err = gqlClient.Mutate(context.Background(), &deleteSavedPayment, map[string]interface{}{
 		"input": types.DeleteAccountSavedPaymentMethodInput{
 			SavedPaymentMethodID: savedPaymentMethodId,
 		},
@@ -98,7 +100,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error extending club supporter subscription")
-	require.Equal(t, "2022-04-02 00:00:00 +0000 UTC", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.NextBillingDate, "should be extended")
+	require.Equal(t, "2022-03-31 00:00:00 +0000 UTC", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.NextBillingDate.String(), "should be extended")
 
 	// extend our subscription
 	var generateProratedRefund GenerateRefundAmountForAccountClubSupporterSubscription
@@ -133,7 +135,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	err = gqlClient.Mutate(context.Background(), &cancel, map[string]interface{}{
 		"input": types.CancelAccountClubSupporterSubscriptionInput{
 			ClubSupporterSubscriptionID: accountClubSupporterSubscriptionId,
-			CancellationReasonID:        relay.NewID(types.CancellationReason{}, "1q7MJ5IyRTV0X4J27F3m5wGD5mj"),
+			CancellationReasonID:        relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.CancellationReason{}, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")))),
 		},
 	})
 

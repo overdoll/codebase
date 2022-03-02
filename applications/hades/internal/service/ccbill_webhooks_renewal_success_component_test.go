@@ -22,16 +22,18 @@ type AccountTransactionHistoryInvoice struct {
 			TransactionHistory struct {
 				Edges []*struct {
 					Node struct {
-						Id                            relay.ID
-						Transaction                   types.AccountTransactionType
-						Amount                        float64
-						Currency                      types.Currency
-						BilledAtDate                  time.Time
-						NextBillingDate               time.Time
-						PaymentMethod                 types.PaymentMethod
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						Timestamp                     time.Time
-					} `graphql:"... on AccountInvoiceTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							Amount                        float64
+							Currency                      types.Currency
+							BilledAtDate                  time.Time
+							NextBillingDate               time.Time
+							PaymentMethod                 types.PaymentMethod
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+							Timestamp                     time.Time
+						} `graphql:"... on AccountInvoiceTransactionHistory"`
+					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
@@ -109,7 +111,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	require.NoError(t, err, "no error grabbing account transaction history")
 
 	require.Len(t, accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
-	transaction := accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges[0].Node
+	transaction := accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-26 08:21:49 +0000 UTC", transaction.Timestamp, "correct timestamp")

@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
     ccbill_subscription_id     text,
 
     primary key ( (account_id, bucket), id )
-);
+) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 (
@@ -141,10 +141,12 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 
 CREATE TABLE IF NOT EXISTS receipt_files
 (
-    id                   text,
+    id                             text,
 
-    file_path            text,
-    temporal_workflow_id text,
+    account_transaction_history_id text,
+
+    file_path                      text,
+    temporal_workflow_id           text,
 
     primary key ( id )
 );

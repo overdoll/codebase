@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/bucket"
@@ -590,7 +591,7 @@ func (r BillingCassandraRepository) DeleteAccountClubSupporterSubscriptionOperat
 
 func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptionByIdOperator(ctx context.Context, accountId, clubId, id string) (*billing.AccountClubSupporterSubscription, error) {
 
-	var accountClubSupported *accountClubSupporterSubscription
+	var accountClubSupported accountClubSupporterSubscription
 
 	if err := accountClubSupporterSubscriptionsTable.
 		SelectBuilder().
@@ -739,6 +740,7 @@ func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionO
 
 	if err := accountClubSupporterSubscriptionsTable.
 		SelectBuilder().
+		Where(qb.Eq("account_id"), qb.Eq("club_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountClubSupporterSubscription{
@@ -900,7 +902,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context
 
 func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
 
-	var encrypted string
+	var encrypted *string
 
 	if accountHistory.PaymentMethod() != nil {
 
@@ -910,7 +912,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 			return fmt.Errorf("failed to encrypt payment method: %s", err)
 		}
 
-		encrypted = enc
+		encrypted = &enc
 	} else {
 
 		// new/invoice transactions - grab billing details from ccbill (these details are not added automatically)
@@ -928,7 +930,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 				return err
 			}
 
-			encrypted = enc
+			encrypted = &enc
 		}
 	}
 
@@ -945,7 +947,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		Id:                      accountHistory.Id(),
 		TransactionType:         accountHistory.Transaction().String(),
 		SupportedClubId:         accountHistory.SupportedClubId(),
-		EncryptedPaymentMethod:  &encrypted,
+		EncryptedPaymentMethod:  encrypted,
 		Amount:                  accountHistory.Amount(),
 		Currency:                currency,
 		Timestamp:               accountHistory.Timestamp(),
@@ -1032,12 +1034,12 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 	// iterate through all buckets starting from x bucket until we have enough values
 	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
 
-		var accountTransactions []*accountTransactionHistory
+		var accountTransactions []accountTransactionHistory
 
 		builder := accountTransactionHistoryByAccountTable.SelectBuilder()
 
 		if cursor != nil {
-			if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			if err := cursor.BuildCassandra(builder, "id", false); err != nil {
 				return nil, err
 			}
 		}
@@ -1089,7 +1091,7 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 			accountTransactionsMorphed = append(accountTransactionsMorphed, transactionItem)
 		}
 
-		if cursor.GetLimit() >= len(accountTransactionsMorphed) {
+		if len(accountTransactionsMorphed) >= cursor.GetLimit() {
 			break
 		}
 	}

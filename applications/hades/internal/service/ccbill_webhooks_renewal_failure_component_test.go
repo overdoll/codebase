@@ -22,14 +22,16 @@ type AccountTransactionHistoryFailure struct {
 			TransactionHistory struct {
 				Edges []*struct {
 					Node struct {
-						Id                            relay.ID
-						Transaction                   types.AccountTransactionType
-						NextRetryDate                 time.Time
-						CCBillErrorCode               string
-						CCBillErrorText               string
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						Timestamp                     time.Time
-					} `graphql:"... on AccountFailureTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							NextRetryDate                 time.Time
+							CCBillErrorCode               string
+							CCBillErrorText               string
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+							Timestamp                     time.Time
+						} `graphql:"... on AccountFailureTransactionHistory"`
+					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
@@ -85,7 +87,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	require.NoError(t, err, "no error grabbing account transaction history")
 
 	require.Len(t, accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
-	transaction := accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges[0].Node
+	transaction := accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-24 14:24:14 +0000 UTC", transaction.Timestamp, "correct timestamp")

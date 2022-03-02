@@ -28,9 +28,23 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 		return nil, err
 	}
 
-	var declineError types.CCBillDeclineError
+	var id relay.ID
+
+	if result.ClubId() != nil {
+		id = relay.NewID(types.CCBillTransactionDetails{}, result.AccountId(), *result.ClubId(), result.Id())
+	}
+
+	transaction := &types.CCBillTransactionDetails{
+		ID:          id,
+		Approved:    result.Approved(),
+		DeclineText: result.DeclineText(),
+		DeclineCode: result.DeclineCode(),
+	}
 
 	if result.DeclineCode() != nil {
+
+		var declineError types.CCBillDeclineError
+
 		switch *result.DeclineCode() {
 		case "11":
 			declineError = types.CCBillDeclineErrorTransactionDeclined
@@ -49,19 +63,9 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 		default:
 			declineError = types.CCBillDeclineErrorGeneralSystemError
 		}
+
+		transaction.DeclineError = &declineError
 	}
 
-	var id relay.ID
-
-	if result.ClubId() != nil {
-		id = relay.NewID(types.CCBillTransactionDetails{}, result.AccountId(), *result.ClubId(), result.Id())
-	}
-
-	return &types.CCBillTransactionDetails{
-		ID:           id,
-		Approved:     result.Approved(),
-		DeclineError: &declineError,
-		DeclineText:  result.DeclineText(),
-		DeclineCode:  result.DeclineCode(),
-	}, nil
+	return transaction, nil
 }

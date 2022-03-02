@@ -3,8 +3,6 @@ package service_test
 import (
 	"context"
 	uuid2 "github.com/google/uuid"
-	"github.com/jung-kurt/gofpdf"
-	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/mocks"
@@ -20,17 +18,6 @@ import (
 	"time"
 )
 
-type AccountTransactionHistoryNewItem struct {
-	Id                            relay.ID
-	Transaction                   types.AccountTransactionType
-	Amount                        float64
-	Currency                      types.Currency
-	BilledAtDate                  time.Time
-	NextBillingDate               time.Time
-	PaymentMethod                 types.PaymentMethod
-	CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-}
-
 type AccountTransactionHistoryNew struct {
 	Entities []struct {
 		Account struct {
@@ -38,7 +25,16 @@ type AccountTransactionHistoryNew struct {
 			TransactionHistory *struct {
 				Edges []*struct {
 					Node struct {
-						Item AccountTransactionHistoryNewItem `graphql:"... on AccountNewTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							Amount                        float64
+							Currency                      types.Currency
+							BilledAtDate                  time.Time
+							NextBillingDate               time.Time
+							PaymentMethod                 types.PaymentMethod
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+						} `graphql:"... on AccountNewTransactionHistory"`
 					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
@@ -207,8 +203,30 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate.String(), "correct next billing date")
 	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate.String(), "correct billing date")
 
-	generateReceiptWorkflow := workflows.CCBillNewSaleOrUpSaleSuccess
+	generateReceiptWorkflow := workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory
 	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, generateReceiptWorkflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
+	flowRun := &mocks.WorkflowRun{}
+
+	flowRun.
+		On("Get", mock.Anything, mock.Anything).
+		Return(nil)
+
+	temporalClientMock.
+		On("GetWorkflow", mock.Anything, mock.Anything, mock.Anything).
+		// on GetWorkflow command, this would check if the workflow was completed
+		// so we run our workflow to make sure it's completed
+		Run(
+			func(args mock.Arguments) {
+				args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, generateReceiptWorkflow, mock.Anything)
+				env = getWorkflowEnvironment(t)
+				// execute workflow manually since it won't be
+				env.ExecuteWorkflow(generateReceiptWorkflow, args...)
+				require.True(t, env.IsWorkflowCompleted())
+				require.NoError(t, env.GetWorkflowError())
+			},
+		).
+		Return(flowRun)
 
 	var generateReceipt GenerateClubSupporterReceiptFromAccountTransactionHistory
 
@@ -220,24 +238,8 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.NoError(t, err, "no error generating a receipt from transaction history")
 
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, generateReceiptWorkflow, mock.Anything)
-	env = getWorkflowEnvironment(t)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(generateReceiptWorkflow, args...)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
-
 	fileUrl := generateReceipt.GenerateClubSupporterReceiptFromAccountTransactionHistory.Link.String()
 	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
-
-	fileName := ksuid.New().String() + ".png"
-	err = testing_tools.DownloadFile(fileName, fileUrl)
-	require.NoError(t, err, "no error downloading the file")
-
-	path, _ := testing_tools.NormalizedPathFromBazelTarget("applications/hades/internal/service/file_fixtures/generated_transaction_receipt.pdf")
-
-	err = gofpdf.ComparePDFFiles(fileName, path, false)
-	require.NoError(t, err, "no error comparing the 2 pdf files - generated file is identical")
 }
 
 func assertNewSaleSuccessCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {

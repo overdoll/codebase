@@ -22,15 +22,17 @@ type AccountTransactionHistoryRefund struct {
 			TransactionHistory struct {
 				Edges []*struct {
 					Node struct {
-						Id                            relay.ID
-						Transaction                   types.AccountTransactionType
-						CCBillReason                  string
-						Amount                        float64
-						Currency                      types.Currency
-						PaymentMethod                 types.PaymentMethod
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						Timestamp                     time.Time
-					} `graphql:"... on AccountRefundTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							CCBillReason                  string
+							Amount                        float64
+							Currency                      types.Currency
+							PaymentMethod                 types.PaymentMethod
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+							Timestamp                     time.Time
+						} `graphql:"... on AccountRefundTransactionHistory"`
+					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
@@ -95,7 +97,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.NoError(t, err, "no error grabbing account transaction history")
 
 	require.Len(t, accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
-	transaction := accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges[0].Node
+	transaction := accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-24 20:27:56 +0000 UTC", transaction.Timestamp, "correct timestamp")

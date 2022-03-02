@@ -687,7 +687,7 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 			em.Node = paging.NewNode(member.JoinedAt)
 		}
 
-		if cursor.GetLimit() == len(members) {
+		if len(members) >= cursor.GetLimit() {
 			break
 		}
 	}

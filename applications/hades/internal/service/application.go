@@ -75,6 +75,9 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 
 	return app.Application{
 		Commands: app.Commands{
+			CreateCancellationReason:                                  command.NewCreateCancellationReasonHandler(cancelRepo),
+			UpdateCancellationReasonDeprecated:                        command.NewUpdateCancellationReasonDeprecatedHandler(cancelRepo),
+			UpdateCancellationReasonTitle:                             command.NewUpdateCancellationReasonTitleHandler(cancelRepo),
 			GenerateCCBillFlexFormsPaymentLink:                        command.NewGenerateCCBillFlexFormsPaymentLink(),
 			ParseCCBillFlexFormsResponseAndGenerateTemplate:           command.NewParseCCBillFlexFormsResponseAndGenerateTemplate(),
 			GenerateCCBillClubSupporterPaymentLink:                    command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),

@@ -43,6 +43,7 @@ func (r *MutationResolver) UpdateCancellationReasonTitle(ctx context.Context, in
 			ctx,
 			command.UpdateCancellationReasonTitle{
 				Principal: principal.FromContext(ctx),
+				ReasonId:  input.CancellationReasonID.GetID(),
 				Title:     input.Title,
 				Locale:    input.Locale,
 			},
@@ -68,6 +69,7 @@ func (r *MutationResolver) UpdateCancellationReasonDeprecated(ctx context.Contex
 			ctx,
 			command.UpdateCancellationReasonDeprecated{
 				Principal:  principal.FromContext(ctx),
+				ReasonId:   input.CancellationReasonID.GetID(),
 				Deprecated: input.Deprecated,
 			},
 		)

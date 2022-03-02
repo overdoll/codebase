@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"strconv"
+	"strings"
 )
 
 type CreateNewClubSubscriptionAccountTransactionRecord struct {
@@ -37,7 +38,7 @@ func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx conte
 		return fmt.Errorf("failed to parse timestamp: %s", err)
 	}
 
-	billedAtDate, err := ccbill.ParseCCBillDate(request.BillingDate)
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(request.BillingDate, " ")[0])
 
 	if err != nil {
 		return fmt.Errorf("failed to parse date: %s", err)

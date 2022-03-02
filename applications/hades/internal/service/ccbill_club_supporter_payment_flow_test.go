@@ -9,7 +9,6 @@ import (
 	"net/url"
 	"os"
 	"overdoll/applications/hades/internal/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -34,7 +33,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 
 	err := gqlClient.Mutate(context.Background(), &generateCCBillClubSupporterPayment, map[string]interface{}{
 		"input": types.GenerateCCBillClubSupporterPaymentLinkInput{
-			ClubID:                     relay.NewID(types.Club{}, clubId),
+			ClubID:                     convertClubIdIdToRelayId(clubId),
 			Currency:                   types.CurrencyUsd,
 			SavePaymentDetailsForLater: false,
 		},
@@ -47,9 +46,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	parsedUrl, err := url.Parse(urls)
 	require.NoError(t, err, "no error parsing url")
 
-	require.Equal(t, os.Getenv("APP_URL")+"/api/ccbill/payment-flow", parsedUrl.Path, "expected to have proper path")
-
-	queryParameterPaymentToken := parsedUrl.Query().Get("overdollPaymentToken")
+	queryParameterPaymentToken := parsedUrl.Query().Get("token")
 	require.NotEmptyf(t, queryParameterPaymentToken, "token should not be empty")
 
 	// construct request to our local one because we run a local http server
@@ -59,18 +56,21 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	res, err := httpClient.Do(req)
 	require.NoError(t, err, "no error doing payment flow call")
 
-	require.Equal(t, os.Getenv("CCBILL_FLEXFORMS_URL"), res.Request.URL.Path, "we are on a flexforms URL")
+	require.Equal(t, os.Getenv("CCBILL_FLEXFORMS_URL"), "https://"+res.Request.URL.Host+res.Request.URL.Path, "we are on a flexforms URL")
 	require.Equal(t, 200, res.StatusCode, "200 response indicates we got a correct ccbill url")
 
 	// now, do a callback for failed - build url
 	callbackFailedAddressUrl, err := url.Parse(HadesHttpCCBillPaymentFlowCallbackAddr)
 	require.NoError(t, err, "no error generating payment callback url")
-	callbackFailedAddressUrl.Query().Add("ccbillDenialId", "0222056501000243638")
-	callbackFailedAddressUrl.Query().Add("ccbillResponseDigest", "1962d623384d4cc4c04817c62def2e25")
-	callbackFailedAddressUrl.Query().Add("ccbillDeclineCode", "BE-111")
-	callbackFailedAddressUrl.Query().Add("ccbillSubscriptionId", "")
-	callbackFailedAddressUrl.Query().Add("ccbillDeclineReason", "Timeout")
-	callbackFailedAddressUrl.Query().Add("overdollPaymentToken", queryParameterPaymentToken)
+	q := callbackFailedAddressUrl.Query()
+	q.Add("ccbillDenialId", "0222056501000243638")
+	q.Add("ccbillResponseDigest", "1962d623384d4cc4c04817c62def2e25")
+	q.Add("ccbillDeclineCode", "BE-111")
+	q.Add("ccbillSubscriptionId", "")
+	q.Add("ccbillDeclineReason", "Timeout")
+	q.Add("overdollPaymentToken", queryParameterPaymentToken)
+
+	callbackFailedAddressUrl.RawQuery = q.Encode()
 
 	// construct request to our local one because we run a local http server
 	callbackFailedReq, err := http.NewRequest("GET", callbackFailedAddressUrl.String(), nil)
@@ -89,21 +89,24 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	ccbillTransactionDetailsFailure := getCCBillTransactionDetails(t, gqlClient, callbackFailedToken)
 
 	require.False(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.Approved, "should not be approved")
-	require.Equal(t, "BE-111", ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineCode, "correct decline code")
-	require.Equal(t, "Timeout", ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineText, "correct decline text")
-	require.Equal(t, types.CCBillDeclineErrorGeneralSystemError, ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "correct decline reason")
+	require.Equal(t, "BE-111", *ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineCode, "correct decline code")
+	require.Equal(t, "Timeout", *ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineText, "correct decline text")
+	require.Equal(t, types.CCBillDeclineErrorGeneralSystemError, *ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "correct decline reason")
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, &queryParameterPaymentToken)
 
 	// now, do a success callback
 	callbackSuccessAddressUrl, err := url.Parse(HadesHttpCCBillPaymentFlowCallbackAddr)
 	require.NoError(t, err, "no error generating payment callback url")
-	callbackSuccessAddressUrl.Query().Add("ccbillDenialId", "")
-	callbackSuccessAddressUrl.Query().Add("ccbillResponseDigest", "1962d623384d4cc4c04817c62def2e25")
-	callbackSuccessAddressUrl.Query().Add("ccbillDeclineCode", "")
-	callbackSuccessAddressUrl.Query().Add("ccbillSubscriptionId", "222059101000249429")
-	callbackSuccessAddressUrl.Query().Add("ccbillDeclineReason", "")
-	callbackSuccessAddressUrl.Query().Add("overdollPaymentToken", queryParameterPaymentToken)
+	q = callbackSuccessAddressUrl.Query()
+	q.Add("ccbillDenialId", "")
+	q.Add("ccbillResponseDigest", "6eb57d362c97e55c051211fc9d7a1668")
+	q.Add("ccbillDeclineCode", "")
+	q.Add("ccbillSubscriptionId", "222059101000249429")
+	q.Add("ccbillDeclineReason", "")
+	q.Add("overdollPaymentToken", queryParameterPaymentToken)
+
+	callbackSuccessAddressUrl.RawQuery = q.Encode()
 
 	callbackSuccessReq, err := http.NewRequest("GET", callbackSuccessAddressUrl.String(), nil)
 	require.NoError(t, err, "no error creating a new callback failed request")
@@ -111,7 +114,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	callbackSuccessResponse, err := httpClient.Do(callbackSuccessReq)
 	require.NoError(t, err, "no error doing error callback")
 
-	require.Equal(t, 200, callbackFailedResponse.StatusCode, "200 response indicates we got a confirmed response")
+	require.Equal(t, 200, callbackSuccessResponse.StatusCode, "200 response indicates we got a confirmed response")
 
 	callbackSuccessDocument, err := goquery.NewDocumentFromReader(callbackSuccessResponse.Body)
 	require.NoError(t, err, "no error for parsing html document success response")
@@ -121,10 +124,10 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	ccbillTransactionDetailsSuccess := getCCBillTransactionDetails(t, gqlClient, callbackSuccessToken)
 
 	require.Nil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.DeclineCode, "no error")
-	require.True(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.Approved, "should be approved")
+	require.True(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.Approved, "should be approved")
 	require.Nil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.DeclineText, "no decline text")
-	require.Nil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "no decline reason")
-	require.NotNil(t, ccbillTransactionDetailsFailure.CCBillTransactionDetails.LinkedAccountClubSupporterSubscription, "a subscription record also now exists")
+	require.Nil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.DeclineError, "no decline reason")
+	require.NotNil(t, ccbillTransactionDetailsSuccess.CCBillTransactionDetails.LinkedAccountClubSupporterSubscription, "a subscription record also now exists")
 }
 
 func getTokenResponseFromDocument(doc *goquery.Document) string {

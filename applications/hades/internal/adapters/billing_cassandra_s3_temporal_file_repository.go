@@ -71,7 +71,7 @@ func (r BillingCassandraS3TemporalFileRepository) unmarshalClubSupportReceipt(ct
 
 func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx context.Context, id string) (*receiptFiles, error) {
 
-	var receiptFile *receiptFiles
+	var receiptFile receiptFiles
 
 	if err := receiptFilesTable.
 		SelectBuilder().
@@ -89,7 +89,7 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		return nil, fmt.Errorf("failed to get club supporter receipt from account transaction history: %v", err)
 	}
 
-	return receiptFile, nil
+	return &receiptFile, nil
 }
 
 func (r BillingCassandraS3TemporalFileRepository) waitForClubSupportReceiptWorkflow(ctx context.Context, id, workflowId string) (*billing.ClubSupporterReceipt, error) {
@@ -137,7 +137,7 @@ func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterReceiptWith
 	fileKey := "/club-supporter-receipts/" + builder.FileName()
 
 	// open the file
-	file, err := os.OpenFile(builder.FileName(), os.O_RDWR, 0644)
+	file, err := os.Open(builder.FileName())
 
 	if err != nil {
 		return err

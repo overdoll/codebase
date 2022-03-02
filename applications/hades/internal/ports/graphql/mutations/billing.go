@@ -81,10 +81,10 @@ func (r *MutationResolver) CancelAccountClubSupporterSubscription(ctx context.Co
 			ctx,
 			command.CancelAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(1),
 				CancellationReasonId:               input.CancellationReasonID.GetID(),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
+				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
 			},
 		)
 
@@ -108,9 +108,9 @@ func (r *MutationResolver) VoidOrRefundAccountClubSupporterSubscription(ctx cont
 			ctx,
 			command.VoidOrRefundAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
+				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
 				Amount:                             input.Amount,
 			},
 		); err != nil {
@@ -133,9 +133,9 @@ func (r *MutationResolver) ExtendAccountClubSupporterSubscription(ctx context.Co
 			ctx,
 			command.ExtendAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
+				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
 				Days:                               input.Days,
 			},
 		)
@@ -160,9 +160,9 @@ func (r *MutationResolver) GenerateRefundAmountForAccountClubSupporterSubscripti
 			ctx,
 			command.GenerateProratedRefundAmountForAccountClubSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
+				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
 			},
 		)
 
@@ -190,8 +190,8 @@ func (r *MutationResolver) DeleteAccountSavedPaymentMethod(ctx context.Context, 
 			ctx,
 			command.DeleteAccountSavedPaymentMethod{
 				Principal:                   principal.FromContext(ctx),
-				AccountId:                   input.SavedPaymentMethodID.GetCompositePartID(0),
-				AccountSavedPaymentMethodId: input.SavedPaymentMethodID.GetCompositePartID(1),
+				AccountId:                   input.SavedPaymentMethodID.GetCompositePartID(1),
+				AccountSavedPaymentMethodId: input.SavedPaymentMethodID.GetCompositePartID(0),
 			},
 		); err != nil {
 		return nil, err

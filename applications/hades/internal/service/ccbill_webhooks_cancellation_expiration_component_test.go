@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -19,15 +20,17 @@ type AccountTransactionHistoryCancelled struct {
 	Entities []struct {
 		Account struct {
 			Id                 relay.ID
-			TransactionHistory struct {
+			TransactionHistory *struct {
 				Edges []*struct {
 					Node struct {
-						Id                            relay.ID
-						Transaction                   types.AccountTransactionType
-						CCBillReason                  string
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						Timestamp                     time.Time
-					} `graphql:"... on AccountCancelledTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							CCBillReason                  string                              `graphql:"ccbillReason"`
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+							Timestamp                     time.Time
+						} `graphql:"... on AccountCancelledTransactionHistory"`
+					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
@@ -41,11 +44,13 @@ type AccountTransactionHistoryExpired struct {
 			TransactionHistory struct {
 				Edges []*struct {
 					Node struct {
-						Id                            relay.ID
-						Transaction                   types.AccountTransactionType
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						Timestamp                     time.Time
-					} `graphql:"... on AccountExpiredTransactionHistory"`
+						Item struct {
+							Id                            relay.ID
+							Transaction                   types.AccountTransactionType
+							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+							Timestamp                     time.Time
+						} `graphql:"... on AccountExpiredTransactionHistory"`
+					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
@@ -107,10 +112,12 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 
-	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
+	fmt.Println(accountId)
+
+	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 14:24:41 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "2022-02-24 21:24:41 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, "Transaction Voided", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
@@ -118,7 +125,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflowExpired, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// run webhook - expiration
-	runWebhookAction(t, "Expired", map[string]string{
+	runWebhookAction(t, "Expiration", map[string]string{
 		"clientAccnum":   "951492",
 		"clientSubacc":   "0101",
 		"subscriptionId": ccbillSubscriptionId,
@@ -150,11 +157,11 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.NoError(t, err, "no error grabbing account transaction history")
 
-	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 3, "3 transaction items")
+	require.Len(t, accountTransactionsExpired.Entities[0].Account.TransactionHistory.Edges, 3, "3 transaction items")
 
-	transaction = accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node
+	expiredTransaction := accountTransactionsExpired.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 14:24:41 +0000 UTC", transaction.Timestamp, "correct timestamp")
-	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, expiredTransaction.Transaction, "correct transaction type")
+	require.Equal(t, "2022-02-24 21:24:41 +0000 UTC", expiredTransaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, ccbillSubscriptionId, expiredTransaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }

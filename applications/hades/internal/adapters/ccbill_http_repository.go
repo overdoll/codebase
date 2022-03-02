@@ -173,7 +173,7 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	if result.Results != 1 {
+	if result.Results < 0 {
 		return fmt.Errorf("failed to cancel subscription: %s", result.Results)
 	}
 
@@ -217,7 +217,7 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 		return err
 	}
 
-	if result.Results != 1 {
+	if result.Results < 0 {
 		return fmt.Errorf("failed to void or refund subscription: %s", result.Results)
 	}
 
@@ -258,7 +258,7 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	if result.Results != 1 {
+	if result.Results < 0 {
 		return fmt.Errorf("failed to extend subscription: %s", result.Results)
 	}
 
@@ -305,7 +305,7 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		return nil, err
 	}
 
-	if result.Results != 1 {
+	if result.Results < 0 {
 		return nil, fmt.Errorf("failed to charge by previous transaction id: %s", result.Results)
 	}
 

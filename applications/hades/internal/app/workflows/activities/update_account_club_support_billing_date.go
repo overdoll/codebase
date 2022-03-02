@@ -15,7 +15,7 @@ type UpdateAccountClubSupportBillingDate struct {
 
 func (h *Activities) UpdateAccountClubSupportBillingDate(ctx context.Context, request UpdateAccountClubSupportBillingDate) error {
 
-	nextBillingDate, err := ccbill.ParseCCBillDateWithTime(request.NextBillingDate)
+	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
 
 	if err != nil {
 		return err
