@@ -25,7 +25,7 @@ type AccountTransactionHistoryVoid struct {
 						Id                            relay.ID
 						Transaction                   types.AccountTransactionType
 						CCBillReason                  string
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 						Timestamp                     time.Time
 					} `graphql:"... on AccountVoidTransactionHistory"`
 				}
@@ -60,7 +60,7 @@ func TestBillingFlow_Void(t *testing.T) {
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

@@ -52,7 +52,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

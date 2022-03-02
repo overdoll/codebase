@@ -46,6 +46,10 @@ go_test(
         "component_test.go",
         "subscriptions_component_test.go",
     ],
+    data = [
+        "//applications/hades:config.toml",
+        "//applications/hades/internal/service/file_fixtures:all",
+    ],
     deps = [
         ":service",
         "//applications/hades/internal/app/workflows",

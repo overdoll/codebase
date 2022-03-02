@@ -472,19 +472,19 @@ enum CardType {
 
 """Represents a billing address."""
 type BillingAddress {
-  AddressLine1: String!
-  City: String!
-  State: String!
-  Country: String!
-  PostalCode: String!
+  addressLine1: String!
+  city: String!
+  state: String!
+  country: String!
+  postalCode: String!
 }
 
 """Represents a billing contact."""
 type BillingContact {
-  FirstName: String!
-  LastName: String!
-  Email: String!
-  PhoneNumber: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
 }
 
 """Represents a card."""

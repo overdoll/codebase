@@ -37,7 +37,7 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

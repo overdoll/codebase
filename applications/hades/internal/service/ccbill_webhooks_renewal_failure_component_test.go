@@ -27,7 +27,7 @@ type AccountTransactionHistoryFailure struct {
 						NextRetryDate                 time.Time
 						CCBillErrorCode               string
 						CCBillErrorText               string
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 						Timestamp                     time.Time
 					} `graphql:"... on AccountFailureTransactionHistory"`
 				}
@@ -63,7 +63,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

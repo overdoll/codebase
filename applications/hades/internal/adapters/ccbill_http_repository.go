@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"strconv"
@@ -41,13 +43,13 @@ type response struct {
 	Results int `xml:"results"`
 }
 
-func addDatalinkCredentialsToRequest(req *http.Request) {
-	q := req.URL.Query()
+func addDatalinkCredentialsToRequest(q url.Values) url.Values {
 	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
 	q.Add("usingSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
 	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
 	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
 	q.Add("returnXML", "1")
+	return q
 }
 
 func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbillSubscriptionId string) (*ccbill.SubscriptionStatus, error) {
@@ -59,10 +61,11 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 	}
 
 	// add credentials
-	addDatalinkCredentialsToRequest(req)
+	q := addDatalinkCredentialsToRequest(req.URL.Query())
 
-	req.URL.Query().Add("subscriptionId", ccbillSubscriptionId)
-	req.URL.Query().Add("action", "viewSubscriptionStatus")
+	q.Add("subscriptionId", ccbillSubscriptionId)
+	q.Add("action", "viewSubscriptionStatus")
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := r.client.Do(req)
 
@@ -70,14 +73,19 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		return nil, err
 	}
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, err
 	}
 
 	var subResult subscription
 
 	if err := xml.Unmarshal(body, &subResult); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal xml: %s", err)
+	}
+
+	loc, err := time.LoadLocation("MST")
+	if err != nil {
 		return nil, err
 	}
 
@@ -85,7 +93,8 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 	var expirationDate *time.Time
 
 	if subResult.CancelDate != "" {
-		newCancelDate, err := time.Parse("20050228", subResult.CancelDate)
+
+		newCancelDate, err := time.ParseInLocation("20060102150405", subResult.CancelDate, loc)
 
 		if err != nil {
 			return nil, err
@@ -95,7 +104,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 	}
 
 	if subResult.ExpirationDate != "" {
-		newExpirationDate, err := time.Parse("20050228", subResult.ExpirationDate)
+		newExpirationDate, err := time.ParseInLocation("20060102150405", subResult.ExpirationDate, loc)
 
 		if err != nil {
 			return nil, err
@@ -104,7 +113,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		expirationDate = &newExpirationDate
 	}
 
-	signupDate, err := time.Parse("20050228170442", subResult.SignupDate)
+	signupDate, err := time.ParseInLocation("20060102150405", subResult.SignupDate, loc)
 
 	if err != nil {
 		return nil, err
@@ -141,10 +150,11 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 	}
 
 	// add credentials
-	addDatalinkCredentialsToRequest(req)
+	q := addDatalinkCredentialsToRequest(req.URL.Query())
 
-	req.URL.Query().Add("subscriptionId", ccbillSubscriptionId)
-	req.URL.Query().Add("action", "cancelSubscription")
+	q.Add("subscriptionId", ccbillSubscriptionId)
+	q.Add("action", "cancelSubscription")
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := r.client.Do(req)
 
@@ -152,8 +162,8 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return err
 	}
 
@@ -179,14 +189,16 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	}
 
 	// add credentials
-	addDatalinkCredentialsToRequest(req)
+	q := addDatalinkCredentialsToRequest(req.URL.Query())
 
-	req.URL.Query().Add("subscriptionId", refund.SubscriptionId())
-	req.URL.Query().Add("action", "voidOrRefundTransaction")
+	q.Add("subscriptionId", refund.SubscriptionId())
+	q.Add("action", "voidOrRefundTransaction")
 
 	if refund.Amount() != nil {
-		req.URL.Query().Add("amount", fmt.Sprintf("%.2f", *refund.Amount()))
+		q.Add("amount", fmt.Sprintf("%.2f", *refund.Amount()))
 	}
+
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := r.client.Do(req)
 
@@ -194,8 +206,8 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 		return err
 	}
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return err
 	}
 
@@ -221,11 +233,13 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 	}
 
 	// add credentials
-	addDatalinkCredentialsToRequest(req)
+	q := addDatalinkCredentialsToRequest(req.URL.Query())
 
-	req.URL.Query().Add("subscriptionId", ccbillSubscriptionId)
-	req.URL.Query().Add("action", "extendSubscription")
-	req.URL.Query().Add("extendLength", strconv.Itoa(days))
+	q.Add("subscriptionId", ccbillSubscriptionId)
+	q.Add("action", "extendSubscription")
+	q.Add("extendLength", strconv.Itoa(days))
+
+	req.URL.RawQuery = q.Encode()
 
 	resp, err := r.client.Do(req)
 
@@ -233,8 +247,8 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return err
 	}
 
@@ -280,8 +294,8 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		return nil, err
 	}
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, err
 	}
 

@@ -51,7 +51,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	clubId := uuid.New().String()
 
 	// once again, do another new sale success webhook, since this sets up everything we need for the following test
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
 
 	// since we know internally how these IDs are created, we create the ID here without having to grab it through an API call
 	savedPaymentMethodId := relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId)

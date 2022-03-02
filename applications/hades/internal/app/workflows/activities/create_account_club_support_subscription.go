@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"strconv"
+	"strings"
 )
 
 type CreateAccountClubSupportSubscription struct {
@@ -56,7 +57,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, r
 		return err
 	}
 
-	lastBillingDate, err := ccbill.ParseCCBillDate(request.Timestamp)
+	lastBillingDate, err := ccbill.ParseCCBillDate(strings.Split(request.Timestamp, " ")[0])
 
 	if err != nil {
 		return err

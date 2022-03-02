@@ -281,10 +281,15 @@ func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
 
 func decryptPaymentMethod(payM string) (*billing.PaymentMethod, error) {
 
-	var newPaymentMethod *paymentMethod
+	decrypted, err := crypt.Decrypt(payM)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decrypt payment method: %v", err)
+	}
 
-	if err := json.Unmarshal([]byte(payM), newPaymentMethod); err != nil {
-		return nil, err
+	var newPaymentMethod paymentMethod
+
+	if err := json.Unmarshal([]byte(decrypted), &newPaymentMethod); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal payment method: %s", err)
 	}
 
 	return billing.UnmarshalPaymentMethodFromDatabase(
@@ -529,7 +534,7 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 	}
 
 	if err := r.session.
-		Query(accountSavedPaymentMethodTable.Insert()).
+		Query(accountClubSupporterSubscriptionsTable.Insert()).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to create account club supporter subscription: %v", err)
@@ -902,7 +907,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		enc, err := encryptPaymentMethod(accountHistory.PaymentMethod())
 
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to encrypt payment method: %s", err)
 		}
 
 		encrypted = enc
@@ -914,7 +919,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, accountHistory.CCBillSubscriptionId())
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get subscription details: %s", err)
 			}
 
 			enc, err := encryptPaymentMethod(ccbill.PaymentMethod())
@@ -1025,7 +1030,7 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 	}
 
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId > endingBucket; bucketId-- {
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
 
 		var accountTransactions []*accountTransactionHistory
 
@@ -1084,7 +1089,7 @@ func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.
 			accountTransactionsMorphed = append(accountTransactionsMorphed, transactionItem)
 		}
 
-		if cursor.GetLimit() == len(accountTransactionsMorphed) {
+		if cursor.GetLimit() >= len(accountTransactionsMorphed) {
 			break
 		}
 	}

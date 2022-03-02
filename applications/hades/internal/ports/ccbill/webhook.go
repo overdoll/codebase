@@ -19,10 +19,7 @@ var (
 		{net.ParseIP("64.38.215.1"), net.ParseIP("64.38.215.254")},
 		{net.ParseIP("64.38.240.1"), net.ParseIP("64.38.240.254")},
 		{net.ParseIP("64.38.241.1"), net.ParseIP("64.38.241.254")},
-		{net.ParseIP("192.168.1.1"), net.ParseIP("192.168.255.255")},
-
-		// TODO: temporary ip range of my machine for testing
-		{net.ParseIP("184.146.205.157"), net.ParseIP("184.146.205.157")},
+		{net.ParseIP("127.0.0.1"), net.ParseIP("127.0.0.1")},
 	}
 )
 
@@ -33,7 +30,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 
 		trial := net.ParseIP(ip)
 		if trial.To4() == nil {
-			c.Data(http.StatusBadRequest, "text", nil)
+			c.Data(http.StatusBadRequest, "text", []byte("invalid ip header"))
 			return
 		}
 
@@ -59,8 +56,6 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		var buf bytes.Buffer
 		tee := io.TeeReader(c.Request.Body, &buf)
 		body, _ := ioutil.ReadAll(tee)
-
-		fmt.Println(string(body))
 
 		if err := app.Commands.ProcessCCBillWebhook.Handle(c.Request.Context(), command.ProcessCCBillWebhook{
 			Payload:   body,

@@ -28,7 +28,7 @@ type AccountTransactionHistoryChargeback struct {
 						Amount                        float64
 						Currency                      types.Currency
 						PaymentMethod                 types.PaymentMethod
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 						Timestamp                     time.Time
 					} `graphql:"... on AccountChargebackTransactionHistory"`
 				}
@@ -70,7 +70,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -96,7 +96,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-26 08:21:49 +0000 UTC", transaction.Timestamp, "correct timestamp")
-	require.Equal(t, "6.99", transaction.Amount, "correct amount")
+	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

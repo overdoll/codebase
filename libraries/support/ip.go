@@ -15,5 +15,9 @@ func GetIPFromRequest(req *http.Request) string {
 		ip = req.RemoteAddr
 	}
 
-	return strings.TrimSpace(ip)
+	ip = strings.TrimSpace(ip)
+
+	split := strings.Split(ip, ":")
+
+	return split[0]
 }

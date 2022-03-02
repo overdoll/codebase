@@ -3,8 +3,10 @@ package service_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"io"
 	"net/http"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -107,6 +109,10 @@ func runWebhookAction(t *testing.T, event string, payload interface{}) {
 	require.NoError(t, err, "no error creating a new request")
 
 	cl := http.Client{}
-	_, err = cl.Do(req)
+	response, err := cl.Do(req)
 	require.NoError(t, err, "no error doing webhook call")
+
+	b, err := io.ReadAll(response.Body)
+
+	require.Equal(t, 200, response.StatusCode, fmt.Sprintf("error calling webhook: %s", string(b)))
 }

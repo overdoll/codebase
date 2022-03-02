@@ -25,7 +25,7 @@ type AccountTransactionHistoryCancelled struct {
 						Id                            relay.ID
 						Transaction                   types.AccountTransactionType
 						CCBillReason                  string
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 						Timestamp                     time.Time
 					} `graphql:"... on AccountCancelledTransactionHistory"`
 				}
@@ -43,7 +43,7 @@ type AccountTransactionHistoryExpired struct {
 					Node struct {
 						Id                            relay.ID
 						Transaction                   types.AccountTransactionType
-						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction
+						CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 						Timestamp                     time.Time
 					} `graphql:"... on AccountExpiredTransactionHistory"`
 				}
@@ -78,7 +78,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -128,7 +128,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflowExpired, mock.Anything)
 	env = getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflowExpired, args)
+	env.ExecuteWorkflow(workflowExpired, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

@@ -63,7 +63,7 @@ func startService() bool {
 
 	srv := ports.NewHttpServer(&application)
 
-	bootstrap.InitializeHttpServer(HadesHttpAddr, srv, func() {})
+	go bootstrap.InitializeHttpServer(HadesHttpAddr, srv, func() {})
 
 	ok := testing_tools.WaitForPort(HadesHttpAddr)
 	if !ok {

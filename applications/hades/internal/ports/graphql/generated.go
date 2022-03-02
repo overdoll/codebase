@@ -1302,63 +1302,63 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillTransactionToken(childComplexity), true
 
-	case "BillingAddress.AddressLine1":
+	case "BillingAddress.addressLine1":
 		if e.complexity.BillingAddress.AddressLine1 == nil {
 			break
 		}
 
 		return e.complexity.BillingAddress.AddressLine1(childComplexity), true
 
-	case "BillingAddress.City":
+	case "BillingAddress.city":
 		if e.complexity.BillingAddress.City == nil {
 			break
 		}
 
 		return e.complexity.BillingAddress.City(childComplexity), true
 
-	case "BillingAddress.Country":
+	case "BillingAddress.country":
 		if e.complexity.BillingAddress.Country == nil {
 			break
 		}
 
 		return e.complexity.BillingAddress.Country(childComplexity), true
 
-	case "BillingAddress.PostalCode":
+	case "BillingAddress.postalCode":
 		if e.complexity.BillingAddress.PostalCode == nil {
 			break
 		}
 
 		return e.complexity.BillingAddress.PostalCode(childComplexity), true
 
-	case "BillingAddress.State":
+	case "BillingAddress.state":
 		if e.complexity.BillingAddress.State == nil {
 			break
 		}
 
 		return e.complexity.BillingAddress.State(childComplexity), true
 
-	case "BillingContact.Email":
+	case "BillingContact.email":
 		if e.complexity.BillingContact.Email == nil {
 			break
 		}
 
 		return e.complexity.BillingContact.Email(childComplexity), true
 
-	case "BillingContact.FirstName":
+	case "BillingContact.firstName":
 		if e.complexity.BillingContact.FirstName == nil {
 			break
 		}
 
 		return e.complexity.BillingContact.FirstName(childComplexity), true
 
-	case "BillingContact.LastName":
+	case "BillingContact.lastName":
 		if e.complexity.BillingContact.LastName == nil {
 			break
 		}
 
 		return e.complexity.BillingContact.LastName(childComplexity), true
 
-	case "BillingContact.PhoneNumber":
+	case "BillingContact.phoneNumber":
 		if e.complexity.BillingContact.PhoneNumber == nil {
 			break
 		}
@@ -2670,19 +2670,19 @@ enum CardType {
 
 """Represents a billing address."""
 type BillingAddress {
-  AddressLine1: String!
-  City: String!
-  State: String!
-  Country: String!
-  PostalCode: String!
+  addressLine1: String!
+  city: String!
+  state: String!
+  country: String!
+  postalCode: String!
 }
 
 """Represents a billing contact."""
 type BillingContact {
-  FirstName: String!
-  LastName: String!
-  Email: String!
-  PhoneNumber: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
 }
 
 """Represents a card."""
@@ -7773,7 +7773,7 @@ func (ec *executionContext) _BecomeClubSupporterWithAccountSavedPaymentMethodPay
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingAddress_AddressLine1(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingAddress_addressLine1(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7808,7 +7808,7 @@ func (ec *executionContext) _BillingAddress_AddressLine1(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingAddress_City(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingAddress_city(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7843,7 +7843,7 @@ func (ec *executionContext) _BillingAddress_City(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingAddress_State(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingAddress_state(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7878,7 +7878,7 @@ func (ec *executionContext) _BillingAddress_State(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingAddress_Country(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingAddress_country(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7913,7 +7913,7 @@ func (ec *executionContext) _BillingAddress_Country(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingAddress_PostalCode(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingAddress_postalCode(ctx context.Context, field graphql.CollectedField, obj *types.BillingAddress) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7948,7 +7948,7 @@ func (ec *executionContext) _BillingAddress_PostalCode(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingContact_FirstName(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingContact_firstName(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7983,7 +7983,7 @@ func (ec *executionContext) _BillingContact_FirstName(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingContact_LastName(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingContact_lastName(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8018,7 +8018,7 @@ func (ec *executionContext) _BillingContact_LastName(ctx context.Context, field 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingContact_Email(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingContact_email(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8053,7 +8053,7 @@ func (ec *executionContext) _BillingContact_Email(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillingContact_PhoneNumber(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
+func (ec *executionContext) _BillingContact_phoneNumber(ctx context.Context, field graphql.CollectedField, obj *types.BillingContact) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -14728,9 +14728,9 @@ func (ec *executionContext) _BillingAddress(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BillingAddress")
-		case "AddressLine1":
+		case "addressLine1":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAddress_AddressLine1(ctx, field, obj)
+				return ec._BillingAddress_addressLine1(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14738,9 +14738,9 @@ func (ec *executionContext) _BillingAddress(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "City":
+		case "city":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAddress_City(ctx, field, obj)
+				return ec._BillingAddress_city(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14748,9 +14748,9 @@ func (ec *executionContext) _BillingAddress(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "State":
+		case "state":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAddress_State(ctx, field, obj)
+				return ec._BillingAddress_state(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14758,9 +14758,9 @@ func (ec *executionContext) _BillingAddress(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "Country":
+		case "country":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAddress_Country(ctx, field, obj)
+				return ec._BillingAddress_country(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14768,9 +14768,9 @@ func (ec *executionContext) _BillingAddress(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "PostalCode":
+		case "postalCode":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAddress_PostalCode(ctx, field, obj)
+				return ec._BillingAddress_postalCode(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14799,9 +14799,9 @@ func (ec *executionContext) _BillingContact(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BillingContact")
-		case "FirstName":
+		case "firstName":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingContact_FirstName(ctx, field, obj)
+				return ec._BillingContact_firstName(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14809,9 +14809,9 @@ func (ec *executionContext) _BillingContact(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "LastName":
+		case "lastName":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingContact_LastName(ctx, field, obj)
+				return ec._BillingContact_lastName(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14819,9 +14819,9 @@ func (ec *executionContext) _BillingContact(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "Email":
+		case "email":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingContact_Email(ctx, field, obj)
+				return ec._BillingContact_email(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14829,9 +14829,9 @@ func (ec *executionContext) _BillingContact(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "PhoneNumber":
+		case "phoneNumber":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingContact_PhoneNumber(ctx, field, obj)
+				return ec._BillingContact_phoneNumber(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

@@ -30,9 +30,9 @@ type AccountClubSupporterSubscriptions struct {
 	Entities []struct {
 		Account struct {
 			Id                         relay.ID
-			ClubSupporterSubscriptions ClubSupporterSubscriptionsEdges `graphql:"... on Account"`
-		} `graphql:"_entities(representations: $representations)"`
-	}
+			ClubSupporterSubscriptions ClubSupporterSubscriptionsEdges
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
 }
 
 type _Any map[string]interface{}
@@ -50,7 +50,7 @@ func getAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, 
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error grabbing subscriptions")
 
 	return accountClubSupporterSubscriptions.Entities[0].Account.ClubSupporterSubscriptions
 }

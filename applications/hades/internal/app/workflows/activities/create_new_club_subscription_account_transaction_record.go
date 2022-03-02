@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"strconv"
@@ -27,25 +28,25 @@ func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx conte
 	amount, err := strconv.ParseFloat(request.Amount, 64)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse amount: %s", err)
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse timestamp: %s", err)
 	}
 
 	billedAtDate, err := ccbill.ParseCCBillDate(request.BillingDate)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse date: %s", err)
 	}
 
 	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse date: %s", err)
 	}
 
 	transaction, err := billing.NewNewClubSubscriptionAccountTransactionFromCCBill(
@@ -60,7 +61,7 @@ func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx conte
 	)
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
-		return err
+		return fmt.Errorf("failed to create transaction history: %s", err)
 	}
 
 	return nil

@@ -350,19 +350,19 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodPayload struct {
 
 // Represents a billing address.
 type BillingAddress struct {
-	AddressLine1 string `json:"AddressLine1"`
-	City         string `json:"City"`
-	State        string `json:"State"`
-	Country      string `json:"Country"`
-	PostalCode   string `json:"PostalCode"`
+	AddressLine1 string `json:"addressLine1"`
+	City         string `json:"city"`
+	State        string `json:"state"`
+	Country      string `json:"country"`
+	PostalCode   string `json:"postalCode"`
 }
 
 // Represents a billing contact.
 type BillingContact struct {
-	FirstName   string `json:"FirstName"`
-	LastName    string `json:"LastName"`
-	Email       string `json:"Email"`
-	PhoneNumber string `json:"PhoneNumber"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phoneNumber"`
 }
 
 // The ccbill subscription details.
