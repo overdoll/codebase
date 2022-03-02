@@ -26,11 +26,11 @@ type AccountTransactionHistoryFailure struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
 							NextRetryDate                 time.Time
-							CCBillErrorCode               string
-							CCBillErrorText               string
+							CCBillErrorCode               string                              `graphql:"ccbillErrorCode"`
+							CCBillErrorText               string                              `graphql:"ccbillErrorText"`
 							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 							Timestamp                     time.Time
-						} `graphql:"... on AccountFailureTransactionHistory"`
+						} `graphql:"... on AccountFailedTransactionHistory"`
 					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
@@ -90,8 +90,8 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	transaction := accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 14:24:14 +0000 UTC", transaction.Timestamp, "correct timestamp")
-	require.Equal(t, "2012-08-20 00:00:00 +0000 UTC", transaction.NextRetryDate, "correct timestamp")
+	require.Equal(t, "2022-02-24 21:24:14 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2012-08-20 00:00:00 +0000 UTC", transaction.NextRetryDate.String(), "correct timestamp")
 	require.Equal(t, "Invalid Input.", transaction.CCBillErrorText, "correct reason")
 	require.Equal(t, "BE-140", transaction.CCBillErrorCode, "correct code")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

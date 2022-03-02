@@ -74,6 +74,7 @@ type ComplexityRoot struct {
 	AccountChargebackTransactionHistory struct {
 		Account                       func(childComplexity int) int
 		Amount                        func(childComplexity int) int
+		CcbillReason                  func(childComplexity int) int
 		CcbillSubscriptionTransaction func(childComplexity int) int
 		Currency                      func(childComplexity int) int
 		ID                            func(childComplexity int) int
@@ -587,6 +588,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountChargebackTransactionHistory.Amount(childComplexity), true
+
+	case "AccountChargebackTransactionHistory.ccbillReason":
+		if e.complexity.AccountChargebackTransactionHistory.CcbillReason == nil {
+			break
+		}
+
+		return e.complexity.AccountChargebackTransactionHistory.CcbillReason(childComplexity), true
 
 	case "AccountChargebackTransactionHistory.ccbillSubscriptionTransaction":
 		if e.complexity.AccountChargebackTransactionHistory.CcbillSubscriptionTransaction == nil {
@@ -2462,6 +2470,9 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
 
   """The club that was supported as part of this transaction history."""
   supportedClub: Club
+
+  """If this is a ccbill transaction, the reason for the chargeback."""
+  ccbillReason: String
 
   """The payment method linked to this chargeback (only card will be available)."""
   paymentMethod: PaymentMethod!
@@ -4413,6 +4424,38 @@ func (ec *executionContext) _AccountChargebackTransactionHistory_supportedClub(c
 	res := resTmp.(*types.Club)
 	fc.Result = res
 	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountChargebackTransactionHistory_ccbillReason(ctx context.Context, field graphql.CollectedField, obj *types.AccountChargebackTransactionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountChargebackTransactionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CcbillReason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountChargebackTransactionHistory_paymentMethod(ctx context.Context, field graphql.CollectedField, obj *types.AccountChargebackTransactionHistory) (ret graphql.Marshaler) {
@@ -13449,6 +13492,13 @@ func (ec *executionContext) _AccountChargebackTransactionHistory(ctx context.Con
 		case "supportedClub":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AccountChargebackTransactionHistory_supportedClub(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "ccbillReason":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountChargebackTransactionHistory_ccbillReason(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

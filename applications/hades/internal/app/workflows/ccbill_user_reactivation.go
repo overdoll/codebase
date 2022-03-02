@@ -11,7 +11,6 @@ type CCBillUserReactivationPayload struct {
 	Price           string `json:"price"`
 	ClientAccnum    string `json:"clientAccnum"`
 	ClientSubacc    string `json:"clientSubacc"`
-	Timestamp       string `json:"timestamp"`
 	Email           string `json:"email"`
 	NextRenewalDate string `json:"nextRenewalDate"`
 }
@@ -34,7 +33,6 @@ func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivation
 		activities.CreateReactivatedClubSubscriptionAccountTransactionRecord{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
 			CCBillSubscriptionId: payload.SubscriptionId,
 			NextBillingDate:      payload.NextRenewalDate,
 		},

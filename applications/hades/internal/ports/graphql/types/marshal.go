@@ -417,6 +417,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			SupportedClub:                 club,
 			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
 			CcbillSubscriptionTransaction: subscriptionDetails,
+			CcbillReason:                  result.CCBillReason(),
 			Timestamp:                     result.Timestamp(),
 		}
 	}

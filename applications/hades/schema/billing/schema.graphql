@@ -265,6 +265,9 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   """The club that was supported as part of this transaction history."""
   supportedClub: Club
 
+  """If this is a ccbill transaction, the reason for the chargeback."""
+  ccbillReason: String
+
   """The payment method linked to this chargeback (only card will be available)."""
   paymentMethod: PaymentMethod!
 

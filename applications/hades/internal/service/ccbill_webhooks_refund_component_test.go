@@ -25,7 +25,7 @@ type AccountTransactionHistoryRefund struct {
 						Item struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
-							CCBillReason                  string
+							CCBillReason                  string `graphql:"ccbillReason"`
 							Amount                        float64
 							Currency                      types.Currency
 							PaymentMethod                 types.PaymentMethod
@@ -100,7 +100,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	transaction := accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 20:27:56 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "2022-02-25 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", transaction.CCBillReason, "correct reason")

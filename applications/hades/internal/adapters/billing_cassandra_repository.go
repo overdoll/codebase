@@ -252,21 +252,29 @@ type ccbillSubscriptionDetails struct {
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
 
-	u, err := json.Marshal(&paymentMethod{
-		AddressLine1:   payM.BillingAddress().AddressLine1(),
-		City:           payM.BillingAddress().City(),
-		State:          payM.BillingAddress().State(),
-		Country:        payM.BillingAddress().Country(),
-		PostalCode:     payM.BillingAddress().PostalCode(),
-		FirstName:      payM.BillingContact().FirstName(),
-		LastName:       payM.BillingContact().LastName(),
-		PhoneNumber:    payM.BillingContact().PhoneNumber(),
-		Email:          payM.BillingContact().Email(),
+	payment := paymentMethod{
 		CardBin:        payM.Card().BIN(),
 		CardType:       payM.Card().Type().String(),
 		CardLast4:      payM.Card().Last4(),
 		CardExpiration: payM.Card().Expiration(),
-	})
+	}
+
+	if payM.BillingAddress() != nil {
+		payment.AddressLine1 = payM.BillingAddress().AddressLine1()
+		payment.City = payM.BillingAddress().City()
+		payment.State = payM.BillingAddress().State()
+		payment.Country = payM.BillingAddress().Country()
+		payment.PostalCode = payM.BillingAddress().PostalCode()
+	}
+
+	if payM.BillingContact() != nil {
+		payment.FirstName = payM.BillingContact().FirstName()
+		payment.LastName = payM.BillingContact().LastName()
+		payment.PhoneNumber = payM.BillingContact().PhoneNumber()
+		payment.Email = payM.BillingContact().Email()
+	}
+
+	u, err := json.Marshal(&payment)
 
 	if err != nil {
 		return "", err
@@ -293,10 +301,21 @@ func decryptPaymentMethod(payM string) (*billing.PaymentMethod, error) {
 		return nil, fmt.Errorf("failed to unmarshal payment method: %s", err)
 	}
 
+	var contact *billing.Contact
+	var address *billing.Address
+
+	if newPaymentMethod.City != "" {
+		address = billing.UnmarshalAddressFromDatabase(newPaymentMethod.AddressLine1, newPaymentMethod.City, newPaymentMethod.State, newPaymentMethod.Country, newPaymentMethod.PostalCode)
+	}
+
+	if newPaymentMethod.FirstName != "" {
+		contact = billing.UnmarshalContactFromDatabase(newPaymentMethod.FirstName, newPaymentMethod.LastName, newPaymentMethod.Email, newPaymentMethod.PhoneNumber)
+	}
+
 	return billing.UnmarshalPaymentMethodFromDatabase(
 		billing.UnmarshalCardFromDatabase(newPaymentMethod.CardBin, newPaymentMethod.CardType, newPaymentMethod.CardLast4, newPaymentMethod.CardExpiration),
-		billing.UnmarshalContactFromDatabase(newPaymentMethod.FirstName, newPaymentMethod.LastName, newPaymentMethod.Email, newPaymentMethod.PhoneNumber),
-		billing.UnmarshalAddressFromDatabase(newPaymentMethod.AddressLine1, newPaymentMethod.City, newPaymentMethod.State, newPaymentMethod.Country, newPaymentMethod.PostalCode),
+		contact,
+		address,
 	), nil
 }
 

@@ -25,7 +25,7 @@ type AccountTransactionHistoryVoid struct {
 						Item struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
-							CCBillReason                  string
+							CCBillReason                  string                              `graphql:"ccbillReason"`
 							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
 							Timestamp                     time.Time
 						} `graphql:"... on AccountVoidTransactionHistory"`
@@ -87,7 +87,7 @@ func TestBillingFlow_Void(t *testing.T) {
 	transaction := accountTransactionsVoid.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 14:24:14 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "2022-02-24 21:24:14 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, "Income issues", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }

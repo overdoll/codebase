@@ -50,6 +50,6 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 
 	subscription := subscriptions.Edges[0]
 
-	require.Equal(t, subscription.Node.Status, types.AccountClubSupporterSubscriptionStatusActive, "subscription is active")
-	require.Equal(t, subscription.Node.NextBillingDate, "2025-03-28 00:00:00 +0000 UTC", "correct next billing date")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
+	require.Equal(t, "2025-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
 }

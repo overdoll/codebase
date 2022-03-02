@@ -64,7 +64,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
 
 	// check for the correct payment method
-	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscriptions.Edges[0].Node.PaymentMethod)
+	assertCustomerDataUpdateCorrectPaymentMethodDetails(t, subscriptions.Edges[0].Node.PaymentMethod)
 
 	accountSavedPayments := getAccountSavedPaymentMethods(t, gqlClient, accountId)
 

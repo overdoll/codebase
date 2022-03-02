@@ -22,16 +22,36 @@ type CreateVoidClubSubscriptionAccountTransactionRecord struct {
 
 func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateRefundClubSubscriptionAccountTransactionRecord) error {
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	var amount float64
+	var currency string
+
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
+	}
+
+	if request.Amount != "" {
+		amount, err = strconv.ParseFloat(request.Amount, 64)
+
+		if err != nil {
+			return err
+		}
+
+	} else {
+		amount = ccbillSubscription.BilledInitialPrice()
+	}
+
+	if request.Currency != "" {
+		currency = request.Currency
+	} else {
+		currency = ccbillSubscription.BilledCurrency().String()
 	}
 
 	transaction, err := billing.NewVoidClubSubscriptionAccountTransactionFromCCBill(
@@ -40,7 +60,7 @@ func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx cont
 		request.CCBillSubscriptionId,
 		timestamp,
 		amount,
-		request.Currency,
+		currency,
 		request.Reason,
 	)
 

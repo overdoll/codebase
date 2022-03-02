@@ -40,8 +40,6 @@ func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			Timestamp:            payload.Timestamp,
-			Currency:             payload.Currency,
-			Amount:               payload.Amount,
 			Reason:               payload.Reason,
 		},
 	).Get(ctx, nil); err != nil {

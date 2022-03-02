@@ -66,6 +66,8 @@ type AccountChargebackTransactionHistory struct {
 	Currency Currency `json:"currency"`
 	// The club that was supported as part of this transaction history.
 	SupportedClub *Club `json:"supportedClub"`
+	// If this is a ccbill transaction, the reason for the chargeback.
+	CcbillReason *string `json:"ccbillReason"`
 	// The payment method linked to this chargeback (only card will be available).
 	PaymentMethod *PaymentMethod `json:"paymentMethod"`
 	// A ccbill subscription transaction, if this transaction originated from ccbill.

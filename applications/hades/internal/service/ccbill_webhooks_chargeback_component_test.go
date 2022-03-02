@@ -25,7 +25,7 @@ type AccountTransactionHistoryChargeback struct {
 						Item struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
-							CCBillReason                  string
+							CCBillReason                  string `graphql:"ccbillReason"`
 							Amount                        float64
 							Currency                      types.Currency
 							PaymentMethod                 types.PaymentMethod
@@ -97,7 +97,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	transaction := accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-26 08:21:49 +0000 UTC", transaction.Timestamp, "correct timestamp")
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", transaction.CCBillReason, "correct reason")
