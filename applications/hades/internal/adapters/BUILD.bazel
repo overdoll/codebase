@@ -48,6 +48,7 @@ go_test(
         "ccbill_http_repository_test.go",
         "repository_test.go",
     ],
+    data = ["//applications/hades:config.toml"],
     deps = [
         ":adapters",
         "//applications/hades/internal/domain/billing",

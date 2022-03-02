@@ -9,6 +9,7 @@ type SubscriptionStatus struct {
 	expirationDate        *time.Time
 	recurringSubscription bool
 	signupDate            time.Time
+	nextBillingDate       *time.Time
 	refundsIssued         int
 	subscriptionStatus    SubscriptionStatusValue
 	timesRebilled         int
@@ -35,6 +36,10 @@ func (s *SubscriptionStatus) ExpirationDate() *time.Time {
 	return s.expirationDate
 }
 
+func (s *SubscriptionStatus) NextBillingDate() *time.Time {
+	return s.nextBillingDate
+}
+
 func (s *SubscriptionStatus) SignupDate() time.Time {
 	return s.signupDate
 }
@@ -55,7 +60,7 @@ func (s *SubscriptionStatus) VoidsIssued() int {
 	return s.voidsIssued
 }
 
-func UnmarshalSubscriptionStatusFromDatabase(id string, cancelDate *time.Time, chargebacksIssued int, expirationDate *time.Time, recurringSubscription bool, refundsIssued int, signupDate time.Time, subscriptionStatus, timesRebilled, voidsIssued int) *SubscriptionStatus {
+func UnmarshalSubscriptionStatusFromDatabase(id string, cancelDate *time.Time, chargebacksIssued int, nextBillingDate, expirationDate *time.Time, recurringSubscription bool, refundsIssued int, signupDate time.Time, subscriptionStatus, timesRebilled, voidsIssued int) *SubscriptionStatus {
 
 	sb, _ := SubscriptionStatusValueFromInt(subscriptionStatus)
 
@@ -63,6 +68,7 @@ func UnmarshalSubscriptionStatusFromDatabase(id string, cancelDate *time.Time, c
 		id:                    id,
 		cancelDate:            cancelDate,
 		chargebacksIssued:     chargebacksIssued,
+		nextBillingDate:       nextBillingDate,
 		expirationDate:        expirationDate,
 		recurringSubscription: recurringSubscription,
 		signupDate:            signupDate,

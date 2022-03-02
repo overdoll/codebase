@@ -31,17 +31,16 @@ type subscription struct {
 	CancelDate            string   `xml:"cancelDate"`
 	ChargebacksIssued     int      `xml:"chargebacksIssued"`
 	ExpirationDate        string   `xml:"expirationDate"`
+	NextBillingDate       string   `xml:"nextBillingDate"`
 	RecurringSubscription int      `xml:"recurringSubscription"`
-	RefundsIssued         int      `xml:"RefundsIssued"`
+	RefundsIssued         int      `xml:"refundsIssued"`
 	SignupDate            string   `xml:"signupDate"`
 	SubscriptionStatus    int      `xml:"subscriptionStatus"`
 	TimesRebilled         int      `xml:"timesRebilled"`
 	VoidsIssued           int      `xml:"voidsIssued"`
 }
 
-type response struct {
-	Results int `xml:"results"`
-}
+type response int
 
 func addDatalinkCredentialsToRequest(q url.Values) url.Values {
 	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
@@ -84,6 +83,20 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		return nil, fmt.Errorf("failed to unmarshal xml: %s", err)
 	}
 
+	// signup date is "" - need to unmarshal into a different type
+	if subResult.SignupDate == "" {
+
+		var result response
+
+		if err := xml.Unmarshal(body, &result); err != nil {
+			return nil, err
+		}
+
+		if result < 1 {
+			return nil, fmt.Errorf("failed to charge by previous: ccbill error: %s", strconv.Itoa(int(result)))
+		}
+	}
+
 	loc, err := time.LoadLocation("MST")
 	if err != nil {
 		return nil, err
@@ -91,6 +104,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 
 	var cancelDate *time.Time
 	var expirationDate *time.Time
+	var nextBillingDate *time.Time
 
 	if subResult.CancelDate != "" {
 
@@ -113,6 +127,16 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		expirationDate = &newExpirationDate
 	}
 
+	if subResult.NextBillingDate != "" {
+		newNextBillingDate, err := time.ParseInLocation("20060102", subResult.NextBillingDate, loc)
+
+		if err != nil {
+			return nil, err
+		}
+
+		nextBillingDate = &newNextBillingDate
+	}
+
 	signupDate, err := time.ParseInLocation("20060102150405", subResult.SignupDate, loc)
 
 	if err != nil {
@@ -131,6 +155,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		ccbillSubscriptionId,
 		cancelDate,
 		subResult.ChargebacksIssued,
+		nextBillingDate,
 		expirationDate,
 		isRecurring,
 		subResult.RefundsIssued,
@@ -173,8 +198,8 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	if result.Results < 0 {
-		return fmt.Errorf("failed to cancel subscription: %s", result.Results)
+	if result < 1 {
+		return fmt.Errorf("failed to cancel subscription: ccbill error: %s", strconv.Itoa(int(result)))
 	}
 
 	return nil
@@ -217,8 +242,8 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 		return err
 	}
 
-	if result.Results < 0 {
-		return fmt.Errorf("failed to void or refund subscription: %s", result.Results)
+	if result < 1 {
+		return fmt.Errorf("failed to void or refund subscription: ccbill error: %s", strconv.Itoa(int(result)))
 	}
 
 	return nil
@@ -238,6 +263,11 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 	q.Add("subscriptionId", ccbillSubscriptionId)
 	q.Add("action", "extendSubscription")
 	q.Add("extendLength", strconv.Itoa(days))
+	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
+	q.Add("clientSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
+	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
+	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
+	q.Add("returnXML", "1")
 
 	req.URL.RawQuery = q.Encode()
 
@@ -258,8 +288,8 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 		return err
 	}
 
-	if result.Results < 0 {
-		return fmt.Errorf("failed to extend subscription: %s", result.Results)
+	if result < 1 {
+		return fmt.Errorf("failed to extend subscription: ccbill error: %s", strconv.Itoa(int(result)))
 	}
 
 	return nil
@@ -299,20 +329,24 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		return nil, err
 	}
 
-	var result response
-
-	if err := xml.Unmarshal(body, &result); err != nil {
-		return nil, err
-	}
-
-	if result.Results < 0 {
-		return nil, fmt.Errorf("failed to charge by previous transaction id: %s", result.Results)
-	}
-
 	var realResult chargeByPreviousResult
 
 	if err := xml.Unmarshal(body, &realResult); err != nil {
 		return nil, err
+	}
+
+	// these are blank, so we need to retry
+	if realResult.SubscriptionId == "" && realResult.DenialId == "" {
+
+		var result response
+
+		if err := xml.Unmarshal(body, &result); err != nil {
+			return nil, err
+		}
+
+		if result < 1 {
+			return nil, fmt.Errorf("failed to charge by previous: ccbill error: %s", strconv.Itoa(int(result)))
+		}
 	}
 
 	token, err := ccbill.NewChargeByPreviousResult(
