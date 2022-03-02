@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/corona10/goimagehash"
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/mock"
@@ -15,11 +14,9 @@ import (
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/support"
 	"overdoll/libraries/testing_tools"
 	"strings"
 	"testing"
-	"time"
 )
 
 type Resources struct {
@@ -44,6 +41,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	tusClient := getTusClient(t)
 	// upload some files
 	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
+	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
 	grpcClient := getGrpcClient(t)
 
@@ -53,7 +51,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
-		ResourceIds: []string{imageFileId},
+		ResourceIds: []string{imageFileId, videoFileId},
 		Private:     true,
 	})
 
@@ -84,6 +82,10 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 			"__typename": "Resource",
 			"id":         convertResourceIdToRelayId(itemId, res.AllResourceIds[0]),
 		},
+		{
+			"__typename": "Resource",
+			"id":         convertResourceIdToRelayId(itemId, res.AllResourceIds[1]),
+		},
 	}
 
 	// query our resources through graphql
@@ -93,23 +95,26 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error grabbing entities")
 
-	imageResource := resourceResults.Resources[0]
-
 	// check results
-	require.Len(t, newResources.Entities, 1, "should have found all graphql entities")
+	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
 
-	// manually sign our url and confirm it matches
-	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
-	require.NoError(t, err, "no error creating RSA key")
+	var assertions int
 
-	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
-	signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", time.Now().Add(15*time.Minute))
-	require.NoError(t, err, "no error signing url")
+	// validate all urls that the files are accessible
+	for _, entity := range newResources.Entities {
 
-	// validate signed url is equal to our above signed url
-	targetUrl := string(newResources.Entities[0].Resource.Urls[0].URL)
-	require.Equal(t, signedURL, targetUrl)
-	require.True(t, testing_tools.FileExists(targetUrl), "file exists in bucket")
+		for _, u := range entity.Resource.Urls {
+			assertions += 1
+			require.True(t, testing_tools.FileExists(u.URL.String()), "file exists in bucket")
+		}
+
+		if entity.Resource.Type == types.ResourceTypeVideo {
+			assertions += 1
+			require.True(t, testing_tools.FileExists(entity.Resource.VideoThumbnail.URL.String()), "video thumbnail file exists in bucket")
+		}
+	}
+
+	require.Equal(t, 4, assertions, "should have checked 3 urls in total")
 
 	// now, apply a filter
 	copyResourceResults, err := grpcClient.CopyResourcesAndApplyFilter(
@@ -118,6 +123,10 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 			Resources: []*loader.ResourceIdentifier{
 				{
 					Id:     res.AllResourceIds[0],
+					ItemId: itemId,
+				},
+				{
+					Id:     res.AllResourceIds[1],
 					ItemId: itemId,
 				},
 			},
@@ -129,10 +138,18 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error copying resources")
 
-	require.Len(t, copyResourceResults.Resources, 1, "should have 1 filtered resource")
+	require.Len(t, copyResourceResults.Resources, 2, "should have 2 filtered resources")
 
-	newResourceItemId := copyResourceResults.Resources[0].NewResource.ItemId
-	newResourceId := copyResourceResults.Resources[0].NewResource.Id
+	var originalImageFileNewId string
+	var originalVideoFileNewId string
+
+	for _, r := range copyResourceResults.Resources {
+		if r.OldResource.Id == res.AllResourceIds[0] {
+			originalImageFileNewId = r.NewResource.Id
+		} else if r.OldResource.Id == res.AllResourceIds[1] {
+			originalVideoFileNewId = r.NewResource.Id
+		}
+	}
 
 	var filteredResources Resources
 
@@ -141,48 +158,77 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Resource",
-				"id":         convertResourceIdToRelayId(newResourceItemId, newResourceId),
+				"id":         convertResourceIdToRelayId(itemId, copyResourceResults.Resources[0].NewResource.Id),
+			},
+			{
+				"__typename": "Resource",
+				"id":         convertResourceIdToRelayId(itemId, copyResourceResults.Resources[1].NewResource.Id),
 			},
 		},
 	})
 
 	require.NoError(t, err, "no error grabbing new filtered resource")
-	require.Len(t, filteredResources.Entities[0].Resource.Urls, 1, "only should have 1 url")
 
-	downloadUrl := filteredResources.Entities[0].Resource.Urls[0].URL.String()
-	fileName := ksuid.New().String() + ".png"
+	require.Len(t, filteredResources.Entities, 2, "should have 2 entities")
 
-	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+newResourceItemId+"/"+newResourceId+".png", downloadUrl, "correct, non-private URL")
+	// validate all urls that the files are accessible, and check hashes
+	for _, entity := range filteredResources.Entities {
 
-	err = testing_tools.DownloadFile(fileName, downloadUrl)
-	require.NoError(t, err, "no error downloading the file")
+		var downloadUrl string
+		var referenceFile string
 
-	targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
+		decoded, _ := base64.StdEncoding.DecodeString(entity.Resource.ID.GetID())
 
-	file1, err := os.Open(targ)
-	require.NoError(t, err, "no error opening reference file")
-	file2, err := os.Open(fileName)
-	require.NoError(t, err, "no error opening target file")
+		resourceId := relay.NewID(string(decoded)).GetID()
 
-	defer file1.Close()
-	defer file2.Close()
+		if resourceId == originalImageFileNewId {
+			for _, u := range entity.Resource.Urls {
+				downloadUrl = u.URL.String()
+				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
+				referenceFile = targ
+			}
+		}
 
-	img1, err := png.Decode(file1)
-	require.NoError(t, err, "no error decoding reference file")
+		if resourceId == originalVideoFileNewId {
+			for _, u := range entity.Resource.Urls {
+				downloadUrl = u.URL.String()
+				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_2_pixelated.png")
+				referenceFile = targ
+			}
+		}
 
-	img2, err := png.Decode(file2)
-	require.NoError(t, err, "no error decoding target file")
+		require.True(t, testing_tools.FileExists(downloadUrl), "filtered file exists in bucket and is accessible")
 
-	hash1, err := goimagehash.AverageHash(img1)
-	require.NoError(t, err, "no error generating hash of reference file")
+		// now, perform hash checks against each file
+		fileName := ksuid.New().String() + ".png"
+		err = testing_tools.DownloadFile(fileName, downloadUrl)
+		require.NoError(t, err, "no error downloading the file")
 
-	hash2, err := goimagehash.AverageHash(img2)
-	require.NoError(t, err, "no error generating hash of target file")
+		file1, err := os.Open(referenceFile)
+		require.NoError(t, err, "no error opening reference file")
+		file2, err := os.Open(fileName)
+		require.NoError(t, err, "no error opening target file")
 
-	distance, err := hash1.Distance(hash2)
-	require.NoError(t, err, "no error grabbing distance between files")
+		img1, err := png.Decode(file1)
+		require.NoError(t, err, "no error decoding reference file")
 
-	require.Equal(t, 14123, distance, "should have exactly x distance")
+		img2, err := png.Decode(file2)
+		require.NoError(t, err, "no error decoding target file")
+
+		hash1, err := goimagehash.AverageHash(img1)
+		require.NoError(t, err, "no error generating hash of reference file")
+
+		hash2, err := goimagehash.AverageHash(img2)
+		require.NoError(t, err, "no error generating hash of target files")
+
+		distance, err := hash1.Distance(hash2)
+		require.NoError(t, err, "no error grabbing distance between files")
+
+		require.Equal(t, 0, distance, "should have 0 differences with files")
+
+		_ = file1.Close()
+		_ = file2.Close()
+	}
 }
 
 func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
@@ -284,11 +330,16 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 		}
 	}
 
-	// expected image resource
-	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[0].URL)), "image uploaded file exists in bucket")
+	var assertions int
 
-	// expected video resource
-	require.True(t, testing_tools.FileExists(string(newVideoResource.Urls[0].URL)), "video uploaded file exists in bucket")
+	for _, entity := range newResources.Entities {
+		for _, u := range entity.Resource.Urls {
+			require.True(t, testing_tools.FileExists(u.URL.String()), "uploaded file exists in bucket")
+			assertions += 1
+		}
+	}
+
+	require.Equal(t, 2, assertions, "expected to have checked 2 files")
 
 	env := getWorkflowEnvironment(t)
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, itemId, mock.Anything)
@@ -352,13 +403,9 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// expect 2 urls for image
 	require.Len(t, newImageResource.Urls, 2)
-	// expected first image to be webp
-	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".webp", string(newImageResource.Urls[0].URL))
-	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[0].URL)), "image webp file exists in bucket")
 
-	// expected second image to be a png
-	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+imageResource.ItemId+"/"+imageResource.ProcessedId+".png", string(newImageResource.Urls[1].URL))
-	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[1].URL)), "image png file exists in bucket")
+	require.Equal(t, "image/webp", newImageResource.Urls[0].MimeType, "expected first image to be webp")
+	require.Equal(t, "image/png", newImageResource.Urls[1].MimeType, "expected second image to be png")
 
 	// correct dimensions
 	require.Equal(t, 532, newImageResource.Height, "should be the correct height")
@@ -366,13 +413,6 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// expect 1 url for video
 	require.Len(t, newVideoResource.Urls, 1)
-	// expected video resource
-	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/"+videoResource.ProcessedId+".mp4", string(newVideoResource.Urls[0].URL))
-	require.True(t, testing_tools.FileExists(string(newVideoResource.Urls[0].URL)), "video mp4 file exists in bucket")
-
-	// correct thumbnail
-	require.Equal(t, os.Getenv("RESOURCES_URL")+"/"+videoResource.ItemId+"/t-"+videoResource.ProcessedId+".png", string(newVideoResource.VideoThumbnail.URL))
-	require.True(t, testing_tools.FileExists(string(newVideoResource.VideoThumbnail.URL)), "video thumbnail png file exists in bucket")
 
 	// correct dimensions
 	require.Equal(t, 360, newVideoResource.Height, "should be the correct height")
@@ -380,6 +420,33 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// correct duration
 	require.Equal(t, 13347, newVideoResource.VideoDuration, "should be the correct duration")
+
+	require.Equal(t, "video/mp4", newVideoResource.Urls[0].MimeType, "expected video to be mp4")
+	require.Equal(t, "image/png", newVideoResource.VideoThumbnail.MimeType, "expected video thumbnail to be png")
+
+	var processedAssertions int
+
+	// our list that we will check to make sure all files are deleted here
+	var resourceUrlsTo404 []string
+
+	// assert files existence
+	for _, entity := range newResources.Entities {
+		for _, u := range entity.Resource.Urls {
+			downloadUrl := u.URL.String()
+			require.True(t, testing_tools.FileExists(downloadUrl), "processed file exists in bucket")
+			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
+			processedAssertions += 1
+		}
+
+		if entity.Resource.Type == types.ResourceTypeVideo {
+			downloadUrl := entity.Resource.VideoThumbnail.URL.String()
+			require.True(t, testing_tools.FileExists(entity.Resource.VideoThumbnail.URL.String()), "video thumbnail file exists in bucket")
+			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
+			processedAssertions += 1
+		}
+	}
+
+	require.Equal(t, 4, processedAssertions, "expected to have checked 4 files")
 
 	deleteWorkflow := workflows.DeleteResources
 	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
@@ -407,4 +474,10 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, resources.Resources, 0, "should not have found any resources")
+
+	require.Len(t, resourceUrlsTo404, 4, "should have 4 urls to check for deletion")
+
+	for _, u := range resourceUrlsTo404 {
+		require.False(t, testing_tools.FileExists(u), "file should no longer exist after being deleted")
+	}
 }

@@ -15,6 +15,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
+	"io"
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
@@ -436,6 +437,21 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 				return fmt.Errorf("unable to delete file %v", err)
 			}
 		}
+
+		if target.IsVideo() && target.IsProcessed() {
+
+			thumbnailType, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
+
+			// delete object
+			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String("/" + target.ItemId() + "/" + target.VideoThumbnail() + thumbnailType),
+			})
+
+			if err != nil {
+				return fmt.Errorf("unable to delete video thumbnail file %v", err)
+			}
+		}
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -551,10 +567,21 @@ func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fil
 func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Context, file *os.File, target *resource.Resource) error {
 	s3Client := s3.New(r.aws)
 
-	fileInfo, _ := file.Stat()
+	// seek to beginning of files
+	_, _ = file.Seek(0, io.SeekStart)
+
+	fileInfo, err := file.Stat()
+
+	if err != nil {
+		return err
+	}
+
 	var size = fileInfo.Size()
 	buffer := make([]byte, size)
-	file.Read(buffer)
+
+	if _, err := file.Read(buffer); err != nil {
+		return err
+	}
 
 	bucket := os.Getenv("RESOURCES_BUCKET")
 
@@ -564,14 +591,21 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 
 	url := "/" + target.ItemId() + "/" + target.ProcessedId() + filepath.Ext(fileInfo.Name())
 
-	// new file that was created
-	if _, err := s3Client.PutObject(&s3.PutObjectInput{
+	input := &s3.PutObjectInput{
 		Bucket:        aws.String(bucket),
 		Key:           aws.String(url),
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
 		ContentType:   aws.String(http.DetectContentType(buffer)),
-	}); err != nil {
+	}
+
+	if !target.IsPrivate() {
+		// grant read access to non-public objects
+		input.ACL = aws.String("public-read")
+	}
+
+	// new file that was created
+	if _, err := s3Client.PutObject(input); err != nil {
 		return fmt.Errorf("failed to put file: %v", err)
 	}
 
@@ -620,14 +654,21 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
 		}
 
-		// new file that was created
-		_, err = s3Client.PutObject(&s3.PutObjectInput{
+		input := &s3.PutObjectInput{
 			Bucket:        aws.String(bucket),
 			Key:           aws.String(moveTarget.RemoteUrlTarget()),
 			Body:          bytes.NewReader(buffer),
 			ContentLength: aws.Int64(size),
 			ContentType:   aws.String(http.DetectContentType(buffer)),
-		})
+		}
+
+		if !target.IsPrivate() {
+			// grant read access to non public objects
+			input.ACL = aws.String("public-read")
+		}
+
+		// new file that was created
+		_, err = s3Client.PutObject(input)
 
 		if err != nil {
 			return fmt.Errorf("failed to put file: %v", err)

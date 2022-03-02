@@ -105,9 +105,7 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 		filteredResources = append(filteredResources, filteredResource)
 
 		// cleanup files
-		_ = newFile.Close()
 		_ = os.Remove(newFile.Name())
-		_ = file.Close()
 		_ = os.Remove(file.Name())
 	}
 

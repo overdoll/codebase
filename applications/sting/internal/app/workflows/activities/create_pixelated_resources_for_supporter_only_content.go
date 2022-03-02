@@ -22,7 +22,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 			resourceIds = append(resourceIds, c.ResourceId())
 		}
 
-		newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, postId, resourceIds, 300, false)
+		newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, postId, resourceIds, 100, false)
 
 		if err != nil {
 			return err

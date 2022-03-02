@@ -32,12 +32,14 @@ func (i *ImageFilters) ApplyFilters(file *os.File) (*os.File, error) {
 	// create and apply filters
 	g := gift.New()
 
-	//if i.Pixelate() != nil {
-	//	g.Add(gift.Pixelate(*i.Pixelate()))
-	//}
+	if i.Pixelate() != nil {
+		g.Add(gift.Pixelate(*i.Pixelate()))
+	}
 
 	dst := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(dst, src)
+
+	_ = file.Close()
 
 	// create filtered version of the file
 	newFile, err := os.Create("filtered-" + file.Name())
