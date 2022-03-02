@@ -88,14 +88,14 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 		IsPrivate: request.Private,
 	}
 
-	for i, r := range request.Resources {
-		data.ResourcePairs[i] = struct {
+	for _, r := range request.Resources {
+		data.ResourcePairs = append(data.ResourcePairs, struct {
 			ItemId     string
 			ResourceId string
 		}{
 			ItemId:     r.ItemId,
 			ResourceId: r.Id,
-		}
+		})
 	}
 
 	if request.Filters.Pixelate != nil {

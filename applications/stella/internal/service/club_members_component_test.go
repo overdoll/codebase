@@ -106,7 +106,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything, mock.Anything)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
@@ -177,7 +177,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// run supporter method
 	env = getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, supporterWorkflow)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, supporterWorkflow, mock.Anything, mock.Anything, mock.Anything)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(supporterWorkflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
@@ -200,7 +200,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// run supporter method
 	env = getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything, mock.Anything)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(supporterRemoveWorkflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
@@ -220,7 +220,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	})
 	require.NoError(t, err, "no error withdrawing club membership")
 
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, removeMemberWorkflow)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, removeMemberWorkflow, mock.Anything, mock.Anything)
 
 	env = getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)

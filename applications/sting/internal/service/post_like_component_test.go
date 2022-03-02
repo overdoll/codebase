@@ -97,7 +97,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args...)
@@ -131,7 +131,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(newWorkflow, args...)

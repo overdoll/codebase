@@ -35,7 +35,6 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 				MimeType: url.MimeType(),
 			}
 		}
-
 	}
 
 	return &Resource{

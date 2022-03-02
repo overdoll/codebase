@@ -412,7 +412,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		require.NoError(t, newEnv.GetWorkflowError())
 	}, time.Hour*24)
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args...)

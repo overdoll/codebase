@@ -58,7 +58,6 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 
 		if target.IsVideo() {
 			file, err = h.rr.DownloadVideoThumbnailForResource(ctx, target)
-
 		} else {
 			file, err = h.rr.DownloadResource(ctx, target)
 		}

@@ -239,13 +239,6 @@ def go_repositories():
         sum = "h1:zH8ljVhhq7yC0MIeUL/IviMtY8hx2mK8cN9wEYb8ggw=",
         version = "v0.0.0-20211011173535-cb28da3451f1",
     )
-    go_repository(
-        name = "com_github_compose_spec_godotenv",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/compose-spec/godotenv",
-        sum = "h1:y5msFdJBf/1IWhHbq8Dl+Kbr594n2a38sRAtO9t4YUw=",
-        version = "v1.3.0",
-    )
 
     go_repository(
         name = "com_github_coreos_bbolt",
@@ -283,6 +276,13 @@ def go_repositories():
         importpath = "github.com/coreos/pkg",
         sum = "h1:lBNOc5arjvs8E5mO2tbpBpLoyyu8B6e44T7hJy6potg=",
         version = "v0.0.0-20180928190104-399ea9e2e55f",
+    )
+    go_repository(
+        name = "com_github_corona10_goimagehash",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/corona10/goimagehash",
+        sum = "h1:NZM518aKLmoNluluhfHGxT3LGOnrojrxhGn63DR/CZA=",
+        version = "v1.0.3",
     )
 
     go_repository(
@@ -1187,6 +1187,13 @@ def go_repositories():
         importpath = "github.com/nbio/st",
         sum = "h1:W6apQkHrMkS0Muv8G/TipAy/FJl/rCYT0+EuS8+Z0z4=",
         version = "v0.0.0-20140626010706-e9e8d9816f32",
+    )
+    go_repository(
+        name = "com_github_nfnt_resize",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/nfnt/resize",
+        sum = "h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=",
+        version = "v0.0.0-20180221191011-83c6a9932646",
     )
 
     go_repository(

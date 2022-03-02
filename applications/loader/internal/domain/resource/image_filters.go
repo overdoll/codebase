@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"fmt"
 	"github.com/disintegration/gift"
 	"image"
 	"image/png"
@@ -22,14 +23,18 @@ func (i *ImageFilters) Pixelate() *int {
 // ApplyFilters - apply filters to a file. only outputs a PNG image for now
 func (i *ImageFilters) ApplyFilters(file *os.File) (*os.File, error) {
 	// decode image file
-	src, _, err := image.Decode(file)
+	src, err := png.Decode(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode a file for filters: %s", err)
+	}
 
 	// create and apply filters
 	g := gift.New()
 
-	if i.Pixelate() != nil {
-		g.Add(gift.Pixelate(*i.Pixelate()))
-	}
+	//if i.Pixelate() != nil {
+	//	g.Add(gift.Pixelate(*i.Pixelate()))
+	//}
 
 	dst := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(dst, src)
@@ -42,8 +47,8 @@ func (i *ImageFilters) ApplyFilters(file *os.File) (*os.File, error) {
 	}
 
 	// encode the file to png
-	if err = png.Encode(newFile, dst); err != nil {
-		return nil, err
+	if err := png.Encode(newFile, dst); err != nil {
+		return nil, fmt.Errorf("failed to encode png file: %s", err)
 	}
 
 	return newFile, nil

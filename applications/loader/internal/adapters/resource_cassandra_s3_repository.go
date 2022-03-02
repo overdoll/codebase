@@ -127,7 +127,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
 
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("could not generate signed url: %s", err)
 			}
 
 			url = signedURL
@@ -142,7 +142,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 			urlStr, err := req.Presign(15 * time.Minute)
 
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("could not generate signed url: %s", err)
 			}
 
 			url = urlStr
@@ -169,20 +169,29 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 
 		format, _ := resource.ExtensionByType(i.VideoThumbnailMimeType)
 
-		signedURL, err := resourcesSigner.Sign(bucket+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(15*time.Minute))
+		if i.IsPrivate {
 
-		if err != nil {
-			return nil, err
+			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(15*time.Minute))
+
+			if err != nil {
+				return nil, fmt.Errorf("could not generate video thumbnail signed url: %s", err)
+			}
+
+			if err != nil {
+				return nil, err
+			}
+
+			videoThumbnail = resource.UnmarshalUrlFromDatabase(
+				signedURL,
+				i.VideoThumbnailMimeType,
+			)
+		} else {
+			videoThumbnail = resource.UnmarshalUrlFromDatabase(
+				os.Getenv("RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format,
+				i.VideoThumbnailMimeType,
+			)
 		}
 
-		if err != nil {
-			return nil, err
-		}
-
-		videoThumbnail = resource.UnmarshalUrlFromDatabase(
-			signedURL,
-			i.VideoThumbnailMimeType,
-		)
 	}
 
 	return resource.UnmarshalResourceFromDatabase(
@@ -261,6 +270,7 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 	return r.session.ExecuteBatch(batch)
 }
 func (r ResourceCassandraS3Repository) GetResourcesByIdsWithUrls(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
+
 	b, err := r.getResourcesByIds(ctx, itemId, resourceIds)
 
 	if err != nil {
@@ -507,7 +517,7 @@ func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, tar
 func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fileId string, isProcessed, isPrivate bool) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
 
-	file, err := os.Create(fileId)
+	file, err := os.Create(strings.Split(fileId, "/")[len(strings.Split(fileId, "/"))-1])
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create file: %v", err)

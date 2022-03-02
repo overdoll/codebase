@@ -10,10 +10,11 @@ go_library(
 go_library(
     name = "testing_tools",
     srcs = [
+        "bazel.go",
         "file.go",
         "function.go",
         "mailing.go",
-        "mocks.go",
+        "temporal_client_mock.go",
         "wait.go",
     ],
     importpath = "overdoll/libraries/testing_tools",
@@ -23,5 +24,7 @@ go_library(
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
+        "@io_bazel_rules_go//go/tools/bazel:go_default_library",
+        "@io_temporal_go_sdk//mocks",
     ],
 )

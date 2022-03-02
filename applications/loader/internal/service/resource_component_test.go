@@ -115,8 +115,13 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	copyResourceResults, err := grpcClient.CopyResourcesAndApplyFilter(
 		context.Background(),
 		&loader.CopyResourcesAndApplyFilterRequest{
-			Resources: nil,
-			Private:   false,
+			Resources: []*loader.ResourceIdentifier{
+				{
+					Id:     res.AllResourceIds[0],
+					ItemId: itemId,
+				},
+			},
+			Private: false,
 			Filters: &loader.Filters{
 				Pixelate: &loader.PixelateFilter{Size: 100},
 			}},
@@ -152,17 +157,30 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	err = testing_tools.DownloadFile(fileName, downloadUrl)
 	require.NoError(t, err, "no error downloading the file")
 
-	file1, _ := os.Open("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
-	file2, _ := os.Open(fileName)
+	targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
+
+	file1, err := os.Open(targ)
+	require.NoError(t, err, "no error opening reference file")
+	file2, err := os.Open(fileName)
+	require.NoError(t, err, "no error opening target file")
+
 	defer file1.Close()
 	defer file2.Close()
 
-	img1, _ := png.Decode(file1)
-	img2, _ := png.Decode(file2)
+	img1, err := png.Decode(file1)
+	require.NoError(t, err, "no error decoding reference file")
 
-	hash1, _ := goimagehash.AverageHash(img1)
-	hash2, _ := goimagehash.AverageHash(img2)
-	distance, _ := hash1.Distance(hash2)
+	img2, err := png.Decode(file2)
+	require.NoError(t, err, "no error decoding target file")
+
+	hash1, err := goimagehash.AverageHash(img1)
+	require.NoError(t, err, "no error generating hash of reference file")
+
+	hash2, err := goimagehash.AverageHash(img2)
+	require.NoError(t, err, "no error generating hash of target file")
+
+	distance, err := hash1.Distance(hash2)
+	require.NoError(t, err, "no error grabbing distance between files")
 
 	require.Equal(t, 14123, distance, "should have exactly x distance")
 }
@@ -377,7 +395,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	env = getWorkflowEnvironment(t)
 	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	env.ExecuteWorkflow(deleteWorkflow, args...)
 	require.True(t, env.IsWorkflowCompleted(), "deleted resources")
 	require.NoError(t, env.GetWorkflowError(), "deleted resources without error")
 
