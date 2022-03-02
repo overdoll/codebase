@@ -3,7 +3,9 @@ package service_test
 import (
 	"context"
 	uuid2 "github.com/google/uuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -58,7 +60,10 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+
+	workflow := workflows.CCBillCancellation
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Cancellation", map[string]string{
@@ -70,10 +75,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-24 14:24:41",
 	})
 
-	workflow := workflows.CCBillCancellation
-
-	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
-
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args)
@@ -112,6 +114,9 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.Equal(t, "Transaction Voided", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
+	workflowExpired := workflows.CCBillExpiration
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflowExpired, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	// run webhook - expiration
 	runWebhookAction(t, "Expired", map[string]string{
 		"clientAccnum":   "951492",
@@ -120,12 +125,10 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-24 14:24:41",
 	})
 
-	newWorkflow := workflows.CCBillExpiration
-
-	args = testing_tools.GetArgumentsForWorkflowCall(t, newWorkflow, temporalClientMock.Calls)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflowExpired, mock.Anything)
 	env = getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(newWorkflow, args)
+	env.ExecuteWorkflow(workflowExpired, args)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

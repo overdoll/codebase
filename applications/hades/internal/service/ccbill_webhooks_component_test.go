@@ -12,24 +12,32 @@ import (
 	"testing"
 )
 
-func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, clubId string) {
+func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, clubId string, customToken *string) {
 	t.Parallel()
 
-	// generate a new unique payment token
-	encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
-		HeaderConfiguration: &hades.HeaderConfiguration{
-			SavePaymentDetails: true,
-			CreatedAt:          timestamppb.Now(),
-		},
-		CcbillClubSupporter: &hades.CCBillClubSupporter{
-			ClubId: clubId,
-		},
-		AccountInitiator: &hades.AccountInitiator{
-			AccountId: accountId,
-		},
-	})
+	var token *string
 
-	require.NoError(t, err, "no error encrypting a new token")
+	if customToken != nil {
+		token = customToken
+	} else {
+		// generate a new unique payment token
+		encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
+			HeaderConfiguration: &hades.HeaderConfiguration{
+				SavePaymentDetails: true,
+				CreatedAt:          timestamppb.Now(),
+			},
+			CcbillClubSupporter: &hades.CCBillClubSupporter{
+				ClubId: clubId,
+			},
+			AccountInitiator: &hades.AccountInitiator{
+				AccountId: accountId,
+			},
+		})
+
+		require.NoError(t, err, "no error encrypting a new token")
+
+		token = encrypted
+	}
 
 	env := getWorkflowEnvironment(t)
 
@@ -84,7 +92,7 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 		"X-formDigest":                   "5e118a92ac1ff6cec8bbe64e13acb7c5",
 		"X-currencyCode":                 "840",
 		"subscriptionId":                 ccbillSubscriptionId,
-		"X-overdollPaymentToken":         *encrypted,
+		"X-overdollPaymentToken":         *token,
 	})
 
 	require.True(t, env.IsWorkflowCompleted())

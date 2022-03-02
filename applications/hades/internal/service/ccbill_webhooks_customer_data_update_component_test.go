@@ -2,7 +2,9 @@ package service_test
 
 import (
 	uuid2 "github.com/google/uuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/testing_tools"
@@ -18,7 +20,10 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+
+	workflow := workflows.CCBillCustomerDataUpdate
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// run webhook - customer data update
 	runWebhookAction(t, "CustomerDataUpdate", map[string]string{
@@ -44,10 +49,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 		"timestamp":      "2022-02-24 20:21:37",
 	})
 
-	workflow := workflows.CCBillCustomerDataUpdate
-
-	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
-
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args)

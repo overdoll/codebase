@@ -5,7 +5,9 @@ import (
 	uuid2 "github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/segmentio/ksuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -68,6 +70,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.NoError(t, err, "no error encrypting a new token")
 
+	workflow := workflows.CCBillNewSaleOrUpSaleSuccess
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	runWebhookAction(t, "NewSaleSuccess", map[string]string{
 		"accountingCurrency":             "USD",
 		"accountingCurrencyCode":         "840",
@@ -121,10 +126,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		"X-overdollPaymentToken":         *encrypted,
 	})
 
-	workflow := workflows.CCBillNewSaleOrUpSaleSuccess
-
-	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
-
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(workflow, args)
@@ -203,6 +205,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate, "correct next billing date")
 	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate, "correct billing date")
 
+	generateReceiptWorkflow := workflows.CCBillNewSaleOrUpSaleSuccess
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, generateReceiptWorkflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	var generateReceipt GenerateClubSupporterReceiptFromAccountTransactionHistory
 
 	err = gqlClient.Mutate(context.Background(), &generateReceipt, map[string]interface{}{
@@ -213,13 +218,10 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.NoError(t, err, "no error generating a receipt from transaction history")
 
-	newWorkflow := workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory
-
-	args = temporalClientMock.MethodCalled(testing_tools.GetFunctionName(newWorkflow), nil)
-
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, generateReceiptWorkflow, mock.Anything)
 	env = getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(newWorkflow, args)
+	env.ExecuteWorkflow(generateReceiptWorkflow, args)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -230,7 +232,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	err = testing_tools.DownloadFile(fileName, fileUrl)
 	require.NoError(t, err, "no error downloading the file")
 
-	err = gofpdf.ComparePDFFiles(fileName, "applications/hades/internal/service/file_fixtures/generated_transaction_receipt.pdf", false)
+	path, _ := testing_tools.NormalizedPathFromBazelTarget("applications/hades/internal/service/file_fixtures/generated_transaction_receipt.pdf")
+
+	err = gofpdf.ComparePDFFiles(fileName, path, false)
 	require.NoError(t, err, "no error comparing the 2 pdf files - generated file is identical")
 }
 

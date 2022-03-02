@@ -2,7 +2,9 @@ package service_test
 
 import (
 	uuid2 "github.com/google/uuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/testing_tools"
@@ -18,7 +20,10 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 	ccbillSubscriptionId := uuid2.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+
+	workflow := workflows.CCBillUserReactivation
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "UserReactivation", map[string]string{
@@ -28,9 +33,7 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 		"clientSubacc":    "0101",
 	})
 
-	workflow := workflows.CCBillUserReactivation
-
-	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
