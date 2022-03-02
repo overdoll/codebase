@@ -72,7 +72,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	workflow := workflows.CCBillCancellation
 
-	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
@@ -122,7 +122,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	newWorkflow := workflows.CCBillExpiration
 
-	args = testing_tools.GetArgumentsForMethodCallFromMockCalls(t, newWorkflow, temporalClientMock.Calls)
+	args = testing_tools.GetArgumentsForWorkflowCall(t, newWorkflow, temporalClientMock.Calls)
 	env = getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be
 	env.ExecuteWorkflow(newWorkflow, args)

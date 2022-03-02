@@ -3,6 +3,8 @@ package service_test
 import (
 	"context"
 	"github.com/segmentio/ksuid"
+	"github.com/stretchr/testify/mock"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -338,6 +340,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.Error(t, err)
 
+	workflow := workflows.SubmitPost
+
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -406,12 +412,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		require.NoError(t, newEnv.GetWorkflowError())
 	}, time.Hour*24)
 
-	workflow := workflows.SubmitPost
-
-	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow)
 
 	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args)
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -424,7 +428,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
-	require.Equal(t, 1, len(post.Post.Content), "should have only 1 content at the end")
+	require.Equal(t, 2, len(post.Post.Content), "should have only 2 content at the end")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
 
@@ -466,6 +470,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
 	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
+
+	post = getPost(t, client, postId)
 
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
 	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")

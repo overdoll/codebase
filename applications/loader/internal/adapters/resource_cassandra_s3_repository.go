@@ -106,7 +106,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 
 	for _, mime := range i.MimeTypes {
 
-		key := "/" + i.ItemId
+		key := "/" + i.ResourceId
 
 		extension := ""
 
@@ -381,6 +381,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"width",
 			"height",
 		)
+
 		batch.Query(stmt, r.MimeTypes(), r.IsProcessed(), r.ProcessedId(), r.VideoDuration(), r.VideoThumbnail(), r.VideoThumbnailMimeType(), r.Width(), r.Height(), r.ItemId(), r.ID())
 	}
 

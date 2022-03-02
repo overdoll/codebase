@@ -711,16 +711,26 @@ func (r ClubCassandraRepository) UpdateClubMemberIsSupporter(ctx context.Context
 		return nil, err
 	}
 
+	clb = &clubMember{
+		ClubId:          currentClub.ClubId(),
+		Bucket:          clb.Bucket,
+		MemberAccountId: clb.MemberAccountId,
+		JoinedAt:        clb.JoinedAt,
+		IsSupporter:     currentClub.IsSupporter(),
+		SupporterSince:  currentClub.SupporterSince(),
+		Deleted:         false,
+	}
+
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	stmt, _ := clubMembersByAccountTable.Update("is_supporter", "supporter_since")
-	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId, clb.IsSupporter, clb.SupporterSince)
+	batch.Query(stmt, clb.IsSupporter, clb.SupporterSince, clb.MemberAccountId, clb.JoinedAt, clb.ClubId)
 
 	stmt, _ = clubMembersByClubTable.Update("is_supporter", "supporter_since")
-	batch.Query(stmt, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId, clb.IsSupporter, clb.SupporterSince)
+	batch.Query(stmt, clb.IsSupporter, clb.SupporterSince, clb.ClubId, clb.Bucket, clb.JoinedAt, clb.MemberAccountId)
 
 	stmt, _ = clubMembersTable.Update("is_supporter", "supporter_since")
-	batch.Query(stmt, clb.ClubId, clb.ClubId, clb.IsSupporter, clb.SupporterSince)
+	batch.Query(stmt, clb.IsSupporter, clb.SupporterSince, clb.ClubId, clb.MemberAccountId)
 
 	if clb.IsSupporter {
 		stmt, _ = accountSupportedClubsTable.Insert()

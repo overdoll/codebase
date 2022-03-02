@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/app"
@@ -25,37 +27,39 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewLoaderGrpc(loaderClient),
-		),
+			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
 
 	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+
+	temporalClient := &mocks.Client{}
 
 	return createApplication(ctx,
 			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			LoaderServiceMock{},
+			temporalClient,
 		),
 		func() {
 			cleanup()
-		}
+		},
+		temporalClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
 	esClient := bootstrap.InitializeElasticSearchSession()
-
-	client := clients.NewTemporalClient(ctx)
 
 	clubRepo := adapters.NewClubCassandraRepository(session)
 	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(esClient, session)

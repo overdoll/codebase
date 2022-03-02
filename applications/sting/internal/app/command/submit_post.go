@@ -49,7 +49,7 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 		return nil, err
 	}
 
-	if err := h.event.PublishPost(ctx, pendingPost.ID()); err != nil {
+	if err := h.event.SubmitPost(ctx, pendingPost.ID()); err != nil {
 		return nil, err
 	}
 

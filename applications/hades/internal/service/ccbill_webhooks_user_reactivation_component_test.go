@@ -30,7 +30,7 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 
 	workflow := workflows.CCBillUserReactivation
 
-	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be

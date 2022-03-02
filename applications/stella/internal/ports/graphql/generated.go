@@ -96,10 +96,12 @@ type ComplexityRoot struct {
 	}
 
 	ClubMember struct {
-		Account  func(childComplexity int) int
-		Club     func(childComplexity int) int
-		ID       func(childComplexity int) int
-		JoinedAt func(childComplexity int) int
+		Account        func(childComplexity int) int
+		Club           func(childComplexity int) int
+		ID             func(childComplexity int) int
+		IsSupporter    func(childComplexity int) int
+		JoinedAt       func(childComplexity int) int
+		SupporterSince func(childComplexity int) int
 	}
 
 	ClubMemberConnection struct {
@@ -482,12 +484,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubMember.ID(childComplexity), true
 
+	case "ClubMember.isSupporter":
+		if e.complexity.ClubMember.IsSupporter == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.IsSupporter(childComplexity), true
+
 	case "ClubMember.joinedAt":
 		if e.complexity.ClubMember.JoinedAt == nil {
 			break
 		}
 
 		return e.complexity.ClubMember.JoinedAt(childComplexity), true
+
+	case "ClubMember.supporterSince":
+		if e.complexity.ClubMember.SupporterSince == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.SupporterSince(childComplexity), true
 
 	case "ClubMemberConnection.edges":
 		if e.complexity.ClubMemberConnection.Edges == nil {
@@ -1033,6 +1049,12 @@ type ClubMember implements Node @key(fields: "id") {
 
   """The account that belongs to this membership."""
   account: Account!
+
+  """Whether or not this member is a supporter."""
+  isSupporter: Boolean!
+
+  """If is a supporter, when they became a supporter."""
+  supporterSince: Time
 }
 
 """Add alias slug."""
@@ -3061,6 +3083,73 @@ func (ec *executionContext) _ClubMember_account(ctx context.Context, field graph
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_isSupporter(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsSupporter, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SupporterSince, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClubMemberConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberConnection) (ret graphql.Marshaler) {
@@ -6651,6 +6740,23 @@ func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isSupporter":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubMember_isSupporter(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "supporterSince":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubMember_supporterSince(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -8960,6 +9066,21 @@ func (ec *executionContext) marshalOSuspendClubPayload2ᚖoverdollᚋapplication
 		return graphql.Null
 	}
 	return ec._SuspendClubPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUnSuspendClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnSuspendClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnSuspendClubPayload) graphql.Marshaler {

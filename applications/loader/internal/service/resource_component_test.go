@@ -6,7 +6,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/corona10/goimagehash"
 	"github.com/segmentio/ksuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"image/png"
 	"os"
 	"overdoll/applications/loader/internal/app/workflows"
@@ -33,6 +35,9 @@ func convertResourceIdToRelayId(itemId, resourceId string) relay.ID {
 }
 
 func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
+
+	t.Parallel()
+
 	// create an item ID to associate the resources with
 	itemId := ksuid.New().String()
 
@@ -41,6 +46,9 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
 
 	grpcClient := getGrpcClient(t)
+
+	workflow := workflows.ProcessResources
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -51,11 +59,10 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	// process resources
 	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ProcessResources)
-
-	env.ExecuteWorkflow(workflows.ProcessResources, itemId, res.AllResourceIds)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, itemId, mock.Anything)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted(), "processed resources")
 	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
 
@@ -106,7 +113,14 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	// now, apply a filter
 	copyResourceResults, err := grpcClient.CopyResourcesAndApplyFilter(
-		context.Background(), &loader.CopyResourcesAndApplyFilterRequest{Resources: nil, Private: false, Filters: &loader.Filters{Pixelate: &loader.PixelateFilter{Size: 100}}})
+		context.Background(),
+		&loader.CopyResourcesAndApplyFilterRequest{
+			Resources: nil,
+			Private:   false,
+			Filters: &loader.Filters{
+				Pixelate: &loader.PixelateFilter{Size: 100},
+			}},
+	)
 
 	require.NoError(t, err, "no error copying resources")
 
@@ -165,6 +179,9 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
 	grpcClient := getGrpcClient(t)
+
+	workflow := workflows.ProcessResources
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -250,18 +267,15 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	}
 
 	// expected image resource
-	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+imageFileId, string(newImageResource.Urls[0].URL))
 	require.True(t, testing_tools.FileExists(string(newImageResource.Urls[0].URL)), "image uploaded file exists in bucket")
 
 	// expected video resource
-	require.Equal(t, os.Getenv("UPLOADS_URL")+"/"+videoFileId, string(newVideoResource.Urls[0].URL))
 	require.True(t, testing_tools.FileExists(string(newVideoResource.Urls[0].URL)), "video uploaded file exists in bucket")
 
-	// finally, run the processing workflow. we will query our resources one more time to check that the proper formats and URLs are now available
 	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ProcessResources)
-
-	env.ExecuteWorkflow(workflows.ProcessResources, itemId, resourceIds)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, itemId, mock.Anything)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted(), "processed resources")
 	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
 
@@ -349,13 +363,8 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// correct duration
 	require.Equal(t, 13347, newVideoResource.VideoDuration, "should be the correct duration")
 
-	// should not have gotten an error for trying to upload the same resources
-	_, err = grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: newResourceIds,
-	})
-
-	require.NoError(t, err, "no error trying to upload the exact same resources")
+	deleteWorkflow := workflows.DeleteResources
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
@@ -366,11 +375,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// run workflow to delete resources
 	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.DeleteResources)
-
-	env.ExecuteWorkflow(workflows.DeleteResources, itemId, resourceIds)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything)
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args...)
+	require.True(t, env.IsWorkflowCompleted(), "deleted resources")
+	require.NoError(t, env.GetWorkflowError(), "deleted resources without error")
 
 	// run grpc and see that we didnt find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{

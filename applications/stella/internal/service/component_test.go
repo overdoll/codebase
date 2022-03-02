@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -25,6 +26,10 @@ import (
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
 	"testing"
+)
+
+var (
+	temporalClientMock *mocks.Client
 )
 
 const StellaHttpAddr = ":2222"
@@ -50,7 +55,7 @@ func getGrpcClient(t *testing.T) stella.StellaClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _ := service.NewComponentTestApplication(context.Background())
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(newApp.Activities)
 
 	return env
@@ -110,7 +115,8 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 func startService() bool {
 	config.Read("applications/stella")
 
-	application, _ := service.NewComponentTestApplication(context.Background())
+	application, _, newTClient := service.NewComponentTestApplication(context.Background())
+	temporalClientMock = newTClient
 
 	client := clients.NewTemporalClient(context.Background())
 

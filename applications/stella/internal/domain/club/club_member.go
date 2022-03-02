@@ -140,6 +140,11 @@ func IsAccountClubMembershipReached(requester *principal.Principal, accountId st
 }
 
 func ViewAccountClubMembershipsLimit(requester *principal.Principal, accountId string) (int, error) {
+
+	if requester.IsStaff() {
+		return maxAccountClubMembershipLimit, nil
+	}
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
 	}
@@ -148,6 +153,11 @@ func ViewAccountClubMembershipsLimit(requester *principal.Principal, accountId s
 }
 
 func CanViewAccountClubMemberships(requester *principal.Principal, accountId string) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
 	}

@@ -42,10 +42,12 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 				newAccountId,
 				testClubId,
 				time.Now().Add(time.Hour*time.Duration(i)),
+				false,
+				nil,
 			)
 
 		// create the new member
-		err = clubRepo.CreateClubMember(ctx, principalItem, newMember)
+		err = clubRepo.CreateClubMember(ctx, newMember)
 		require.NoError(t, err, "no error creating a new member")
 
 		// add to list

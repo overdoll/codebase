@@ -69,7 +69,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	workflow := workflows.CCBillRenewalSuccess
 
-	args := testing_tools.GetArgumentsForMethodCallFromMockCalls(t, workflow, temporalClientMock.Calls)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, workflow, temporalClientMock.Calls)
 
 	env := getWorkflowEnvironment(t)
 	// execute workflow manually since it won't be

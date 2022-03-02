@@ -28,7 +28,7 @@ func DownloadFile(filepath string, url string) error {
 }
 
 func FileExists(fileUrl string) bool {
-	resp, err := http.Head(fileUrl)
+	resp, err := http.Get(fileUrl)
 	if err != nil {
 		return false
 	}

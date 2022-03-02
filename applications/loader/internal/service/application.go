@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
@@ -16,15 +18,22 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
-	return createApplication(ctx), func() {
+	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {
 
 	}
 }
 
-func createApplication(ctx context.Context) app.Application {
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &mocks.Client{}
+	return createApplication(ctx, temporalClient), func() {
+
+	}, temporalClient
+}
+
+func createApplication(ctx context.Context, client client.Client) app.Application {
 
 	s := bootstrap.InitializeDatabaseSession()
-	client := clients.NewTemporalClient(ctx)
 
 	awsSession := bootstrap.InitializeAWSSession()
 
