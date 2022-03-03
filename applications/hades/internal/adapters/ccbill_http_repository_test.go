@@ -22,7 +22,7 @@ var (
 func Test_ChargeByPrevious_Void(t *testing.T) {
 	t.Parallel()
 
-	if os.Getenv("IS_CI") != "" {
+	if os.Getenv("BUILDKITE_BUILD_NUMBER") != "" {
 		t.Skip("Skipping testing in CI environment")
 	}
 
@@ -78,7 +78,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 	t.Parallel()
 
-	if os.Getenv("IS_CI") != "" {
+	if os.Getenv("BUILDKITE_BUILD_NUMBER") != "" {
 		t.Skip("Skipping testing in CI environment")
 	}
 
@@ -127,7 +127,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 func Test_ChargeByPrevious_View_Refunded(t *testing.T) {
 	t.Parallel()
 
-	if os.Getenv("IS_CI") != "" {
+	if os.Getenv("BUILDKITE_BUILD_NUMBER") != "" {
 		t.Skip("Skipping testing in CI environment")
 	}
 
@@ -145,7 +145,7 @@ func Test_ChargeByPrevious_View_Refunded(t *testing.T) {
 func Test_ChargeByPrevious_View_Voided(t *testing.T) {
 	t.Parallel()
 
-	if os.Getenv("IS_CI") != "" {
+	if os.Getenv("BUILDKITE_BUILD_NUMBER") != "" {
 		t.Skip("Skipping testing in CI environment")
 	}
 

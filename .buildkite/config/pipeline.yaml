@@ -12,6 +12,7 @@ steps:
         EVA_SERVICE: eva:8080
         RESOURCES_BUCKET: sandbox-overdoll-resources
         UPLOADS_BUCKET: sandbox-overdoll-uploads
+        PRIVATE_RESOURCES_BUCKET: sandbox-overdoll-private-resources
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
         CARRIER_SERVICE: carrier:8080
@@ -32,3 +33,6 @@ steps:
         EMAIL_DOMAIN_WHITELIST: inbox.testmail.app
         RESOURCES_URL: https://sandbox-overdoll-resources.s3.amazonaws.com
         UPLOADS_URL: https://sandbox-overdoll-uploads.s3.amazonaws.com
+        PRIVATE_RESOURCES_URL: https://dcd9vpqfvvgum.cloudfront.net
+        OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
+        FILES_BUCKET: sandbox-overdoll-files

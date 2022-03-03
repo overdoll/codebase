@@ -10,7 +10,15 @@ func GetIPFromRequest(req *http.Request) string {
 
 	forwarded := req.Header.Get("X-FORWARDED-FOR")
 	if forwarded != "" {
-		ip = strings.Split(forwarded, ",")[len(strings.Split(forwarded, ","))-1]
+
+		splits := strings.Split(forwarded, ",")
+
+		for _, r := range splits {
+			if r != "unknown" {
+				ip = r
+				break
+			}
+		}
 	} else {
 		ip = req.RemoteAddr
 	}

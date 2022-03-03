@@ -52,7 +52,13 @@ def execute_integration_tests_commands(configs):
             "AWS_ENDPOINT",
             "AWS_REGION",
             "TESTMAIL_API_KEY",
-            "TESTMAIL_NAMESPACE"
+            "TESTMAIL_NAMESPACE",
+            "CCBILL_FLEXFORMS_URL",
+            "CCBILL_SALT_KEY",
+            "CCBILL_ACCOUNT_NUMBER",
+            "CCBILL_SUB_ACCOUNT_NUMBER",
+            "CCBILL_DATALINK_USERNAME",
+            "CCBILL_DATALINK_PASSWORD",
         ]
 
         test_flags, json_profile_out_test = flags.calculate_flags(
@@ -202,10 +208,21 @@ def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = ["HOME", "AWS_ACCESS_KEY",
-                         "AWS_ACCESS_SECRET",
-                         "AWS_ENDPOINT",
-                         "AWS_REGION", "TESTMAIL_API_KEY", "TESTMAIL_NAMESPACE"]
+        test_env_vars = [
+            "HOME",
+            "CCBILL_FLEXFORMS_URL",
+            "CCBILL_SALT_KEY",
+            "CCBILL_ACCOUNT_NUMBER",
+            "CCBILL_SUB_ACCOUNT_NUMBER",
+            "CCBILL_DATALINK_USERNAME",
+            "CCBILL_DATALINK_PASSWORD",
+            "AWS_ACCESS_KEY",
+            "AWS_ACCESS_SECRET",
+            "AWS_ENDPOINT",
+            "AWS_REGION",
+            "TESTMAIL_API_KEY",
+            "TESTMAIL_NAMESPACE",
+        ]
 
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
@@ -343,10 +360,21 @@ def print_project_pipeline():
 
 
 def push_images(targets, tmpdir):
-    test_env_vars = ["HOME", "AWS_ACCESS_KEY",
-                     "AWS_ACCESS_SECRET",
-                     "AWS_ENDPOINT",
-                     "AWS_REGION", "TESTMAIL_API_KEY", "TESTMAIL_NAMESPACE"]
+    test_env_vars = [
+        "HOME",
+        "CCBILL_FLEXFORMS_URL",
+        "CCBILL_SALT_KEY",
+        "CCBILL_ACCOUNT_NUMBER",
+        "CCBILL_SUB_ACCOUNT_NUMBER",
+        "CCBILL_DATALINK_USERNAME",
+        "CCBILL_DATALINK_PASSWORD",
+        "AWS_ACCESS_KEY",
+        "AWS_ACCESS_SECRET",
+        "AWS_ENDPOINT",
+        "AWS_REGION",
+        "TESTMAIL_API_KEY",
+        "TESTMAIL_NAMESPACE",
+    ]
 
     run_flags, json_profile_out_test = flags.calculate_flags(
         "run_flags", "run", tmpdir, test_env_vars

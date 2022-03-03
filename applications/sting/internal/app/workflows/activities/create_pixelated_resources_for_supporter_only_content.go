@@ -22,22 +22,25 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 			resourceIds = append(resourceIds, c.ResourceId())
 		}
 
-		newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, postId, resourceIds, 100, false)
+		if len(resourceIds) > 0 {
 
-		if err != nil {
-			return err
-		}
+			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, postId, resourceIds, 100, false)
 
-		// create new pixelated content
-		for _, content := range pending.Content() {
-			for _, newContent := range newContents {
-				if newContent.OldResourceId() == content.ResourceId() {
-					if err := content.UpdateResourceIdHidden(newContent.NewResourceId()); err != nil {
-						return err
-					}
-				}
+			if err != nil {
+				return err
 			}
 
+			// create new pixelated content
+			for _, content := range pending.Content() {
+				for _, newContent := range newContents {
+					if newContent.OldResourceId() == content.ResourceId() {
+						if err := content.UpdateResourceIdHidden(newContent.NewResourceId()); err != nil {
+							return err
+						}
+					}
+				}
+
+			}
 		}
 
 		return nil

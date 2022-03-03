@@ -135,7 +135,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
 		"input": types.UpdateSeriesThumbnailInput{
 			ID:        series.Id,
-			Thumbnail: "test",
+			Thumbnail: "04ba807328b59c911a8a37f80447e16a",
 		},
 	})
 

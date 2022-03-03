@@ -100,6 +100,12 @@ def create_docker_step(label, commands, additional_env_vars=None):
 
 def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=True):
     vars = [
+        "CCBILL_FLEXFORMS_URL",
+        "CCBILL_SALT_KEY",
+        "CCBILL_ACCOUNT_NUMBER",
+        "CCBILL_SUB_ACCOUNT_NUMBER",
+        "CCBILL_DATALINK_USERNAME",
+        "CCBILL_DATALINK_PASSWORD",
         "BUILDKITE_JOB_ID",
         "BUILDKITE_BUILD_ID",
         "BUILDKITE_AGENT_ACCESS_TOKEN",

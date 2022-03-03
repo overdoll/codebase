@@ -32,15 +32,15 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 	country := record.Country.IsoCode
 
 	if subdivision == "" {
-		subdivision = "Unknown"
+		subdivision = ""
 	}
 
 	if city == "" {
-		city = "Unknown"
+		city = ""
 	}
 
 	if country == "" {
-		country = "Unknown"
+		country = ""
 	}
 
 	return location.UnmarshalLocationFromDatabase(

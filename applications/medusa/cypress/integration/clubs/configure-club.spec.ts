@@ -73,10 +73,16 @@ describe('Club - Configure', () => {
   it('visit club members page', () => {
     cy.visit(`/club/${newClubName}/members`)
     cy.findByText('Club Members').should('exist')
-    cy.findByText(/No members found/iu).should('exist')
+    // club owner is now automatically a member
+    // cy.findByText(/No members found/iu).should('exist')
   })
 
   it('visit club public page', () => {
+    const [username, email] = generateUsernameAndEmail()
+
+    // need to visit club public page as a new member because owners are automatically members
+    cy.joinWithNewAccount(username, email)
+
     cy.visit(`/${newClubName}`)
     cy.findByText(newClubName).should('exist')
     cy.findByRole('button', { name: /Join/iu }).should('not.be.disabled').click()

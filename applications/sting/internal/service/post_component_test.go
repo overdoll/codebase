@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.temporal.io/sdk/mocks"
 	"overdoll/libraries/testing_tools"
-	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 
@@ -188,7 +187,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
 		"input": types.AddPostContentInput{
 			ID:      relay.ID(newPostId),
-			Content: []string{uuid.New().String(), uuid.New().String(), uuid.New().String()},
+			Content: []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"},
 		},
 	})
 

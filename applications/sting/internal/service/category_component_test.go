@@ -136,7 +136,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 	err = client.Mutate(context.Background(), &updateCategoryThumbnail, map[string]interface{}{
 		"input": types.UpdateCategoryThumbnailInput{
 			ID:        category.Id,
-			Thumbnail: "test",
+			Thumbnail: "00be69a89e31d28cf8e79b7373d505c7",
 		},
 	})
 
