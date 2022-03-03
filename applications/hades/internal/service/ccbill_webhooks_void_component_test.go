@@ -56,7 +56,7 @@ func TestBillingFlow_Void(t *testing.T) {
 		"reason":         "Income issues",
 		"source":         "webAdmin",
 		"subscriptionId": ccbillSubscriptionId,
-		"timestamp":      "2022-02-24 14:24:14",
+		"timestamp":      "2022-02-26 20:18:00",
 	})
 
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
@@ -87,7 +87,7 @@ func TestBillingFlow_Void(t *testing.T) {
 	transaction := accountTransactionsVoid.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 21:24:14 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, "Income issues", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }

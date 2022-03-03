@@ -106,6 +106,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "CCBILL_SUB_ACCOUNT_NUMBER",
         "CCBILL_DATALINK_USERNAME",
         "CCBILL_DATALINK_PASSWORD",
+        "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
+        "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
         "BUILDKITE_JOB_ID",
         "BUILDKITE_BUILD_ID",
         "BUILDKITE_AGENT_ACCESS_TOKEN",

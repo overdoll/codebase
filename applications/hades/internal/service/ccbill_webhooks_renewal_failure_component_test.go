@@ -59,7 +59,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 		"failureCode":    "BE-140",
 		"nextRetryDate":  "2012-08-20",
 		"subscriptionId": ccbillSubscriptionId,
-		"timestamp":      "2022-02-24 14:24:14",
+		"timestamp":      "2022-02-26 20:18:00",
 	})
 
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
@@ -90,7 +90,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	transaction := accountTransactionsFailure.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 21:24:14 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, "2012-08-20 00:00:00 +0000 UTC", transaction.NextRetryDate.String(), "correct timestamp")
 	require.Equal(t, "Invalid Input.", transaction.CCBillErrorText, "correct reason")
 	require.Equal(t, "BE-140", transaction.CCBillErrorCode, "correct code")

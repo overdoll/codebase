@@ -69,7 +69,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		"paymentType":            "CREDIT",
 		"reason":                 "Refunded through Data Link: subscriptionManagement.cgi",
 		"subscriptionId":         ccbillSubscriptionId,
-		"timestamp":              "2022-02-24 20:27:56",
+		"timestamp":              "2022-02-28 20:27:56",
 	})
 
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
@@ -100,7 +100,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	transaction := accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-25 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", transaction.CCBillReason, "correct reason")

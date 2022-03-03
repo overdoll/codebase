@@ -65,7 +65,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 		"expDate":                "0423",
 		"last4":                  "1111",
 		"reason":                 "IDK LOL",
-		"timestamp":              "2022-02-26 08:21:49",
+		"timestamp":              "2022-02-26 20:18:00",
 		"subscriptionId":         ccbillSubscriptionId,
 	})
 
@@ -97,7 +97,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	transaction := accountTransactionsChargeback.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", transaction.CCBillReason, "correct reason")

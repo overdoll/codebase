@@ -70,7 +70,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 		"renewalDate":            "2021-03-28",
 		"nextRenewalDate":        "2024-03-28",
 		"paymentType":            "CREDIT",
-		"timestamp":              "2022-02-26 08:21:49",
+		"timestamp":              "2022-02-28 08:21:49",
 		"subscriptionId":         ccbillSubscriptionId,
 	})
 
@@ -114,7 +114,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	transaction := accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 6.99, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

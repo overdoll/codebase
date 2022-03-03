@@ -31,7 +31,7 @@ func TestBillingFlow_BillingDateChanged(t *testing.T) {
 		"clientSubacc":    "0101",
 		"nextRenewalDate": "2022-03-28",
 		"subscriptionId":  ccbillSubscriptionId,
-		"timestamp":       "2022-02-24 20:18:00",
+		"timestamp":       "2022-02-26 20:18:00",
 	})
 
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)

@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -77,7 +76,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"reason":         "Transaction Voided",
 		"source":         "webAdmin",
 		"subscriptionId": ccbillSubscriptionId,
-		"timestamp":      "2022-02-24 14:24:41",
+		"timestamp":      "2022-02-26 20:18:00",
 	})
 
 	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
@@ -112,12 +111,10 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
 
-	fmt.Println(accountId)
-
 	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 21:24:41 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, "Transaction Voided", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
@@ -129,7 +126,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"clientAccnum":   "951492",
 		"clientSubacc":   "0101",
 		"subscriptionId": ccbillSubscriptionId,
-		"timestamp":      "2022-02-24 14:24:41",
+		"timestamp":      "2022-02-28 20:18:00",
 	})
 
 	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflowExpired, mock.Anything)
@@ -162,6 +159,6 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	expiredTransaction := accountTransactionsExpired.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, expiredTransaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-24 21:24:41 +0000 UTC", expiredTransaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredTransaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, ccbillSubscriptionId, expiredTransaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 }
