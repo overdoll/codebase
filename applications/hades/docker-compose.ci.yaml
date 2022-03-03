@@ -11,9 +11,9 @@ services:
       - 7532:8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.puppy.rule=PathPrefix(`/api/ccbill/*`)"
-      - "traefik.http.routers.puppy.entrypoints=websecure"
-      - "traefik.http.routers.puppy.tls=true"
+      - "traefik.http.routers.hades.rule=PathPrefix(`/api/ccbill/*`)"
+      - "traefik.http.routers.hades.entrypoints=websecure"
+      - "traefik.http.routers.hades.tls=true"
       - "traefik.port=8000"
     environment:
       - CCBILL_FLEXFORMS_URL=${CCBILL_FLEXFORMS_URL}
