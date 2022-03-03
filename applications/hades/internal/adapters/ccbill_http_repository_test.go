@@ -14,13 +14,13 @@ import (
 )
 
 var (
-	existingSubscriptionId = "0222061301000154998"
-	refundedSubscriptionId = "0122061301000154282"
-	voidedSubscriptionId   = "0122061301000154282"
+	existingSubscriptionId  = "0222061301000154998"
+	existingSubscriptionId2 = "0222061301000161038"
+	refundedSubscriptionId  = "0122061301000154282"
+	voidedSubscriptionId    = "0122061301000154282"
 )
 
 func Test_ChargeByPrevious_Void(t *testing.T) {
-	t.Parallel()
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -76,7 +76,6 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 }
 
 func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
-	t.Parallel()
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -94,7 +93,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
 		ksuid.New().String(),
-		existingSubscriptionId,
+		existingSubscriptionId2,
 		billing.UnmarshalPricingFromDatabase(billing.USD, 6.99),
 	)
 
@@ -110,8 +109,8 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 
 	newSubscriptionId := transactionDetails.Id()
 
-	//err = repository.ExtendSubscription(context.Background(), newSubscriptionId, 10)
-	//require.NoError(t, err, "no error extending subscription")
+	err = repository.ExtendSubscription(context.Background(), newSubscriptionId, 3)
+	require.NoError(t, err, "no error extending subscription")
 
 	err = repository.CancelSubscription(context.Background(), newSubscriptionId)
 	require.NoError(t, err, "no error cancelling subscription")
@@ -125,7 +124,6 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 }
 
 func Test_ChargeByPrevious_View_Refunded(t *testing.T) {
-	t.Parallel()
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -143,7 +141,6 @@ func Test_ChargeByPrevious_View_Refunded(t *testing.T) {
 }
 
 func Test_ChargeByPrevious_View_Voided(t *testing.T) {
-	t.Parallel()
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -154,7 +151,7 @@ func Test_ChargeByPrevious_View_Voided(t *testing.T) {
 	status, err := repository.ViewSubscriptionStatus(context.Background(), voidedSubscriptionId)
 	require.NoError(t, err, "no error viewing subscription")
 
-	require.Equal(t, 1, status.VoidsIssued(), "one void issued")
+	require.Equal(t, 1, status.RefundsIssued(), "one refund issued")
 	require.NotNil(t, status.ExpirationDate(), "expiration date")
 	require.NotNil(t, status.CancelDate(), "cancel date")
 	require.Equal(t, ccbill.Inactive, status.SubscriptionStatus(), "inactive status")

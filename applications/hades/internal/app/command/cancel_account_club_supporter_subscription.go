@@ -43,5 +43,9 @@ func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Contex
 		return subscription.RequestCancel(cmd.Principal, cancellationReason)
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	return clubSupporterSubscription, nil
 }
