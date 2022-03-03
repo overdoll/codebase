@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -251,6 +252,10 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 
 func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubscriptionId string, days int) error {
 
+	if days >= 6 {
+		return errors.New("only a max of 6 day extensions can be created (ccbill limit)")
+	}
+
 	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
 
 	if err != nil {
@@ -263,11 +268,6 @@ func (r CCBillHttpRepository) ExtendSubscription(ctx context.Context, ccbillSubs
 	q.Add("subscriptionId", ccbillSubscriptionId)
 	q.Add("action", "extendSubscription")
 	q.Add("extendLength", strconv.Itoa(days))
-	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
-	q.Add("clientSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
-	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
-	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
-	q.Add("returnXML", "1")
 
 	req.URL.RawQuery = q.Encode()
 
