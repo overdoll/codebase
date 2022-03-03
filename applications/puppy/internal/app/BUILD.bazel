@@ -9,6 +9,7 @@ go_library(
         "//applications/puppy/internal/domain/session",
         "//libraries/localization",
         "//libraries/passport",
+        "//libraries/support",
         "@com_github_google_uuid//:uuid",
         "@com_github_gorilla_securecookie//:securecookie",
     ],

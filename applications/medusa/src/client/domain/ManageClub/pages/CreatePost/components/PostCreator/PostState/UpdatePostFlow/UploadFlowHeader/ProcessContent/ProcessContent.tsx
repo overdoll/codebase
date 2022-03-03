@@ -20,7 +20,9 @@ const Fragment = graphql`
   fragment ProcessContentFragment on Post {
     reference
     content {
-      processed
+      resource {
+        processed
+      }
     }
   }
 `

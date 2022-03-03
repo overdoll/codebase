@@ -12,6 +12,10 @@ func NewURI(uri string) URI {
 	return URI(uri)
 }
 
+func (y *URI) String() string {
+	return string(*y)
+}
+
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (y *URI) UnmarshalGQL(v interface{}) error {
 	yes, ok := v.(string)

@@ -79,11 +79,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	client := clients.NewTemporalClient(ctx)
-
-	defer client.Close()
-
-	srv := ports.NewHttpServer(&app, client)
+	srv := ports.NewHttpServer(&app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

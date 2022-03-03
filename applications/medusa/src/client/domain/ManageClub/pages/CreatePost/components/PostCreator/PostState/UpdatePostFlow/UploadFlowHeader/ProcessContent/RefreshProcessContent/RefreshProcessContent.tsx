@@ -21,7 +21,9 @@ const Query = graphql`
       reference
       content {
         id
-        processed
+        resource {
+          processed
+        }
       }
     }
   }
@@ -39,7 +41,7 @@ export default function RefreshProcessContent ({
   const { dispatch } = useSequenceContext()
 
   const isProcessed = (): boolean => {
-    const processed = queryData?.post?.content.map((item) => item.processed) as boolean[]
+    const processed = queryData?.post?.content.map((item) => item.resource.processed) as boolean[]
     return processed.every(x => x)
   }
 

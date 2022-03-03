@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -35,6 +37,15 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
+func (e StellaServiceMock) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+
+	if accountId == "1pcKiTRBqURVEdcw1cKhyiejFp7" {
+		return []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"}, nil
+	}
+
+	return []string{}, nil
+}
+
 func (e StellaServiceMock) CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error) {
 	return true, nil
 }
@@ -53,7 +64,17 @@ func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, cl
 
 type LoaderServiceMock struct{}
 
-func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
+func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
+	var newContent []*post.NewContent
+
+	for _, n := range resourceIds {
+		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, ksuid.New().String()))
+	}
+
+	return newContent, nil
+}
+
+func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error) {
 	return resourceIds, nil
 }
 

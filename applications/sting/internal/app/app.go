@@ -20,9 +20,10 @@ type Commands struct {
 	SubmitPost  command.SubmitPostHandler
 	RemovePost  command.RemovePostHandler
 
-	RemovePostContent      command.RemovePostContentHandler
-	AddPostContent         command.AddPostContentHandler
-	UpdatePostContentOrder command.UpdatePostContentOrderHandler
+	RemovePostContent                command.RemovePostContentHandler
+	AddPostContent                   command.AddPostContentHandler
+	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
+	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
@@ -91,4 +92,5 @@ type Queries struct {
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler
 	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
+	ModeratorPostsQueue   query.ModeratorPostsQueueHandler
 }

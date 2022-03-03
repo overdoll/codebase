@@ -2,10 +2,7 @@ package mutations
 
 import (
 	"context"
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/command"
-	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -32,7 +29,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 
 	return &types.CreatePostPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error) {
@@ -54,23 +51,12 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 		return nil, err
 	}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SubmitPostWorkflow_" + pst.ID(),
-	}
-
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, pst.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
 	inReview := true
 
 	return &types.SubmitPostPayload{
 		Post:     types.MarshalPostToGraphQL(ctx, pst),
 		InReview: &inReview,
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error) {
@@ -95,7 +81,7 @@ func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.U
 
 	return &types.UpdatePostAudiencePayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) AddPostContent(ctx context.Context, input types.AddPostContentInput) (*types.AddPostContentPayload, error) {
@@ -120,7 +106,7 @@ func (r *MutationResolver) AddPostContent(ctx context.Context, input types.AddPo
 
 	return &types.AddPostContentPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.RemovePostContentInput) (*types.RemovePostContentPayload, error) {
@@ -151,10 +137,11 @@ func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.Re
 
 	return &types.RemovePostContentPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error) {
+
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
@@ -181,7 +168,39 @@ func (r *MutationResolver) UpdatePostContentOrder(ctx context.Context, input typ
 
 	return &types.UpdatePostContentOrderPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
+}
+
+func (r *MutationResolver) UpdatePostContentIsSupporterOnly(ctx context.Context, input types.UpdatePostContentIsSupporterOnlyInput) (*types.UpdatePostContentIsSupporterOnlyPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	var updatedContentIds []string
+
+	for _, cnt := range input.ContentIds {
+		updatedContentIds = append(updatedContentIds, cnt.GetID())
+	}
+
+	pst, err := r.App.Commands.UpdatePostContentIsSupporterOnly.
+		Handle(
+			ctx,
+			command.UpdatePostContentIsSupporterOnly{
+				Principal:       principal.FromContext(ctx),
+				PostId:          input.ID.GetID(),
+				ContentIds:      updatedContentIds,
+				IsSupporterOnly: input.IsSupporterOnly,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdatePostContentIsSupporterOnlyPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, nil
 }
 
 func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error) {
@@ -212,7 +231,7 @@ func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types
 
 	return &types.UpdatePostCharactersPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }
 
 func (r *MutationResolver) UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error) {
@@ -243,5 +262,5 @@ func (r *MutationResolver) UpdatePostCategories(ctx context.Context, input types
 
 	return &types.UpdatePostCategoriesPayload{
 		Post: types.MarshalPostToGraphQL(ctx, pst),
-	}, err
+	}, nil
 }

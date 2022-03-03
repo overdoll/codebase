@@ -24,6 +24,9 @@ type Commands struct {
 	BecomeClubMember              command.BecomeClubMemberHandler
 	WithdrawClubMembership        command.WithdrawClubMembershipHandler
 
+	AddClubSupporter    command.AddClubSupporterHandler
+	RemoveClubSupporter command.RemoveClubSupporterHandler
+
 	SuspendClub   command.SuspendClubHandler
 	UnSuspendClub command.UnSuspendClubHandler
 
@@ -42,6 +45,8 @@ type Queries struct {
 
 	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
 	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
+	CanAccountBecomeClubSupporter query.CanAccountBecomeClubSupporterHandler
+	AccountSupportedClubs         query.AccountSupportedClubsHandler
 
 	SuspendedClubs query.SuspendedClubsHandler
 

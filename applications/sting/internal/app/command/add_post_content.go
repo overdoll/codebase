@@ -29,7 +29,7 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content, true)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to create processed resources from uploads")

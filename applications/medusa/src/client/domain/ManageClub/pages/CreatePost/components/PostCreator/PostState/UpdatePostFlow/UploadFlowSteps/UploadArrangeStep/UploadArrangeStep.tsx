@@ -17,10 +17,6 @@ const Fragment = graphql`
   fragment UploadArrangeStepFragment on Post {
     content {
       id
-      urls {
-        url
-        mimeType
-      }
     }
     ...ArrangeUploadsFragment
     ...ProcessUploadsFragment

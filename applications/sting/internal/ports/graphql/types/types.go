@@ -289,8 +289,10 @@ type Post struct {
 	ID relay.ID `json:"id"`
 	// The reference of this post. Should always be used to reference this post.
 	Reference string `json:"reference"`
-	// The state of the post
+	// The state of the post.
 	State PostState `json:"state"`
+	// The supporter-only status.
+	SupporterOnlyStatus SupporterOnlyStatus `json:"supporterOnlyStatus"`
 	// The moderator to whom this pending post was assigned
 	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
@@ -298,7 +300,7 @@ type Post struct {
 	// The club belonging to the post
 	Club *Club `json:"club"`
 	// Content belonging to this post
-	Content []*Resource `json:"content"`
+	Content []*PostContent `json:"content"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
@@ -325,6 +327,18 @@ func (Post) IsEntity() {}
 type PostConnection struct {
 	Edges    []*PostEdge     `json:"edges"`
 	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+// Represents content for a post.
+type PostContent struct {
+	// The ID of this content.
+	ID relay.ID `json:"id"`
+	// The resource belonging to this content.
+	Resource *Resource `json:"resource"`
+	// Whether or not this content is supporter only.
+	IsSupporterOnly bool `json:"isSupporterOnly"`
+	// Whether or not the viewer is able to see this content.
+	ViewerCanViewSupporterOnlyContent bool `json:"viewerCanViewSupporterOnlyContent"`
 }
 
 type PostEdge struct {
@@ -621,6 +635,22 @@ type UpdatePostCharactersPayload struct {
 
 // Payload for updating a post
 type UpdatePostClubPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post content is supporter only.
+type UpdatePostContentIsSupporterOnlyInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Content IDs to update
+	ContentIds []relay.ID `json:"contentIds"`
+	// The change to make
+	IsSupporterOnly bool `json:"isSupporterOnly"`
+}
+
+// Payload for updating a post
+type UpdatePostContentIsSupporterOnlyPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }
@@ -1115,5 +1145,51 @@ func (e *SeriesSort) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SeriesSort) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SupporterOnlyStatus string
+
+const (
+	// None of the content requires supporting to view.
+	SupporterOnlyStatusNone SupporterOnlyStatus = "NONE"
+	// Some of the content requires supporting to view, at least 1 content piece is free.
+	SupporterOnlyStatusPartial SupporterOnlyStatus = "PARTIAL"
+	// All of the content is supporter-only.
+	SupporterOnlyStatusFull SupporterOnlyStatus = "FULL"
+)
+
+var AllSupporterOnlyStatus = []SupporterOnlyStatus{
+	SupporterOnlyStatusNone,
+	SupporterOnlyStatusPartial,
+	SupporterOnlyStatusFull,
+}
+
+func (e SupporterOnlyStatus) IsValid() bool {
+	switch e {
+	case SupporterOnlyStatusNone, SupporterOnlyStatusPartial, SupporterOnlyStatusFull:
+		return true
+	}
+	return false
+}
+
+func (e SupporterOnlyStatus) String() string {
+	return string(e)
+}
+
+func (e *SupporterOnlyStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SupporterOnlyStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SupporterOnlyStatus", str)
+	}
+	return nil
+}
+
+func (e SupporterOnlyStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -3,6 +3,9 @@ type Rule implements Node @key(fields: "id") {
   """ID of the rule."""
   id: ID!
 
+  """Reference of the rule. Should be used for single lookups."""
+  reference: String!
+
   """The title for this rule."""
   title: String!
 
@@ -34,6 +37,11 @@ type RuleConnection {
   pageInfo: PageInfo!
 }
 type Query {
+  """
+  Get a single rule by reference.
+  """
+  rule(reference: String!): Rule
+
   """
   Get all rules for the site.
   """

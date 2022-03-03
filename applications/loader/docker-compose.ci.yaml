@@ -3,18 +3,20 @@ services:
   loader:
     image: $CONTAINER_REGISTRY/loader/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/loader/internal/image.binary db migrate keyspace && /app/applications/loader/internal/image.binary"
+    command: /bin/sh -c "/app/applications/loader/internal/image.binary db migrate keyspace && /app/applications/loader/internal/image.binary db seed && /app/applications/loader/internal/image.binary"
     env_file: ../../applications/loader/.env.ci
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
-      - "traefik.http.routers.buffer.entrypoints=websecure"
-      - "traefik.http.routers.buffer.tls=true"
+      - "traefik.http.routers.loader.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
+      - "traefik.http.routers.loader.entrypoints=websecure"
+      - "traefik.http.routers.loader.tls=true"
     environment:
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}
       - AWS_ENDPOINT=${AWS_ENDPOINT}
       - AWS_REGION=${AWS_REGION}
+      - AWS_PRIVATE_RESOURCES_KEY_PAIR_ID=${AWS_PRIVATE_RESOURCES_KEY_PAIR_ID}
+      - AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY=${AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY}
     depends_on:
       - traefik
       - temporal

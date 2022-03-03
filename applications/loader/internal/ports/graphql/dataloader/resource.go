@@ -33,7 +33,7 @@ func resourcesByIds(app *app.Application) *dataloader.Loader {
 				resourceIds = append(resourceIds, res[1])
 			}
 
-			res, err := app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
+			res, err := app.Queries.ResourcesByIdsWithUrls.Handle(ctx, query.ResourcesByIdsWithUrls{
 				ItemIds:     itemIds,
 				ResourceIds: resourceIds,
 			})

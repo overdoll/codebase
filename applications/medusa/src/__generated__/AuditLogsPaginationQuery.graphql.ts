@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6edef09883e28b26a1f94f536ba19173>>
- * @relayHash d57209087b582080000187f415693c2d
+ * @generated SignedSource<<c42e203920b06960b69f2d41f620710d>>
+ * @relayHash ed86adcdffd1c376e90e1a3cc7b5d597
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d57209087b582080000187f415693c2d
+// @relayRequestID ed86adcdffd1c376e90e1a3cc7b5d597
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -359,13 +359,25 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
                                 "selections": [
-                                  (v12/*: any*/),
-                                  (v14/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": [
+                                      (v12/*: any*/),
+                                      (v14/*: any*/),
+                                      (v9/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
                                   (v9/*: any*/)
                                 ],
                                 "storageKey": null
@@ -451,7 +463,7 @@ return {
     ]
   },
   "params": {
-    "id": "d57209087b582080000187f415693c2d",
+    "id": "ed86adcdffd1c376e90e1a3cc7b5d597",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

@@ -1,18 +1,16 @@
 package gen
 
 import (
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/ports/graphql/entities"
 )
 
 type Resolver struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewResolver(app *app.Application, client client.Client) *Resolver {
-	return &Resolver{app: app, client: client}
+func NewResolver(app *app.Application) *Resolver {
+	return &Resolver{app: app}
 }
 
 func (r *Resolver) Entity() EntityResolver {

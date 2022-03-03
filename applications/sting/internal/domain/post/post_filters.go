@@ -12,7 +12,9 @@ type Filters struct {
 
 	state State
 
-	suspendedClubIds []string
+	supporterOnlyStatus []SupporterOnlyStatus
+
+	showSuspendedClubs bool
 
 	characterIds []string
 	seriesIds    []string
@@ -20,7 +22,7 @@ type Filters struct {
 	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, clubIds, audienceIds, categoryIds, characterIds, seriesIds, suspendedClubIds []string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string, showSuspendedClubs bool) (*Filters, error) {
 
 	newState := Unknown
 	var err error
@@ -35,6 +37,20 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, cl
 		}
 	}
 
+	var supporterOnlyStatusItem []SupporterOnlyStatus
+
+	for _, s := range supporterOnlyStatus {
+		s := strings.ToLower(s)
+
+		newSuppStatus, err := SupporterOnlyStatusFromString(s)
+
+		if err != nil {
+			return nil, err
+		}
+
+		supporterOnlyStatusItem = append(supporterOnlyStatusItem, newSuppStatus)
+	}
+
 	sorting := UnknownSort
 
 	if sortBy != "" {
@@ -46,16 +62,17 @@ func NewPostFilters(sortBy string, state, moderatorId, contributorId *string, cl
 	}
 
 	return &Filters{
-		sortBy:           sorting,
-		state:            newState,
-		moderatorId:      moderatorId,
-		contributorId:    contributorId,
-		clubIds:          clubIds,
-		audienceIds:      audienceIds,
-		categoryIds:      categoryIds,
-		characterIds:     characterIds,
-		seriesIds:        seriesIds,
-		suspendedClubIds: suspendedClubIds,
+		sortBy:              sorting,
+		state:               newState,
+		moderatorId:         moderatorId,
+		contributorId:       contributorId,
+		clubIds:             clubIds,
+		audienceIds:         audienceIds,
+		categoryIds:         categoryIds,
+		characterIds:        characterIds,
+		seriesIds:           seriesIds,
+		showSuspendedClubs:  showSuspendedClubs,
+		supporterOnlyStatus: supporterOnlyStatusItem,
 	}, nil
 }
 
@@ -75,8 +92,12 @@ func (e *Filters) State() State {
 	return e.state
 }
 
-func (e *Filters) SuspendedClubIds() []string {
-	return e.suspendedClubIds
+func (e *Filters) SupporterOnlyStatus() []SupporterOnlyStatus {
+	return e.supporterOnlyStatus
+}
+
+func (e *Filters) ShowSuspendedClubs() bool {
+	return e.showSuspendedClubs
 }
 
 func (e *Filters) SortBy() Sorting {

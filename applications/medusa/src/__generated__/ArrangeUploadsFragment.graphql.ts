@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db48d61381f1610c742788c42c67185e>>
+ * @generated SignedSource<<b6e3e94463c801bd2d2af2f39403541d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,13 @@ export type ArrangeUploadsFragment$data = {
   readonly id: string;
   readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly urls: ReadonlyArray<{
-      readonly url: string;
-    }>;
-    readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
+    readonly resource: {
+      readonly id: string;
+      readonly urls: ReadonlyArray<{
+        readonly url: string;
+      }>;
+      readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
+    };
   }>;
   readonly " $fragmentType": "ArrangeUploadsFragment";
 };
@@ -45,7 +48,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -54,25 +57,37 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "ResourceUrl",
+          "concreteType": "Resource",
           "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
+          "name": "resource",
+          "plural": false,
           "selections": [
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "url",
+              "concreteType": "ResourceUrl",
+              "kind": "LinkedField",
+              "name": "urls",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "url",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "DraggableContentFragment"
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "DraggableContentFragment"
         }
       ],
       "storageKey": null
@@ -83,6 +98,6 @@ return {
 };
 })();
 
-(node as any).hash = "7e3330519ad1d875dc1b559deb8b1fa8";
+(node as any).hash = "632ee9b9ff26226bf3650dbf3b7821b1";
 
 export default node;

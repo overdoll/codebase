@@ -2,21 +2,12 @@ package mutations
 
 import (
 	"context"
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
-	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
-	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
-
-type MutationResolver struct {
-	App    *app.Application
-	Client client.Client
-}
 
 func (r *MutationResolver) CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error) {
 
@@ -187,7 +178,6 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 	}
 
 	clubId := input.ClubID.GetID()
-	accountId := principal.FromContext(ctx).AccountId()
 
 	clb, err := r.App.Commands.BecomeClubMember.
 		Handle(
@@ -199,15 +189,6 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 		)
 
 	if err != nil {
-		return nil, err
-	}
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddClubMember_" + clubId + "_" + accountId,
-	}
-
-	if _, err = r.Client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, clubId, accountId); err != nil {
 		return nil, err
 	}
 
@@ -223,7 +204,6 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 	}
 
 	clubId := input.ClubID.GetID()
-	accountId := principal.FromContext(ctx).AccountId()
 
 	if err := r.App.Commands.WithdrawClubMembership.
 		Handle(
@@ -233,15 +213,6 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 				ClubId:    clubId,
 			},
 		); err != nil {
-		return nil, err
-	}
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemoveClubMember_" + clubId + "_" + accountId,
-	}
-
-	if _, err := r.Client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, clubId, accountId); err != nil {
 		return nil, err
 	}
 

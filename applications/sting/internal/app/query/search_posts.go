@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -20,7 +19,8 @@ type SearchPosts struct {
 	CharacterSlugs []string
 	SeriesSlugs    []string
 
-	State *string
+	SupporterOnlyStatus []string
+	State               *string
 
 	SortBy string
 
@@ -28,13 +28,12 @@ type SearchPosts struct {
 }
 
 type SearchPostsHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	stella StellaService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr, pi: pi, stella: stella}
+func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr, pi: pi}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
@@ -81,27 +80,18 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		}
 	}
 
-	var suspendedClubIds []string
-
-	if !query.ShowSuspendedClubs {
-		suspendedClubIds, err = h.stella.GetSuspendedClubs(ctx)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	filters, err := post.NewPostFilters(
 		query.SortBy,
 		query.State,
 		query.ModeratorId,
 		query.ContributorId,
+		query.SupporterOnlyStatus,
 		query.ClubIds,
 		audienceIds,
 		categoryIds,
 		characterIds,
 		seriesIds,
-		suspendedClubIds,
+		query.ShowSuspendedClubs,
 	)
 
 	if err != nil {

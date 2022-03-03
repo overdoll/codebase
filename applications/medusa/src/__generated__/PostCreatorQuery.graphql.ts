@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<52943d7a27a74c969161ae316092a211>>
- * @relayHash 681de73c68a865165b675655d8dbc1fc
+ * @generated SignedSource<<e7bff47b2795383c1c6b8a33d64082e2>>
+ * @relayHash f7435e444fd613fbd5d89e1d8653de94
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 681de73c68a865165b675655d8dbc1fc
+// @relayRequestID f7435e444fd613fbd5d89e1d8653de94
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -100,10 +100,17 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "type",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -111,7 +118,7 @@ v7 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v6/*: any*/),
+    (v7/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -122,13 +129,6 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
@@ -137,7 +137,7 @@ v9 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/)
+    (v7/*: any*/)
   ],
   "storageKey": null
 },
@@ -163,8 +163,8 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v6/*: any*/),
     (v8/*: any*/),
-    (v7/*: any*/),
     (v9/*: any*/),
     (v5/*: any*/)
   ],
@@ -255,7 +255,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Resource",
+            "concreteType": "PostContent",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
@@ -263,14 +263,26 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "processed",
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  },
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v8/*: any*/),
+                  (v9/*: any*/)
+                ],
                 "storageKey": null
               },
-              (v5/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
-              (v9/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -366,7 +378,7 @@ return {
     ]
   },
   "params": {
-    "id": "681de73c68a865165b675655d8dbc1fc",
+    "id": "f7435e444fd613fbd5d89e1d8653de94",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

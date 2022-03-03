@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c3b65cbd8ed15e527e006df6b538881>>
+ * @generated SignedSource<<481fba45451797c74a29b48b6d90ffe2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,7 +82,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,

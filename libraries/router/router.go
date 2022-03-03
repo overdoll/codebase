@@ -1,8 +1,8 @@
 package router
 
 import (
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/support"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ func NewRawGinRouter() *gin.Engine {
 
 	router := gin.Default()
 
-	if helpers.IsDebug() {
+	if support.IsDebug() {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)

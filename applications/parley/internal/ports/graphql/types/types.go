@@ -197,6 +197,8 @@ type PostReport struct {
 	Account *Account `json:"account"`
 	// The rule that was cited for this report.
 	Rule *Rule `json:"rule"`
+	// The post linked to this report.
+	Post *Post `json:"post"`
 }
 
 func (PostReport) IsNode()   {}
@@ -296,6 +298,8 @@ type ReportPostPayload struct {
 type Rule struct {
 	// ID of the rule.
 	ID relay.ID `json:"id"`
+	// Reference of the rule. Should be used for single lookups.
+	Reference string `json:"reference"`
 	// The title for this rule.
 	Title string `json:"title"`
 	// All translations for this title.

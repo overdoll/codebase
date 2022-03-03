@@ -217,7 +217,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	updatedClb = getClub(t, client, oldSlug)
 	require.NotNil(t, updatedClb.Club, "can find club using old slug")
 
-	// promote the slug to primary
+	// remove club slug alias
 	var removeClubSlugAlias RemoveClubSlugAlias
 	err = client.Mutate(context.Background(), &removeClubSlugAlias, map[string]interface{}{
 		"input": types.RemoveClubSlugAliasInput{

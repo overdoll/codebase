@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <title>Redirecting...</title>
+    <meta name="overdoll-ccbill-flexforms-payment-flow-token" content="{{ .Token }}">
+</head>
+<script>
+
+  const send = function () {
+    window.opener.postMessage(
+      {
+        payload: { token: "{{ .Token }}" },
+        source: 'overdoll-ccbill-flexforms-payment-flow'
+      },
+      "{{ .Origin }}"
+    )
+  }
+
+  send()
+
+  setTimeout(function () {
+    send()
+  }, 1000)
+
+</script>
+</html>

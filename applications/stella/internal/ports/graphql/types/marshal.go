@@ -10,10 +10,12 @@ import (
 
 func MarshalClubMemberToGraphql(ctx context.Context, result *club2.Member) *ClubMember {
 	return &ClubMember{
-		ID:       relay.NewID(ClubMember{}, result.ClubId(), result.AccountId()),
-		JoinedAt: result.JoinedAt(),
-		Club:     &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Account:  &Account{ID: relay.NewID(Account{}, result.AccountId())},
+		ID:             relay.NewID(ClubMember{}, result.ClubId(), result.AccountId()),
+		JoinedAt:       result.JoinedAt(),
+		Club:           &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Account:        &Account{ID: relay.NewID(Account{}, result.AccountId())},
+		IsSupporter:    result.IsSupporter(),
+		SupporterSince: result.SupporterSince(),
 	}
 }
 

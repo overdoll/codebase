@@ -5,6 +5,13 @@ CREATE TABLE IF NOT EXISTS account_clubs
     primary key ( account_id, club_id )
 );
 
+CREATE TABLE IF NOT EXISTS account_supported_clubs
+(
+    account_id text,
+    club_id    text,
+    primary key ( account_id, club_id )
+);
+
 CREATE TABLE IF NOT EXISTS clubs
 (
     id                    text,
@@ -32,6 +39,8 @@ CREATE TABLE IF NOT EXISTS club_members
     member_account_id text,
     bucket            timeuuid,
     joined_at         timeuuid,
+    is_supporter      boolean,
+    supporter_since   timestamp,
     deleted           boolean,
     primary key ( (club_id, member_account_id) )
 );
@@ -42,6 +51,8 @@ CREATE TABLE IF NOT EXISTS club_members_by_account
     member_account_id text,
     bucket            timeuuid,
     joined_at         timeuuid,
+    is_supporter      boolean,
+    supporter_since   timestamp,
     primary key ( member_account_id, joined_at, club_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC, club_id ASC);
 
@@ -51,6 +62,8 @@ CREATE TABLE IF NOT EXISTS club_members_by_club
     bucket            timeuuid,
     member_account_id text,
     joined_at         timeuuid,
+    is_supporter      boolean,
+    supporter_since   timestamp,
     primary key ( (club_id, bucket), joined_at, member_account_id )
 ) WITH CLUSTERING ORDER BY (joined_at ASC);
 

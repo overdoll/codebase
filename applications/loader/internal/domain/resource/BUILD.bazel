@@ -3,6 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "resource",
     srcs = [
+        "filtered_resource.go",
+        "image_filters.go",
         "move.go",
         "repository.go",
         "resource.go",
@@ -14,7 +16,9 @@ go_library(
     deps = [
         "//libraries/uuid",
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
+        "@com_github_disintegration_gift//:gift",
         "@com_github_h2non_filetype//:filetype",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_tus_tusd//pkg/handler",
         "@com_github_u2takey_ffmpeg_go//:ffmpeg-go",
     ],

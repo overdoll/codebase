@@ -139,7 +139,7 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 	err = client.Mutate(context.Background(), &updateCharacterThumbnail, map[string]interface{}{
 		"input": types.UpdateCharacterThumbnailInput{
 			ID:        character.Id,
-			Thumbnail: "test",
+			Thumbnail: "00be69a89e31d28cf8e79b7373d505c7",
 		},
 	})
 

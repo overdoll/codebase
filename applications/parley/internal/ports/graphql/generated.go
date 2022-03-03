@@ -174,6 +174,7 @@ type ComplexityRoot struct {
 	PostReport struct {
 		Account func(childComplexity int) int
 		ID      func(childComplexity int) int
+		Post    func(childComplexity int) int
 		Rule    func(childComplexity int) int
 	}
 
@@ -189,6 +190,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		PostReports        func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) int
+		Rule               func(childComplexity int, reference string) int
 		Rules              func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
@@ -220,6 +222,7 @@ type ComplexityRoot struct {
 		DescriptionTranslations func(childComplexity int) int
 		ID                      func(childComplexity int) int
 		Infraction              func(childComplexity int) int
+		Reference               func(childComplexity int) int
 		Title                   func(childComplexity int) int
 		TitleTranslations       func(childComplexity int) int
 	}
@@ -306,6 +309,7 @@ type PostReportResolver interface {
 	Rule(ctx context.Context, obj *types.PostReport) (*types.Rule, error)
 }
 type QueryResolver interface {
+	Rule(ctx context.Context, reference string) (*types.Rule, error)
 	Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error)
 	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
 }
@@ -893,6 +897,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostReport.ID(childComplexity), true
 
+	case "PostReport.post":
+		if e.complexity.PostReport.Post == nil {
+			break
+		}
+
+		return e.complexity.PostReport.Post(childComplexity), true
+
 	case "PostReport.rule":
 		if e.complexity.PostReport.Rule == nil {
 			break
@@ -939,6 +950,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.PostReports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange)), true
+
+	case "Query.rule":
+		if e.complexity.Query.Rule == nil {
+			break
+		}
+
+		args, err := ec.field_Query_rule_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Rule(childComplexity, args["reference"].(string)), true
 
 	case "Query.rules":
 		if e.complexity.Query.Rules == nil {
@@ -1040,6 +1063,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Rule.Infraction(childComplexity), true
+
+	case "Rule.reference":
+		if e.complexity.Rule.Reference == nil {
+			break
+		}
+
+		return e.complexity.Rule.Reference(childComplexity), true
 
 	case "Rule.title":
 		if e.complexity.Rule.Title == nil {
@@ -1533,6 +1563,9 @@ type PostReport implements Node @key(fields: "id") {
 
   """The rule that was cited for this report."""
   rule: Rule! @goField(forceResolver: true)
+
+  """The post linked to this report."""
+  post: Post!
 }
 
 """Edge of the post report"""
@@ -1621,6 +1654,9 @@ type Rule implements Node @key(fields: "id") {
   """ID of the rule."""
   id: ID!
 
+  """Reference of the rule. Should be used for single lookups."""
+  reference: String!
+
   """The title for this rule."""
   title: String!
 
@@ -1652,6 +1688,11 @@ type RuleConnection {
   pageInfo: PageInfo!
 }
 type Query {
+  """
+  Get a single rule by reference.
+  """
+  rule(reference: String!): Rule
+
   """
   Get all rules for the site.
   """
@@ -1846,8 +1887,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
-directive @extends on OBJECT | INTERFACE
+directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -2463,6 +2504,21 @@ func (ec *executionContext) field_Query_postReports_args(ctx context.Context, ra
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_rule_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_rules_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2511,6 +2567,21 @@ func (ec *executionContext) field_Query_rules_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["deprecated"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *bool
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["includeDeprecated"] = arg0
 	return args, nil
 }
 
@@ -4926,6 +4997,41 @@ func (ec *executionContext) _PostReport_rule(ctx context.Context, field graphql.
 	return ec.marshalNRule2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRule(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PostReport_post(ctx context.Context, field graphql.CollectedField, obj *types.PostReport) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostReport",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PostReportConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostReportConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5064,6 +5170,45 @@ func (ec *executionContext) _PostReportEdge_cursor(ctx context.Context, field gr
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_rule(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_rule_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Rule(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Rule)
+	fc.Result = res
+	return ec.marshalORule2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRule(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_rules(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5494,6 +5639,41 @@ func (ec *executionContext) _Rule_id(ctx context.Context, field graphql.Collecte
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Rule_reference(ctx context.Context, field graphql.CollectedField, obj *types.Rule) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Rule",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Rule_title(ctx context.Context, field graphql.CollectedField, obj *types.Rule) (ret graphql.Marshaler) {
@@ -6465,6 +6645,13 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field___Field_args_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -8950,6 +9137,16 @@ func (ec *executionContext) _PostReport(ctx context.Context, sel ast.SelectionSe
 				return innerFunc(ctx)
 
 			})
+		case "post":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostReport_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9062,6 +9259,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "rule":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_rule(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "rules":
 			field := field
 
@@ -9335,6 +9552,16 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Rule_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reference":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Rule_reference(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -10732,7 +10959,11 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -10884,7 +11115,11 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -11098,8 +11333,7 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	res := graphql.MarshalBoolean(v)
-	return res
+	return graphql.MarshalBoolean(v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -11114,8 +11348,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalBoolean(*v)
-	return res
+	return graphql.MarshalBoolean(*v)
 }
 
 func (ec *executionContext) marshalOClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistory) graphql.Marshaler {
@@ -11144,8 +11377,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalInt(*v)
-	return res
+	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) marshalOIssueClubInfractionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionPayload(ctx context.Context, sel ast.SelectionSet, v *types.IssueClubInfractionPayload) graphql.Marshaler {
@@ -11217,8 +11449,7 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
-	return res
+	return graphql.MarshalString(v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
@@ -11233,8 +11464,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(*v)
-	return res
+	return graphql.MarshalString(*v)
 }
 
 func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
@@ -11249,8 +11479,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalTime(*v)
-	return res
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUpdateRuleDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateRuleDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateRuleDeprecatedPayload) graphql.Marshaler {

@@ -26,6 +26,8 @@ type Post struct {
 
 	state State
 
+	supporterOnlyStatus SupporterOnlyStatus
+
 	moderatorId   *string
 	contributorId string
 
@@ -37,10 +39,11 @@ type Post struct {
 	seriesIds    []string
 	categoryIds  []string
 
-	contentResourceIds []string
-	createdAt          time.Time
-	postedAt           *time.Time
-	reassignmentAt     *time.Time
+	content []Content
+
+	createdAt      time.Time
+	postedAt       *time.Time
+	reassignmentAt *time.Time
 
 	likes int
 }
@@ -53,33 +56,57 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}
 
 	return &Post{
-		id:            id.String(),
-		clubId:        clubId,
-		state:         Draft,
-		contributorId: requester.AccountId(),
-		createdAt:     time.Now(),
+		id:                  id.String(),
+		clubId:              clubId,
+		state:               Draft,
+		supporterOnlyStatus: None,
+		contributorId:       requester.AccountId(),
+		createdAt:           time.Now(),
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state string, likes int, moderatorId *string, contributorId string, contentIds []string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
+	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
+
+	requesterIsSupporter := false
+
+	for _, requesterClubId := range supportedClubIds {
+		if clubId == requesterClubId {
+			requesterIsSupporter = true
+			break
+		}
+	}
+
+	var content []Content
+
+	for _, resourceId := range contentResourceIds {
+		content = append(content, Content{
+			resourceId:           resourceId,
+			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
+			isSupporterOnly:      contentSupporterOnly[resourceId],
+			canViewSupporterOnly: requesterIsSupporter,
+			requester:            requester,
+		})
+	}
 
 	return &Post{
-		id:                 id,
-		moderatorId:        moderatorId,
-		state:              ps,
-		clubId:             clubId,
-		likes:              likes,
-		audienceId:         audienceId,
-		contributorId:      contributorId,
-		contentResourceIds: contentIds,
-		characterIds:       characterIds,
-		seriesIds:          seriesIds,
-		categoryIds:        categoryIds,
-		createdAt:          createdAt,
-		postedAt:           postedAt,
-		reassignmentAt:     reassignmentAt,
+		id:                  id,
+		moderatorId:         moderatorId,
+		state:               ps,
+		supporterOnlyStatus: so,
+		clubId:              clubId,
+		likes:               likes,
+		audienceId:          audienceId,
+		contributorId:       contributorId,
+		content:             content,
+		characterIds:        characterIds,
+		seriesIds:           seriesIds,
+		categoryIds:         categoryIds,
+		createdAt:           createdAt,
+		postedAt:            postedAt,
+		reassignmentAt:      reassignmentAt,
 	}
 }
 
@@ -111,8 +138,26 @@ func (p *Post) State() State {
 	return p.state
 }
 
-func (p *Post) ContentResourceIds() []string {
-	return p.contentResourceIds
+func (p *Post) SupporterOnlyStatus() SupporterOnlyStatus {
+	return p.supporterOnlyStatus
+}
+
+func (p *Post) Content() []Content {
+	return p.content
+}
+
+func (p *Post) AllContentResourceIds() []string {
+	var resourceIdsToDelete []string
+	var resourceIds2ToDelete []string
+
+	for _, cnt := range p.Content() {
+		resourceIdsToDelete = append(resourceIdsToDelete, cnt.ResourceId())
+		if cnt.ResourceIdHidden() != "" {
+			resourceIds2ToDelete = append(resourceIds2ToDelete, cnt.ResourceIdHidden())
+		}
+	}
+
+	return append(resourceIdsToDelete, resourceIds2ToDelete...)
 }
 
 func (p *Post) UpdateModerator(moderatorId string) error {
@@ -194,7 +239,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.contentResourceIds = []string{}
+	p.content = []Content{}
 
 	return nil
 }
@@ -221,7 +266,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.contentResourceIds = []string{}
+	p.content = []Content{}
 
 	return nil
 }
@@ -318,13 +363,43 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	return nil
 }
 
+func (p *Post) updatePostSupporterOnlyStatus() {
+
+	var supporterOnlyContent []string
+
+	for _, c := range p.content {
+		if c.isSupporterOnly {
+			supporterOnlyContent = append(supporterOnlyContent, c.resourceId)
+		}
+	}
+
+	if len(supporterOnlyContent) == 0 {
+		p.supporterOnlyStatus = None
+	} else if len(supporterOnlyContent) == len(p.content) {
+		p.supporterOnlyStatus = Full
+	} else {
+		p.supporterOnlyStatus = Partial
+	}
+}
+
 func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
-	p.contentResourceIds = append(p.contentResourceIds, contentIds...)
+	var newContent []Content
+
+	for _, contentId := range contentIds {
+		newContent = append(newContent, Content{
+			resourceId:       contentId,
+			resourceIdHidden: "",
+			isSupporterOnly:  false,
+		})
+	}
+
+	p.content = append(p.content, newContent...)
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 
@@ -334,17 +409,20 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		return err
 	}
 
-	if len(contentIds) != len(p.contentResourceIds) {
+	if len(contentIds) != len(p.content) {
 		return errors.New("missing resources")
 	}
 
-	for _, currentContent := range p.contentResourceIds {
+	var reorderedContent []Content
+
+	for _, newContent := range contentIds {
 
 		foundContent := false
 
-		for _, newContent := range contentIds {
-			if currentContent == newContent {
+		for _, currentContent := range p.content {
+			if currentContent.resourceId == newContent {
 				foundContent = true
+				reorderedContent = append(reorderedContent, currentContent)
 				break
 			}
 		}
@@ -354,7 +432,40 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		}
 	}
 
-	p.contentResourceIds = contentIds
+	p.content = reorderedContent
+
+	return nil
+}
+
+func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	var actualContent []Content
+
+	for _, content := range p.content {
+
+		foundContent := false
+
+		for _, updatedContent := range contentIds {
+			if updatedContent == content.resourceId {
+				foundContent = true
+				continue
+			}
+		}
+
+		if !foundContent {
+			actualContent = append(actualContent, content)
+		} else {
+			content.isSupporterOnly = supporterOnly
+			actualContent = append(actualContent, content)
+		}
+	}
+
+	p.content = actualContent
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 
@@ -364,14 +475,14 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		return err
 	}
 
-	var actualContent []string
+	var actualContent []Content
 
-	for _, content := range p.contentResourceIds {
+	for _, content := range p.content {
 
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content {
+			if removedContent == content.resourceId {
 				foundContent = true
 				continue
 			}
@@ -382,7 +493,8 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		}
 	}
 
-	p.contentResourceIds = actualContent
+	p.content = actualContent
+	p.updatePostSupporterOnlyStatus()
 	return nil
 }
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"overdoll/applications/sting/internal/app/query"
 	"strconv"
 	"time"
 
@@ -17,20 +18,23 @@ import (
 )
 
 type postDocument struct {
-	Id                 string   `json:"id"`
-	State              string   `json:"state"`
-	Likes              int      `json:"likes"`
-	ModeratorId        string   `json:"moderator_id"`
-	ContributorId      string   `json:"contributor_id"`
-	ClubId             string   `json:"club_id"`
-	ContentResourceIds []string `json:"content_resource_ids"`
-	AudienceId         string   `json:"audience_id"`
-	CategoryIds        []string `json:"category_ids"`
-	CharacterIds       []string `json:"character_ids"`
-	SeriesIds          []string `json:"series_ids"`
-	CreatedAt          string   `json:"created_at"`
-	PostedAt           string   `json:"posted_at"`
-	ReassignmentAt     string   `json:"reassignment_at"`
+	Id                              string            `json:"id"`
+	State                           string            `json:"state"`
+	SupporterOnlyStatus             string            `json:"supporter_only_status"`
+	ContentResourceIds              []string          `json:"content_resource_ids"`
+	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
+	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
+	Likes                           int               `json:"likes"`
+	ModeratorId                     string            `json:"moderator_id"`
+	ContributorId                   string            `json:"contributor_id"`
+	ClubId                          string            `json:"club_id"`
+	AudienceId                      string            `json:"audience_id"`
+	CategoryIds                     []string          `json:"category_ids"`
+	CharacterIds                    []string          `json:"character_ids"`
+	SeriesIds                       []string          `json:"series_ids"`
+	CreatedAt                       string            `json:"created_at"`
+	PostedAt                        string            `json:"posted_at"`
+	ReassignmentAt                  string            `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -42,6 +46,9 @@ const postIndex = `
 					"type": "keyword"
 				},
 				"state": {
+					"type": "keyword"
+				},
+				"supporter_only_status": {
 					"type": "keyword"
 				},
 				"likes": {
@@ -71,6 +78,14 @@ const postIndex = `
 				"content_resource_ids": {
                      "type": "keyword"
 				},
+				"content_supporter_only": {
+                     "type": "object",
+					 "dynamic": true
+				},
+				"content_supporter_only_resource_ids": {
+                     "type": "object",
+					 "dynamic": true
+				},
 				"created_at": {
                      "type": "date"
 				},			
@@ -90,13 +105,14 @@ const PostIndexName = "posts"
 type PostsIndexElasticSearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
+	stella  query.StellaService
 }
 
-func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PostsIndexElasticSearchRepository {
-	return PostsIndexElasticSearchRepository{client: client, session: session}
+func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session, stella query.StellaService) PostsIndexElasticSearchRepository {
+	return PostsIndexElasticSearchRepository{client: client, session: session, stella: stella}
 }
 
-func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principal, supportedClubIds []string) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -148,10 +164,13 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 	createdPost := post.UnmarshalPostFromDatabase(
 		pst.Id,
 		pst.State,
+		pst.SupporterOnlyStatus,
 		pst.Likes,
 		&pst.ModeratorId,
 		pst.ContributorId,
 		pst.ContentResourceIds,
+		pst.ContentSupporterOnly,
+		pst.ContentSupporterOnlyResourceIds,
 		pst.ClubId,
 		audience,
 		pst.CharacterIds,
@@ -160,6 +179,8 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		time.Unix(createdAt, 0),
 		postedAtTime,
 		reassignmentAtTime,
+		requester,
+		supportedClubIds,
 	)
 
 	createdPost.Node = paging.NewNode(hit.Sort)
@@ -197,21 +218,36 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		audience = *pst.AudienceId()
 	}
 
+	var contentResourceIds []string
+	contentSupporterOnly := make(map[string]bool)
+	contentSupporterOnlyResourceIds := make(map[string]string)
+
+	for _, cont := range pst.Content() {
+		contentResourceIds = append(contentResourceIds, cont.ResourceId())
+		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() {
+			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+		}
+	}
+
 	return &postDocument{
-		Id:                 pst.ID(),
-		Likes:              pst.Likes(),
-		State:              pst.State().String(),
-		AudienceId:         audience,
-		ClubId:             pst.ClubId(),
-		ModeratorId:        moderatorId,
-		ContributorId:      pst.ContributorId(),
-		ContentResourceIds: pst.ContentResourceIds(),
-		CategoryIds:        pst.CategoryIds(),
-		CharacterIds:       pst.CharacterIds(),
-		SeriesIds:          pst.SeriesIds(),
-		CreatedAt:          strconv.FormatInt(pst.CreatedAt().Unix(), 10),
-		PostedAt:           postedAt,
-		ReassignmentAt:     reassignmentAt,
+		Id:                              pst.ID(),
+		Likes:                           pst.Likes(),
+		SupporterOnlyStatus:             pst.SupporterOnlyStatus().String(),
+		State:                           pst.State().String(),
+		AudienceId:                      audience,
+		ClubId:                          pst.ClubId(),
+		ModeratorId:                     moderatorId,
+		ContributorId:                   pst.ContributorId(),
+		ContentResourceIds:              contentResourceIds,
+		ContentSupporterOnly:            contentSupporterOnly,
+		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
+		CategoryIds:                     pst.CategoryIds(),
+		CharacterIds:                    pst.CharacterIds(),
+		SeriesIds:                       pst.SeriesIds(),
+		CreatedAt:                       strconv.FormatInt(pst.CreatedAt().Unix(), 10),
+		PostedAt:                        postedAt,
+		ReassignmentAt:                  reassignmentAt,
 	}, nil
 }
 
@@ -399,6 +435,76 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx 
 	return int(count), nil
 }
 
+func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
+
+	if cursor == nil {
+		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
+		return nil, err
+	}
+
+	clubMembershipIds, err := r.stella.GetClubMembershipsForAccount(ctx, requester.AccountId())
+	if err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		Must(elastic.NewTermsQueryFromStrings("club_id", clubMembershipIds...)).
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)),
+	)
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String(), post.Full.String()))
+
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to search posts: %v", err)
+	}
+
+	var supportedClubIds []string
+
+	if requester != nil {
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts, nil
+}
+
 func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
@@ -429,6 +535,14 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		Modifier("none")
 
 	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
+	query.Add(elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()), postedTimeFunc)
+
+	suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	query.Add(elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)), postedTimeFunc)
 
 	if len(filter.AudienceIds()) > 0 {
 		query.Add(
@@ -450,11 +564,27 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
+	var supportedClubIds []string
+
+	if requester != nil {
+
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -501,12 +631,25 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	var filterQueries []elastic.Query
 
-	if len(filter.SuspendedClubIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...)))
+	if !filter.ShowSuspendedClubs() {
+		suspendedClubs, err := r.stella.GetSuspendedClubs(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubs...)))
 	}
 
 	if filter.State() != post.Unknown {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
+	}
+
+	if len(filter.SupporterOnlyStatus()) > 0 {
+		var supporterStatus []string
+		for _, status := range filter.SupporterOnlyStatus() {
+			supporterStatus = append(supporterStatus, status.String())
+		}
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", supporterStatus...))
 	}
 
 	if filter.ModeratorId() != nil {
@@ -549,11 +692,23 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
+	var supportedClubIds []string
+
+	if requester != nil {
+
+		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := unmarshalPostDocument(hit, requester, supportedClubIds)
 
 		if err != nil {
 			return nil, err
@@ -575,7 +730,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 		},
 	)
 
-	rep := NewPostsCassandraRepository(r.session)
+	rep := NewPostsCassandraRepository(r.session, r.stella)
 
 	err := scanner.RunIterator(ctx, postTable, func(iter *gocqlx.Iterx) error {
 

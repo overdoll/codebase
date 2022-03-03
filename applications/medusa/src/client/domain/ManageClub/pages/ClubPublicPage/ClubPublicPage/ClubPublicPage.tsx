@@ -45,7 +45,9 @@ const Query = graphql`
         edges {
           node {
             content {
-              ...ResourceItemFragment
+              resource {
+                ...ResourceItemFragment
+              }
             }
           }
         }
@@ -137,7 +139,10 @@ export default function ClubPublicPage (props: Props): JSX.Element {
       <Stack spacing={2}>
         <Box h={140}>
           <TileOverlay
-            backdrop={<ResourceItem query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0] ?? null} />}
+            backdrop={(
+              <ResourceItem
+                query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
+              />)}
           >
             <LargeClubHeader query={queryData?.club} />
           </TileOverlay>

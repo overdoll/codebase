@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69f94a57716f474e269d8118cfe52d64>>
- * @relayHash ac3652c6ab1c23d2412264810c504b4b
+ * @generated SignedSource<<3ad40b777ed15779240f3757d5b95000>>
+ * @relayHash 072af9a58d567ae70cc7ee27a4b97c89
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ac3652c6ab1c23d2412264810c504b4b
+// @relayRequestID 072af9a58d567ae70cc7ee27a4b97c89
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -247,11 +247,23 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
-                                "selections": (v7/*: any*/),
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": (v7/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v4/*: any*/)
+                                ],
                                 "storageKey": null
                               },
                               (v4/*: any*/)
@@ -320,7 +332,7 @@ return {
     ]
   },
   "params": {
-    "id": "ac3652c6ab1c23d2412264810c504b4b",
+    "id": "072af9a58d567ae70cc7ee27a4b97c89",
     "metadata": {},
     "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",

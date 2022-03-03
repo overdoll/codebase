@@ -16,7 +16,6 @@ func NewLocationMaxmindRepository(reader *geoip2.Reader) LocationMaxmindReposito
 }
 
 func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip string) (*location.Location, error) {
-
 	record, err := r.reader.City(net.ParseIP(ip))
 
 	if err != nil {
@@ -30,18 +29,18 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 	}
 
 	city := record.City.Names["en"]
-	country := record.Country.Names["en"]
+	country := record.Country.IsoCode
 
 	if subdivision == "" {
-		subdivision = "Unknown"
+		subdivision = ""
 	}
 
 	if city == "" {
-		city = "Unknown"
+		city = ""
 	}
 
 	if country == "" {
-		country = "Unknown"
+		country = ""
 	}
 
 	return location.UnmarshalLocationFromDatabase(

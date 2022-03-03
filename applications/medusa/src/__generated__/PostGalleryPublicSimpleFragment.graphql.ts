@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ef23826821554829f666b1fae7f6389d>>
+ * @generated SignedSource<<f9d5085669193c85ea298bc97cc47c1d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,10 @@ export type PostGalleryPublicSimpleFragment$data = {
   readonly id: string;
   readonly reference: string;
   readonly content: ReadonlyArray<{
-    readonly type: ResourceType;
-    readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+    readonly resource: {
+      readonly type: ResourceType;
+      readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+    };
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
@@ -50,7 +52,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -58,19 +60,30 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "type",
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ImageSnippetFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ControlledVideoFragment"
+            }
+          ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ImageSnippetFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ControlledVideoFragment"
         }
       ],
       "storageKey": null
@@ -90,6 +103,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ae9654200c536b806e42fdbbac504807";
+(node as any).hash = "78ce8daf77922ef44d5fface4768babd";
 
 export default node;

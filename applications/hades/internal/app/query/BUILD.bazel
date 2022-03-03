@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "query",
+    srcs = [
+        "account_club_supporter_subscriptions.go",
+        "account_saved_payment_methods.go",
+        "account_transaction_history.go",
+        "cancellation_reason_by_id.go",
+        "cancellation_reasons.go",
+        "ccbill_subscription_details.go",
+        "ccbill_transaction_details.go",
+        "club_supporter_pricing.go",
+        "club_supporter_subscription_finalized.go",
+        "principal_by_id.go",
+        "services.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/app/query",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/cancellation",
+        "//applications/hades/internal/domain/ccbill",
+        "//libraries/location",
+        "//libraries/paging",
+        "//libraries/passport",
+        "//libraries/principal",
+    ],
+)

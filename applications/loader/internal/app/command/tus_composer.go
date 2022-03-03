@@ -8,16 +8,16 @@ import (
 )
 
 type TusComposerHandler struct {
-	fr resource.FileRepository
+	rr resource.Repository
 }
 
-func NewTusComposerHandler(fr resource.FileRepository) TusComposerHandler {
-	return TusComposerHandler{fr: fr}
+func NewTusComposerHandler(rr resource.Repository) TusComposerHandler {
+	return TusComposerHandler{rr: rr}
 }
 
 func (h TusComposerHandler) Handle(ctx context.Context) (*tusd.StoreComposer, error) {
 
-	composer, err := h.fr.GetComposer(ctx)
+	composer, err := h.rr.GetComposer(ctx)
 
 	if err != nil {
 		return nil, err

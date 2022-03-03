@@ -5,6 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -60,4 +61,22 @@ func (r QueryResolver) Rules(ctx context.Context, after *string, before *string,
 	}
 
 	return types.MarshalRuleToGraphQLConnection(ctx, results, cursor), nil
+}
+
+func (r QueryResolver) Rule(ctx context.Context, reference string) (*types.Rule, error) {
+
+	result, err := r.App.Queries.RuleById.Handle(ctx, query.RuleById{
+		RuleId: reference,
+	})
+
+	if err != nil {
+
+		if err == rule.ErrRuleNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalRuleToGraphQL(ctx, result), nil
 }

@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/app"
@@ -25,38 +27,43 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewLoaderGrpc(loaderClient),
-		),
+			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
 
 	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+
+	temporalClient := &mocks.Client{}
 
 	return createApplication(ctx,
 			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			LoaderServiceMock{},
+			temporalClient,
 		),
 		func() {
 			cleanup()
-		}
+		},
+		temporalClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
-	client := bootstrap.InitializeElasticSearchSession()
+	esClient := bootstrap.InitializeElasticSearchSession()
 
 	clubRepo := adapters.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(client, session)
+	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(esClient, session)
+	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -66,17 +73,21 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
 			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
 			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
-			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo),
-			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo),
+			BecomeClubMember:              command.NewBecomeClubMemberHandler(clubRepo, eventRepo),
+			WithdrawClubMembership:        command.NewWithdrawClubMembershipHandler(clubRepo, eventRepo),
 			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, clubIndexRepo, loader),
 			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, clubIndexRepo),
 			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, clubIndexRepo),
 			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, clubIndexRepo),
+			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
+			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                  query.NewPrincipalByIdHandler(eva),
+			AccountSupportedClubs:          query.NewAccountSupportedClubsHandler(clubRepo),
 			CanAccountCreatePostUnderClub:  query.NewCanAccountCreatePostUnderClubHandler(clubRepo),
 			CanAccountViewPostUnderClub:    query.NewCanAccountViewPostUnderClubHandler(clubRepo, eva),
+			CanAccountBecomeClubSupporter:  query.NewCanAccountBecomeClubSupporterHandler(clubRepo, eva),
 			ClubsByIds:                     query.NewClubsByIdsHandler(clubRepo),
 			SearchClubs:                    query.NewSearchClubsHandler(clubIndexRepo),
 			SuspendedClubs:                 query.NewSuspendedClubsHandler(clubIndexRepo),

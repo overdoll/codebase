@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b3785998eeb4178ea96bb6f293139a66>>
- * @relayHash 8fdb9c54a809897cab71fd63c68a2475
+ * @generated SignedSource<<a4097b66128dcb777e6aad77361232ba>>
+ * @relayHash 6683ace9cf8ce99ba60d0b266ccad721
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8fdb9c54a809897cab71fd63c68a2475
+// @relayRequestID 6683ace9cf8ce99ba60d0b266ccad721
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -273,13 +273,25 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
+                            "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v7/*: any*/),
-                              (v9/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "resource",
+                                "plural": false,
+                                "selections": [
+                                  (v7/*: any*/),
+                                  (v9/*: any*/),
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -410,7 +422,7 @@ return {
     ]
   },
   "params": {
-    "id": "8fdb9c54a809897cab71fd63c68a2475",
+    "id": "6683ace9cf8ce99ba60d0b266ccad721",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

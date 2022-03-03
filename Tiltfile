@@ -141,6 +141,27 @@ applications = {
             sync("applications/loader/database", "/app/applications/loader/internal/local-image.binary.runfiles/overdoll/applications/loader/database"),
         ],
     },
+    "hades": {
+        "type": "go",
+        "directory": "hades",
+        "image_reference": "hades-image",
+        "image_target": "//applications/hades/internal:local-image",
+        "binary_target": "//applications/hades/internal:internal",
+        "binary_output": "applications/hades/internal/internal_/internal",
+        "container_workdir": "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/hades/internal/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/hades/internal:local-image",
+        "dependencies": [
+            "applications/hades/.env",
+            "applications/hades/config.toml",
+            "applications/hades/database",
+        ],
+        "live_update": [
+            sync("applications/hades/.env", "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/applications/hades/.env"),
+            sync("applications/hades/config.toml", "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/applications/hades/config.toml"),
+            sync("applications/hades/database", "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/applications/hades/database"),
+        ],
+    },
 }
 
 # Build applications with our helper function

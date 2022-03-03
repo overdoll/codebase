@@ -112,6 +112,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searchSeries.Series.Edges, 1, "found 1 result")
 	require.Equal(t, fake.Title, searchSeries.Series.Edges[0].Node.Title, "found the correct result")
+	require.Equal(t, currentSeriesSlug, searchSeries.Series.Edges[0].Node.Slug, "slug is set properly")
 
 	fake = TestSeries{}
 	err = faker.FakeData(&fake)
@@ -134,7 +135,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
 		"input": types.UpdateSeriesThumbnailInput{
 			ID:        series.Id,
-			Thumbnail: "test",
+			Thumbnail: "04ba807328b59c911a8a37f80447e16a",
 		},
 	})
 

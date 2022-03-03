@@ -38,6 +38,8 @@ cypress.json
 .garden
 tilt_options.json
 
+development/local-files
+
 yarn-error.log
 error.log
 telepresence.log

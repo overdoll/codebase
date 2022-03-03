@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "helpers",
+    srcs = [
+        "debug.go",
+        "gin.go",
+    ],
+    importpath = "overdoll/libraries/helpers",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_gin_gonic_gin//:gin"],
+)
+
+go_library(
+    name = "support",
+    srcs = [
+        "debug.go",
+        "gin.go",
+        "ip.go",
+        "rsa.go",
+    ],
+    importpath = "overdoll/libraries/support",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_gin_gonic_gin//:gin"],
+)

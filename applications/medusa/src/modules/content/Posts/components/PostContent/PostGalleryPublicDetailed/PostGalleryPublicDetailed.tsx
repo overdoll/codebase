@@ -18,9 +18,11 @@ const Fragment = graphql`
     id
     reference
     content {
-      type
-      ...ImageSnippetFragment
-      ...ControlledVideoFragment
+      resource {
+        type
+        ...ImageSnippetFragment
+        ...ControlledVideoFragment
+      }
     }
   }
 `
@@ -56,9 +58,9 @@ export default function PostGalleryPublicDetailed ({
             key={index}
           >
             <Flex h='100%' align='center' justify='center'>
-              {item.type === 'IMAGE' &&
-                <ImageSnippet query={item} />}
-              {item.type === 'VIDEO' &&
+              {item.resource.type === 'IMAGE' &&
+                <ImageSnippet query={item.resource} />}
+              {item.resource.type === 'VIDEO' &&
                 <ControlledVideo
                   controls={{
                     canSeek: true,
@@ -71,7 +73,7 @@ export default function PostGalleryPublicDetailed ({
                   isMuted={videoMuted}
                   onMute={changeVideoMuted}
                   onVolumeChange={changeVideoVolume}
-                  query={item}
+                  query={item.resource}
                 />}
             </Flex>
           </SwiperSlide>)}

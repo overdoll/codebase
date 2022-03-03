@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/segmentio/ksuid"
+	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
 
@@ -29,8 +30,12 @@ import (
 	"overdoll/libraries/testing_tools"
 )
 
-const StingHttpAddr = ":6666"
-const StingGraphqlClientAddr = "http://:6666/api/graphql"
+var (
+	temporalClientMock *mocks.Client
+)
+
+const StingHttpAddr = ":4564"
+const StingGraphqlClientAddr = "http://:4564/api/graphql"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
@@ -96,12 +101,12 @@ func newFakeAccount(t *testing.T) string {
 func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
 
-	adapter := adapters.NewPostsCassandraRepository(session)
+	adapter := adapters.NewPostsCassandraRepository(session, service.StellaServiceMock{})
 	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
 	es := bootstrap.InitializeElasticSearchSession()
-	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session)
+	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session, service.StellaServiceMock{})
 	err = adapterEs.IndexPost(context.Background(), pst)
 	require.NoError(t, err)
 
@@ -156,7 +161,7 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _ := service.NewComponentTestApplication(context.Background())
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(newApp.Activities)
 
 	return env
@@ -165,11 +170,11 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 func startService() bool {
 	config.Read("applications/sting")
 
-	application, _ := service.NewComponentTestApplication(context.Background())
+	application, _, newTClient := service.NewComponentTestApplication(context.Background())
 
-	client := clients.NewTemporalClient(context.Background())
+	temporalClientMock = newTClient
 
-	srv := ports.NewHttpServer(&application, client)
+	srv := ports.NewHttpServer(&application)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
@@ -179,7 +184,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application, client)
+	s := ports.NewGrpcServer(&application)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)

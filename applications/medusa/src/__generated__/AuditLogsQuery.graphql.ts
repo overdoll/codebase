@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<21b3db72fd13f66a458b55a41701aa36>>
- * @relayHash 7f32dbd6d93a60c8c8e88398ed09f5e3
+ * @generated SignedSource<<124a869a2f699b5f28a92a867ec01406>>
+ * @relayHash e4facdac7df23a1ca3073d9f47deb698
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f32dbd6d93a60c8c8e88398ed09f5e3
+// @relayRequestID e4facdac7df23a1ca3073d9f47deb698
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -302,13 +302,25 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
+                            "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v4/*: any*/),
-                              (v6/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "resource",
+                                "plural": false,
+                                "selections": [
+                                  (v4/*: any*/),
+                                  (v6/*: any*/),
+                                  (v3/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v3/*: any*/)
                             ],
                             "storageKey": null
@@ -397,7 +409,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f32dbd6d93a60c8c8e88398ed09f5e3",
+    "id": "e4facdac7df23a1ca3073d9f47deb698",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

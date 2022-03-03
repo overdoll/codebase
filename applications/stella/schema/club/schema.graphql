@@ -104,6 +104,12 @@ type ClubMember implements Node @key(fields: "id") {
 
   """The account that belongs to this membership."""
   account: Account!
+
+  """Whether or not this member is a supporter."""
+  isSupporter: Boolean!
+
+  """If is a supporter, when they became a supporter."""
+  supporterSince: Time
 }
 
 """Add alias slug."""

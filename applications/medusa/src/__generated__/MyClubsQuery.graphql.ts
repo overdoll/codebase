@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<eebc1758fe22d47fd92fc082682a8418>>
- * @relayHash 2f3348e3a9defee4afbd7e9cd554f940
+ * @generated SignedSource<<50cf9e8bc395ca5195ec473f9108faea>>
+ * @relayHash 465929aa214f0b83da4674d4737550dc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2f3348e3a9defee4afbd7e9cd554f940
+// @relayRequestID 465929aa214f0b83da4674d4737550dc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -311,11 +311,23 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
-                                "selections": (v12/*: any*/),
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": (v12/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v4/*: any*/)
+                                ],
                                 "storageKey": null
                               },
                               (v4/*: any*/)
@@ -397,13 +409,25 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v9/*: any*/),
-                          (v11/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              (v9/*: any*/),
+                              (v11/*: any*/),
+                              (v4/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v4/*: any*/)
                         ],
                         "storageKey": null
@@ -518,7 +542,7 @@ return {
     ]
   },
   "params": {
-    "id": "2f3348e3a9defee4afbd7e9cd554f940",
+    "id": "465929aa214f0b83da4674d4737550dc",
     "metadata": {},
     "name": "MyClubsQuery",
     "operationKind": "query",

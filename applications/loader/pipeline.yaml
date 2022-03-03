@@ -22,7 +22,7 @@ steps:
       - name: loader.integration
         paths:
           - ./applications/loader/internal/adapters/**/coverage.dat
-      - name: stella.component
+      - name: loader.component
         paths:
           - ./applications/loader/internal/service/**/coverage.dat
     setup:

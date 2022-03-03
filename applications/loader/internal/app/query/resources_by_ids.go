@@ -5,22 +5,22 @@ import (
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
-type ResourcesByIds struct {
+type ResourcesByIdsWithUrls struct {
 	ItemIds     []string
 	ResourceIds []string
 }
 
-type ResourcesByIdsHandler struct {
+type ResourcesByIdsWithUrlsHandler struct {
 	rr resource.Repository
 }
 
-func NewResourcesByIdsHandler(rr resource.Repository) ResourcesByIdsHandler {
-	return ResourcesByIdsHandler{rr: rr}
+func NewResourcesByIdsWithUrlsHandler(rr resource.Repository) ResourcesByIdsWithUrlsHandler {
+	return ResourcesByIdsWithUrlsHandler{rr: rr}
 }
 
-func (h ResourcesByIdsHandler) Handle(ctx context.Context, query ResourcesByIds) ([]*resource.Resource, error) {
+func (h ResourcesByIdsWithUrlsHandler) Handle(ctx context.Context, query ResourcesByIdsWithUrls) ([]*resource.Resource, error) {
 
-	result, err := h.rr.GetResourcesByIds(ctx, query.ItemIds, query.ResourceIds)
+	result, err := h.rr.GetResourcesByIdsWithUrls(ctx, query.ItemIds, query.ResourceIds)
 
 	if err != nil {
 		return nil, err

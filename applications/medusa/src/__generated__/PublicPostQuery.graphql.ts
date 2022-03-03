@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<403651730bd7691cd1a5ca52f204d574>>
- * @relayHash f509f5ae0bf76c877660e805b5a79390
+ * @generated SignedSource<<6069eaf968646086115848f71b86818e>>
+ * @relayHash 7af40d6ea4072d07a5898931b4d3596b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f509f5ae0bf76c877660e805b5a79390
+// @relayRequestID 7af40d6ea4072d07a5898931b4d3596b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -97,13 +97,25 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
-  "concreteType": "Resource",
+  "concreteType": "PostContent",
   "kind": "LinkedField",
   "name": "content",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
-    (v6/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "resource",
+      "plural": false,
+      "selections": [
+        (v4/*: any*/),
+        (v6/*: any*/),
+        (v3/*: any*/)
+      ],
+      "storageKey": null
+    },
     (v3/*: any*/)
   ],
   "storageKey": null
@@ -455,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "f509f5ae0bf76c877660e805b5a79390",
+    "id": "7af40d6ea4072d07a5898931b4d3596b",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

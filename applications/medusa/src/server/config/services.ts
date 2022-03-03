@@ -18,5 +18,9 @@ export default [
   {
     name: 'loader',
     url: process.env.LOADER_GRAPHQL_URL
+  },
+  {
+    name: 'hades',
+    url: process.env.HADES_GRAPHQL_URL
   }
 ]

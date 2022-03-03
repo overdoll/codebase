@@ -4,24 +4,19 @@ import (
 	"context"
 	"overdoll/libraries/principal"
 
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/app/workflows"
 	sting "overdoll/applications/sting/proto"
 )
 
 type Server struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewGrpcServer(application *app.Application, client client.Client) *Server {
+func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
-		app:    application,
-		client: client,
+		app: application,
 	}
 }
 
@@ -77,17 +72,6 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 		return nil, err
 	}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewPublishPostWorkflow_" + request.Id,
-	}
-
-	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.PublishPost, request.Id)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &sting.UpdatePostResponse{}, nil
 }
 
@@ -99,17 +83,6 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 		return nil, err
 	}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewDiscardPostWorkflow_" + request.Id,
-	}
-
-	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.DiscardPost, request.Id)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &sting.UpdatePostResponse{}, nil
 }
 
@@ -118,17 +91,6 @@ func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*st
 	if err := s.app.Commands.RemovePost.Handle(ctx, command.RemovePost{
 		PostId: request.Id,
 	}); err != nil {
-		return nil, err
-	}
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewRemovePostWorkflow_" + request.Id,
-	}
-
-	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, request.Id)
-
-	if err != nil {
 		return nil, err
 	}
 

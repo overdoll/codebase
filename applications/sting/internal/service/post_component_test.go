@@ -3,7 +3,9 @@ package service_test
 import (
 	"context"
 	"github.com/segmentio/ksuid"
-	"overdoll/libraries/uuid"
+	"github.com/stretchr/testify/mock"
+	"go.temporal.io/sdk/mocks"
+	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
 
@@ -33,16 +35,14 @@ type PostModified struct {
 		Id string
 	}
 	Categories []CategoryModified
-	Content    []types.Resource
+	Content    []types.PostContent
 }
 
 type Post struct {
 	Post *PostModified `graphql:"post(reference: $reference)"`
 }
 
-func getPost(t *testing.T, id string) Post {
-
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+func getPost(t *testing.T, client *graphql.Client, id string) Post {
 
 	var post Post
 
@@ -81,6 +81,12 @@ type UpdatePostContentOrder struct {
 	UpdatePostContentOrder *struct {
 		Post *PostModified
 	} `graphql:"updatePostContentOrder(input: $input)"`
+}
+
+type UpdatePostContentIsSupporterOnly struct {
+	UpdatePostContentIsSupporterOnly *struct {
+		Post *PostModified
+	} `graphql:"updatePostContentIsSupporterOnly(input: $input)"`
 }
 
 type RemovePostContent struct {
@@ -157,7 +163,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	var createPost CreatePost
 
-	clubId := ksuid.New().String()
+	clubId := "1q7MJFMVgDPo4mFjsfNag6rRwRy"
 
 	relayId := convertClubIdToRelayId(clubId)
 
@@ -181,19 +187,28 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
 		"input": types.AddPostContentInput{
 			ID:      relay.ID(newPostId),
-			Content: []string{uuid.New().String(), uuid.New().String()},
+			Content: []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"},
 		},
 	})
 
 	require.NoError(t, err)
 
-	require.Len(t, addPostContent.AddPostContent.Post.Content, 2, "should have 2 content")
+	require.Len(t, addPostContent.AddPostContent.Post.Content, 3, "should have 3 content")
+
+	require.False(t, addPostContent.AddPostContent.Post.Content[0].IsSupporterOnly, "should not be supporter only content #1")
+	require.False(t, addPostContent.AddPostContent.Post.Content[1].IsSupporterOnly, "should not be supporter only content #2")
+
+	require.True(t, addPostContent.AddPostContent.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+	require.True(t, addPostContent.AddPostContent.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #2")
 
 	// quickly reverse the list
 	var reversedContentIds []relay.ID
 
+	secondIdContent := addPostContent.AddPostContent.Post.Content[0].ID
+
 	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[1].ID)
-	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[0].ID)
+	reversedContentIds = append(reversedContentIds, secondIdContent)
+	reversedContentIds = append(reversedContentIds, addPostContent.AddPostContent.Post.Content[2].ID)
 
 	var updatePostContentOrder UpdatePostContentOrder
 
@@ -207,14 +222,34 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err, "no error updating the order")
 
-	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 2, "should have 2 content")
+	require.Len(t, updatePostContentOrder.UpdatePostContentOrder.Post.Content, 3, "should have 3 content")
 
 	var newContentIds []relay.ID
 
 	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[0].ID)
 	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[1].ID)
+	newContentIds = append(newContentIds, updatePostContentOrder.UpdatePostContentOrder.Post.Content[2].ID)
 
 	require.Equal(t, reversedContentIds, newContentIds, "list should still be reversed")
+
+	var updatePostContentIsSupporterOnly UpdatePostContentIsSupporterOnly
+
+	// update order
+	err = client.Mutate(context.Background(), &updatePostContentIsSupporterOnly, map[string]interface{}{
+		"input": types.UpdatePostContentIsSupporterOnlyInput{
+			ID:              newPostId,
+			ContentIds:      []relay.ID{secondIdContent},
+			IsSupporterOnly: true,
+		},
+	})
+
+	require.NoError(t, err, "no error updating supporter only content")
+
+	require.False(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].IsSupporterOnly, "should not be supporter only content #1")
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].IsSupporterOnly, "should be supporter only content #2")
+
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
+	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #2")
 
 	var removePostContent RemovePostContent
 
@@ -222,13 +257,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Mutate(context.Background(), &removePostContent, map[string]interface{}{
 		"input": types.RemovePostContentInput{
 			ID:         relay.ID(newPostId),
-			ContentIds: []relay.ID{addPostContent.AddPostContent.Post.Content[0].ID},
+			ContentIds: []relay.ID{addPostContent.AddPostContent.Post.Content[2].ID},
 		},
 	})
 
 	require.NoError(t, err)
 
-	require.Len(t, removePostContent.RemovePostContent.Post.Content, 1, "should have 1 content")
+	require.Len(t, removePostContent.RemovePostContent.Post.Content, 2, "should have 2 content")
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories
@@ -304,6 +339,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.Error(t, err)
 
+	workflow := workflows.SubmitPost
+
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -317,8 +356,9 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
 	require.Equal(t, true, submitPost.SubmitPost.InReview, "expected post submitted to be in review")
 
-	env := getWorkflowEnvironment(t)
 	postId := submitPost.SubmitPost.Post.Reference
+
+	env := getWorkflowEnvironment(t)
 
 	// we need to submit the post, in which our tests will do an action
 	env.RegisterDelayedCallback(func() {
@@ -371,19 +411,23 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		require.NoError(t, newEnv.GetWorkflowError())
 	}, time.Hour*24)
 
-	env.ExecuteWorkflow(workflows.SubmitPost, postId)
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
 
-	post = getPost(t, postId)
+	client = getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	post = getPost(t, client, postId)
 
 	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
-	require.Equal(t, 1, len(post.Post.Content), "should have only 1 content at the end")
+	require.Equal(t, 2, len(post.Post.Content), "should have only 2 content at the end")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
 
@@ -411,6 +455,28 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	}
 
 	require.False(t, exists, "should no longer be in the moderator posts queue")
+
+	// make a random client so we can test post permissions
+	client = getGraphqlClientWithAuthenticatedAccount(t, ksuid.New().String())
+
+	post = getPost(t, client, postId)
+
+	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
+	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
+
+	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
+	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+
+	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
+	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
+
+	post = getPost(t, client, postId)
+
+	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
+	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
+
+	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
+	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -515,7 +581,9 @@ func TestCreatePost_Discard(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	post := getPost(t, postId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	post := getPost(t, client, postId)
 
 	// check to make sure post is in a dicarded state
 	require.Equal(t, types.PostStateDiscarded, post.Post.State)
@@ -542,7 +610,9 @@ func TestCreatePost_Reject(t *testing.T) {
 		_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
 		require.NoError(t, e)
 
-		post := getPost(t, postId)
+		client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+		post := getPost(t, client, postId)
 
 		// make sure post is in rejected state
 		require.Equal(t, types.PostStateRejected, post.Post.State)
@@ -554,7 +624,9 @@ func TestCreatePost_Reject(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	post := getPost(t, postId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	post := getPost(t, client, postId)
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRejected, post.Post.State)
@@ -591,7 +663,9 @@ func TestCreatePost_Remove(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	post := getPost(t, postId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	post := getPost(t, client, postId)
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRemoved, post.Post.State)

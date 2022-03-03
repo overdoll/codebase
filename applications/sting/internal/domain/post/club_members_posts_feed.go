@@ -1,10 +1,11 @@
 package post
 
-func NewClubMembersPostsFeed(clubIds, suspendedClubIds []string) (*Filters, error) {
+func NewClubMembersPostsFeed(clubIds []string) (*Filters, error) {
 	return &Filters{
-		clubIds:          clubIds,
-		suspendedClubIds: suspendedClubIds,
-		sortBy:           NewSort,
-		state:            Published,
+		clubIds:             clubIds,
+		showSuspendedClubs:  false,
+		sortBy:              NewSort,
+		state:               Published,
+		supporterOnlyStatus: []SupporterOnlyStatus{Partial, None, Full},
 	}, nil
 }

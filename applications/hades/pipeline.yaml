@@ -1,0 +1,50 @@
+steps:
+  build:
+    targets:
+      - //applications/hades/internal:internal
+
+  unit_test:
+    coverage:
+      - name: hades.unit
+        paths:
+          - ./applications/hades/**/coverage.dat
+    targets:
+      - //applications/hades/internal/app/...
+      - //applications/hades/internal/domain/...
+      - //applications/hades/internal/ports/...
+
+  push_image:
+    targets:
+      - //applications/hades/internal:publish-testing
+
+  integration_test:
+    coverage:
+      - name: hades.integration
+        paths:
+          - ./applications/hades/internal/adapters/**/coverage.dat
+      - name: stella.component
+        paths:
+          - ./applications/hades/internal/service/**/coverage.dat
+    setup:
+      dockerfile:
+        - ./applications/hades/docker-compose.ci.yaml
+    network_dependencies:
+      - host: hades
+        port: 8000
+    targets:
+      - //applications/hades/internal/adapters/...
+      - //applications/hades/internal/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/hades/docker-compose.ci.yaml
+        - ./applications/hades/docker-compose.ci.e2e.yaml
+    network_dependencies:
+      - host: hades
+        port: 8000
+        priority: 0
+
+  publish_image:
+    targets:
+      - //applications/hades/internal:publish
