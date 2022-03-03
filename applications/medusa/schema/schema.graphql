@@ -348,7 +348,7 @@ type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Occurs when a transaction is charged back."""
@@ -358,6 +358,9 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
 
   """The amount charged back."""
   amount: Float!
+
+  """If this is a ccbill transaction, the reason for the chargeback."""
+  ccbillReason: String
 
   """
   A ccbill subscription transaction, if this transaction originated from ccbill.
@@ -382,7 +385,7 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """An account club supporter subscription."""
@@ -506,7 +509,7 @@ type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Occurs when a transaction subscription is failed to be billed."""
@@ -536,7 +539,7 @@ type AccountFailedTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Occurs when a subscription is rebilled."""
@@ -574,7 +577,7 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 type AccountLock {
@@ -624,7 +627,7 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """
@@ -652,7 +655,7 @@ type AccountReactivatedTransactionHistory implements IAccountTransactionHistory 
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Occurs when a transaction is refunded."""
@@ -689,7 +692,7 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 type AccountSavedPaymentMethod {
@@ -812,7 +815,7 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Add an email to the account"""
@@ -1098,19 +1101,19 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodPayload {
 
 """Represents a billing address."""
 type BillingAddress {
-  AddressLine1: String!
-  City: String!
-  Country: String!
-  PostalCode: String!
-  State: String!
+  addressLine1: String!
+  city: String!
+  country: String!
+  postalCode: String!
+  state: String!
 }
 
 """Represents a billing contact."""
 type BillingContact {
-  Email: String!
-  FirstName: String!
-  LastName: String!
-  PhoneNumber: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
 }
 
 """Cancel account club supporter subscription input."""
@@ -1368,12 +1371,14 @@ Represents a CCBill transaction, which may or may not contain these fields.
 """
 type CCBillSubscriptionTransaction {
   ccbillSubscriptionId: String!
-  ccbillTransactionId: String
 }
 
 type CCBillTransactionDetails {
   """Whether or not the transaction was approved."""
   approved: Boolean!
+
+  """The decline code from CCBill."""
+  declineCode: String
 
   """The error from CCBill, if the transaction was not approved."""
   declineError: CCBillDeclineError
@@ -1657,8 +1662,14 @@ type ClubMember implements Node {
   """An ID pointing to this club member."""
   id: ID!
 
+  """Whether or not this member is a supporter."""
+  isSupporter: Boolean!
+
   """When the membership was created (when the account originally joined)."""
   joinedAt: Time!
+
+  """If is a supporter, when they became a supporter."""
+  supporterSince: Time
 }
 
 type ClubMemberConnection {
@@ -2200,7 +2211,7 @@ interface IAccountTransactionHistory {
   timestamp: Time!
 
   """The type of account transaction history, or what it belongs to."""
-  type: AccountTransactionType!
+  transaction: AccountTransactionType!
 }
 
 """Issue a club infraction."""
@@ -4258,13 +4269,6 @@ input VoidOrRefundAccountClubSupporterSubscriptionInput {
 type VoidOrRefundAccountClubSupporterSubscriptionPayload {
   """The id of the subscription, deleted."""
   deletedClubSupporterSubscriptionId: ID!
-
-  """Validation for voiding or refunding the subscription."""
-  validation: VoidOrRefundAccountClubSupporterSubscriptionValidation
-}
-
-enum VoidOrRefundAccountClubSupporterSubscriptionValidation {
-  INVALID_AMOUNT
 }
 
 """Withdraw club membership."""

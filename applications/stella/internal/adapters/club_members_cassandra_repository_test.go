@@ -79,7 +79,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	results, err = clubRepo.GetMembersForClub(ctx, principalItem, newCursor, testClubId)
 	require.NoError(t, err, "no error searching club members")
 
-	require.Len(t, results, 1, "should have found only the last club member")
+	require.Len(t, results, 2, "should have found the last 2 club members")
 }
 
 func newClubRepository(t *testing.T) adapters.ClubCassandraRepository {

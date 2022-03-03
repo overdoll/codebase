@@ -36,3 +36,4 @@ steps:
         PRIVATE_RESOURCES_URL: https://dcd9vpqfvvgum.cloudfront.net
         OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
         FILES_BUCKET: sandbox-overdoll-files
+        IS_CI: "true"

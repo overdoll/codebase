@@ -14,7 +14,7 @@ func GetIPFromRequest(req *http.Request) string {
 		splits := strings.Split(forwarded, ",")
 
 		for _, r := range splits {
-			if r != "unknown" {
+			if strings.TrimSpace(r) != "unknown" {
 				ip = r
 				break
 			}

@@ -34,8 +34,8 @@ var (
 	temporalClientMock *mocks.Client
 )
 
-const StingHttpAddr = ":6666"
-const StingGraphqlClientAddr = "http://:6666/api/graphql"
+const StingHttpAddr = ":4564"
+const StingGraphqlClientAddr = "http://:4564/api/graphql"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"

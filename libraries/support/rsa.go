@@ -3,19 +3,21 @@ package support
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/pem"
 	"errors"
-	"strings"
 )
 
 // ParseRsaPrivateKeyFromPemEnvFile parse PEM file from env file, which is supposed to use a specific format
 func ParseRsaPrivateKeyFromPemEnvFile(privPEM string) (*rsa.PrivateKey, error) {
 
-	pemPrivateKey := strings.ReplaceAll(privPEM, " ", "\n")
+	res, err := base64.StdEncoding.DecodeString(privPEM)
 
-	pemPrivateKey = strings.ReplaceAll(pemPrivateKey, "_", " ")
+	if err != nil {
+		return nil, err
+	}
 
-	block, _ := pem.Decode([]byte(pemPrivateKey))
+	block, _ := pem.Decode(res)
 	if block == nil {
 		return nil, errors.New("failed to parse PEM block containing the key")
 	}

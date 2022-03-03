@@ -58,7 +58,7 @@ def execute_integration_tests_commands(configs):
             "CCBILL_ACCOUNT_NUMBER",
             "CCBILL_SUB_ACCOUNT_NUMBER",
             "CCBILL_DATALINK_USERNAME",
-            "CCBILL_DATALINK_PASSWORD",
+            "CCBILL_DATALINK_PASSWORD"
         ]
 
         test_flags, json_profile_out_test = flags.calculate_flags(
@@ -221,7 +221,7 @@ def execute_build_commands(configs):
             "AWS_ENDPOINT",
             "AWS_REGION",
             "TESTMAIL_API_KEY",
-            "TESTMAIL_NAMESPACE",
+            "TESTMAIL_NAMESPACE"
         ]
 
         build_flags, json_profile_out_build = flags.calculate_flags(
