@@ -13,7 +13,7 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../domain/ManageClub/components/JoinClubButton/JoinClubButton'
+import JoinClubButton from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 
 interface Props {
   query: FullSimplePostFragment$key

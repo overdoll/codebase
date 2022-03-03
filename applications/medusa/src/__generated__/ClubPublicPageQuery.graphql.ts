@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1deb28e8140cff725942941e444ecd16>>
- * @relayHash c22307d23c85c1832068f819d7de095c
+ * @generated SignedSource<<3f60e331845a254107574410bb7b5c7c>>
+ * @relayHash 0b5c80a813805cf4bc1f4f5f654aed82
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c22307d23c85c1832068f819d7de095c
+// @relayRequestID 0b5c80a813805cf4bc1f4f5f654aed82
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,19 +19,7 @@ export type ClubPublicPageQuery$variables = {
 export type ClubPublicPageQueryVariables = ClubPublicPageQuery$variables;
 export type ClubPublicPageQuery$data = {
   readonly club: {
-    readonly slug: string;
     readonly membersCount: number;
-    readonly members: {
-      readonly edges: ReadonlyArray<{
-        readonly node: {
-          readonly account: {
-            readonly avatar: {
-              readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-            } | null;
-          };
-        };
-      }>;
-    };
     readonly backgroundPost: {
       readonly edges: ReadonlyArray<{
         readonly node: {
@@ -41,10 +29,10 @@ export type ClubPublicPageQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubPublicPageNewPostsFragment" | "ClubPublicPageTopPostsFragment" | "ClubMenuFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment" | "SupportClubButtonViewerFragment">;
   } | null;
 };
 export type ClubPublicPageQueryResponse = ClubPublicPageQuery$data;
@@ -72,50 +60,31 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "membersCount",
   "storageKey": null
 },
-v4 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 4
-  },
-  {
-    "kind": "Literal",
-    "name": "sortBy",
-    "value": "NEWEST"
-  }
-],
-v5 = [
+v3 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 1
   }
 ],
-v6 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v7 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -131,7 +100,7 @@ v8 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      (v6/*: any*/),
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -150,28 +119,28 @@ v8 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v6/*: any*/)
+      (v4/*: any*/)
     ],
     "storageKey": null
   },
-  (v7/*: any*/)
+  (v5/*: any*/)
 ],
-v9 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "content",
   "plural": true,
-  "selections": (v8/*: any*/),
+  "selections": (v6/*: any*/),
   "storageKey": null
 },
-v10 = {
+v8 = {
   "kind": "Literal",
   "name": "first",
   "value": 10
 },
-v11 = [
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -195,8 +164,8 @@ v11 = [
             "name": "reference",
             "storageKey": null
           },
-          (v9/*: any*/),
-          (v7/*: any*/)
+          (v7/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -220,70 +189,9 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": (v4/*: any*/),
-            "concreteType": "ClubMemberConnection",
-            "kind": "LinkedField",
-            "name": "members",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubMemberEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ClubMember",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Account",
-                        "kind": "LinkedField",
-                        "name": "account",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Resource",
-                            "kind": "LinkedField",
-                            "name": "avatar",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "args": null,
-                                "kind": "FragmentSpread",
-                                "name": "ResourceIconFragment"
-                              }
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": "members(first:4,sortBy:\"NEWEST\")"
-          },
           {
             "alias": "backgroundPost",
-            "args": (v5/*: any*/),
+            "args": (v3/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -343,17 +251,22 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ClubPublicPageNewPostsFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ClubPublicPageTopPostsFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
             "name": "ClubMenuFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubTopPostsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubExclusivePostsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SupportClubButtonClubFragment"
           }
         ],
         "storageKey": null
@@ -370,6 +283,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "JoinClubButtonViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SupportClubButtonViewerFragment"
           }
         ],
         "storageKey": null
@@ -393,66 +311,9 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": (v4/*: any*/),
-            "concreteType": "ClubMemberConnection",
-            "kind": "LinkedField",
-            "name": "members",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubMemberEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ClubMember",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Account",
-                        "kind": "LinkedField",
-                        "name": "account",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Resource",
-                            "kind": "LinkedField",
-                            "name": "avatar",
-                            "plural": false,
-                            "selections": (v8/*: any*/),
-                            "storageKey": null
-                          },
-                          (v7/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      (v7/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": "members(first:4,sortBy:\"NEWEST\")"
-          },
           {
             "alias": "backgroundPost",
-            "args": (v5/*: any*/),
+            "args": (v3/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -474,8 +335,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
-                      (v7/*: any*/)
+                      (v7/*: any*/),
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -499,10 +360,10 @@ return {
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": (v8/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
-          (v7/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -518,31 +379,21 @@ return {
                 "name": "__typename",
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
           {
-            "alias": "newPosts",
-            "args": [
-              (v10/*: any*/),
-              {
-                "kind": "Literal",
-                "name": "sortBy",
-                "value": "NEW"
-              }
-            ],
-            "concreteType": "PostConnection",
-            "kind": "LinkedField",
-            "name": "posts",
-            "plural": false,
-            "selections": (v11/*: any*/),
-            "storageKey": "posts(first:10,sortBy:\"NEW\")"
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "slug",
+            "storageKey": null
           },
           {
             "alias": "topPosts",
             "args": [
-              (v10/*: any*/),
+              (v8/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -553,8 +404,25 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"TOP\")"
+          },
+          {
+            "alias": "exclusivePosts",
+            "args": [
+              (v8/*: any*/),
+              {
+                "kind": "Literal",
+                "name": "sortBy",
+                "value": "NEW"
+              }
+            ],
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "posts",
+            "plural": false,
+            "selections": (v9/*: any*/),
+            "storageKey": "posts(first:10,sortBy:\"NEW\")"
           }
         ],
         "storageKey": null
@@ -581,14 +449,14 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "c22307d23c85c1832068f819d7de095c",
+    "id": "0b5c80a813805cf4bc1f4f5f654aed82",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -597,6 +465,6 @@ return {
 };
 })();
 
-(node as any).hash = "de3d9d568e13bc8002cc262d069dc028";
+(node as any).hash = "e66b6c6a3acf13a3b76c5c3baa91c4e7";
 
 export default node;

@@ -21,7 +21,9 @@ export default function ClubMenu ({ query }: Props): JSX.Element {
   return (
     <Can I='interact' a='Club' passThrough>
       {allowed => (
-        <Menu isDisabled={allowed === false}>
+        <Menu
+          isDisabled={allowed === false}
+        >
           <Can I='admin' a='Club'>
             <MenuLinkItem
               to={`/admin/club/${data.slug}`}

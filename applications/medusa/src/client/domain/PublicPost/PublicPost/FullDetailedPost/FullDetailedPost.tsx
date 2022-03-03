@@ -12,7 +12,7 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
+import JoinClubButton from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import CopyLinkToClipboard from '../../../../components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard'

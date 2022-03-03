@@ -104,7 +104,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/billing/'>
+              <PagePanelWrap isExternal path='www.corpodoll.com/subscriptions/'>
                 <PagePanelIcon icon={Barcode} colorScheme='green' />
                 <PagePanelText
                   title={

@@ -2035,14 +2035,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/ManageClub/pages/ClubPublicPage/RootClubPublicPage'
+            './domain/ClubPublicPage/RootClubPublicPage'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/ManageClub/pages/ClubPublicPage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ClubPublicPage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2071,14 +2071,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/RootClubPublicPosts'
+            './domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/RootClubPublicPosts'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages

@@ -9,7 +9,7 @@ import ClubPublicPageQuery, {
 import { useParams } from '@//:modules/routing/useParams'
 import ClubPublicPage from './ClubPublicPage/ClubPublicPage'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import LockedAccountBanner from '../../../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner from '../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 
 interface Props {
   prepared: {

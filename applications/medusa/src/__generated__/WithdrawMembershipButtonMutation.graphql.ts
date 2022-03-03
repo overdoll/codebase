@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<880800f832a2f08c5f5ffafbe457cb77>>
- * @relayHash 0ff8f14ca8c48fbb992962f7a8216c3a
+ * @generated SignedSource<<9cad989a488470c962dc9b959d557a2e>>
+ * @relayHash e615c2a8304cd1f54fe689491fefa291
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0ff8f14ca8c48fbb992962f7a8216c3a
+// @relayRequestID e615c2a8304cd1f54fe689491fefa291
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type JoinClubButtonWithdrawMembershipMutation$variables = {
+export type WithdrawMembershipButtonMutation$variables = {
   clubId: string;
 };
-export type JoinClubButtonWithdrawMembershipMutationVariables = JoinClubButtonWithdrawMembershipMutation$variables;
-export type JoinClubButtonWithdrawMembershipMutation$data = {
+export type WithdrawMembershipButtonMutationVariables = WithdrawMembershipButtonMutation$variables;
+export type WithdrawMembershipButtonMutation$data = {
   readonly withdrawClubMembership: {
     readonly clubMemberId: string;
   } | null;
 };
-export type JoinClubButtonWithdrawMembershipMutationResponse = JoinClubButtonWithdrawMembershipMutation$data;
-export type JoinClubButtonWithdrawMembershipMutation = {
-  variables: JoinClubButtonWithdrawMembershipMutationVariables;
-  response: JoinClubButtonWithdrawMembershipMutation$data;
+export type WithdrawMembershipButtonMutationResponse = WithdrawMembershipButtonMutation$data;
+export type WithdrawMembershipButtonMutation = {
+  variables: WithdrawMembershipButtonMutationVariables;
+  response: WithdrawMembershipButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -72,7 +72,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "JoinClubButtonWithdrawMembershipMutation",
+    "name": "WithdrawMembershipButtonMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -81,19 +81,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "JoinClubButtonWithdrawMembershipMutation",
+    "name": "WithdrawMembershipButtonMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "0ff8f14ca8c48fbb992962f7a8216c3a",
+    "id": "e615c2a8304cd1f54fe689491fefa291",
     "metadata": {},
-    "name": "JoinClubButtonWithdrawMembershipMutation",
+    "name": "WithdrawMembershipButtonMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "ea374c122586c3c08804939f498a6d4b";
+(node as any).hash = "f50d90e489ac3a7756beb33894fc75ab";
 
 export default node;

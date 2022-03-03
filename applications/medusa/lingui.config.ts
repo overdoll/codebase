@@ -109,12 +109,12 @@ export default {
       include: ['src/client/domain/ManageClub/pages/ClubPosts']
     },
     {
-      path: 'src/client/domain/ManageClub/pages/ClubPublicPage/__locale__/{locale}/index',
-      include: ['src/client/domain/ManageClub/pages/ClubPublicPage']
+      path: 'src/client/domain/ClubPublicPage/__locale__/{locale}/index',
+      include: ['src/client/domain/ClubPublicPage']
     },
     {
-      path: 'src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts/__locale__/{locale}/index',
-      include: ['src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPosts']
+      path: 'src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts']
     },
     {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',

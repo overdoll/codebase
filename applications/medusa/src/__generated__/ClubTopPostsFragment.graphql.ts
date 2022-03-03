@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a7da9b8b6e419f3bba4a53d496bdb1fe>>
+ * @generated SignedSource<<03703b508faf62cbaf55c71976b0bfe5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,34 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPublicPageNewPostsFragment$data = {
-  readonly newPosts: {
+export type ClubTopPostsFragment$data = {
+  readonly slug: string;
+  readonly topPosts: {
     readonly " $fragmentSpreads": FragmentRefs<"PostsHorizontalPreviewFragment">;
   };
-  readonly " $fragmentType": "ClubPublicPageNewPostsFragment";
+  readonly " $fragmentType": "ClubTopPostsFragment";
 };
-export type ClubPublicPageNewPostsFragment = ClubPublicPageNewPostsFragment$data;
-export type ClubPublicPageNewPostsFragment$key = {
-  readonly " $data"?: ClubPublicPageNewPostsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPageNewPostsFragment">;
+export type ClubTopPostsFragment = ClubTopPostsFragment$data;
+export type ClubTopPostsFragment$key = {
+  readonly " $data"?: ClubTopPostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubTopPostsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ClubPublicPageNewPostsFragment",
+  "name": "ClubTopPostsFragment",
   "selections": [
     {
-      "alias": "newPosts",
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    {
+      "alias": "topPosts",
       "args": [
         {
           "kind": "Literal",
@@ -39,7 +47,7 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "sortBy",
-          "value": "NEW"
+          "value": "TOP"
         }
       ],
       "concreteType": "PostConnection",
@@ -53,13 +61,13 @@ const node: ReaderFragment = {
           "name": "PostsHorizontalPreviewFragment"
         }
       ],
-      "storageKey": "posts(first:10,sortBy:\"NEW\")"
+      "storageKey": "posts(first:10,sortBy:\"TOP\")"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "0f6bcb63d458a9f08af91844e4d310f9";
+(node as any).hash = "a6fef71cd9cc2ac2f27e7b5f3d14dbbf";
 
 export default node;

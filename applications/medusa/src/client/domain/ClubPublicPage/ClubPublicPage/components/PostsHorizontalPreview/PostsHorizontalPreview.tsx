@@ -62,17 +62,15 @@ export default function PostsHorizontalPreview ({
           </SwiperSlide>)}
         <SwiperSlide>
           <GridWrap>
-            <GridTile m={1}>
-              <LinkTile to={to}>
-                <Flex w='100%' align='center' justify='center'>
-                  <Heading fontSize='lg' color='gray.00'>
-                    <Trans>
-                      See All
-                    </Trans>
-                  </Heading>
-                </Flex>
-              </LinkTile>
-            </GridTile>
+            <LinkTile to={to}>
+              <Flex w='100%' align='center' justify='center'>
+                <Heading fontSize='lg' color='gray.00'>
+                  <Trans>
+                    See All
+                  </Trans>
+                </Heading>
+              </Flex>
+            </LinkTile>
           </GridWrap>
         </SwiperSlide>
       </Swiper>

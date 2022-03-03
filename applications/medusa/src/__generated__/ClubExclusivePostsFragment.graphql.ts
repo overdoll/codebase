@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee9a02a76beaccc6f0b9e1748cf03868>>
+ * @generated SignedSource<<c86ce03788f83ea5455332b104b75d00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,34 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPublicPageTopPostsFragment$data = {
-  readonly topPosts: {
+export type ClubExclusivePostsFragment$data = {
+  readonly slug: string;
+  readonly exclusivePosts: {
     readonly " $fragmentSpreads": FragmentRefs<"PostsHorizontalPreviewFragment">;
   };
-  readonly " $fragmentType": "ClubPublicPageTopPostsFragment";
+  readonly " $fragmentType": "ClubExclusivePostsFragment";
 };
-export type ClubPublicPageTopPostsFragment = ClubPublicPageTopPostsFragment$data;
-export type ClubPublicPageTopPostsFragment$key = {
-  readonly " $data"?: ClubPublicPageTopPostsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPageTopPostsFragment">;
+export type ClubExclusivePostsFragment = ClubExclusivePostsFragment$data;
+export type ClubExclusivePostsFragment$key = {
+  readonly " $data"?: ClubExclusivePostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ClubPublicPageTopPostsFragment",
+  "name": "ClubExclusivePostsFragment",
   "selections": [
     {
-      "alias": "topPosts",
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    {
+      "alias": "exclusivePosts",
       "args": [
         {
           "kind": "Literal",
@@ -39,7 +47,7 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "sortBy",
-          "value": "TOP"
+          "value": "NEW"
         }
       ],
       "concreteType": "PostConnection",
@@ -53,13 +61,13 @@ const node: ReaderFragment = {
           "name": "PostsHorizontalPreviewFragment"
         }
       ],
-      "storageKey": "posts(first:10,sortBy:\"TOP\")"
+      "storageKey": "posts(first:10,sortBy:\"NEW\")"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "f6846808c5352c269c670b735f3cd6fa";
+(node as any).hash = "ef8eeef048a46db8cee979cdc5bb6415";
 
 export default node;

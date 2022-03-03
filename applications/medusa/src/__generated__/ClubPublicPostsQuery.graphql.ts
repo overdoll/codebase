@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bc8f2400923c7561fd2f6aca497e50b1>>
- * @relayHash 60bea64e32723874deb54a369d571b82
+ * @generated SignedSource<<52032ae9468262489de57574d1e555a9>>
+ * @relayHash 7912112fed162602e56fc4209cddc8ea
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 60bea64e32723874deb54a369d571b82
+// @relayRequestID 7912112fed162602e56fc4209cddc8ea
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -344,8 +344,6 @@ return {
                         "name": "characters",
                         "plural": true,
                         "selections": [
-                          (v15/*: any*/),
-                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -355,10 +353,13 @@ return {
                             "plural": false,
                             "selections": [
                               (v13/*: any*/),
+                              (v6/*: any*/),
                               (v9/*: any*/)
                             ],
                             "storageKey": null
                           },
+                          (v15/*: any*/),
+                          (v6/*: any*/),
                           (v14/*: any*/),
                           (v9/*: any*/)
                         ],
@@ -487,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "60bea64e32723874deb54a369d571b82",
+    "id": "7912112fed162602e56fc4209cddc8ea",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

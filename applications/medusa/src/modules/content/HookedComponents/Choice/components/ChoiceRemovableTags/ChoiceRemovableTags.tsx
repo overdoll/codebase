@@ -22,7 +22,9 @@ export default function ChoiceRemovableTags ({
   }
 
   return (
-    <HStackScroll spacing={1}>
+    <HStackScroll
+      spacing={1}
+    >
       {Object.keys(values).map((item, index) => (
         <RemovableTag
           key={index}

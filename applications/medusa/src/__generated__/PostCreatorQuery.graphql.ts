@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<52943d7a27a74c969161ae316092a211>>
- * @relayHash 681de73c68a865165b675655d8dbc1fc
+ * @generated SignedSource<<d5f407847399a4b0892578f1076652e2>>
+ * @relayHash 363e47ee29c77bfedabf2879aef825c7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 681de73c68a865165b675655d8dbc1fc
+// @relayRequestID 363e47ee29c77bfedabf2879aef825c7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -312,8 +312,6 @@ return {
             "plural": true,
             "selections": [
               (v5/*: any*/),
-              (v13/*: any*/),
-              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -323,10 +321,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v10/*: any*/),
+                  (v11/*: any*/),
                   (v5/*: any*/)
                 ],
                 "storageKey": null
               },
+              (v13/*: any*/),
+              (v11/*: any*/),
               (v12/*: any*/)
             ],
             "storageKey": null
@@ -366,7 +367,7 @@ return {
     ]
   },
   "params": {
-    "id": "681de73c68a865165b675655d8dbc1fc",
+    "id": "363e47ee29c77bfedabf2879aef825c7",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

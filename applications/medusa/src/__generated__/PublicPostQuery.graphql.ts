@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<403651730bd7691cd1a5ca52f204d574>>
- * @relayHash f509f5ae0bf76c877660e805b5a79390
+ * @generated SignedSource<<ca854c96c5ef872ff9386ac97bbbd102>>
+ * @relayHash c45f50a76127a9d58ee01054ca2cd4ea
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f509f5ae0bf76c877660e805b5a79390
+// @relayRequestID c45f50a76127a9d58ee01054ca2cd4ea
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,8 +216,6 @@ v17 = {
   "name": "characters",
   "plural": true,
   "selections": [
-    (v12/*: any*/),
-    (v13/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -227,10 +225,13 @@ v17 = {
       "plural": false,
       "selections": [
         (v16/*: any*/),
+        (v13/*: any*/),
         (v3/*: any*/)
       ],
       "storageKey": null
     },
+    (v12/*: any*/),
+    (v13/*: any*/),
     (v14/*: any*/),
     (v3/*: any*/)
   ],
@@ -455,7 +456,7 @@ return {
     ]
   },
   "params": {
-    "id": "f509f5ae0bf76c877660e805b5a79390",
+    "id": "c45f50a76127a9d58ee01054ca2cd4ea",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

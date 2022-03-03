@@ -71,7 +71,7 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
+      <SmallBackgroundBox mt={14}>
         <Trans>
           No posts found
         </Trans>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aa7aa777462b48b1f2306779ef7a23b1>>
- * @relayHash e1ea829a799e377aa54cc8f769264456
+ * @generated SignedSource<<727318dbd8be02b8862789eff3cb648f>>
+ * @relayHash e7cb73e99697764bb651d0792fa56da7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e1ea829a799e377aa54cc8f769264456
+// @relayRequestID e7cb73e99697764bb651d0792fa56da7
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type JoinClubButtonBecomeMemberMutation$variables = {
+export type BecomeMemberButtonMutation$variables = {
   clubId: string;
 };
-export type JoinClubButtonBecomeMemberMutationVariables = JoinClubButtonBecomeMemberMutation$variables;
-export type JoinClubButtonBecomeMemberMutation$data = {
+export type BecomeMemberButtonMutationVariables = BecomeMemberButtonMutation$variables;
+export type BecomeMemberButtonMutation$data = {
   readonly becomeClubMember: {
     readonly clubMember: {
       readonly id: string;
@@ -32,10 +32,10 @@ export type JoinClubButtonBecomeMemberMutation$data = {
     } | null;
   } | null;
 };
-export type JoinClubButtonBecomeMemberMutationResponse = JoinClubButtonBecomeMemberMutation$data;
-export type JoinClubButtonBecomeMemberMutation = {
-  variables: JoinClubButtonBecomeMemberMutationVariables;
-  response: JoinClubButtonBecomeMemberMutation$data;
+export type BecomeMemberButtonMutationResponse = BecomeMemberButtonMutation$data;
+export type BecomeMemberButtonMutation = {
+  variables: BecomeMemberButtonMutationVariables;
+  response: BecomeMemberButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -130,7 +130,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "JoinClubButtonBecomeMemberMutation",
+    "name": "BecomeMemberButtonMutation",
     "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -139,19 +139,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "JoinClubButtonBecomeMemberMutation",
+    "name": "BecomeMemberButtonMutation",
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "e1ea829a799e377aa54cc8f769264456",
+    "id": "e7cb73e99697764bb651d0792fa56da7",
     "metadata": {},
-    "name": "JoinClubButtonBecomeMemberMutation",
+    "name": "BecomeMemberButtonMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "03c0e73247a4e31f4ac05278aead190a";
+(node as any).hash = "502e25d2b62fd3d0d5669d429b4d18d9";
 
 export default node;
