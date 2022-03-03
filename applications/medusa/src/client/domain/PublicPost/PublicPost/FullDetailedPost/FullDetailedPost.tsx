@@ -15,7 +15,6 @@ import {
 import JoinClubButton from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
-import CopyLinkToClipboard from '../../../../components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard'
 import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
@@ -74,9 +73,6 @@ export default function FullDetailedPost ({
                     />}
         rightItem={<PostMenu query={data} />}
       />
-      <CopyLinkToClipboard w='100%'>
-        {`https://overdoll.com/p/${data?.reference}`}
-      </CopyLinkToClipboard>
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />
     </Stack>

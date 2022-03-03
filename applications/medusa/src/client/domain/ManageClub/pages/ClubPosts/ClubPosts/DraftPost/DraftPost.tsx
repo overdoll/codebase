@@ -40,7 +40,7 @@ export default function DraftPost ({
   return (
     <Stack spacing={1}>
       <HStack align='center' spacing={3} justify='space-between'>
-        <Badge fontSize='sm' colorScheme='teal'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='teal'>
           <Trans>
             DRAFT
           </Trans>

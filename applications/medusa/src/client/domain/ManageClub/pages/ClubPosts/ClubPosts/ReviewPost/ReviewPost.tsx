@@ -26,7 +26,7 @@ export default function ReviewPost ({
   return (
     <Stack spacing={1}>
       <HStack align='center' spacing={3} justify='space-between'>
-        <Badge fontSize='sm' colorScheme='purple'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
           <Trans>
             Review
           </Trans>

@@ -6,6 +6,7 @@ import { useFragment } from 'react-relay/hooks'
 import { Menu, MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../authorization/Can'
 import PostReportButton from './PostReportButton/PostReportButton'
+import PostCopyLinkButton from './PostCopyLinkButton/PostCopyLinkButton'
 
 interface Props {
   query: PostMenuFragment$key
@@ -16,6 +17,7 @@ const Fragment = graphql`
   fragment PostMenuFragment on Post {
     reference @required(action: THROW)
     ...PostReportButtonFragment
+    ...PostCopyLinkButtonFragment
   }
 `
 
@@ -46,6 +48,8 @@ export default function PostMenu ({
           h={buttonSize}
           w={buttonSize}
         >
+          <PostCopyLinkButton query={data} />
+          <PostReportButton query={data} />
           <Can I='admin' a='Post'>
             <MenuLinkItem
               to={`/moderation/post/${data.reference}`}
@@ -57,7 +61,6 @@ export default function PostMenu ({
               icon={LoginKeys}
             />
           </Can>
-          <PostReportButton query={data} />
         </Menu>)}
     </Can>
   )

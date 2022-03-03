@@ -6,6 +6,7 @@ import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/Them
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import useCountdown from '../../../../../../../modules/hooks/useCountdown'
 import AdminClubUnSuspendButton from './AdminClubUnSuspendButton/AdminClubUnSuspendButton'
+import SuspendClubForm from '../AdminClubInfractions/SuspendClubForm/SuspendClubForm'
 
 interface Props {
   query: AdminClubStatusFragment$key
@@ -16,6 +17,7 @@ const Fragment = graphql`
     suspension {
       expires
     }
+    ...SuspendClubFormFragment
     ...AdminClubUnSuspendButtonFragment
   }
 `
@@ -55,17 +57,29 @@ export default function AdminClubStatus ({ query }: Props): JSX.Element {
             </Text>
           </Flex>
         </SmallBackgroundBox>)}
-      {isSuspended && (
-        <Collapse>
-          <CollapseButton>
-            <Trans>
-              Remove Suspension
-            </Trans>
-          </CollapseButton>
-          <CollapseBody>
-            <AdminClubUnSuspendButton query={data} />
-          </CollapseBody>
-        </Collapse>)}
+      {isSuspended
+        ? (
+          <Collapse>
+            <CollapseButton>
+              <Trans>
+                Remove Suspension
+              </Trans>
+            </CollapseButton>
+            <CollapseBody>
+              <AdminClubUnSuspendButton query={data} />
+            </CollapseBody>
+          </Collapse>)
+        : (
+          <Collapse>
+            <CollapseButton>
+              <Trans>
+                Suspend Club
+              </Trans>
+            </CollapseButton>
+            <CollapseBody>
+              <SuspendClubForm query={data} />
+            </CollapseBody>
+          </Collapse>)}
     </Stack>
   )
 }

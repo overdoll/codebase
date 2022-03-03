@@ -27,7 +27,7 @@ export default function PublishedPost ({
   return (
     <Stack spacing={1}>
       <HStack align='center' spacing={3} justify='space-between'>
-        <Badge fontSize='sm' colorScheme='green'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
           <Trans>
             Published
           </Trans>

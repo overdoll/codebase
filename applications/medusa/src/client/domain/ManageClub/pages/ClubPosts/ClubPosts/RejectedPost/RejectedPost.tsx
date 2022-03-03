@@ -26,7 +26,7 @@ export default function RejectedPost ({
   return (
     <Stack spacing={1}>
       <HStack align='center' spacing={3} justify='space-between'>
-        <Badge fontSize='sm' colorScheme='orange'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
           <Trans>
             Rejected
           </Trans>
