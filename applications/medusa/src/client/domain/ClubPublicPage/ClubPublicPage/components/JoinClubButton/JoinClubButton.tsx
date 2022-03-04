@@ -58,7 +58,6 @@ export default function JoinClubButton ({
     return (
       <WithdrawMembershipButton
         clubQuery={clubData}
-        viewerQuery={viewerData}
         {...rest}
       />
     )

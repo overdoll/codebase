@@ -1,10 +1,6 @@
 import type {
   WithdrawMembershipButtonClubFragment$key
 } from '@//:artifacts/WithdrawMembershipButtonClubFragment.graphql'
-import type {
-  WithdrawMembershipButtonViewerFragment$key
-} from '@//:artifacts/WithdrawMembershipButtonViewerFragment.graphql'
-
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
@@ -16,7 +12,6 @@ import { WithdrawMembershipButtonMutation } from '@//:artifacts/WithdrawMembersh
 
 interface Props extends ButtonProps {
   clubQuery: WithdrawMembershipButtonClubFragment$key
-  viewerQuery: WithdrawMembershipButtonViewerFragment$key | null
 }
 
 const ClubFragment = graphql`
@@ -36,7 +31,6 @@ const LeaveClubMutation = graphql`
 
 export default function WithdrawMembershipButton ({
   clubQuery,
-  viewerQuery,
   ...rest
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
