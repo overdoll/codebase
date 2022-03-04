@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f9d5085669193c85ea298bc97cc47c1d>>
+ * @generated SignedSource<<65f267d753046ca3fa992042dd9471cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,13 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicSimpleFragment$data = {
   readonly id: string;
   readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly resource: {
-      readonly type: ResourceType;
-      readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
@@ -66,21 +64,9 @@ const node: ReaderFragment = {
           "plural": false,
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "ImageSnippetFragment"
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ControlledVideoFragment"
+              "name": "PostMediaFragment"
             }
           ],
           "storageKey": null
@@ -103,6 +89,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "78ce8daf77922ef44d5fface4768babd";
+(node as any).hash = "221edf0f3cf9a6c15684f8088e276039";
 
 export default node;

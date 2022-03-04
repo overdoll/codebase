@@ -6,7 +6,6 @@ import ClubInfractionHistory from './ClubInfractionHistory/ClubInfractionHistory
 import { Stack } from '@chakra-ui/react'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import IssueClubInfractionForm from './IssueClubInfractionForm/IssueClubInfractionForm'
-import SuspendClubForm from './SuspendClubForm/SuspendClubForm'
 
 interface Props {
   query: AdminClubInfractionsFragment$key
@@ -16,7 +15,6 @@ const Fragment = graphql`
   fragment AdminClubInfractionsFragment on Club {
     ...ClubInfractionHistoryFragment
     ...IssueClubInfractionFormFragment
-    ...SuspendClubFormFragment
     suspension {
       __typename
     }
@@ -27,8 +25,6 @@ export default function AdminClubInfractions ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const isSuspended = data.suspension != null
-
-  //
 
   return (
     <>
@@ -51,16 +47,6 @@ export default function AdminClubInfractions ({ query }: Props): JSX.Element {
               </CollapseButton>
               <CollapseBody>
                 <IssueClubInfractionForm query={data} />
-              </CollapseBody>
-            </Collapse>
-            <Collapse>
-              <CollapseButton>
-                <Trans>
-                  Suspend Club
-                </Trans>
-              </CollapseButton>
-              <CollapseBody>
-                <SuspendClubForm query={data} />
               </CollapseBody>
             </Collapse>
           </>

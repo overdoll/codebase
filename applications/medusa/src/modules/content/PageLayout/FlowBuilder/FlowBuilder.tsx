@@ -1,5 +1,8 @@
 import { Stack } from '@chakra-ui/react'
 import { createContext, FunctionComponent, ReactNode, useState } from 'react'
+import { defineMessage } from '@lingui/macro'
+import { useQueryParam } from 'use-query-params'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface BuilderProps {
   stepsArray: string[]
@@ -11,6 +14,7 @@ interface BuilderProps {
 
 interface ComponentProps extends BuilderProps {
   children: ReactNode
+  useParams?: boolean | undefined
   onFinish?: () => void
 }
 
@@ -43,7 +47,6 @@ const defaultValue = {
   previousStep: () => {
   },
   skipToStep: (step: string) => {
-
   }
 }
 
@@ -56,40 +59,69 @@ export default function FlowBuilder ({
   stepsComponents,
   stepsHeaders,
   colorScheme = 'primary',
-  onFinish
+  onFinish,
+  useParams
 }: ComponentProps): JSX.Element {
-  const [currentStep, setCurrentStep] = useState(defaultStep != null ? defaultStep : stepsArray[0])
+  const initialStep = defaultStep != null ? defaultStep : stepsArray[0]
+
+  const [paramStep, setParamStep] = useQueryParam<string | null | undefined>('step')
+  const getParamStep = (paramStep != null && stepsArray.includes(paramStep)) ? paramStep : initialStep
+
+  const [currentStep, setCurrentStep] = useState(useParams == null ? initialStep : getParamStep)
+
+  const calculateCurrentStep = (step: string): void => {
+    setCurrentStep(step)
+    if (useParams === true) {
+      setParamStep(step)
+    }
+  }
 
   const nextStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
 
     if (currentIndex + 1 >= stepsArray.length) {
-      setCurrentStep(stepsArray[0])
+      calculateCurrentStep(stepsArray[0])
       onFinish?.()
       return
     }
-    setCurrentStep(stepsArray[currentIndex + 1])
+    calculateCurrentStep(stepsArray[currentIndex + 1])
   }
 
   const previousStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
     if (currentIndex - 1 < 0) {
-      setCurrentStep(stepsArray[stepsArray.length - 1])
+      calculateCurrentStep(stepsArray[stepsArray.length - 1])
       return
     }
-    setCurrentStep(stepsArray[currentIndex - 1])
+    calculateCurrentStep(stepsArray[currentIndex - 1])
   }
+
+  const definedHeaders = Object.keys(stepsHeaders).reduce((accum, item) => ({
+    ...accum,
+    [item]: {
+      title: defineMessage({ message: stepsHeaders[item].title }),
+      icon: stepsHeaders[item].icon
+    }
+  }), {})
 
   const contextValue = {
     stepsArray: stepsArray,
     stepsComponents: stepsComponents,
-    stepsHeaders: stepsHeaders,
+    stepsHeaders: definedHeaders,
     currentStep: currentStep,
     nextStep: nextStep,
     previousStep: previousStep,
     skipToStep: setCurrentStep,
     colorScheme: colorScheme
   }
+
+  useUpdateEffect(() => {
+    if (useParams === true) {
+      if (paramStep !== currentStep) {
+        setCurrentStep(getParamStep)
+      }
+    }
+  }, [paramStep, currentStep])
 
   return (
     <FlowContext.Provider value={contextValue}>

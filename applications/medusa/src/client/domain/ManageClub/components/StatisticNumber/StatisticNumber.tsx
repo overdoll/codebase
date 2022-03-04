@@ -14,14 +14,14 @@ export default function StatisticNumber ({
   value,
   text,
   colorScheme,
-  icon
+  icon,
 }: Props): JSX.Element {
   const colors = [
     'purple',
     'orange',
     'teal',
     'green',
-    'primary'
+    'primary',
   ]
 
   const randomColor = colors[Math.floor(Math.random() * 5)]

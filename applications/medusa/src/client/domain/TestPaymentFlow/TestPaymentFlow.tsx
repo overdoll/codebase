@@ -106,6 +106,7 @@ export default function TestPaymentFlow ({ prepared }: Props): JSX.Element {
     if (windowReference.current == null) return
     windowReference.current?.close()
   }
+  //
 
   // an example of how NOT to use window.open - window.open cannot be called from anything that's not a response to a mouse click, or else firefox/chrome will block the popup
   // useEffect(() => {

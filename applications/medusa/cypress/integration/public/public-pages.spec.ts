@@ -13,7 +13,7 @@ describe('Visit Public Pages', () => {
 
   it('go to the help page', () => {
     cy.visit('/help')
-    cy.findByText(/General Help/iu).should('exist')
+    cy.findByText(/Legal/iu).should('exist')
     // TODO make sure help links work?
   })
 

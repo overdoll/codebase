@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e7bff47b2795383c1c6b8a33d64082e2>>
- * @relayHash f7435e444fd613fbd5d89e1d8653de94
+ * @generated SignedSource<<c06795721c67b7c3e6c52b82ae61ed02>>
+ * @relayHash 70c149b6a5bd0f9943e1002b579f58fc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7435e444fd613fbd5d89e1d8653de94
+// @relayRequestID 70c149b6a5bd0f9943e1002b579f58fc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -163,9 +163,9 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/),
     (v8/*: any*/),
     (v9/*: any*/),
+    (v6/*: any*/),
     (v5/*: any*/)
   ],
   "storageKey": null
@@ -278,7 +278,14 @@ return {
                   (v5/*: any*/),
                   (v6/*: any*/),
                   (v8/*: any*/),
-                  (v9/*: any*/)
+                  (v9/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "videoDuration",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -324,8 +331,6 @@ return {
             "plural": true,
             "selections": [
               (v5/*: any*/),
-              (v13/*: any*/),
-              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -335,10 +340,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v10/*: any*/),
+                  (v11/*: any*/),
                   (v5/*: any*/)
                 ],
                 "storageKey": null
               },
+              (v13/*: any*/),
+              (v11/*: any*/),
               (v12/*: any*/)
             ],
             "storageKey": null
@@ -378,7 +386,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7435e444fd613fbd5d89e1d8653de94",
+    "id": "70c149b6a5bd0f9943e1002b579f58fc",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

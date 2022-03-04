@@ -2,9 +2,10 @@ import { Flex, Text, Wrap, WrapItem } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostClickableCategoriesFragment$key } from '@//:artifacts/PostClickableCategoriesFragment.graphql'
 import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
-import { ArrayParam, encodeQueryParams, StringParam } from 'serialize-query-params'
+import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { useHistory } from '../../../../../routing'
+import { configMap } from '../../../../../../client/components/PostsSearch/constants'
 
 interface Props {
   query: PostClickableCategoriesFragment$key | null
@@ -28,10 +29,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
   const history = useHistory()
 
   const onClick = (node): void => {
-    const encodedQuery = encodeQueryParams({
-      categories: ArrayParam,
-      sort: StringParam
-    }, {
+    const encodedQuery = encodeQueryParams(configMap, {
       categories: node.slug,
       sort: 'TOP'
     })

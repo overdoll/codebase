@@ -1,5 +1,5 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import JoinClubButton from '../../../../ManageClub/components/JoinClubButton/JoinClubButton'
+import JoinClubButton from '../../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Trans } from '@lingui/macro'

@@ -41,7 +41,7 @@ const Fragment = graphql`
           state
           ...PostPreviewContentFragment
           ...DraftPostFragment
-          ...PostReviewFragment
+          ...PublishedPostFragment
           ...ReviewPostFragment
           ...RejectedPostFragment
         }

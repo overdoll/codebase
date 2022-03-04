@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d88c8f8d040a509e5439fe875f0dc821>>
+ * @generated SignedSource<<4aa92e0978912d2af4cbf06010aeaa9d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AdminClubStatusFragment$data = {
   readonly suspension: {
     readonly expires: any;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubUnSuspendButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment" | "AdminClubUnSuspendButtonFragment">;
   readonly " $fragmentType": "AdminClubStatusFragment";
 };
 export type AdminClubStatusFragment = AdminClubStatusFragment$data;
@@ -50,6 +50,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "SuspendClubFormFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "AdminClubUnSuspendButtonFragment"
     }
   ],
@@ -57,6 +62,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "689ef1759520ac0f783bc69774dd5362";
+(node as any).hash = "ccafb9d0008644f775c2cefb8d3bd079";
 
 export default node;

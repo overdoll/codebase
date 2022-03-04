@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fe5e532da229a3d8212305e3f27ccd66>>
- * @relayHash 0792c65c3231599a6d5fb84cff2347b2
+ * @generated SignedSource<<94a4feee4b162a51d9f06eee4c6517ab>>
+ * @relayHash 7cca116fe651c56b33d83fba7b7bdcaf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0792c65c3231599a6d5fb84cff2347b2
+// @relayRequestID 7cca116fe651c56b33d83fba7b7bdcaf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -128,7 +128,6 @@ v11 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/),
     (v8/*: any*/),
     {
       "alias": null,
@@ -142,6 +141,7 @@ v11 = {
       ],
       "storageKey": null
     },
+    (v6/*: any*/),
     (v5/*: any*/)
   ],
   "storageKey": null
@@ -272,8 +272,6 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v12/*: any*/),
-                      (v9/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -283,10 +281,13 @@ return {
                         "plural": false,
                         "selections": [
                           (v10/*: any*/),
+                          (v9/*: any*/),
                           (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
+                      (v12/*: any*/),
+                      (v9/*: any*/),
                       (v11/*: any*/),
                       (v5/*: any*/)
                     ],
@@ -382,7 +383,7 @@ return {
     ]
   },
   "params": {
-    "id": "0792c65c3231599a6d5fb84cff2347b2",
+    "id": "7cca116fe651c56b33d83fba7b7bdcaf",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20778fc1de7f4ee9b62c410b8f503334>>
+ * @generated SignedSource<<2a734f349d71acbcf35ea39c9f702d2a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AdminClubInfractionsFragment$data = {
   readonly suspension: {
     readonly __typename: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubInfractionHistoryFragment" | "IssueClubInfractionFormFragment" | "SuspendClubFormFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubInfractionHistoryFragment" | "IssueClubInfractionFormFragment">;
   readonly " $fragmentType": "AdminClubInfractionsFragment";
 };
 export type AdminClubInfractionsFragment = AdminClubInfractionsFragment$data;
@@ -40,11 +40,6 @@ const node: ReaderFragment = {
       "name": "IssueClubInfractionFormFragment"
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "SuspendClubFormFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "concreteType": "ClubSuspension",
@@ -67,6 +62,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "968f8d44962fcef7a79e315a624e94a7";
+(node as any).hash = "9a26c9b74c0656c82ee0c93a4d98472f";
 
 export default node;

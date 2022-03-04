@@ -3,7 +3,7 @@ import type { PostPreviewContentFragment$key } from '@//:artifacts/PostPreviewCo
 import { Flex, Text } from '@chakra-ui/react'
 import { FileMultiple } from '@//:assets/icons/navigation'
 import Icon from '../../../../PageLayout/Flair/Icon/Icon'
-import ResourceItem from '../../../../DataDisplay/ResourceItem/ResourceItem'
+import ResourceInfo from '../../../../DataDisplay/ResourceInfo/ResourceInfo'
 
 interface Props {
   query: PostPreviewContentFragment$key
@@ -13,7 +13,7 @@ const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
     content {
       resource {
-        ...ResourceItemFragment
+        ...ResourceInfoFragment
       }
     }
   }
@@ -39,12 +39,12 @@ export default function PostPreviewContent ({
       justify='center'
       align='center'
     >
-      <ResourceItem h='100%' query={firstContent} />
+      <ResourceInfo query={firstContent} />
       {hasMoreThanOne &&
         <Flex
           align='center'
           borderRadius='xl'
-          bg='dimmers.500'
+          bg='dimmers.400'
           m={2}
           position='absolute'
           py={1}

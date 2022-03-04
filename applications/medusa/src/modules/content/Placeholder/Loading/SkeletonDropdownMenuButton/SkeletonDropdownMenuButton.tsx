@@ -1,20 +1,19 @@
-import { Box, Skeleton } from '@chakra-ui/react'
+import { Flex, Skeleton } from '@chakra-ui/react'
 
 export default function SkeletonDropdownMenuButton (): JSX.Element {
   return (
-    <Box>
+    <Flex p={2}>
       <Skeleton
-        p={2}
+        m={1}
         w={{
           base: 24,
           md: '100%'
         }}
         h={{
           base: 24,
-          md: '50px'
+          md: 10
         }}
-        borderRadius='sm'
       />
-    </Box>
+    </Flex>
   )
 }

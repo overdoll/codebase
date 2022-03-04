@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<13290cfc0bf114e60d10b48937e1e6ff>>
- * @relayHash cc7f29631a14e96d8f822fd83df1eaad
+ * @generated SignedSource<<42f3fbc1af457caa5143726c28ecae5e>>
+ * @relayHash 9171d052cd67540f469db545b15bc154
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cc7f29631a14e96d8f822fd83df1eaad
+// @relayRequestID 9171d052cd67540f469db545b15bc154
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -165,13 +165,6 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "urls",
@@ -200,6 +193,13 @@ return {
                 ],
                 "storageKey": null
               },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -210,7 +210,7 @@ return {
     ]
   },
   "params": {
-    "id": "cc7f29631a14e96d8f822fd83df1eaad",
+    "id": "9171d052cd67540f469db545b15bc154",
     "metadata": {},
     "name": "AdminViewSeriesQuery",
     "operationKind": "query",

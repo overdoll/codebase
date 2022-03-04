@@ -17,14 +17,14 @@ export default function VerticalNavigationGroup ({
   baseUrl,
   children
 }: Props): JSX.Element {
-  const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
-
   const location = useLocation()
 
   const isActive = location.pathname.includes(baseUrl)
+
+  const {
+    isOpen,
+    onToggle
+  } = useDisclosure({ defaultIsOpen: isActive })
 
   const IconComponent = (): JSX.Element => {
     const color = isActive

@@ -3,15 +3,15 @@ import { graphql } from 'react-relay'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import './css/scrollbar.min.css'
-import { Box, Flex, Heading, Spinner } from '@chakra-ui/react'
+import { Box, Spinner } from '@chakra-ui/react'
 import SwiperCore, { Mousewheel, Scrollbar, Virtual } from 'swiper'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
-import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { ReactNode, useState } from 'react'
+import { PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { useState } from 'react'
 import { Trans } from '@lingui/macro'
 
 interface Props {
@@ -20,7 +20,6 @@ interface Props {
   hasNext: boolean
   loadNext: (number, options) => {}
   isLoadingNext: boolean
-  prependSlide?: ReactNode
 }
 
 const PostFragment = graphql`
@@ -44,8 +43,7 @@ export default function PostsInfiniteScroll ({
   viewerQuery,
   hasNext,
   loadNext,
-  isLoadingNext,
-  prependSlide
+  isLoadingNext
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
@@ -71,7 +69,7 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
+      <SmallBackgroundBox mt={14}>
         <Trans>
           No posts found
         </Trans>
@@ -88,27 +86,23 @@ export default function PostsInfiniteScroll ({
         style={{ height: 'calc(100vh - 54px)' }}
         mousewheel
         slidesOffsetBefore={50}
+        slidesOffsetAfter={40}
         virtual={{
           cache: true,
           addSlidesBefore: 12,
           addSlidesAfter: 12
         }}
-        spaceBetween={20}
         slidesPerView={1.1}
+        freeModeSticky
         freeMode
         direction='vertical'
       >
-        {prependSlide != null && (
-          <SwiperSlide>
-            {prependSlide}
-          </SwiperSlide>
-        )}
         {data?.edges.map((item, index) =>
           <SwiperSlide
             key={index}
             virtualIndex={index}
           >
-            <Box h='100%'>
+            <Box py={3} px={1} h='100%'>
               <ObserverManagerProvider>
                 <PostVideoManagerProvider>
                   <FullSimplePost query={item.node} viewerQuery={viewerData} />
@@ -116,26 +110,13 @@ export default function PostsInfiniteScroll ({
               </ObserverManagerProvider>
             </Box>
           </SwiperSlide>)}
-        {hasNext
-          ? (
-            <SwiperSlide>
-              {isLoadingNext &&
-                <PostPlaceholder>
-                  <Spinner size='lg' />
-                </PostPlaceholder>}
-            </SwiperSlide>)
-          : (
-            <SwiperSlide>
-              <LargeBackgroundBox h='72vh'>
-                <Flex align='center' h='100%' justify='center'>
-                  <Heading fontSize='xl' color='gray.00'>
-                    <Trans>
-                      No more content available
-                    </Trans>
-                  </Heading>
-                </Flex>
-              </LargeBackgroundBox>
-            </SwiperSlide>)}
+        {hasNext && (
+          <SwiperSlide>
+            {isLoadingNext &&
+              <PostPlaceholder>
+                <Spinner size='lg' />
+              </PostPlaceholder>}
+          </SwiperSlide>)}
       </Swiper>
     </Box>
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6069eaf968646086115848f71b86818e>>
- * @relayHash 7af40d6ea4072d07a5898931b4d3596b
+ * @generated SignedSource<<093e65b23241a84f230eca85df0c0eb7>>
+ * @relayHash 45f8930943ef4cc1493bd63daa9d1464
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7af40d6ea4072d07a5898931b4d3596b
+// @relayRequestID 45f8930943ef4cc1493bd63daa9d1464
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,10 +20,10 @@ export type PublicPostQueryVariables = PublicPostQuery$variables;
 export type PublicPostQuery$data = {
   readonly post: {
     readonly reference: string;
-    readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment" | "PublicPostFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment" | "SuggestedPostsFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostViewerFragment" | "PostsInfiniteScrollViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostViewerFragment" | "SuggestedPostsViewerFragment">;
   };
 };
 export type PublicPostQueryResponse = PublicPostQuery$data;
@@ -170,7 +170,6 @@ v14 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v4/*: any*/),
     (v6/*: any*/),
     {
       "alias": null,
@@ -184,6 +183,7 @@ v14 = {
       ],
       "storageKey": null
     },
+    (v4/*: any*/),
     (v3/*: any*/)
   ],
   "storageKey": null
@@ -228,8 +228,6 @@ v17 = {
   "name": "characters",
   "plural": true,
   "selections": [
-    (v12/*: any*/),
-    (v13/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -239,10 +237,13 @@ v17 = {
       "plural": false,
       "selections": [
         (v16/*: any*/),
+        (v13/*: any*/),
         (v3/*: any*/)
       ],
       "storageKey": null
     },
+    (v12/*: any*/),
+    (v13/*: any*/),
     (v14/*: any*/),
     (v3/*: any*/)
   ],
@@ -294,7 +295,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "PublicPostFragment"
+            "name": "SuggestedPostsFragment"
           }
         ],
         "storageKey": null
@@ -317,7 +318,7 @@ return {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "PostsInfiniteScrollViewerFragment"
+              "name": "SuggestedPostsViewerFragment"
             }
           ],
           "storageKey": null
@@ -431,7 +432,7 @@ return {
             "args": (v19/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "ViewPost_suggestedPosts",
+            "key": "SuggestedPosts_suggestedPosts",
             "kind": "LinkedHandle",
             "name": "suggestedPosts"
           }
@@ -467,7 +468,7 @@ return {
     ]
   },
   "params": {
-    "id": "7af40d6ea4072d07a5898931b4d3596b",
+    "id": "45f8930943ef4cc1493bd63daa9d1464",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -476,6 +477,6 @@ return {
 };
 })();
 
-(node as any).hash = "e8bddf6416e358d370fcd3c013dbbeda";
+(node as any).hash = "83475c2caed8583e8ffec3c328d267d9";
 
 export default node;

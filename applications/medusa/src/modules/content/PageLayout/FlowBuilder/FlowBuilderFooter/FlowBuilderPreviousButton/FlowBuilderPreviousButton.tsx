@@ -2,8 +2,11 @@ import { useContext } from 'react'
 import { FlowContext } from '../../FlowBuilder'
 import Button from '../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
+import { ButtonProps } from '@chakra-ui/react'
 
-export default function FlowBuilderPreviousButton (): JSX.Element {
+type Props = ButtonProps
+
+export default function FlowBuilderPreviousButton (props: Props): JSX.Element {
   const { previousStep } = useContext(FlowContext)
 
   return (
@@ -12,6 +15,7 @@ export default function FlowBuilderPreviousButton (): JSX.Element {
       size='lg'
       colorScheme='gray'
       variant='solid'
+      {...props}
     >
       <Trans>
         Back

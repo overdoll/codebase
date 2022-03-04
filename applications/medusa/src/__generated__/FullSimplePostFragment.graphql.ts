@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bac4068c0116cf4b08203a2e51d17339>>
+ * @generated SignedSource<<cf92367a1b04aa5877525f347c3d4019>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,11 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type FullSimplePostFragment$data = {
-  readonly id: string;
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostMenuFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+  readonly reference: string;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
 };
 export type FullSimplePostFragment = FullSimplePostFragment$data;
@@ -31,13 +31,6 @@ const node: ReaderFragment = {
   "name": "FullSimplePostFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostGalleryPublicSimpleFragment"
@@ -45,7 +38,22 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostMenuFragment"
+      "name": "PostViewButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostModerateButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostCopyLinkButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostReportButtonFragment"
     },
     {
       "args": null,
@@ -82,12 +90,19 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "d24b1e2a3778b9ad97a96486f180be3d";
+(node as any).hash = "85facb88e9ed8416f459c62cf93403b4";
 
 export default node;

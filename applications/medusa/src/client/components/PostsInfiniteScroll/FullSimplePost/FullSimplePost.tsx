@@ -13,7 +13,14 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../domain/ManageClub/components/JoinClubButton/JoinClubButton'
+import JoinClubButton from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
+import PostCopyLinkButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
+import PostViewButton from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -22,9 +29,11 @@ interface Props {
 
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
-    id
     ...PostGalleryPublicSimpleFragment
-    ...PostMenuFragment
+    ...PostViewButtonFragment
+    ...PostModerateButtonFragment
+    ...PostCopyLinkButtonFragment
+    ...PostReportButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
@@ -32,6 +41,7 @@ const PostFragment = graphql`
     club {
       ...JoinClubButtonClubFragment
     }
+    reference
   }
 `
 
@@ -54,7 +64,7 @@ export default function FullSimplePost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={1}>
+    <Stack h='100%' justify='space-between' spacing={1}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
         <JoinClubButton
@@ -64,14 +74,25 @@ export default function FullSimplePost ({
         />
       </HStack>
       <PostGalleryPublicSimple query={data} />
-      <PostFooter
-        leftItem={<PostLikeButton size='sm' query={data} />}
-        centerItem={<PostIndexer
-          length={slidesCount}
-          currentIndex={currentSlide}
-                    />}
-        rightItem={<PostMenu size='sm' query={data} />}
-      />
+      <Stack spacing={1}>
+        <PostFooter
+          leftItem={(
+            <PostLikeButton size='sm' query={data} />
+          )}
+          centerItem={(
+            <PostIndexer
+              length={slidesCount}
+              currentIndex={currentSlide}
+            />)}
+          rightItem={(
+            <PostMenu variant='ghost' size='sm'>
+              <PostViewButton query={data} />
+              <PostCopyLinkButton query={data} />
+              <PostReportButton query={data} />
+              <PostModerateButton query={data} />
+            </PostMenu>)}
+        />
+      </Stack>
     </Stack>
   )
 }

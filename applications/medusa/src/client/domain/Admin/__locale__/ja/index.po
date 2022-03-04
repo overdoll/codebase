@@ -63,7 +63,7 @@ msgstr ""
 msgid "A selection is required"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:44
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:46
 msgid "Active"
 msgstr ""
 
@@ -109,6 +109,8 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:127
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:126
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:128
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:127
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:128
 msgid "BCP 47 Locale Code"
 msgstr ""
@@ -155,6 +157,22 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:57
 msgid "Change Character Name"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:37
+msgid "Change Deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:37
+msgid "Change Infraction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:58
+msgid "Change Rule Description"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:57
+msgid "Change Rule Title"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:57
@@ -224,9 +242,13 @@ msgid "Create Rule"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:53
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:148
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
 #: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries.tsx:30
 msgid "Create Series"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
+msgid "Deprecated"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:77
@@ -250,6 +272,10 @@ msgstr ""
 msgid "Enter a character slug"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:118
+msgid "Enter a description"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:121
 msgid "Enter a description for the rule"
 msgstr ""
@@ -266,13 +292,17 @@ msgstr ""
 msgid "Enter a rule title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:138
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:132
 msgid "Enter a series slug"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:124
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:118
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:118
 msgid "Enter a series title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:117
+msgid "Enter a title"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:138
@@ -300,7 +330,7 @@ msgstr ""
 msgid "Error creating rule {0}"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:98
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
 msgid "Error creating series {0}"
 msgstr ""
 
@@ -316,11 +346,23 @@ msgstr ""
 msgid "Error updating character name"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:95
+msgid "Error updating rule description"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:94
+msgid "Error updating rule title"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:95
 msgid "Error updating series title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:37
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
+msgid "Infraction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:33
 msgid "Infractions"
 msgstr ""
 
@@ -328,7 +370,7 @@ msgstr ""
 #~ msgid "Instant"
 #~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:48
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:44
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
 msgid "Issue Infraction"
 msgstr ""
@@ -340,6 +382,8 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:133
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:132
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:133
 msgid "Locale"
 msgstr ""
@@ -389,7 +433,7 @@ msgstr ""
 msgid "Purge"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:61
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:64
 msgid "Remove Suspension"
 msgstr ""
 
@@ -408,15 +452,26 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:28
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:105
+msgid "Rule Deprecated"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:31
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:113
 msgid "Rule Description"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:129
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:28
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:105
 msgid "Rule Infraction"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:101
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:32
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:112
 msgid "Rule Title"
 msgstr ""
 
@@ -498,7 +553,7 @@ msgstr ""
 msgid "Series"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:133
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:127
 msgid "Series Slug"
 msgstr ""
 
@@ -507,12 +562,12 @@ msgstr ""
 msgid "Series Thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:119
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:113
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:32
 msgid "Series Title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:92
+#: src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/AdminCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
 msgid "Series {0} was created successfully"
 msgstr ""
 
@@ -532,6 +587,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
 msgid "Submit"
@@ -589,16 +648,24 @@ msgstr ""
 msgid "Successfully updated character thumbnail"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:81
+msgid "Successfully updated rule deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:81
+msgid "Successfully updated rule infraction"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
 msgid "Successfully updated series thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:58
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:75
 msgid "Suspend Club"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:40
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:42
 msgid "Suspended"
 msgstr ""
 
@@ -686,6 +753,14 @@ msgstr ""
 msgid "There was an error updating audience standard"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:87
+msgid "There was an error updating rule deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:87
+msgid "There was an error updating rule infraction"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:86
 msgid "There was an error updating the audience thumbnail"
 msgstr ""
@@ -723,6 +798,14 @@ msgstr ""
 msgid "Updated character name to {0} for {1}"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:89
+msgid "Updated rule description for {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:88
+msgid "Updated rule title to {0} for {1}"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:89
 msgid "Updated series title to {0} for {1}"
 msgstr ""
@@ -730,6 +813,8 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:43
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:44
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:43
 msgid "View Translations"
 msgstr ""

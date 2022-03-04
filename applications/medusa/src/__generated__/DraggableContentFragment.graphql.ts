@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<61e90180d35e01af58f16b1fcc776c23>>
+ * @generated SignedSource<<d63cd30129bccaf994fa617a5c854db0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type DraggableContentFragment$data = {
     readonly url: string;
     readonly mimeType: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   readonly " $fragmentType": "DraggableContentFragment";
 };
 export type DraggableContentFragment = DraggableContentFragment$data;
@@ -75,13 +75,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ResourceItemFragment"
+      "name": "ResourceInfoFragment"
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "3ec2210c98b7e5b443a31d689e9743b2";
+(node as any).hash = "7777cf09d01745ccfff9fb1b4afc35df";
 
 export default node;
