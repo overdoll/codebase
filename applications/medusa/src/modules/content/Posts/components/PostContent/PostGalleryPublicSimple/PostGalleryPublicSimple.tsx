@@ -1,15 +1,15 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex, Stack } from '@chakra-ui/react'
-import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../helpers/PostVideoManager/PostVideoManager'
-import { GlobalVideoManagerContext } from '../../../helpers/GlobalVideoManager/GlobalVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
-import ControlledVideo from '../../PostMedia/ControlledVideo/ControlledVideo'
-import { Trans } from '@lingui/macro'
+import PostMedia from '../../PostMedia/PostMedia'
 import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
+import { Trans } from '@lingui/macro'
+import { ArrowButtonRight } from '@//:assets/icons'
+import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null
@@ -21,8 +21,7 @@ const Fragment = graphql`
     reference
     content {
       type
-      ...ImageSnippetFragment
-      ...ControlledVideoFragment
+      ...PostMediaFragment
     }
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
@@ -35,60 +34,43 @@ export default function PostGalleryPublicSimple ({
   const data = useFragment(Fragment, query)
 
   const {
-    changeVideoVolume,
-    changeVideoMuted,
-    onVideoPlay,
-    videoMuted,
-    videoVolume
-  } = useContext(GlobalVideoManagerContext)
-
-  const {
-    onInitialize,
-    onVideoInitialize
+    onInitialize
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Box bg='gray.800'>
-      <Swiper
-        observer
-        onSwiper={(swiper) =>
-          onInitialize(swiper)}
-        onObserverUpdate={(swiper) => onInitialize(swiper)}
-      >
-        {data?.content.map((item, index) =>
-          <SwiperSlide
-            key={index}
-          >
-            <Flex h='72vh' align='center' justify='center'>
-              {item.type === 'IMAGE' &&
-                <ImageSnippet h='100%' query={item} />}
-              {item.type === 'VIDEO' &&
-                <ControlledVideo
-                  onPlay={(paused, target) => onVideoPlay(data?.reference, paused, target)}
-                  onPause={(paused, target) => onVideoPlay(data?.reference, paused, target)}
-                  onInitialize={(target) => onVideoInitialize(target, index)}
-                  volume={videoVolume}
-                  isMuted={videoMuted}
-                  onMute={changeVideoMuted}
-                  onVolumeChange={changeVideoVolume}
-                  query={item}
-                />}
-            </Flex>
-          </SwiperSlide>)}
-        <SwiperSlide>
-          <Stack h='72vh' align='center' justify='center' spacing={2}>
-            <LinkButton
-              size='lg'
-              colorScheme='primary'
-              to={`/p/${data?.reference as string}`}
+    <Stack spacing={1}>
+      <Box>
+        <Swiper
+          observer
+          onSwiper={(swiper) =>
+            onInitialize(swiper)}
+          onObserverUpdate={(swiper) => onInitialize(swiper)}
+        >
+          {data?.content.map((item, index) =>
+            <SwiperSlide
+              key={index}
             >
-              <Trans>
-                View Post
-              </Trans>
-            </LinkButton>
-          </Stack>
-        </SwiperSlide>
-      </Swiper>
-    </Box>
+              <Flex bg='gray.800' w='100%' h='72vh' align='center' justify='center'>
+                <Stack spacing={1}>
+                  <PostMedia query={item} index={index} reference={data.reference} />
+                  <Flex px={1} justify='flex-end'>
+                    <LinkButton
+                      size='sm'
+                      variant='ghost'
+                      colorScheme='gray'
+                      rightIcon={<Icon w={2} h={2} icon={ArrowButtonRight} fill='inherit' />}
+                      to={`/p/${data?.reference}`}
+                    >
+                      <Trans>
+                        View Post
+                      </Trans>
+                    </LinkButton>
+                  </Flex>
+                </Stack>
+              </Flex>
+            </SwiperSlide>)}
+        </Swiper>
+      </Box>
+    </Stack>
   )
 }

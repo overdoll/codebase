@@ -45,7 +45,7 @@ export default function DraftPost ({
             DRAFT
           </Trans>
         </Badge>
-        <PostMenu size='sm' query={data} />
+        <PostMenu size='xs' query={data} />
       </HStack>
       <GridTile>
         <LinkTile to={`${draftPostPath()}?post=${data.reference}`}>

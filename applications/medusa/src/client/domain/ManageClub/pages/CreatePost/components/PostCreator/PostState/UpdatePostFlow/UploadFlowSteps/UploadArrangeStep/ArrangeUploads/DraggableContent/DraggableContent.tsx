@@ -1,11 +1,11 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { DraggableContentFragment$key } from '@//:artifacts/DraggableContentFragment.graphql'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
 
 interface Props {
   onRemove: (string) => void
@@ -24,7 +24,7 @@ const Fragment = graphql`
       url
       mimeType
     }
-    ...ResourceItemFragment
+    ...ResourceInfoFragment
   }
 `
 
@@ -59,7 +59,7 @@ export default function DraggableContent ({
             </Heading>
           </Flex>
           <Flex align='center' justify='center' w='38%'>
-            <ResourceItem query={data} />
+            <ResourceInfo query={data} />
           </Flex>
           <Flex w='38%' />
           <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>

@@ -1,66 +1,48 @@
-import { Trans } from '@lingui/macro'
-import { LoginKeys } from '@//:assets/icons/navigation'
 import { graphql } from 'react-relay'
 import { PostMenuFragment$key } from '@//:artifacts/PostMenuFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { Menu, MenuLinkItem } from '../../../../ThemeComponents/Menu/Menu'
+import { Menu } from '../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../authorization/Can'
 import PostReportButton from './PostReportButton/PostReportButton'
 import PostCopyLinkButton from './PostCopyLinkButton/PostCopyLinkButton'
+import PostViewButton from './PostViewButton/PostViewButton'
+import PostModerateButton from './PostModerateButton/PostModerateButton'
+import { ButtonProps } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends ButtonProps {
   query: PostMenuFragment$key
-  size?: string
 }
 
 const Fragment = graphql`
   fragment PostMenuFragment on Post {
-    reference @required(action: THROW)
     ...PostReportButtonFragment
     ...PostCopyLinkButtonFragment
+    ...PostViewButtonFragment
+    ...PostModerateButtonFragment
+    state
   }
 `
 
 export default function PostMenu ({
   query,
-  size = 'md'
+  ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const getButtonSize = (): number => {
-    switch (size) {
-      case 'sm':
-        return 5
-      default:
-        return 12
-    }
-  }
-
-  const buttonSize = getButtonSize()
 
   return (
     <Can I='interact' a='Post'>
       {allowed => (
         <Menu
           isDisabled={allowed === false}
-          size={size}
-          bg='transparent'
-          h={buttonSize}
-          w={buttonSize}
+          {...rest}
         >
-          <PostCopyLinkButton query={data} />
-          <PostReportButton query={data} />
-          <Can I='admin' a='Post'>
-            <MenuLinkItem
-              to={`/moderation/post/${data.reference}`}
-              text={(
-                <Trans>
-                  Moderate
-                </Trans>)}
-              colorScheme='purple'
-              icon={LoginKeys}
-            />
-          </Can>
+          {data.state === 'PUBLISHED' && (
+            <>
+              <PostViewButton query={data} />
+              <PostCopyLinkButton query={data} />
+              <PostReportButton query={data} />
+            </>)}
+          <PostModerateButton query={data} />
         </Menu>)}
     </Can>
   )

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fe5b95cdff1956ce32cc5f308903108>>
+ * @generated SignedSource<<9216d841456ed2b06dda595be0b19303>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PublicPostFragment$data = {
+export type SuggestedPostsFragment$data = {
   readonly suggestedPosts: {
     readonly edges: ReadonlyArray<{
       readonly __typename: string;
@@ -18,12 +18,12 @@ export type PublicPostFragment$data = {
     readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
   };
   readonly id: string;
-  readonly " $fragmentType": "PublicPostFragment";
+  readonly " $fragmentType": "SuggestedPostsFragment";
 };
-export type PublicPostFragment = PublicPostFragment$data;
-export type PublicPostFragment$key = {
-  readonly " $data"?: PublicPostFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PublicPostFragment">;
+export type SuggestedPostsFragment = SuggestedPostsFragment$data;
+export type SuggestedPostsFragment$key = {
+  readonly " $data"?: SuggestedPostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -72,18 +72,18 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ViewPostPaginationQuery.graphql'),
+      "operation": require('./SuggestedPostsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "PublicPostFragment",
+  "name": "SuggestedPostsFragment",
   "selections": [
     {
       "alias": "suggestedPosts",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__ViewPost_suggestedPosts_connection",
+      "name": "__SuggestedPosts_suggestedPosts_connection",
       "plural": false,
       "selections": [
         {
@@ -163,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "2637b02c8a7f2f31d1cde9a992e6f847";
+(node as any).hash = "bec0a94a48aa18a3478bbd6122d05fe6";
 
 export default node;

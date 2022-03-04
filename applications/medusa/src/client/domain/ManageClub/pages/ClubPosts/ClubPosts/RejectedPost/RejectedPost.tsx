@@ -31,7 +31,7 @@ export default function RejectedPost ({
             Rejected
           </Trans>
         </Badge>
-        <PostMenu size='sm' query={data} />
+        <PostMenu size='xs' query={data} />
       </HStack>
       <GridTile>
         <PostPreviewContent query={data} />

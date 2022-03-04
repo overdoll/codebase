@@ -1,5 +1,8 @@
 import { Stack } from '@chakra-ui/react'
 import { createContext, FunctionComponent, ReactNode, useState } from 'react'
+import { defineMessage } from '@lingui/macro'
+import { useQueryParam } from 'use-query-params'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface BuilderProps {
   stepsArray: string[]
@@ -11,6 +14,7 @@ interface BuilderProps {
 
 interface ComponentProps extends BuilderProps {
   children: ReactNode
+  useParams?: boolean | undefined
   onFinish?: () => void
 }
 
@@ -43,7 +47,6 @@ const defaultValue = {
   previousStep: () => {
   },
   skipToStep: (step: string) => {
-
   }
 }
 
@@ -56,9 +59,13 @@ export default function FlowBuilder ({
   stepsComponents,
   stepsHeaders,
   colorScheme = 'primary',
-  onFinish
+  onFinish,
+  useParams
 }: ComponentProps): JSX.Element {
-  const [currentStep, setCurrentStep] = useState(defaultStep != null ? defaultStep : stepsArray[0])
+  const initialStep = defaultStep != null ? defaultStep : stepsArray[0]
+
+  const [currentStep, setCurrentStep] = useState(initialStep)
+  const [paramStep, setParamStep] = useQueryParam<string | null | undefined>('step')
 
   const nextStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
@@ -80,16 +87,36 @@ export default function FlowBuilder ({
     setCurrentStep(stepsArray[currentIndex - 1])
   }
 
+  const definedHeaders = Object.keys(stepsHeaders).reduce((accum, item) => ({
+    ...accum,
+    [item]: {
+      title: defineMessage({ message: stepsHeaders[item].title }),
+      icon: stepsHeaders[item].icon
+    }
+  }), {})
+
   const contextValue = {
     stepsArray: stepsArray,
     stepsComponents: stepsComponents,
-    stepsHeaders: stepsHeaders,
-    currentStep: currentStep,
+    stepsHeaders: definedHeaders,
+    currentStep: useParams === true && paramStep != null ? paramStep : currentStep,
     nextStep: nextStep,
     previousStep: previousStep,
     skipToStep: setCurrentStep,
     colorScheme: colorScheme
   }
+
+  useUpdateEffect(() => {
+    if (useParams === true && currentStep !== initialStep) {
+      setParamStep(currentStep)
+    }
+  }, [currentStep, setParamStep])
+
+  useUpdateEffect(() => {
+    if (useParams === true && paramStep == null) {
+      setCurrentStep(initialStep)
+    }
+  }, [paramStep])
 
   return (
     <FlowContext.Provider value={contextValue}>

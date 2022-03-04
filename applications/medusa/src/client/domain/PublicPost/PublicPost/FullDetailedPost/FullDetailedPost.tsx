@@ -59,22 +59,26 @@ export default function FullDetailedPost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={2}>
-      <HStack spacing={3} justify='space-between' align='center'>
-        <PostHeaderClub query={data} />
-        <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
-      </HStack>
-      <PostGalleryPublicDetailed query={data} />
-      <PostFooter
-        leftItem={<PostLikeButton query={data} />}
-        centerItem={<PostIndexer
-          length={slidesCount}
-          currentIndex={currentSlide}
-                    />}
-        rightItem={<PostMenu query={data} />}
-      />
-      <PostClickableCharacters query={data} />
-      <PostClickableCategories query={data} />
+    <Stack spacing={8}>
+      <Stack h='100%' justify='space-between' spacing={2}>
+        <HStack spacing={3} justify='space-between' align='center'>
+          <PostHeaderClub query={data} />
+          <JoinClubButton size='sm' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
+        </HStack>
+        <PostGalleryPublicDetailed query={data} />
+        <PostFooter
+          leftItem={<PostLikeButton size='sm' query={data} />}
+          centerItem={<PostIndexer
+            length={slidesCount}
+            currentIndex={currentSlide}
+                      />}
+          rightItem={<PostMenu size='sm' variant='ghost' query={data} />}
+        />
+      </Stack>
+      <Stack spacing={2}>
+        <PostClickableCharacters query={data} />
+        <PostClickableCategories query={data} />
+      </Stack>
     </Stack>
   )
 }

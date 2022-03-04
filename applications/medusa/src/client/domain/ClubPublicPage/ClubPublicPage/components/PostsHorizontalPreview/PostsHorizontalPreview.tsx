@@ -44,8 +44,8 @@ export default function PostsHorizontalPreview ({
   return (
     <Box>
       <Swiper
-        spaceBetween={6}
-        slidesPerView={2.2}
+        spaceBetween={16}
+        slidesPerView='auto'
       >
         {data?.edges.map((item, index) =>
           <SwiperSlide
@@ -53,7 +53,7 @@ export default function PostsHorizontalPreview ({
             virtualIndex={index}
           >
             <GridWrap>
-              <GridTile m={1}>
+              <GridTile>
                 <LinkTile to={`/p/${item.node.reference}`}>
                   <PostPreviewContent query={item.node} />
                 </LinkTile>
@@ -62,15 +62,17 @@ export default function PostsHorizontalPreview ({
           </SwiperSlide>)}
         <SwiperSlide>
           <GridWrap>
-            <LinkTile to={to}>
-              <Flex w='100%' align='center' justify='center'>
-                <Heading fontSize='lg' color='gray.00'>
-                  <Trans>
-                    See All
-                  </Trans>
-                </Heading>
-              </Flex>
-            </LinkTile>
+            <GridTile>
+              <LinkTile to={to}>
+                <Flex h='100%' w='100%' align='center' justify='center'>
+                  <Heading fontSize='lg' color='gray.00'>
+                    <Trans>
+                      See all
+                    </Trans>
+                  </Heading>
+                </Flex>
+              </LinkTile>
+            </GridTile>
           </GridWrap>
         </SwiperSlide>
       </Swiper>

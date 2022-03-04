@@ -34,7 +34,7 @@ export default function File ({
     uppy.removeFile(id)
     dispatch({
       type: 'files',
-      value: { id: id },
+      value: [{ id: id }],
       transform: 'REMOVE'
     })
     dispatch({

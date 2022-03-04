@@ -10,8 +10,6 @@ export default function PageInfiniteScrollWrapper ({ children }: Props): JSX.Ele
     <Center>
       <Box
         w={['full', 'lg']}
-        pl={[1, 0]}
-        pr={[1, 0]}
         h='100%'
       >
         {children}

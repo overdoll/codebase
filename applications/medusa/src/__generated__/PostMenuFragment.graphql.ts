@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f2196e8a26a6d36e8dc2543ba2b90bf>>
+ * @generated SignedSource<<5a49fbc2ee33e4972f8a6d73d6312ef9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,11 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostMenuFragment$data = {
-  readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostReportButtonFragment" | "PostCopyLinkButtonFragment">;
+  readonly state: PostState;
+  readonly " $fragmentSpreads": FragmentRefs<"PostReportButtonFragment" | "PostCopyLinkButtonFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment">;
   readonly " $fragmentType": "PostMenuFragment";
 };
 export type PostMenuFragment = PostMenuFragment$data;
@@ -28,18 +29,6 @@ const node: ReaderFragment = {
   "name": "PostMenuFragment",
   "selections": [
     {
-      "kind": "RequiredField",
-      "field": {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "reference",
-        "storageKey": null
-      },
-      "action": "THROW",
-      "path": "reference"
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostReportButtonFragment"
@@ -48,12 +37,29 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostCopyLinkButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostViewButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostModerateButtonFragment"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "state",
+      "storageKey": null
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "1fb2f253136334bb0b11bff936e52269";
+(node as any).hash = "432ee28a999ba7894dd555377d4d61a7";
 
 export default node;

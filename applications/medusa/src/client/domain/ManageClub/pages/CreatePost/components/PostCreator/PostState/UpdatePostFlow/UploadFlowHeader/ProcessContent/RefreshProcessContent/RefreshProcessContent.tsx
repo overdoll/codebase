@@ -22,10 +22,23 @@ const Query = graphql`
       content {
         id
         processed
+        videoDuration
+        videoThumbnail {
+          url
+        }
+        urls {
+          mimeType
+          url
+        }
       }
     }
   }
 `
+
+export const isProcessed = (content): boolean => {
+  const processed = content.map((item) => item.processed) as boolean[]
+  return processed.every(x => x)
+}
 
 export default function RefreshProcessContent ({
   searchArguments
@@ -38,12 +51,7 @@ export default function RefreshProcessContent ({
 
   const { dispatch } = useSequenceContext()
 
-  const isProcessed = (): boolean => {
-    const processed = queryData?.post?.content.map((item) => item.processed) as boolean[]
-    return processed.every(x => x)
-  }
-
-  const contentIsProcessed = isProcessed()
+  const contentIsProcessed = isProcessed(queryData?.post?.content)
 
   useUpdateEffect(() => {
     dispatch({

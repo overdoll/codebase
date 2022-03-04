@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c3b65cbd8ed15e527e006df6b538881>>
+ * @generated SignedSource<<744b929f66eacb1f51366e84847c2d7c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type UpdatePostFlowFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly processed: boolean;
   }>;
   readonly audience: {
     readonly id: string;
@@ -87,7 +88,14 @@ return {
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "processed",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -136,6 +144,6 @@ return {
 };
 })();
 
-(node as any).hash = "ac721cac976189622103f2a22fdc8252";
+(node as any).hash = "2d4cefa87206b6386a3fb49b9d5cde83";
 
 export default node;

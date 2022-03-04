@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { FullSimplePostFragment$key } from '@//:artifacts/FullSimplePostFragment.graphql'
 import { FullSimplePostViewerFragment$key } from '@//:artifacts/FullSimplePostViewerFragment.graphql'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Flex, HStack, Stack } from '@chakra-ui/react'
 import { useContext } from 'react'
 import {
   PostFooter,
@@ -14,6 +14,8 @@ import {
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
 import JoinClubButton from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -22,7 +24,6 @@ interface Props {
 
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
-    id
     ...PostGalleryPublicSimpleFragment
     ...PostMenuFragment
     ...PostLikeButtonFragment
@@ -32,6 +33,7 @@ const PostFragment = graphql`
     club {
       ...JoinClubButtonClubFragment
     }
+    reference
   }
 `
 
@@ -54,7 +56,7 @@ export default function FullSimplePost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={1}>
+    <Stack h='100%' justify='space-between' spacing={1}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
         <JoinClubButton
@@ -64,14 +66,19 @@ export default function FullSimplePost ({
         />
       </HStack>
       <PostGalleryPublicSimple query={data} />
-      <PostFooter
-        leftItem={<PostLikeButton size='sm' query={data} />}
-        centerItem={<PostIndexer
-          length={slidesCount}
-          currentIndex={currentSlide}
-                    />}
-        rightItem={<PostMenu size='sm' query={data} />}
-      />
+      <Stack spacing={1}>
+        <PostFooter
+          leftItem={(
+            <PostLikeButton size='sm' query={data} />
+          )}
+          centerItem={(
+            <PostIndexer
+              length={slidesCount}
+              currentIndex={currentSlide}
+            />)}
+          rightItem={<PostMenu variant='ghost' size='sm' query={data} />}
+        />
+      </Stack>
     </Stack>
   )
 }

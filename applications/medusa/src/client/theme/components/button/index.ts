@@ -68,7 +68,10 @@ const variantSolid: SystemStyleFunction = (props) => {
 }
 
 const variantGhost: SystemStyleFunction = (props) => {
-  const { colorScheme: c } = props
+  const {
+    colorScheme: c,
+    theme
+  } = props
 
   if (c === 'gray') {
     return {
@@ -86,13 +89,16 @@ const variantGhost: SystemStyleFunction = (props) => {
   }
 
   return {
-    color: mode(`${c}.600`, `${c}.300`)(props),
-    bg: 'transparent',
+    color: mode(`${c}.600`, `${c}.400`)(props),
+    bg: 'dimmers.400',
     _hover: {
-      color: mode(`${c}.50`, `${c}.200`)(props)
+      bg: 'dimmers.500',
+      color: mode(`${c}.50`, `${c}.500`)(props)
     },
     _active: {
-      color: mode(`${c}.50`, `${c}.500`)(props)
+      bg: 'dimmers.400',
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`,
+      color: mode(`${c}.50`, `${c}.400`)(props)
     }
   }
 }

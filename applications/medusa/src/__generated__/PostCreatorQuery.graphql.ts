@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d5f407847399a4b0892578f1076652e2>>
- * @relayHash 363e47ee29c77bfedabf2879aef825c7
+ * @generated SignedSource<<b8727c4d7cedca3cd42a57756927f4fc>>
+ * @relayHash 857cbe2874148f414faed492c5f4465e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 363e47ee29c77bfedabf2879aef825c7
+// @relayRequestID 857cbe2874148f414faed492c5f4465e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -163,9 +163,9 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v8/*: any*/),
     (v7/*: any*/),
     (v9/*: any*/),
+    (v8/*: any*/),
     (v5/*: any*/)
   ],
   "storageKey": null
@@ -270,7 +270,14 @@ return {
               (v5/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v9/*: any*/)
+              (v9/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "videoDuration",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -367,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "363e47ee29c77bfedabf2879aef825c7",
+    "id": "857cbe2874148f414faed492c5f4465e",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

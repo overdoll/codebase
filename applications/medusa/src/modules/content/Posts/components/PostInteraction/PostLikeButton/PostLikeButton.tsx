@@ -4,15 +4,16 @@ import 'swiper/components/navigation/navigation.min.css'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
 import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
 import { useMutation } from 'react-relay/hooks'
-import { ClickableBox, Icon } from '../../../../PageLayout'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Icon } from '../../../../PageLayout'
+import { ButtonProps, Flex, Heading } from '@chakra-ui/react'
 import { abbreviateNumber } from '../../../../../support'
-import { useContext } from 'react'
-import { AbilityContext } from '../../../../../authorization/AbilityContext'
+import IconButton from '../../../../../form/IconButton/IconButton'
+import Can from '../../../../../authorization/Can'
+import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 
-interface Props {
+interface Props extends ButtonProps {
   query: PostLikeButtonFragment$key | null
-  size?: string
 }
 
 const Fragment = graphql`
@@ -49,12 +50,16 @@ const UndoMutation = graphql`
 
 export default function PostLikeButton ({
   query,
-  size = 'md'
+  ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [likePost] = useMutation(LikeMutation)
-  const [undoLike] = useMutation(UndoMutation)
+  const [likePost, isLiking] = useMutation(LikeMutation)
+  const [undoLike, isUnliking] = useMutation(UndoMutation)
+
+  const { i18n } = useLingui()
+
+  const hasLiked = data?.viewerLiked != null
 
   const onLikePost = (): void => {
     if (data?.id == null) return
@@ -104,52 +109,32 @@ export default function PostLikeButton ({
 
   const likes = abbreviateNumber(data?.likes ?? 0, 2)
 
-  const getIconSize = (): number => {
-    switch (size) {
-      case 'sm':
-        return 6
-      default:
-        return 8
-    }
-  }
-
-  const getFontSize = (): string => {
-    switch (size) {
-      case 'sm':
-        return 'xl'
-      default:
-        return '2xl'
-    }
-  }
-
-  const iconSize = getIconSize()
-  const fontSize = getFontSize()
-
-  const ability = useContext(AbilityContext)
-
-  const isDisabled = ability.cannot('interact', 'Post')
-
-  if (data?.viewerLiked != null) {
-    return (
-      <Flex align='center'>
-        <ClickableBox isDisabled={isDisabled} mr={1} bg='transparent' borderRadius='xl' onClick={onUndoLike} p={1}>
-          <Icon icon={HeartFull} fill='primary.400' h={iconSize} w={iconSize} />
-        </ClickableBox>
-        <Heading color='primary.400' fontSize={fontSize}>
-          {likes}
-        </Heading>
-      </Flex>
-    )
-  }
-
   return (
-    <Flex align='center'>
-      <ClickableBox isDisabled={isDisabled} mr={1} bg='transparent' borderRadius='xl' onClick={onLikePost} p={1}>
-        <Icon icon={HeartOutline} fill='gray.200' h={iconSize} w={iconSize} />
-      </ClickableBox>
-      <Heading color='gray.200' fontSize={fontSize}>
-        {likes}
-      </Heading>
-    </Flex>
+    <Can I='interact' a='Post'>
+      {allowed => (
+        <Flex align='center'>
+          <IconButton
+            aria-label={i18n._(t`Like`)}
+            borderRadius='xl'
+            isDisabled={allowed === false}
+            mr={1}
+            bg='transparent'
+            isLoading={isLiking || isUnliking}
+            icon={(<Icon
+              p={1}
+              icon={hasLiked ? HeartFull : HeartOutline}
+              fill={hasLiked ? 'primary.400' : 'gray.200'}
+              h='100%'
+              w='100%'
+                   />)}
+            onClick={hasLiked ? () => onUndoLike() : () => onLikePost()}
+            {...rest}
+          />
+          <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>
+            {likes}
+          </Heading>
+        </Flex>
+      )}
+    </Can>
   )
 }

@@ -32,7 +32,7 @@ export default function PublishedPost ({
             Published
           </Trans>
         </Badge>
-        <PostMenu size='sm' query={data} />
+        <PostMenu size='xs' query={data} />
       </HStack>
       <GridTile>
         <LinkTile to={`/p/${data.reference}`}>

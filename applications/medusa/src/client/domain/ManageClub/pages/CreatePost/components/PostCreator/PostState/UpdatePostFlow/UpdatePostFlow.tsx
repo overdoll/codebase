@@ -13,6 +13,7 @@ import UploadFlowFooter from './UploadFlowFooter/UploadFlowFooter'
 import UploadCharacterStep from './UploadFlowSteps/UploadCharacterStep/UploadCharacterStep'
 import { useEffect } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { isProcessed } from './UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
 
 interface Props {
   query: UpdatePostFlowFragment$key
@@ -26,6 +27,7 @@ const Fragment = graphql`
     ...UploadArrangeStepFragment
     content {
       id
+      processed
     }
     audience {
       id
@@ -80,6 +82,8 @@ export default function UpdatePostFlow ({
     }
   }
 
+  const contentIsProcessed = isProcessed(data?.content)
+
   // push all post data into state on post load
   useEffect(() => {
     dispatch({
@@ -110,6 +114,11 @@ export default function UpdatePostFlow ({
         ...accum,
         [item.id]: { title: item.title }
       }), {}),
+      transform: 'SET'
+    })
+    dispatch({
+      type: 'isProcessing',
+      value: !contentIsProcessed,
       transform: 'SET'
     })
   }, [])

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<77e0611545a4a298cddadfd9306ac5c8>>
- * @relayHash 1f7c979d17ba068ea6a12b8c216ec8df
+ * @generated SignedSource<<47e4535d7fdfe752440693a5031079a3>>
+ * @relayHash fe458110f217192092aa98969f0f8f39
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1f7c979d17ba068ea6a12b8c216ec8df
+// @relayRequestID fe458110f217192092aa98969f0f8f39
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -23,6 +23,14 @@ export type RefreshProcessContentQuery$data = {
     readonly content: ReadonlyArray<{
       readonly id: string;
       readonly processed: boolean;
+      readonly videoDuration: number;
+      readonly videoThumbnail: {
+        readonly url: string;
+      } | null;
+      readonly urls: ReadonlyArray<{
+        readonly mimeType: string;
+        readonly url: string;
+      }>;
     }>;
   } | null;
 };
@@ -47,7 +55,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": [
@@ -85,6 +100,44 @@ v2 = [
             "kind": "ScalarField",
             "name": "processed",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "videoDuration",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ResourceUrl",
+            "kind": "LinkedField",
+            "name": "videoThumbnail",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ResourceUrl",
+            "kind": "LinkedField",
+            "name": "urls",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "mimeType",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -99,7 +152,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "RefreshProcessContentQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -108,10 +161,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RefreshProcessContentQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "1f7c979d17ba068ea6a12b8c216ec8df",
+    "id": "fe458110f217192092aa98969f0f8f39",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -120,6 +173,6 @@ return {
 };
 })();
 
-(node as any).hash = "a0e5a1df244f026dfd280f1d95b2eb4a";
+(node as any).hash = "038c0aa448f19cc1db944154447ea146";
 
 export default node;

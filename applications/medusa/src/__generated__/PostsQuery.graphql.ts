@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<690d753dd9d91b949712c5d3aa13486a>>
- * @relayHash cebcc9b97d3ee245ebd126cfa55c78db
+ * @generated SignedSource<<0b4e6ce0c42aeee430c4aa79cf7a356b>>
+ * @relayHash 60f0f83b8dc10e8db7bcbdc6d2246e81
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cebcc9b97d3ee245ebd126cfa55c78db
+// @relayRequestID 60f0f83b8dc10e8db7bcbdc6d2246e81
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -270,7 +270,6 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
-                              (v5/*: any*/),
                               (v7/*: any*/),
                               {
                                 "alias": null,
@@ -284,6 +283,7 @@ return {
                                 ],
                                 "storageKey": null
                               },
+                              (v5/*: any*/),
                               (v1/*: any*/)
                             ],
                             "storageKey": null
@@ -417,7 +417,7 @@ return {
     ]
   },
   "params": {
-    "id": "cebcc9b97d3ee245ebd126cfa55c78db",
+    "id": "60f0f83b8dc10e8db7bcbdc6d2246e81",
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

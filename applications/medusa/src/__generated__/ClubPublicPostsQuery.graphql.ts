@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<537f15d5e17bbb02b95a2a3a8622092d>>
- * @relayHash 0f9e463d63820d2b9a2f34ed8b9c1514
+ * @generated SignedSource<<f5272748d18f4dc39e06e9356f842940>>
+ * @relayHash a6a60f8efbb1cfcc967b31a683ddf463
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0f9e463d63820d2b9a2f34ed8b9c1514
+// @relayRequestID a6a60f8efbb1cfcc967b31a683ddf463
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -166,7 +166,6 @@ v14 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v10/*: any*/),
     (v12/*: any*/),
     {
       "alias": null,
@@ -180,6 +179,7 @@ v14 = {
       ],
       "storageKey": null
     },
+    (v10/*: any*/),
     (v9/*: any*/)
   ],
   "storageKey": null
@@ -368,6 +368,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "PostLike",
                         "kind": "LinkedField",
                         "name": "viewerLiked",
@@ -488,7 +495,7 @@ return {
     ]
   },
   "params": {
-    "id": "0f9e463d63820d2b9a2f34ed8b9c1514",
+    "id": "a6a60f8efbb1cfcc967b31a683ddf463",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

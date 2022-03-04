@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<21b3db72fd13f66a458b55a41701aa36>>
- * @relayHash 7f32dbd6d93a60c8c8e88398ed09f5e3
+ * @generated SignedSource<<af25e79d349369050af6352754acde01>>
+ * @relayHash 0ff6295a6f91466ecbaf27a7f84b806b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f32dbd6d93a60c8c8e88398ed09f5e3
+// @relayRequestID 0ff6295a6f91466ecbaf27a7f84b806b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -83,17 +83,10 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -101,7 +94,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -110,6 +103,13 @@ v6 = {
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
   "storageKey": null
 },
 v7 = [
@@ -227,8 +227,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
-                                  (v4/*: any*/),
-                                  (v6/*: any*/),
+                                  (v5/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -237,10 +236,11 @@ return {
                                     "name": "videoThumbnail",
                                     "plural": false,
                                     "selections": [
-                                      (v5/*: any*/)
+                                      (v4/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
+                                  (v6/*: any*/),
                                   (v3/*: any*/)
                                 ],
                                 "storageKey": null
@@ -307,8 +307,8 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v4/*: any*/),
                               (v6/*: any*/),
+                              (v5/*: any*/),
                               (v3/*: any*/)
                             ],
                             "storageKey": null
@@ -397,7 +397,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f32dbd6d93a60c8c8e88398ed09f5e3",
+    "id": "0ff6295a6f91466ecbaf27a7f84b806b",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0fa5f04a38100b785107e04cdc97d3f4>>
- * @relayHash 44633be9ef8f78a1630bdaaa993ba316
+ * @generated SignedSource<<0a59e177dde3f7c1ccb892c6be440e2a>>
+ * @relayHash 576227d21fea4809f80e9ec8d261717f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 44633be9ef8f78a1630bdaaa993ba316
+// @relayRequestID 576227d21fea4809f80e9ec8d261717f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -166,13 +166,6 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "urls",
@@ -201,6 +194,13 @@ return {
                 ],
                 "storageKey": null
               },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
               (v2/*: any*/)
             ],
             "storageKey": null
@@ -211,7 +211,7 @@ return {
     ]
   },
   "params": {
-    "id": "44633be9ef8f78a1630bdaaa993ba316",
+    "id": "576227d21fea4809f80e9ec8d261717f",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

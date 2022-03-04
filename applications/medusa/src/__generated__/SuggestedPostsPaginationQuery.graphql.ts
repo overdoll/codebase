@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8cb5e33587eb60ef8897701d5dea039a>>
- * @relayHash 9c5730825c54fcb29ca2dd0c7e05095c
+ * @generated SignedSource<<844ff89503a4e5d8627729262216a4c7>>
+ * @relayHash e44a594e2dcd985c792b91cd348b1cc0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,25 +9,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9c5730825c54fcb29ca2dd0c7e05095c
+// @relayRequestID e44a594e2dcd985c792b91cd348b1cc0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ViewPostPaginationQuery$variables = {
+export type SuggestedPostsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type ViewPostPaginationQueryVariables = ViewPostPaginationQuery$variables;
-export type ViewPostPaginationQuery$data = {
+export type SuggestedPostsPaginationQueryVariables = SuggestedPostsPaginationQuery$variables;
+export type SuggestedPostsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"PublicPostFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsFragment">;
   } | null;
 };
-export type ViewPostPaginationQueryResponse = ViewPostPaginationQuery$data;
-export type ViewPostPaginationQuery = {
-  variables: ViewPostPaginationQueryVariables;
-  response: ViewPostPaginationQuery$data;
+export type SuggestedPostsPaginationQueryResponse = SuggestedPostsPaginationQuery$data;
+export type SuggestedPostsPaginationQuery = {
+  variables: SuggestedPostsPaginationQueryVariables;
+  response: SuggestedPostsPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -136,7 +136,6 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/),
     (v7/*: any*/),
     {
       "alias": null,
@@ -150,6 +149,7 @@ v10 = {
       ],
       "storageKey": null
     },
+    (v5/*: any*/),
     (v4/*: any*/)
   ],
   "storageKey": null
@@ -170,7 +170,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ViewPostPaginationQuery",
+    "name": "SuggestedPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -183,7 +183,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "PublicPostFragment"
+            "name": "SuggestedPostsFragment"
           }
         ],
         "storageKey": null
@@ -196,7 +196,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ViewPostPaginationQuery",
+    "name": "SuggestedPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -313,6 +313,13 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "PostLike",
                             "kind": "LinkedField",
                             "name": "viewerLiked",
@@ -391,7 +398,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "ViewPost_suggestedPosts",
+                "key": "SuggestedPosts_suggestedPosts",
                 "kind": "LinkedHandle",
                 "name": "suggestedPosts"
               }
@@ -405,15 +412,15 @@ return {
     ]
   },
   "params": {
-    "id": "9c5730825c54fcb29ca2dd0c7e05095c",
+    "id": "e44a594e2dcd985c792b91cd348b1cc0",
     "metadata": {},
-    "name": "ViewPostPaginationQuery",
+    "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "2637b02c8a7f2f31d1cde9a992e6f847";
+(node as any).hash = "bec0a94a48aa18a3478bbd6122d05fe6";
 
 export default node;
