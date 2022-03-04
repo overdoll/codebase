@@ -64,8 +64,10 @@ export default function FlowBuilder ({
 }: ComponentProps): JSX.Element {
   const initialStep = defaultStep != null ? defaultStep : stepsArray[0]
 
-  const [currentStep, setCurrentStep] = useState(initialStep)
+  // TODO figure out param steps here
+
   const [paramStep, setParamStep] = useQueryParam<string | null | undefined>('step')
+  const [currentStep, setCurrentStep] = useState(useParams == null ? initialStep : (paramStep == null ? initialStep : paramStep))
 
   const nextStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
@@ -99,7 +101,7 @@ export default function FlowBuilder ({
     stepsArray: stepsArray,
     stepsComponents: stepsComponents,
     stepsHeaders: definedHeaders,
-    currentStep: useParams === true && paramStep != null ? paramStep : currentStep,
+    currentStep: currentStep,
     nextStep: nextStep,
     previousStep: previousStep,
     skipToStep: setCurrentStep,
@@ -107,14 +109,20 @@ export default function FlowBuilder ({
   }
 
   useUpdateEffect(() => {
-    if (useParams === true && currentStep !== initialStep) {
-      setParamStep(currentStep)
+    if (useParams === true) {
+      if (currentStep !== initialStep && currentStep !== paramStep) {
+        setParamStep(currentStep)
+      }
     }
-  }, [currentStep, setParamStep])
+  }, [currentStep, setParamStep, paramStep])
 
   useUpdateEffect(() => {
-    if (useParams === true && paramStep == null) {
-      setCurrentStep(initialStep)
+    if (useParams === true) {
+      if (paramStep == null) {
+        setCurrentStep(initialStep)
+        return
+      }
+      setCurrentStep(paramStep)
     }
   }, [paramStep])
 

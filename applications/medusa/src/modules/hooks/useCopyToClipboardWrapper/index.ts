@@ -22,7 +22,7 @@ export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, (
     notify({
       title: t`Copied to clipboard!`,
       status: 'info',
-      duration: null
+      duration: 2000
     })
   }
 

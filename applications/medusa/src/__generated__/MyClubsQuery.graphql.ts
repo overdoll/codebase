@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<54a26bd6a5d3455e3b701d7eba0fd10b>>
- * @relayHash f7285b2d0e3ef97233f8752080801cfd
+ * @generated SignedSource<<c1186dbce29b300eeb65ec8dd603c140>>
+ * @relayHash a6ab02cbeb0d7d1a0a04611f965b173d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7285b2d0e3ef97233f8752080801cfd
+// @relayRequestID a6ab02cbeb0d7d1a0a04611f965b173d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -467,13 +467,6 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "state",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "PostLike",
                         "kind": "LinkedField",
                         "name": "viewerLiked",
@@ -538,7 +531,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7285b2d0e3ef97233f8752080801cfd",
+    "id": "a6ab02cbeb0d7d1a0a04611f965b173d",
     "metadata": {},
     "name": "MyClubsQuery",
     "operationKind": "query",

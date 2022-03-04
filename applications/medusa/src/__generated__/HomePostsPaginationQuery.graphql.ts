@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8fe34825ce72b26789b87b78609b05ce>>
- * @relayHash a3860d8d7a27ad68edebd1abc38d4699
+ * @generated SignedSource<<20ae5011ff2ed7ec76e714ed53943751>>
+ * @relayHash 608778d43c5eeb8a6dd3f2c50f047db4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a3860d8d7a27ad68edebd1abc38d4699
+// @relayRequestID 608778d43c5eeb8a6dd3f2c50f047db4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -284,13 +284,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "state",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "concreteType": "PostLike",
                     "kind": "LinkedField",
                     "name": "viewerLiked",
@@ -378,7 +371,7 @@ return {
     ]
   },
   "params": {
-    "id": "a3860d8d7a27ad68edebd1abc38d4699",
+    "id": "608778d43c5eeb8a6dd3f2c50f047db4",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

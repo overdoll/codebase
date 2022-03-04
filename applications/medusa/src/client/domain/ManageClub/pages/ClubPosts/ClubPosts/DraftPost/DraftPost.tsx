@@ -8,6 +8,8 @@ import generatePath from '../../../../../../../modules/routing/generatePath'
 import { useParams } from '@//:modules/routing'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 
 interface Props {
   query: DraftPostFragment$key
@@ -17,7 +19,7 @@ const Fragment = graphql`
   fragment DraftPostFragment on Post {
     reference
     ...PostPreviewContentFragment
-    ...PostMenuFragment
+    ...PostModerateButtonFragment
   }
 `
 
@@ -45,7 +47,9 @@ export default function DraftPost ({
             DRAFT
           </Trans>
         </Badge>
-        <PostMenu size='xs' query={data} />
+        <PostMenu size='xs'>
+          <PostModerateButton query={data} />
+        </PostMenu>
       </HStack>
       <GridTile>
         <LinkTile to={`${draftPostPath()}?post=${data.reference}`}>

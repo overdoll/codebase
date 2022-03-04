@@ -19,6 +19,12 @@ import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
+import PostCopyLinkButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -29,7 +35,9 @@ const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
     reference
     ...PostGalleryPublicDetailedFragment
-    ...PostMenuFragment
+    ...PostCopyLinkButtonFragment
+    ...PostReportButtonFragment
+    ...PostModerateButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
@@ -72,7 +80,12 @@ export default function FullDetailedPost ({
             length={slidesCount}
             currentIndex={currentSlide}
                       />}
-          rightItem={<PostMenu size='sm' variant='ghost' query={data} />}
+          rightItem={(
+            <PostMenu variant='ghost' size='sm'>
+              <PostCopyLinkButton query={data} />
+              <PostReportButton query={data} />
+              <PostModerateButton query={data} />
+            </PostMenu>)}
         />
       </Stack>
       <Stack spacing={2}>

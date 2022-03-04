@@ -22,6 +22,7 @@ export default function ClubMenu ({ query }: Props): JSX.Element {
     <Can I='interact' a='Club' passThrough>
       {allowed => (
         <Menu
+          variant='ghost'
           isDisabled={allowed === false}
         >
           <Can I='admin' a='Club'>

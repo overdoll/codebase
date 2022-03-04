@@ -6,6 +6,12 @@ import PostPreviewContent
   from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
+import PostCopyLinkButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 
 interface Props {
   query: PublishedPostFragment$key
@@ -15,7 +21,9 @@ const Fragment = graphql`
   fragment PublishedPostFragment on Post {
     reference
     ...PostPreviewContentFragment
-    ...PostMenuFragment
+    ...PostCopyLinkButtonFragment
+    ...PostModerateButtonFragment
+    ...PostReportButtonFragment
   }
 `
 
@@ -32,7 +40,11 @@ export default function PublishedPost ({
             Published
           </Trans>
         </Badge>
-        <PostMenu size='xs' query={data} />
+        <PostMenu size='xs'>
+          <PostCopyLinkButton query={data} />
+          <PostReportButton query={data} />
+          <PostModerateButton query={data} />
+        </PostMenu>
       </HStack>
       <GridTile>
         <LinkTile to={`/p/${data.reference}`}>

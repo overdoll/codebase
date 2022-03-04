@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { FullSimplePostFragment$key } from '@//:artifacts/FullSimplePostFragment.graphql'
 import { FullSimplePostViewerFragment$key } from '@//:artifacts/FullSimplePostViewerFragment.graphql'
-import { Flex, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { useContext } from 'react'
 import {
   PostFooter,
@@ -14,8 +14,13 @@ import {
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
 import JoinClubButton from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { Trans } from '@lingui/macro'
+import PostCopyLinkButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
+import PostViewButton from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -25,7 +30,10 @@ interface Props {
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
     ...PostGalleryPublicSimpleFragment
-    ...PostMenuFragment
+    ...PostViewButtonFragment
+    ...PostModerateButtonFragment
+    ...PostCopyLinkButtonFragment
+    ...PostReportButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
@@ -76,7 +84,13 @@ export default function FullSimplePost ({
               length={slidesCount}
               currentIndex={currentSlide}
             />)}
-          rightItem={<PostMenu variant='ghost' size='sm' query={data} />}
+          rightItem={(
+            <PostMenu variant='ghost' size='sm'>
+              <PostViewButton query={data} />
+              <PostCopyLinkButton query={data} />
+              <PostReportButton query={data} />
+              <PostModerateButton query={data} />
+            </PostMenu>)}
         />
       </Stack>
     </Stack>

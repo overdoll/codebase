@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<14b9716e61247aef46d7d8b14a68d3f1>>
- * @relayHash 3b4a9dd1c3f5568ad98e38b9f8141ab7
+ * @generated SignedSource<<e237a0a35992fa90fa080075d9996bfa>>
+ * @relayHash 84da5bf561831c0c4ea8ec3a914e338d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b4a9dd1c3f5568ad98e38b9f8141ab7
+// @relayRequestID 84da5bf561831c0c4ea8ec3a914e338d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -112,52 +112,45 @@ v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "state",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/),
+v9 = [
+  (v8/*: any*/),
   (v3/*: any*/)
 ],
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "PostLike",
   "kind": "LinkedField",
   "name": "viewerLiked",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -183,7 +176,7 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "Club",
@@ -191,9 +184,9 @@ v16 = {
   "name": "club",
   "plural": false,
   "selections": [
+    (v12/*: any*/),
     (v13/*: any*/),
     (v14/*: any*/),
-    (v15/*: any*/),
     (v3/*: any*/),
     {
       "alias": null,
@@ -202,20 +195,20 @@ v16 = {
       "kind": "LinkedField",
       "name": "viewerMember",
       "plural": false,
-      "selections": (v10/*: any*/),
+      "selections": (v9/*: any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "Character",
@@ -231,20 +224,20 @@ v18 = {
       "name": "series",
       "plural": false,
       "selections": [
-        (v17/*: any*/),
-        (v14/*: any*/),
+        (v16/*: any*/),
+        (v13/*: any*/),
         (v3/*: any*/)
       ],
       "storageKey": null
     },
+    (v12/*: any*/),
     (v13/*: any*/),
     (v14/*: any*/),
-    (v15/*: any*/),
     (v3/*: any*/)
   ],
   "storageKey": null
 },
-v19 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "Category",
@@ -252,14 +245,14 @@ v19 = {
   "name": "categories",
   "plural": true,
   "selections": [
+    (v13/*: any*/),
+    (v16/*: any*/),
     (v14/*: any*/),
-    (v17/*: any*/),
-    (v15/*: any*/),
     (v3/*: any*/)
   ],
   "storageKey": null
 },
-v20 = [
+v19 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -342,15 +335,14 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v7/*: any*/),
-          (v8/*: any*/),
+          (v10/*: any*/),
           (v11/*: any*/),
-          (v12/*: any*/),
-          (v16/*: any*/),
+          (v15/*: any*/),
+          (v17/*: any*/),
           (v18/*: any*/),
-          (v19/*: any*/),
           {
             "alias": null,
-            "args": (v20/*: any*/),
+            "args": (v19/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "suggestedPosts",
@@ -364,7 +356,7 @@ return {
                 "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v9/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -380,16 +372,15 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
+                      (v8/*: any*/),
                       (v3/*: any*/),
                       (v2/*: any*/),
                       (v7/*: any*/),
-                      (v19/*: any*/),
                       (v18/*: any*/),
-                      (v8/*: any*/),
+                      (v17/*: any*/),
+                      (v10/*: any*/),
                       (v11/*: any*/),
-                      (v12/*: any*/),
-                      (v16/*: any*/)
+                      (v15/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -426,7 +417,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v20/*: any*/),
+            "args": (v19/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "SuggestedPosts_suggestedPosts",
@@ -465,7 +456,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b4a9dd1c3f5568ad98e38b9f8141ab7",
+    "id": "84da5bf561831c0c4ea8ec3a914e338d",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
