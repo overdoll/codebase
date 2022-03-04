@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<fe0c529422cd9116d5bf20f08d244533>>
  * @relayHash 033dd95ad7665626f9d99b8f67d2ff7d
+=======
+ * @generated SignedSource<<c42e203920b06960b69f2d41f620710d>>
+ * @relayHash ed86adcdffd1c376e90e1a3cc7b5d597
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 033dd95ad7665626f9d99b8f67d2ff7d
+=======
+// @relayRequestID ed86adcdffd1c376e90e1a3cc7b5d597
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -359,13 +368,30 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
                                 "selections": [
+<<<<<<< HEAD
                                   (v14/*: any*/),
                                   (v13/*: any*/),
+=======
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": [
+                                      (v12/*: any*/),
+                                      (v14/*: any*/),
+                                      (v9/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
+>>>>>>> master
                                   (v9/*: any*/)
                                 ],
                                 "storageKey": null
@@ -451,7 +477,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "033dd95ad7665626f9d99b8f67d2ff7d",
+=======
+    "id": "ed86adcdffd1c376e90e1a3cc7b5d597",
+>>>>>>> master
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

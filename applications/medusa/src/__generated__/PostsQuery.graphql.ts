@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<0b4e6ce0c42aeee430c4aa79cf7a356b>>
  * @relayHash 60f0f83b8dc10e8db7bcbdc6d2246e81
+=======
+ * @generated SignedSource<<c9d6757e83f24e3c7a3c682a50eb9261>>
+ * @relayHash e1c055ce04a42143604243bf8ef96a6a
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 60f0f83b8dc10e8db7bcbdc6d2246e81
+=======
+// @relayRequestID e1c055ce04a42143604243bf8ef96a6a
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -235,13 +244,25 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v5/*: any*/),
-                          (v7/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              (v5/*: any*/),
+                              (v7/*: any*/),
+                              (v1/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v1/*: any*/)
                         ],
                         "storageKey": null
@@ -417,7 +438,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "60f0f83b8dc10e8db7bcbdc6d2246e81",
+=======
+    "id": "e1c055ce04a42143604243bf8ef96a6a",
+>>>>>>> master
     "metadata": {},
     "name": "PostsQuery",
     "operationKind": "query",

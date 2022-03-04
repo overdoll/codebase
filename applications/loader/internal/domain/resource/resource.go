@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
+	"github.com/segmentio/ksuid"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"image"
 	_ "image/png"
@@ -33,7 +34,7 @@ var extensionsMap = map[string]string{
 	"image/webp": ".webp",
 }
 
-func extensionByType(tp string) (string, error) {
+func ExtensionByType(tp string) (string, error) {
 	return extensionsMap[tp], nil
 }
 
@@ -55,6 +56,11 @@ type Resource struct {
 	processed   bool
 	processedId string
 
+	urls              []*Url
+	videoThumbnailUrl *Url
+
+	isPrivate bool
+
 	videoThumbnail         string
 	videoThumbnailMimeType string
 
@@ -68,7 +74,23 @@ type Resource struct {
 	resourceType Type
 }
 
-func NewResource(itemId, id, mimeType string) (*Resource, error) {
+func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int) (*Resource, error) {
+	id := ksuid.New().String()
+	return &Resource{
+		id:           id,
+		itemId:       itemId,
+		processedId:  id,
+		mimeTypes:    []string{mimeType},
+		sizes:        []int{},
+		resourceType: Image,
+		isPrivate:    isPrivate,
+		processed:    true,
+		height:       height,
+		width:        width,
+	}, nil
+}
+
+func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType Type
@@ -95,6 +117,7 @@ func NewResource(itemId, id, mimeType string) (*Resource, error) {
 		mimeTypes:     []string{mimeType},
 		sizes:         []int{},
 		resourceType:  rType,
+		isPrivate:     isPrivate,
 		processed:     false,
 		height:        0,
 		width:         0,
@@ -266,17 +289,16 @@ func (r *Resource) ItemId() string {
 	return r.itemId
 }
 
-func (r *Resource) Url() string {
-
-	if r.processed {
-		return "/" + r.itemId + "/" + r.processedId
-	}
-
-	return "/" + r.id
+func (r *Resource) IsPrivate() bool {
+	return r.isPrivate
 }
 
 func (r *Resource) MimeTypes() []string {
 	return r.mimeTypes
+}
+
+func (r *Resource) LastMimeType() string {
+	return r.mimeTypes[len(r.mimeTypes)-1]
 }
 
 func (r *Resource) MakeImage() error {
@@ -326,49 +348,14 @@ func (r *Resource) VideoThumbnail() string {
 }
 
 func (r *Resource) VideoThumbnailFullUrl() *Url {
-
-	if r.processed {
-		format, _ := extensionByType(r.videoThumbnailMimeType)
-		return &Url{
-			fullUrl:  os.Getenv("RESOURCES_URL") + "/" + r.itemId + "/" + r.videoThumbnail + format,
-			mimeType: r.videoThumbnailMimeType,
-		}
-	}
-
-	return nil
+	return r.videoThumbnailUrl
 }
 
 func (r *Resource) FullUrls() []*Url {
-
-	var generatedContent []*Url
-
-	for _, m := range r.mimeTypes {
-
-		extension := ""
-
-		format, err := extensionByType(m)
-
-		if err == nil && r.processed {
-			extension = format
-		}
-
-		domain := os.Getenv("UPLOADS_URL")
-
-		if r.processed {
-			domain = os.Getenv("RESOURCES_URL")
-		}
-
-		// generate the proper content url
-		generatedContent = append(generatedContent, &Url{
-			fullUrl:  domain + r.Url() + extension,
-			mimeType: m,
-		})
-	}
-
-	return generatedContent
+	return r.urls
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
@@ -376,6 +363,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes 
 		id:                     resourceId,
 		itemId:                 itemId,
 		videoDuration:          videoDuration,
+		isPrivate:              isPrivate,
 		videoThumbnail:         videoThumbnail,
 		videoThumbnailMimeType: videoThumbnailMimeType,
 		width:                  width,
@@ -384,5 +372,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, mimeTypes 
 		mimeTypes:              mimeTypes,
 		resourceType:           typ,
 		processed:              processed,
+		urls:                   urls,
+		videoThumbnailUrl:      videoThumbnailUrl,
 	}
 }

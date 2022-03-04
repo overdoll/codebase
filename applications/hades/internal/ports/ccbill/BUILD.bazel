@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ccbill_webhook",
+    srcs = ["ccbill_webhook.go"],
+    importpath = "overdoll/applications/hades/internal/ports/ccbill_webhook",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/app",
+        "//applications/hades/internal/app/command",
+        "//libraries/support",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)
+
+go_library(
+    name = "ccbill",
+    srcs = [
+        "payment_flow.go",
+        "payment_flow_callback.go",
+        "webhook.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/ports/ccbill",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/app",
+        "//applications/hades/internal/app/command",
+        "//applications/hades/internal/domain/ccbill",
+        "//libraries/support",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)

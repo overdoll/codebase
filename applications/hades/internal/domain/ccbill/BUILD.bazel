@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_embed_data")
+
+go_library(
+    name = "ccbill",
+    srcs = [
+        "ccbill.go",
+        "ccbill_payment.go",
+        "ccbill_transaction.go",
+        "ccbill_transaction_details.go",
+        "charge_by_previous_club_supporter_payment_url.go",
+        "charge_by_previous_result.go",
+        "club_supporter_payment_link.go",
+        "flexforms_payment_link.go",
+        "payment_flow_callback_template.go",
+        "repository.go",
+        "subscription_status.go",
+        "subscription_status_value.go",
+        "support.go",
+        "validate_ccbill_transaction.go",
+        "void_or_refund.go",
+    ],
+    embedsrcs = ["payment_flow_callback.gohtml"],
+    importpath = "overdoll/applications/hades/internal/domain/ccbill",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/proto:v1_go_proto",
+        "//libraries/principal",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_golang_x_crypto//nacl/secretbox",
+    ],
+)

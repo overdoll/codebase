@@ -1,0 +1,118 @@
+"""Cancellation reason."""
+type CancellationReason implements Node @key(fields: "id") {
+  """ID of the reason."""
+  id: ID!
+
+  """Reference of the reason. Should be used for single lookups."""
+  reference: String!
+
+  """The title for this reason."""
+  title: String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """If this reason is deprecated."""
+  deprecated: Boolean!
+}
+
+"""Edge of the reason"""
+type CancellationReasonEdge {
+  node: CancellationReason!
+  cursor: String!
+}
+
+"""Connection of the reason"""
+type CancellationReasonConnection {
+  edges: [CancellationReasonEdge!]!
+  pageInfo: PageInfo!
+}
+
+type Query {
+  """
+  Get a cancellation reason by reference.
+  """
+  cancellationReason(reference: String!): CancellationReason
+
+  """
+  Get all reasons for the site.
+  """
+  cancellationReasons(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated reasons."""
+    deprecated: Boolean! = false
+  ): CancellationReasonConnection!
+}
+
+"""Create a new cancellation reason input."""
+input CreateCancellationReasonInput {
+  """The title."""
+  title: String!
+}
+
+"""Updated cancellation reason."""
+type CreateCancellationReasonPayload {
+  """The updated cancellation reason."""
+  cancellationReason: CancellationReason
+}
+
+"""Update cancellation reason."""
+input UpdateCancellationReasonTitleInput {
+  """The reason to update."""
+  cancellationReasonId: ID!
+
+  """The title to update"""
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated reason."""
+type UpdateCancellationReasonTitlePayload {
+  """The updated reason."""
+  cancellationReason: CancellationReason
+}
+
+"""Update reason."""
+input UpdateCancellationReasonDeprecatedInput {
+  """The cancellation reason to update."""
+  cancellationReasonId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Updated reason."""
+type UpdateCancellationReasonDeprecatedPayload {
+  """The updated reason."""
+  cancellationReason: CancellationReason
+}
+
+extend type Mutation {
+  """
+  Create a new reason.
+  """
+  createCancellationReason(input: CreateCancellationReasonInput!): CreateCancellationReasonPayload
+
+  """
+  Update a reason title.
+  """
+  updateCancellationReasonTitle(input: UpdateCancellationReasonTitleInput!): UpdateCancellationReasonTitlePayload
+
+  """
+  Update a reason deprecation.
+  """
+  updateCancellationReasonDeprecated(input: UpdateCancellationReasonDeprecatedInput!): UpdateCancellationReasonDeprecatedPayload
+}

@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<1981107113e35aeacd7000d36e266144>>
  * @relayHash 415eb6787f335a0a5c592bddf114c5bb
+=======
+ * @generated SignedSource<<075a5e075a7f65deebbd53fae52f5fef>>
+ * @relayHash aaf6d2458f2dfbd036dc9b9b179c1121
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 415eb6787f335a0a5c592bddf114c5bb
+=======
+// @relayRequestID aaf6d2458f2dfbd036dc9b9b179c1121
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -255,13 +264,25 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
+                            "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v5/*: any*/),
-                              (v7/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "resource",
+                                "plural": false,
+                                "selections": [
+                                  (v5/*: any*/),
+                                  (v7/*: any*/),
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -405,7 +426,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "415eb6787f335a0a5c592bddf114c5bb",
+=======
+    "id": "aaf6d2458f2dfbd036dc9b9b179c1121",
+>>>>>>> master
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

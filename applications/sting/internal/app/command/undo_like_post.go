@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -12,11 +13,12 @@ type UndoLikePost struct {
 }
 
 type UndoLikePostHandler struct {
-	pr post.Repository
+	pr    post.Repository
+	event event.Repository
 }
 
-func NewUndoLikePostHandler(pr post.Repository) UndoLikePostHandler {
-	return UndoLikePostHandler{pr: pr}
+func NewUndoLikePostHandler(pr post.Repository, event event.Repository) UndoLikePostHandler {
+	return UndoLikePostHandler{pr: pr, event: event}
 }
 
 func (h UndoLikePostHandler) Handle(ctx context.Context, cmd UndoLikePost) error {
@@ -35,6 +37,10 @@ func (h UndoLikePostHandler) Handle(ctx context.Context, cmd UndoLikePost) error
 
 	// delete the like
 	if err := h.pr.DeletePostLike(ctx, cmd.Principal, postLike); err != nil {
+		return err
+	}
+
+	if err := h.event.AddPostLike(ctx, cmd.PostId, cmd.Principal.AccountId()); err != nil {
 		return err
 	}
 

@@ -1,0 +1,7 @@
+image:
+  repository: hades-image
+
+nameOverride: "hades"
+
+service: true
+http: true

@@ -96,10 +96,12 @@ type ComplexityRoot struct {
 	}
 
 	ClubMember struct {
-		Account  func(childComplexity int) int
-		Club     func(childComplexity int) int
-		ID       func(childComplexity int) int
-		JoinedAt func(childComplexity int) int
+		Account        func(childComplexity int) int
+		Club           func(childComplexity int) int
+		ID             func(childComplexity int) int
+		IsSupporter    func(childComplexity int) int
+		JoinedAt       func(childComplexity int) int
+		SupporterSince func(childComplexity int) int
 	}
 
 	ClubMemberConnection struct {
@@ -482,12 +484,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubMember.ID(childComplexity), true
 
+	case "ClubMember.isSupporter":
+		if e.complexity.ClubMember.IsSupporter == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.IsSupporter(childComplexity), true
+
 	case "ClubMember.joinedAt":
 		if e.complexity.ClubMember.JoinedAt == nil {
 			break
 		}
 
 		return e.complexity.ClubMember.JoinedAt(childComplexity), true
+
+	case "ClubMember.supporterSince":
+		if e.complexity.ClubMember.SupporterSince == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.SupporterSince(childComplexity), true
 
 	case "ClubMemberConnection.edges":
 		if e.complexity.ClubMemberConnection.Edges == nil {
@@ -1033,6 +1049,12 @@ type ClubMember implements Node @key(fields: "id") {
 
   """The account that belongs to this membership."""
   account: Account!
+
+  """Whether or not this member is a supporter."""
+  isSupporter: Boolean!
+
+  """If is a supporter, when they became a supporter."""
+  supporterSince: Time
 }
 
 """Add alias slug."""
@@ -1409,8 +1431,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
-directive @extends on OBJECT | INTERFACE
+directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -1947,6 +1969,21 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["sortBy"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *bool
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["includeDeprecated"] = arg0
 	return args, nil
 }
 
@@ -3046,6 +3083,73 @@ func (ec *executionContext) _ClubMember_account(ctx context.Context, field graph
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_isSupporter(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsSupporter, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SupporterSince, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClubMemberConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubMemberConnection) (ret graphql.Marshaler) {
@@ -5024,6 +5128,13 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field___Field_args_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -6629,6 +6740,23 @@ func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isSupporter":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubMember_isSupporter(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "supporterSince":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubMember_supporterSince(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -8386,7 +8514,11 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -8538,7 +8670,11 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -8761,8 +8897,7 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	res := graphql.MarshalBoolean(v)
-	return res
+	return graphql.MarshalBoolean(v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -8777,8 +8912,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalBoolean(*v)
-	return res
+	return graphql.MarshalBoolean(*v)
 }
 
 func (ec *executionContext) marshalOClub2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
@@ -8837,8 +8971,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalInt(*v)
-	return res
+	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) marshalOPromoteClubSlugAliasToDefaultPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultPayload(ctx context.Context, sel ast.SelectionSet, v *types.PromoteClubSlugAliasToDefaultPayload) graphql.Marshaler {
@@ -8868,8 +9001,7 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
-	return res
+	return graphql.MarshalString(v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
@@ -8878,7 +9010,11 @@ func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v
 	}
 	var vSlice []interface{}
 	if v != nil {
-		vSlice = graphql.CoerceList(v)
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -8922,8 +9058,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(*v)
-	return res
+	return graphql.MarshalString(*v)
 }
 
 func (ec *executionContext) marshalOSuspendClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐSuspendClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.SuspendClubPayload) graphql.Marshaler {
@@ -8931,6 +9066,21 @@ func (ec *executionContext) marshalOSuspendClubPayload2ᚖoverdollᚋapplication
 		return graphql.Null
 	}
 	return ec._SuspendClubPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUnSuspendClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnSuspendClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnSuspendClubPayload) graphql.Marshaler {

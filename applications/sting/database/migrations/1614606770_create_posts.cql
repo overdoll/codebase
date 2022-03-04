@@ -75,19 +75,22 @@ CREATE TABLE IF NOT EXISTS audience_slugs
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    id                        text,
-    state                     text,
-    moderator_account_id      text,
-    contributor_account_id    text,
-    club_id                   text,
-    audience_id               text,
-    category_ids              list<text>,
-    character_ids             list<text>,
-    series_ids                list<text>,
-    content_resource_ids      list<text>,
-    created_at                timestamp,
-    posted_at                 timestamp,
-    moderator_reassignment_at timestamp,
+    id                                  text,
+    state                               text,
+    supporter_only_status               text,
+    moderator_account_id                text,
+    contributor_account_id              text,
+    club_id                             text,
+    audience_id                         text,
+    category_ids                        list<text>,
+    character_ids                       list<text>,
+    series_ids                          list<text>,
+    content_resource_ids                list<text>,
+    content_supporter_only              map<text, boolean>,
+    content_supporter_only_resource_ids map<text, text>,
+    created_at                          timestamp,
+    posted_at                           timestamp,
+    moderator_reassignment_at           timestamp,
     primary key ( id )
 );
 

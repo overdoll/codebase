@@ -15,7 +15,7 @@ type CharacterResolver struct {
 	App *app.Application
 }
 
-func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -28,6 +28,12 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 	if state != nil {
 		str := state.String()
 		stateModified = &str
+	}
+
+	var supporterOnly []string
+
+	for _, s := range supporterOnlyStatus {
+		supporterOnly = append(supporterOnly, s.String())
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{

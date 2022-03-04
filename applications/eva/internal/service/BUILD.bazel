@@ -30,6 +30,7 @@ go_test(
         "authenticate_component_test.go",
         "component_test.go",
         "language_component_test.go",
+        "location_component_test.go",
         "staff_component_test.go",
     ],
     data = [

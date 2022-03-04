@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
  * @generated SignedSource<<6374d25cf1705513d89182be344c5edd>>
  * @relayHash 92df713ef4fd52fe3bb251945ad580e0
+=======
+ * @generated SignedSource<<7f2b9f2238f9aa78d388ff0ce09ca164>>
+ * @relayHash 74d3bfe10486d3d348fca7b5f2ef4f62
+>>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
 // @relayRequestID 92df713ef4fd52fe3bb251945ad580e0
+=======
+// @relayRequestID 74d3bfe10486d3d348fca7b5f2ef4f62
+>>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -255,13 +264,25 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Resource",
+                            "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
                             "plural": true,
                             "selections": [
-                              (v5/*: any*/),
-                              (v7/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "resource",
+                                "plural": false,
+                                "selections": [
+                                  (v5/*: any*/),
+                                  (v7/*: any*/),
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -405,7 +426,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
     "id": "92df713ef4fd52fe3bb251945ad580e0",
+=======
+    "id": "74d3bfe10486d3d348fca7b5f2ef4f62",
+>>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

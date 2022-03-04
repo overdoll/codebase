@@ -62,8 +62,8 @@ type ComplexityRoot struct {
 		ClubMembersPostsFeed func(childComplexity int, after *string, before *string, first *int, last *int) int
 		CurationProfile      func(childComplexity int) int
 		ID                   func(childComplexity int) int
-		ModeratorPostsQueue  func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
-		Posts                func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		ModeratorPostsQueue  func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts                func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 	}
 
 	AddPostContentPayload struct {
@@ -72,7 +72,7 @@ type ComplexityRoot struct {
 
 	Audience struct {
 		ID                func(childComplexity int) int
-		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
 		Standard          func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
@@ -100,7 +100,7 @@ type ComplexityRoot struct {
 
 	Category struct {
 		ID                func(childComplexity int) int
-		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int) int
@@ -129,7 +129,7 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		NameTranslations func(childComplexity int) int
-		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Series           func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int) int
@@ -149,7 +149,7 @@ type ComplexityRoot struct {
 
 	Club struct {
 		ID    func(childComplexity int) int
-		Posts func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 	}
 
 	CreateAudiencePayload struct {
@@ -234,6 +234,7 @@ type ComplexityRoot struct {
 		UpdatePostAudience               func(childComplexity int, input types.UpdatePostAudienceInput) int
 		UpdatePostCategories             func(childComplexity int, input types.UpdatePostCategoriesInput) int
 		UpdatePostCharacters             func(childComplexity int, input types.UpdatePostCharactersInput) int
+		UpdatePostContentIsSupporterOnly func(childComplexity int, input types.UpdatePostContentIsSupporterOnlyInput) int
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
 		UpdateSeriesThumbnail            func(childComplexity int, input types.UpdateSeriesThumbnailInput) int
 		UpdateSeriesTitle                func(childComplexity int, input types.UpdateSeriesTitleInput) int
@@ -247,27 +248,35 @@ type ComplexityRoot struct {
 	}
 
 	Post struct {
-		Audience       func(childComplexity int) int
-		Categories     func(childComplexity int) int
-		Characters     func(childComplexity int) int
-		Club           func(childComplexity int) int
-		Content        func(childComplexity int) int
-		Contributor    func(childComplexity int) int
-		CreatedAt      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Likes          func(childComplexity int) int
-		Moderator      func(childComplexity int) int
-		PostedAt       func(childComplexity int) int
-		ReassignmentAt func(childComplexity int) int
-		Reference      func(childComplexity int) int
-		State          func(childComplexity int) int
-		SuggestedPosts func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ViewerLiked    func(childComplexity int) int
+		Audience            func(childComplexity int) int
+		Categories          func(childComplexity int) int
+		Characters          func(childComplexity int) int
+		Club                func(childComplexity int) int
+		Content             func(childComplexity int) int
+		Contributor         func(childComplexity int) int
+		CreatedAt           func(childComplexity int) int
+		ID                  func(childComplexity int) int
+		Likes               func(childComplexity int) int
+		Moderator           func(childComplexity int) int
+		PostedAt            func(childComplexity int) int
+		ReassignmentAt      func(childComplexity int) int
+		Reference           func(childComplexity int) int
+		State               func(childComplexity int) int
+		SuggestedPosts      func(childComplexity int, after *string, before *string, first *int, last *int) int
+		SupporterOnlyStatus func(childComplexity int) int
+		ViewerLiked         func(childComplexity int) int
 	}
 
 	PostConnection struct {
 		Edges    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
+	}
+
+	PostContent struct {
+		ID                                func(childComplexity int) int
+		IsSupporterOnly                   func(childComplexity int) int
+		Resource                          func(childComplexity int) int
+		ViewerCanViewSupporterOnlyContent func(childComplexity int) int
 	}
 
 	PostEdge struct {
@@ -290,7 +299,7 @@ type ComplexityRoot struct {
 		Character          func(childComplexity int, slug string, seriesSlug string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) int
 		Post               func(childComplexity int, reference string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Serial             func(childComplexity int, slug string) int
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) int
@@ -308,7 +317,7 @@ type ComplexityRoot struct {
 
 	Series struct {
 		ID                func(childComplexity int) int
-		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, sortBy types.PostsSort) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int) int
@@ -397,6 +406,10 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	UpdatePostContentIsSupporterOnlyPayload struct {
+		Post func(childComplexity int) int
+	}
+
 	UpdatePostContentOrderPayload struct {
 		Post func(childComplexity int) int
 	}
@@ -417,26 +430,26 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	CurationProfile(ctx context.Context, obj *types.Account) (*types.CurationProfile, error)
 	ClubMembersPostsFeed(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
-	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
-	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
-	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceCurationProfileResolver interface {
 	Audiences(ctx context.Context, obj *types.AudienceCurationProfile) ([]*types.Audience, error)
 }
 type CategoryResolver interface {
-	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CategoryCurationProfileResolver interface {
 	Categories(ctx context.Context, obj *types.CategoryCurationProfile) ([]*types.Category, error)
 }
 type CharacterResolver interface {
-	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type ClubResolver interface {
-	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -469,6 +482,7 @@ type MutationResolver interface {
 	AddPostContent(ctx context.Context, input types.AddPostContentInput) (*types.AddPostContentPayload, error)
 	RemovePostContent(ctx context.Context, input types.RemovePostContentInput) (*types.RemovePostContentPayload, error)
 	UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error)
+	UpdatePostContentIsSupporterOnly(ctx context.Context, input types.UpdatePostContentIsSupporterOnlyInput) (*types.UpdatePostContentIsSupporterOnlyPayload, error)
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
@@ -493,12 +507,12 @@ type QueryResolver interface {
 	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) (*types.SeriesConnection, error)
 	Serial(ctx context.Context, slug string) (*types.Series, error)
 }
 type SeriesResolver interface {
-	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 
 type executableSchema struct {
@@ -552,7 +566,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Account.posts":
 		if e.complexity.Account.Posts == nil {
@@ -564,7 +578,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "AddPostContentPayload.post":
 		if e.complexity.AddPostContentPayload.Post == nil {
@@ -590,7 +604,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "Audience.slug":
 		if e.complexity.Audience.Slug == nil {
@@ -707,7 +721,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "Category.slug":
 		if e.complexity.Category.Slug == nil {
@@ -831,7 +845,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "Character.series":
 		if e.complexity.Character.Series == nil {
@@ -913,7 +927,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "CreateAudiencePayload.audience":
 		if e.complexity.CreateAudiencePayload.Audience == nil {
@@ -1427,6 +1441,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdatePostCharacters(childComplexity, args["input"].(types.UpdatePostCharactersInput)), true
 
+	case "Mutation.updatePostContentIsSupporterOnly":
+		if e.complexity.Mutation.UpdatePostContentIsSupporterOnly == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostContentIsSupporterOnly_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostContentIsSupporterOnly(childComplexity, args["input"].(types.UpdatePostContentIsSupporterOnlyInput)), true
+
 	case "Mutation.updatePostContentOrder":
 		if e.complexity.Mutation.UpdatePostContentOrder == nil {
 			break
@@ -1601,6 +1627,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.SuggestedPosts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
+	case "Post.supporterOnlyStatus":
+		if e.complexity.Post.SupporterOnlyStatus == nil {
+			break
+		}
+
+		return e.complexity.Post.SupporterOnlyStatus(childComplexity), true
+
 	case "Post.viewerLiked":
 		if e.complexity.Post.ViewerLiked == nil {
 			break
@@ -1621,6 +1654,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PostConnection.PageInfo(childComplexity), true
+
+	case "PostContent.id":
+		if e.complexity.PostContent.ID == nil {
+			break
+		}
+
+		return e.complexity.PostContent.ID(childComplexity), true
+
+	case "PostContent.isSupporterOnly":
+		if e.complexity.PostContent.IsSupporterOnly == nil {
+			break
+		}
+
+		return e.complexity.PostContent.IsSupporterOnly(childComplexity), true
+
+	case "PostContent.resource":
+		if e.complexity.PostContent.Resource == nil {
+			break
+		}
+
+		return e.complexity.PostContent.Resource(childComplexity), true
+
+	case "PostContent.viewerCanViewSupporterOnlyContent":
+		if e.complexity.PostContent.ViewerCanViewSupporterOnlyContent == nil {
+			break
+		}
+
+		return e.complexity.PostContent.ViewerCanViewSupporterOnlyContent(childComplexity), true
 
 	case "PostEdge.cursor":
 		if e.complexity.PostEdge.Cursor == nil {
@@ -1758,7 +1819,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "Query.postsFeed":
 		if e.complexity.Query.PostsFeed == nil {
@@ -1846,7 +1907,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
 	case "Series.slug":
 		if e.complexity.Series.Slug == nil {
@@ -2050,6 +2111,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostClubPayload.Post(childComplexity), true
+
+	case "UpdatePostContentIsSupporterOnlyPayload.post":
+		if e.complexity.UpdatePostContentIsSupporterOnlyPayload.Post == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostContentIsSupporterOnlyPayload.Post(childComplexity), true
 
 	case "UpdatePostContentOrderPayload.post":
 		if e.complexity.UpdatePostContentOrderPayload.Post == nil {
@@ -2825,14 +2893,32 @@ extend type Mutation {
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload
 }
 `, BuiltIn: false},
-	{Name: "schema/post/schema.graphql", Input: `type Post implements Node @key(fields: "id") {
+	{Name: "schema/post/schema.graphql", Input: `"""Represents content for a post."""
+type PostContent {
+  """The ID of this content."""
+  id: ID!
+
+  """The resource belonging to this content."""
+  resource: Resource!
+
+  """Whether or not this content is supporter only."""
+  isSupporterOnly: Boolean!
+
+  """Whether or not the viewer is able to see this content."""
+  viewerCanViewSupporterOnlyContent: Boolean!
+}
+
+type Post implements Node @key(fields: "id") {
   id: ID!
 
   """The reference of this post. Should always be used to reference this post."""
   reference: String!
 
-  """The state of the post"""
+  """The state of the post."""
   state: PostState!
+
+  """The supporter-only status."""
+  supporterOnlyStatus: SupporterOnlyStatus!
 
   """The moderator to whom this pending post was assigned"""
   moderator: Account
@@ -2844,7 +2930,7 @@ extend type Mutation {
   club: Club!
 
   """Content belonging to this post"""
-  content: [Resource!]!
+  content: [PostContent!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!
@@ -2882,6 +2968,17 @@ enum PostState {
   PROCESSING
   REMOVING
   REMOVED
+}
+
+enum SupporterOnlyStatus {
+  """None of the content requires supporting to view."""
+  NONE
+
+  """Some of the content requires supporting to view, at least 1 content piece is free."""
+  PARTIAL
+
+  """All of the content is supporter-only."""
+  FULL
 }
 
 """Create a new post. A club ID is required."""
@@ -2924,6 +3021,18 @@ input UpdatePostContentOrderInput {
 
   """Content IDs for the content"""
   contentIds: [ID!]!
+}
+
+"""Update post content is supporter only."""
+input UpdatePostContentIsSupporterOnlyInput {
+  """The post to update"""
+  id: ID!
+
+  """Content IDs to update"""
+  contentIds: [ID!]!
+
+  """The change to make"""
+  isSupporterOnly: Boolean!
 }
 
 """Update post audience."""
@@ -2982,6 +3091,12 @@ type RemovePostContentPayload {
 
 """Payload for updating a post"""
 type UpdatePostContentOrderPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentIsSupporterOnlyPayload {
   """The post after the update"""
   post: Post
 }
@@ -3056,24 +3171,6 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Search by audience slugs."""
-    audienceSlugs: [String!]
-
-    """Search by category slugs."""
-    categorySlugs: [String!]
-
-    """Search by character slugs."""
-    characterSlugs: [String!]
-
-    """Search by series slugs."""
-    seriesSlugs: [String!]
-
-    """Search by a post state."""
-    state: PostState = REVIEW
-
-    """Sorting options for posts."""
-    sortBy: PostsSort! = NEW
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
@@ -3105,6 +3202,9 @@ extend type Account {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -3135,6 +3235,11 @@ extend type Mutation {
   Update a post in draft status - update post content order - need to send exact same IDs
   """
   updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+
+  """
+  Update a post content - whether or not it is supporter only
+  """
+  updatePostContentIsSupporterOnly(input: UpdatePostContentIsSupporterOnlyInput!): UpdatePostContentIsSupporterOnlyPayload
 
   """
   Update a post in draft status - characters
@@ -3203,6 +3308,9 @@ extend type Query {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection!
@@ -3235,6 +3343,9 @@ extend type Category {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -3263,6 +3374,9 @@ extend type Character {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -3295,6 +3409,9 @@ extend type Series {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -3331,6 +3448,9 @@ extend type Club {
     """Search by a post state."""
     state: PostState = PUBLISHED
 
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
+
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
   ): PostConnection! @goField(forceResolver: true)
@@ -3362,6 +3482,9 @@ extend type Audience {
 
     """Search by a post state."""
     state: PostState = PUBLISHED
+
+    """Search by a post supporter only status."""
+    supporterOnlyStatus: [SupporterOnlyStatus!]
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -3712,60 +3835,6 @@ func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.C
 		}
 	}
 	args["last"] = arg3
-	var arg4 []string
-	if tmp, ok := rawArgs["audienceSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
-		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["audienceSlugs"] = arg4
-	var arg5 []string
-	if tmp, ok := rawArgs["categorySlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
-		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["categorySlugs"] = arg5
-	var arg6 []string
-	if tmp, ok := rawArgs["characterSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
-		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["characterSlugs"] = arg6
-	var arg7 []string
-	if tmp, ok := rawArgs["seriesSlugs"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
-		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seriesSlugs"] = arg7
-	var arg8 *types.PostState
-	if tmp, ok := rawArgs["state"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["state"] = arg8
-	var arg9 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["sortBy"] = arg9
 	return args, nil
 }
 
@@ -3853,15 +3922,24 @@ func (ec *executionContext) field_Account_posts_args(ctx context.Context, rawArg
 		}
 	}
 	args["state"] = arg8
-	var arg9 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg9 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg9
+	args["supporterOnlyStatus"] = arg9
+	var arg10 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg10, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg10
 	return args, nil
 }
 
@@ -3940,15 +4018,24 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["state"] = arg7
-	var arg8 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg8, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg8 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg8, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg8
+	args["supporterOnlyStatus"] = arg8
+	var arg9 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg9
 	return args, nil
 }
 
@@ -4027,15 +4114,24 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["state"] = arg7
-	var arg8 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg8, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg8 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg8, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg8
+	args["supporterOnlyStatus"] = arg8
+	var arg9 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg9
 	return args, nil
 }
 
@@ -4105,15 +4201,24 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 		}
 	}
 	args["state"] = arg6
-	var arg7 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg7, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg7 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg7, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg7
+	args["supporterOnlyStatus"] = arg7
+	var arg8 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg8, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg8
 	return args, nil
 }
 
@@ -4201,15 +4306,24 @@ func (ec *executionContext) field_Club_posts_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["state"] = arg8
-	var arg9 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg9 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg9
+	args["supporterOnlyStatus"] = arg9
+	var arg10 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg10, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg10
 	return args, nil
 }
 
@@ -4670,6 +4784,21 @@ func (ec *executionContext) field_Mutation_updatePostCharacters_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePostContentIsSupporterOnly_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostContentIsSupporterOnlyInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostContentIsSupporterOnlyInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentIsSupporterOnlyInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5206,15 +5335,24 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["state"] = arg8
-	var arg9 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg9 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg9
+	args["supporterOnlyStatus"] = arg9
+	var arg10 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg10, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg10
 	return args, nil
 }
 
@@ -5377,15 +5515,24 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 		}
 	}
 	args["state"] = arg7
-	var arg8 types.PostsSort
-	if tmp, ok := rawArgs["sortBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg8, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+	var arg8 []types.SupporterOnlyStatus
+	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
+		arg8, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg8
+	args["supporterOnlyStatus"] = arg8
+	var arg9 types.PostsSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg9, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg9
 	return args, nil
 }
 
@@ -5544,7 +5691,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5586,7 +5733,7 @@ func (ec *executionContext) _Account_posts(ctx context.Context, field graphql.Co
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Account().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5972,7 +6119,7 @@ func (ec *executionContext) _Audience_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6501,7 +6648,7 @@ func (ec *executionContext) _Category_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7065,7 +7212,7 @@ func (ec *executionContext) _Character_posts(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7247,7 +7394,7 @@ func (ec *executionContext) _Club_posts(ctx context.Context, field graphql.Colle
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Club().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9082,6 +9229,45 @@ func (ec *executionContext) _Mutation_updatePostContentOrder(ctx context.Context
 	return ec.marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updatePostContentIsSupporterOnly(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePostContentIsSupporterOnly_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostContentIsSupporterOnly(rctx, args["input"].(types.UpdatePostContentIsSupporterOnlyInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostContentIsSupporterOnlyPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostContentIsSupporterOnlyPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentIsSupporterOnlyPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updatePostCharacters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9555,6 +9741,41 @@ func (ec *executionContext) _Post_state(ctx context.Context, field graphql.Colle
 	return ec.marshalNPostState2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Post_supporterOnlyStatus(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SupporterOnlyStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.SupporterOnlyStatus)
+	fc.Result = res
+	return ec.marshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Post_moderator(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9687,9 +9908,9 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Resource)
+	res := resTmp.([]*types.PostContent)
 	fc.Result = res
-	return ec.marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
+	return ec.marshalNPostContent2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostContentᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -10070,6 +10291,146 @@ func (ec *executionContext) _PostConnection_pageInfo(ctx context.Context, field 
 	res := resTmp.(*relay.PageInfo)
 	fc.Result = res
 	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostContent_id(ctx context.Context, field graphql.CollectedField, obj *types.PostContent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostContent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostContent_resource(ctx context.Context, field graphql.CollectedField, obj *types.PostContent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostContent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Resource, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Resource)
+	fc.Result = res
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostContent_isSupporterOnly(ctx context.Context, field graphql.CollectedField, obj *types.PostContent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostContent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsSupporterOnly, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostContent_viewerCanViewSupporterOnlyContent(ctx context.Context, field graphql.CollectedField, obj *types.PostContent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostContent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ViewerCanViewSupporterOnlyContent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PostEdge) (ret graphql.Marshaler) {
@@ -10631,7 +10992,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11211,7 +11572,7 @@ func (ec *executionContext) _Series_posts(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11959,6 +12320,38 @@ func (ec *executionContext) _UpdatePostClubPayload_post(ctx context.Context, fie
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "UpdatePostClubPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdatePostContentIsSupporterOnlyPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostContentIsSupporterOnlyPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdatePostContentIsSupporterOnlyPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -13960,6 +14353,45 @@ func (ec *executionContext) unmarshalInputUpdatePostCharactersInput(ctx context.
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdatePostContentIsSupporterOnlyInput(ctx context.Context, obj interface{}) (types.UpdatePostContentIsSupporterOnlyInput, error) {
+	var it types.UpdatePostContentIsSupporterOnlyInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentIds"))
+			it.ContentIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "isSupporterOnly":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isSupporterOnly"))
+			it.IsSupporterOnly, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdatePostContentOrderInput(ctx context.Context, obj interface{}) (types.UpdatePostContentOrderInput, error) {
 	var it types.UpdatePostContentOrderInput
 	asMap := map[string]interface{}{}
@@ -15823,6 +16255,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "updatePostContentIsSupporterOnly":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostContentIsSupporterOnly(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "updatePostCharacters":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updatePostCharacters(ctx, field)
@@ -15964,6 +16403,16 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "state":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_state(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "supporterOnlyStatus":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Post_supporterOnlyStatus(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -16170,6 +16619,67 @@ func (ec *executionContext) _PostConnection(ctx context.Context, sel ast.Selecti
 		case "pageInfo":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._PostConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var postContentImplementors = []string{"PostContent"}
+
+func (ec *executionContext) _PostContent(ctx context.Context, sel ast.SelectionSet, obj *types.PostContent) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postContentImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PostContent")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostContent_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "resource":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostContent_resource(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isSupporterOnly":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostContent_isSupporterOnly(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "viewerCanViewSupporterOnlyContent":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostContent_viewerCanViewSupporterOnlyContent(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -17363,6 +17873,34 @@ func (ec *executionContext) _UpdatePostClubPayload(ctx context.Context, sel ast.
 	return out
 }
 
+var updatePostContentIsSupporterOnlyPayloadImplementors = []string{"UpdatePostContentIsSupporterOnlyPayload"}
+
+func (ec *executionContext) _UpdatePostContentIsSupporterOnlyPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostContentIsSupporterOnlyPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostContentIsSupporterOnlyPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostContentIsSupporterOnlyPayload")
+		case "post":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdatePostContentIsSupporterOnlyPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updatePostContentOrderPayloadImplementors = []string{"UpdatePostContentOrderPayload"}
 
 func (ec *executionContext) _UpdatePostContentOrderPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostContentOrderPayload) graphql.Marshaler {
@@ -18538,6 +19076,60 @@ func (ec *executionContext) marshalNPostConnection2ᚖoverdollᚋapplicationsᚋ
 	return ec._PostConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNPostContent2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostContentᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostContent) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPostContent2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostContent(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNPostContent2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostContent(ctx context.Context, sel ast.SelectionSet, v *types.PostContent) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PostContent(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -18629,50 +19221,6 @@ func (ec *executionContext) marshalNPostsSort2overdollᚋapplicationsᚋstingᚋ
 func (ec *executionContext) unmarshalNRemovePostContentInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemovePostContentInput(ctx context.Context, v interface{}) (types.RemovePostContentInput, error) {
 	res, err := ec.unmarshalInputRemovePostContentInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Resource) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
@@ -18833,6 +19381,16 @@ func (ec *executionContext) unmarshalNSubmitPostInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx context.Context, v interface{}) (types.SupporterOnlyStatus, error) {
+	var res types.SupporterOnlyStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx context.Context, sel ast.SelectionSet, v types.SupporterOnlyStatus) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
 	res, err := graphql.UnmarshalTime(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -18969,6 +19527,11 @@ func (ec *executionContext) unmarshalNUpdatePostCategoriesInput2overdollᚋappli
 
 func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx context.Context, v interface{}) (types.UpdatePostCharactersInput, error) {
 	res, err := ec.unmarshalInputUpdatePostCharactersInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatePostContentIsSupporterOnlyInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentIsSupporterOnlyInput(ctx context.Context, v interface{}) (types.UpdatePostContentIsSupporterOnlyInput, error) {
+	res, err := ec.unmarshalInputUpdatePostContentIsSupporterOnlyInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -19685,6 +20248,77 @@ func (ec *executionContext) marshalOSubmitPostPayload2ᚖoverdollᚋapplications
 	return ec._SubmitPostPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx context.Context, v interface{}) ([]types.SupporterOnlyStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]types.SupporterOnlyStatus, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx context.Context, sel ast.SelectionSet, v []types.SupporterOnlyStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
 	if v == nil {
 		return nil, nil
@@ -19796,6 +20430,13 @@ func (ec *executionContext) marshalOUpdatePostCharactersPayload2ᚖoverdollᚋap
 		return graphql.Null
 	}
 	return ec._UpdatePostCharactersPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostContentIsSupporterOnlyPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentIsSupporterOnlyPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostContentIsSupporterOnlyPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostContentIsSupporterOnlyPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostContentOrderPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostContentOrderPayload) graphql.Marshaler {

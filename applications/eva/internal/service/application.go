@@ -99,6 +99,8 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(mfaRepo),
 			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			AccountEmailsLimit:                          query.NewAccountEmailsLimitHandler(accountRepo),
+
+			LocationFromIp: query.NewLocationFromIpHandler(locationRepo),
 		},
 	}
 }

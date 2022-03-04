@@ -28,7 +28,7 @@ func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeri
 
 	series, err := h.pr.UpdateSeriesThumbnail(ctx, cmd.Principal, cmd.SeriesId, func(series *post.Series) error {
 
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail})
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to create or get resources from uploads")

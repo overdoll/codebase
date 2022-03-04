@@ -2,6 +2,9 @@ package service_test
 
 import (
 	"context"
+	"github.com/stretchr/testify/mock"
+	"go.temporal.io/sdk/mocks"
+	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
 
@@ -76,6 +79,10 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
+	workflow := workflows.AddPostLike
+
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+
 	var likePost LikePost
 
 	err := client.Mutate(context.Background(), &likePost, map[string]interface{}{
@@ -89,8 +96,11 @@ func TestLikePost_and_undo(t *testing.T) {
 	env := getWorkflowEnvironment(t)
 
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	env.ExecuteWorkflow(workflows.AddPostLike, postId)
 
+	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
+
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(workflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -102,6 +112,10 @@ func TestLikePost_and_undo(t *testing.T) {
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should exist")
 
 	require.Equal(t, 1, postAfterLiked.Post.Likes, "post has 1 like")
+
+	newWorkflow := workflows.RemovePostLike
+
+	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, newWorkflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
 
 	var undoLikePost UndoLikePost
 
@@ -116,8 +130,11 @@ func TestLikePost_and_undo(t *testing.T) {
 	env = getWorkflowEnvironment(t)
 
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	env.ExecuteWorkflow(workflows.RemovePostLike, postId)
 
+	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
+
+	// execute workflow manually since it won't be
+	env.ExecuteWorkflow(newWorkflow, args...)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

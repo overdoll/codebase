@@ -4,8 +4,10 @@ go_library(
     name = "workflows",
     srcs = [
         "add_club_member.go",
+        "add_club_supporter.go",
         "options.go",
         "remove_club_member.go",
+        "remove_club_supporter.go",
         "update_club_member_total_count.go",
     ],
     importpath = "overdoll/applications/stella/internal/app/workflows",

@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<2af6caa0639f8a0d6ab2ece8d7d60d6d>>
  * @relayHash 90414548c10fbe0d0316c6b8e593f447
+=======
+ * @generated SignedSource<<aa7aa9286a0008bfdcc65aa60567e6f7>>
+ * @relayHash 11ca3058641bfc4d3b99bd6c7f55f92d
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 90414548c10fbe0d0316c6b8e593f447
+=======
+// @relayRequestID 11ca3058641bfc4d3b99bd6c7f55f92d
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -266,13 +275,25 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Resource",
+                    "concreteType": "PostContent",
                     "kind": "LinkedField",
                     "name": "content",
                     "plural": true,
                     "selections": [
-                      (v6/*: any*/),
-                      (v8/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "resource",
+                        "plural": false,
+                        "selections": [
+                          (v6/*: any*/),
+                          (v8/*: any*/),
+                          (v5/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -414,7 +435,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "90414548c10fbe0d0316c6b8e593f447",
+=======
+    "id": "11ca3058641bfc4d3b99bd6c7f55f92d",
+>>>>>>> master
     "metadata": {},
     "name": "SearchPostsPaginationQuery",
     "operationKind": "query",

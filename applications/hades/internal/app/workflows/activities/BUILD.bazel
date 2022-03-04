@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "add_club_supporter.go",
+        "check_for_duplicate_club_support_subscription.go",
+        "create_account_club_support_subscription.go",
+        "create_cancelled_club_subscription_account_transaction_record.go",
+        "create_chargeback_club_subscription_account_transaction_record.go",
+        "create_expired_club_subscription_account_transaction_record.go",
+        "create_failed_club_subscription_account_transaction_record.go",
+        "create_invoice_club_subscription_account_transaction_record.go",
+        "create_new_club_subscription_account_transaction_record.go",
+        "create_reactivated_club_subscription_account_transaction_record.go",
+        "create_refund_club_subscription_account_transaction_record.go",
+        "create_void_club_subscription_account_transaction_record.go",
+        "generate_club_supporter_receipt_from_account_transaction_history.go",
+        "get_ccbill_subscription_details.go",
+        "mark_account_club_support_cancelled.go",
+        "mark_account_club_support_reactivated.go",
+        "remove_account_club_support_subscription.go",
+        "remove_club_supporter.go",
+        "unravel_ccbill_payment.go",
+        "update_account_club_support_billing_date.go",
+        "update_ccbill_subscription_details.go",
+        "void_or_refund_ccbill_subscription.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/app/workflows/activities",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/app/command",
+        "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/ccbill",
+        "//applications/hades/proto:v1_go_proto",
+    ],
+)

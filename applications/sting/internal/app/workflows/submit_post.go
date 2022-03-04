@@ -13,6 +13,10 @@ func SubmitPost(ctx workflow.Context, id string) error {
 
 	var a *activities.Activities
 
+	if err := workflow.ExecuteActivity(ctx, a.CreatePixelatedResourcesForSupporterOnlyContent, id).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.SubmitPost, id).Get(ctx, nil); err != nil {
 		return err
 	}

@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<56c102d356660f2fb32d6d2c9152dac5>>
  * @relayHash 3a1cc3588dd75cff64ba418247f0acf4
+=======
+ * @generated SignedSource<<cd6762dd39512190c6e849f81d5786fd>>
+ * @relayHash 8a3327afb981910505c4761f403b8731
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 3a1cc3588dd75cff64ba418247f0acf4
+=======
+// @relayRequestID 8a3327afb981910505c4761f403b8731
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,10 +195,58 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
+<<<<<<< HEAD
+=======
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": (v6/*: any*/),
+                            "storageKey": null
+                          },
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v9/*: any*/),
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+>>>>>>> master
                         "selections": [
                           {
                             "alias": null,
@@ -315,7 +372,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "3a1cc3588dd75cff64ba418247f0acf4",
+=======
+    "id": "8a3327afb981910505c4761f403b8731",
+>>>>>>> master
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

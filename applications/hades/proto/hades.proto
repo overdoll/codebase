@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package applications.grpc.hades.v1;
+
+import "google/protobuf/timestamp.proto";
+
+
+// generated messages used to communicate with CCBill and our system
+message CCBillClubSupporter {
+  string clubId = 1;
+}
+
+// source initiator
+message AccountInitiator {
+  string accountId = 1;
+}
+
+message TransactionHeader {
+  google.protobuf.Timestamp createdAt = 1;
+}
+
+// any extra details in the header
+message HeaderConfiguration {
+  bool savePaymentDetails = 1;
+  google.protobuf.Timestamp createdAt = 2;
+}
+
+message CCBillFlexFormsDetails {
+  string pricingDigest = 1;
+}
+
+message CCBillPricingDetails {
+  string initialPrice = 1;
+  string initialPeriod = 2;
+  string recurringPrice = 3;
+  string recurringPeriod = 4;
+  string numRebills = 5;
+  string currencyCode = 6;
+}
+
+message CCBillTransactionDenied {
+  string id = 1;
+  string code = 2;
+  string reason = 3;
+}
+
+message CCBillTransactionAuthorized {
+  string subscriptionId = 1;
+}
+
+message CCBillPayment {
+  HeaderConfiguration headerConfiguration = 1;
+  optional CCBillClubSupporter ccbillClubSupporter = 2;
+  optional CCBillFlexFormsDetails ccbillFlexFormsDetails = 3;
+  CCBillPricingDetails ccbillPricingDetails = 4;
+  AccountInitiator accountInitiator = 5;
+}
+
+message CCBillTransaction {
+  TransactionHeader transactionHeader = 1;
+  CCBillPayment ccbillPayment = 2;
+  optional CCBillTransactionDenied ccbillTransactionDenied = 3;
+  optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 4;
+}

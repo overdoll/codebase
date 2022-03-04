@@ -105,6 +105,10 @@ type ClubMember struct {
 	Club *Club `json:"club"`
 	// The account that belongs to this membership.
 	Account *Account `json:"account"`
+	// Whether or not this member is a supporter.
+	IsSupporter bool `json:"isSupporter"`
+	// If is a supporter, when they became a supporter.
+	SupporterSince *time.Time `json:"supporterSince"`
 }
 
 func (ClubMember) IsNode()   {}

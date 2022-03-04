@@ -141,7 +141,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	err = client.Mutate(context.Background(), &updateAudienceThumbnail, map[string]interface{}{
 		"input": types.UpdateAudienceThumbnailInput{
 			ID:        audience.Id,
-			Thumbnail: "test",
+			Thumbnail: "00be69a89e31d28cf8e79b7373d505c7",
 		},
 	})
 

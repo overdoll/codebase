@@ -64,3 +64,14 @@ func (s StellaGrpc) GetSuspendedClubs(ctx context.Context) ([]string, error) {
 
 	return md.ClubIds, nil
 }
+
+func (s StellaGrpc) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+
+	md, err := s.client.GetAccountSupportedClubs(ctx, &stella.GetAccountSupportedClubsRequest{AccountId: accountId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return md.ClubIds, nil
+}

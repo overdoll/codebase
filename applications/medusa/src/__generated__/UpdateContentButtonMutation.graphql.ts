@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cab318ba69ed263caa94f69f1467215e>>
- * @relayHash df51bbbed92255556ab2c5e699f05295
+ * @generated SignedSource<<07e57f61d8657f138f798326a18cbb70>>
+ * @relayHash 3f9ead09ba7b3ff6dbe83df766038b23
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID df51bbbed92255556ab2c5e699f05295
+// @relayRequestID 3f9ead09ba7b3ff6dbe83df766038b23
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -27,12 +27,14 @@ export type UpdateContentButtonMutation$data = {
       readonly id: string;
       readonly content: ReadonlyArray<{
         readonly id: string;
-        readonly type: ResourceType;
-        readonly processed: boolean;
-        readonly urls: ReadonlyArray<{
-          readonly url: string;
-          readonly mimeType: string;
-        }>;
+        readonly resource: {
+          readonly type: ResourceType;
+          readonly processed: boolean;
+          readonly urls: ReadonlyArray<{
+            readonly url: string;
+            readonly mimeType: string;
+          }>;
+        };
       }>;
     } | null;
   } | null;
@@ -51,80 +53,104 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "UpdatePostContentOrderPayload",
-    "kind": "LinkedField",
-    "name": "updatePostContentOrder",
-    "plural": false,
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "processed",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "url",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "UpdateContentButtonMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Post",
+        "args": (v1/*: any*/),
+        "concreteType": "UpdatePostContentOrderPayload",
         "kind": "LinkedField",
-        "name": "post",
+        "name": "updatePostContentOrder",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Resource",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
+            "name": "post",
+            "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "processed",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
+                "concreteType": "PostContent",
                 "kind": "LinkedField",
-                "name": "urls",
+                "name": "content",
                 "plural": true,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "resource",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v4/*: any*/),
+                      (v5/*: any*/)
+                    ],
                     "storageKey": null
                   }
                 ],
@@ -137,16 +163,6 @@ v2 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "UpdateContentButtonMutation",
-    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -155,10 +171,61 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UpdateContentButtonMutation",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "UpdatePostContentOrderPayload",
+        "kind": "LinkedField",
+        "name": "updatePostContentOrder",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Post",
+            "kind": "LinkedField",
+            "name": "post",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostContent",
+                "kind": "LinkedField",
+                "name": "content",
+                "plural": true,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Resource",
+                    "kind": "LinkedField",
+                    "name": "resource",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v4/*: any*/),
+                      (v5/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "df51bbbed92255556ab2c5e699f05295",
+    "id": "3f9ead09ba7b3ff6dbe83df766038b23",
     "metadata": {},
     "name": "UpdateContentButtonMutation",
     "operationKind": "mutation",
@@ -167,6 +234,6 @@ return {
 };
 })();
 
-(node as any).hash = "306bc32c87a2f82fcfa83513852288ad";
+(node as any).hash = "332f558c862f6ea71bdfb9cef3fc973c";
 
 export default node;

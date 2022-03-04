@@ -2,25 +2,19 @@ package ports
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
-	"overdoll/applications/loader/internal/app/workflows"
 	loader "overdoll/applications/loader/proto"
 )
 
 type Server struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewGrpcServer(application *app.Application, client client.Client) *Server {
+func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
-		app:    application,
-		client: client,
+		app: application,
 	}
 }
 
@@ -29,6 +23,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
 		ItemId:    request.ItemId,
 		UploadIds: request.ResourceIds,
+		IsPrivate: request.Private,
 	})
 
 	if err != nil {
@@ -41,30 +36,15 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		newResourceIds = append(newResourceIds, r.ID())
 	}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "ProcessResourcesForUpload" + uuid.New().String(),
-	}
-
-	_, err = s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, newResourceIds)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: newResourceIds}, nil
 }
 
 func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResourcesRequest) (*loader.DeleteResourcesResponse, error) {
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "DeleteProcessedResources" + uuid.New().String(),
-	}
-
-	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, request.ItemId, request.ResourceIds)
-
-	if err != nil {
+	if err := s.app.Commands.DeleteResources.Handle(ctx, command.DeleteResources{
+		ItemId:      request.ItemId,
+		ResourceIds: request.ResourceIds,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -73,7 +53,7 @@ func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResou
 
 func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRequest) (*loader.GetResourcesResponse, error) {
 
-	allResources, err := s.app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
+	allResources, err := s.app.Queries.ResourcesByIdsWithUrls.Handle(ctx, query.ResourcesByIdsWithUrls{
 		ItemIds:     []string{request.ItemId},
 		ResourceIds: request.ResourceIds,
 	})
@@ -90,8 +70,58 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 			ItemId:      resource.ItemId(),
 			Processed:   resource.IsProcessed(),
 			ProcessedId: resource.ProcessedId(),
+			Private:     resource.IsPrivate(),
 		})
 	}
 
 	return &loader.GetResourcesResponse{Resources: responseResources}, nil
+}
+
+func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
+
+	data := command.CopyResourcesAndApplyFilters{
+		ResourcePairs: []struct {
+			ItemId     string
+			ResourceId string
+		}{},
+		Filters:   struct{ Pixelate *struct{ Size int } }{},
+		IsPrivate: request.Private,
+	}
+
+	for _, r := range request.Resources {
+		data.ResourcePairs = append(data.ResourcePairs, struct {
+			ItemId     string
+			ResourceId string
+		}{
+			ItemId:     r.ItemId,
+			ResourceId: r.Id,
+		})
+	}
+
+	if request.Filters.Pixelate != nil {
+		data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+	}
+
+	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var filtered []*loader.FilteredResources
+
+	for _, r := range filteredResources {
+		filtered = append(filtered, &loader.FilteredResources{
+			OldResource: &loader.ResourceIdentifier{
+				Id:     r.OldResource().ID(),
+				ItemId: r.OldResource().ItemId(),
+			},
+			NewResource: &loader.ResourceIdentifier{
+				Id:     r.NewResource().ID(),
+				ItemId: r.NewResource().ItemId(),
+			},
+		})
+	}
+
+	return &loader.CopyResourcesAndApplyFilterResponse{Resources: filtered}, nil
 }

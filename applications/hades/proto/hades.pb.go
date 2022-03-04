@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/hades/proto/v1_go_proto_/overdoll/applications/hades/proto/hades.pb.go

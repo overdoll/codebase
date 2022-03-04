@@ -39,9 +39,22 @@ message CreateSessionResponse {
   string id = 1;
 }
 
+message GetLocationFromIpRequest {
+  string ip = 1;
+}
+
+message Location {
+  string city = 1;
+  string country = 2;
+  string postalCode = 3;
+  string subdivision = 4;
+  double latitude = 5;
+  double longitude = 6;
+}
+
 service Eva {
   rpc GetAccount(GetAccountRequest) returns (Account);
-
+  rpc GetLocationFromIp(GetLocationFromIpRequest) returns (Location);
   rpc GetSession(SessionRequest) returns (SessionResponse);
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
   rpc RevokeSession(SessionRequest) returns (google.protobuf.Empty);

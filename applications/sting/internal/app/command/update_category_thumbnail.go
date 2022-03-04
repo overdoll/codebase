@@ -28,7 +28,7 @@ func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCa
 
 	cat, err := h.pr.UpdateCategoryThumbnail(ctx, cmd.Principal, cmd.CategoryId, func(category *post.Category) error {
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail})
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to create or get resources from uploads")

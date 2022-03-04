@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<b8727c4d7cedca3cd42a57756927f4fc>>
  * @relayHash 857cbe2874148f414faed492c5f4465e
+=======
+ * @generated SignedSource<<e7bff47b2795383c1c6b8a33d64082e2>>
+ * @relayHash f7435e444fd613fbd5d89e1d8653de94
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 857cbe2874148f414faed492c5f4465e
+=======
+// @relayRequestID f7435e444fd613fbd5d89e1d8653de94
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -100,10 +109,17 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "type",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -111,7 +127,7 @@ v7 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v6/*: any*/),
+    (v7/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -122,13 +138,6 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
@@ -137,7 +146,7 @@ v9 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/)
+    (v7/*: any*/)
   ],
   "storageKey": null
 },
@@ -163,7 +172,12 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+<<<<<<< HEAD
     (v7/*: any*/),
+=======
+    (v6/*: any*/),
+    (v8/*: any*/),
+>>>>>>> master
     (v9/*: any*/),
     (v8/*: any*/),
     (v5/*: any*/)
@@ -255,7 +269,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Resource",
+            "concreteType": "PostContent",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
@@ -263,10 +277,26 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "processed",
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  },
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v8/*: any*/),
+                  (v9/*: any*/)
+                ],
                 "storageKey": null
               },
+<<<<<<< HEAD
               (v5/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
@@ -278,6 +308,9 @@ return {
                 "name": "videoDuration",
                 "storageKey": null
               }
+=======
+              (v5/*: any*/)
+>>>>>>> master
             ],
             "storageKey": null
           },
@@ -374,7 +407,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "857cbe2874148f414faed492c5f4465e",
+=======
+    "id": "f7435e444fd613fbd5d89e1d8653de94",
+>>>>>>> master
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

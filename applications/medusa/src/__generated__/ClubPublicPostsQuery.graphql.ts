@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<8e5dcc238c474212261c4d0fe822659b>>
  * @relayHash 38dd291eabc5b5e1515ea3110fef77a3
+=======
+ * @generated SignedSource<<b05b93b263ae62b53eccf6a33e6d2358>>
+ * @relayHash 00cb3e242d337ee5bbc6f220881b91cb
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 38dd291eabc5b5e1515ea3110fef77a3
+=======
+// @relayRequestID 00cb3e242d337ee5bbc6f220881b91cb
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -310,13 +319,25 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v10/*: any*/),
-                          (v12/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              (v10/*: any*/),
+                              (v12/*: any*/),
+                              (v9/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v9/*: any*/)
                         ],
                         "storageKey": null
@@ -488,7 +509,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "38dd291eabc5b5e1515ea3110fef77a3",
+=======
+    "id": "00cb3e242d337ee5bbc6f220881b91cb",
+>>>>>>> master
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

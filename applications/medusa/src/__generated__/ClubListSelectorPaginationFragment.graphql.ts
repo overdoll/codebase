@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<799616d0ea35d51670b7b1bbf2828098>>
  * @relayHash f820ea5ff3098406d0e73794993ea7e8
+=======
+ * @generated SignedSource<<b2f2ce179679b62f6b50d9773f46479b>>
+ * @relayHash 513fb4e6d5460dcc355baf33e1d5b627
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID f820ea5ff3098406d0e73794993ea7e8
+=======
+// @relayRequestID 513fb4e6d5460dcc355baf33e1d5b627
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -277,11 +286,12 @@ return {
                                       {
                                         "alias": null,
                                         "args": null,
-                                        "concreteType": "Resource",
+                                        "concreteType": "PostContent",
                                         "kind": "LinkedField",
                                         "name": "content",
                                         "plural": true,
                                         "selections": [
+<<<<<<< HEAD
                                           (v11/*: any*/),
                                           (v9/*: any*/),
                                           (v10/*: any*/),
@@ -290,6 +300,16 @@ return {
                                             "args": null,
                                             "kind": "ScalarField",
                                             "name": "processed",
+=======
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "concreteType": "Resource",
+                                            "kind": "LinkedField",
+                                            "name": "resource",
+                                            "plural": false,
+                                            "selections": (v9/*: any*/),
+>>>>>>> master
                                             "storageKey": null
                                           },
                                           (v7/*: any*/)
@@ -370,7 +390,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "f820ea5ff3098406d0e73794993ea7e8",
+=======
+    "id": "513fb4e6d5460dcc355baf33e1d5b627",
+>>>>>>> master
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

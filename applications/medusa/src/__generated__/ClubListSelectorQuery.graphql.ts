@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<0704c4425a78c5d9d5d75f851326bf48>>
  * @relayHash 52ea882fa6af3d8f82616aede011f000
+=======
+ * @generated SignedSource<<2e42defd25610c14adf57abbf076fc89>>
+ * @relayHash 6f011f8d84002274df2924e6c1478993
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 52ea882fa6af3d8f82616aede011f000
+=======
+// @relayRequestID 6f011f8d84002274df2924e6c1478993
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -213,11 +222,12 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "concreteType": "Resource",
+                                    "concreteType": "PostContent",
                                     "kind": "LinkedField",
                                     "name": "content",
                                     "plural": true,
                                     "selections": [
+<<<<<<< HEAD
                                       (v4/*: any*/),
                                       (v2/*: any*/),
                                       (v3/*: any*/),
@@ -229,6 +239,19 @@ return {
                                         "storageKey": null
                                       },
                                       (v5/*: any*/)
+=======
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "Resource",
+                                        "kind": "LinkedField",
+                                        "name": "resource",
+                                        "plural": false,
+                                        "selections": (v3/*: any*/),
+                                        "storageKey": null
+                                      },
+                                      (v2/*: any*/)
+>>>>>>> master
                                     ],
                                     "storageKey": null
                                   },
@@ -309,7 +332,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "52ea882fa6af3d8f82616aede011f000",
+=======
+    "id": "6f011f8d84002274df2924e6c1478993",
+>>>>>>> master
     "metadata": {},
     "name": "ClubListSelectorQuery",
     "operationKind": "query",

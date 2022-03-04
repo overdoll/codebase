@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75d71926405e0eed45de02a08016a03c>>
+ * @generated SignedSource<<5e1873b1e3e981dad550e55dd7a04a61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,9 @@ export type ClubTileOverlayFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly content: ReadonlyArray<{
-          readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+          readonly resource: {
+            readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+          };
         }>;
       };
     }>;
@@ -94,15 +96,26 @@ const node: ReaderFragment = {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Resource",
+                  "concreteType": "PostContent",
                   "kind": "LinkedField",
                   "name": "content",
                   "plural": true,
                   "selections": [
                     {
+                      "alias": null,
                       "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceItemFragment"
+                      "concreteType": "Resource",
+                      "kind": "LinkedField",
+                      "name": "resource",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "args": null,
+                          "kind": "FragmentSpread",
+                          "name": "ResourceItemFragment"
+                        }
+                      ],
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
@@ -121,6 +134,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1293800741068de04adaf409b99de94c";
+(node as any).hash = "8e320799e009da4a30aad7f7d283f8a5";
 
 export default node;

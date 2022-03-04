@@ -42,9 +42,12 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 			post.UnmarshalPostFromDatabase(
 				id.String(),
 				"published",
+				"none",
 				0,
 				&testClubId,
 				testAccountId,
+				nil,
+				nil,
 				nil,
 				testClubId,
 				&audienceId,
@@ -54,6 +57,8 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				time.Now(),
 				&postTime,
 				&postTime,
+				nil,
+				[]string{},
 			)
 
 		// create the new post
@@ -79,6 +84,8 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	filters, err := post.NewPostFilters(
 		"new",
 		&state,
+
+		nil,
 		nil,
 		nil,
 		[]string{testClubId},
@@ -86,7 +93,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 		nil,
 		nil,
 		nil,
-		nil,
+		false,
 	)
 
 	require.NoError(t, err, "no error creating empty filters")
@@ -160,11 +167,11 @@ func newPostIndexRepository(t *testing.T) adapters.PostsIndexElasticSearchReposi
 	session := bootstrap.InitializeDatabaseSession()
 	client := bootstrap.InitializeElasticSearchSession()
 
-	return adapters.NewPostsIndexElasticSearchRepository(client, session)
+	return adapters.NewPostsIndexElasticSearchRepository(client, session, StellaServiceMock{})
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
 	session := bootstrap.InitializeDatabaseSession()
 
-	return adapters.NewPostsCassandraRepository(session)
+	return adapters.NewPostsCassandraRepository(session, StellaServiceMock{})
 }

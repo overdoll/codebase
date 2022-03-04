@@ -28,7 +28,7 @@ func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateC
 
 	char, err := h.pr.UpdateCharacterThumbnail(ctx, cmd.Principal, cmd.CharacterId, func(character *post.Character) error {
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail})
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to create or get resources from uploads")

@@ -79,7 +79,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		name:                lc,
 		slugAliases:         []string{},
 		thumbnailResourceId: "",
-		membersCount:        0,
+		membersCount:        1,
 		ownerAccountId:      requester.AccountId(),
 	}, nil
 }
@@ -315,6 +315,29 @@ func (m *Club) CanView(requester *principal.Principal) bool {
 	return true
 }
 
+func (m *Club) CanBecomeSupporter(requester *principal.Principal, clubMemberships []*Member) (bool, error) {
+
+	if m.suspended {
+		return false, nil
+	}
+
+	foundClub := false
+
+	for _, membership := range clubMemberships {
+		if membership.clubId == m.id && membership.isSupporter {
+			foundClub = true
+			break
+		}
+	}
+
+	// already member, return false
+	if foundClub {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {
 
 	lim, err := ViewAccountClubsLimit(requester, accountId)
@@ -331,6 +354,7 @@ func IsAccountClubsLimitReached(requester *principal.Principal, accountId string
 }
 
 func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
 	}

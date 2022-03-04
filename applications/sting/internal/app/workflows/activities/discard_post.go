@@ -10,7 +10,7 @@ func (h *Activities) DiscardPost(ctx context.Context, postId string) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
 		// Delete all resources
-		if err := h.loader.DeleteResources(ctx, postId, pending.ContentResourceIds()); err != nil {
+		if err := h.loader.DeleteResources(ctx, postId, pending.AllContentResourceIds()); err != nil {
 			return err
 		}
 

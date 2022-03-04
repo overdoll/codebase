@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<236b8f04b62e952f545384eec2711f00>>
+=======
+ * @generated SignedSource<<f9d5085669193c85ea298bc97cc47c1d>>
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +19,15 @@ export type PostGalleryPublicSimpleFragment$data = {
   readonly id: string;
   readonly reference: string;
   readonly content: ReadonlyArray<{
+<<<<<<< HEAD
     readonly type: ResourceType;
     readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
+=======
+    readonly resource: {
+      readonly type: ResourceType;
+      readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+    };
+>>>>>>> master
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
@@ -50,7 +61,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
+      "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -58,14 +69,38 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "type",
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ImageSnippetFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ControlledVideoFragment"
+            }
+          ],
           "storageKey": null
+<<<<<<< HEAD
         },
         {
           "args": null,
           "kind": "FragmentSpread",
           "name": "PostMediaFragment"
+=======
+>>>>>>> master
         }
       ],
       "storageKey": null
@@ -85,6 +120,10 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
+<<<<<<< HEAD
 (node as any).hash = "80d8eaf6ccfe2c9e57caa9b6a8a9d09f";
+=======
+(node as any).hash = "78ce8daf77922ef44d5fface4768babd";
+>>>>>>> master
 
 export default node;

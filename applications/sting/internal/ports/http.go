@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
 	gen "overdoll/applications/sting/internal/ports/graphql"
 	"overdoll/libraries/graphql"
@@ -37,7 +36,7 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
-func NewHttpServer(app *app.Application, client client.Client) http.Handler {
+func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter()
 
@@ -47,7 +46,7 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	// graphql
 	rtr.POST("/api/graphql",
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
-			Resolvers: gen.NewResolver(app, client),
+			Resolvers: gen.NewResolver(app),
 		})),
 	)
 

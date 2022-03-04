@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	tusd "github.com/tus/tusd/pkg/handler"
-	"go.temporal.io/sdk/client"
 	"go.uber.org/zap"
 	"net/http"
 	"overdoll/applications/loader/internal/app"
@@ -26,7 +25,7 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
-func NewHttpServer(app *app.Application, client client.Client) http.Handler {
+func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter()
 
@@ -34,7 +33,7 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	rtr.POST("/api/graphql",
 		dataLoaderToContext(app),
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
-			Resolvers: gen.NewResolver(app, client),
+			Resolvers: gen.NewResolver(app),
 		})),
 	)
 
@@ -57,6 +56,5 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	rtr.POST("/api/upload/", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.PostFile)))))
 	rtr.HEAD("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.HeadFile)))))
 	rtr.PATCH("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.PatchFile)))))
-
 	return rtr
 }

@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<a04cc094cf177b541dd24d703741b968>>
  * @relayHash 8b46a73fd27d5ad212e6528c84aad0ef
+=======
+ * @generated SignedSource<<3ad40b777ed15779240f3757d5b95000>>
+ * @relayHash 072af9a58d567ae70cc7ee27a4b97c89
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 8b46a73fd27d5ad212e6528c84aad0ef
+=======
+// @relayRequestID 072af9a58d567ae70cc7ee27a4b97c89
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -249,11 +258,12 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "concreteType": "Resource",
+                                "concreteType": "PostContent",
                                 "kind": "LinkedField",
                                 "name": "content",
                                 "plural": true,
                                 "selections": [
+<<<<<<< HEAD
                                   (v9/*: any*/),
                                   (v7/*: any*/),
                                   (v8/*: any*/),
@@ -262,6 +272,16 @@ return {
                                     "args": null,
                                     "kind": "ScalarField",
                                     "name": "processed",
+=======
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Resource",
+                                    "kind": "LinkedField",
+                                    "name": "resource",
+                                    "plural": false,
+                                    "selections": (v7/*: any*/),
+>>>>>>> master
                                     "storageKey": null
                                   },
                                   (v4/*: any*/)
@@ -334,7 +354,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "8b46a73fd27d5ad212e6528c84aad0ef",
+=======
+    "id": "072af9a58d567ae70cc7ee27a4b97c89",
+>>>>>>> master
     "metadata": {},
     "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",

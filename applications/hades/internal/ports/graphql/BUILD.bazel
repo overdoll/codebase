@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "graphql",
+    srcs = [
+        "federation.go",
+        "generated.go",
+        "resolver.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/ports/graphql",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/app",
+        "//applications/hades/internal/ports/graphql/entities",
+        "//applications/hades/internal/ports/graphql/mutations",
+        "//applications/hades/internal/ports/graphql/queries",
+        "//applications/hades/internal/ports/graphql/resolvers",
+        "//applications/hades/internal/ports/graphql/types",
+        "//libraries/graphql",
+        "//libraries/graphql/relay",
+        "@com_github_99designs_gqlgen//graphql",
+        "@com_github_99designs_gqlgen//graphql/introspection",
+        "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
+        "@com_github_vektah_gqlparser_v2//:gqlparser",
+        "@com_github_vektah_gqlparser_v2//ast",
+    ],
+)

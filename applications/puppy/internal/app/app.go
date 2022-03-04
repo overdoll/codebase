@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/puppy/internal/domain/session"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/support"
 	"strings"
 )
 
@@ -24,17 +25,10 @@ type Application struct {
 
 func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, string, error) {
 	userAgent := strings.Join(req.Header["User-Agent"], ",")
-	forwarded := req.Header.Get("X-FORWARDED-FOR")
 
-	ip := ""
+	ip := support.GetIPFromRequest(req)
 	deviceId := ""
 	language := ""
-
-	if forwarded != "" {
-		ip = strings.Split(forwarded, ",")[0]
-	} else {
-		ip = req.RemoteAddr
-	}
 
 	c, err := req.Cookie(deviceCookieName)
 

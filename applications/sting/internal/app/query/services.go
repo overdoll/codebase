@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/libraries/principal"
 )
 
@@ -15,4 +14,5 @@ type StellaService interface {
 	CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error)
 	GetSuspendedClubs(ctx context.Context) ([]string, error)
 	CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
+	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
 }
