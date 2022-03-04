@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<fe0c529422cd9116d5bf20f08d244533>>
- * @relayHash 033dd95ad7665626f9d99b8f67d2ff7d
-=======
- * @generated SignedSource<<c42e203920b06960b69f2d41f620710d>>
- * @relayHash ed86adcdffd1c376e90e1a3cc7b5d597
->>>>>>> master
+ * @generated SignedSource<<ef652fff95ad16275d0e746c4c2126ba>>
+ * @relayHash f81c14c69e7b0e527a9a72997e4e6bd0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID 033dd95ad7665626f9d99b8f67d2ff7d
-=======
-// @relayRequestID ed86adcdffd1c376e90e1a3cc7b5d597
->>>>>>> master
+// @relayRequestID f81c14c69e7b0e527a9a72997e4e6bd0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -373,10 +364,6 @@ return {
                                 "name": "content",
                                 "plural": true,
                                 "selections": [
-<<<<<<< HEAD
-                                  (v14/*: any*/),
-                                  (v13/*: any*/),
-=======
                                   {
                                     "alias": null,
                                     "args": null,
@@ -385,13 +372,12 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v12/*: any*/),
                                       (v14/*: any*/),
+                                      (v13/*: any*/),
                                       (v9/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
->>>>>>> master
                                   (v9/*: any*/)
                                 ],
                                 "storageKey": null
@@ -477,11 +463,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "033dd95ad7665626f9d99b8f67d2ff7d",
-=======
-    "id": "ed86adcdffd1c376e90e1a3cc7b5d597",
->>>>>>> master
+    "id": "f81c14c69e7b0e527a9a72997e4e6bd0",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

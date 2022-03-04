@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<0704c4425a78c5d9d5d75f851326bf48>>
- * @relayHash 52ea882fa6af3d8f82616aede011f000
-=======
- * @generated SignedSource<<2e42defd25610c14adf57abbf076fc89>>
- * @relayHash 6f011f8d84002274df2924e6c1478993
->>>>>>> master
+ * @generated SignedSource<<a776e1c3690eece10d6e5178a1e11dc2>>
+ * @relayHash a18bdd2920128998546bc822dd2e877c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID 52ea882fa6af3d8f82616aede011f000
-=======
-// @relayRequestID 6f011f8d84002274df2924e6c1478993
->>>>>>> master
+// @relayRequestID a18bdd2920128998546bc822dd2e877c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -227,19 +218,6 @@ return {
                                     "name": "content",
                                     "plural": true,
                                     "selections": [
-<<<<<<< HEAD
-                                      (v4/*: any*/),
-                                      (v2/*: any*/),
-                                      (v3/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "processed",
-                                        "storageKey": null
-                                      },
-                                      (v5/*: any*/)
-=======
                                       {
                                         "alias": null,
                                         "args": null,
@@ -247,11 +225,22 @@ return {
                                         "kind": "LinkedField",
                                         "name": "resource",
                                         "plural": false,
-                                        "selections": (v3/*: any*/),
+                                        "selections": [
+                                          (v4/*: any*/),
+                                          (v2/*: any*/),
+                                          (v3/*: any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "processed",
+                                            "storageKey": null
+                                          },
+                                          (v5/*: any*/)
+                                        ],
                                         "storageKey": null
                                       },
-                                      (v2/*: any*/)
->>>>>>> master
+                                      (v5/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -332,11 +321,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "52ea882fa6af3d8f82616aede011f000",
-=======
-    "id": "6f011f8d84002274df2924e6c1478993",
->>>>>>> master
+    "id": "a18bdd2920128998546bc822dd2e877c",
     "metadata": {},
     "name": "ClubListSelectorQuery",
     "operationKind": "query",

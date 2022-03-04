@@ -33,3 +33,7 @@ export interface TagDescription {
 export interface TagInfraction {
   infraction: boolean
 }
+
+export interface TagDeprecated {
+  deprecated: boolean
+}

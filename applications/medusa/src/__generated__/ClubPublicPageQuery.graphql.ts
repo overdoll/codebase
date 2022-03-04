@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<4278b24d54df07ded2b9f88d14525f12>>
- * @relayHash 92aa2cb7c6e3ef3f1decb5efdeac0fc3
-=======
- * @generated SignedSource<<24298987647daf1ebf3ca647d5cca2e3>>
- * @relayHash f883ef3a645a9a9db60adb6785b6fb09
->>>>>>> master
+ * @generated SignedSource<<7f57ff288def45bcbdbe0dfb7d5b43f4>>
+ * @relayHash 6ea0ee0d2bad7f347b4c6d5e29db0802
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID 92aa2cb7c6e3ef3f1decb5efdeac0fc3
-=======
-// @relayRequestID f883ef3a645a9a9db60adb6785b6fb09
->>>>>>> master
+// @relayRequestID 6ea0ee0d2bad7f347b4c6d5e29db0802
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -136,28 +127,8 @@ v8 = {
 v9 = {
   "alias": null,
   "args": null,
-<<<<<<< HEAD
   "kind": "ScalarField",
   "name": "id",
-=======
-  "concreteType": "PostContent",
-  "kind": "LinkedField",
-  "name": "content",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "resource",
-      "plural": false,
-      "selections": (v8/*: any*/),
-      "storageKey": null
-    },
-    (v7/*: any*/)
-  ],
->>>>>>> master
   "storageKey": null
 },
 v10 = {
@@ -192,20 +163,32 @@ v11 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Resource",
+            "concreteType": "PostContent",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "videoDuration",
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "videoDuration",
+                    "storageKey": null
+                  },
+                  (v9/*: any*/)
+                ],
                 "storageKey": null
               },
               (v9/*: any*/)
@@ -396,15 +379,27 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v4/*: any*/),
-                          (v6/*: any*/),
-                          (v7/*: any*/),
-                          (v8/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              (v4/*: any*/),
+                              (v6/*: any*/),
+                              (v7/*: any*/),
+                              (v8/*: any*/),
+                              (v9/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v9/*: any*/)
                         ],
                         "storageKey": null
@@ -534,11 +529,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "92aa2cb7c6e3ef3f1decb5efdeac0fc3",
-=======
-    "id": "f883ef3a645a9a9db60adb6785b6fb09",
->>>>>>> master
+    "id": "6ea0ee0d2bad7f347b4c6d5e29db0802",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -547,10 +538,6 @@ return {
 };
 })();
 
-<<<<<<< HEAD
-(node as any).hash = "e66b6c6a3acf13a3b76c5c3baa91c4e7";
-=======
-(node as any).hash = "003662d9344147bf6c0a2a19295fcc37";
->>>>>>> master
+(node as any).hash = "aff2d5debd751344b0c6739957754bda";
 
 export default node;

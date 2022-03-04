@@ -16,8 +16,10 @@ const Fragment = graphql`
     id
     reference
     content {
-      type
-      ...PostMediaFragment
+      resource {
+        ...PostMediaFragment
+      }
+      
     }
   }
 `
@@ -44,7 +46,7 @@ export default function PostGalleryPublicDetailed ({
             key={index}
           >
             <Flex minH={400} bg='gray.800' w='100%' align='center' justify='center'>
-              <PostMedia query={item} index={index} reference={data.reference} />
+              <PostMedia query={item.resource} index={index} reference={data.reference} />
             </Flex>
           </SwiperSlide>)}
       </Swiper>

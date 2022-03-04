@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<47e4535d7fdfe752440693a5031079a3>>
- * @relayHash fe458110f217192092aa98969f0f8f39
-=======
- * @generated SignedSource<<801d1607879fbb113cf1ff0c6ab17e75>>
- * @relayHash 3dcd6dbea1a6016a2cf628d3f919dcee
->>>>>>> master
+ * @generated SignedSource<<9af363340135bb2b91397e1256a6881e>>
+ * @relayHash c69acd8b7c7a7bbe19e62275a91e1cdc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID fe458110f217192092aa98969f0f8f39
-=======
-// @relayRequestID 3dcd6dbea1a6016a2cf628d3f919dcee
->>>>>>> master
+// @relayRequestID c69acd8b7c7a7bbe19e62275a91e1cdc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -31,21 +22,17 @@ export type RefreshProcessContentQuery$data = {
     readonly reference: string;
     readonly content: ReadonlyArray<{
       readonly id: string;
-<<<<<<< HEAD
-      readonly processed: boolean;
-      readonly videoDuration: number;
-      readonly videoThumbnail: {
-        readonly url: string;
-      } | null;
-      readonly urls: ReadonlyArray<{
-        readonly mimeType: string;
-        readonly url: string;
-      }>;
-=======
       readonly resource: {
         readonly processed: boolean;
+        readonly videoDuration: number;
+        readonly videoThumbnail: {
+          readonly url: string;
+        } | null;
+        readonly urls: ReadonlyArray<{
+          readonly mimeType: string;
+          readonly url: string;
+        }>;
       };
->>>>>>> master
     }>;
   } | null;
 };
@@ -77,29 +64,6 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-<<<<<<< HEAD
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
-v3 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "reference",
-        "variableName": "reference"
-      }
-    ],
-    "concreteType": "Post",
-    "kind": "LinkedField",
-    "name": "post",
-    "plural": false,
-=======
 v3 = {
   "alias": null,
   "args": null,
@@ -113,6 +77,51 @@ v4 = {
   "kind": "ScalarField",
   "name": "processed",
   "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    },
+    (v6/*: any*/)
+  ],
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -120,111 +129,6 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "RefreshProcessContentQuery",
->>>>>>> master
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "Post",
-        "kind": "LinkedField",
-        "name": "post",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PostContent",
-            "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "resource",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "videoDuration",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ResourceUrl",
-            "kind": "LinkedField",
-            "name": "videoThumbnail",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ResourceUrl",
-            "kind": "LinkedField",
-            "name": "urls",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "mimeType",
-                "storageKey": null
-              },
-              (v2/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-<<<<<<< HEAD
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RefreshProcessContentQuery",
-    "selections": (v3/*: any*/),
-=======
->>>>>>> master
-    "type": "Query",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "RefreshProcessContentQuery",
-<<<<<<< HEAD
-    "selections": (v3/*: any*/)
-  },
-  "params": {
-    "id": "fe458110f217192092aa98969f0f8f39",
-=======
     "selections": [
       {
         "alias": null,
@@ -254,6 +158,59 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "RefreshProcessContentQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "post",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostContent",
+            "kind": "LinkedField",
+            "name": "content",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -267,8 +224,7 @@ return {
     ]
   },
   "params": {
-    "id": "3dcd6dbea1a6016a2cf628d3f919dcee",
->>>>>>> master
+    "id": "c69acd8b7c7a7bbe19e62275a91e1cdc",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -277,10 +233,6 @@ return {
 };
 })();
 
-<<<<<<< HEAD
-(node as any).hash = "038c0aa448f19cc1db944154447ea146";
-=======
-(node as any).hash = "869952080b2e9cfb54a931d45e857f94";
->>>>>>> master
+(node as any).hash = "9cccadf3be01de8b079899f1911344d6";
 
 export default node;

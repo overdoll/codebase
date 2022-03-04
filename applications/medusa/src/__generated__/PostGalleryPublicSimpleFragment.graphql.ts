@@ -1,9 +1,5 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<236b8f04b62e952f545384eec2711f00>>
-=======
- * @generated SignedSource<<f9d5085669193c85ea298bc97cc47c1d>>
->>>>>>> master
+ * @generated SignedSource<<65f267d753046ca3fa992042dd9471cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,21 +9,14 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicSimpleFragment$data = {
   readonly id: string;
   readonly reference: string;
   readonly content: ReadonlyArray<{
-<<<<<<< HEAD
-    readonly type: ResourceType;
-    readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
-=======
     readonly resource: {
-      readonly type: ResourceType;
-      readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
->>>>>>> master
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
@@ -75,32 +64,12 @@ const node: ReaderFragment = {
           "plural": false,
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "ImageSnippetFragment"
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ControlledVideoFragment"
+              "name": "PostMediaFragment"
             }
           ],
           "storageKey": null
-<<<<<<< HEAD
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostMediaFragment"
-=======
->>>>>>> master
         }
       ],
       "storageKey": null
@@ -120,10 +89,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-<<<<<<< HEAD
-(node as any).hash = "80d8eaf6ccfe2c9e57caa9b6a8a9d09f";
-=======
-(node as any).hash = "78ce8daf77922ef44d5fface4768babd";
->>>>>>> master
+(node as any).hash = "221edf0f3cf9a6c15684f8088e276039";
 
 export default node;

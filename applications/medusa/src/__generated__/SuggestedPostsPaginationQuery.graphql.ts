@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
- * @generated SignedSource<<6374d25cf1705513d89182be344c5edd>>
- * @relayHash 92df713ef4fd52fe3bb251945ad580e0
-=======
- * @generated SignedSource<<7f2b9f2238f9aa78d388ff0ce09ca164>>
- * @relayHash 74d3bfe10486d3d348fca7b5f2ef4f62
->>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
+ * @generated SignedSource<<74335cdc086756338664630ca43f517f>>
+ * @relayHash a478b83c60708f8272de08c28541056e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
-// @relayRequestID 92df713ef4fd52fe3bb251945ad580e0
-=======
-// @relayRequestID 74d3bfe10486d3d348fca7b5f2ef4f62
->>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
+// @relayRequestID a478b83c60708f8272de08c28541056e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -426,11 +417,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD:applications/medusa/src/__generated__/SuggestedPostsPaginationQuery.graphql.ts
-    "id": "92df713ef4fd52fe3bb251945ad580e0",
-=======
-    "id": "74d3bfe10486d3d348fca7b5f2ef4f62",
->>>>>>> master:applications/medusa/src/__generated__/ViewPostPaginationQuery.graphql.ts
+    "id": "a478b83c60708f8272de08c28541056e",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

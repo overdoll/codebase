@@ -185,6 +185,10 @@ export default {
       include: ['src/client/domain/Admin/pages/AdminRules/AdminCreateRule']
     },
     {
+      path: 'src/client/domain/Admin/pages/AdminRules/AdminViewRule/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminRules/AdminViewRule']
+    },
+    {
       path: 'src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/{locale}/index',
       include: ['src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries']
     },

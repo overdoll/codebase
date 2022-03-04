@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<45a1275c032889877252dad84959b727>>
- * @relayHash da13fd007f8d4dd1b171de4c5d26c248
-=======
- * @generated SignedSource<<f6e15ac0a946719ed9fe9b719e664cde>>
- * @relayHash 20e978858940d707805c43f89827ea55
->>>>>>> master
+ * @generated SignedSource<<0b84aec724520c42402cda08bd0c19d3>>
+ * @relayHash bc45309adee2a1b32c5cb74dbcf2f734
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID da13fd007f8d4dd1b171de4c5d26c248
-=======
-// @relayRequestID 20e978858940d707805c43f89827ea55
->>>>>>> master
+// @relayRequestID bc45309adee2a1b32c5cb74dbcf2f734
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -412,11 +403,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "da13fd007f8d4dd1b171de4c5d26c248",
-=======
-    "id": "20e978858940d707805c43f89827ea55",
->>>>>>> master
+    "id": "bc45309adee2a1b32c5cb74dbcf2f734",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

@@ -20,8 +20,10 @@ const Fragment = graphql`
     id
     reference
     content {
-      type
-      ...PostMediaFragment
+      resource {
+        ...PostMediaFragment
+      }
+
     }
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
@@ -52,7 +54,7 @@ export default function PostGalleryPublicSimple ({
             >
               <Flex bg='gray.800' w='100%' h='72vh' align='center' justify='center'>
                 <Stack spacing={1}>
-                  <PostMedia query={item} index={index} reference={data.reference} />
+                  <PostMedia query={item.resource} index={index} reference={data.reference} />
                   <Flex px={1} justify='flex-end'>
                     <LinkButton
                       size='sm'

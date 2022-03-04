@@ -21,14 +21,16 @@ const Query = graphql`
       reference
       content {
         id
-        processed
-        videoDuration
-        videoThumbnail {
-          url
-        }
-        urls {
-          mimeType
-          url
+        resource {
+          processed
+          videoDuration
+          videoThumbnail {
+            url
+          }
+          urls {
+            mimeType
+            url
+          }
         }
       }
     }
@@ -36,7 +38,7 @@ const Query = graphql`
 `
 
 export const isProcessed = (content): boolean => {
-  const processed = content.map((item) => item.processed) as boolean[]
+  const processed = content.map((item) => item.resource.processed) as boolean[]
   return processed.every(x => x)
 }
 

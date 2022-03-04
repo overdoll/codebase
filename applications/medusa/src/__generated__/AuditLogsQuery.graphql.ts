@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<af25e79d349369050af6352754acde01>>
- * @relayHash 0ff6295a6f91466ecbaf27a7f84b806b
-=======
- * @generated SignedSource<<124a869a2f699b5f28a92a867ec01406>>
- * @relayHash e4facdac7df23a1ca3073d9f47deb698
->>>>>>> master
+ * @generated SignedSource<<cce55798c55ec5bd6dca362d3ef3ad91>>
+ * @relayHash fadcac37147ee4b1add8c65cf40f6e50
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID 0ff6295a6f91466ecbaf27a7f84b806b
-=======
-// @relayRequestID e4facdac7df23a1ca3073d9f47deb698
->>>>>>> master
+// @relayRequestID fadcac37147ee4b1add8c65cf40f6e50
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -316,10 +307,6 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
-<<<<<<< HEAD
-                              (v6/*: any*/),
-                              (v5/*: any*/),
-=======
                               {
                                 "alias": null,
                                 "args": null,
@@ -328,13 +315,12 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v4/*: any*/),
                                   (v6/*: any*/),
+                                  (v5/*: any*/),
                                   (v3/*: any*/)
                                 ],
                                 "storageKey": null
                               },
->>>>>>> master
                               (v3/*: any*/)
                             ],
                             "storageKey": null
@@ -423,11 +409,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "0ff6295a6f91466ecbaf27a7f84b806b",
-=======
-    "id": "e4facdac7df23a1ca3073d9f47deb698",
->>>>>>> master
+    "id": "fadcac37147ee4b1add8c65cf40f6e50",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

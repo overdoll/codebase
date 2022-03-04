@@ -13,18 +13,52 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubMenu/ClubMenu.tsx:29
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/ClubMenu/ClubAdminButton/ClubAdminButton.tsx:26
 msgid "Admin"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:157
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubButton.tsx:45
+msgid "Become a Supporter"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:110
+msgid "Become a supporter and get access to the club's exclusive content!"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/ClubMenu/ClubCopyLinkButton/ClubCopyLinkButton.tsx:29
+msgid "Copy Link"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:109
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:123
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton.tsx:50
+msgid "Join"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/WithdrawMembershipButton/WithdrawMembershipButton.tsx:76
+msgid "Leave"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:90
 msgid "Members"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:38
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/PostsHorizontalPreview/PostsHorizontalPreview.tsx:37
 msgid "No posts found"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:70
-msgid "See All"
+#~ msgid "See All"
+#~ msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/PostsHorizontalPreview/PostsHorizontalPreview.tsx:69
+msgid "See all"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:88
+msgid "You are now a member of {0}!"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:74
+msgid "You're in too many clubs. You need to leave at least one before you can join this one."
 msgstr ""

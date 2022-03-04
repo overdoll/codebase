@@ -27,7 +27,9 @@ const Fragment = graphql`
     ...UploadArrangeStepFragment
     content {
       id
-      processed
+      resource {
+        processed
+      }
     }
     audience {
       id

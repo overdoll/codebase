@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d0bdd75e7f5dda5d6246d092bfd06301>>
- * @relayHash e490bb4e88cc04a5f4e5da44e932c564
+ * @generated SignedSource<<cf1c20aea3334d785a1e40f76ae9d551>>
+ * @relayHash 1682eb50329e5719990b46a59c87ff60
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e490bb4e88cc04a5f4e5da44e932c564
+// @relayRequestID 1682eb50329e5719990b46a59c87ff60
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,19 +186,31 @@ v9 = [
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Resource",
+                        "concreteType": "PostContent",
                         "kind": "LinkedField",
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v6/*: any*/),
-                          (v4/*: any*/),
-                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "processed",
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "resource",
+                            "plural": false,
+                            "selections": [
+                              (v6/*: any*/),
+                              (v4/*: any*/),
+                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "processed",
+                                "storageKey": null
+                              },
+                              (v7/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           (v7/*: any*/)
@@ -329,7 +341,7 @@ return {
     ]
   },
   "params": {
-    "id": "e490bb4e88cc04a5f4e5da44e932c564",
+    "id": "1682eb50329e5719990b46a59c87ff60",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",

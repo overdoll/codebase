@@ -13,7 +13,7 @@ const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
     content {
       resource {
-        ...ResourceItemFragment
+        ...ResourceInfoFragment
       }
     }
   }

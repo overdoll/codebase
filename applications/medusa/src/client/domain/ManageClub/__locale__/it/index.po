@@ -33,13 +33,13 @@ msgstr ""
 msgid "Add some categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:72
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:68
 msgid "Add, arrange, or remove the files you're uploading."
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubMenu/ClubMenu.tsx:29
-msgid "Admin"
-msgstr ""
+#~ msgid "Admin"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
 msgid "Alias"
@@ -131,7 +131,7 @@ msgstr ""
 msgid "Creating your post..."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:44
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:46
 msgid "DRAFT"
 msgstr ""
 
@@ -201,12 +201,12 @@ msgstr ""
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:151
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:185
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:200
-msgid "Join"
-msgstr ""
+#~ msgid "Join"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:168
-msgid "Leave"
-msgstr ""
+#~ msgid "Leave"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:73
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
@@ -222,7 +222,6 @@ msgstr ""
 
 #: src/client/domain/ManageClub/RootManageClub.tsx:105
 #: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:43
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:157
 msgid "Members"
 msgstr ""
 
@@ -250,7 +249,6 @@ msgid "No members found"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:76
-#: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:38
 msgid "No posts found"
 msgstr ""
 
@@ -266,7 +264,7 @@ msgstr ""
 #~ msgid "Please wait for your post content to finish processing before continuing."
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:73
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:83
 msgid "Post Content Processed"
 msgstr ""
 
@@ -278,7 +276,7 @@ msgstr ""
 msgid "Post again"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:69
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:65
 msgid "Posting {0} media"
 msgstr ""
 
@@ -290,16 +288,16 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:61
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
 msgid "Processing Post Content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:31
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:39
 #: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
 msgid "Published"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:30
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:32
 #: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
 msgid "Rejected"
 msgstr ""
@@ -316,11 +314,11 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:126
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:125
 msgid "Retry"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:30
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:32
 msgid "Review"
 msgstr ""
 
@@ -348,8 +346,8 @@ msgid "Search for a character by name"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:70
-msgid "See All"
-msgstr ""
+#~ msgid "See All"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowHeader/FlowHeader.tsx:81
 #~ msgid "Select an audience"
@@ -446,7 +444,7 @@ msgstr ""
 msgid "There was an error creating a draft post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:120
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:119
 msgid "There was an error processing your files"
 msgstr ""
 
@@ -478,7 +476,7 @@ msgstr ""
 msgid "There was an error un-suspending your club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:97
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:96
 msgid "There was an error updating the post content"
 msgstr ""
 
@@ -507,7 +505,7 @@ msgid "Un-Suspend Club"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:94
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:145
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:144
 msgid "Upload Files"
 msgstr ""
 
@@ -537,8 +535,8 @@ msgid "Yes, exit"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:109
-msgid "You are now a member of {0}!"
-msgstr ""
+#~ msgid "You are now a member of {0}!"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClub.tsx:55
 msgid "You can only create a maximum of {0} clubs"
@@ -564,13 +562,13 @@ msgstr ""
 msgid "You own the rights to the content you upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:139
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:144
 msgid "You'll need to upload at least one file to continue"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/JoinClubButton/JoinClubButton.tsx:95
-msgid "You're in too many clubs. You need to leave at least one before you can join this one."
-msgstr ""
+#~ msgid "You're in too many clubs. You need to leave at least one before you can join this one."
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:134
 msgid "Your Club Name"

@@ -14,9 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:74
-msgid "Suggested Posts"
-msgstr ""
+#~ msgid "Suggested Posts"
+#~ msgstr ""
 
 #: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:73
-msgid "View Post"
-msgstr ""
+#~ msgid "View Post"
+#~ msgstr ""

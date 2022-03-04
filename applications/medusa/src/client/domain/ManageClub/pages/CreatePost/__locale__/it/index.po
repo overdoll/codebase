@@ -25,7 +25,7 @@ msgstr ""
 msgid "Add some categories"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:72
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:68
 msgid "Add, arrange, or remove the files you're uploading."
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 #~ msgid "Please wait for your post content to finish processing before continuing."
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:73
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:83
 msgid "Post Content Processed"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Post again"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:69
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:65
 msgid "Posting {0} media"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:61
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
 msgid "Processing Post Content"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:126
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:125
 msgid "Retry"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgstr ""
 msgid "There was an error creating a draft post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:120
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:119
 msgid "There was an error processing your files"
 msgstr ""
 
@@ -248,7 +248,7 @@ msgstr ""
 msgid "There was an error submitting your post"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:97
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:96
 msgid "There was an error updating the post content"
 msgstr ""
 
@@ -257,7 +257,7 @@ msgid "This post was already submitted"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:94
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:145
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:144
 msgid "Upload Files"
 msgstr ""
 
@@ -302,7 +302,7 @@ msgstr ""
 msgid "You own the rights to the content you upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:139
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:144
 msgid "You'll need to upload at least one file to continue"
 msgstr ""
 

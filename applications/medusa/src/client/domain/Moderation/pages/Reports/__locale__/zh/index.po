@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:68
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:72
 msgid "No reports found"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:85
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:89
 msgid "Post"
 msgstr ""
 
@@ -29,15 +29,15 @@ msgstr ""
 #~ msgid "Reports"
 #~ msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:80
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:84
 msgid "Rule"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:75
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:79
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:103
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:107
 msgid "View Post"
 msgstr ""
 

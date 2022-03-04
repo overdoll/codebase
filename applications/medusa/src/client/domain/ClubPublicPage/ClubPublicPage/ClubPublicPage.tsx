@@ -30,7 +30,10 @@ const Query = graphql`
         edges {
           node {
             content {
-              ...ResourceItemFragment
+              resource {
+                ...ResourceItemFragment
+              }
+              
             }
           }
         }
@@ -69,7 +72,7 @@ export default function ClubPublicPage (props: Props): JSX.Element {
         <TileOverlay
           backdrop={(
             <ResourceItem
-              query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0] ?? null}
+              query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
             />)}
         >
           <Flex h='100%' w='100%' align='center' justify='center' position='relative'>
