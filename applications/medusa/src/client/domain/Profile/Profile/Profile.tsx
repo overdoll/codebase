@@ -2,13 +2,11 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ProfileQuery } from '@//:artifacts/ProfileQuery.graphql'
 import { graphql } from 'react-relay'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
+import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import ProfileSupportedClubs from './ProfileSupportedClubs/ProfileSupportedClubs'
-import ProfileContributingClubs from './ProfileContributingClubs/ProfileContributingClubs'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -22,8 +20,6 @@ const Query = graphql`
         ...ResourceIconFragment
       }
       ...ProfileMenuFragment
-      ...ProfileSupportedClubsFragment
-      ...ProfileContributingClubsFragment
     }
   }
 `
@@ -59,22 +55,6 @@ export default function Profile (props: Props): JSX.Element {
             </Flex>
           </Flex>
         </TileOverlay>
-      </Box>
-      <Box>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='orange'>
-            Supporting
-          </PageSectionTitle>
-        </PageSectionWrap>
-        <ProfileSupportedClubs query={queryData?.account} />
-      </Box>
-      <Box>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='orange'>
-            Contributing
-          </PageSectionTitle>
-        </PageSectionWrap>
-        <ProfileContributingClubs query={queryData?.account} />
       </Box>
     </Stack>
   )
