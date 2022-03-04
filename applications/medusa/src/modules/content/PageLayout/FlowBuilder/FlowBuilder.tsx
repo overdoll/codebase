@@ -64,29 +64,36 @@ export default function FlowBuilder ({
 }: ComponentProps): JSX.Element {
   const initialStep = defaultStep != null ? defaultStep : stepsArray[0]
 
-  // TODO figure out param steps here
-
   const [paramStep, setParamStep] = useQueryParam<string | null | undefined>('step')
-  const [currentStep, setCurrentStep] = useState(useParams == null ? initialStep : (paramStep == null ? initialStep : paramStep))
+  const getParamStep = (paramStep != null && stepsArray.includes(paramStep)) ? paramStep : initialStep
+
+  const [currentStep, setCurrentStep] = useState(useParams == null ? initialStep : getParamStep)
+
+  const calculateCurrentStep = (step: string): void => {
+    setCurrentStep(step)
+    if (useParams === true) {
+      setParamStep(step)
+    }
+  }
 
   const nextStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
 
     if (currentIndex + 1 >= stepsArray.length) {
-      setCurrentStep(stepsArray[0])
+      calculateCurrentStep(stepsArray[0])
       onFinish?.()
       return
     }
-    setCurrentStep(stepsArray[currentIndex + 1])
+    calculateCurrentStep(stepsArray[currentIndex + 1])
   }
 
   const previousStep = (): void => {
     const currentIndex = stepsArray.indexOf(currentStep)
     if (currentIndex - 1 < 0) {
-      setCurrentStep(stepsArray[stepsArray.length - 1])
+      calculateCurrentStep(stepsArray[stepsArray.length - 1])
       return
     }
-    setCurrentStep(stepsArray[currentIndex - 1])
+    calculateCurrentStep(stepsArray[currentIndex - 1])
   }
 
   const definedHeaders = Object.keys(stepsHeaders).reduce((accum, item) => ({
@@ -110,21 +117,11 @@ export default function FlowBuilder ({
 
   useUpdateEffect(() => {
     if (useParams === true) {
-      if (currentStep !== initialStep && currentStep !== paramStep) {
-        setParamStep(currentStep)
+      if (paramStep !== currentStep) {
+        setCurrentStep(getParamStep)
       }
     }
-  }, [currentStep, setParamStep, paramStep])
-
-  useUpdateEffect(() => {
-    if (useParams === true) {
-      if (paramStep == null) {
-        setCurrentStep(initialStep)
-        return
-      }
-      setCurrentStep(paramStep)
-    }
-  }, [paramStep])
+  }, [paramStep, currentStep])
 
   return (
     <FlowContext.Provider value={contextValue}>

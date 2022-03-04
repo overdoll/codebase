@@ -1,9 +1,9 @@
-import { Menu, MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
-import { Trans } from '@lingui/macro'
-import { LoginKeys } from '@//:assets/icons'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubMenuFragment$key } from '@//:artifacts/ClubMenuFragment.graphql'
 import Can from '@//:modules/authorization/Can'
+import ClubAdminButton from './ClubAdminButton/ClubAdminButton'
+import ClubCopyLinkButton from './ClubCopyLinkButton/ClubCopyLinkButton'
 
 interface Props {
   query: ClubMenuFragment$key
@@ -11,7 +11,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubMenuFragment on Club {
-    slug
+    ...ClubAdminButtonFragment
+    ...ClubCopyLinkButtonFragment
   }
 `
 
@@ -25,17 +26,8 @@ export default function ClubMenu ({ query }: Props): JSX.Element {
           variant='ghost'
           isDisabled={allowed === false}
         >
-          <Can I='admin' a='Club'>
-            <MenuLinkItem
-              to={`/admin/club/${data.slug}`}
-              text={(
-                <Trans>
-                  Admin
-                </Trans>)}
-              colorScheme='purple'
-              icon={LoginKeys}
-            />
-          </Can>
+          <ClubCopyLinkButton query={data} />
+          <ClubAdminButton query={data} />
         </Menu>)}
     </Can>
   )
