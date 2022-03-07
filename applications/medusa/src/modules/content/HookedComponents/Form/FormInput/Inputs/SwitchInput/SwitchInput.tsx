@@ -5,7 +5,7 @@ import Switch from '../../../../../../form/Switch/Switch'
 import { Heading, HStack } from '@chakra-ui/react'
 
 interface Props {
-  placeholder: ReactNode
+  placeholder?: ReactNode
 }
 
 export default function SwitchInput ({ placeholder }: Props): JSX.Element {
@@ -46,9 +46,10 @@ export default function SwitchInput ({ placeholder }: Props): JSX.Element {
           />
         )}
       />
-      <Heading fontSize={size} color='gray.100'>
-        {placeholder}
-      </Heading>
+      {placeholder != null && (
+        <Heading fontSize={size} color='gray.100'>
+          {placeholder}
+        </Heading>)}
     </HStack>
   )
 }

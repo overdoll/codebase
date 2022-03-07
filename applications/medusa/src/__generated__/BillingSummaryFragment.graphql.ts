@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a31b5d7f88734d59fb82ac7fbbab94c>>
+ * @generated SignedSource<<05589025eed7c80d23c5b5cfb5070070>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,49 +11,28 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type SupportClubButtonClubFragment$data = {
-  readonly viewerMember: {
-    readonly isSupporter: boolean;
-  } | null;
+export type BillingSummaryFragment$data = {
   readonly supporterSubscriptionPrice: {
-    readonly localizedPrice: {
-      readonly amount: number;
+    readonly prices: ReadonlyArray<{
       readonly currency: Currency;
-    };
+      readonly amount: number;
+    }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodFragment">;
-  readonly " $fragmentType": "SupportClubButtonClubFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
+  readonly " $fragmentType": "BillingSummaryFragment";
 };
-export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
-export type SupportClubButtonClubFragment$key = {
-  readonly " $data"?: SupportClubButtonClubFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonClubFragment">;
+export type BillingSummaryFragment = BillingSummaryFragment$data;
+export type BillingSummaryFragment$key = {
+  readonly " $data"?: BillingSummaryFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"BillingSummaryFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "SupportClubButtonClubFragment",
+  "name": "BillingSummaryFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ClubMember",
-      "kind": "LinkedField",
-      "name": "viewerMember",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isSupporter",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -67,21 +46,21 @@ const node: ReaderFragment = {
           "args": null,
           "concreteType": "Price",
           "kind": "LinkedField",
-          "name": "localizedPrice",
-          "plural": false,
+          "name": "prices",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "amount",
+              "name": "currency",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "currency",
+              "name": "amount",
               "storageKey": null
             }
           ],
@@ -93,13 +72,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "SupportSelectMethodFragment"
+      "name": "LargeClubHeaderFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "d72e68188f050ad7dac769a2db750312";
+(node as any).hash = "87edb41c9895ea0611d040d169694a93";
 
 export default node;

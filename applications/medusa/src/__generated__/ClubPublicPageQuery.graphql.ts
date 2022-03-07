@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<83bae601a95e095b8842801d51943aee>>
- * @relayHash 8c4b6a2fe79791b9f06050e6a84f987a
+ * @generated SignedSource<<600d23d7cebdab37e49f2fa7132b533f>>
+ * @relayHash 7b3450cd54e72c9f7d61fc5d6a3ca74d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c4b6a2fe79791b9f06050e6a84f987a
+// @relayRequestID 7b3450cd54e72c9f7d61fc5d6a3ca74d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -209,7 +209,21 @@ v12 = [
     ],
     "storageKey": null
   }
-];
+],
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "amount",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "currency",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -521,20 +535,21 @@ return {
                 "name": "localizedPrice",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "amount",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "currency",
-                    "storageKey": null
-                  }
+                  (v13/*: any*/),
+                  (v14/*: any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Price",
+                "kind": "LinkedField",
+                "name": "prices",
+                "plural": true,
+                "selections": [
+                  (v14/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -567,6 +582,41 @@ return {
             "storageKey": null
           },
           (v10/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountSavedPaymentMethodConnection",
+            "kind": "LinkedField",
+            "name": "savedPaymentMethods",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountSavedPaymentMethodEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountSavedPaymentMethod",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v10/*: any*/),
+                      (v9/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           (v9/*: any*/)
         ],
         "storageKey": null
@@ -574,7 +624,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c4b6a2fe79791b9f06050e6a84f987a",
+    "id": "7b3450cd54e72c9f7d61fc5d6a3ca74d",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

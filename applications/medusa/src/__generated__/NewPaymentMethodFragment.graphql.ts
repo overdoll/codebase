@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a31b5d7f88734d59fb82ac7fbbab94c>>
+ * @generated SignedSource<<53e13e763a2959796f2f0f1c055ef3e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,49 +11,27 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type SupportClubButtonClubFragment$data = {
-  readonly viewerMember: {
-    readonly isSupporter: boolean;
-  } | null;
+export type NewPaymentMethodFragment$data = {
   readonly supporterSubscriptionPrice: {
     readonly localizedPrice: {
-      readonly amount: number;
       readonly currency: Currency;
     };
   };
-  readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodFragment">;
-  readonly " $fragmentType": "SupportClubButtonClubFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"ChooseCurrencyFragment" | "BillingSummaryFragment" | "CCBillSubscribeFormFragment">;
+  readonly " $fragmentType": "NewPaymentMethodFragment";
 };
-export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
-export type SupportClubButtonClubFragment$key = {
-  readonly " $data"?: SupportClubButtonClubFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonClubFragment">;
+export type NewPaymentMethodFragment = NewPaymentMethodFragment$data;
+export type NewPaymentMethodFragment$key = {
+  readonly " $data"?: NewPaymentMethodFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "SupportClubButtonClubFragment",
+  "name": "NewPaymentMethodFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ClubMember",
-      "kind": "LinkedField",
-      "name": "viewerMember",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isSupporter",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -74,13 +52,6 @@ const node: ReaderFragment = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "amount",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
               "name": "currency",
               "storageKey": null
             }
@@ -93,13 +64,23 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "SupportSelectMethodFragment"
+      "name": "ChooseCurrencyFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "BillingSummaryFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CCBillSubscribeFormFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "d72e68188f050ad7dac769a2db750312";
+(node as any).hash = "aa3cd42da2327f4d4bc6903ca2414056";
 
 export default node;

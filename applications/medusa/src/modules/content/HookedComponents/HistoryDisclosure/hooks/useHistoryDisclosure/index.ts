@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useDisclosure } from '@chakra-ui/react'
-import { useHistory } from '../../routing'
+import { useDisclosure, UseDisclosureReturn } from '@chakra-ui/react'
+import { useHistory } from '../../../../../routing'
 
 /**
  * useDisclosure hook modified so that when it is opened
@@ -8,23 +8,17 @@ import { useHistory } from '../../routing'
  * when the back button is pressed its closed
  */
 
-interface HistoryDisclosure {
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
-  onToggle: () => void
-
-}
-
 interface HistoryDisclosureState {
   hasModal?: boolean
 }
 
-export default function useHistoryDisclosure (): HistoryDisclosure {
+export default function useHistoryDisclosure (): UseDisclosureReturn {
   const {
     isOpen,
     onOpen: onOpenAction,
-    onClose: onCloseAction
+    onClose: onCloseAction,
+    onToggle: onToggleAction,
+    ...rest
   } = useDisclosure()
 
   const history = useHistory()
@@ -67,6 +61,7 @@ export default function useHistoryDisclosure (): HistoryDisclosure {
     isOpen,
     onOpen,
     onClose,
-    onToggle
+    onToggle,
+    ...rest
   }
 }

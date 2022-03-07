@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fb806a856c994dc98122d4b941bc955f>>
+ * @generated SignedSource<<c394aa44867c6f89cbb451606945dc47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,11 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SupportClubButtonViewerFragment$data = {
   readonly __typename: "Account";
-  readonly " $fragmentType": "SupportClubButtonViewerFragment";
-} | {
-  // This will never be '%other', but we need some
-  // value in case none of the concrete values match.
-  readonly __typename: "%other";
+  readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodViewerFragment">;
   readonly " $fragmentType": "SupportClubButtonViewerFragment";
 };
 export type SupportClubButtonViewerFragment = SupportClubButtonViewerFragment$data;
@@ -37,12 +33,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "__typename",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "SupportSelectMethodViewerFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "fed6f01fa072abc609287969295af44f";
+(node as any).hash = "dd0306487544e4a3ce064d2500cafcff";
 
 export default node;
