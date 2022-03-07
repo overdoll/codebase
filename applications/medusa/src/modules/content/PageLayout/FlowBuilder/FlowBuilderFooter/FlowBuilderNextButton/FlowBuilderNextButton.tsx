@@ -2,12 +2,13 @@ import { useContext } from 'react'
 import { FlowContext } from '../../FlowBuilder'
 import Button from '../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
+import { ButtonProps } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends ButtonProps {
   isDisabled?: boolean | undefined
 }
 
-export default function FlowBuilderNextButton ({ isDisabled }: Props): JSX.Element {
+export default function FlowBuilderNextButton ({ isDisabled, ...rest }: Props): JSX.Element {
   const { nextStep } = useContext(FlowContext)
 
   return (
@@ -17,6 +18,7 @@ export default function FlowBuilderNextButton ({ isDisabled }: Props): JSX.Eleme
       size='lg'
       colorScheme='gray'
       variant='solid'
+      {...rest}
     >
       <Trans>
         Next

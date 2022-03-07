@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9e2104a7241e2becec9cb8707132c239>>
- * @relayHash 5128a14c0b8280f3e720a0b913f92087
+ * @generated SignedSource<<91f934cdaaa86d0b54603110acdf4496>>
+ * @relayHash eda17252147798840aed4729e859793e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5128a14c0b8280f3e720a0b913f92087
+// @relayRequestID eda17252147798840aed4729e859793e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -181,7 +181,6 @@ v18 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v13/*: any*/),
     (v15/*: any*/),
     {
       "alias": null,
@@ -195,6 +194,7 @@ v18 = {
       ],
       "storageKey": null
     },
+    (v13/*: any*/),
     (v11/*: any*/)
   ],
   "storageKey": null
@@ -365,8 +365,6 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v19/*: any*/),
-                              (v16/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -376,10 +374,13 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v17/*: any*/),
+                                  (v16/*: any*/),
                                   (v11/*: any*/)
                                 ],
                                 "storageKey": null
                               },
+                              (v19/*: any*/),
+                              (v16/*: any*/),
                               (v18/*: any*/),
                               (v11/*: any*/)
                             ],
@@ -485,7 +486,7 @@ return {
     ]
   },
   "params": {
-    "id": "5128a14c0b8280f3e720a0b913f92087",
+    "id": "eda17252147798840aed4729e859793e",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

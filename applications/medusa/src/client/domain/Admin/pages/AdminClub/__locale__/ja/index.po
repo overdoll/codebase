@@ -17,7 +17,7 @@ msgstr ""
 msgid "(Optional) Custom Duration"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:44
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:46
 msgid "Active"
 msgstr ""
 
@@ -25,11 +25,11 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:37
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:33
 msgid "Infractions"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:48
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:44
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
 msgid "Issue Infraction"
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 msgid "No infractions found"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:61
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:64
 msgid "Remove Suspension"
 msgstr ""
 
@@ -63,12 +63,12 @@ msgstr ""
 msgid "Successfully un-suspended club"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:58
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:75
 msgid "Suspend Club"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:40
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:42
 msgid "Suspended"
 msgstr ""
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<57cda5d9415a6001904c7e08d43711b7>>
- * @relayHash 81373e6bb7863b7138d6337ac141d519
+ * @generated SignedSource<<ed39d8fff52dcab03af7f5c663b3e231>>
+ * @relayHash be6e08a8666d11a62d4982edc94d2504
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 81373e6bb7863b7138d6337ac141d519
+// @relayRequestID be6e08a8666d11a62d4982edc94d2504
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -150,7 +150,6 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v7/*: any*/),
     (v9/*: any*/),
     {
       "alias": null,
@@ -164,6 +163,7 @@ v12 = {
       ],
       "storageKey": null
     },
+    (v7/*: any*/),
     (v6/*: any*/)
   ],
   "storageKey": null
@@ -317,8 +317,6 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v13/*: any*/),
-                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -328,10 +326,13 @@ return {
                         "plural": false,
                         "selections": [
                           (v11/*: any*/),
+                          (v10/*: any*/),
                           (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
+                      (v13/*: any*/),
+                      (v10/*: any*/),
                       (v12/*: any*/),
                       (v6/*: any*/)
                     ],
@@ -456,7 +457,7 @@ return {
     ]
   },
   "params": {
-    "id": "81373e6bb7863b7138d6337ac141d519",
+    "id": "be6e08a8666d11a62d4982edc94d2504",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",

@@ -36,3 +36,6 @@ export { default as SeriesIdentifier } from './normal-bold/series-identifier.svg
 export { default as ClubMembers } from './normal-bold/club-members.svg'
 export { default as SubtractMinus } from './mini-bold/actions/subtract-minus.svg'
 export { default as RemoveCross } from './mini-bold/actions/remove-cross.svg'
+export { default as PremiumStar } from './normal-bold/premium-star.svg'
+export { default as CopyLink } from './mini-bold/actions/copy-link.svg'
+export { default as PictureIdentifier } from './normal-bold/picture-identifier.svg'

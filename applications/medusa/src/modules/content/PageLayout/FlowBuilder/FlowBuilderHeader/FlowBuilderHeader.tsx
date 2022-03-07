@@ -2,7 +2,6 @@ import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { FunctionComponent, ReactNode, useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
-import { defineMessage } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { MaybeRenderProp } from '@//:types/components'
 import { runIfFunction } from '../../../../support'
@@ -25,13 +24,8 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
 
   const { i18n } = useLingui()
 
-  const messages = Object.keys(stepsHeaders).reduce((accum, item) => ({
-    ...accum,
-    [item]: defineMessage({ message: stepsHeaders[item].title })
-  }), {})
-
   const icon = stepsHeaders[currentStep].icon
-  const title = messages[currentStep]
+  const title = stepsHeaders[currentStep].title
 
   if (children == null) {
     return (

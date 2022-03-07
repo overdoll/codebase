@@ -13,3 +13,4 @@ export { default as FlowBuilderSaveButton } from './FlowBuilderFooter/FlowBuilde
 export {
   default as FlowBuilderScrollableContainer
 } from './FlowBuilderBody/FlowBuilderScrollableContainer/FlowBuilderScrollableContainer'
+export { default as FlowBuilderFloatingFooter } from './FlowBuilderFloatingFooter/FlowBuilderFloatingFooter'

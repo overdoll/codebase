@@ -13,6 +13,18 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Profile/Profile/ProfileMenu/ProfileMenu.tsx:27
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfileAdminButton/ProfileAdminButton.tsx:26
 msgid "Admin"
+msgstr ""
+
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfileCopyLinkButton/ProfileCopyLinkButton.tsx:29
+msgid "Copy Link"
+msgstr ""
+
+#: src/client/domain/Profile/Profile/ProfileContributingClubs/ProfileContributingClubs.tsx:34
+msgid "Not contributing to any clubs"
+msgstr ""
+
+#: src/client/domain/Profile/Profile/ProfileSupportedClubs/ProfileSupportedClubs.tsx:34
+msgid "Not supporting any clubs"
 msgstr ""

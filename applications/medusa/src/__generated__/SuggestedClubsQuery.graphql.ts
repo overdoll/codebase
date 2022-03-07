@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c962336194940ff726e2c4b1b12b643a>>
- * @relayHash 8c34d5c8a3ad8e93332fac2d43a68c5e
+ * @generated SignedSource<<2e45318f6357e4ecd87fbc78ff8793a0>>
+ * @relayHash 777cf4c4ba872aeaa7787633c8f8cfc4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c34d5c8a3ad8e93332fac2d43a68c5e
+// @relayRequestID 777cf4c4ba872aeaa7787633c8f8cfc4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -70,47 +70,44 @@ v4 = {
   "name": "url",
   "storageKey": null
 },
-v5 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": [
-      (v4/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "videoThumbnail",
-    "plural": false,
-    "selections": [
-      (v4/*: any*/)
-    ],
-    "storageKey": null
-  },
-  (v2/*: any*/)
-];
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v4/*: any*/)
+  ],
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -208,7 +205,12 @@ return {
                     "kind": "LinkedField",
                     "name": "thumbnail",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": [
+                      (v5/*: any*/),
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v2/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -256,7 +258,19 @@ return {
                                     "kind": "LinkedField",
                                     "name": "resource",
                                     "plural": false,
-                                    "selections": (v5/*: any*/),
+                                    "selections": [
+                                      (v7/*: any*/),
+                                      (v5/*: any*/),
+                                      (v6/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "processed",
+                                        "storageKey": null
+                                      },
+                                      (v2/*: any*/)
+                                    ],
                                     "storageKey": null
                                   },
                                   (v2/*: any*/)
@@ -355,7 +369,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c34d5c8a3ad8e93332fac2d43a68c5e",
+    "id": "777cf4c4ba872aeaa7787633c8f8cfc4",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",

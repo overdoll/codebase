@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<075a5e075a7f65deebbd53fae52f5fef>>
- * @relayHash aaf6d2458f2dfbd036dc9b9b179c1121
+ * @generated SignedSource<<1196f8767ea96bf812d53129cb39b31a>>
+ * @relayHash 94ca4147ea1853c5156f5bf6c8aa0f02
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aaf6d2458f2dfbd036dc9b9b179c1121
+// @relayRequestID 94ca4147ea1853c5156f5bf6c8aa0f02
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -136,7 +136,6 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/),
     (v7/*: any*/),
     {
       "alias": null,
@@ -150,6 +149,7 @@ v10 = {
       ],
       "storageKey": null
     },
+    (v5/*: any*/),
     (v4/*: any*/)
   ],
   "storageKey": null
@@ -301,8 +301,6 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v11/*: any*/),
-                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -312,10 +310,13 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v9/*: any*/),
+                                  (v8/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
                               },
+                              (v11/*: any*/),
+                              (v8/*: any*/),
                               (v10/*: any*/),
                               (v4/*: any*/)
                             ],
@@ -416,7 +417,7 @@ return {
     ]
   },
   "params": {
-    "id": "aaf6d2458f2dfbd036dc9b9b179c1121",
+    "id": "94ca4147ea1853c5156f5bf6c8aa0f02",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

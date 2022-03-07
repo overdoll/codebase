@@ -2,7 +2,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { PostReportsQuery } from '@//:artifacts/PostReportsQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import { Button, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import {
@@ -14,6 +14,7 @@ import {
 } from '@//:modules/content/ThemeComponents/TableRow/TableRow'
 import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 type Props = ComponentSearchArguments<any>
 
@@ -40,6 +41,9 @@ const Fragment = graphql`
           }
           rule {
             title
+          }
+          post {
+            reference
           }
         }
       }
@@ -99,11 +103,11 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                   {item.node.rule.title}
                 </TableRowColumnText>
                 <TableRowColumnText column={2}>
-                  <Button size='sm' variant='link'>
+                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference}`}>
                     <Trans>
                       View Post
                     </Trans>
-                  </Button>
+                  </LinkButton>
                 </TableRowColumnText>
               </TableRow>
             </TableRowBackground>))}

@@ -12,14 +12,19 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../ManageClub/components/JoinClubButton/JoinClubButton'
+import JoinClubButton from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
-import CopyLinkToClipboard from '../../../../components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard'
 import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
+import PostCopyLinkButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -30,7 +35,9 @@ const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
     reference
     ...PostGalleryPublicDetailedFragment
-    ...PostMenuFragment
+    ...PostCopyLinkButtonFragment
+    ...PostReportButtonFragment
+    ...PostModerateButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
@@ -60,25 +67,31 @@ export default function FullDetailedPost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack spacing={2}>
-      <HStack spacing={3} justify='space-between' align='center'>
-        <PostHeaderClub query={data} />
-        <JoinClubButton size='md' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
-      </HStack>
-      <PostGalleryPublicDetailed query={data} />
-      <PostFooter
-        leftItem={<PostLikeButton query={data} />}
-        centerItem={<PostIndexer
-          length={slidesCount}
-          currentIndex={currentSlide}
-                    />}
-        rightItem={<PostMenu query={data} />}
-      />
-      <CopyLinkToClipboard w='100%'>
-        {`https://overdoll.com/p/${data?.reference}`}
-      </CopyLinkToClipboard>
-      <PostClickableCharacters query={data} />
-      <PostClickableCategories query={data} />
+    <Stack spacing={8}>
+      <Stack h='100%' justify='space-between' spacing={2}>
+        <HStack spacing={3} justify='space-between' align='center'>
+          <PostHeaderClub query={data} />
+          <JoinClubButton size='sm' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
+        </HStack>
+        <PostGalleryPublicDetailed query={data} />
+        <PostFooter
+          leftItem={<PostLikeButton size='sm' query={data} />}
+          centerItem={<PostIndexer
+            length={slidesCount}
+            currentIndex={currentSlide}
+                      />}
+          rightItem={(
+            <PostMenu variant='ghost' size='sm'>
+              <PostCopyLinkButton query={data} />
+              <PostReportButton query={data} />
+              <PostModerateButton query={data} />
+            </PostMenu>)}
+        />
+      </Stack>
+      <Stack spacing={2}>
+        <PostClickableCharacters query={data} />
+        <PostClickableCategories query={data} />
+      </Stack>
     </Stack>
   )
 }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<218a06731365734fa84f02a3fb51f348>>
- * @relayHash 6215b50afa7eddb2bb51ef262d0571b8
+ * @generated SignedSource<<f37bd768700fd32259a85b8065e741a4>>
+ * @relayHash 953d1f29cdcf0962b09b525deeabb6fe
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6215b50afa7eddb2bb51ef262d0571b8
+// @relayRequestID 953d1f29cdcf0962b09b525deeabb6fe
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -167,6 +167,25 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "Post",
+                    "kind": "LinkedField",
+                    "name": "post",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
@@ -226,7 +245,7 @@ return {
     ]
   },
   "params": {
-    "id": "6215b50afa7eddb2bb51ef262d0571b8",
+    "id": "953d1f29cdcf0962b09b525deeabb6fe",
     "metadata": {},
     "name": "PostReportsPaginationQuery",
     "operationKind": "query",
@@ -235,6 +254,6 @@ return {
 };
 })();
 
-(node as any).hash = "f794e282a9be7b95ccbf153a1741a1cf";
+(node as any).hash = "c30fa10987a7d6cd59d9167199c98725";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cababfb42454a5a796eec635f54f9ea8>>
- * @relayHash 123269200ae5a40ff3ca6efa21df1253
+ * @generated SignedSource<<fb558c6ca2251f0b24c528402b3c90ae>>
+ * @relayHash 2c432fb7d3080a37e7a22b074c5fa66c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 123269200ae5a40ff3ca6efa21df1253
+// @relayRequestID 2c432fb7d3080a37e7a22b074c5fa66c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -177,6 +177,13 @@ return {
                         ],
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "processed",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -243,7 +250,7 @@ return {
     ]
   },
   "params": {
-    "id": "123269200ae5a40ff3ca6efa21df1253",
+    "id": "2c432fb7d3080a37e7a22b074c5fa66c",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorPaginationFragment",
     "operationKind": "query",

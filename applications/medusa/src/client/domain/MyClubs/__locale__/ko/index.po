@@ -14,16 +14,16 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:47
-msgid "My Clubs"
-msgstr ""
+#~ msgid "My Clubs"
+#~ msgstr ""
 
 #: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:67
 msgid "No clubs found"
 msgstr ""
 
 #: src/client/domain/MyClubs/MyClubs/MyClubs.tsx:43
-msgid "Popular Clubs"
-msgstr ""
+#~ msgid "Popular Clubs"
+#~ msgstr ""
 
 #: src/client/domain/MyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:29
 msgid "Search for a club by name"

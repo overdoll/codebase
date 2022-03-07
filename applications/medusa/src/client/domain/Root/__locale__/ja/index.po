@@ -21,7 +21,7 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:16
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
 
@@ -71,6 +71,10 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:29
+msgid "Copy Link"
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonClub/DropdownMenuButtonClub.tsx:35
 #: src/client/domain/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:41
 msgid "Create a Club"
@@ -81,7 +85,7 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:109
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:106
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
@@ -140,6 +144,10 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:117
+msgid "Like"
+msgstr ""
+
 #: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:35
 msgid "Load More"
 msgstr ""
@@ -172,7 +180,7 @@ msgstr ""
 #~ msgid "Menu"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostMenu.tsx:53
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton.tsx:30
 msgid "Moderate"
 msgstr ""
 
@@ -188,7 +196,7 @@ msgstr ""
 #~ msgid "New"
 #~ msgstr ""
 
-#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:21
+#: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:23
 msgid "Next"
 msgstr ""
 
@@ -213,10 +221,10 @@ msgid "No clubs were found{0}"
 msgstr ""
 
 #: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:132
-msgid "No more content available"
-msgstr ""
+#~ msgid "No more content available"
+#~ msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:73
 msgid "No posts found"
 msgstr ""
 
@@ -236,7 +244,7 @@ msgstr ""
 #~ msgid "Nothing was found"
 #~ msgstr ""
 
-#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:57
+#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:51
 msgid "Open"
 msgstr ""
 
@@ -245,7 +253,7 @@ msgid "Open Lock Info"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:48
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:47
 msgid "Open Menu"
 msgstr ""
 
@@ -293,7 +301,7 @@ msgstr ""
 msgid "Post report was submitted successfully"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:134
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:131
 msgid "Remove Upload"
 msgstr ""
 
@@ -440,7 +448,8 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostContent/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:85
+#: src/modules/content/Posts/components/PostContent/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:66
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:28
 msgid "View Post"
 msgstr ""
 

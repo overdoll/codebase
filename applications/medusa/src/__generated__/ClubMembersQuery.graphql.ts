@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<40e95d53b2c215f6b8872dbd6efcdd1c>>
- * @relayHash 5847a368262b41e284246e9774c265ea
+ * @generated SignedSource<<ee0a1f11aaeaf8f712531d7f974c9a7f>>
+ * @relayHash 74073ce21b3b74bd86672d7a9593d3ae
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5847a368262b41e284246e9774c265ea
+// @relayRequestID 74073ce21b3b74bd86672d7a9593d3ae
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -155,13 +155,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "ResourceUrl",
                                 "kind": "LinkedField",
                                 "name": "urls",
@@ -188,6 +181,20 @@ return {
                                 "selections": [
                                   (v3/*: any*/)
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "processed",
                                 "storageKey": null
                               },
                               (v4/*: any*/)
@@ -263,7 +270,7 @@ return {
     ]
   },
   "params": {
-    "id": "5847a368262b41e284246e9774c265ea",
+    "id": "74073ce21b3b74bd86672d7a9593d3ae",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

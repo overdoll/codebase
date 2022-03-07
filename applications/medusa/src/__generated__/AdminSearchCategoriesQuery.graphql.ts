@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2c6a759a2b88221c7cd1bd1c8d55b005>>
- * @relayHash 582f8e5f7bba377a637e05495f90ea1e
+ * @generated SignedSource<<cc3cc59d5d6bf5fbb92cd4bf8fd15a3d>>
+ * @relayHash e447e7e43730833fb291081970e97e40
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 582f8e5f7bba377a637e05495f90ea1e
+// @relayRequestID e447e7e43730833fb291081970e97e40
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -166,6 +166,13 @@ return {
                         ],
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "processed",
+                        "storageKey": null
+                      },
                       (v3/*: any*/)
                     ],
                     "storageKey": null
@@ -233,7 +240,7 @@ return {
     ]
   },
   "params": {
-    "id": "582f8e5f7bba377a637e05495f90ea1e",
+    "id": "e447e7e43730833fb291081970e97e40",
     "metadata": {},
     "name": "AdminSearchCategoriesQuery",
     "operationKind": "query",

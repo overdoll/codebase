@@ -1,4 +1,4 @@
-import { Flex, HTMLChakraProps } from '@chakra-ui/react'
+import { Flex, HTMLChakraProps, Spinner } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import ImageSnippet from '../ImageSnippet/ImageSnippet'
 import VideoSnippet from '../VideoSnippet/VideoSnippet'
@@ -17,13 +17,12 @@ const Fragment = graphql`
     type
     ...ImageSnippetFragment
     ...VideoSnippetFragment
+    processed
   }
 `
 
 export default function ResourceItem ({
   query,
-  h,
-  w,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -36,14 +35,20 @@ export default function ResourceItem ({
     )
   }
 
-  // TODO this should show the video thumbnail
+  if (!data.processed) {
+    return (
+      <Flex w='100%' p={4} align='center' justify='center' h='100%'>
+        <Spinner />
+      </Flex>
+    )
+  }
 
   return (
     <Flex align='center' justify='center' h='100%'>
       {data.type === 'IMAGE' &&
-        <ImageSnippet query={data} h={h} w={w} />}
+        <ImageSnippet query={data} {...rest} />}
       {data.type === 'VIDEO' &&
-        <VideoSnippet query={data} h={h} w={w} />}
+        <VideoSnippet query={data} {...rest} />}
     </Flex>
   )
 }

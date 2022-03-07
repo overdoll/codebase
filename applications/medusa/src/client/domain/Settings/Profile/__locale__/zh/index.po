@@ -33,7 +33,7 @@ msgstr ""
 msgid "Can be set as a Primary email"
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:67
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:62
 msgid "Change Username"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another."
 msgstr ""
 
-#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:77
+#: src/client/domain/Settings/Profile/RootUsernames/Usernames/Usernames.tsx:72
 msgid "You have recently made a username edit. You may edit your username again in {remainingTime}."
 msgstr ""
 

@@ -1,11 +1,13 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
 import { graphql } from 'react-relay'
-import { Trans } from '@lingui/macro'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
-import PageSectionScroller from '../../../components/PageSectionScroller/PageSectionScroller'
 import SearchSuggestedClubs from './SearchSuggestedClubs/SearchSuggestedClubs'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { FlowBuilder, FlowBuilderBody, FlowBuilderFloatingFooter, PageWrapper } from '@//:modules/content/PageLayout'
+import { ClubPeopleGroup } from '@//:assets/icons'
+import PageInfiniteScrollWrapper
+  from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
+import { Box, Stack } from '@chakra-ui/react'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>
@@ -36,23 +38,55 @@ export default function MyClubs (props: Props): JSX.Element {
     )
   }
 
-  return (
-    <PageSectionScroller
-      reversed={queryData?.viewer?.clubMembershipsCount > 0}
-      childrenTitle={(
-        <Trans>
-          Popular Clubs
-        </Trans>
-      )}
-      infiniteScrollTitle={<Trans>My Clubs</Trans>}
-      pageInfiniteScroll={(
+  const PostsFeed = (
+    <PageInfiniteScrollWrapper>
+      <Box w='100%' h='100%' position='relative'>
         <ClubPostsFeed
           query={queryData.viewer}
           viewerQuery={queryData.viewer}
         />
-      )}
+        <Box pb={1} zIndex='docked' bottom={0} w='100%' position='absolute'>
+          <FlowBuilderFloatingFooter />
+        </Box>
+      </Box>
+    </PageInfiniteScrollWrapper>
+  )
+
+  const SuggestedClubs = (
+    <PageWrapper>
+      <Stack spacing={4}>
+        <FlowBuilderFloatingFooter />
+        <SearchSuggestedClubs />
+      </Stack>
+    </PageWrapper>
+  )
+
+  const steps = ['posts', 'clubs']
+
+  const components = {
+    posts: PostsFeed,
+    clubs: SuggestedClubs
+  }
+
+  const headers = {
+    posts: {
+      title: 'My Club Feed',
+      icon: ClubPeopleGroup
+    },
+    clubs: {
+      title: 'See Popular Clubs',
+      icon: ClubPeopleGroup
+    }
+  }
+
+  return (
+    <FlowBuilder
+      stepsArray={steps}
+      stepsComponents={components}
+      stepsHeaders={headers}
+      useParams
     >
-      <SearchSuggestedClubs />
-    </PageSectionScroller>
+      <FlowBuilderBody />
+    </FlowBuilder>
   )
 }

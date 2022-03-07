@@ -6,6 +6,8 @@ import PostPreviewContent
   from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
+import PostModerateButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 
 interface Props {
   query: ReviewPostFragment$key
@@ -14,7 +16,7 @@ interface Props {
 const Fragment = graphql`
   fragment ReviewPostFragment on Post {
     ...PostPreviewContentFragment
-    ...PostMenuFragment
+    ...PostModerateButtonFragment
   }
 `
 
@@ -26,12 +28,14 @@ export default function ReviewPost ({
   return (
     <Stack spacing={1}>
       <HStack align='center' spacing={3} justify='space-between'>
-        <Badge fontSize='sm' colorScheme='purple'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
           <Trans>
             Review
           </Trans>
         </Badge>
-        <PostMenu size='sm' query={data} />
+        <PostMenu size='xs'>
+          <PostModerateButton query={data} />
+        </PostMenu>
       </HStack>
       <GridTile>
         <PostPreviewContent query={data} />

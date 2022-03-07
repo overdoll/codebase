@@ -29,7 +29,7 @@ const dates = [
     value: 'yesterday'
   },
   {
-    title: 'Last week',
+    title: 'Last Week',
     value: 'lastWeek'
   },
   {
