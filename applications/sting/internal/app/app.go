@@ -19,6 +19,8 @@ type Commands struct {
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
 	RemovePost  command.RemovePostHandler
+	DeletePost  command.DeletePostHandler
+	ArchivePost command.ArchivePostHandler
 
 	RemovePostContent                command.RemovePostContentHandler
 	AddPostContent                   command.AddPostContentHandler

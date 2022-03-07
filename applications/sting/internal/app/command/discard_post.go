@@ -23,17 +23,11 @@ func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository, event ev
 
 func (h DiscardPostHandler) Handle(ctx context.Context, cmd DiscardPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
-		return pending.MakeDiscarding()
-	})
+	pst, err := h.pr.GetPostByIdOperator(ctx, cmd.PostId)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
-		return err
-	}
-
-	return h.event.DiscardPost(ctx, pendingPost.ID())
+	return h.event.DiscardPost(ctx, pst.ID())
 }

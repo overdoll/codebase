@@ -38,6 +38,18 @@ type AddPostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+// Archive post.
+type ArchivePostInput struct {
+	// The post to archive
+	ID relay.ID `json:"id"`
+}
+
+// Payload for archiving a post
+type ArchivePostPayload struct {
+	// The archived post.
+	Post *Post `json:"post"`
+}
+
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
@@ -264,6 +276,18 @@ type DateOfBirthCurationProfile struct {
 	Completed bool `json:"completed"`
 	// The date of birth set.
 	DateOfBirth *time.Time `json:"dateOfBirth"`
+}
+
+// Delete post.
+type DeletePostInput struct {
+	// The post to delete
+	ID relay.ID `json:"id"`
+}
+
+// Payload for deleting a post
+type DeletePostPayload struct {
+	// The deleted post.
+	PostID *relay.ID `json:"postId"`
 }
 
 type Language struct {
@@ -1003,34 +1027,28 @@ func (e CreateSeriesValidation) MarshalGQL(w io.Writer) {
 type PostState string
 
 const (
-	PostStateDraft      PostState = "DRAFT"
-	PostStatePublishing PostState = "PUBLISHING"
-	PostStateReview     PostState = "REVIEW"
-	PostStatePublished  PostState = "PUBLISHED"
-	PostStateDiscarding PostState = "DISCARDING"
-	PostStateDiscarded  PostState = "DISCARDED"
-	PostStateRejected   PostState = "REJECTED"
-	PostStateProcessing PostState = "PROCESSING"
-	PostStateRemoving   PostState = "REMOVING"
-	PostStateRemoved    PostState = "REMOVED"
+	PostStateDraft     PostState = "DRAFT"
+	PostStateReview    PostState = "REVIEW"
+	PostStatePublished PostState = "PUBLISHED"
+	PostStateDiscarded PostState = "DISCARDED"
+	PostStateRejected  PostState = "REJECTED"
+	PostStateRemoved   PostState = "REMOVED"
+	PostStateArchived  PostState = "ARCHIVED"
 )
 
 var AllPostState = []PostState{
 	PostStateDraft,
-	PostStatePublishing,
 	PostStateReview,
 	PostStatePublished,
-	PostStateDiscarding,
 	PostStateDiscarded,
 	PostStateRejected,
-	PostStateProcessing,
-	PostStateRemoving,
 	PostStateRemoved,
+	PostStateArchived,
 }
 
 func (e PostState) IsValid() bool {
 	switch e {
-	case PostStateDraft, PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing, PostStateRemoving, PostStateRemoved:
+	case PostStateDraft, PostStateReview, PostStatePublished, PostStateDiscarded, PostStateRejected, PostStateRemoved, PostStateArchived:
 		return true
 	}
 	return false

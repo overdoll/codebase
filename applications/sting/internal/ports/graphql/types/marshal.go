@@ -37,32 +37,20 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		state = PostStateReview
 	}
 
-	if result.IsProcessing() {
-		state = PostStateProcessing
-	}
-
-	if result.IsPublishing() {
-		state = PostStatePublishing
-	}
-
 	if result.IsDiscarded() {
 		state = PostStateDiscarded
-	}
-
-	if result.IsDiscarding() {
-		state = PostStateDiscarding
-	}
-
-	if result.IsPublished() {
-		state = PostStatePublished
 	}
 
 	if result.IsRejected() {
 		state = PostStateRejected
 	}
 
-	if result.IsRemoving() {
-		state = PostStateRemoving
+	if result.IsPublished() {
+		state = PostStatePublished
+	}
+
+	if result.IsArchived() {
+		state = PostStateArchived
 	}
 
 	if result.IsRemoved() {

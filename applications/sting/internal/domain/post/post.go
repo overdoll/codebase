@@ -12,9 +12,6 @@ import (
 var (
 	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
-	ErrNotReview        = errors.New("post must be in review")
-	ErrNotRemoving      = errors.New("post must be removing")
-	ErrNotComplete      = errors.New("post is incomplete")
 	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
 )
@@ -200,11 +197,6 @@ func (p *Post) ReassignmentAt() *time.Time {
 
 func (p *Post) MakePublish() error {
 
-	// State of the post needs to be "publishing" before "published"
-	if p.state != Publishing {
-		return ErrNotPublishing
-	}
-
 	p.state = Published
 
 	return nil
@@ -220,22 +212,7 @@ func (p *Post) RemoveLike() error {
 	return nil
 }
 
-func (p *Post) MakeDiscarding() error {
-
-	if p.state != Review {
-		return ErrNotReview
-	}
-
-	p.state = Discarding
-
-	return nil
-}
-
 func (p *Post) MakeDiscarded() error {
-
-	if p.state != Discarding {
-		return ErrNotReview
-	}
 
 	p.state = Discarded
 
@@ -251,33 +228,11 @@ func (p *Post) MakeRejected() error {
 	return nil
 }
 
-func (p *Post) MakeRemoving() error {
-
-	p.state = Removing
-
-	return nil
-}
-
 func (p *Post) MakeRemoved() error {
-
-	if p.state != Removing {
-		return ErrNotRemoving
-	}
 
 	p.state = Removed
 
 	p.content = []Content{}
-
-	return nil
-}
-
-func (p *Post) MakePublishing() {
-	p.state = Publishing
-}
-
-func (p *Post) MakeProcessing() error {
-
-	p.state = Processing
 
 	return nil
 }
@@ -294,37 +249,30 @@ func (p *Post) IsPublished() bool {
 	return p.state == Published
 }
 
-func (p *Post) IsRemoving() bool {
-	return p.state == Removing
-}
-
 func (p *Post) IsRemoved() bool {
 	return p.state == Removed
-}
-
-func (p *Post) IsPublishing() bool {
-	return p.state == Publishing
-}
-
-func (p *Post) IsProcessing() bool {
-	return p.state == Processing
 }
 
 func (p *Post) IsRejected() bool {
 	return p.state == Rejected
 }
 
-func (p *Post) IsDiscarded() bool {
-	return p.state == Discarded
+func (p *Post) IsArchived() bool {
+	return p.state == Archived
 }
 
-func (p *Post) IsDiscarding() bool {
-	return p.state == Discarding
+func (p *Post) IsDiscarded() bool {
+	return p.state == Discarded
 }
 
 func (p *Post) MakeReview() error {
 	p.state = Review
 
+	return nil
+}
+
+func (p *Post) MakeArchived() error {
+	p.state = Archived
 	return nil
 }
 
@@ -348,7 +296,6 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	p.moderatorId = &moderatorId
 	p.postedAt = &postTime
 	p.reassignmentAt = &reassignmentAt
-	p.state = Processing
 
 	return nil
 }
@@ -535,6 +482,24 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 
 	p.categoryIds = categoryIds
 	return nil
+}
+
+func (p *Post) CanDelete(requester *principal.Principal) error {
+
+	if p.state != Published && p.state != Archived && p.state != Removed && p.state != Rejected && p.state != Discarded {
+		return errors.New("invalid deletion state for post: post must be archived, draft, removed, rejected, discarded")
+	}
+
+	return nil
+}
+
+func (p *Post) CanArchive(requester *principal.Principal) error {
+
+	if p.state != Published {
+		return errors.New("only published posts can be archived")
+	}
+
+	return p.MakeArchived()
 }
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {

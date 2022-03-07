@@ -64,15 +64,12 @@ type Post implements Node @key(fields: "id") {
 
 enum PostState {
   DRAFT
-  PUBLISHING
   REVIEW
   PUBLISHED
-  DISCARDING
   DISCARDED
   REJECTED
-  PROCESSING
-  REMOVING
   REMOVED
+  ARCHIVED
 }
 
 enum SupporterOnlyStatus {
@@ -164,6 +161,18 @@ input SubmitPostInput {
   id: ID!
 }
 
+"""Delete post."""
+input DeletePostInput {
+  """The post to delete"""
+  id: ID!
+}
+
+"""Archive post."""
+input ArchivePostInput {
+  """The post to archive"""
+  id: ID!
+}
+
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
@@ -225,6 +234,18 @@ type SubmitPostPayload {
 
   """Whether or not the submitted post is going in review"""
   inReview: Boolean
+}
+
+"""Payload for deleting a post"""
+type DeletePostPayload {
+  """The deleted post."""
+  postId: ID
+}
+
+"""Payload for archiving a post"""
+type ArchivePostPayload {
+  """The archived post."""
+  post: Post
 }
 
 type PostEdge {
@@ -357,9 +378,19 @@ extend type Mutation {
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
 
   """
-  Submit a post. Will be either in review or instantly move to publishing if the account is verified
+  Submit a post. State will either be in "review" or "published"
   """
   submitPost(input: SubmitPostInput!): SubmitPostPayload
+
+  """
+  Delete a post. Can only be deleted if the post is in Draft, Archived, Removed, Discarded or Rejected state.
+  """
+  deletePost(input: DeletePostInput!): DeletePostPayload
+
+  """
+  Archive a post, removing it from public visibility.
+  """
+  archivePost(input: ArchivePostInput!): ArchivePostPayload
 }
 
 extend type Query {

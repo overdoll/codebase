@@ -80,7 +80,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo, eventRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
 			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, parley, loader),
-			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo),
+			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo, eventRepo),
+			DeletePost:  command.NewDeletePostHandler(postRepo, postIndexRepo, eventRepo),
+			ArchivePost: command.NewArchivePostHandler(postRepo, postIndexRepo, eventRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),

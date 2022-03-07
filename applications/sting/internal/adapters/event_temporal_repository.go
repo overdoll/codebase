@@ -47,6 +47,38 @@ func (r EventTemporalRepository) DiscardPost(ctx context.Context, postId string)
 	return nil
 }
 
+func (r EventTemporalRepository) DeletePost(ctx context.Context, postId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "NewDeletePostWorkflow_" + postId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeletePost, postId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) ArchivePost(ctx context.Context, postId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "NewArchivePostWorkflow_" + postId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ArchivePost, postId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{
