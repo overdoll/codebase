@@ -11,7 +11,7 @@ type Application struct {
 }
 
 type Commands struct {
-	GetNextModerator command.GetNextModeratorHandler
+	PutPostIntoModeratorQueueOrPublish command.PutPostIntoModeratorQueueOrPublishHandler
 
 	RejectPost  command.RejectPostHandler
 	ApprovePost command.ApprovePostHandler
@@ -43,6 +43,8 @@ type Queries struct {
 	SearchPostReports          query.SearchPostReportsHandler
 	PostReportById             query.PostReportByIdHandler
 	PostReportByAccountAndPost query.PostReportByAccountAndPostHandler
+
+	SearchPostModeratorQueue query.SearchPostModeratorQueueHandler
 
 	SearchPostAuditLogs   query.SearchPostAuditLogsHandler
 	ClubInfractionHistory query.ClubInfractionHistoryByAccountHandler

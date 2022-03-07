@@ -231,9 +231,6 @@ type UpdatePostCharactersPayload {
 type SubmitPostPayload {
   """The post after being submitted"""
   post: Post
-
-  """Whether or not the submitted post is going in review"""
-  inReview: Boolean
 }
 
 """Payload for deleting a post"""
@@ -258,7 +255,6 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-
 """Properties by which posts connections can be sorted."""
 enum PostsSort {
   """Posts by newest first"""
@@ -271,21 +267,6 @@ enum PostsSort {
 extend type Account {
   """Posts feed for the clubs that the account currently is a member of."""
   clubMembersPostsFeed(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection! @goField(forceResolver: true)
-
-  """Posts queue specific to this account (when moderator)"""
-  moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -378,7 +359,7 @@ extend type Mutation {
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
 
   """
-  Submit a post. State will either be in "review" or "published"
+  Submit a post.
   """
   submitPost(input: SubmitPostInput!): SubmitPostPayload
 

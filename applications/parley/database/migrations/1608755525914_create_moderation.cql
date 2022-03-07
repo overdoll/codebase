@@ -6,6 +6,22 @@ CREATE TABLE IF NOT EXISTS moderators
     primary key ( bucket, account_id ),
 );
 
+CREATE TABLE IF NOT EXISTS account_post_moderators_queue
+(
+    account_id text,
+    post_id    text,
+    placed_at  timestamp,
+    primary key ( account_id, post_id ),
+) WITH CLUSTERING ORDER BY (post_id DESC);
+
+CREATE TABLE IF NOT EXISTS post_moderators
+(
+    account_id text,
+    post_id text,
+    placed_at  timestamp,
+    primary key ( post_id, account_id ),
+);
+
 CREATE TABLE IF NOT EXISTS rules
 (
     bucket      int,

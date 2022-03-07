@@ -94,5 +94,4 @@ type Queries struct {
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler
 	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
-	ModeratorPostsQueue   query.ModeratorPostsQueueHandler
 }

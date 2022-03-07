@@ -63,7 +63,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 		temporalClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -75,11 +75,11 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo, parley),
+			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo),
 			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eventRepo),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo, eventRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, parley, loader),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, loader),
 			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo, eventRepo),
 			DeletePost:  command.NewDeletePostHandler(postRepo, postIndexRepo, eventRepo),
 			ArchivePost: command.NewArchivePostHandler(postRepo, postIndexRepo, eventRepo),
@@ -147,7 +147,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SeriesByIds:  query.NewSeriesByIdsHandler(postRepo),
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
-			ModeratorPostsQueue:        query.NewModeratorPostsQueueHandler(postRepo, postIndexRepo),
 
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo, postIndexRepo),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, postIndexRepo),

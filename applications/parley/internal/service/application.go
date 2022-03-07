@@ -55,9 +55,9 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 	return app.Application{
 		Commands: app.Commands{
-			GetNextModerator:             command.NewGetNextModeratorHandler(moderatorRepo),
-			AddModeratorToPostQueue:      command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
-			RemoveModeratorFromPostQueue: command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
+			PutPostIntoModeratorQueueOrPublish: command.NewPutPostIntoModeratorQueueOrPublishHandler(moderatorRepo),
+			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
+			RemoveModeratorFromPostQueue:       command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
 			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eva, sting, stella),
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, eva, sting),

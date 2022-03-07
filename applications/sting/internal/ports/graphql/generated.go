@@ -62,7 +62,6 @@ type ComplexityRoot struct {
 		ClubMembersPostsFeed func(childComplexity int, after *string, before *string, first *int, last *int) int
 		CurationProfile      func(childComplexity int) int
 		ID                   func(childComplexity int) int
-		ModeratorPostsQueue  func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Posts                func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 	}
 
@@ -347,8 +346,7 @@ type ComplexityRoot struct {
 	}
 
 	SubmitPostPayload struct {
-		InReview func(childComplexity int) int
-		Post     func(childComplexity int) int
+		Post func(childComplexity int) int
 	}
 
 	Translation struct {
@@ -440,7 +438,6 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	CurationProfile(ctx context.Context, obj *types.Account) (*types.CurationProfile, error)
 	ClubMembersPostsFeed(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
-	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
@@ -567,18 +564,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ID(childComplexity), true
-
-	case "Account.moderatorPostsQueue":
-		if e.complexity.Account.ModeratorPostsQueue == nil {
-			break
-		}
-
-		args, err := ec.field_Account_moderatorPostsQueue_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Account.posts":
 		if e.complexity.Account.Posts == nil {
@@ -2029,13 +2014,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SeriesEdge.Node(childComplexity), true
 
-	case "SubmitPostPayload.inReview":
-		if e.complexity.SubmitPostPayload.InReview == nil {
-			break
-		}
-
-		return e.complexity.SubmitPostPayload.InReview(childComplexity), true
-
 	case "SubmitPostPayload.post":
 		if e.complexity.SubmitPostPayload.Post == nil {
 			break
@@ -3176,9 +3154,6 @@ type UpdatePostCharactersPayload {
 type SubmitPostPayload {
   """The post after being submitted"""
   post: Post
-
-  """Whether or not the submitted post is going in review"""
-  inReview: Boolean
 }
 
 """Payload for deleting a post"""
@@ -3203,7 +3178,6 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-
 """Properties by which posts connections can be sorted."""
 enum PostsSort {
   """Posts by newest first"""
@@ -3216,21 +3190,6 @@ enum PostsSort {
 extend type Account {
   """Posts feed for the clubs that the account currently is a member of."""
   clubMembersPostsFeed(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection! @goField(forceResolver: true)
-
-  """Posts queue specific to this account (when moderator)"""
-  moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -3323,7 +3282,7 @@ extend type Mutation {
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
 
   """
-  Submit a post. State will either be in "review" or "published"
+  Submit a post.
   """
   submitPost(input: SubmitPostInput!): SubmitPostPayload
 
@@ -3836,48 +3795,6 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Account_clubMembersPostsFeed_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -5761,48 +5678,6 @@ func (ec *executionContext) _Account_clubMembersPostsFeed(ctx context.Context, f
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Account().ClubMembersPostsFeed(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.PostConnection)
-	fc.Result = res
-	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_moderatorPostsQueue_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12014,38 +11889,6 @@ func (ec *executionContext) _SubmitPostPayload_post(ctx context.Context, field g
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SubmitPostPayload_inReview(ctx context.Context, field graphql.CollectedField, obj *types.SubmitPostPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SubmitPostPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.InReview, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -14973,26 +14816,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
-		case "moderatorPostsQueue":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_moderatorPostsQueue(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "posts":
 			field := field
 
@@ -17759,13 +17582,6 @@ func (ec *executionContext) _SubmitPostPayload(ctx context.Context, sel ast.Sele
 		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._SubmitPostPayload_post(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "inReview":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._SubmitPostPayload_inReview(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

@@ -19,7 +19,9 @@ type Account struct {
 	//
 	// Viewable by the currently authenticated account or staff+
 	ModeratorSettings *ModeratorSettings `json:"moderatorSettings"`
-	ID                relay.ID           `json:"id"`
+	// Posts queue specific to this account (when moderator)
+	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
+	ID                  relay.ID        `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -187,6 +189,16 @@ type PostAuditLogDateRange struct {
 type PostAuditLogEdge struct {
 	Node   *PostAuditLog `json:"node"`
 	Cursor string        `json:"cursor"`
+}
+
+type PostConnection struct {
+	Edges    []*PostEdge     `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type PostEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Post  `json:"node"`
 }
 
 // Post report

@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
-func SubmitPost(ctx workflow.Context, id string) error {
+func SubmitPost(ctx workflow.Context, id string, postDate time.Time) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -17,30 +17,24 @@ func SubmitPost(ctx workflow.Context, id string) error {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.SubmitPost, id).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.SubmitPost, id, postDate).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	// reassign moderator every day
-	for {
-		if err := workflow.Sleep(ctx, time.Hour*24); err != nil {
+	var inReview bool
+
+	if err := workflow.ExecuteActivity(ctx, a.PutPostIntoModeratorQueueOrPublish, id).Get(ctx, &inReview); err != nil {
+		return err
+	}
+
+	if inReview {
+		if err := workflow.ExecuteActivity(ctx, a.ReviewPost, id, postDate).Get(ctx, nil); err != nil {
 			return err
 		}
-
-		var assignedNewModerator bool
-
-		err := workflow.ExecuteActivity(ctx, a.ReassignModerator, id).Get(ctx, &assignedNewModerator)
-
-		if err != nil {
+	} else {
+		if err := workflow.ExecuteActivity(ctx, a.PublishPost, id, postDate).Get(ctx, nil); err != nil {
 			return err
 		}
-
-		if assignedNewModerator {
-			continue
-		}
-
-		// if a moderator was not assigned this loop (post was moderated successfully), then break out of loop
-		break
 	}
 
 	return nil

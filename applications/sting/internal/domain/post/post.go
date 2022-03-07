@@ -276,7 +276,12 @@ func (p *Post) MakeArchived() error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string, allResourcesProcessed bool) error {
+func (p *Post) UpdatePostPostedDate(date time.Time) error {
+	p.postedAt = &date
+	return nil
+}
+
+func (p *Post) SubmitPostRequest(requester *principal.Principal, allResourcesProcessed bool) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -289,13 +294,6 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	if p.state != Draft {
 		return ErrNotDraft
 	}
-
-	postTime := time.Now()
-	reassignmentAt := time.Now().Add(time.Hour * 24)
-
-	p.moderatorId = &moderatorId
-	p.postedAt = &postTime
-	p.reassignmentAt = &reassignmentAt
 
 	return nil
 }

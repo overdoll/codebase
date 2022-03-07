@@ -51,11 +51,56 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 		return nil, err
 	}
 
-	inReview := true
-
 	return &types.SubmitPostPayload{
-		Post:     types.MarshalPostToGraphQL(ctx, pst),
-		InReview: &inReview,
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, nil
+}
+
+func (r *MutationResolver) DeletePost(ctx context.Context, input types.DeletePostInput) (*types.DeletePostPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.DeletePost.
+		Handle(
+			ctx,
+			command.DeletePost{
+				Principal: principal.FromContext(ctx),
+				PostId:    input.ID.GetID(),
+			},
+		); err != nil {
+		return nil, err
+	}
+
+	id := input.ID
+
+	return &types.DeletePostPayload{
+		PostID: &id,
+	}, nil
+}
+
+func (r *MutationResolver) ArchivePost(ctx context.Context, input types.ArchivePostInput) (*types.ArchivePostPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.ArchivePost.
+		Handle(
+			ctx,
+			command.ArchivePost{
+				Principal: principal.FromContext(ctx),
+				PostId:    input.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.ArchivePostPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, nil
 }
 

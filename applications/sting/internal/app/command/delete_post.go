@@ -23,21 +23,21 @@ func NewDeletePostHandler(pr post.Repository, pi post.IndexRepository, event eve
 	return DeletePostHandler{pr: pr, pi: pi, event: event}
 }
 
-func (h DeletePostHandler) Handle(ctx context.Context, cmd DeletePost) (*post.Post, error) {
+func (h DeletePostHandler) Handle(ctx context.Context, cmd DeletePost) error {
 
 	pst, err := h.pr.GetPostById(ctx, cmd.Principal, cmd.PostId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := pst.CanDelete(cmd.Principal); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := h.event.DeletePost(ctx, pst.ID()); err != nil {
-		return nil, err
+		return err
 	}
 
-	return pst, nil
+	return nil
 }

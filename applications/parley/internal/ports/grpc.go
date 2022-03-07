@@ -3,6 +3,7 @@ package ports
 import (
 	"context"
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/command"
 	parley "overdoll/applications/parley/proto"
 )
 
@@ -16,13 +17,15 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
-func (s Server) GetNextModerator(ctx context.Context, request *parley.GetModeratorRequest) (*parley.Moderator, error) {
+func (s Server) PutPostIntoModeratorQueueOrPublish(ctx context.Context, request *parley.PutPostIntoModeratorQueueOrPublishRequest) (*parley.PutPostIntoModeratorQueueOrPublishResponse, error) {
 
-	moderator, err := s.app.Commands.GetNextModerator.Handle(ctx)
+	putIntoQueue, err := s.app.Commands.PutPostIntoModeratorQueueOrPublish.Handle(ctx, command.PutPostIntoModeratorQueueOrPublish{
+		PostId: request.PostId,
+	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &parley.Moderator{Id: moderator.ID()}, nil
+	return &parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: putIntoQueue}, nil
 }

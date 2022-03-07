@@ -15,8 +15,6 @@ type Account struct {
 	CurationProfile *CurationProfile `json:"curationProfile"`
 	// Posts feed for the clubs that the account currently is a member of.
 	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
-	// Posts queue specific to this account (when moderator)
-	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
 	Posts *PostConnection `json:"posts"`
 	ID    relay.ID        `json:"id"`
@@ -446,8 +444,6 @@ type SubmitPostInput struct {
 type SubmitPostPayload struct {
 	// The post after being submitted
 	Post *Post `json:"post"`
-	// Whether or not the submitted post is going in review
-	InReview *bool `json:"inReview"`
 }
 
 type Translation struct {

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/workflows"
+	"time"
 )
 
 type EventTemporalRepository struct {
@@ -95,14 +96,14 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) 
 	return nil
 }
 
-func (r EventTemporalRepository) SubmitPost(ctx context.Context, postId string) error {
+func (r EventTemporalRepository) SubmitPost(ctx context.Context, postId string, submitTime time.Time) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "SubmitPostWorkflow_" + postId,
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, postId)
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, postId, submitTime)
 
 	if err != nil {
 		return err

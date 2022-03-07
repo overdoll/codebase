@@ -12,13 +12,12 @@ type CreatePost struct {
 }
 
 type CreatePostHandler struct {
-	pr     post.Repository
-	pi     post.IndexRepository
-	parley ParleyService
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pi: pi, parley: parley}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {

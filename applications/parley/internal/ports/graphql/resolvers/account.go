@@ -63,3 +63,28 @@ func (r AccountResolver) ModeratorSettings(ctx context.Context, obj *types.Accou
 
 	return types.MarshalModeratorSettingsToGraphQL(mod), nil
 }
+
+func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	posts, err := r.App.Queries.SearchPostModeratorQueue.Handle(ctx, query.SearchPostModeratorQueue{
+		Cursor:    cursor,
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostModeratorQueueToGraphQLConnection(ctx, posts, cursor), nil
+}

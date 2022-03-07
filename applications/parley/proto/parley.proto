@@ -2,12 +2,14 @@ syntax = "proto3";
 
 package applications.grpc.parley.v1;
 
-message Moderator {
-  string id = 1;
+message PutPostIntoModeratorQueueOrPublishRequest {
+  string postId = 1;
 }
 
-message GetModeratorRequest {}
+message PutPostIntoModeratorQueueOrPublishResponse {
+  bool putIntoReview = 1;
+}
 
 service Parley {
-  rpc GetNextModerator(GetModeratorRequest) returns (Moderator);
+  rpc PutPostIntoModeratorQueueOrPublish(PutPostIntoModeratorQueueOrPublishRequest) returns (PutPostIntoModeratorQueueOrPublishResponse);
 }
