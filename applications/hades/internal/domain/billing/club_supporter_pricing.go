@@ -23,7 +23,14 @@ var (
 
 func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Price, error) {
 
-	region, err := language.ParseRegion(location.Country())
+	// blank country, make sure it works
+	country := location.Country()
+
+	if country == "" {
+		country = "US"
+	}
+
+	region, err := language.ParseRegion(country)
 
 	if err != nil {
 		return nil, err
