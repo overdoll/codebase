@@ -6,6 +6,7 @@ import { useFragment } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { ButtonProps } from '@chakra-ui/react'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props extends ButtonProps {
   clubQuery: SupportClubButtonClubFragment$key
@@ -14,15 +15,21 @@ interface Props extends ButtonProps {
 
 const ClubFragment = graphql`
   fragment SupportClubButtonClubFragment on Club {
-    id
-    name
+    viewerMember {
+      isSupporter
+    }
+    supporterSubscriptionPrice {
+      localizedPrice {
+        amount
+        currency
+      }
+    }
   }
 `
 
 const ViewerFragment = graphql`
   fragment SupportClubButtonViewerFragment on Account {
-    clubMembershipsLimit
-    clubMembershipsCount
+    __typename
   }
 `
 
@@ -32,8 +39,38 @@ export default function SupportClubButton ({
   ...rest
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
+  console.log(clubData)
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
+
+  if (clubData.viewerMember?.isSupporter === true) {
+    return (
+      <Button
+        colorScheme='gray'
+        size='lg'
+        {...rest}
+      >
+        <Trans>
+          Manage Subscriptions
+        </Trans>
+      </Button>
+    )
+  }
+
+  if (viewerData == null) {
+    return (
+      <LinkButton
+        colorScheme='orange'
+        size='lg'
+        to='/join'
+        {...rest}
+      >
+        <Trans>
+          Become a Supporter
+        </Trans>
+      </LinkButton>
+    )
+  }
 
   return (
     <>

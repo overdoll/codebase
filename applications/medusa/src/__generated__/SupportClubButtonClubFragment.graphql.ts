@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<251d43aaa21216cdb3a8dd7953520da6>>
+ * @generated SignedSource<<ff409878ed04ee807b6e573497d1e827>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,18 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SupportClubButtonClubFragment$data = {
-  readonly id: string;
-  readonly name: string;
+  readonly viewerMember: {
+    readonly isSupporter: boolean;
+  } | null;
+  readonly supporterSubscriptionPrice: {
+    readonly localizedPrice: {
+      readonly amount: number;
+      readonly currency: Currency;
+    };
+  };
   readonly " $fragmentType": "SupportClubButtonClubFragment";
 };
 export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
@@ -30,15 +38,55 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
+      "concreteType": "ClubMember",
+      "kind": "LinkedField",
+      "name": "viewerMember",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporter",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "name",
+      "concreteType": "LocalizedPricingPoint",
+      "kind": "LinkedField",
+      "name": "supporterSubscriptionPrice",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Price",
+          "kind": "LinkedField",
+          "name": "localizedPrice",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "amount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "currency",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -46,6 +94,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5e78a44042b4a1b69e33bc6c700ebe65";
+(node as any).hash = "54347b61d04976d784ebfec125b4d3c6";
 
 export default node;

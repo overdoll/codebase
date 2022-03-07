@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7f57ff288def45bcbdbe0dfb7d5b43f4>>
- * @relayHash 6ea0ee0d2bad7f347b4c6d5e29db0802
+ * @generated SignedSource<<83bae601a95e095b8842801d51943aee>>
+ * @relayHash 8c4b6a2fe79791b9f06050e6a84f987a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ea0ee0d2bad7f347b4c6d5e29db0802
+// @relayRequestID 8c4b6a2fe79791b9f06050e6a84f987a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -132,11 +132,18 @@ v9 = {
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v11 = {
   "kind": "Literal",
   "name": "first",
   "value": 10
 },
-v11 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -445,14 +452,15 @@ return {
             "name": "viewerMember",
             "plural": false,
             "selections": [
+              (v10/*: any*/),
+              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "__typename",
+                "name": "isSupporter",
                 "storageKey": null
-              },
-              (v9/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -466,7 +474,7 @@ return {
           {
             "alias": "topPosts",
             "args": [
-              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -477,13 +485,13 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"TOP\")"
           },
           {
             "alias": "exclusivePosts",
             "args": [
-              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -494,8 +502,44 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"NEW\")"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocalizedPricingPoint",
+            "kind": "LinkedField",
+            "name": "supporterSubscriptionPrice",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Price",
+                "kind": "LinkedField",
+                "name": "localizedPrice",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "amount",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "currency",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -522,6 +566,7 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
+          (v10/*: any*/),
           (v9/*: any*/)
         ],
         "storageKey": null
@@ -529,7 +574,7 @@ return {
     ]
   },
   "params": {
-    "id": "6ea0ee0d2bad7f347b4c6d5e29db0802",
+    "id": "8c4b6a2fe79791b9f06050e6a84f987a",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
