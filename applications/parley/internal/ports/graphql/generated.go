@@ -56,10 +56,10 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ID                  func(childComplexity int) int
-		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ModeratorSettings   func(childComplexity int) int
-		PostAuditLogs       func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) int
+		ID                 func(childComplexity int) int
+		ModeratorSettings  func(childComplexity int) int
+		PostAuditLogs      func(childComplexity int, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) int
+		PostModeratorQueue func(childComplexity int, after *string, before *string, first *int, last *int) int
 	}
 
 	AddModeratorToPostQueuePayload struct {
@@ -149,7 +149,7 @@ type ComplexityRoot struct {
 	Post struct {
 		AuditLogs    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID           func(childComplexity int) int
-		Reports      func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) int
+		Reports      func(childComplexity int, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) int
 		ViewerReport func(childComplexity int) int
 	}
 
@@ -172,12 +172,20 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	PostConnection struct {
+	PostModerator struct {
+		ID             func(childComplexity int) int
+		Moderator      func(childComplexity int) int
+		PlacedAt       func(childComplexity int) int
+		Post           func(childComplexity int) int
+		ReassignmentAt func(childComplexity int) int
+	}
+
+	PostModeratorConnection struct {
 		Edges    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
 	}
 
-	PostEdge struct {
+	PostModeratorEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
 	}
@@ -200,7 +208,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		PostReports        func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) int
+		PostReports        func(childComplexity int, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) int
 		Rule               func(childComplexity int, reference string) int
 		Rules              func(childComplexity int, after *string, before *string, first *int, last *int, deprecated bool) int
 		__resolve__service func(childComplexity int) int
@@ -275,9 +283,9 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error)
+	PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostAuditLogConnection, error)
 	ModeratorSettings(ctx context.Context, obj *types.Account) (*types.ModeratorSettings, error)
-	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	PostModeratorQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostModeratorConnection, error)
 }
 type ClubResolver interface {
 	InfractionHistory(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubInfractionHistoryConnection, error)
@@ -312,7 +320,7 @@ type MutationResolver interface {
 type PostResolver interface {
 	AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
 	ViewerReport(ctx context.Context, obj *types.Post) (*types.PostReport, error)
-	Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
+	Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error)
 }
 type PostAuditLogResolver interface {
 	Rule(ctx context.Context, obj *types.PostAuditLog) (*types.Rule, error)
@@ -323,7 +331,7 @@ type PostReportResolver interface {
 type QueryResolver interface {
 	Rule(ctx context.Context, reference string) (*types.Rule, error)
 	Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error)
-	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
+	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error)
 }
 
 type executableSchema struct {
@@ -348,18 +356,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.ID(childComplexity), true
 
-	case "Account.moderatorPostsQueue":
-		if e.complexity.Account.ModeratorPostsQueue == nil {
-			break
-		}
-
-		args, err := ec.field_Account_moderatorPostsQueue_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
-
 	case "Account.moderatorSettings":
 		if e.complexity.Account.ModeratorSettings == nil {
 			break
@@ -377,7 +373,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.PostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange)), true
+		return e.complexity.Account.PostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time)), true
+
+	case "Account.postModeratorQueue":
+		if e.complexity.Account.PostModeratorQueue == nil {
+			break
+		}
+
+		args, err := ec.field_Account_postModeratorQueue_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Account.PostModeratorQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "AddModeratorToPostQueuePayload.account":
 		if e.complexity.AddModeratorToPostQueuePayload.Account == nil {
@@ -828,7 +836,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Post.Reports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange)), true
+		return e.complexity.Post.Reports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time)), true
 
 	case "Post.viewerReport":
 		if e.complexity.Post.ViewerReport == nil {
@@ -907,33 +915,68 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostAuditLogEdge.Node(childComplexity), true
 
-	case "PostConnection.edges":
-		if e.complexity.PostConnection.Edges == nil {
+	case "PostModerator.id":
+		if e.complexity.PostModerator.ID == nil {
 			break
 		}
 
-		return e.complexity.PostConnection.Edges(childComplexity), true
+		return e.complexity.PostModerator.ID(childComplexity), true
 
-	case "PostConnection.pageInfo":
-		if e.complexity.PostConnection.PageInfo == nil {
+	case "PostModerator.moderator":
+		if e.complexity.PostModerator.Moderator == nil {
 			break
 		}
 
-		return e.complexity.PostConnection.PageInfo(childComplexity), true
+		return e.complexity.PostModerator.Moderator(childComplexity), true
 
-	case "PostEdge.cursor":
-		if e.complexity.PostEdge.Cursor == nil {
+	case "PostModerator.placedAt":
+		if e.complexity.PostModerator.PlacedAt == nil {
 			break
 		}
 
-		return e.complexity.PostEdge.Cursor(childComplexity), true
+		return e.complexity.PostModerator.PlacedAt(childComplexity), true
 
-	case "PostEdge.node":
-		if e.complexity.PostEdge.Node == nil {
+	case "PostModerator.post":
+		if e.complexity.PostModerator.Post == nil {
 			break
 		}
 
-		return e.complexity.PostEdge.Node(childComplexity), true
+		return e.complexity.PostModerator.Post(childComplexity), true
+
+	case "PostModerator.reassignmentAt":
+		if e.complexity.PostModerator.ReassignmentAt == nil {
+			break
+		}
+
+		return e.complexity.PostModerator.ReassignmentAt(childComplexity), true
+
+	case "PostModeratorConnection.edges":
+		if e.complexity.PostModeratorConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.PostModeratorConnection.Edges(childComplexity), true
+
+	case "PostModeratorConnection.pageInfo":
+		if e.complexity.PostModeratorConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.PostModeratorConnection.PageInfo(childComplexity), true
+
+	case "PostModeratorEdge.cursor":
+		if e.complexity.PostModeratorEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.PostModeratorEdge.Cursor(childComplexity), true
+
+	case "PostModeratorEdge.node":
+		if e.complexity.PostModeratorEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.PostModeratorEdge.Node(childComplexity), true
 
 	case "PostReport.account":
 		if e.complexity.PostReport.Account == nil {
@@ -1001,7 +1044,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PostReports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange)), true
+		return e.complexity.Query.PostReports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time)), true
 
 	case "Query.rule":
 		if e.complexity.Query.Rule == nil {
@@ -1321,12 +1364,6 @@ type PostAuditLogConnection {
   pageInfo: PageInfo!
 }
 
-"""Date range for audit logs"""
-input PostAuditLogDateRange {
-  from: Time!
-  to: Time!
-}
-
 extend type Post {
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -1367,8 +1404,11 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for audit logs. Required."""
-    dateRange: PostAuditLogDateRange!
+    """From which date the audit logs should be shown."""
+    from: Time!
+
+    """The end date of the audit logs. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
@@ -1597,13 +1637,30 @@ type ModeratorSettings {
   lastSelected: Time
 }
 
-type PostEdge {
-  cursor: String!
-  node: Post!
+type PostModerator {
+  """The ID to identify this post moderator item."""
+  id: ID!
+
+  """The post linked to this post moderator."""
+  post: Post!
+
+  """The moderator.."""
+  moderator: Account!
+
+  """When this post queue item was initially placed in the queue."""
+  placedAt: Time!
+
+  """When this post queue item will be reassigned."""
+  reassignmentAt: Time!
 }
 
-type PostConnection {
-  edges: [PostEdge!]!
+type PostModeratorEdge {
+  cursor: String!
+  node: PostModerator!
+}
+
+type PostModeratorConnection {
+  edges: [PostModeratorEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -1616,7 +1673,7 @@ extend type Account {
   moderatorSettings: ModeratorSettings! @goField(forceResolver: true)
 
   """Posts queue specific to this account (when moderator)"""
-  moderatorPostsQueue(
+  postModeratorQueue(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1628,19 +1685,10 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection! @goField(forceResolver: true)
+  ): PostModeratorConnection! @goField(forceResolver: true)
 }
 `, BuiltIn: false},
-	{Name: "schema/report/schema.graphql", Input: `"""Date range for post reports"""
-input PostReportDateRange {
-  """The starting date range"""
-  from: Time!
-
-  """The ending date range"""
-  to: Time!
-}
-
-"""Post report"""
+	{Name: "schema/report/schema.graphql", Input: `"""Post report"""
 type PostReport implements Node @key(fields: "id") {
   """ID of the report"""
   id: ID!
@@ -1684,8 +1732,11 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostReportConnection! @goField(forceResolver: true)
 }
 
@@ -1709,8 +1760,11 @@ extend type Post {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostReportConnection! @goField(forceResolver: true)
 }
 
@@ -2024,48 +2078,6 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	return args, nil
-}
-
 func (ec *executionContext) field_Account_postAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2105,15 +2117,66 @@ func (ec *executionContext) field_Account_postAuditLogs_args(ctx context.Context
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.PostAuditLogDateRange
-	if tmp, ok := rawArgs["dateRange"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
-		arg4, err = ec.unmarshalNPostAuditLogDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogDateRange(ctx, tmp)
+	var arg4 time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg4, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["dateRange"] = arg4
+	args["from"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg5
+	return args, nil
+}
+
+func (ec *executionContext) field_Account_postModeratorQueue_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
 	return args, nil
 }
 
@@ -2540,15 +2603,24 @@ func (ec *executionContext) field_Post_reports_args(ctx context.Context, rawArgs
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.PostReportDateRange
-	if tmp, ok := rawArgs["dateRange"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
-		arg4, err = ec.unmarshalNPostReportDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportDateRange(ctx, tmp)
+	var arg4 time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg4, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["dateRange"] = arg4
+	args["from"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg5
 	return args, nil
 }
 
@@ -2621,15 +2693,24 @@ func (ec *executionContext) field_Query_postReports_args(ctx context.Context, ra
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.PostReportDateRange
-	if tmp, ok := rawArgs["dateRange"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
-		arg4, err = ec.unmarshalNPostReportDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportDateRange(ctx, tmp)
+	var arg4 time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg4, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["dateRange"] = arg4
+	args["from"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg5
 	return args, nil
 }
 
@@ -2777,7 +2858,7 @@ func (ec *executionContext) _Account_postAuditLogs(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().PostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange))
+		return ec.resolvers.Account().PostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2829,7 +2910,7 @@ func (ec *executionContext) _Account_moderatorSettings(ctx context.Context, fiel
 	return ec.marshalNModeratorSettings2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐModeratorSettings(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_postModeratorQueue(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2846,7 +2927,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_moderatorPostsQueue_args(ctx, rawArgs)
+	args, err := ec.field_Account_postModeratorQueue_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2854,7 +2935,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Account().PostModeratorQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2866,9 +2947,9 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.PostConnection)
+	res := resTmp.(*types.PostModeratorConnection)
 	fc.Result = res
-	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
+	return ec.marshalNPostModeratorConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_id(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -4667,7 +4748,7 @@ func (ec *executionContext) _Post_reports(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Post().Reports(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange))
+		return ec.resolvers.Post().Reports(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5063,7 +5144,7 @@ func (ec *executionContext) _PostAuditLogEdge_cursor(ctx context.Context, field 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostModerator_id(ctx context.Context, field graphql.CollectedField, obj *types.PostModerator) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5071,7 +5152,182 @@ func (ec *executionContext) _PostConnection_edges(ctx context.Context, field gra
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostConnection",
+		Object:     "PostModerator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostModerator_post(ctx context.Context, field graphql.CollectedField, obj *types.PostModerator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostModerator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostModerator_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PostModerator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostModerator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Moderator, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostModerator_placedAt(ctx context.Context, field graphql.CollectedField, obj *types.PostModerator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostModerator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlacedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostModerator_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.PostModerator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostModerator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReassignmentAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostModeratorConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostModeratorConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostModeratorConnection",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5093,12 +5349,12 @@ func (ec *executionContext) _PostConnection_edges(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.PostEdge)
+	res := resTmp.([]*types.PostModeratorEdge)
 	fc.Result = res
-	return ec.marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostEdgeᚄ(ctx, field.Selections, res)
+	return ec.marshalNPostModeratorEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorEdgeᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.PostConnection) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostModeratorConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.PostModeratorConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5106,7 +5362,7 @@ func (ec *executionContext) _PostConnection_pageInfo(ctx context.Context, field 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostConnection",
+		Object:     "PostModeratorConnection",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5133,7 +5389,7 @@ func (ec *executionContext) _PostConnection_pageInfo(ctx context.Context, field 
 	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PostEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostModeratorEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PostModeratorEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5141,7 +5397,7 @@ func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostEdge",
+		Object:     "PostModeratorEdge",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5168,7 +5424,7 @@ func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PostEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostModeratorEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PostModeratorEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5176,7 +5432,7 @@ func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.Co
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostEdge",
+		Object:     "PostModeratorEdge",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5198,9 +5454,9 @@ func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Post)
+	res := resTmp.(*types.PostModerator)
 	fc.Result = res
-	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+	return ec.marshalNPostModerator2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModerator(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostReport_id(ctx context.Context, field graphql.CollectedField, obj *types.PostReport) (ret graphql.Marshaler) {
@@ -5589,7 +5845,7 @@ func (ec *executionContext) _Query_postReports(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PostReports(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostReportDateRange))
+		return ec.resolvers.Query().PostReports(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7820,68 +8076,6 @@ func (ec *executionContext) unmarshalInputIssueClubInfractionInput(ctx context.C
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputPostAuditLogDateRange(ctx context.Context, obj interface{}) (types.PostAuditLogDateRange, error) {
-	var it types.PostAuditLogDateRange
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "from":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
-			it.From, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "to":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
-			it.To, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputPostReportDateRange(ctx context.Context, obj interface{}) (types.PostReportDateRange, error) {
-	var it types.PostReportDateRange
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "from":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
-			it.From, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "to":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
-			it.To, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputRejectPostInput(ctx context.Context, obj interface{}) (types.RejectPostInput, error) {
 	var it types.RejectPostInput
 	asMap := map[string]interface{}{}
@@ -8330,7 +8524,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
-		case "moderatorPostsQueue":
+		case "postModeratorQueue":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -8339,7 +8533,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_moderatorPostsQueue(ctx, field, obj)
+				res = ec._Account_postModeratorQueue(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9418,19 +9612,19 @@ func (ec *executionContext) _PostAuditLogEdge(ctx context.Context, sel ast.Selec
 	return out
 }
 
-var postConnectionImplementors = []string{"PostConnection"}
+var postModeratorImplementors = []string{"PostModerator"}
 
-func (ec *executionContext) _PostConnection(ctx context.Context, sel ast.SelectionSet, obj *types.PostConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, postConnectionImplementors)
+func (ec *executionContext) _PostModerator(ctx context.Context, sel ast.SelectionSet, obj *types.PostModerator) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postModeratorImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("PostConnection")
-		case "edges":
+			out.Values[i] = graphql.MarshalString("PostModerator")
+		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostConnection_edges(ctx, field, obj)
+				return ec._PostModerator_id(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -9438,9 +9632,39 @@ func (ec *executionContext) _PostConnection(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageInfo":
+		case "post":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostConnection_pageInfo(ctx, field, obj)
+				return ec._PostModerator_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "moderator":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostModerator_moderator(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "placedAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostModerator_placedAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reassignmentAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostModerator_reassignmentAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -9459,19 +9683,60 @@ func (ec *executionContext) _PostConnection(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var postEdgeImplementors = []string{"PostEdge"}
+var postModeratorConnectionImplementors = []string{"PostModeratorConnection"}
 
-func (ec *executionContext) _PostEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PostEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, postEdgeImplementors)
+func (ec *executionContext) _PostModeratorConnection(ctx context.Context, sel ast.SelectionSet, obj *types.PostModeratorConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postModeratorConnectionImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("PostEdge")
+			out.Values[i] = graphql.MarshalString("PostModeratorConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostModeratorConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._PostModeratorConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var postModeratorEdgeImplementors = []string{"PostModeratorEdge"}
+
+func (ec *executionContext) _PostModeratorEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PostModeratorEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postModeratorEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PostModeratorEdge")
 		case "cursor":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostEdge_cursor(ctx, field, obj)
+				return ec._PostModeratorEdge_cursor(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -9481,7 +9746,7 @@ func (ec *executionContext) _PostEdge(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "node":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._PostEdge_node(ctx, field, obj)
+				return ec._PostModeratorEdge_node(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -10991,11 +11256,6 @@ func (ec *executionContext) marshalNPostAuditLogConnection2ᚖoverdollᚋapplica
 	return ec._PostAuditLogConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPostAuditLogDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogDateRange(ctx context.Context, v interface{}) (types.PostAuditLogDateRange, error) {
-	res, err := ec.unmarshalInputPostAuditLogDateRange(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNPostAuditLogEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostAuditLogEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -11050,21 +11310,31 @@ func (ec *executionContext) marshalNPostAuditLogEdge2ᚖoverdollᚋapplications�
 	return ec._PostAuditLogEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPostConnection2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v types.PostConnection) graphql.Marshaler {
-	return ec._PostConnection(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNPostConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v *types.PostConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNPostModerator2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModerator(ctx context.Context, sel ast.SelectionSet, v *types.PostModerator) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._PostConnection(ctx, sel, v)
+	return ec._PostModerator(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNPostModeratorConnection2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorConnection(ctx context.Context, sel ast.SelectionSet, v types.PostModeratorConnection) graphql.Marshaler {
+	return ec._PostModeratorConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPostModeratorConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorConnection(ctx context.Context, sel ast.SelectionSet, v *types.PostModeratorConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PostModeratorConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPostModeratorEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostModeratorEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -11088,7 +11358,7 @@ func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋpar
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPostEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalNPostModeratorEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11108,14 +11378,14 @@ func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋpar
 	return ret
 }
 
-func (ec *executionContext) marshalNPostEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v *types.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNPostModeratorEdge2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostModeratorEdge(ctx context.Context, sel ast.SelectionSet, v *types.PostModeratorEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._PostEdge(ctx, sel, v)
+	return ec._PostModeratorEdge(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPostReport2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReport(ctx context.Context, sel ast.SelectionSet, v types.PostReport) graphql.Marshaler {
@@ -11144,11 +11414,6 @@ func (ec *executionContext) marshalNPostReportConnection2ᚖoverdollᚋapplicati
 		return graphql.Null
 	}
 	return ec._PostReportConnection(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNPostReportDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportDateRange(ctx context.Context, v interface{}) (types.PostReportDateRange, error) {
-	res, err := ec.unmarshalInputPostReportDateRange(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPostReportEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReportEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostReportEdge) graphql.Marshaler {

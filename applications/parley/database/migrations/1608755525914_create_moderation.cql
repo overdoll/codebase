@@ -8,17 +8,21 @@ CREATE TABLE IF NOT EXISTS moderators
 
 CREATE TABLE IF NOT EXISTS account_post_moderators_queue
 (
-    account_id text,
-    post_id    text,
-    placed_at  timestamp,
-    primary key ( account_id, post_id ),
-) WITH CLUSTERING ORDER BY (post_id DESC);
+    account_id      text,
+    sort_key        timeuuid,
+    post_id         text,
+    placed_at       timestamp,
+    reassignment_at timestamp,
+    primary key ( account_id, sort_key ),
+) WITH CLUSTERING ORDER BY (sort_key DESC);
 
 CREATE TABLE IF NOT EXISTS post_moderators
 (
-    account_id text,
-    post_id text,
-    placed_at  timestamp,
+    account_id      text,
+    post_id         text,
+    sort_key        timeuuid,
+    placed_at       timestamp,
+    reassignment_at timestamp,
     primary key ( post_id, account_id ),
 );
 

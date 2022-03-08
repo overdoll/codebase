@@ -20,8 +20,8 @@ type Account struct {
 	// Viewable by the currently authenticated account or staff+
 	ModeratorSettings *ModeratorSettings `json:"moderatorSettings"`
 	// Posts queue specific to this account (when moderator)
-	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
-	ID                  relay.ID        `json:"id"`
+	PostModeratorQueue *PostModeratorConnection `json:"postModeratorQueue"`
+	ID                 relay.ID                 `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -179,26 +179,33 @@ type PostAuditLogConnection struct {
 	PageInfo *relay.PageInfo     `json:"pageInfo"`
 }
 
-// Date range for audit logs
-type PostAuditLogDateRange struct {
-	From time.Time `json:"from"`
-	To   time.Time `json:"to"`
-}
-
 // Edge of the audit log
 type PostAuditLogEdge struct {
 	Node   *PostAuditLog `json:"node"`
 	Cursor string        `json:"cursor"`
 }
 
-type PostConnection struct {
-	Edges    []*PostEdge     `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
+type PostModerator struct {
+	// The ID to identify this post moderator item.
+	ID relay.ID `json:"id"`
+	// The post linked to this post moderator.
+	Post *Post `json:"post"`
+	// The moderator..
+	Moderator *Account `json:"moderator"`
+	// When this post queue item was initially placed in the queue.
+	PlacedAt time.Time `json:"placedAt"`
+	// When this post queue item will be reassigned.
+	ReassignmentAt time.Time `json:"reassignmentAt"`
 }
 
-type PostEdge struct {
-	Cursor string `json:"cursor"`
-	Node   *Post  `json:"node"`
+type PostModeratorConnection struct {
+	Edges    []*PostModeratorEdge `json:"edges"`
+	PageInfo *relay.PageInfo      `json:"pageInfo"`
+}
+
+type PostModeratorEdge struct {
+	Cursor string         `json:"cursor"`
+	Node   *PostModerator `json:"node"`
 }
 
 // Post report
@@ -220,14 +227,6 @@ func (PostReport) IsEntity() {}
 type PostReportConnection struct {
 	Edges    []*PostReportEdge `json:"edges"`
 	PageInfo *relay.PageInfo   `json:"pageInfo"`
-}
-
-// Date range for post reports
-type PostReportDateRange struct {
-	// The starting date range
-	From time.Time `json:"from"`
-	// The ending date range
-	To time.Time `json:"to"`
 }
 
 // Edge of the post report

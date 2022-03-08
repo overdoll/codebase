@@ -41,12 +41,6 @@ type PostAuditLogConnection {
   pageInfo: PageInfo!
 }
 
-"""Date range for audit logs"""
-input PostAuditLogDateRange {
-  from: Time!
-  to: Time!
-}
-
 extend type Post {
   """Audit logs belonging to this pending post"""
   auditLogs(
@@ -87,7 +81,10 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for audit logs. Required."""
-    dateRange: PostAuditLogDateRange!
+    """From which date the audit logs should be shown."""
+    from: Time!
+
+    """The end date of the audit logs. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }

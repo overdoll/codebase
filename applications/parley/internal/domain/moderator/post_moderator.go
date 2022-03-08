@@ -16,16 +16,18 @@ var (
 type PostModerator struct {
 	*paging.Node
 
-	accountId string
-	postId    string
-	placedAt  time.Time
+	accountId      string
+	postId         string
+	placedAt       time.Time
+	reassignmentAt time.Time
 }
 
 func NewPostModerator(accountId, postId string) (*PostModerator, error) {
 	return &PostModerator{
-		accountId: accountId,
-		postId:    postId,
-		placedAt:  time.Now(),
+		accountId:      accountId,
+		postId:         postId,
+		placedAt:       time.Now(),
+		reassignmentAt: time.Now().Add(time.Hour * 24),
 	}, nil
 }
 
@@ -39,6 +41,10 @@ func (m *PostModerator) PostId() string {
 
 func (m *PostModerator) PlacedAt() time.Time {
 	return m.placedAt
+}
+
+func (m *PostModerator) ReassignmentAt() time.Time {
+	return m.reassignmentAt
 }
 
 func (m *PostModerator) CanRejectPost(requester *principal.Principal, ruleInstance *rule.Rule) error {
@@ -73,11 +79,12 @@ func (m *PostModerator) CanApprovePost(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalPostModeratorFromDatabase(accountId, postId string, placedAt time.Time) *PostModerator {
+func UnmarshalPostModeratorFromDatabase(accountId, postId string, placedAt, reassignmentAt time.Time) *PostModerator {
 	return &PostModerator{
-		accountId: accountId,
-		postId:    postId,
-		placedAt:  placedAt,
+		accountId:      accountId,
+		postId:         postId,
+		placedAt:       placedAt,
+		reassignmentAt: reassignmentAt,
 	}
 }
 

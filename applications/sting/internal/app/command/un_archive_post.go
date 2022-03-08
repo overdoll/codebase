@@ -23,7 +23,7 @@ func NewUnArchivePostHandler(pr post.Repository, pi post.IndexRepository, event 
 	return UnArchivePostHandler{pr: pr, pi: pi, event: event}
 }
 
-func (h UnArchivePostHandler) Handle(ctx context.Context, cmd ArchivePost) (*post.Post, error) {
+func (h UnArchivePostHandler) Handle(ctx context.Context, cmd UnArchivePost) (*post.Post, error) {
 
 	pst, err := h.pr.GetPostById(ctx, cmd.Principal, cmd.PostId)
 

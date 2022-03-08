@@ -17,28 +17,34 @@ var accountPostModeratorsQueueTable = table.New(table.Metadata{
 	Name: "account_post_moderators_queue",
 	Columns: []string{
 		"account_id",
+		"sort_key",
 		"post_id",
 		"placed_at",
+		"reassignment_at",
 	},
 	PartKey: []string{"account_id"},
-	SortKey: []string{"post_id"},
+	SortKey: []string{"sort_key"},
 })
 
 var postModeratorsTable = table.New(table.Metadata{
-	Name: "post_moderators_queue",
+	Name: "post_moderators",
 	Columns: []string{
 		"post_id",
 		"account_id",
+		"sort_key",
 		"placed_at",
+		"reassignment_at",
 	},
 	PartKey: []string{"post_id"},
 	SortKey: []string{"account_id"},
 })
 
 type postModerators struct {
-	AccountId string    `db:"account_id"`
-	PostId    string    `db:"post_id"`
-	PlacedAt  time.Time `db:"placed_at"`
+	AccountId      string     `db:"account_id"`
+	PostId         string     `db:"post_id"`
+	SortKey        gocql.UUID `db:"sort_key"`
+	PlacedAt       time.Time  `db:"placed_at"`
+	ReassignmentAt time.Time  `db:"reassignment_at"`
 }
 
 var moderatorTable = table.New(table.Metadata{
@@ -107,24 +113,29 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 		return nil, fmt.Errorf("failed to get post moderator by post id: %v", err)
 	}
 
-	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt), nil
+	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt, postModerator.ReassignmentAt), nil
 }
 
 func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := accountPostModeratorsQueueTable.Insert()
-
 	postModerator := &postModerators{
-		AccountId: queue.AccountId(),
-		PostId:    queue.PostId(),
-		PlacedAt:  queue.PlacedAt(),
+		AccountId:      queue.AccountId(),
+		PostId:         queue.PostId(),
+		PlacedAt:       queue.PlacedAt(),
+		ReassignmentAt: queue.ReassignmentAt(),
+		SortKey:        gocql.UUIDFromTime(time.Now()),
 	}
+
+	stmt, _ := accountPostModeratorsQueueTable.Insert()
 
 	batch.Query(stmt,
 		postModerator.AccountId,
+		postModerator.SortKey,
 		postModerator.PostId,
+		postModerator.PlacedAt,
+		postModerator.ReassignmentAt,
 	)
 
 	stmt, _ = postModeratorsTable.Insert()
@@ -132,6 +143,9 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 	batch.Query(stmt,
 		postModerator.PostId,
 		postModerator.AccountId,
+		postModerator.SortKey,
+		postModerator.PlacedAt,
+		postModerator.ReassignmentAt,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -152,7 +166,7 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 	builder := accountPostModeratorsQueueTable.SelectBuilder()
 
 	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "post_id", false); err != nil {
+		if err := cursor.BuildCassandra(builder, "sort_key", false); err != nil {
 			return nil, err
 		}
 	}
@@ -169,15 +183,15 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 	var postQueue []*moderator.PostModerator
 
 	for _, item := range postModeratorQueueItems {
-		queueItem := moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt)
-		queueItem.Node = paging.NewNode(item.PostId)
+		queueItem := moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt, item.ReassignmentAt)
+		queueItem.Node = paging.NewNode(item.SortKey)
 		postQueue = append(postQueue, queueItem)
 	}
 
 	return postQueue, nil
 }
 
-func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
+func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Context, postId string) (*postModerators, error) {
 
 	var item postModerators
 
@@ -190,25 +204,35 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx conte
 		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
 	}
 
-	return moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt), nil
+	return &item, nil
 }
 
-func (r ModeratorCassandraRepository) DeletePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
+func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
+
+	item, err := r.getPostModeratorByPostId(ctx, postId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt, item.ReassignmentAt), nil
+}
+
+func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Context, postId string) error {
+
+	postModerator, err := r.getPostModeratorByPostId(ctx, postId)
+
+	if err != nil {
+		return err
+	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	stmt, _ := accountPostModeratorsQueueTable.Delete()
 
-	postModerator := &postModerators{
-		AccountId: queue.AccountId(),
-		PostId:    queue.PostId(),
-		PlacedAt:  queue.PlacedAt(),
-	}
-
 	batch.Query(stmt,
 		postModerator.AccountId,
-		postModerator.PostId,
-		postModerator.PlacedAt,
+		postModerator.SortKey,
 	)
 
 	stmt, _ = postModeratorsTable.Delete()
@@ -216,7 +240,6 @@ func (r ModeratorCassandraRepository) DeletePostModerator(ctx context.Context, q
 	batch.Query(stmt,
 		postModerator.PostId,
 		postModerator.AccountId,
-		postModerator.PlacedAt,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

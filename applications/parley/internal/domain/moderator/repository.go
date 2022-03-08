@@ -19,5 +19,5 @@ type Repository interface {
 	GetPostModeratorByPostId(ctx context.Context, requester *principal.Principal, postId string) (*PostModerator, error)
 	SearchPostModerator(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*PostModerator, error)
 	CreatePostModerator(ctx context.Context, queue *PostModerator) error
-	DeletePostModerator(ctx context.Context, queue *PostModerator) error
+	DeletePostModeratorByPostId(ctx context.Context, postId string) error
 }

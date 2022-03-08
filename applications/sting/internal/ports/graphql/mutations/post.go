@@ -104,6 +104,30 @@ func (r *MutationResolver) ArchivePost(ctx context.Context, input types.ArchiveP
 	}, nil
 }
 
+func (r *MutationResolver) UnArchivePost(ctx context.Context, input types.UnArchivePostInput) (*types.UnArchivePostPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.UnArchivePost.
+		Handle(
+			ctx,
+			command.UnArchivePost{
+				Principal: principal.FromContext(ctx),
+				PostId:    input.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UnArchivePostPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, nil
+}
+
 func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

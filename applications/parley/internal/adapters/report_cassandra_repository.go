@@ -192,55 +192,64 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 
 	var postReports []*report.PostReport
 
-	if cursor.IsEmpty() {
-		return postReports, nil
-	}
-
 	if err := report.CanViewWithFilters(requester, filters); err != nil {
 		return nil, err
 	}
 
-	info := map[string]interface{}{
-		"bucket":  bucket.MakeBucketsFromTimeRange(filters.From(), filters.To()),
-		"post_id": filters.PostId(),
+	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(filters.From())
+	endingBucket := 0
+
+	if filters.To() != nil {
+		endingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filters.To())
 	}
 
-	var builder *qb.SelectBuilder
+	// iterate through all buckets starting from x bucket until we have enough values
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
 
-	if filters.PostId() != nil {
-		builder = qb.Select(postReportByPostTable.Name()).
-			Where(qb.In("bucket"), qb.Eq("post_id"))
-	} else {
-		builder = qb.Select(postReportsByBucketTable.Name()).
-			Where(qb.In("bucket"))
-	}
+		info := map[string]interface{}{
+			"bucket":  bucketId,
+			"post_id": filters.PostId(),
+		}
 
-	if err := cursor.BuildCassandra(builder, "id", false); err != nil {
-		return nil, err
-	}
+		var builder *qb.SelectBuilder
 
-	var results []*postReport
+		if filters.PostId() != nil {
+			builder = qb.Select(postReportByPostTable.Name()).
+				Where(qb.In("bucket"), qb.Eq("post_id"))
+		} else {
+			builder = qb.Select(postReportsByBucketTable.Name()).
+				Where(qb.In("bucket"))
+		}
 
-	if err := builder.
-		Query(r.session).
-		// need to disable paging since we do orderBy and IN queries
-		PageSize(0).
-		BindMap(info).
-		Select(&results); err != nil {
-		return nil, fmt.Errorf("failed to search post reports: %v", err)
-	}
+		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
+			return nil, err
+		}
 
-	for _, postRep := range results {
+		var results []*postReport
 
-		result := report.UnmarshalPostReportFromDatabase(
-			postRep.Id,
-			postRep.PostId,
-			postRep.ReportingAccountId,
-			postRep.RuleId,
-		)
+		if err := builder.
+			Query(r.session).
+			BindMap(info).
+			Select(&results); err != nil {
+			return nil, fmt.Errorf("failed to search post reports: %v", err)
+		}
 
-		result.Node = paging.NewNode(postRep.Id)
-		postReports = append(postReports, result)
+		for _, postRep := range results {
+
+			result := report.UnmarshalPostReportFromDatabase(
+				postRep.Id,
+				postRep.PostId,
+				postRep.ReportingAccountId,
+				postRep.RuleId,
+			)
+
+			result.Node = paging.NewNode(postRep.Id)
+			postReports = append(postReports, result)
+		}
+
+		if len(postReports) >= cursor.GetLimit() {
+			break
+		}
 	}
 
 	return postReports, nil

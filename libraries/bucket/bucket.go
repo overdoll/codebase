@@ -42,7 +42,7 @@ func MakeWeeklyBucketFromKSUID(target string) (int, error) {
 	return timestampToWeekBucket(int(id.Time().Unix())), nil
 }
 
-func MakeBucketsFromTimeRange(from, to time.Time) []int {
+func MakeWeeklyBucketsFromTimeRange(from, to time.Time) []int {
 
 	startBucket := MakeWeeklyBucketFromTimestamp(from)
 	endBucket := MakeWeeklyBucketFromTimestamp(to)

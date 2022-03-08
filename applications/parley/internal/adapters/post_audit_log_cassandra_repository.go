@@ -199,66 +199,76 @@ func (r PostAuditLogCassandraRepository) GetPostAuditLogById(ctx context.Context
 
 func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post_audit_log.PostAuditLogFilters) ([]*post_audit_log.PostAuditLog, error) {
 
-	var auditLogs []*post_audit_log.PostAuditLog
-
-	if cursor.IsEmpty() {
-		return auditLogs, nil
-	}
+	var pendingPostAuditLogs []*post_audit_log.PostAuditLog
 
 	if err := post_audit_log.CanViewWithFilters(requester, filter); err != nil {
 		return nil, err
 	}
 
-	var builder *qb.SelectBuilder
+	startingBucket := 1
+	endingBucket := 0
 
-	info := map[string]interface{}{}
-
-	if filter.ModeratorId() != nil {
-		builder = qb.Select(postAuditLogByModeratorTable.Name()).
-			Where(qb.In("bucket"), qb.Eq("moderator_account_id"))
-
-		info["bucket"] = bucket.MakeBucketsFromTimeRange(*filter.From(), *filter.To())
-		info["moderator_account_id"] = *filter.ModeratorId()
+	if filter.From() != nil {
+		startingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filter.From())
 	}
 
-	if filter.PostId() != nil {
-		builder = qb.Select(postAuditLogByPostTable.Name()).
-			Where(qb.Eq("post_id"))
-
-		info["post_id"] = *filter.PostId()
+	if filter.To() != nil {
+		endingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filter.To())
 	}
 
-	if err := cursor.BuildCassandra(builder, "id", false); err != nil {
-		return nil, err
-	}
+	// iterate through all buckets starting from x bucket until we have enough values
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
 
-	var results []*postAuditLog
+		var builder *qb.SelectBuilder
 
-	if err := builder.
-		// this say this may be nil but it would never actually happen because theres a validator on the filter level
-		Query(r.session).
-		// need to disable paging since we do orderBy and IN queries
-		PageSize(0).
-		BindMap(info).
-		Select(&results); err != nil {
-		return nil, fmt.Errorf("failed to search audit logs: %v", err)
-	}
+		info := map[string]interface{}{}
 
-	var pendingPostAuditLogs []*post_audit_log.PostAuditLog
+		if filter.ModeratorId() != nil {
+			builder = qb.Select(postAuditLogByModeratorTable.Name()).
+				Where(qb.Eq("bucket"), qb.Eq("moderator_account_id"))
 
-	for _, auditLog := range results {
+			info["bucket"] = bucketId
+			info["moderator_account_id"] = *filter.ModeratorId()
+		}
 
-		result := post_audit_log.UnmarshalPostAuditLogFromDatabase(
-			auditLog.Id,
-			auditLog.PostId,
-			auditLog.ModeratorAccountId,
-			auditLog.Action,
-			auditLog.RuleId,
-			auditLog.Notes,
-		)
+		if filter.PostId() != nil {
+			builder = qb.Select(postAuditLogByPostTable.Name()).
+				Where(qb.Eq("post_id"))
 
-		result.Node = paging.NewNode(auditLog.Id)
-		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
+			info["post_id"] = *filter.PostId()
+		}
+
+		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
+			return nil, err
+		}
+
+		var results []*postAuditLog
+
+		if err := builder.
+			Query(r.session).
+			BindMap(info).
+			Select(&results); err != nil {
+			return nil, fmt.Errorf("failed to search audit logs: %v", err)
+		}
+
+		for _, auditLog := range results {
+
+			result := post_audit_log.UnmarshalPostAuditLogFromDatabase(
+				auditLog.Id,
+				auditLog.PostId,
+				auditLog.ModeratorAccountId,
+				auditLog.Action,
+				auditLog.RuleId,
+				auditLog.Notes,
+			)
+
+			result.Node = paging.NewNode(auditLog.Id)
+			pendingPostAuditLogs = append(pendingPostAuditLogs, result)
+		}
+
+		if len(pendingPostAuditLogs) >= cursor.GetLimit() {
+			break
+		}
 	}
 
 	return pendingPostAuditLogs, nil

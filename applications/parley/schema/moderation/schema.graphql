@@ -116,13 +116,30 @@ type ModeratorSettings {
   lastSelected: Time
 }
 
-type PostEdge {
-  cursor: String!
-  node: Post!
+type PostModerator {
+  """The ID to identify this post moderator item."""
+  id: ID!
+
+  """The post linked to this post moderator."""
+  post: Post!
+
+  """The moderator.."""
+  moderator: Account!
+
+  """When this post queue item was initially placed in the queue."""
+  placedAt: Time!
+
+  """When this post queue item will be reassigned."""
+  reassignmentAt: Time!
 }
 
-type PostConnection {
-  edges: [PostEdge!]!
+type PostModeratorEdge {
+  cursor: String!
+  node: PostModerator!
+}
+
+type PostModeratorConnection {
+  edges: [PostModeratorEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -135,7 +152,7 @@ extend type Account {
   moderatorSettings: ModeratorSettings! @goField(forceResolver: true)
 
   """Posts queue specific to this account (when moderator)"""
-  moderatorPostsQueue(
+  postModeratorQueue(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -147,5 +164,5 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection! @goField(forceResolver: true)
+  ): PostModeratorConnection! @goField(forceResolver: true)
 }

@@ -380,16 +380,24 @@ func MarshalRuleToGraphQLConnection(ctx context.Context, results []*rule.Rule, c
 	return conn
 }
 
-func MarshalPostModeratorQueueToGraphQL(ctx context.Context, result *moderator.PostModerator) *Post {
-	return &Post{
-		ID: relay.NewID(Post{}, result.PostId()),
+func MarshalPostModeratorQueueToGraphQL(ctx context.Context, result *moderator.PostModerator) *PostModerator {
+	return &PostModerator{
+		ID: relay.NewID(PostModerator{}, result.AccountId(), result.PostId()),
+		Post: &Post{
+			ID: relay.NewID(Post{}, result.PostId()),
+		},
+		Moderator: &Account{
+			ID: relay.NewID(Account{}, result.AccountId()),
+		},
+		PlacedAt:       result.PlacedAt(),
+		ReassignmentAt: result.ReassignmentAt(),
 	}
 }
 
-func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results []*moderator.PostModerator, cursor *paging.Cursor) *PostConnection {
-	var posts []*PostEdge
+func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results []*moderator.PostModerator, cursor *paging.Cursor) *PostModeratorConnection {
+	var posts []*PostModeratorEdge
 
-	conn := &PostConnection{
+	conn := &PostModeratorConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
@@ -426,7 +434,7 @@ func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results [
 
 	for i := range results {
 		node := nodeAt(i)
-		posts = append(posts, &PostEdge{
+		posts = append(posts, &PostModeratorEdge{
 			Node:   MarshalPostModeratorQueueToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
