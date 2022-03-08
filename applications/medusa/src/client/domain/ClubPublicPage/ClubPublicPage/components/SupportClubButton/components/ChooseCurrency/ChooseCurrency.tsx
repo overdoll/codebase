@@ -8,14 +8,10 @@ import { runIfFunction } from '@//:modules/support'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 
-interface ChildrenCallableChooseCurrency {
-  currency: string
-}
-
 interface Props {
   query: ChooseCurrencyFragment$key
   defaultValue: string
-  children: MaybeRenderProp<ChildrenCallableChooseCurrency>
+  onChange: (e) => void
 }
 
 const Fragment = graphql`
@@ -31,42 +27,37 @@ const Fragment = graphql`
 export default function ChooseCurrency ({
   query,
   defaultValue,
-  children
+  onChange
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [currency, setCurrency] = useState<string>(defaultValue)
-
-  const onChange = (e): void => {
-    setCurrency(e.target.value)
+  const onChangeCurrency = (e): void => {
+    onChange(e.target.value)
   }
 
   return (
-    <Stack spacing={8}>
-      <HStack spacing={3} justify='space-between'>
-        <Heading w='100%' fontSize='lg' color='gray.00'>
-          <Trans>
-            Preferred Billing Currency
-          </Trans>
-        </Heading>
-        <Select
-          variant='outline'
-          size='md'
-          w={140}
-          defaultValue={currency}
-          onChange={onChange}
-        >
-          {data.supporterSubscriptionPrice.prices.map((item, index) => (
-            <option
-              key={index}
-              value={item.currency}
-            >
-              {item.currency}
-            </option>
-          ))}
-        </Select>
-      </HStack>
-      {runIfFunction(children, { currency })}
-    </Stack>
+    <HStack spacing={3} justify='space-between'>
+      <Heading w='100%' fontSize='lg' color='gray.00'>
+        <Trans>
+          Preferred Billing Currency
+        </Trans>
+      </Heading>
+      <Select
+        variant='outline'
+        size='md'
+        w={140}
+        defaultValue={defaultValue}
+        onChange={onChangeCurrency}
+      >
+        {data.supporterSubscriptionPrice.prices.map((item, index) => (
+          <option
+            key={index}
+            value={item.currency}
+          >
+            {item.currency}
+          </option>
+        ))}
+      </Select>
+    </HStack>
   )
 }

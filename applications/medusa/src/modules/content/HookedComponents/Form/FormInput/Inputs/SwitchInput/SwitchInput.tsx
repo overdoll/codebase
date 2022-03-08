@@ -1,14 +1,15 @@
-import { ReactNode, useContext } from 'react'
+import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
 import Switch from '../../../../../../form/Switch/Switch'
-import { Heading, HStack } from '@chakra-ui/react'
+import { SwitchProps } from '@chakra-ui/react'
 
-interface Props {
-  placeholder?: ReactNode
-}
+type Props = SwitchProps
 
-export default function SwitchInput ({ placeholder }: Props): JSX.Element {
+export default function SwitchInput ({
+  placeholder,
+  ...rest
+}: Props): JSX.Element {
   const {
     id,
     size
@@ -19,37 +20,32 @@ export default function SwitchInput ({ placeholder }: Props): JSX.Element {
   } = useFormContext()
 
   return (
-    <HStack spacing={3} align='center'>
-      <Controller
-        control={control}
-        name={id}
-        render={({
-          field: {
-            onChange,
-            value,
-            onBlur,
-            name,
-            ref
-          },
-          fieldState: {
-            invalid
-          }
-        }) => (
-          <Switch
-            ref={ref}
-            size={size}
-            name={name}
-            onChange={onChange}
-            isInvalid={invalid}
-            isChecked={value}
-            onBlur={onBlur}
-          />
-        )}
-      />
-      {placeholder != null && (
-        <Heading fontSize={size} color='gray.100'>
-          {placeholder}
-        </Heading>)}
-    </HStack>
+    <Controller
+      control={control}
+      name={id}
+      render={({
+        field: {
+          onChange,
+          value,
+          onBlur,
+          name,
+          ref
+        },
+        fieldState: {
+          invalid
+        }
+      }) => (
+        <Switch
+          ref={ref}
+          size={size}
+          name={name}
+          onChange={onChange}
+          isInvalid={invalid}
+          isChecked={value}
+          onBlur={onBlur}
+          {...rest}
+        />
+      )}
+    />
   )
 }

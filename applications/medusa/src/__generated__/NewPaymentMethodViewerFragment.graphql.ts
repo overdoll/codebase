@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<077b457f33282bfe44145c4a35d4afe4>>
+ * @generated SignedSource<<ff7fcacdc74555f80d5478f0326fe9a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type NewPaymentMethodViewerFragment$data = {
-  readonly savedPaymentMethods: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly __typename: string;
-      };
-    }>;
-  };
   readonly __typename: "Account";
+  readonly " $fragmentType": "NewPaymentMethodViewerFragment";
+} | {
+  // This will never be '%other', but we need some
+  // value in case none of the concrete values match.
+  readonly __typename: "%other";
   readonly " $fragmentType": "NewPaymentMethodViewerFragment";
 };
 export type NewPaymentMethodViewerFragment = NewPaymentMethodViewerFragment$data;
@@ -27,61 +25,24 @@ export type NewPaymentMethodViewerFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodViewerFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "NewPaymentMethodViewerFragment",
   "selections": [
-    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
-      "concreteType": "AccountSavedPaymentMethodConnection",
-      "kind": "LinkedField",
-      "name": "savedPaymentMethods",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "AccountSavedPaymentMethodEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "AccountSavedPaymentMethod",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                (v0/*: any*/)
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
+      "kind": "ScalarField",
+      "name": "__typename",
       "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "d41a13a29c77be9c0cf343ae632bea20";
+(node as any).hash = "e3059acd6752893b95dcc0296e0e3eda";
 
 export default node;

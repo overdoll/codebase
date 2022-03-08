@@ -2,6 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import {
   Box,
   Heading,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,7 +11,6 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react'
-import CommunityGuidelines from '../../ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { LockedAccountModalFragment$key } from '@//:artifacts/LockedAccountModalFragment.graphql'
 import { Trans } from '@lingui/macro'
 import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
@@ -76,12 +76,25 @@ export default function LockedAccountModal ({
               </Trans>
             </Text>
             <Box>
-              <Text>
+              <Text fontSize='md'>
                 <Trans>
-                  Please review the community guidelines to make sure this doesn't happen again.
+                  Please review the
+                  {' '}
+                  <Link
+                    color='teal.400'
+                    fontSize='md'
+                    isExternal
+                    href='https://www.corpodoll.com/community-guidelines/'
+                  >
+                    <Trans>
+                      Community Guidelines
+                    </Trans>
+                  </Link>
+                  {' '}
+                  to make sure this doesn't happen again.
                 </Trans>
               </Text>
-              <CommunityGuidelines />
+
             </Box>
             <Text>
               {hasPassed

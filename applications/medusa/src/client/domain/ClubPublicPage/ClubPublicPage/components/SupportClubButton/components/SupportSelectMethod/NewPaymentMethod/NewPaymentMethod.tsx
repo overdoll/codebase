@@ -1,11 +1,13 @@
 import type { NewPaymentMethodFragment$key } from '@//:artifacts/NewPaymentMethodFragment.graphql'
 import type { NewPaymentMethodViewerFragment$key } from '@//:artifacts/NewPaymentMethodViewerFragment.graphql'
-
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import ChooseCurrency from '../../ChooseCurrency/ChooseCurrency'
 import BillingSummary from '../../BillingSummary/BillingSummary'
 import CCBillSubscribeForm from './CCBillSubscribeForm/CCBillSubscribeForm'
+import { useRef, useState } from 'react'
+import CCBillWindowListener from './CCBillWindowListener/CCBillWindowListener'
+import { Stack } from '@chakra-ui/react'
 
 interface Props {
   clubQuery: NewPaymentMethodFragment$key
@@ -28,13 +30,6 @@ const ClubFragment = graphql`
 const ViewerFragment = graphql`
   fragment NewPaymentMethodViewerFragment on Account {
     __typename
-    savedPaymentMethods {
-      edges {
-        node {
-          __typename
-        }
-      }
-    }
   }
 `
 
@@ -44,16 +39,30 @@ export default function NewPaymentMethod ({
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
+  const [originLink, updateOriginLink] = useState<string | null>(null)
+  const windowReference = useRef<Window | null>(null)
+  const [currency, setCurrency] = useState(clubData.supporterSubscriptionPrice.localizedPrice.currency)
+
+  if (originLink != null && windowReference != null) {
+    return (
+      <CCBillWindowListener
+        windowReference={windowReference}
+        originLink={originLink}
+        updateOriginLink={updateOriginLink}
+      />
+    )
+  }
 
   return (
-    <ChooseCurrency query={clubData} defaultValue={clubData.supporterSubscriptionPrice.localizedPrice.currency}>
-      {({ currency }) => (
-        <>
-          <BillingSummary query={clubData} currency={currency} />
-          <CCBillSubscribeForm query={clubData} currency={currency} />
-        </>
-      )}
-    </ChooseCurrency>
+    <Stack spacing={8}>
+      <ChooseCurrency query={clubData} onChange={setCurrency} defaultValue={currency} />
+      <BillingSummary query={clubData} currency={currency} />
+      <CCBillSubscribeForm
+        updateOriginLink={updateOriginLink}
+        windowReference={windowReference}
+        query={clubData}
+        currency={currency}
+      />
+    </Stack>
   )
 }

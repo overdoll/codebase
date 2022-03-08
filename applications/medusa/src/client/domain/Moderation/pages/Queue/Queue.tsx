@@ -40,7 +40,6 @@ export default function Queue (props: Props): JSX.Element | null {
               community guidelines.
             </Trans>
           </PageSectionDescription>
-          <CommunityGuidelines />
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>

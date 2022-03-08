@@ -26,7 +26,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
       cursor: 'not-allowed'
     },
     _checked: {
-      bg: mode(`${c}.500`, `${c}.200`)(props)
+      bg: mode(`${c}.500`, `${c}.400`)(props)
     }
   }
 }
