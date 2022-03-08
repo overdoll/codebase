@@ -474,6 +474,15 @@ func (p *Post) CanArchive(requester *principal.Principal) error {
 	return p.MakeArchived()
 }
 
+func (p *Post) CanUnArchive(requester *principal.Principal) error {
+
+	if p.state != Archived {
+		return errors.New("only archived posts can be unarchived")
+	}
+
+	return p.MakePublish()
+}
+
 func (p *Post) CanUpdate(requester *principal.Principal) error {
 
 	if err := requester.BelongsToAccount(requester.AccountId()); err != nil {

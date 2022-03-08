@@ -315,8 +315,6 @@ type Post struct {
 	State PostState `json:"state"`
 	// The supporter-only status.
 	SupporterOnlyStatus SupporterOnlyStatus `json:"supporterOnlyStatus"`
-	// The moderator to whom this pending post was assigned
-	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
 	// The club belonging to the post
@@ -327,8 +325,6 @@ type Post struct {
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
 	PostedAt *time.Time `json:"postedAt"`
-	// The date at which this pending post will be reassigned
-	ReassignmentAt *time.Time `json:"reassignmentAt"`
 	// Suggested posts for this post.
 	SuggestedPosts *PostConnection `json:"suggestedPosts"`
 	// Represents the audience that this post belongs to
@@ -451,6 +447,18 @@ type Translation struct {
 	Language *Language `json:"language"`
 	// The translation text.
 	Text string `json:"text"`
+}
+
+// Un-Archive post.
+type UnArchivePostInput struct {
+	// The post to un-archive
+	ID relay.ID `json:"id"`
+}
+
+// Payload for un-archiving a post
+type UnArchivePostPayload struct {
+	// The un-archived post.
+	Post *Post `json:"post"`
 }
 
 // Undo like on a post.

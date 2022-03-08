@@ -23,8 +23,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var slugAliases []*ClubSlugAlias

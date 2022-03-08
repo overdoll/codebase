@@ -19,7 +19,7 @@ type Account struct {
 	email            string
 	roles            []Role
 	verified         bool
-	avatarResourceId string
+	avatarResourceId *string
 	language         *localization.Language
 
 	locked      bool
@@ -41,7 +41,7 @@ var (
 	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locale string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
 
 	var newRoles []Role
 
@@ -100,7 +100,7 @@ func (a *Account) Verified() bool {
 	return a.verified
 }
 
-func (a *Account) AvatarResourceId() string {
+func (a *Account) AvatarResourceId() *string {
 	return a.avatarResourceId
 }
 

@@ -34,7 +34,7 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 	return nil
 }
 
-func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *principal.Principal, postId, ruleId string, notes *string) error {
+func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *principal.Principal, clubId, postId, ruleId string, notes *string) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -44,6 +44,7 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: requester.AccountId(),
 		PostId:    postId,
+		ClubId:    clubId,
 		RuleId:    ruleId,
 		Notes:     notes,
 	})
@@ -55,7 +56,7 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	return nil
 }
 
-func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *principal.Principal, postId, ruleId string, clubId string, notes *string) error {
+func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *principal.Principal, clubId, postId, ruleId string, notes *string) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),

@@ -167,6 +167,12 @@ input ArchivePostInput {
   id: ID!
 }
 
+"""Un-Archive post."""
+input UnArchivePostInput {
+  """The post to un-archive"""
+  id: ID!
+}
+
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
@@ -236,6 +242,12 @@ type DeletePostPayload {
 """Payload for archiving a post"""
 type ArchivePostPayload {
   """The archived post."""
+  post: Post
+}
+
+"""Payload for un-archiving a post"""
+type UnArchivePostPayload {
+  """The un-archived post."""
   post: Post
 }
 
@@ -366,6 +378,11 @@ extend type Mutation {
   Archive a post, removing it from public visibility.
   """
   archivePost(input: ArchivePostInput!): ArchivePostPayload
+
+  """
+  Un-archive a post, putting it back in public view.
+  """
+  unArchivePost(input: UnArchivePostInput!): UnArchivePostPayload
 }
 
 extend type Query {

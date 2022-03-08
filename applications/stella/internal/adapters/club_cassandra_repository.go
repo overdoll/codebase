@@ -36,7 +36,7 @@ type clubs struct {
 	Slug                string            `db:"slug"`
 	SlugAliases         []string          `db:"slug_aliases"`
 	Name                map[string]string `db:"name"`
-	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	MembersCount        int               `db:"members_count"`
 	OwnerAccountId      string            `db:"owner_account_id"`
 	Suspended           bool              `db:"suspended"`

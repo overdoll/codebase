@@ -59,7 +59,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 		return err
 	}
 
-	if err := h.event.RejectPost(ctx, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+	if err := h.event.RejectPost(ctx, cmd.Principal, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
 		return err
 	}
 

@@ -21,7 +21,7 @@ type Character struct {
 	id                  string
 	slug                string
 	name                *localization.Translation
-	thumbnailResourceId string
+	thumbnailResourceId *string
 	series              *Series
 
 	totalLikes int
@@ -53,7 +53,7 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		slug:                slug,
 		name:                lc,
 		series:              series,
-		thumbnailResourceId: "",
+		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
 	}, nil
@@ -75,7 +75,7 @@ func (c *Character) Series() *Series {
 	return c.series
 }
 
-func (c *Character) ThumbnailResourceId() string {
+func (c *Character) ThumbnailResourceId() *string {
 	return c.thumbnailResourceId
 }
 
@@ -120,7 +120,7 @@ func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail st
 		return err
 	}
 
-	c.thumbnailResourceId = thumbnail
+	c.thumbnailResourceId = &thumbnail
 
 	return nil
 }
@@ -138,7 +138,7 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, totalLikes, totalPosts int, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *string, totalLikes, totalPosts int, media *Series) *Character {
 	return &Character{
 		id:                  id,
 		slug:                slug,

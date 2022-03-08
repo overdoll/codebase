@@ -21,7 +21,7 @@ type Audience struct {
 	id                  string
 	slug                string
 	title               *localization.Translation
-	thumbnailResourceId string
+	thumbnailResourceId *string
 
 	totalLikes int
 	totalPosts int
@@ -53,7 +53,7 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		id:                  uuid.New().String(),
 		slug:                slug,
 		title:               lc,
-		thumbnailResourceId: "",
+		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
 		standard:            standard,
@@ -80,7 +80,7 @@ func (m *Audience) TotalPosts() int {
 	return m.totalPosts
 }
 
-func (m *Audience) ThumbnailResourceId() string {
+func (m *Audience) ThumbnailResourceId() *string {
 	return m.thumbnailResourceId
 }
 
@@ -122,7 +122,7 @@ func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail str
 		return err
 	}
 
-	m.thumbnailResourceId = thumbnail
+	m.thumbnailResourceId = &thumbnail
 
 	return nil
 }
@@ -151,7 +151,7 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail string, standard int, totalLikes, totalPosts int) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *string, standard int, totalLikes, totalPosts int) *Audience {
 	return &Audience{
 		id:                  id,
 		slug:                slug,

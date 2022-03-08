@@ -229,6 +229,7 @@ type ComplexityRoot struct {
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
 		RemovePostContent                func(childComplexity int, input types.RemovePostContentInput) int
 		SubmitPost                       func(childComplexity int, input types.SubmitPostInput) int
+		UnArchivePost                    func(childComplexity int, input types.UnArchivePostInput) int
 		UndoLikePost                     func(childComplexity int, input types.UndoLikePostInput) int
 		UpdateAudienceIsStandard         func(childComplexity int, input types.UpdateAudienceIsStandardInput) int
 		UpdateAudienceThumbnail          func(childComplexity int, input types.UpdateAudienceThumbnailInput) int
@@ -266,9 +267,7 @@ type ComplexityRoot struct {
 		CreatedAt           func(childComplexity int) int
 		ID                  func(childComplexity int) int
 		Likes               func(childComplexity int) int
-		Moderator           func(childComplexity int) int
 		PostedAt            func(childComplexity int) int
-		ReassignmentAt      func(childComplexity int) int
 		Reference           func(childComplexity int) int
 		State               func(childComplexity int) int
 		SuggestedPosts      func(childComplexity int, after *string, before *string, first *int, last *int) int
@@ -352,6 +351,10 @@ type ComplexityRoot struct {
 	Translation struct {
 		Language func(childComplexity int) int
 		Text     func(childComplexity int) int
+	}
+
+	UnArchivePostPayload struct {
+		Post func(childComplexity int) int
 	}
 
 	UndoLikePostPayload struct {
@@ -495,6 +498,7 @@ type MutationResolver interface {
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 	DeletePost(ctx context.Context, input types.DeletePostInput) (*types.DeletePostPayload, error)
 	ArchivePost(ctx context.Context, input types.ArchivePostInput) (*types.ArchivePostPayload, error)
+	UnArchivePost(ctx context.Context, input types.UnArchivePostInput) (*types.UnArchivePostPayload, error)
 	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
 	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
 	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
@@ -1308,6 +1312,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SubmitPost(childComplexity, args["input"].(types.SubmitPostInput)), true
 
+	case "Mutation.unArchivePost":
+		if e.complexity.Mutation.UnArchivePost == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_unArchivePost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UnArchivePost(childComplexity, args["input"].(types.UnArchivePostInput)), true
+
 	case "Mutation.undoLikePost":
 		if e.complexity.Mutation.UndoLikePost == nil {
 			break
@@ -1615,26 +1631,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.Likes(childComplexity), true
 
-	case "Post.moderator":
-		if e.complexity.Post.Moderator == nil {
-			break
-		}
-
-		return e.complexity.Post.Moderator(childComplexity), true
-
 	case "Post.postedAt":
 		if e.complexity.Post.PostedAt == nil {
 			break
 		}
 
 		return e.complexity.Post.PostedAt(childComplexity), true
-
-	case "Post.reassignmentAt":
-		if e.complexity.Post.ReassignmentAt == nil {
-			break
-		}
-
-		return e.complexity.Post.ReassignmentAt(childComplexity), true
 
 	case "Post.reference":
 		if e.complexity.Post.Reference == nil {
@@ -2034,6 +2036,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Translation.Text(childComplexity), true
+
+	case "UnArchivePostPayload.post":
+		if e.complexity.UnArchivePostPayload.Post == nil {
+			break
+		}
+
+		return e.complexity.UnArchivePostPayload.Post(childComplexity), true
 
 	case "UndoLikePostPayload.postLikeId":
 		if e.complexity.UndoLikePostPayload.PostLikeID == nil {
@@ -2948,9 +2957,6 @@ type Post implements Node @key(fields: "id") {
   """The supporter-only status."""
   supporterOnlyStatus: SupporterOnlyStatus!
 
-  """The moderator to whom this pending post was assigned"""
-  moderator: Account
-
   """The contributor who contributed this post"""
   contributor: Account!
 
@@ -2965,9 +2971,6 @@ type Post implements Node @key(fields: "id") {
 
   """The date and time of when this post was posted"""
   postedAt: Time
-
-  """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time
 
   """Suggested posts for this post."""
   suggestedPosts(
@@ -3096,6 +3099,12 @@ input ArchivePostInput {
   id: ID!
 }
 
+"""Un-Archive post."""
+input UnArchivePostInput {
+  """The post to un-archive"""
+  id: ID!
+}
+
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
@@ -3165,6 +3174,12 @@ type DeletePostPayload {
 """Payload for archiving a post"""
 type ArchivePostPayload {
   """The archived post."""
+  post: Post
+}
+
+"""Payload for un-archiving a post"""
+type UnArchivePostPayload {
+  """The un-archived post."""
   post: Post
 }
 
@@ -3295,6 +3310,11 @@ extend type Mutation {
   Archive a post, removing it from public visibility.
   """
   archivePost(input: ArchivePostInput!): ArchivePostPayload
+
+  """
+  Un-archive a post, putting it back in public view.
+  """
+  unArchivePost(input: UnArchivePostInput!): UnArchivePostPayload
 }
 
 extend type Query {
@@ -4602,6 +4622,21 @@ func (ec *executionContext) field_Mutation_submitPost_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSubmitPostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSubmitPostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_unArchivePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UnArchivePostInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUnArchivePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9513,6 +9548,45 @@ func (ec *executionContext) _Mutation_archivePost(ctx context.Context, field gra
 	return ec.marshalOArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐArchivePostPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_unArchivePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_unArchivePost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UnArchivePost(rctx, args["input"].(types.UnArchivePostInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UnArchivePostPayload)
+	fc.Result = res
+	return ec.marshalOUnArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createSeries(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -9904,38 +9978,6 @@ func (ec *executionContext) _Post_supporterOnlyStatus(ctx context.Context, field
 	return ec.marshalNSupporterOnlyStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatus(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Post_moderator(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Post",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Moderator, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Post_contributor(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10095,38 +10137,6 @@ func (ec *executionContext) _Post_postedAt(ctx context.Context, field graphql.Co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.PostedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Post_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Post",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ReassignmentAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11957,6 +11967,38 @@ func (ec *executionContext) _Translation_text(ctx context.Context, field graphql
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UnArchivePostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UnArchivePostPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UnArchivePostPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UndoLikePostPayload_postLikeId(ctx context.Context, field graphql.CollectedField, obj *types.UndoLikePostPayload) (ret graphql.Marshaler) {
@@ -14024,6 +14066,29 @@ func (ec *executionContext) unmarshalInputRemovePostContentInput(ctx context.Con
 
 func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, obj interface{}) (types.SubmitPostInput, error) {
 	var it types.SubmitPostInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUnArchivePostInput(ctx context.Context, obj interface{}) (types.UnArchivePostInput, error) {
+	var it types.UnArchivePostInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -16475,6 +16540,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "unArchivePost":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_unArchivePost(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "createSeries":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSeries(ctx, field)
@@ -16612,13 +16684,6 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "moderator":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_moderator(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "contributor":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_contributor(ctx, field, obj)
@@ -16662,13 +16727,6 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "postedAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Post_postedAt(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "reassignmentAt":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Post_reassignmentAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -17627,6 +17685,34 @@ func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var unArchivePostPayloadImplementors = []string{"UnArchivePostPayload"}
+
+func (ec *executionContext) _UnArchivePostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UnArchivePostPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, unArchivePostPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UnArchivePostPayload")
+		case "post":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UnArchivePostPayload_post(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -19655,6 +19741,11 @@ func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋsti
 	return ec._Translation(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNUnArchivePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostInput(ctx context.Context, v interface{}) (types.UnArchivePostInput, error) {
+	res, err := ec.unmarshalInputUnArchivePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUndoLikePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostInput(ctx context.Context, v interface{}) (types.UndoLikePostInput, error) {
 	res, err := ec.unmarshalInputUndoLikePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -20116,13 +20207,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx context.Context, sel ast.SelectionSet, v *types.Account) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Account(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOAddPostContentPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddPostContentPayload(ctx context.Context, sel ast.SelectionSet, v *types.AddPostContentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -20541,6 +20625,13 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 		return graphql.Null
 	}
 	return graphql.MarshalTime(*v)
+}
+
+func (ec *executionContext) marshalOUnArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnArchivePostPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UnArchivePostPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUndoLikePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUndoLikePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UndoLikePostPayload) graphql.Marshaler {

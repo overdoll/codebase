@@ -62,16 +62,6 @@ type ModeratorCassandraRepository struct {
 	session gocqlx.Session
 }
 
-func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r ModeratorCassandraRepository) DeletePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
-	//TODO implement me
-	panic("implement me")
-}
-
 func NewModeratorCassandraRepository(session gocqlx.Session) ModeratorCassandraRepository {
 	return ModeratorCassandraRepository{session: session}
 }
@@ -135,7 +125,6 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 	batch.Query(stmt,
 		postModerator.AccountId,
 		postModerator.PostId,
-		postModerator.PlacedAt,
 	)
 
 	stmt, _ = postModeratorsTable.Insert()
@@ -143,7 +132,6 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 	batch.Query(stmt,
 		postModerator.PostId,
 		postModerator.AccountId,
-		postModerator.PlacedAt,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -187,6 +175,55 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 	}
 
 	return postQueue, nil
+}
+
+func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
+
+	var item postModerators
+
+	if err := r.session.Query(postModeratorsTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postModerators{
+			PostId: postId,
+		}).
+		Get(&item); err != nil {
+		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
+	}
+
+	return moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt), nil
+}
+
+func (r ModeratorCassandraRepository) DeletePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := accountPostModeratorsQueueTable.Delete()
+
+	postModerator := &postModerators{
+		AccountId: queue.AccountId(),
+		PostId:    queue.PostId(),
+		PlacedAt:  queue.PlacedAt(),
+	}
+
+	batch.Query(stmt,
+		postModerator.AccountId,
+		postModerator.PostId,
+		postModerator.PlacedAt,
+	)
+
+	stmt, _ = postModeratorsTable.Delete()
+
+	batch.Query(stmt,
+		postModerator.PostId,
+		postModerator.AccountId,
+		postModerator.PlacedAt,
+	)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete post moderator: %v", err)
+	}
+
+	return nil
 }
 
 func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, requester *principal.Principal, accountId string) (*moderator.Moderator, error) {

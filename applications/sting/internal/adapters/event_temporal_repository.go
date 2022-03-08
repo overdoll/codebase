@@ -88,6 +88,24 @@ func (r EventTemporalRepository) ArchivePost(ctx context.Context, postId string)
 	return nil
 }
 
+func (r EventTemporalRepository) UnArchivePost(ctx context.Context, postId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "UnArchivePost_" + postId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnArchivePost, workflows.UnArchivePostInput{
+		PostId: postId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{

@@ -19,7 +19,7 @@ import (
 type seriesDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
 	CreatedAt           string            `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`

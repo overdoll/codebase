@@ -21,7 +21,7 @@ type Category struct {
 	id                  string
 	slug                string
 	title               *localization.Translation
-	thumbnailResourceId string
+	thumbnailResourceId *string
 	totalLikes          int
 	totalPosts          int
 }
@@ -50,7 +50,7 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		id:                  uuid.New().String(),
 		slug:                slug,
 		title:               lc,
-		thumbnailResourceId: "",
+		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
 	}, nil
@@ -68,7 +68,7 @@ func (c *Category) Title() *localization.Translation {
 	return c.title
 }
 
-func (c *Category) ThumbnailResourceId() string {
+func (c *Category) ThumbnailResourceId() *string {
 	return c.thumbnailResourceId
 }
 
@@ -113,7 +113,7 @@ func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail str
 		return err
 	}
 
-	c.thumbnailResourceId = thumbnail
+	c.thumbnailResourceId = &thumbnail
 
 	return nil
 }
@@ -131,7 +131,7 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail string, totalLikes, totalPosts int) *Category {
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int) *Category {
 	return &Category{
 		id:                  id,
 		slug:                slug,

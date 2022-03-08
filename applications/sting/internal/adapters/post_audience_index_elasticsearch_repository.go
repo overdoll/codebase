@@ -20,7 +20,7 @@ type audienceDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
 	Title               map[string]string `json:"title"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Standard            int               `json:"standard"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`

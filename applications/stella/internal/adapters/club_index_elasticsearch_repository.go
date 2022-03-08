@@ -22,7 +22,7 @@ type clubDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
 	SlugAliases         []string          `json:"slug_aliases"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Name                map[string]string `json:"name"`
 	CreatedAt           string            `json:"created_at"`
 	MembersCount        int               `json:"members_count"`

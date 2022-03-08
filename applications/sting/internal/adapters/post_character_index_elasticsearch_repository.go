@@ -20,7 +20,7 @@ import (
 type characterDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Name                map[string]string `json:"name"`
 	Series              seriesDocument    `json:"series"`
 	CreatedAt           string            `json:"created_at"`

@@ -75,14 +75,15 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:  command.NewCreatePostHandler(postRepo, postIndexRepo),
-			PublishPost: command.NewPublishPostHandler(postRepo, postIndexRepo, eventRepo),
-			DiscardPost: command.NewDiscardPostHandler(postRepo, postIndexRepo, eventRepo),
-			RejectPost:  command.NewRejectPostHandler(postRepo, postIndexRepo),
-			SubmitPost:  command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, loader),
-			RemovePost:  command.NewRemovePostHandler(postRepo, postIndexRepo, eventRepo),
-			DeletePost:  command.NewDeletePostHandler(postRepo, postIndexRepo, eventRepo),
-			ArchivePost: command.NewArchivePostHandler(postRepo, postIndexRepo, eventRepo),
+			CreatePost:    command.NewCreatePostHandler(postRepo, postIndexRepo),
+			PublishPost:   command.NewPublishPostHandler(postRepo, postIndexRepo, eventRepo),
+			DiscardPost:   command.NewDiscardPostHandler(postRepo, postIndexRepo, eventRepo),
+			RejectPost:    command.NewRejectPostHandler(postRepo, postIndexRepo),
+			SubmitPost:    command.NewSubmitPostHandler(postRepo, postIndexRepo, eventRepo, loader),
+			RemovePost:    command.NewRemovePostHandler(postRepo, postIndexRepo, eventRepo),
+			DeletePost:    command.NewDeletePostHandler(postRepo, postIndexRepo, eventRepo),
+			ArchivePost:   command.NewArchivePostHandler(postRepo, postIndexRepo, eventRepo),
+			UnArchivePost: command.NewUnArchivePostHandler(postRepo, postIndexRepo, eventRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, postIndexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, postIndexRepo),

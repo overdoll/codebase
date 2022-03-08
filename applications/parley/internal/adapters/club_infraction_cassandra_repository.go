@@ -90,6 +90,36 @@ func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx conte
 	return nil
 }
 
+func (r ClubInfractionCassandraRepository) GetAllClubInfractionHistoryByClubIdOperator(ctx context.Context, accountId string) ([]*club_infraction.ClubInfractionHistory, error) {
+
+	var dbClubInfractionHistory []clubInfractionHistory
+
+	if err := clubInfractionHistoryTable.SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&clubInfractionHistory{ClubId: accountId}).
+		Select(&dbClubInfractionHistory); err != nil {
+		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
+	}
+
+	var infractionHistory []*club_infraction.ClubInfractionHistory
+	for _, infractionHist := range dbClubInfractionHistory {
+		infract := club_infraction.UnmarshalClubInfractionHistoryFromDatabase(
+			infractionHist.Id,
+			infractionHist.ClubId,
+			infractionHist.IssuerAccountId,
+			infractionHist.Source,
+			infractionHist.RuleId,
+			infractionHist.IssuedAt,
+			infractionHist.ExpiresAt,
+			infractionHist.ClubSuspensionLength,
+		)
+		infractionHistory = append(infractionHistory, infract)
+	}
+
+	return infractionHistory, nil
+}
+
 func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club_infraction.ClubInfractionHistory, error) {
 
 	if err := club_infraction.CanViewClubInfractionHistory(requester); err != nil {

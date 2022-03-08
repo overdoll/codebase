@@ -143,8 +143,8 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -174,8 +174,8 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -204,8 +204,8 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -234,8 +234,8 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var nameTranslations []*Translation

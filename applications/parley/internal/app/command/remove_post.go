@@ -52,7 +52,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 		return err
 	}
 
-	if err := h.event.RemovePost(ctx, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+	if err := h.event.RemovePost(ctx, cmd.Principal, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
 		return err
 	}
 

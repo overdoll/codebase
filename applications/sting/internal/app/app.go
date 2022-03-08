@@ -13,14 +13,15 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePost  command.CreatePostHandler
-	DiscardPost command.DiscardPostHandler
-	PublishPost command.PublishPostHandler
-	RejectPost  command.RejectPostHandler
-	SubmitPost  command.SubmitPostHandler
-	RemovePost  command.RemovePostHandler
-	DeletePost  command.DeletePostHandler
-	ArchivePost command.ArchivePostHandler
+	CreatePost    command.CreatePostHandler
+	DiscardPost   command.DiscardPostHandler
+	PublishPost   command.PublishPostHandler
+	RejectPost    command.RejectPostHandler
+	SubmitPost    command.SubmitPostHandler
+	RemovePost    command.RemovePostHandler
+	DeletePost    command.DeletePostHandler
+	ArchivePost   command.ArchivePostHandler
+	UnArchivePost command.UnArchivePostHandler
 
 	RemovePostContent                command.RemovePostContentHandler
 	AddPostContent                   command.AddPostContentHandler
