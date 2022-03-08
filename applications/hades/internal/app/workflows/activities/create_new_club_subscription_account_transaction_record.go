@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type CreateNewClubSubscriptionAccountTransactionRecord struct {
+type CreateNewClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -24,41 +24,41 @@ type CreateNewClubSubscriptionAccountTransactionRecord struct {
 	NextBillingDate string
 }
 
-func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateNewClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateNewClubSubscriptionAccountTransactionRecordInput) error {
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
+	amount, err := strconv.ParseFloat(input.Amount, 64)
 
 	if err != nil {
 		return fmt.Errorf("failed to parse amount: %s", err)
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return fmt.Errorf("failed to parse timestamp: %s", err)
 	}
 
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(request.BillingDate, " ")[0])
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.BillingDate, " ")[0])
 
 	if err != nil {
 		return fmt.Errorf("failed to parse date: %s", err)
 	}
 
-	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextBillingDate)
 
 	if err != nil {
 		return fmt.Errorf("failed to parse date: %s", err)
 	}
 
 	transaction, err := billing.NewNewClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
 		billedAtDate,
 		nextBillingDate,
 		amount,
-		request.Currency,
+		input.Currency,
 	)
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {

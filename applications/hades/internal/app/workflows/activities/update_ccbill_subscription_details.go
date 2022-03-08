@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 )
 
-type UpdateCCBillSubscriptionDetails struct {
+type UpdateCCBillSubscriptionDetailsInput struct {
 	CCBillSubscriptionId string
 	Timestamp            string
 
@@ -26,21 +26,21 @@ type UpdateCCBillSubscriptionDetails struct {
 	PostalCode   string
 }
 
-func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, request UpdateCCBillSubscriptionDetails) error {
+func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, input UpdateCCBillSubscriptionDetailsInput) error {
 
-	card, err := billing.NewCard(request.CardBin, request.CardType, request.CardLast4, request.CardExpirationDate)
-
-	if err != nil {
-		return err
-	}
-
-	contact, err := billing.NewContact(request.FirstName, request.LastName, request.Email, request.PhoneNumber)
+	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
 	}
 
-	address, err := billing.NewAddress(request.AddressLine1, request.City, request.State, request.Country, request.PostalCode)
+	contact, err := billing.NewContact(input.FirstName, input.LastName, input.Email, input.PhoneNumber)
+
+	if err != nil {
+		return err
+	}
+
+	address, err := billing.NewAddress(input.AddressLine1, input.City, input.State, input.Country, input.PostalCode)
 
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, reques
 		return err
 	}
 
-	_, err = h.billing.UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx, request.CCBillSubscriptionId, func(subscription *billing.CCBillSubscriptionDetails) error {
+	_, err = h.billing.UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx, input.CCBillSubscriptionId, func(subscription *billing.CCBillSubscriptionDetails) error {
 
 		// update saved payment method, if it exists for this subscription
 		_, err = h.billing.UpdateAccountSavedPaymentMethodOperator(ctx, subscription.AccountId(), subscription.CCBillSubscriptionId(), func(savedPaymentMethod *billing.SavedPaymentMethod) error {

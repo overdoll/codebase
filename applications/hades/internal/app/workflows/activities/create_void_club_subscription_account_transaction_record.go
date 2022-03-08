@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type CreateVoidClubSubscriptionAccountTransactionRecord struct {
+type CreateVoidClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -20,9 +20,9 @@ type CreateVoidClubSubscriptionAccountTransactionRecord struct {
 	Reason   string
 }
 
-func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateRefundClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateRefundClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return err
@@ -31,14 +31,14 @@ func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx cont
 	var amount float64
 	var currency string
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
 	}
 
-	if request.Amount != "" {
-		amount, err = strconv.ParseFloat(request.Amount, 64)
+	if input.Amount != "" {
+		amount, err = strconv.ParseFloat(input.Amount, 64)
 
 		if err != nil {
 			return err
@@ -48,20 +48,20 @@ func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx cont
 		amount = ccbillSubscription.BilledInitialPrice()
 	}
 
-	if request.Currency != "" {
-		currency = request.Currency
+	if input.Currency != "" {
+		currency = input.Currency
 	} else {
 		currency = ccbillSubscription.BilledCurrency().String()
 	}
 
 	transaction, err := billing.NewVoidClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
 		amount,
 		currency,
-		request.Reason,
+		input.Reason,
 	)
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {

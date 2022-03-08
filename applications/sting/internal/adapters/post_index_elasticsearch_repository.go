@@ -25,7 +25,6 @@ type postDocument struct {
 	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
 	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
 	Likes                           int               `json:"likes"`
-	ModeratorId                     string            `json:"moderator_id"`
 	ContributorId                   string            `json:"contributor_id"`
 	ClubId                          string            `json:"club_id"`
 	AudienceId                      string            `json:"audience_id"`
@@ -34,7 +33,6 @@ type postDocument struct {
 	SeriesIds                       []string          `json:"series_ids"`
 	CreatedAt                       string            `json:"created_at"`
 	PostedAt                        string            `json:"posted_at"`
-	ReassignmentAt                  string            `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -53,9 +51,6 @@ const postIndex = `
 				},
 				"likes": {
 					"type": "integer"
-				},
-				"moderator_id": {
-					"type": "keyword"
 				},
 				"contributor_id": {
 					"type": "keyword"
@@ -129,19 +124,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principa
 	}
 
 	var postedAtTime *time.Time
-	var reassignmentAtTime *time.Time
-
-	if pst.ReassignmentAt != "" {
-		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
-
-		if err != nil {
-			return nil, err
-		}
-
-		newTime := time.Unix(reassignmentAt, 0)
-
-		reassignmentAtTime = &newTime
-	}
 
 	if pst.PostedAt != "" {
 		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
@@ -166,7 +148,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principa
 		pst.State,
 		pst.SupporterOnlyStatus,
 		pst.Likes,
-		&pst.ModeratorId,
 		pst.ContributorId,
 		pst.ContentResourceIds,
 		pst.ContentSupporterOnly,
@@ -178,7 +159,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principa
 		pst.CategoryIds,
 		time.Unix(createdAt, 0),
 		postedAtTime,
-		reassignmentAtTime,
 		requester,
 		supportedClubIds,
 	)
@@ -190,26 +170,12 @@ func unmarshalPostDocument(hit *elastic.SearchHit, requester *principal.Principa
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 
-	var moderatorId string
-
-	if pst.ModeratorId() != nil {
-		moderatorId = *pst.ModeratorId()
-	}
-
 	var postedAt string
 
 	if pst.PostedAt() != nil {
 		postedAt = strconv.FormatInt(pst.PostedAt().Unix(), 10)
 	} else {
 		postedAt = strconv.FormatInt(0, 10)
-	}
-
-	var reassignmentAt string
-
-	if pst.ReassignmentAt() != nil {
-		reassignmentAt = strconv.FormatInt(pst.ReassignmentAt().Unix(), 10)
-	} else {
-		reassignmentAt = strconv.FormatInt(0, 10)
 	}
 
 	var audience string
@@ -237,7 +203,6 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		State:                           pst.State().String(),
 		AudienceId:                      audience,
 		ClubId:                          pst.ClubId(),
-		ModeratorId:                     moderatorId,
 		ContributorId:                   pst.ContributorId(),
 		ContentResourceIds:              contentResourceIds,
 		ContentSupporterOnly:            contentSupporterOnly,
@@ -247,7 +212,6 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		SeriesIds:                       pst.SeriesIds(),
 		CreatedAt:                       strconv.FormatInt(pst.CreatedAt().Unix(), 10),
 		PostedAt:                        postedAt,
-		ReassignmentAt:                  reassignmentAt,
 	}, nil
 }
 
@@ -738,12 +702,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 		for iter.StructScan(&p) {
 
-			var moderatorId string
-
-			if p.ModeratorId != nil {
-				moderatorId = *p.ModeratorId
-			}
-
 			likes, err := rep.getLikesForPost(ctx, p.Id)
 
 			if err != nil {
@@ -760,7 +718,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				Id:                 p.Id,
 				State:              p.State,
 				Likes:              likes,
-				ModeratorId:        moderatorId,
 				ContributorId:      p.ContributorId,
 				ContentResourceIds: p.ContentResourceIds,
 				ClubId:             p.ClubId,
@@ -770,7 +727,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				SeriesIds:          p.SeriesIds,
 				CreatedAt:          strconv.FormatInt(p.CreatedAt.Unix(), 10),
 				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
-				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
 			}
 
 			_, err = r.client.

@@ -4,6 +4,10 @@ import (
 	"context"
 )
 
-func (h *Activities) PutPostIntoModeratorQueueOrPublish(ctx context.Context, postId string) (bool, error) {
-	return h.parley.PutPostIntoModeratorQueueOrPublish(ctx, postId)
+type PutPostIntoModeratorQueueOrPublishInput struct {
+	PostId string
+}
+
+func (h *Activities) PutPostIntoModeratorQueueOrPublish(ctx context.Context, input PutPostIntoModeratorQueueOrPublishInput) (bool, error) {
+	return h.parley.PutPostIntoModeratorQueueOrPublish(ctx, input.PostId)
 }

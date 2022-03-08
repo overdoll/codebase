@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type GetOrCreateCCBillSubscriptionAndCheckForDuplicates struct {
+type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
 	AccountId            string
 	ClubId               string
 	CCBillSubscriptionId string
@@ -47,9 +47,9 @@ type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload struct {
 	DuplicateSupportDifferentSubscription bool
 }
 
-func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx context.Context, request GetOrCreateCCBillSubscriptionAndCheckForDuplicates) (*GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload, error) {
+func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx context.Context, input GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput) (*GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload, error) {
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
 
 	if err != nil && err != billing.ErrCCBillSubscriptionNotFound {
 		return nil, err
@@ -58,7 +58,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 	// exiting ccbill subscription found
 	if ccbillSubscription != nil {
 		// not the same idempotency key - same subscription requested twice
-		if ccbillSubscription.IdempotencyKey() != request.IdempotencyKey {
+		if ccbillSubscription.IdempotencyKey() != input.IdempotencyKey {
 			return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
 				DuplicateSupportSameSubscription:      true,
 				DuplicateSupportDifferentSubscription: false,
@@ -74,7 +74,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 
 	// ccbill subscription is nil - so we didn't have ccbill duplicate subscription ids come in.
 	// now, we need to check the actual account subscription for duplicates
-	subscription, err := h.billing.HasExistingAccountClubSupporterSubscriptionOperator(ctx, request.AccountId, request.ClubId)
+	subscription, err := h.billing.HasExistingAccountClubSupporterSubscriptionOperator(ctx, input.AccountId, input.ClubId)
 
 	if err != nil && err != billing.ErrAccountClubSupportSubscriptionNotFound {
 		return nil, err
@@ -90,19 +90,19 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 
 	// if we reached here, we have a brand new subscription, so we construct it
 
-	card, err := billing.NewCard(request.CardBin, request.CardType, request.CardLast4, request.CardExpirationDate)
+	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return nil, err
 	}
 
-	contact, err := billing.NewContact(request.FirstName, request.LastName, request.Email, request.PhoneNumber)
+	contact, err := billing.NewContact(input.FirstName, input.LastName, input.Email, input.PhoneNumber)
 
 	if err != nil {
 		return nil, err
 	}
 
-	address, err := billing.NewAddress(request.AddressLine1, request.City, request.State, request.Country, request.PostalCode)
+	address, err := billing.NewAddress(input.AddressLine1, input.City, input.State, input.Country, input.PostalCode)
 
 	if err != nil {
 		return nil, err
@@ -114,57 +114,57 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
-	accountingInitialPrice, err := strconv.ParseFloat(request.AccountingInitialPrice, 64)
+	accountingInitialPrice, err := strconv.ParseFloat(input.AccountingInitialPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	accountingRecurringPrice, err := strconv.ParseFloat(request.AccountingRecurringPrice, 64)
+	accountingRecurringPrice, err := strconv.ParseFloat(input.AccountingRecurringPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	subscriptionInitialPrice, err := strconv.ParseFloat(request.SubscriptionInitialPrice, 64)
+	subscriptionInitialPrice, err := strconv.ParseFloat(input.SubscriptionInitialPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	subscriptionRecurringPrice, err := strconv.ParseFloat(request.SubscriptionRecurringPrice, 64)
+	subscriptionRecurringPrice, err := strconv.ParseFloat(input.SubscriptionRecurringPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	billedInitialPrice, err := strconv.ParseFloat(request.BilledInitialPrice, 64)
+	billedInitialPrice, err := strconv.ParseFloat(input.BilledInitialPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
-	billedRecurringPrice, err := strconv.ParseFloat(request.BilledRecurringPrice, 64)
+	billedRecurringPrice, err := strconv.ParseFloat(input.BilledRecurringPrice, 64)
 
 	if err != nil {
 		return nil, err
 	}
 
 	ccbillSubscription, err = billing.NewCCBillSubscriptionDetails(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		paymentMethod,
 		subscriptionInitialPrice,
 		subscriptionRecurringPrice,
-		request.SubscriptionCurrency,
+		input.SubscriptionCurrency,
 		billedInitialPrice,
 		billedRecurringPrice,
-		request.BilledCurrency,
+		input.BilledCurrency,
 		accountingInitialPrice,
 		accountingRecurringPrice,
-		request.AccountingCurrency,
-		request.IdempotencyKey,
+		input.AccountingCurrency,
+		input.IdempotencyKey,
 	)
 
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillRefundPayload struct {
+type CCBillRefundInput struct {
 	TransactionId          string `json:"transactionId"`
 	SubscriptionId         string `json:"subscriptionId"`
 	ClientAccnum           string `json:"clientAccnum"`
@@ -25,7 +25,7 @@ type CCBillRefundPayload struct {
 	ExpDate                string `json:"expDate"`
 }
 
-func CCBillRefund(ctx workflow.Context, payload CCBillRefundPayload) error {
+func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -34,23 +34,23 @@ func CCBillRefund(ctx workflow.Context, payload CCBillRefundPayload) error {
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
 	// create refund record
 	if err := workflow.ExecuteActivity(ctx, a.CreateRefundClubSubscriptionAccountTransactionRecord,
-		activities.CreateRefundClubSubscriptionAccountTransactionRecord{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.CreateRefundClubSubscriptionAccountTransactionRecordInput{
+			CCBillSubscriptionId: input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
-			Currency:             payload.Currency,
-			Amount:               payload.Amount,
-			Reason:               payload.Reason,
-			CardLast4:            payload.Last4,
-			CardType:             payload.CardType,
-			CardExpirationDate:   payload.ExpDate,
+			Timestamp:            input.Timestamp,
+			Currency:             input.Currency,
+			Amount:               input.Amount,
+			Reason:               input.Reason,
+			CardLast4:            input.Last4,
+			CardType:             input.CardType,
+			CardExpirationDate:   input.ExpDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

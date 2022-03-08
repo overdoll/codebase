@@ -4,9 +4,14 @@ import (
 	"context"
 )
 
-func (h *Activities) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
+type DeleteResourcesInput struct {
+	ItemId      string
+	ResourceIds []string
+}
 
-	res, err := h.rr.GetResourcesByIds(ctx, []string{itemId}, resourceIds)
+func (h *Activities) DeleteResources(ctx context.Context, input DeleteResourcesInput) error {
+
+	res, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
 
 	if err != nil {
 		return err

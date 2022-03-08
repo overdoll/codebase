@@ -6,9 +6,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) PublishPost(ctx context.Context, postId string) error {
+type PublishPostInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) PublishPost(ctx context.Context, input PublishPostInput) error {
+
+	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		// This will make sure the state of the post is always "review" before publishing - we may get an outdated record
 		// from the review stage so it will retry at some point
 		return pending.MakePublish()

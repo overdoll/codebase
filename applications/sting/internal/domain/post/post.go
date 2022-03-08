@@ -25,7 +25,6 @@ type Post struct {
 
 	supporterOnlyStatus SupporterOnlyStatus
 
-	moderatorId   *string
 	contributorId string
 
 	clubId string
@@ -38,9 +37,8 @@ type Post struct {
 
 	content []Content
 
-	createdAt      time.Time
-	postedAt       *time.Time
-	reassignmentAt *time.Time
+	createdAt time.Time
+	postedAt  *time.Time
 
 	likes int
 }
@@ -62,7 +60,7 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -90,7 +88,6 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	return &Post{
 		id:                  id,
-		moderatorId:         moderatorId,
 		state:               ps,
 		supporterOnlyStatus: so,
 		clubId:              clubId,
@@ -103,16 +100,11 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		categoryIds:         categoryIds,
 		createdAt:           createdAt,
 		postedAt:            postedAt,
-		reassignmentAt:      reassignmentAt,
 	}
 }
 
 func (p *Post) ID() string {
 	return p.id
-}
-
-func (p *Post) ModeratorId() *string {
-	return p.moderatorId
 }
 
 func (p *Post) ContributorId() string {
@@ -157,20 +149,6 @@ func (p *Post) AllContentResourceIds() []string {
 	return append(resourceIdsToDelete, resourceIds2ToDelete...)
 }
 
-func (p *Post) UpdateModerator(moderatorId string) error {
-
-	if p.state != Review {
-		return ErrAlreadyModerated
-	}
-
-	newTime := time.Now().Add(time.Hour * 24)
-
-	p.moderatorId = &moderatorId
-	p.reassignmentAt = &newTime
-
-	return nil
-}
-
 func (p *Post) CategoryIds() []string {
 	return p.categoryIds
 }
@@ -189,10 +167,6 @@ func (p *Post) CreatedAt() time.Time {
 
 func (p *Post) PostedAt() *time.Time {
 	return p.postedAt
-}
-
-func (p *Post) ReassignmentAt() *time.Time {
-	return p.reassignmentAt
 }
 
 func (p *Post) MakePublish() error {

@@ -76,27 +76,19 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
-	var moderator *Account
-
-	if result.ModeratorId() != nil {
-		moderator = &Account{ID: relay.NewID(Account{}, *result.ModeratorId())}
-	}
-
 	return &Post{
-		ID:             relay.NewID(Post{}, result.ID()),
-		Reference:      result.ID(),
-		Moderator:      moderator,
-		Contributor:    &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:           &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Audience:       audience,
-		State:          state,
-		Content:        content,
-		Categories:     categories,
-		Characters:     characters,
-		CreatedAt:      result.CreatedAt(),
-		PostedAt:       result.PostedAt(),
-		ReassignmentAt: result.ReassignmentAt(),
-		Likes:          result.Likes(),
+		ID:          relay.NewID(Post{}, result.ID()),
+		Reference:   result.ID(),
+		Contributor: &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Club:        &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Audience:    audience,
+		State:       state,
+		Content:     content,
+		Categories:  categories,
+		Characters:  characters,
+		CreatedAt:   result.CreatedAt(),
+		PostedAt:    result.PostedAt(),
+		Likes:       result.Likes(),
 	}
 }
 

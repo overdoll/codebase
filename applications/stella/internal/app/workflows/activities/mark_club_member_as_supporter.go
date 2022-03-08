@@ -6,10 +6,16 @@ import (
 	"time"
 )
 
-func (h *Activities) MarkClubMemberAsSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
+type MarkClubMemberAsSupporterInput struct {
+	ClubId      string
+	AccountId   string
+	SupportedAt time.Time
+}
 
-	_, err := h.cr.UpdateClubMemberIsSupporter(ctx, clubId, accountId, func(member *club.Member) error {
-		return member.MakeSupporter(supportedAt)
+func (h *Activities) MarkClubMemberAsSupporter(ctx context.Context, input MarkClubMemberAsSupporterInput) error {
+
+	_, err := h.cr.UpdateClubMemberIsSupporter(ctx, input.ClubId, input.AccountId, func(member *club.Member) error {
+		return member.MakeSupporter(input.SupportedAt)
 	})
 
 	if err != nil {

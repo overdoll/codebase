@@ -5,11 +5,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-type DiscardPost struct {
+type DiscardPostInput struct {
 	PostId string
 }
 
-func (h *Activities) DiscardPost(ctx context.Context, input DiscardPost) error {
+func (h *Activities) DiscardPost(ctx context.Context, input DiscardPostInput) error {
 
 	// post approved
 	if err := h.sting.DiscardPost(ctx, input.PostId); err != nil {

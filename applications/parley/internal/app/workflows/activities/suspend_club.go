@@ -5,12 +5,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-type SuspendClub struct {
+type SuspendClubInput struct {
 	ClubId   string
 	Duration int64
 }
 
-func (h *Activities) SuspendClub(ctx context.Context, input SuspendClub) error {
+func (h *Activities) SuspendClub(ctx context.Context, input SuspendClubInput) error {
 
 	// post approved
 	if err := h.stella.SuspendClub(ctx, input.ClubId, input.Duration); err != nil {

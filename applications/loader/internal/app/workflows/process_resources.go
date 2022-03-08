@@ -5,13 +5,23 @@ import (
 	"overdoll/applications/loader/internal/app/workflows/activities"
 )
 
-func ProcessResources(ctx workflow.Context, itemId string, resourceIds []string) error {
+type ProcessResourcesInput struct {
+	ItemId      string
+	ResourceIds []string
+}
+
+func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.ProcessResources, itemId, resourceIds).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.ProcessResources,
+		activities.ProcessResourcesInput{
+			ItemId:      input.ItemId,
+			ResourceIds: input.ResourceIds,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

@@ -41,15 +41,8 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 		return nil, err
 	}
 
-	var moderatorId string
-
-	if post.ModeratorId() != nil {
-		moderatorId = *post.ModeratorId()
-	}
-
 	return &sting.Post{
-		ModeratorId: moderatorId,
-		ClubId:      post.ClubId(),
+		ClubId: post.ClubId(),
 	}, nil
 }
 

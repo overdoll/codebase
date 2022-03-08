@@ -25,9 +25,6 @@ type Post implements Node @key(fields: "id") {
   """The supporter-only status."""
   supporterOnlyStatus: SupporterOnlyStatus!
 
-  """The moderator to whom this pending post was assigned"""
-  moderator: Account
-
   """The contributor who contributed this post"""
   contributor: Account!
 
@@ -42,9 +39,6 @@ type Post implements Node @key(fields: "id") {
 
   """The date and time of when this post was posted"""
   postedAt: Time
-
-  """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time
 
   """Suggested posts for this post."""
   suggestedPosts(

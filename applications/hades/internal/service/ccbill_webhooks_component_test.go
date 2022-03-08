@@ -43,7 +43,7 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 	env := getWorkflowEnvironment(t)
 
 	// execute a new sale success workflow so we can seed data for this test
-	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpsaleSuccessPayload{
+	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpsaleSuccessInput{
 		AccountingCurrency:             "USD",
 		AccountingCurrencyCode:         "840",
 		AccountingInitialPrice:         "6.99",

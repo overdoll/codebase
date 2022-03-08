@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type CreateFailedClubSubscriptionAccountTransactionRecord struct {
+type CreateFailedClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -19,28 +19,28 @@ type CreateFailedClubSubscriptionAccountTransactionRecord struct {
 	FailureCode   string
 }
 
-func (h *Activities) CreateFailedClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateFailedClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateFailedClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateFailedClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
-	nextRetryDate, err := ccbill.ParseCCBillDate(request.NextRetryDate)
+	nextRetryDate, err := ccbill.ParseCCBillDate(input.NextRetryDate)
 
 	if err != nil {
 		return err
 	}
 
 	transaction, err := billing.NewFailedClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
 		nextRetryDate,
-		request.FailureReason,
-		request.FailureCode,
+		input.FailureReason,
+		input.FailureCode,
 	)
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {

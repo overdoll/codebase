@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillBillingDateChangePayload struct {
+type CCBillBillingDateChangeInput struct {
 	SubscriptionId  string `json:"subscriptionId"`
 	ClientAccnum    string `json:"clientAccnum"`
 	ClientSubacc    string `json:"clientSubacc"`
@@ -13,7 +13,7 @@ type CCBillBillingDateChangePayload struct {
 	NextRenewalDate string `json:"nextRenewalDate"`
 }
 
-func CCBillBillingDateChange(ctx workflow.Context, payload CCBillBillingDateChangePayload) error {
+func CCBillBillingDateChange(ctx workflow.Context, input CCBillBillingDateChangeInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -22,17 +22,17 @@ func CCBillBillingDateChange(ctx workflow.Context, payload CCBillBillingDateChan
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
-		activities.UpdateAccountClubSupportBillingDate{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.UpdateAccountClubSupportBillingDateInput{
+			CCBillSubscriptionId: input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			NextBillingDate:      payload.NextRenewalDate,
+			NextBillingDate:      input.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

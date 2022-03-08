@@ -5,9 +5,14 @@ import (
 	"overdoll/applications/stella/internal/domain/club"
 )
 
-func (h *Activities) UnMarkClubMemberSupporter(ctx context.Context, clubId, accountId string) error {
+type UnMarkClubMemberSupporterInput struct {
+	ClubId    string
+	AccountId string
+}
 
-	_, err := h.cr.UpdateClubMemberIsSupporter(ctx, clubId, accountId, func(member *club.Member) error {
+func (h *Activities) UnMarkClubMemberSupporter(ctx context.Context, input UnMarkClubMemberSupporterInput) error {
+
+	_, err := h.cr.UpdateClubMemberIsSupporter(ctx, input.ClubId, input.AccountId, func(member *club.Member) error {
 		return member.UnMakeSupporter()
 	})
 

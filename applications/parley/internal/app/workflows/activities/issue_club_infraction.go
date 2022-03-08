@@ -5,13 +5,13 @@ import (
 	"overdoll/applications/parley/internal/domain/club_infraction"
 )
 
-type IssueClubInfraction struct {
+type IssueClubInfractionInput struct {
 	AccountId string
 	ClubId    string
 	RuleId    string
 }
 
-func (h *Activities) IssueClubInfraction(ctx context.Context, input IssueClubInfraction) error {
+func (h *Activities) IssueClubInfraction(ctx context.Context, input IssueClubInfractionInput) error {
 
 	pastInfractionHistory, err := h.cr.GetAllClubInfractionHistoryByClubIdOperator(ctx, input.ClubId)
 

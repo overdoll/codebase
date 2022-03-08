@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
+type CreateInvoiceClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -27,10 +27,10 @@ type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
 	CardExpirationDate string
 }
 
-func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateInvoiceClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateInvoiceClubSubscriptionAccountTransactionRecordInput) error {
 
 	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 
 	paymentMethod := ccbillSubscription.PaymentMethod()
 
-	card, err := billing.NewCard("", request.CardType, request.CardLast4, request.CardExpirationDate)
+	card, err := billing.NewCard("", input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
@@ -49,39 +49,39 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		return err
 	}
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
+	amount, err := strconv.ParseFloat(input.Amount, 64)
 
 	if err != nil {
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(request.BillingDate, " ")[0])
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.BillingDate, " ")[0])
 
 	if err != nil {
 		return err
 	}
 
-	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextBillingDate)
 
 	if err != nil {
 		return err
 	}
 
 	transaction, err := billing.NewInvoiceClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
 		billedAtDate,
 		nextBillingDate,
 		amount,
-		request.Currency,
+		input.Currency,
 		paymentMethod,
 	)
 

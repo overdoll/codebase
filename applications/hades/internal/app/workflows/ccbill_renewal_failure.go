@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillRenewalFailurePayload struct {
+type CCBillRenewalFailureInput struct {
 	TransactionId  string `json:"transactionId"`
 	SubscriptionId string `json:"subscriptionId"`
 	ClientAccnum   string `json:"clientAccnum"`
@@ -19,7 +19,7 @@ type CCBillRenewalFailurePayload struct {
 	FailureCode    string `json:"failureCode"`
 }
 
-func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayload) error {
+func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -28,20 +28,20 @@ func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayl
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateFailedClubSubscriptionAccountTransactionRecord,
-		activities.CreateFailedClubSubscriptionAccountTransactionRecord{
-			NextRetryDate:        payload.NextRetryDate,
-			FailureReason:        payload.FailureReason,
-			FailureCode:          payload.FailureCode,
+		activities.CreateFailedClubSubscriptionAccountTransactionRecordInput{
+			NextRetryDate:        input.NextRetryDate,
+			FailureReason:        input.FailureReason,
+			FailureCode:          input.FailureCode,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-			Timestamp:            payload.Timestamp,
+			CCBillSubscriptionId: input.SubscriptionId,
+			Timestamp:            input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

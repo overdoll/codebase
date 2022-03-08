@@ -41,7 +41,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 		var hasAssignedModerator bool
 
 		if err := workflow.ExecuteActivity(ctx, a.IsPostAssignedAModerator,
-			activities.IsPostAssignedAModerator{
+			activities.IsPostAssignedAModeratorInput{
 				PostId: input.PostId,
 			},
 		).Get(ctx, &hasAssignedModerator); err != nil {

@@ -6,22 +6,22 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type UpdateAccountClubSupportBillingDate struct {
+type UpdateAccountClubSupportBillingDateInput struct {
 	AccountId            string
 	ClubId               string
 	CCBillSubscriptionId string
 	NextBillingDate      string
 }
 
-func (h *Activities) UpdateAccountClubSupportBillingDate(ctx context.Context, request UpdateAccountClubSupportBillingDate) error {
+func (h *Activities) UpdateAccountClubSupportBillingDate(ctx context.Context, input UpdateAccountClubSupportBillingDateInput) error {
 
-	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextBillingDate)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = h.billing.UpdateAccountClubSupporterBillingDateOperator(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	_, err = h.billing.UpdateAccountClubSupporterBillingDateOperator(ctx, input.AccountId, input.ClubId, input.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.UpdateBillingDate(nextBillingDate)
 	})
 

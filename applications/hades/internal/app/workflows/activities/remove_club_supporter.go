@@ -4,11 +4,11 @@ import (
 	"context"
 )
 
-type RemoveClubSupporter struct {
+type RemoveClubSupporterInput struct {
 	AccountId string
 	ClubId    string
 }
 
-func (h *Activities) RemoveClubSupporter(ctx context.Context, payload RemoveClubSupporter) error {
-	return h.stella.RemoveClubSupporter(ctx, payload.ClubId, payload.AccountId)
+func (h *Activities) RemoveClubSupporter(ctx context.Context, input RemoveClubSupporterInput) error {
+	return h.stella.RemoveClubSupporter(ctx, input.ClubId, input.AccountId)
 }

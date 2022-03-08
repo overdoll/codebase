@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillUserReactivationPayload struct {
+type CCBillUserReactivationInput struct {
 	TransactionId   string `json:"transactionId"`
 	SubscriptionId  string `json:"subscriptionId"`
 	Price           string `json:"price"`
@@ -15,7 +15,7 @@ type CCBillUserReactivationPayload struct {
 	NextRenewalDate string `json:"nextRenewalDate"`
 }
 
-func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivationPayload) error {
+func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -24,17 +24,17 @@ func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivation
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
 	// create reactivated record
 	if err := workflow.ExecuteActivity(ctx, a.CreateReactivatedClubSubscriptionAccountTransactionRecord,
-		activities.CreateReactivatedClubSubscriptionAccountTransactionRecord{
+		activities.CreateReactivatedClubSubscriptionAccountTransactionRecordInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-			NextBillingDate:      payload.NextRenewalDate,
+			CCBillSubscriptionId: input.SubscriptionId,
+			NextBillingDate:      input.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -42,11 +42,11 @@ func CCBillUserReactivation(ctx workflow.Context, payload CCBillUserReactivation
 
 	// update supporter status to display the new reactivation
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupportReactivated,
-		activities.MarkAccountClubSupportReactivated{
+		activities.MarkAccountClubSupportReactivatedInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-			NextBillingDate:      payload.NextRenewalDate,
+			CCBillSubscriptionId: input.SubscriptionId,
+			NextBillingDate:      input.NextRenewalDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -5,9 +5,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) ReviewPost(ctx context.Context, postId string) error {
+type ReviewPostInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) ReviewPost(ctx context.Context, input ReviewPostInput) error {
+
+	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.MakeReview()
 	})
 

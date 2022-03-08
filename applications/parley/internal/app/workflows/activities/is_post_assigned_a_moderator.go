@@ -5,11 +5,11 @@ import (
 	"overdoll/applications/parley/internal/domain/moderator"
 )
 
-type IsPostAssignedAModerator struct {
+type IsPostAssignedAModeratorInput struct {
 	PostId string
 }
 
-func (h *Activities) IsPostAssignedAModerator(ctx context.Context, input IsPostAssignedAModerator) (bool, error) {
+func (h *Activities) IsPostAssignedAModerator(ctx context.Context, input IsPostAssignedAModeratorInput) (bool, error) {
 
 	_, err := h.mr.GetPostModeratorByPostIdOperator(ctx, input.PostId)
 

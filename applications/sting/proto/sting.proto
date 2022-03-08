@@ -9,8 +9,7 @@ message PostRequest {
 message UpdatePostResponse {}
 
 message Post {
-  string moderatorId = 1;
-  string clubId = 2;
+  string clubId = 1;
 }
 
 service Sting {

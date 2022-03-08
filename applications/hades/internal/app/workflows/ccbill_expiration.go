@@ -5,14 +5,14 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillExpirationPayload struct {
+type CCBillExpirationInput struct {
 	SubscriptionId string `json:"subscriptionId"`
 	ClientAccnum   string `json:"clientAccnum"`
 	ClientSubacc   string `json:"clientSubacc"`
 	Timestamp      string `json:"timestamp"`
 }
 
-func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) error {
+func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -21,17 +21,17 @@ func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) err
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
 	// create expired record
 	if err := workflow.ExecuteActivity(ctx, a.CreateExpiredClubSubscriptionAccountTransactionRecord,
-		activities.CreateExpiredClubSubscriptionAccountTransactionRecord{
+		activities.CreateExpiredClubSubscriptionAccountTransactionRecordInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-			Timestamp:            payload.Timestamp,
+			CCBillSubscriptionId: input.SubscriptionId,
+			Timestamp:            input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -39,10 +39,10 @@ func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) err
 
 	// remove account club support
 	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
-		activities.RemoveAccountClubSupportSubscription{
+		activities.RemoveAccountClubSupportSubscriptionInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
+			CCBillSubscriptionId: input.SubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -50,7 +50,7 @@ func CCBillExpiration(ctx workflow.Context, payload CCBillExpirationPayload) err
 
 	// remove account club support - external
 	if err := workflow.ExecuteActivity(ctx, a.RemoveClubSupporter,
-		activities.RemoveClubSupporter{
+		activities.RemoveClubSupporterInput{
 			AccountId: subscriptionDetails.AccountId,
 			ClubId:    subscriptionDetails.ClubId,
 		},

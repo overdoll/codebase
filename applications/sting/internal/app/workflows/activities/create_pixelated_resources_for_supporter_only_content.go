@@ -6,9 +6,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, postId string) error {
+type CreatePixelatedResourcesForSupporterOnlyContentInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePostContentOperator(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, input CreatePixelatedResourcesForSupporterOnlyContentInput) error {
+
+	pendingPost, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
 
 		var resourceIds []string
 
@@ -24,7 +28,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 
 		if len(resourceIds) > 0 {
 
-			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, postId, resourceIds, 100, false)
+			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 100, false)
 
 			if err != nil {
 				return err

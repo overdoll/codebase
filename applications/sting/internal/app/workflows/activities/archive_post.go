@@ -6,9 +6,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) ArchivePost(ctx context.Context, postId string) error {
+type ArchivePostInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) ArchivePost(ctx context.Context, input ArchivePostInput) error {
+
+	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.MakeArchived()
 	})
 

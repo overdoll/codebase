@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type CreateChargebackClubSubscriptionAccountTransactionRecord struct {
+type CreateChargebackClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
 	CCBillSubscriptionId string
@@ -24,9 +24,9 @@ type CreateChargebackClubSubscriptionAccountTransactionRecord struct {
 	CardExpirationDate string
 }
 
-func (h *Activities) CreateChargebackClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateChargebackClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateChargebackClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateChargebackClubSubscriptionAccountTransactionRecordInput) error {
 
-	card, err := billing.NewCard("", request.CardType, request.CardLast4, request.CardExpirationDate)
+	card, err := billing.NewCard("", input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
@@ -38,26 +38,26 @@ func (h *Activities) CreateChargebackClubSubscriptionAccountTransactionRecord(ct
 		return err
 	}
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
+	amount, err := strconv.ParseFloat(input.Amount, 64)
 
 	if err != nil {
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
 	transaction, err := billing.NewChargebackClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
-		request.Reason,
+		input.Reason,
 		amount,
-		request.Currency,
+		input.Currency,
 		paymentMethod,
 	)
 

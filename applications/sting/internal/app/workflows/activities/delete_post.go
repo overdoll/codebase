@@ -4,26 +4,30 @@ import (
 	"context"
 )
 
-func (h *Activities) DeletePost(ctx context.Context, postId string) error {
+type DeletePostInput struct {
+	PostId string
+}
 
-	pst, err := h.pr.GetPostByIdOperator(ctx, postId)
+func (h *Activities) DeletePost(ctx context.Context, input DeletePostInput) error {
+
+	pst, err := h.pr.GetPostByIdOperator(ctx, input.PostId)
 
 	if err != nil {
 		return err
 	}
 
 	// Delete all resources
-	if err := h.loader.DeleteResources(ctx, postId, pst.AllContentResourceIds()); err != nil {
+	if err := h.loader.DeleteResources(ctx, input.PostId, pst.AllContentResourceIds()); err != nil {
 		return err
 	}
 
 	// delete from index
-	if err := h.pi.DeletePost(ctx, postId); err != nil {
+	if err := h.pi.DeletePost(ctx, input.PostId); err != nil {
 		return err
 	}
 
 	// delete from database
-	if err := h.pr.DeletePost(ctx, postId); err != nil {
+	if err := h.pr.DeletePost(ctx, input.PostId); err != nil {
 		return err
 	}
 

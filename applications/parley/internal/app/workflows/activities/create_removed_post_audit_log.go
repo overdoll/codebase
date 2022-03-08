@@ -5,14 +5,14 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 )
 
-type CreateRemovedPostAuditLog struct {
+type CreateRemovedPostAuditLogInput struct {
 	AccountId string
 	PostId    string
 	RuleId    string
 	Notes     *string
 }
 
-func (h *Activities) CreateRemovedPostAuditLog(ctx context.Context, input CreateRemovedPostAuditLog) error {
+func (h *Activities) CreateRemovedPostAuditLog(ctx context.Context, input CreateRemovedPostAuditLogInput) error {
 
 	// create new audit log - all necessary permission checks will be performed
 	postAuditLog, err := post_audit_log.NewRemovePostAuditLog(

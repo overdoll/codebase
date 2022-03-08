@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type CreateCancelledClubSubscriptionAccountTransactionRecord struct {
+type CreateCancelledClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 	ClubId    string
 
@@ -17,20 +17,20 @@ type CreateCancelledClubSubscriptionAccountTransactionRecord struct {
 	Reason string
 }
 
-func (h *Activities) CreateCancelledAccountTransactionRecord(ctx context.Context, request CreateCancelledClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateCancelledAccountTransactionRecord(ctx context.Context, input CreateCancelledClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
 		return err
 	}
 
 	transaction, err := billing.NewCancelledClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
 		timestamp,
-		request.Reason,
+		input.Reason,
 	)
 
 	if err != nil {

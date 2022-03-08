@@ -6,22 +6,22 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type MarkAccountClubSupportCancelled struct {
+type MarkAccountClubSupportCancelledInput struct {
 	AccountId            string
 	ClubId               string
 	CCBillSubscriptionId string
 	CancelledAt          string
 }
 
-func (h *Activities) MarkAccountClubSupportCancelled(ctx context.Context, request MarkAccountClubSupportCancelled) error {
+func (h *Activities) MarkAccountClubSupportCancelled(ctx context.Context, input MarkAccountClubSupportCancelledInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.CancelledAt)
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.CancelledAt)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, request.AccountId, request.ClubId, request.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	_, err = h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, input.AccountId, input.ClubId, input.CCBillSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.MarkCancelled(timestamp)
 	})
 

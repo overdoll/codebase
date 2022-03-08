@@ -5,11 +5,23 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
-func DeletePost(ctx workflow.Context, id string) error {
+type DeletePostInput struct {
+	PostId string
+}
+
+func DeletePost(ctx workflow.Context, input DeletePostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
-	return workflow.ExecuteActivity(ctx, a.DeletePost, id).Get(ctx, nil)
+	if err := workflow.ExecuteActivity(ctx, a.DeletePost,
+		activities.DeletePostInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	return nil
 }
