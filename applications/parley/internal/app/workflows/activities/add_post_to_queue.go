@@ -12,13 +12,13 @@ type AddPostToQueueInput struct {
 
 func (h *Activities) AddPostToQueue(ctx context.Context, input AddPostToQueueInput) error {
 
-	queue, err := moderator.NewPostModeratorQueue(input.ModeratorId, input.PostId)
+	queue, err := moderator.NewPostModerator(input.ModeratorId, input.PostId)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.mr.CreatePostModeratorQueue(ctx, queue); err != nil {
+	if err := h.mr.CreatePostModerator(ctx, queue); err != nil {
 		return err
 	}
 

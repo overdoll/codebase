@@ -2,7 +2,6 @@ package club_infraction
 
 import (
 	"errors"
-	"overdoll/applications/parley/internal/domain/rule"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -31,19 +30,7 @@ var (
 	ErrClubInfractionHistoryNotFound = errors.New("club infraction not found")
 )
 
-func newClubInfraction(requester *principal.Principal, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleInstance *rule.Rule, customLength time.Time) (*ClubInfractionHistory, error) {
-
-	if ruleInstance.Deprecated() {
-		return nil, rule.ErrRuleDeprecated
-	}
-
-	if !(requester.IsStaff() || requester.IsModerator()) {
-		return nil, principal.ErrNotAuthorized
-	}
-
-	if requester.IsLocked() {
-		return nil, principal.ErrLocked
-	}
+func newClubInfraction(issuerAccountId string, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string, customLength time.Time) (*ClubInfractionHistory, error) {
 
 	var activeInfractions []*ClubInfractionHistory
 
@@ -60,11 +47,11 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 		return &ClubInfractionHistory{
 			id:                   ksuid.New().String(),
 			clubId:               clubId,
-			ruleId:               ruleInstance.ID(),
+			ruleId:               ruleId,
 			source:               source,
 			issuedAt:             time.Now(),
 			expiresAt:            time.Now(),
-			issuerAccountId:      requester.AccountId(),
+			issuerAccountId:      issuerAccountId,
 			clubSuspensionLength: -1,
 		}, nil
 	}
@@ -84,8 +71,8 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 	return &ClubInfractionHistory{
 		id:                   ksuid.New().String(),
 		clubId:               clubId,
-		issuerAccountId:      requester.AccountId(),
-		ruleId:               ruleInstance.ID(),
+		issuerAccountId:      issuerAccountId,
+		ruleId:               ruleId,
 		source:               source,
 		issuedAt:             time.Now(),
 		expiresAt:            expiration,
@@ -93,20 +80,20 @@ func newClubInfraction(requester *principal.Principal, source ClubInfractionHist
 	}, nil
 }
 
-func IssueClubInfractionHistoryManual(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, pastClubInfractionHistory, rule, time.Time{})
+func IssueClubInfractionHistoryManual(issuerAccountId string, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string) (*ClubInfractionHistory, error) {
+	return newClubInfraction(issuerAccountId, ClubInfractionHistorySourceManual, clubId, pastClubInfractionHistory, ruleId, time.Time{})
 }
 
-func IssueClubInfractionHistoryManualWithCustomLength(requester *principal.Principal, clubId string, rule *rule.Rule, until time.Time) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourceManual, clubId, nil, rule, until)
+func IssueClubInfractionHistoryManualWithCustomLength(issuerAccountId string, clubId string, ruleId string, until time.Time) (*ClubInfractionHistory, error) {
+	return newClubInfraction(issuerAccountId, ClubInfractionHistorySourceManual, clubId, nil, ruleId, until)
 }
 
-func IssueClubInfractionHistoryFromPostModeration(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourcePostModerationRejection, clubId, pastClubInfractionHistory, rule, time.Time{})
+func IssueClubInfractionHistoryFromPostModeration(issuerAccountId string, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string) (*ClubInfractionHistory, error) {
+	return newClubInfraction(issuerAccountId, ClubInfractionHistorySourcePostModerationRejection, clubId, pastClubInfractionHistory, ruleId, time.Time{})
 }
 
-func IssueClubInfractionHistoryFromPostManualRemoval(requester *principal.Principal, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, rule *rule.Rule) (*ClubInfractionHistory, error) {
-	return newClubInfraction(requester, ClubInfractionHistorySourcePostManualRemoval, clubId, pastClubInfractionHistory, rule, time.Time{})
+func IssueClubInfractionHistoryFromPostManualRemoval(issuerAccountId string, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string) (*ClubInfractionHistory, error) {
+	return newClubInfraction(issuerAccountId, ClubInfractionHistorySourcePostManualRemoval, clubId, pastClubInfractionHistory, ruleId, time.Time{})
 }
 
 func (m *ClubInfractionHistory) ID() string {

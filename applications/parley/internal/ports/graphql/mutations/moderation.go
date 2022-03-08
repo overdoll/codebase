@@ -46,18 +46,20 @@ func (r MutationResolver) RejectPost(ctx context.Context, input types.RejectPost
 		return nil, err
 	}
 
-	auditLog, err := r.App.Commands.RejectPost.Handle(ctx, command.RejectPost{
+	if err := r.App.Commands.RejectPost.Handle(ctx, command.RejectPost{
 		Principal: principal.FromContext(ctx),
 		PostId:    input.PostID.GetID(),
 		RuleId:    input.RuleID.GetID(),
 		Notes:     input.Notes,
-	})
-
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
-	return &types.RejectPostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
+	return &types.RejectPostPayload{
+		Post: &types.Post{
+			ID: input.PostID,
+		},
+	}, nil
 }
 
 func (r MutationResolver) RemovePost(ctx context.Context, input types.RemovePostInput) (*types.RemovePostPayload, error) {
@@ -66,18 +68,20 @@ func (r MutationResolver) RemovePost(ctx context.Context, input types.RemovePost
 		return nil, err
 	}
 
-	auditLog, err := r.App.Commands.RemovePost.Handle(ctx, command.RemovePost{
+	if err := r.App.Commands.RemovePost.Handle(ctx, command.RemovePost{
 		Principal: principal.FromContext(ctx),
 		RuleId:    input.RuleID.GetID(),
 		Notes:     input.Notes,
 		PostId:    input.PostID.GetID(),
-	})
-
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
-	return &types.RemovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
+	return &types.RemovePostPayload{
+		Post: &types.Post{
+			ID: input.PostID,
+		},
+	}, nil
 }
 
 func (r MutationResolver) ApprovePost(ctx context.Context, input types.ApprovePostInput) (*types.ApprovePostPayload, error) {
@@ -86,14 +90,16 @@ func (r MutationResolver) ApprovePost(ctx context.Context, input types.ApprovePo
 		return nil, err
 	}
 
-	auditLog, err := r.App.Commands.ApprovePost.Handle(ctx, command.ApprovePost{
+	if err := r.App.Commands.ApprovePost.Handle(ctx, command.ApprovePost{
 		Principal: principal.FromContext(ctx),
 		PostId:    input.PostID.GetID(),
-	})
-
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
-	return &types.ApprovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
+	return &types.ApprovePostPayload{
+		Post: &types.Post{
+			ID: input.PostID,
+		},
+	}, nil
 }

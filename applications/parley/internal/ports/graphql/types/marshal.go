@@ -380,13 +380,13 @@ func MarshalRuleToGraphQLConnection(ctx context.Context, results []*rule.Rule, c
 	return conn
 }
 
-func MarshalPostModeratorQueueToGraphQL(ctx context.Context, result *moderator.PostModeratorQueue) *Post {
+func MarshalPostModeratorQueueToGraphQL(ctx context.Context, result *moderator.PostModerator) *Post {
 	return &Post{
 		ID: relay.NewID(Post{}, result.PostId()),
 	}
 }
 
-func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results []*moderator.PostModeratorQueue, cursor *paging.Cursor) *PostConnection {
+func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results []*moderator.PostModerator, cursor *paging.Cursor) *PostConnection {
 	var posts []*PostEdge
 
 	conn := &PostConnection{
@@ -411,15 +411,15 @@ func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results [
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *moderator.PostModeratorQueue
+	var nodeAt func(int) *moderator.PostModerator
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *moderator.PostModeratorQueue {
+		nodeAt = func(i int) *moderator.PostModerator {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *moderator.PostModeratorQueue {
+		nodeAt = func(i int) *moderator.PostModerator {
 			return results[i]
 		}
 	}

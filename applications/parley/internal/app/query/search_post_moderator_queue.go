@@ -22,9 +22,9 @@ func NewSearchPostModeratorQueueHandler(mr moderator.Repository) SearchPostModer
 	return SearchPostModeratorQueueHandler{mr: mr}
 }
 
-func (h SearchPostModeratorQueueHandler) Handle(ctx context.Context, query SearchPostModeratorQueue) ([]*moderator.PostModeratorQueue, error) {
+func (h SearchPostModeratorQueueHandler) Handle(ctx context.Context, query SearchPostModeratorQueue) ([]*moderator.PostModerator, error) {
 
-	postQueue, err := h.mr.SearchPostModeratorQueue(ctx, query.Principal, query.Cursor, query.AccountId)
+	postQueue, err := h.mr.SearchPostModerator(ctx, query.Principal, query.Cursor, query.AccountId)
 
 	if err != nil {
 		return nil, err

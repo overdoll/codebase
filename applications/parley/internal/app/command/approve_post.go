@@ -2,6 +2,8 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/event"
+	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 
 	"github.com/pkg/errors"
@@ -15,42 +17,37 @@ type ApprovePost struct {
 
 type ApprovePostHandler struct {
 	pr    post_audit_log.Repository
+	mr    moderator.Repository
+	event event.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewApprovePostHandler(pr post_audit_log.Repository, eva EvaService, sting StingService) ApprovePostHandler {
-	return ApprovePostHandler{sting: sting, eva: eva, pr: pr}
+func NewApprovePostHandler(pr post_audit_log.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService) ApprovePostHandler {
+	return ApprovePostHandler{sting: sting, eva: eva, pr: pr, mr: mr, event: event}
 }
 
-func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) (*post_audit_log.PostAuditLog, error) {
+func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
 
-	postModeratorId, _, err := h.sting.GetPost(ctx, cmd.PostId)
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get post")
-	}
-
-	// create new audit log - all necessary permission checks will be performed
-	postAuditLog, err := post_audit_log.NewApprovePostAuditLog(
-		cmd.Principal,
-		cmd.PostId,
-		postModeratorId,
-	)
+	_, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return nil, err
+		return errors.Wrap(err, "failed to get post")
 	}
 
-	// create audit log record
-	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
-		return nil, err
+	postModerator, err := h.mr.GetPostModeratorByPostId(ctx, cmd.Principal, cmd.PostId)
+
+	if err != nil {
+		return err
 	}
 
-	// post approved
-	if err := h.sting.PublishPost(ctx, postAuditLog.PostId()); err != nil {
-		return nil, errors.Wrap(err, "failed to publish post")
+	if err := postModerator.CanApprovePost(cmd.Principal); err != nil {
+		return err
 	}
 
-	return postAuditLog, nil
+	if err := h.event.ApprovePost(ctx, cmd.PostId); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -35,7 +35,7 @@ var postModeratorsTable = table.New(table.Metadata{
 	SortKey: []string{"account_id"},
 })
 
-type postModeratorQueue struct {
+type postModerators struct {
 	AccountId string    `db:"account_id"`
 	PostId    string    `db:"post_id"`
 	PlacedAt  time.Time `db:"placed_at"`
@@ -60,6 +60,16 @@ type moderators struct {
 
 type ModeratorCassandraRepository struct {
 	session gocqlx.Session
+}
+
+func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r ModeratorCassandraRepository) DeletePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewModeratorCassandraRepository(session gocqlx.Session) ModeratorCassandraRepository {
@@ -94,13 +104,29 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 	return moderator.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
 }
 
-func (r ModeratorCassandraRepository) CreatePostModeratorQueue(ctx context.Context, queue *moderator.PostModeratorQueue) error {
+func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Context, requester *principal.Principal, postId string) (*moderator.PostModerator, error) {
+
+	var postModerator *postModerators
+
+	if err := r.session.Query(postModeratorsTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postModerators{
+			PostId: postId,
+		}).
+		Get(&postModerator); err != nil {
+		return nil, fmt.Errorf("failed to get post moderator by post id: %v", err)
+	}
+
+	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt), nil
+}
+
+func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	stmt, _ := accountPostModeratorsQueueTable.Insert()
 
-	postModerator := &postModeratorQueue{
+	postModerator := &postModerators{
 		AccountId: queue.AccountId(),
 		PostId:    queue.PostId(),
 		PlacedAt:  queue.PlacedAt(),
@@ -127,13 +153,13 @@ func (r ModeratorCassandraRepository) CreatePostModeratorQueue(ctx context.Conte
 	return nil
 }
 
-func (r ModeratorCassandraRepository) SearchPostModeratorQueue(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*moderator.PostModeratorQueue, error) {
+func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*moderator.PostModerator, error) {
 
-	if err := moderator.CanViewPostModeratorQueue(requester, accountId); err != nil {
+	if err := moderator.CanViewPostModerator(requester, accountId); err != nil {
 		return nil, err
 	}
 
-	var postModeratorQueueItems []*postModeratorQueue
+	var postModeratorQueueItems []*postModerators
 
 	builder := accountPostModeratorsQueueTable.SelectBuilder()
 
@@ -145,17 +171,17 @@ func (r ModeratorCassandraRepository) SearchPostModeratorQueue(ctx context.Conte
 
 	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&postModeratorQueue{
+		BindStruct(&postModerators{
 			AccountId: accountId,
 		}).
 		Select(&postModeratorQueueItems); err != nil {
 		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
 	}
 
-	var postQueue []*moderator.PostModeratorQueue
+	var postQueue []*moderator.PostModerator
 
 	for _, item := range postModeratorQueueItems {
-		queueItem := moderator.UnmarshalPostModeratorQueueFromDatabase(item.AccountId, item.PostId, item.PlacedAt)
+		queueItem := moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt)
 		queueItem.Node = paging.NewNode(item.PostId)
 		postQueue = append(postQueue, queueItem)
 	}
