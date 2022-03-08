@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<74335cdc086756338664630ca43f517f>>
- * @relayHash a478b83c60708f8272de08c28541056e
+ * @generated SignedSource<<3b27738a8d83c717e0028c7afac5432b>>
+ * @relayHash 5769802e486fa7538d84e90e74541899
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a478b83c60708f8272de08c28541056e
+// @relayRequestID 5769802e486fa7538d84e90e74541899
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -160,11 +160,7 @@ v11 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v12 = [
-  (v3/*: any*/),
-  (v4/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -329,7 +325,10 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v12/*: any*/),
+                            "selections": [
+                              (v3/*: any*/),
+                              (v4/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           {
@@ -358,7 +357,16 @@ return {
                                 "kind": "LinkedField",
                                 "name": "viewerMember",
                                 "plural": false,
-                                "selections": (v12/*: any*/),
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "isSupporter",
+                                    "storageKey": null
+                                  },
+                                  (v4/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -417,7 +425,7 @@ return {
     ]
   },
   "params": {
-    "id": "a478b83c60708f8272de08c28541056e",
+    "id": "5769802e486fa7538d84e90e74541899",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

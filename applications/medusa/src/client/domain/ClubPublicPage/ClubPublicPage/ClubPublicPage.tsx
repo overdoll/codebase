@@ -2,10 +2,10 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 import { graphql } from 'react-relay'
 import LargeClubHeader from '../../ManageClub/components/LargeClubHeader/LargeClubHeader'
-import { Box, Flex, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Stack } from '@chakra-ui/react'
 import StatisticNumber from '../../ManageClub/components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { abbreviateNumber } from '@//:modules/support'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import JoinClubButton from './components/JoinClubButton/JoinClubButton'
@@ -33,7 +33,7 @@ const Query = graphql`
               resource {
                 ...ResourceItemFragment
               }
-              
+
             }
           }
         }
@@ -106,13 +106,8 @@ export default function ClubPublicPage (props: Props): JSX.Element {
                 Exclusive Posts
               </PageSectionTitle>
             </PageSectionWrap>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Become a supporter and get access to the club's exclusive content!
-              </Trans>
-            </Text>
+            <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
           </Box>
-          <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
         </Stack>
         <ClubExclusivePosts query={queryData?.club} />
       </Stack>

@@ -1,41 +1,24 @@
-import { Dispatch, MutableRefObject, SetStateAction, Suspense, useEffect } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react'
 import { Box, ButtonGroup, Heading, Spinner, Stack, Text } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
-import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import QueryErrorBoundary
-  from '../../../../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { SkeletonStack } from '@//:modules/content/Placeholder'
-import CCBillDisplayTransaction from './CCBillDisplayTransaction/CCBillDisplayTransaction'
 
 interface Props {
   windowReference: MutableRefObject<Window | null>
   originLink: string | null
   updateOriginLink: Dispatch<SetStateAction<string | null>>
-}
-
-interface SearchProps {
-  transactionToken: string | null
+  setArguments: (args) => void
 }
 
 export default function CCBillWindowListener ({
   windowReference,
   originLink,
-  updateOriginLink
+  updateOriginLink,
+  setArguments
 }: Props): JSX.Element {
-  const {
-    searchArguments,
-    setArguments,
-    loadQuery
-  } = useSearch<SearchProps>({
-    defaultValue: {
-      transactionToken: null
-    }
-  })
-
   // Only allow messages from a specific window source
   const messageEvent = (event): void => {
-    if (event.origin !== origin) {
+    if (event.origin !== originLink) {
       return
     }
 
@@ -43,7 +26,7 @@ export default function CCBillWindowListener ({
       return
     }
 
-    setArguments({ transactionToken: event.data.payload.token })
+    setArguments({ token: event.data.payload.token })
     closeWindow()
   }
 
@@ -67,9 +50,8 @@ export default function CCBillWindowListener ({
   useEffect(() => {
     if (windowReference?.current?.closed === true) return
     const refreshLoop = (): void => {
-      if (windowReference?.current?.closed === true && searchArguments.variables.transactionToken == null) {
+      if (windowReference?.current?.closed === true) {
         cancelFlow()
-        return
       }
       setTimeout(refreshLoop, 500)
     }
@@ -85,16 +67,6 @@ export default function CCBillWindowListener ({
       window.removeEventListener('message', messageEvent)
     }
   }, [originLink])
-
-  if (searchArguments.variables.transactionToken != null) {
-    return (
-      <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<SkeletonStack />}>
-          <CCBillDisplayTransaction searchArguments={searchArguments} />
-        </Suspense>
-      </QueryErrorBoundary>
-    )
-  }
 
   return (
     <Stack align='center' spacing={8}>
@@ -119,7 +91,7 @@ export default function CCBillWindowListener ({
         </Button>
         <Button onClick={openWindow} colorScheme='teal'>
           <Trans>
-            Open Window
+            Show Window
           </Trans>
         </Button>
       </ButtonGroup>

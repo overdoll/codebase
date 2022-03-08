@@ -1,5 +1,13 @@
-import type { CCBillSubscribeFormFragment$key } from '@//:artifacts/CCBillSubscribeFormFragment.graphql'
-import type { CCBillSubscribeFormMutation, Currency } from '@//:artifacts/CCBillSubscribeFormMutation.graphql'
+import type {
+  CCBillSelectSavedPaymentFormFragment$key
+} from '@//:artifacts/CCBillSelectSavedPaymentFormFragment.graphql'
+import type {
+  CCBillSelectSavedPaymentFormViewerFragment$key
+} from '@//:artifacts/CCBillSelectSavedPaymentFormViewerFragment.graphql'
+import type {
+  CCBillSelectSavedPaymentFormMutation,
+  Currency
+} from '@//:artifacts/CCBillSelectSavedPaymentFormMutation.graphql'
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import { HStack, Link, Stack, Text } from '@chakra-ui/react'
@@ -10,43 +18,50 @@ import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { Dispatch, MutableRefObject, SetStateAction } from 'react'
+import SelectPaymentMethodInput from './SelectPaymentMethodInput/SelectPaymentMethodInput'
 
 interface Props {
-  query: CCBillSubscribeFormFragment$key
+  query: CCBillSelectSavedPaymentFormFragment$key
+  viewerQuery: CCBillSelectSavedPaymentFormViewerFragment$key
   currency: string
-  updateOriginLink: Dispatch<SetStateAction<string | null>>
-  windowReference: MutableRefObject<Window | null>
+  setArguments: (args) => void
 }
 
 interface FormValues {
   guidelines: boolean
-  savePayment: boolean
+  savedPaymentMethodId: string
 }
 
 const Fragment = graphql`
-  fragment CCBillSubscribeFormFragment on Club {
+  fragment CCBillSelectSavedPaymentFormFragment on Club {
     id
   }
 `
 
+const ViewerFragment = graphql`
+  fragment CCBillSelectSavedPaymentFormViewerFragment on Account {
+    ...SelectPaymentMethodInputFragment
+  }
+`
+
 const Mutation = graphql`
-  mutation CCBillSubscribeFormMutation($input: GenerateCCBillClubSupporterPaymentLinkInput!) {
-    generateCCBillClubSupporterPaymentLink(input: $input) {
-      paymentLink
+  mutation CCBillSelectSavedPaymentFormMutation($input: BecomeClubSupporterWithAccountSavedPaymentMethodInput!) {
+    becomeClubSupporterWithAccountSavedPaymentMethod(input: $input) {
+      ccbillTransactionToken
     }
   }
 `
 
-export default function CCBillSubscribeForm ({
+export default function CCBillSelectSavedPaymentForm ({
   query,
+  viewerQuery,
   currency,
-  updateOriginLink,
-  windowReference
+  setArguments
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  const [commit, isInFlight] = useMutation<CCBillSubscribeFormMutation>(Mutation)
+  const [commit, isInFlight] = useMutation<CCBillSelectSavedPaymentFormMutation>(Mutation)
 
   const notify = useToast()
 
@@ -60,8 +75,13 @@ export default function CCBillSubscribeForm ({
       .messages({
         'any.only': i18n._(t`You must agree to follow the guidelines`)
       }),
-    savePayment: Joi
-      .boolean()
+    savedPaymentMethodId: Joi
+      .string()
+      .required()
+      .messages({
+        'any.required': i18n._(t`Please select a payment method`),
+        'string.empty': i18n._(t`Please select a payment method`)
+      })
   })
 
   const methods = useForm<FormValues>({
@@ -69,8 +89,7 @@ export default function CCBillSubscribeForm ({
       schema
     ),
     defaultValues: {
-      guidelines: false,
-      savePayment: true
+      guidelines: false
     }
   })
 
@@ -80,15 +99,11 @@ export default function CCBillSubscribeForm ({
         input: {
           clubId: data.id,
           currency: currency as Currency,
-          savePaymentDetailsForLater: formValues.savePayment
+          savedPaymentMethodId: formValues.savedPaymentMethodId
         }
       },
       onCompleted (payload) {
-        const paymentLink = payload?.generateCCBillClubSupporterPaymentLink?.paymentLink as string
-
-        windowReference.current = window.open(paymentLink, '_blank', 'width=600,height=800')
-        const url = new URL(paymentLink)
-        updateOriginLink(url.origin)
+        setArguments({ token: payload?.becomeClubSupporterWithAccountSavedPaymentMethod?.ccbillTransactionToken })
       },
       onError () {
         notify({
@@ -102,6 +117,13 @@ export default function CCBillSubscribeForm ({
   return (
     <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
+        <FormInput
+          size='md'
+          id='savedPaymentMethodId'
+        >
+          <SelectPaymentMethodInput query={viewerData} />
+          <InputFooter />
+        </FormInput>
         <FormInput
           size='md'
           id='guidelines'
@@ -122,26 +144,13 @@ export default function CCBillSubscribeForm ({
           </HStack>
           <InputFooter />
         </FormInput>
-        <FormInput
-          size='md'
-          id='savePayment'
-        >
-          <HStack spacing={2}>
-            <SwitchInput colorScheme='teal' />
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Remember this payment method
-              </Trans>
-            </Text>
-          </HStack>
-        </FormInput>
         <FormSubmitButton
           isLoading={isInFlight}
           colorScheme='teal'
           size='lg'
         >
           <Trans>
-            Subscribe with CCBill
+            Subscribe
           </Trans>
         </FormSubmitButton>
       </Stack>

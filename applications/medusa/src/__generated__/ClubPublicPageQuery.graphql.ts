@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8342c6dd489cc2479bf9e39320c2b852>>
- * @relayHash 4e55489b044fa36dc1ad1eb372a30a32
+ * @generated SignedSource<<d45486b3a17f8c1530ab43f3a0d6ceec>>
+ * @relayHash 3854ff9d03a8d956b8e7c4c0672b4a86
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4e55489b044fa36dc1ad1eb372a30a32
+// @relayRequestID 3854ff9d03a8d956b8e7c4c0672b4a86
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -132,18 +132,11 @@ v9 = {
   "storageKey": null
 },
 v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v11 = {
   "kind": "Literal",
   "name": "first",
   "value": 10
 },
-v12 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -210,18 +203,25 @@ v12 = [
     "storageKey": null
   }
 ],
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "amount",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "currency",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -466,15 +466,14 @@ return {
             "name": "viewerMember",
             "plural": false,
             "selections": [
-              (v10/*: any*/),
-              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "isSupporter",
                 "storageKey": null
-              }
+              },
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -488,7 +487,7 @@ return {
           {
             "alias": "topPosts",
             "args": [
-              (v11/*: any*/),
+              (v10/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -499,13 +498,13 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v11/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"TOP\")"
           },
           {
             "alias": "exclusivePosts",
             "args": [
-              (v11/*: any*/),
+              (v10/*: any*/),
               {
                 "kind": "Literal",
                 "name": "sortBy",
@@ -516,7 +515,7 @@ return {
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v11/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"NEW\")"
           },
           {
@@ -535,8 +534,8 @@ return {
                 "name": "localizedPrice",
                 "plural": false,
                 "selections": [
-                  (v13/*: any*/),
-                  (v14/*: any*/)
+                  (v12/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -548,8 +547,8 @@ return {
                 "name": "prices",
                 "plural": true,
                 "selections": [
-                  (v14/*: any*/),
-                  (v13/*: any*/)
+                  (v13/*: any*/),
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -581,7 +580,7 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v10/*: any*/),
+          (v14/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -606,8 +605,37 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
-                      (v9/*: any*/)
+                      (v14/*: any*/),
+                      (v9/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PaymentMethod",
+                        "kind": "LinkedField",
+                        "name": "paymentMethod",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Card",
+                            "kind": "LinkedField",
+                            "name": "card",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "last4",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
@@ -624,7 +652,7 @@ return {
     ]
   },
   "params": {
-    "id": "4e55489b044fa36dc1ad1eb372a30a32",
+    "id": "3854ff9d03a8d956b8e7c4c0672b4a86",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

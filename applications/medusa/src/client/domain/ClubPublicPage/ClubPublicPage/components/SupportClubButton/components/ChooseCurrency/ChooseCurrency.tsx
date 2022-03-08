@@ -36,7 +36,7 @@ export default function ChooseCurrency ({
   }
 
   return (
-    <HStack spacing={3} justify='space-between'>
+    <HStack w='100%' spacing={3} justify='space-between'>
       <Heading w='100%' fontSize='lg' color='gray.00'>
         <Trans>
           Preferred Billing Currency

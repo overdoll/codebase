@@ -1,15 +1,17 @@
 import { useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
-import { Box } from '@chakra-ui/react'
+import { Box, BoxProps } from '@chakra-ui/react'
 
-export default function FlowBuilderBody (): JSX.Element {
+type Props = BoxProps
+
+export default function FlowBuilderBody (props: Props): JSX.Element {
   const {
     currentStep,
     stepsComponents
   } = useContext(FlowContext)
 
   return (
-    <Box minH={300}>
+    <Box minH={300} {...props}>
       {stepsComponents[currentStep]}
     </Box>
   )

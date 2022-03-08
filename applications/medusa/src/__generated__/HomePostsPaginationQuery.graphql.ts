@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<94a4feee4b162a51d9f06eee4c6517ab>>
- * @relayHash 7cca116fe651c56b33d83fba7b7bdcaf
+ * @generated SignedSource<<56da3c896e62c33bf0c2a298de4da485>>
+ * @relayHash a125c4bfb86c79bf8c3c216afe1581b9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7cca116fe651c56b33d83fba7b7bdcaf
+// @relayRequestID a125c4bfb86c79bf8c3c216afe1581b9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -152,11 +152,7 @@ v12 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v13 = [
-  (v4/*: any*/),
-  (v5/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -300,7 +296,10 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v13/*: any*/),
+                    "selections": [
+                      (v4/*: any*/),
+                      (v5/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -329,7 +328,16 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerMember",
                         "plural": false,
-                        "selections": (v13/*: any*/),
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isSupporter",
+                            "storageKey": null
+                          },
+                          (v5/*: any*/)
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -383,7 +391,7 @@ return {
     ]
   },
   "params": {
-    "id": "7cca116fe651c56b33d83fba7b7bdcaf",
+    "id": "a125c4bfb86c79bf8c3c216afe1581b9",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

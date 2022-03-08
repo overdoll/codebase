@@ -1,11 +1,10 @@
 import type { SupportClubButtonClubFragment$key } from '@//:artifacts/SupportClubButtonClubFragment.graphql'
 import type { SupportClubButtonViewerFragment$key } from '@//:artifacts/SupportClubButtonViewerFragment.graphql'
-
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
-import { ButtonProps, Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
+import { ButtonProps, Modal, ModalBody, ModalContent, ModalOverlay, Stack, Text } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -24,6 +23,7 @@ const ClubFragment = graphql`
   fragment SupportClubButtonClubFragment on Club {
     viewerMember {
       isSupporter
+
     }
     supporterSubscriptionPrice {
       localizedPrice {
@@ -69,27 +69,20 @@ export default function SupportClubButton ({
     size: 'lg'
   }
 
-  if (clubData.viewerMember?.isSupporter === true) {
-    return (
-      <Button
-        colorScheme='gray'
-        size='lg'
-        {...rest}
-      >
-        <Trans>
-          Manage Subscriptions
-        </Trans>
-      </Button>
-    )
-  }
-
   if (viewerData == null) {
     return (
-      <LinkButton
-        to='/join'
-        {...buttonProps}
-        {...rest}
-      />
+      <Stack spacing={1}>
+        <Text fontSize='md' color='gray.00'>
+          <Trans>
+            Create an account and become a supporter to get access to this club's exclusive content!
+          </Trans>
+        </Text>
+        <LinkButton
+          to='/join'
+          {...buttonProps}
+          {...rest}
+        />
+      </Stack>
     )
   }
 
@@ -103,14 +96,43 @@ export default function SupportClubButton ({
 
   return (
     <HistoryDisclosureProvider {...methods}>
-      <Button
-        onClick={onOpen}
-        {...buttonProps}
-        {...rest}
-      />
+      {clubData.viewerMember?.isSupporter === true
+        ? (
+          <Stack spacing={1}>
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                Thanks for supporting this club! You can access all of its exclusive content.
+              </Trans>
+            </Text>
+            <Button
+              colorScheme='gray'
+              size='md'
+              {...rest}
+            >
+              <Trans>
+                View Subscription
+              </Trans>
+            </Button>
+          </Stack>)
+        : (
+          <Stack spacing={1}>
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                Support this club and get access to all of its exclusive content!
+              </Trans>
+            </Text>
+            <Button
+              onClick={onOpen}
+              {...buttonProps}
+              {...rest}
+            />
+          </Stack>
+          )}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
         size='xl'
         motionPreset='none'
         isCentered

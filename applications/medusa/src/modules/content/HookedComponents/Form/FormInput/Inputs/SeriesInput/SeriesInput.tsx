@@ -33,6 +33,5 @@ export default function SeriesInput (): JSX.Element {
         />
       )}
     />
-
   )
 }

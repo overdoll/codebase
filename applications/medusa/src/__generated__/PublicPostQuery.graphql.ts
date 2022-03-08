@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<093e65b23241a84f230eca85df0c0eb7>>
- * @relayHash 45f8930943ef4cc1493bd63daa9d1464
+ * @generated SignedSource<<2d21ae6cb9a4cc8390356b67e299e2e2>>
+ * @relayHash 674667b773df1d219677200fa3c6803b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 45f8930943ef4cc1493bd63daa9d1464
+// @relayRequestID 674667b773df1d219677200fa3c6803b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -127,42 +127,41 @@ v8 = {
   "name": "__typename",
   "storageKey": null
 },
-v9 = [
-  (v8/*: any*/),
-  (v3/*: any*/)
-],
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "PostLike",
   "kind": "LinkedField",
   "name": "viewerLiked",
   "plural": false,
-  "selections": (v9/*: any*/),
+  "selections": [
+    (v8/*: any*/),
+    (v3/*: any*/)
+  ],
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -188,7 +187,7 @@ v14 = {
   ],
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "Club",
@@ -196,9 +195,9 @@ v15 = {
   "name": "club",
   "plural": false,
   "selections": [
+    (v11/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
-    (v14/*: any*/),
     (v3/*: any*/),
     {
       "alias": null,
@@ -207,20 +206,29 @@ v15 = {
       "kind": "LinkedField",
       "name": "viewerMember",
       "plural": false,
-      "selections": (v9/*: any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporter",
+          "storageKey": null
+        },
+        (v3/*: any*/)
+      ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "Character",
@@ -236,20 +244,20 @@ v17 = {
       "name": "series",
       "plural": false,
       "selections": [
-        (v16/*: any*/),
-        (v13/*: any*/),
+        (v15/*: any*/),
+        (v12/*: any*/),
         (v3/*: any*/)
       ],
       "storageKey": null
     },
+    (v11/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
-    (v14/*: any*/),
     (v3/*: any*/)
   ],
   "storageKey": null
 },
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "Category",
@@ -257,14 +265,14 @@ v18 = {
   "name": "categories",
   "plural": true,
   "selections": [
+    (v12/*: any*/),
+    (v15/*: any*/),
     (v13/*: any*/),
-    (v16/*: any*/),
-    (v14/*: any*/),
     (v3/*: any*/)
   ],
   "storageKey": null
 },
-v19 = [
+v18 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -347,14 +355,14 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v7/*: any*/),
+          (v9/*: any*/),
           (v10/*: any*/),
-          (v11/*: any*/),
-          (v15/*: any*/),
+          (v14/*: any*/),
+          (v16/*: any*/),
           (v17/*: any*/),
-          (v18/*: any*/),
           {
             "alias": null,
-            "args": (v19/*: any*/),
+            "args": (v18/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "suggestedPosts",
@@ -388,11 +396,11 @@ return {
                       (v3/*: any*/),
                       (v2/*: any*/),
                       (v7/*: any*/),
-                      (v18/*: any*/),
                       (v17/*: any*/),
+                      (v16/*: any*/),
+                      (v9/*: any*/),
                       (v10/*: any*/),
-                      (v11/*: any*/),
-                      (v15/*: any*/)
+                      (v14/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -429,7 +437,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v19/*: any*/),
+            "args": (v18/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "SuggestedPosts_suggestedPosts",
@@ -468,7 +476,7 @@ return {
     ]
   },
   "params": {
-    "id": "45f8930943ef4cc1493bd63daa9d1464",
+    "id": "674667b773df1d219677200fa3c6803b",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

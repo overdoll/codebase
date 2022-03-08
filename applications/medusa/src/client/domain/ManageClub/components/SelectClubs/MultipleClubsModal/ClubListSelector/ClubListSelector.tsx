@@ -84,8 +84,6 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
     onChange: (choices) => onChange(Object.keys(choices)[0])
   })
 
-  console.log('re-render')
-
   return (
     <EmptyBoundary
       fallback={<EmptyClubs />}

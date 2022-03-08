@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<119fcc7b5f095d0fbdcee3ca85a0022e>>
+ * @generated SignedSource<<69d4d5c7f0ed7b80176b607132853ae3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type SupportSelectMethodViewerFragment$data = {
     }>;
   };
   readonly __typename: "Account";
-  readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodViewerFragment" | "SelectMethodChoiceViewerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"SelectMethodChoiceViewerFragment" | "SavedPaymentMethodViewerFragment">;
   readonly " $fragmentType": "SupportSelectMethodViewerFragment";
 };
 export type SupportSelectMethodViewerFragment = SupportSelectMethodViewerFragment$data;
@@ -80,12 +80,12 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "NewPaymentMethodViewerFragment"
+      "name": "SelectMethodChoiceViewerFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "SelectMethodChoiceViewerFragment"
+      "name": "SavedPaymentMethodViewerFragment"
     }
   ],
   "type": "Account",
@@ -93,6 +93,6 @@ return {
 };
 })();
 
-(node as any).hash = "fb786bc7887d8cda891b1ef029737181";
+(node as any).hash = "df33f936b121a4e127bd7c84949582ea";
 
 export default node;

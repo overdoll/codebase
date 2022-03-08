@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2e7b67b5f1cc71af3b5a137828a8dbbb>>
- * @relayHash c9d5a22ce77fb21f784d54013229cc4d
+ * @generated SignedSource<<1d6eaa8e24f6b1b26921776a12e32c27>>
+ * @relayHash 36f1543a2736f9af662bea64b29ba315
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c9d5a22ce77fb21f784d54013229cc4d
+// @relayRequestID 36f1543a2736f9af662bea64b29ba315
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -190,11 +190,7 @@ v15 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v16 = [
-  (v8/*: any*/),
-  (v9/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -384,7 +380,10 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v16/*: any*/),
+                        "selections": [
+                          (v8/*: any*/),
+                          (v9/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -413,7 +412,16 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerMember",
                             "plural": false,
-                            "selections": (v16/*: any*/),
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "isSupporter",
+                                "storageKey": null
+                              },
+                              (v9/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
@@ -500,7 +508,7 @@ return {
     ]
   },
   "params": {
-    "id": "c9d5a22ce77fb21f784d54013229cc4d",
+    "id": "36f1543a2736f9af662bea64b29ba315",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

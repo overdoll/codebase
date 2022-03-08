@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<91f934cdaaa86d0b54603110acdf4496>>
- * @relayHash eda17252147798840aed4729e859793e
+ * @generated SignedSource<<0717cda6fb1a3195276be7d1cd679ef6>>
+ * @relayHash 8d012af1c4e21a00df8bc4193155fb15
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eda17252147798840aed4729e859793e
+// @relayRequestID 8d012af1c4e21a00df8bc4193155fb15
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -205,11 +205,7 @@ v19 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v20 = [
-  (v10/*: any*/),
-  (v11/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -393,7 +389,10 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v20/*: any*/),
+                            "selections": [
+                              (v10/*: any*/),
+                              (v11/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           {
@@ -422,7 +421,16 @@ return {
                                 "kind": "LinkedField",
                                 "name": "viewerMember",
                                 "plural": false,
-                                "selections": (v20/*: any*/),
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "isSupporter",
+                                    "storageKey": null
+                                  },
+                                  (v11/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -486,7 +494,7 @@ return {
     ]
   },
   "params": {
-    "id": "eda17252147798840aed4729e859793e",
+    "id": "8d012af1c4e21a00df8bc4193155fb15",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

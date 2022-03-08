@@ -1,11 +1,11 @@
-import type { NewPaymentMethodFragment$key } from '@//:artifacts/NewPaymentMethodFragment.graphql'
+import type { SavedPaymentMethodFragment$key } from '@//:artifacts/SavedPaymentMethodFragment.graphql'
+import type { SavedPaymentMethodViewerFragment$key } from '@//:artifacts/SavedPaymentMethodViewerFragment.graphql'
+
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import ChooseCurrency from '../../ChooseCurrency/ChooseCurrency'
 import BillingSummary from '../../BillingSummary/BillingSummary'
-import CCBillSubscribeForm from './CCBillSubscribeForm/CCBillSubscribeForm'
-import { Suspense, useRef, useState } from 'react'
-import CCBillWindowListener from './CCBillWindowListener/CCBillWindowListener'
+import { Suspense, useState } from 'react'
 import { HStack, Stack } from '@chakra-ui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import QueryErrorBoundary
@@ -15,13 +15,15 @@ import CCBillDisplayTransaction from '../CCBillDisplayTransaction/CCBillDisplayT
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import CCBillSelectSavedPaymentForm from './CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm'
 
 interface Props {
-  clubQuery: NewPaymentMethodFragment$key
+  clubQuery: SavedPaymentMethodFragment$key
+  viewerQuery: SavedPaymentMethodViewerFragment$key
 }
 
 const ClubFragment = graphql`
-  fragment NewPaymentMethodFragment on Club {
+  fragment SavedPaymentMethodFragment on Club {
     supporterSubscriptionPrice {
       localizedPrice {
         currency
@@ -29,7 +31,13 @@ const ClubFragment = graphql`
     }
     ...ChooseCurrencyFragment
     ...BillingSummaryFragment
-    ...CCBillSubscribeFormFragment
+    ...CCBillSelectSavedPaymentFormFragment
+  }
+`
+
+const ViewerFragment = graphql`
+  fragment SavedPaymentMethodViewerFragment on Account {
+    ...CCBillSelectSavedPaymentFormViewerFragment
   }
 `
 
@@ -37,15 +45,15 @@ interface SearchProps {
   token: string | null
 }
 
-export default function NewPaymentMethod ({
-  clubQuery
+export default function SavedPaymentMethod ({
+  clubQuery,
+  viewerQuery
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
+  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const { onClose } = useHistoryDisclosureContext()
 
-  const [originLink, updateOriginLink] = useState<string | null>(null)
-  const windowReference = useRef<Window | null>(null)
   const [currency, setCurrency] = useState(clubData.supporterSubscriptionPrice.localizedPrice.currency)
 
   const {
@@ -68,17 +76,6 @@ export default function NewPaymentMethod ({
     )
   }
 
-  if (originLink != null && windowReference != null) {
-    return (
-      <CCBillWindowListener
-        windowReference={windowReference}
-        originLink={originLink}
-        updateOriginLink={updateOriginLink}
-        setArguments={setArguments}
-      />
-    )
-  }
-
   return (
     <Stack spacing={8}>
       <HStack spacing={2} justify='space-between'>
@@ -86,11 +83,11 @@ export default function NewPaymentMethod ({
         <CloseButton size='sm' onClick={onClose} />
       </HStack>
       <BillingSummary query={clubData} currency={currency} />
-      <CCBillSubscribeForm
-        updateOriginLink={updateOriginLink}
-        windowReference={windowReference}
+      <CCBillSelectSavedPaymentForm
+        viewerQuery={viewerData}
         query={clubData}
         currency={currency}
+        setArguments={setArguments}
       />
     </Stack>
   )

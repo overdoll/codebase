@@ -18,7 +18,7 @@ const ClubFragment = graphql`
     ...BecomeMemberButtonClubFragment
     ...WithdrawMembershipButtonClubFragment
     viewerMember {
-      __typename
+      isSupporter
     }
   }
 `
@@ -57,6 +57,7 @@ export default function JoinClubButton ({
   if (isClubMember) {
     return (
       <WithdrawMembershipButton
+        isDisabled={clubData?.viewerMember.isSupporter}
         clubQuery={clubData}
         {...rest}
       />

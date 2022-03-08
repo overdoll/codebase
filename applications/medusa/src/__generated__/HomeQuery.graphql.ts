@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0b84aec724520c42402cda08bd0c19d3>>
- * @relayHash bc45309adee2a1b32c5cb74dbcf2f734
+ * @generated SignedSource<<766407f07df70b28505e87e65ee3fff6>>
+ * @relayHash 8ab9e8c509513484652d845daab58579
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bc45309adee2a1b32c5cb74dbcf2f734
+// @relayRequestID 8ab9e8c509513484652d845daab58579
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -133,11 +133,7 @@ v9 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v10 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -294,7 +290,10 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": [
+                      (v1/*: any*/),
+                      (v2/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -323,7 +322,16 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerMember",
                         "plural": false,
-                        "selections": (v10/*: any*/),
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isSupporter",
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -403,7 +411,7 @@ return {
     ]
   },
   "params": {
-    "id": "bc45309adee2a1b32c5cb74dbcf2f734",
+    "id": "8ab9e8c509513484652d845daab58579",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

@@ -7,6 +7,7 @@ import { FlowBuilder, FlowBuilderBody } from '@//:modules/content/PageLayout'
 import { ClubPeopleGroup } from '@//:assets/icons'
 import SelectMethodChoice from './SelectMethodChoice/SelectMethodChoice'
 import NewPaymentMethod from './NewPaymentMethod/NewPaymentMethod'
+import SavedPaymentMethod from './SavedPaymentMethod/SavedPaymentMethod'
 
 interface Props {
   clubQuery: SupportSelectMethodFragment$key
@@ -16,6 +17,7 @@ interface Props {
 const ClubFragment = graphql`
   fragment SupportSelectMethodFragment on Club {
     ...NewPaymentMethodFragment
+    ...SavedPaymentMethodFragment
   }
 `
 
@@ -29,8 +31,8 @@ const ViewerFragment = graphql`
         }
       }
     }
-    ...NewPaymentMethodViewerFragment
     ...SelectMethodChoiceViewerFragment
+    ...SavedPaymentMethodViewerFragment
   }
 `
 
@@ -45,8 +47,8 @@ export default function SupportSelectMethod ({
   const steps = ['select_payment', 'new_payment', 'existing_payment']
   const components = {
     select_payment: <SelectMethodChoice viewerQuery={viewerData} />,
-    new_payment: <NewPaymentMethod clubQuery={clubData} viewerQuery={viewerData} />,
-    existing_payment: <></>
+    new_payment: <NewPaymentMethod clubQuery={clubData} />,
+    existing_payment: <SavedPaymentMethod clubQuery={clubData} viewerQuery={viewerData} />
   }
   const headers = {
     select_payment: {
@@ -70,7 +72,7 @@ export default function SupportSelectMethod ({
       stepsHeaders={headers}
       defaultStep={viewerData.savedPaymentMethods != null && viewerData.savedPaymentMethods.edges.length > 0 ? 'select_payment' : 'new_payment'}
     >
-      <FlowBuilderBody />
+      <FlowBuilderBody minH={undefined} />
     </FlowBuilder>
   )
 }

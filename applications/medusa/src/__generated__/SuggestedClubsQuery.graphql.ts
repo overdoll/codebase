@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2e45318f6357e4ecd87fbc78ff8793a0>>
- * @relayHash 777cf4c4ba872aeaa7787633c8f8cfc4
+ * @generated SignedSource<<62d2c13ef9d299e582662ba3543cf9ea>>
+ * @relayHash ee85dfae10f96b90c57cecc5444da6be
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 777cf4c4ba872aeaa7787633c8f8cfc4
+// @relayRequestID ee85dfae10f96b90c57cecc5444da6be
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -60,17 +60,10 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -78,7 +71,7 @@ v5 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
+    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -89,7 +82,7 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -97,11 +90,11 @@ v6 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v3/*: any*/)
   ],
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -193,7 +186,13 @@ return {
                     "name": "viewerMember",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isSupporter",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -206,9 +205,9 @@ return {
                     "name": "thumbnail",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
-                      (v7/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -259,9 +258,9 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v7/*: any*/),
-                                      (v5/*: any*/),
                                       (v6/*: any*/),
+                                      (v4/*: any*/),
+                                      (v5/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -287,7 +286,13 @@ return {
                     ],
                     "storageKey": "posts(first:1)"
                   },
-                  (v3/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -369,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "777cf4c4ba872aeaa7787633c8f8cfc4",
+    "id": "ee85dfae10f96b90c57cecc5444da6be",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",

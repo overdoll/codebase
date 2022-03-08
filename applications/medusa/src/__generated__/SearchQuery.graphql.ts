@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ed39d8fff52dcab03af7f5c663b3e231>>
- * @relayHash be6e08a8666d11a62d4982edc94d2504
+ * @generated SignedSource<<419ba20ea0d251f2673cf47ddbb707b3>>
+ * @relayHash c25b411e93b1c432eed483db7a133dcb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID be6e08a8666d11a62d4982edc94d2504
+// @relayRequestID c25b411e93b1c432eed483db7a133dcb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -174,11 +174,7 @@ v13 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v14 = [
-  (v5/*: any*/),
-  (v6/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -345,7 +341,10 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v14/*: any*/),
+                    "selections": [
+                      (v5/*: any*/),
+                      (v6/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -374,7 +373,16 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerMember",
                         "plural": false,
-                        "selections": (v14/*: any*/),
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isSupporter",
+                            "storageKey": null
+                          },
+                          (v6/*: any*/)
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -457,7 +465,7 @@ return {
     ]
   },
   "params": {
-    "id": "be6e08a8666d11a62d4982edc94d2504",
+    "id": "c25b411e93b1c432eed483db7a133dcb",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",
