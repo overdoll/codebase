@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6fd54543f9f8fbcf9bd99d57e7c4204>>
+ * @generated SignedSource<<011ac5e78993ab286dce4542140ea88a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SupportSelectMethodViewerFragment$data = {
+export type ClosePaymentModalButtonFragment$data = {
   readonly savedPaymentMethods: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -18,31 +18,20 @@ export type SupportSelectMethodViewerFragment$data = {
       };
     }>;
   };
-  readonly __typename: "Account";
-  readonly " $fragmentSpreads": FragmentRefs<"SelectMethodChoiceViewerFragment" | "SavedPaymentMethodViewerFragment" | "NewPaymentMethodViewerFragment">;
-  readonly " $fragmentType": "SupportSelectMethodViewerFragment";
+  readonly " $fragmentType": "ClosePaymentModalButtonFragment";
 };
-export type SupportSelectMethodViewerFragment = SupportSelectMethodViewerFragment$data;
-export type SupportSelectMethodViewerFragment$key = {
-  readonly " $data"?: SupportSelectMethodViewerFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodViewerFragment">;
+export type ClosePaymentModalButtonFragment = ClosePaymentModalButtonFragment$data;
+export type ClosePaymentModalButtonFragment$key = {
+  readonly " $data"?: ClosePaymentModalButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClosePaymentModalButtonFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "SupportSelectMethodViewerFragment",
+  "name": "ClosePaymentModalButtonFragment",
   "selections": [
-    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -67,7 +56,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             }
@@ -76,28 +71,12 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "SelectMethodChoiceViewerFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "SavedPaymentMethodViewerFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "NewPaymentMethodViewerFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "d60bfc66eadec2c683ab2378bd7029a8";
+(node as any).hash = "c220f0b999ac7fb7d0319ffde3dc80c8";
 
 export default node;

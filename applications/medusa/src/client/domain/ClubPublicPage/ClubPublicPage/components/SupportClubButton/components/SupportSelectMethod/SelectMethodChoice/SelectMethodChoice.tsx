@@ -11,6 +11,8 @@ import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
+import NumberBadge from '../../../../../../../../components/NumberBadge/NumberBadge'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   viewerQuery: SelectMethodChoiceViewerFragment$key
@@ -55,21 +57,27 @@ export default function SelectMethodChoice ({
 
   return (
     <Stack spacing={8}>
-      <Heading align='center' fontSize='2xl' color='gray.00'>
-        <Trans>
-          How will you pay?
-        </Trans>
-      </Heading>
+      <HStack justify='space-between' align='center' spacing={2}>
+        <Heading fontSize='xl' color='gray.00'>
+          <Trans>
+            How will you pay?
+          </Trans>
+        </Heading>
+        <CloseButton size='sm' onClick={onClose} />
+      </HStack>
       <Stack spacing={4}>
         <Box>
           <Choice {...register('existing_payment', {})}>
             <LargeBackgroundBox bg='gray.900'>
               <Center>
-                <Heading color='gray.00' fontSize='xl' align='center'>
-                  <Trans>
-                    Use a saved payment method ({viewerData.savedPaymentMethods.edges.length})
-                  </Trans>
-                </Heading>
+                <HStack spacing={2}>
+                  <Heading color='gray.00' fontSize='xl' align='center'>
+                    <Trans>
+                      Use a saved payment method
+                    </Trans>
+                  </Heading>
+                  <NumberBadge size='md' value={viewerData.savedPaymentMethods.edges.length} colorScheme='green' />
+                </HStack>
               </Center>
             </LargeBackgroundBox>
           </Choice>
@@ -98,28 +106,17 @@ export default function SelectMethodChoice ({
           </Text>
         </Box>
       </Stack>
-      <HStack spacing={3} justify='space-between'>
-        <Button
-          onClick={onClose}
-          colorScheme='gray'
-          size='lg'
-        >
-          <Trans>
-            Cancel
-          </Trans>
-        </Button>
-        <Button
-          onClick={onClick}
-          isDisabled={isDisabled}
-          colorScheme={isDisabled ? 'gray' : 'green'}
-          size='lg'
-          w='100%'
-        >
-          <Trans>
-            Next
-          </Trans>
-        </Button>
-      </HStack>
+      <Button
+        onClick={onClick}
+        isDisabled={isDisabled}
+        colorScheme={isDisabled ? 'gray' : 'green'}
+        size='lg'
+        w='100%'
+      >
+        <Trans>
+          Next
+        </Trans>
+      </Button>
     </Stack>
   )
 }

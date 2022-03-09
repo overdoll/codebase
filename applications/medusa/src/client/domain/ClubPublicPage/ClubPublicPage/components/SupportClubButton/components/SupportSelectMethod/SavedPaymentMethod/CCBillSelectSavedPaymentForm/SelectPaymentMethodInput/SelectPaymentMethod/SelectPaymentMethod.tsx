@@ -2,8 +2,10 @@ import { graphql } from 'react-relay'
 import type { SelectPaymentMethodFragment$key } from '@//:artifacts/SelectPaymentMethodFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
 import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
-import { Stack } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { TableRow, TableRowColumn } from '@//:modules/content/ThemeComponents/TableRow/TableRow'
+import DisplayCard from './DisplayCard/DisplayCard'
 
 interface Props {
   onChange: (id: string) => void
@@ -19,6 +21,8 @@ const Fragment = graphql`
           paymentMethod {
             card {
               last4
+              expiration
+              ...DisplayCardFragment
             }
           }
         }
@@ -50,7 +54,25 @@ export default function SelectPaymentMethod ({
           {...register(item.node.id, {})}
         >
           <SmallBackgroundBox bg='gray.900'>
-            {item.node.paymentMethod.card.last4}
+            <TableRow columns={4}>
+              <TableRowColumn column={1}>
+                <DisplayCard query={item.node.paymentMethod.card} />
+              </TableRowColumn>
+              <TableRowColumn column={2}>
+                <Flex justify='center'>
+                  <Text fontFamily='mono' fontSize='lg' color='gray.00'>
+                    **** {item.node.paymentMethod.card.last4}
+                  </Text>
+                </Flex>
+              </TableRowColumn>
+              <TableRowColumn column={1}>
+                <Flex justify='flex-end'>
+                  <Text fontFamily='mono' fontSize='lg' color='gray.00'>
+                    {item.node.paymentMethod.card.expiration}
+                  </Text>
+                </Flex>
+              </TableRowColumn>
+            </TableRow>
           </SmallBackgroundBox>
         </Choice>
       )

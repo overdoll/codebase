@@ -13,17 +13,24 @@ import { useFragment, useMutation } from 'react-relay/hooks'
 import { HStack, Link, Stack, Text } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
-import { Form, FormInput, FormSubmitButton, InputFooter, SwitchInput } from '@//:modules/content/HookedComponents/Form'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputFooter,
+  InputHeader,
+  SwitchInput
+} from '@//:modules/content/HookedComponents/Form'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import SelectPaymentMethodInput from './SelectPaymentMethodInput/SelectPaymentMethodInput'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: CCBillSelectSavedPaymentFormFragment$key
   viewerQuery: CCBillSelectSavedPaymentFormViewerFragment$key
-  currency: string
   setArguments: (args) => void
 }
 
@@ -55,13 +62,17 @@ const Mutation = graphql`
 export default function CCBillSelectSavedPaymentForm ({
   query,
   viewerQuery,
-  currency,
   setArguments
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [commit, isInFlight] = useMutation<CCBillSelectSavedPaymentFormMutation>(Mutation)
+
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const notify = useToast()
 
@@ -89,16 +100,21 @@ export default function CCBillSelectSavedPaymentForm ({
       schema
     ),
     defaultValues: {
-      guidelines: false
+      guidelines: state.guidelines
     }
   })
 
   const onSubmit = (formValues): void => {
+    dispatch({
+      type: 'guidelines',
+      value: formValues.guidelines,
+      transform: 'SET'
+    })
     commit({
       variables: {
         input: {
           clubId: data.id,
-          currency: currency as Currency,
+          currency: state.currency as Currency,
           savedPaymentMethodId: formValues.savedPaymentMethodId
         }
       },
@@ -116,43 +132,50 @@ export default function CCBillSelectSavedPaymentForm ({
 
   return (
     <Form {...methods} onSubmit={onSubmit}>
-      <Stack spacing={2}>
+      <Stack spacing={4}>
         <FormInput
           size='md'
           id='savedPaymentMethodId'
         >
+          <InputHeader>
+            <Trans>
+              Select a card
+            </Trans>
+          </InputHeader>
           <SelectPaymentMethodInput query={viewerData} />
           <InputFooter />
         </FormInput>
-        <FormInput
-          size='md'
-          id='guidelines'
-        >
-          <HStack spacing={2}>
-            <SwitchInput colorScheme='teal' />
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                I agree to follow the
-              </Trans>
-              {' '}
-              <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/supporter-guidelines/'>
+        <Stack spacing={2}>
+          <FormInput
+            size='md'
+            id='guidelines'
+          >
+            <HStack spacing={2}>
+              <SwitchInput colorScheme='teal' />
+              <Text fontSize='md' color='gray.00'>
                 <Trans>
-                  Supporter Guidelines
+                  I agree to follow the
                 </Trans>
-              </Link>
-            </Text>
-          </HStack>
-          <InputFooter />
-        </FormInput>
-        <FormSubmitButton
-          isLoading={isInFlight}
-          colorScheme='teal'
-          size='lg'
-        >
-          <Trans>
-            Subscribe
-          </Trans>
-        </FormSubmitButton>
+                {' '}
+                <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/supporter-guidelines/'>
+                  <Trans>
+                    Supporter Guidelines
+                  </Trans>
+                </Link>
+              </Text>
+            </HStack>
+            <InputFooter />
+          </FormInput>
+          <FormSubmitButton
+            isLoading={isInFlight}
+            colorScheme='teal'
+            size='lg'
+          >
+            <Trans>
+              Subscribe
+            </Trans>
+          </FormSubmitButton>
+        </Stack>
       </Stack>
     </Form>
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6778023227bf07118f4f7c3592f0f678>>
- * @relayHash f823c9e7c3affd7f2f6112f6886c90ef
+ * @generated SignedSource<<d6f0d6271e39d916a6ff23b02f2e519f>>
+ * @relayHash 696d020d9145fe80d8b1aef12a64a7e5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f823c9e7c3affd7f2f6112f6886c90ef
+// @relayRequestID 696d020d9145fe80d8b1aef12a64a7e5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type AccountClubSupporterSubscriptionStatus = "ACTIVE" | "CANCELLED" | "%future added value";
@@ -28,6 +28,11 @@ export type CCBillDisplayTransactionQuery$data = {
       readonly id: string;
       readonly status: AccountClubSupporterSubscriptionStatus;
       readonly supporterSince: any;
+      readonly paymentMethod: {
+        readonly card: {
+          readonly last4: string;
+        };
+      };
       readonly club: {
         readonly viewerMember: {
           readonly isSupporter: boolean;
@@ -102,6 +107,35 @@ v7 = {
 v8 = {
   "alias": null,
   "args": null,
+  "concreteType": "PaymentMethod",
+  "kind": "LinkedField",
+  "name": "paymentMethod",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Card",
+      "kind": "LinkedField",
+      "name": "card",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "last4",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "isSupporter",
   "storageKey": null
@@ -136,6 +170,7 @@ return {
               (v2/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -152,7 +187,7 @@ return {
                     "name": "viewerMember",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/)
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -198,6 +233,7 @@ return {
               (v2/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -214,7 +250,7 @@ return {
                     "name": "viewerMember",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/),
+                      (v9/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -232,7 +268,7 @@ return {
     ]
   },
   "params": {
-    "id": "f823c9e7c3affd7f2f6112f6886c90ef",
+    "id": "696d020d9145fe80d8b1aef12a64a7e5",
     "metadata": {},
     "name": "CCBillDisplayTransactionQuery",
     "operationKind": "query",
@@ -241,6 +277,6 @@ return {
 };
 })();
 
-(node as any).hash = "92c0df2471836133652a3dbd6a237efa";
+(node as any).hash = "2d1d677ec1fe868e0430cfa57f4f7b99";
 
 export default node;

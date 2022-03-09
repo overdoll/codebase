@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d45486b3a17f8c1530ab43f3a0d6ceec>>
- * @relayHash 3854ff9d03a8d956b8e7c4c0672b4a86
+ * @generated SignedSource<<8e80aed215455329cbe4ed12e12855f9>>
+ * @relayHash 830ca84be9194cd624c09ecf6adc9d74
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3854ff9d03a8d956b8e7c4c0672b4a86
+// @relayRequestID 830ca84be9194cd624c09ecf6adc9d74
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -629,7 +629,15 @@ return {
                                 "kind": "ScalarField",
                                 "name": "last4",
                                 "storageKey": null
-                              }
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "expiration",
+                                "storageKey": null
+                              },
+                              (v4/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -652,7 +660,7 @@ return {
     ]
   },
   "params": {
-    "id": "3854ff9d03a8d956b8e7c4c0672b4a86",
+    "id": "830ca84be9194cd624c09ecf6adc9d74",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

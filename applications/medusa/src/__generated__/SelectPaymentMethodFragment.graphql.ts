@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc75347647845c3ec35f73469c9ef9b2>>
+ * @generated SignedSource<<59426d0c2f33839be7398eb03d321db2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,8 @@ export type SelectPaymentMethodFragment$data = {
         readonly paymentMethod: {
           readonly card: {
             readonly last4: string;
+            readonly expiration: string;
+            readonly " $fragmentSpreads": FragmentRefs<"DisplayCardFragment">;
           };
         };
       };
@@ -90,6 +92,18 @@ const node: ReaderFragment = {
                           "kind": "ScalarField",
                           "name": "last4",
                           "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "expiration",
+                          "storageKey": null
+                        },
+                        {
+                          "args": null,
+                          "kind": "FragmentSpread",
+                          "name": "DisplayCardFragment"
                         }
                       ],
                       "storageKey": null
@@ -111,6 +125,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e225214e82819e525b670ccda14091a4";
+(node as any).hash = "021508f9939827a8c69de427f7558ba1";
 
 export default node;

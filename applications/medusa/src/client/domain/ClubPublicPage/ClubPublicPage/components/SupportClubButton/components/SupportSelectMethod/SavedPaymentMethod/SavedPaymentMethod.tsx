@@ -5,17 +5,15 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import ChooseCurrency from '../../ChooseCurrency/ChooseCurrency'
 import BillingSummary from '../../BillingSummary/BillingSummary'
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { HStack, Stack } from '@chakra-ui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import QueryErrorBoundary
   from '../../../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import CCBillDisplayTransaction from '../CCBillDisplayTransaction/CCBillDisplayTransaction'
-import useHistoryDisclosureContext
-  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
-import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import CCBillSelectSavedPaymentForm from './CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm'
+import ClosePaymentModalButton from '../../ClosePaymentModalButton/ClosePaymentModalButton'
 
 interface Props {
   clubQuery: SavedPaymentMethodFragment$key
@@ -24,11 +22,6 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment SavedPaymentMethodFragment on Club {
-    supporterSubscriptionPrice {
-      localizedPrice {
-        currency
-      }
-    }
     ...ChooseCurrencyFragment
     ...BillingSummaryFragment
     ...CCBillSelectSavedPaymentFormFragment
@@ -38,6 +31,7 @@ const ClubFragment = graphql`
 const ViewerFragment = graphql`
   fragment SavedPaymentMethodViewerFragment on Account {
     ...CCBillSelectSavedPaymentFormViewerFragment
+    ...ClosePaymentModalButtonFragment
   }
 `
 
@@ -51,10 +45,6 @@ export default function SavedPaymentMethod ({
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
-
-  const { onClose } = useHistoryDisclosureContext()
-
-  const [currency, setCurrency] = useState(clubData.supporterSubscriptionPrice.localizedPrice.currency)
 
   const {
     searchArguments,
@@ -79,14 +69,13 @@ export default function SavedPaymentMethod ({
   return (
     <Stack spacing={8}>
       <HStack spacing={2} justify='space-between'>
-        <ChooseCurrency query={clubData} onChange={setCurrency} defaultValue={currency} />
-        <CloseButton size='sm' onClick={onClose} />
+        <ChooseCurrency query={clubData} />
+        <ClosePaymentModalButton query={viewerData} />
       </HStack>
-      <BillingSummary query={clubData} currency={currency} />
+      <BillingSummary query={clubData} />
       <CCBillSelectSavedPaymentForm
         viewerQuery={viewerData}
         query={clubData}
-        currency={currency}
         setArguments={setArguments}
       />
     </Stack>

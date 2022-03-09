@@ -2,16 +2,12 @@ import type { ChooseCurrencyFragment$key } from '@//:artifacts/ChooseCurrencyFra
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import Select from '@//:modules/form/Select/Select'
-import { useState } from 'react'
-import { MaybeRenderProp } from '@//:types/components'
-import { runIfFunction } from '@//:modules/support'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: ChooseCurrencyFragment$key
-  defaultValue: string
-  onChange: (e) => void
 }
 
 const Fragment = graphql`
@@ -25,14 +21,20 @@ const Fragment = graphql`
 `
 
 export default function ChooseCurrency ({
-  query,
-  defaultValue,
-  onChange
+  query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const onChangeCurrency = (e): void => {
-    onChange(e.target.value)
+    dispatch({
+      type: 'currency',
+      value: e.target.value,
+      transform: 'SET'
+    })
   }
 
   return (
@@ -46,7 +48,7 @@ export default function ChooseCurrency ({
         variant='outline'
         size='md'
         w={140}
-        defaultValue={defaultValue}
+        defaultValue={state.currency}
         onChange={onChangeCurrency}
       >
         {data.supporterSubscriptionPrice.prices.map((item, index) => (

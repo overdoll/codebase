@@ -1,6 +1,5 @@
 import type { SupportSelectMethodFragment$key } from '@//:artifacts/SupportSelectMethodFragment.graphql'
 import type { SupportSelectMethodViewerFragment$key } from '@//:artifacts/SupportSelectMethodViewerFragment.graphql'
-
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { FlowBuilder, FlowBuilderBody } from '@//:modules/content/PageLayout'
@@ -8,14 +7,26 @@ import { ClubPeopleGroup } from '@//:assets/icons'
 import SelectMethodChoice from './SelectMethodChoice/SelectMethodChoice'
 import NewPaymentMethod from './NewPaymentMethod/NewPaymentMethod'
 import SavedPaymentMethod from './SavedPaymentMethod/SavedPaymentMethod'
+import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   clubQuery: SupportSelectMethodFragment$key
   viewerQuery: SupportSelectMethodViewerFragment$key
 }
 
+interface SequenceProps {
+  currency: string
+  savePayment: boolean
+  guidelines: boolean
+}
+
 const ClubFragment = graphql`
   fragment SupportSelectMethodFragment on Club {
+    supporterSubscriptionPrice {
+      localizedPrice {
+        currency
+      }
+    }
     ...NewPaymentMethodFragment
     ...SavedPaymentMethodFragment
   }
@@ -33,6 +44,7 @@ const ViewerFragment = graphql`
     }
     ...SelectMethodChoiceViewerFragment
     ...SavedPaymentMethodViewerFragment
+    ...NewPaymentMethodViewerFragment
   }
 `
 
@@ -44,11 +56,35 @@ export default function SupportSelectMethod ({
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const methods = useSequence<SequenceProps>({
+    defaultValue: {
+      currency: clubData.supporterSubscriptionPrice.localizedPrice.currency,
+      savePayment: true,
+      guidelines: false
+    },
+    resolver: {
+      currency: ValueResolver(),
+      savePayment: ValueResolver(),
+      guidelines: ValueResolver()
+    }
+  })
+
   const steps = ['select_payment', 'new_payment', 'existing_payment']
   const components = {
-    select_payment: <SelectMethodChoice viewerQuery={viewerData} />,
-    new_payment: <NewPaymentMethod clubQuery={clubData} />,
-    existing_payment: <SavedPaymentMethod clubQuery={clubData} viewerQuery={viewerData} />
+    select_payment: (
+      <SelectMethodChoice
+        viewerQuery={viewerData}
+      />),
+    new_payment: (
+      <NewPaymentMethod
+        clubQuery={clubData}
+        viewerQuery={viewerData}
+      />),
+    existing_payment: (
+      <SavedPaymentMethod
+        clubQuery={clubData}
+        viewerQuery={viewerData}
+      />)
   }
   const headers = {
     select_payment: {
@@ -66,13 +102,15 @@ export default function SupportSelectMethod ({
   }
 
   return (
-    <FlowBuilder
-      stepsArray={steps}
-      stepsComponents={components}
-      stepsHeaders={headers}
-      defaultStep={viewerData.savedPaymentMethods != null && viewerData.savedPaymentMethods.edges.length > 0 ? 'select_payment' : 'new_payment'}
-    >
-      <FlowBuilderBody minH={undefined} />
-    </FlowBuilder>
+    <SequenceProvider {...methods}>
+      <FlowBuilder
+        stepsArray={steps}
+        stepsComponents={components}
+        stepsHeaders={headers}
+        defaultStep={viewerData.savedPaymentMethods != null && viewerData.savedPaymentMethods.edges.length > 0 ? 'select_payment' : 'new_payment'}
+      >
+        <FlowBuilderBody minH={undefined} />
+      </FlowBuilder>
+    </SequenceProvider>
   )
 }

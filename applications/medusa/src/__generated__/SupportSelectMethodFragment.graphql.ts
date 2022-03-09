@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<45904dfa9b531b04ebbce1aae5e760ad>>
+ * @generated SignedSource<<052afefcf13dd92d9710db4321a675cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,14 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SupportSelectMethodFragment$data = {
+  readonly supporterSubscriptionPrice: {
+    readonly localizedPrice: {
+      readonly currency: Currency;
+    };
+  };
   readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodFragment" | "SavedPaymentMethodFragment">;
   readonly " $fragmentType": "SupportSelectMethodFragment";
 };
@@ -27,6 +33,35 @@ const node: ReaderFragment = {
   "name": "SupportSelectMethodFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "LocalizedPricingPoint",
+      "kind": "LinkedField",
+      "name": "supporterSubscriptionPrice",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Price",
+          "kind": "LinkedField",
+          "name": "localizedPrice",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "currency",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "NewPaymentMethodFragment"
@@ -41,6 +76,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5848ee3553c6c45cd5e85dd928c90fb5";
+(node as any).hash = "cb7cb5fdb3b528ce3a57881474ff3c90";
 
 export default node;

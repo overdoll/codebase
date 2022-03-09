@@ -2,6 +2,9 @@ import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react'
 import { Box, ButtonGroup, Heading, Spinner, Stack, Text } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
+import useHistoryDisclosureContext
+  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
+import { useLocation, useParams } from '@//:modules/routing'
 
 interface Props {
   windowReference: MutableRefObject<Window | null>
@@ -16,6 +19,12 @@ export default function CCBillWindowListener ({
   updateOriginLink,
   setArguments
 }: Props): JSX.Element {
+  const { isOpen } = useHistoryDisclosureContext()
+
+  const location = useLocation()
+
+  const match = useParams()
+
   // Only allow messages from a specific window source
   const messageEvent = (event): void => {
     if (event.origin !== originLink) {
@@ -67,6 +76,13 @@ export default function CCBillWindowListener ({
       window.removeEventListener('message', messageEvent)
     }
   }, [originLink])
+
+  // If the modal is closed we want to close the window
+  useEffect(() => {
+    if (windowReference?.current?.closed === false && isOpen === false) {
+      cancelFlow()
+    }
+  }, [isOpen])
 
   return (
     <Stack align='center' spacing={8}>

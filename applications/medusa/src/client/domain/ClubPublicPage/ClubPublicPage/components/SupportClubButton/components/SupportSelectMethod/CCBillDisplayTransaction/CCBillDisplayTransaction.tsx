@@ -25,6 +25,11 @@ const Query = graphql`
         id
         status
         supporterSince
+        paymentMethod {
+          card {
+            last4
+          }
+        }
         club {
           viewerMember {
             isSupporter
@@ -162,7 +167,8 @@ export default function CCBillDisplayTransaction ({
     )
   }
 
-  if (queryData.ccbillTransactionDetails.approved && queryData.ccbillTransactionDetails.linkedAccountClubSupporterSubscription == null) {
+  if (queryData.ccbillTransactionDetails.approved &&
+    queryData.ccbillTransactionDetails.linkedAccountClubSupporterSubscription?.club?.viewerMember?.isSupporter !== true) {
     return (
       <Stack align='center' spacing={4}>
         <Spinner thickness='4px' w={20} h={20} color='green.400' />

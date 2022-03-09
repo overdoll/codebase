@@ -8,10 +8,10 @@ import displayPrice from '../../helpers/displayPrice'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Trans } from '@lingui/macro'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: BillingSummaryFragment$key
-  currency: string
 }
 
 interface PriceProps {
@@ -32,8 +32,7 @@ const Fragment = graphql`
 `
 
 export default function BillingSummary ({
-  query,
-  currency
+  query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -46,7 +45,11 @@ export default function BillingSummary ({
     ))[0]
   }
 
-  const currentPrice = getPriceByCurrency(currency)
+  const {
+    state
+  } = useSequenceContext()
+
+  const currentPrice = getPriceByCurrency(state.currency)
 
   const price = displayPrice({
     amount: currentPrice.amount,
@@ -67,7 +70,7 @@ export default function BillingSummary ({
       <Box>
         <LargeBackgroundBox bg='gray.900'>
           <Center>
-            <Heading fontSize='3xl' color='gray.00'>
+            <Heading align='center' fontSize='2xl' color='gray.00'>
               {price} per month
             </Heading>
           </Center>

@@ -11,10 +11,10 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: CCBillSubscribeFormFragment$key
-  currency: string
   updateOriginLink: Dispatch<SetStateAction<string | null>>
   windowReference: MutableRefObject<Window | null>
 }
@@ -40,13 +40,17 @@ const Mutation = graphql`
 
 export default function CCBillSubscribeForm ({
   query,
-  currency,
   updateOriginLink,
   windowReference
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const [commit, isInFlight] = useMutation<CCBillSubscribeFormMutation>(Mutation)
+
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const notify = useToast()
 
@@ -69,17 +73,27 @@ export default function CCBillSubscribeForm ({
       schema
     ),
     defaultValues: {
-      guidelines: false,
-      savePayment: true
+      guidelines: state.guidelines,
+      savePayment: state.savePayment
     }
   })
 
   const onSubmit = (formValues): void => {
+    dispatch({
+      type: 'savePayment',
+      value: formValues.savePayment,
+      transform: 'SET'
+    })
+    dispatch({
+      type: 'guidelines',
+      value: formValues.guidelines,
+      transform: 'SET'
+    })
     commit({
       variables: {
         input: {
           clubId: data.id,
-          currency: currency as Currency,
+          currency: state.currency as Currency,
           savePaymentDetailsForLater: formValues.savePayment
         }
       },

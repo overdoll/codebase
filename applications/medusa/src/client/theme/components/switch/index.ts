@@ -11,7 +11,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
 
   return {
-    borderRadius: 'full',
+    borderRadius: 'base',
     p: '2px',
     width: 'var(--slider-track-width)',
     height: 'var(--slider-track-height)',
