@@ -3,6 +3,7 @@ package report
 import (
 	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/uuid"
 
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"

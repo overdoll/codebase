@@ -18,7 +18,7 @@ import { ViewPostReportsQuery } from '@//:artifacts/ViewPostReportsQuery.graphql
 type Props = ComponentSearchArguments<any>
 
 const Query = graphql`
-  query ViewPostReportsQuery($reference: String!, $dateRange: PostReportDateRange!) {
+  query ViewPostReportsQuery($reference: String!, $from: Time!, $to: Time) {
     post(reference: $reference) @required(action: THROW) {
       ...ViewPostReportsFragment
     }

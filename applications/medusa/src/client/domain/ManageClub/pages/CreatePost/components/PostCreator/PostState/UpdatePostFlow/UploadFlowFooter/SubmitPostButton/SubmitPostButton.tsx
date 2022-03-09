@@ -27,7 +27,6 @@ const Mutation = graphql`
         id
         state
       }
-      inReview
     }
   }
 `
@@ -67,7 +66,7 @@ export default function SubmitPostButton ({
         })
         dispatch({
           type: 'isInReview',
-          value: data?.submitPost?.inReview,
+          value: true,
           transform: 'SET'
         })
       },

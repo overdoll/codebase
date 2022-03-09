@@ -12,7 +12,6 @@ go_library(
         "index_post.go",
         "publish_post.go",
         "put_post_into_moderator_queue_or_publish.go",
-        "reassign_moderator.go",
         "remove_like_from_post.go",
         "remove_post.go",
         "review_post.go",
@@ -24,8 +23,5 @@ go_library(
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],
-    deps = [
-        "//applications/sting/internal/domain/post",
-        "@com_github_pkg_errors//:errors",
-    ],
+    deps = ["//applications/sting/internal/domain/post"],
 )

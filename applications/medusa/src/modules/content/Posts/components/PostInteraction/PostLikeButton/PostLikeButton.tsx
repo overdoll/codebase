@@ -28,7 +28,7 @@ const Fragment = graphql`
 
 const LikeMutation = graphql`
   mutation PostLikeButtonLikeMutation($postId: ID!) {
-    likePost(input: {postId: $postId}) {
+    likePost(input: {id: $postId}) {
       postLike {
         post {
           viewerLiked {
@@ -42,7 +42,7 @@ const LikeMutation = graphql`
 
 const UndoMutation = graphql`
   mutation PostLikeButtonUndoMutation($postId: ID!) {
-    undoLikePost(input: {postId: $postId}) {
+    undoLikePost(input: {id: $postId}) {
       postLikeId
     }
   }

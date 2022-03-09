@@ -19,7 +19,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 type Props = ComponentSearchArguments<any>
 
 const Query = graphql`
-  query PostReportsQuery ($dateRange: PostReportDateRange!) {
+  query PostReportsQuery ($from: Time!, $to: Time) {
     ...PostReportsFragment
   }
 `

@@ -9,9 +9,11 @@ interface Props {
 }
 
 const ContributorFragmentGQL = graphql`
-  fragment PostHeaderFragment on Post {
+  fragment PostHeaderFragment on PostModerator {
     reassignmentAt
-    ...PostHeaderClubFragment
+    post {
+      ...PostHeaderClubFragment
+    }
   }
 `
 

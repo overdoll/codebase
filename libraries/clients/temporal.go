@@ -24,9 +24,8 @@ func NewTemporalClient(ctx context.Context) client.Client {
 		HostPort:  os.Getenv("TEMPORAL_URL"),
 		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
 		ConnectionOptions: client.ConnectionOptions{
-			HealthCheckTimeout:   time.Second * 20,
-			DisableHealthCheck:   true,
-			EnableKeepAliveCheck: false,
+			HealthCheckTimeout: time.Second * 20,
+			DisableHealthCheck: true,
 		},
 		DataConverter: encryptedDataConverter,
 	})

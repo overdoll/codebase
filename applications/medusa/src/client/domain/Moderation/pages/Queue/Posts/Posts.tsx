@@ -40,15 +40,17 @@ const PostsGQL = graphql`
   )
   @refetchable(queryName: "PostsPaginationQuery" ) {
     ...NoPostsPlaceholderFragment
-    moderatorPostsQueue (first: $first, after: $after)
-    @connection(key: "Posts_moderatorPostsQueue") {
+    postModeratorQueue (first: $first, after: $after)
+    @connection(key: "Posts_postModeratorQueue") {
       __id
       edges {
         node {
-          id
-          ...PostPreviewFragment
-          ...ModeratePostFragment
-          postedAt
+          post {
+            id
+            ...PostPreviewFragment
+            ...ModeratePostFragment
+            postedAt
+          }
         }
       }
     }
@@ -75,12 +77,12 @@ export default function Posts (props: Props): JSX.Element {
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const currentPost = data?.moderatorPostsQueue.edges[currentIndex]?.node
+  const currentPost = data?.postModeratorQueue.edges[currentIndex]?.node.post
 
-  const postsConnection = data?.moderatorPostsQueue?.__id
+  const postsConnection = data?.postModeratorQueue?.__id
 
   const nextPage = (): void => {
-    if (currentIndex + 1 >= data?.moderatorPostsQueue.edges.length) {
+    if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
       loadNext(
         1,
         {
@@ -104,16 +106,16 @@ export default function Posts (props: Props): JSX.Element {
   // they are able to load more, we go to next page for them
   // automatically so the queue can continue
   useEffect(() => {
-    if (hasNext && data?.moderatorPostsQueue.edges.length < 1) {
+    if (hasNext && data?.postModeratorQueue.edges.length < 1) {
       nextPage()
-    } else if (currentPost == null && data.moderatorPostsQueue.edges.length > 0) {
+    } else if (currentPost == null && data.postModeratorQueue.edges.length > 0) {
       previousPage()
     }
-  }, [data?.moderatorPostsQueue.edges])
+  }, [data?.postModeratorQueue.edges])
 
   // Make sure we show a placeholder for the above logic
   // so we can have a loading state
-  if ((data.moderatorPostsQueue.edges.length < 1 && hasNext) || (currentPost == null && data.moderatorPostsQueue.edges.length > 0)) {
+  if ((data.postModeratorQueue.edges.length < 1 && hasNext) || (currentPost == null && data.postModeratorQueue.edges.length > 0)) {
     return (
       <PostPlaceholder>
         <Skeleton
@@ -125,7 +127,7 @@ export default function Posts (props: Props): JSX.Element {
   }
 
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
-  if (data.moderatorPostsQueue.edges.length < 1) {
+  if (data.postModeratorQueue.edges.length < 1) {
     return (
       <PostPlaceholder>
         <NoPostsPlaceholder moderator={data} />
@@ -158,7 +160,7 @@ export default function Posts (props: Props): JSX.Element {
             <Trans>Posted on {formattedDate}</Trans>
           </Text>
         </SmallBackgroundBox>
-        {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&
+        {(currentIndex + 1 !== data.postModeratorQueue?.edges.length || hasNext) &&
           <IconButton
             aria-label='button right'
             ml={2}
@@ -171,7 +173,7 @@ export default function Posts (props: Props): JSX.Element {
             onClick={nextPage}
           />}
       </Flex>
-      {data?.moderatorPostsQueue.edges.map((item, index) => {
+      {data?.postModeratorQueue.edges.map((item, index) => {
         if (index !== currentIndex) {
           return <Fragment key={index} />
         }
@@ -182,7 +184,7 @@ export default function Posts (props: Props): JSX.Element {
           >
             <ObserverManagerProvider>
               <PostVideoManagerProvider>
-                <PostPreview query={item.node} />
+                <PostPreview query={item.node.post} />
               </PostVideoManagerProvider>
             </ObserverManagerProvider>
             <Flex justify='flex-end' mt={4}>
