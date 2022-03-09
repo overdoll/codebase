@@ -28,7 +28,7 @@ type AccountTransactionHistoryNew struct {
 						Item struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
-							Amount                        float64
+							Amount                        int
 							Currency                      types.Currency
 							BilledAtDate                  time.Time
 							NextBillingDate               time.Time

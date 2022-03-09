@@ -42,14 +42,14 @@ func (m *MockWorkflow) onWorkflowExecution() *mock.Call {
 	ret = append(ret, mock.IsType(m.method))
 	ret = append(ret, m.args...)
 
-	return m.client.On("FindAndExecuteWorkflow", ret...)
+	return m.client.On("ExecuteWorkflow", ret...)
 }
 
 func (m *MockWorkflow) getArgumentsForWorkflowCall() ([]interface{}, error) {
 	funcName := GetFunctionName(m.method)
 
 	for _, c := range m.client.Calls {
-		if c.Method == "FindAndExecuteWorkflow" {
+		if c.Method == "ExecuteWorkflow" {
 			if funcName == GetFunctionName(c.Arguments[2]) {
 
 				var ret []interface{}

@@ -36,7 +36,7 @@ var postModeratorsTable = table.New(table.Metadata{
 		"reassignment_at",
 	},
 	PartKey: []string{"post_id"},
-	SortKey: []string{"account_id"},
+	SortKey: []string{},
 })
 
 type postModerators struct {
@@ -102,7 +102,7 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 
 func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Context, requester *principal.Principal, postId string) (*moderator.PostModerator, error) {
 
-	var postModerator *postModerators
+	var postModerator postModerators
 
 	if err := r.session.Query(postModeratorsTable.Get()).
 		Consistency(gocql.LocalQuorum).
@@ -110,6 +110,11 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 			PostId: postId,
 		}).
 		Get(&postModerator); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, moderator.ErrPostModeratorNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get post moderator by post id: %v", err)
 	}
 
@@ -201,6 +206,11 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 			PostId: postId,
 		}).
 		Get(&item); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, moderator.ErrPostModeratorNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
 	}
 
@@ -239,7 +249,6 @@ func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Co
 
 	batch.Query(stmt,
 		postModerator.PostId,
-		postModerator.AccountId,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

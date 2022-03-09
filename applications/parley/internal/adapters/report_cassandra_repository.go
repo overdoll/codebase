@@ -215,10 +215,10 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 
 		if filters.PostId() != nil {
 			builder = qb.Select(postReportByPostTable.Name()).
-				Where(qb.In("bucket"), qb.Eq("post_id"))
+				Where(qb.Eq("bucket"), qb.Eq("post_id"))
 		} else {
 			builder = qb.Select(postReportsByBucketTable.Name()).
-				Where(qb.In("bucket"))
+				Where(qb.Eq("bucket"))
 		}
 
 		if err := cursor.BuildCassandra(builder, "id", false); err != nil {

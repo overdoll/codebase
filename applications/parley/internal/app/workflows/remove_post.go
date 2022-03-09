@@ -19,8 +19,8 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.CreateRejectedPostAuditLog,
-		activities.CreateRejectedPostAuditLogInput{
+	if err := workflow.ExecuteActivity(ctx, a.CreateRemovedPostAuditLog,
+		activities.CreateRemovedPostAuditLogInput{
 			AccountId: input.AccountId,
 			PostId:    input.PostId,
 			RuleId:    input.RuleId,

@@ -84,6 +84,17 @@ func seedRuleInfraction(t *testing.T) *rule.Rule {
 	return pst
 }
 
+func clearModeratorsTableAndSeedModerator(t *testing.T, accountId string) {
+	session := bootstrap.InitializeDatabaseSession()
+	err := session.Query("TRUNCATE moderators", nil).ExecRelease()
+	require.NoError(t, err)
+
+	m, err := moderator.NewModerator(principal.NewPrincipal(accountId, []string{"moderator"}, false, false), accountId)
+	require.NoError(t, err)
+	adapter := adapters.NewModeratorCassandraRepository(session)
+	err = adapter.CreateModerator(context.Background(), m)
+}
+
 func seedPostModerator(t *testing.T, accountId, postId string) *moderator.PostModerator {
 	pst, err := moderator.NewPostModerator(accountId, postId)
 	require.NoError(t, err)
@@ -97,8 +108,8 @@ func seedPostModerator(t *testing.T, accountId, postId string) *moderator.PostMo
 	return pst
 }
 
-func seedRule(t *testing.T) *rule.Rule {
-	pst := createRule(t, false)
+func seedRule(t *testing.T, infraction bool) *rule.Rule {
+	pst := createRule(t, infraction)
 
 	session := bootstrap.InitializeDatabaseSession()
 

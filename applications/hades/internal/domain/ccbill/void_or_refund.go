@@ -44,7 +44,7 @@ func (v *VoidOrRefund) Amount() (*float64, error) {
 		return nil, nil
 	}
 
-	amt, err := ConvertAmountToFloat(*v.amount, v.currency)
+	amt, err := ConvertAmountToCCBillFloat(*v.amount, v.currency)
 
 	if err != nil {
 		return nil, err

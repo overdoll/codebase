@@ -616,10 +616,6 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", supporterStatus...))
 	}
 
-	if filter.ModeratorId() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
-	}
-
 	if len(filter.ClubIds()) > 0 {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", filter.ClubIds()...))
 	}

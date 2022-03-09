@@ -1,7 +1,7 @@
 package ccbill
 
 import (
-	"errors"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -19,28 +19,36 @@ func ParseCCBillDate(timestamp string) (time.Time, error) {
 	return tm, nil
 }
 
-func ConvertAmountToFloat(amount int64, currencyCode int) (float64, error) {
+func ConvertAmountToCCBillFloat(amount int64, currencyCode int) (float64, error) {
 	switch currencyCode {
 	case 840:
+		fallthrough
 	case 978:
+		fallthrough
 	case 036:
+		fallthrough
 	case 826:
+		fallthrough
 	case 124:
 		return float64(amount) / 100, nil
 	case 392:
 		return float64(amount), nil
 	}
 
-	return 0, errors.New("invalid currency passed")
+	return 0, fmt.Errorf("invalid currency code passed: %s", strconv.Itoa(currencyCode))
 }
 
 func ParseCCBillCurrencyAmount(amount string, currency string) (int64, error) {
 	switch currency {
-	case "EUR":
-	case "AUD":
-	case "CAD":
-	case "GBP":
 	case "USD":
+		fallthrough
+	case "AUD":
+		fallthrough
+	case "CAD":
+		fallthrough
+	case "GBP":
+		fallthrough
+	case "EUR":
 		amt, err := strconv.ParseFloat(amount, 64)
 
 		if err != nil {
@@ -58,5 +66,5 @@ func ParseCCBillCurrencyAmount(amount string, currency string) (int64, error) {
 		return amt, nil
 	}
 
-	return 0, errors.New("invalid currency passed")
+	return 0, fmt.Errorf("invalid currency passed: %s", currency)
 }

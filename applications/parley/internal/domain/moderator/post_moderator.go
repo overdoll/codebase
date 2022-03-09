@@ -100,6 +100,8 @@ func CanViewPostModerator(requester *principal.Principal, accountId string) erro
 
 			return nil
 		}
+	} else {
+		return nil
 	}
 
 	return principal.ErrNotAuthorized

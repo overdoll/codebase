@@ -53,7 +53,7 @@ func (c *ClubSupporterPaymentLink) GenerateLink() (*string, error) {
 // GenerateEncryptedPaymentToken - basically lock down the price at generation time
 func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, error) {
 
-	amount, err := ConvertAmountToFloat(c.amount, c.currency)
+	amount, err := ConvertAmountToCCBillFloat(c.amount, c.currency)
 
 	if err != nil {
 		return nil, err

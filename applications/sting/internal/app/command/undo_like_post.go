@@ -40,7 +40,7 @@ func (h UndoLikePostHandler) Handle(ctx context.Context, cmd UndoLikePost) error
 		return err
 	}
 
-	if err := h.event.AddPostLike(ctx, cmd.PostId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.RemovePostLike(ctx, cmd.PostId, cmd.Principal.AccountId()); err != nil {
 		return err
 	}
 

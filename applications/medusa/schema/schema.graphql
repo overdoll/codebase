@@ -361,8 +361,12 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged back."""
-  amount: Float!
+  """
+  The amount charged back.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """If this is a ccbill transaction, the reason for the chargeback."""
   ccbillReason: String
@@ -399,7 +403,7 @@ type AccountClubSupporterSubscription {
   account: Account!
 
   """The billing amount."""
-  billingAmount: Float!
+  billingAmount: Int!
 
   """The currency."""
   billingCurrency: Currency!
@@ -552,8 +556,12 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """When the billing occurred."""
   billedAtDate: Time!
@@ -602,8 +610,12 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """When the billing occurred."""
   billedAtDate: Time!
@@ -668,8 +680,12 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount refunded."""
-  amount: Float!
+  """
+  The amount refunded.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """If this is a ccbill transaction, the reason for the refund."""
   ccbillReason: String
@@ -796,8 +812,12 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount voided."""
-  amount: Float!
+  """
+  The amount voided.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """If this is a ccbill transaction, the reason for the void."""
   ccbillReason: String
@@ -1311,13 +1331,13 @@ type CCBillSubscriptionDetails {
   accountingCurrency: Currency!
 
   """Accounting details."""
-  accountingInitialPrice: Float!
-  accountingRecurringPrice: Float!
+  accountingInitialPrice: Int!
+  accountingRecurringPrice: Int!
   billedCurrency: Currency!
 
   """Billed details."""
-  billedInitialPrice: Float!
-  billedRecurringPrice: Float!
+  billedInitialPrice: Int!
+  billedRecurringPrice: Int!
 
   """If this subscription was cancelled, the date it occurred."""
   cancelDate: Time
@@ -1351,8 +1371,8 @@ type CCBillSubscriptionDetails {
   subscriptionCurrency: Currency!
 
   """Subscription details."""
-  subscriptionInitialPrice: Float!
-  subscriptionRecurringPrice: Float!
+  subscriptionInitialPrice: Int!
+  subscriptionRecurringPrice: Int!
 
   """The amount of rebills that occurred."""
   timesRebilled: Int!
@@ -3108,7 +3128,14 @@ enum PostState {
 
 """Type describing a price."""
 type Price {
-  amount: Float!
+  """
+  The amount.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
+
+  """The currency the amount is represented in."""
   currency: Currency!
 }
 
@@ -3480,13 +3507,19 @@ type RefundAmount {
   """The currency."""
   currency: Currency!
 
-  """The maximum amount you can issue a refund for."""
-  maximumAmount: Float!
+  """
+  The maximum amount you can issue a refund for.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  maximumAmount: Int!
 
   """
   A prorated refund amount, based on the first date and last date of billing / billing duration.
+  
+  A positive integer representing the currency in the smallest currency unit.
   """
-  proratedAmount: Float!
+  proratedAmount: Int!
 }
 
 """Moderate the pending post input"""
@@ -4449,8 +4482,12 @@ enum VerifyAuthenticationTokenValidation {
 
 """Void or refund account club supporter subscription."""
 input VoidOrRefundAccountClubSupporterSubscriptionInput {
-  """The amount to refund."""
-  amount: Float!
+  """
+  The amount to refund.
+  
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The id of the subscription."""
   clubSupporterSubscriptionId: ID!

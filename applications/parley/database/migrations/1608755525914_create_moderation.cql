@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS post_moderators
     sort_key        timeuuid,
     placed_at       timestamp,
     reassignment_at timestamp,
-    primary key ( post_id, account_id ),
+    primary key ( post_id ),
 );
 
 CREATE TABLE IF NOT EXISTS rules

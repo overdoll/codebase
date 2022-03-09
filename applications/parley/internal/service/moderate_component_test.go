@@ -5,11 +5,9 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/parley/internal/adapters"
 	"overdoll/applications/parley/internal/app/workflows"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	parley "overdoll/applications/parley/proto"
-	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -53,7 +51,7 @@ func getClubInfractionHistory(t *testing.T, client *graphql.Client, clubId relay
 		"representations": []_Any{
 			{
 				"__typename": "Club",
-				"id":         string(clubId),
+				"id":         clubId,
 			},
 		},
 	})
@@ -146,7 +144,7 @@ func TestModeratePost_remove(t *testing.T) {
 	var removePost RemovePost
 
 	postIdRelay := convertPostIdToRelayId(uuid.New().String())
-	rule := seedRule(t)
+	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePost, mock.Anything)
@@ -197,7 +195,7 @@ func TestModeratePost_reject(t *testing.T) {
 	postId := uuid.New().String()
 	postIdRelay := convertPostIdToRelayId(postId)
 
-	rule := seedRule(t)
+	rule := seedRule(t, true)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
 	seedPostModerator(t, accountId, postId)
@@ -210,7 +208,7 @@ func TestModeratePost_reject(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
-		ClubId:    "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+		ClubId:    postId,
 		RuleId:    rule.ID(),
 		Notes:     &notes,
 	})
@@ -235,7 +233,7 @@ func TestModeratePost_reject(t *testing.T) {
 	require.Len(t, logs.Entities[0].Account.PostAuditLogs.Edges, 1, "should have 1 audit log")
 
 	require.Equal(t, types.PostAuditLogActionDenied, logs.Entities[0].Account.PostAuditLogs.Edges[0].Node.Action, "should be denied")
-	require.Equal(t, notes, logs.Entities[0].Account.PostAuditLogs.Edges[0].Node.Notes, "correct note was added")
+	require.Equal(t, &notes, logs.Entities[0].Account.PostAuditLogs.Edges[0].Node.Notes, "correct note was added")
 	require.Equal(t, ruleIdRelay, logs.Entities[0].Account.PostAuditLogs.Edges[0].Node.Rule.ID, "correct rule was set")
 
 	posts := auditLogsForPost(t, client, postIdRelay)
@@ -243,7 +241,7 @@ func TestModeratePost_reject(t *testing.T) {
 	require.Len(t, posts.Entities[0].Post.AuditLogs.Edges, 1)
 
 	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action, "should be denied")
-	require.Equal(t, notes, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Notes, "correct note was added")
+	require.Equal(t, &notes, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Notes, "correct note was added")
 	require.Equal(t, ruleIdRelay, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Rule.ID, "correct rule was set")
 
 	postModeratorQueue = accountPostModeratorQueue(t, client, accountId)
@@ -271,7 +269,7 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
-		ClubId:    "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+		ClubId:    postId,
 		RuleId:    rule.ID(),
 		Notes:     nil,
 	})
@@ -347,6 +345,10 @@ func accountPostModeratorQueue(t *testing.T, client *graphql.Client, accountId s
 func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 	t.Parallel()
 
+	// clear moderators table, and add a new moderator that will be used for this test
+	accountId := uuid.New().String()
+	clearModeratorsTableAndSeedModerator(t, accountId)
+
 	grpcClient := getGrpcClient(t)
 
 	postId := uuid.New().String()
@@ -362,17 +364,8 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 	env := getWorkflowEnvironment(t)
 
-	var accountId string
-
 	// during our delayed callback, we want to make sure the post is being "moderated"
 	env.RegisterDelayedCallback(func() {
-		// first, init adapter repository so we can find out which moderator got the post
-		moderatorRepo := adapters.NewModeratorCassandraRepository(bootstrap.InitializeDatabaseSession())
-		res, err := moderatorRepo.GetPostModeratorByPostIdOperator(context.Background(), postId)
-		require.NoError(t, err, "no error grabbing post moderator for post")
-
-		// save our account ID, for later
-		accountId = res.AccountId()
 
 		client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -386,8 +379,6 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 		// now, go through the motion of actually approving our post
 		var approvePost ApprovePost
-
-		postIdRelay := convertPostIdToRelayId(uuid.New().String())
 
 		err = client.Mutate(context.Background(), &approvePost, map[string]interface{}{
 			"input": types.ApprovePostInput{
@@ -409,10 +400,10 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 		require.Equal(t, types.PostAuditLogActionApproved, logs.Entities[0].Account.PostAuditLogs.Edges[0].Node.Action)
 
-		posts := auditLogsForPost(t, client, postIdRelay)
+		posts := auditLogsForPost(t, client, convertPostIdToRelayId(postId))
 
 		// should be exactly 1
-		require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
+		require.Equal(t, 1, len(posts.Entities[0].Post.AuditLogs.Edges))
 
 		// audit logs should exist for this action
 		require.Equal(t, types.PostAuditLogActionApproved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)

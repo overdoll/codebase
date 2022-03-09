@@ -212,5 +212,6 @@ func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, "foreigner_on_mars", searchCharacters.Characters.Edges[0].Node.Series.Slug, "correct series")
 	require.Equal(t, fakeSeries.Title, searchCharacters.Characters.Edges[0].Node.Series.Title, "correct updated title for the series when it was updated")
 }

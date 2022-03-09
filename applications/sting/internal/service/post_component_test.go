@@ -17,11 +17,8 @@ import (
 )
 
 type PostModified struct {
-	ID        relay.ID
-	Reference string
-	Moderator *struct {
-		Id string
-	}
+	ID          relay.ID
+	Reference   string
 	Contributor struct {
 		Id string
 	}
@@ -112,8 +109,7 @@ type UpdatePostAudience struct {
 
 type SubmitPost struct {
 	SubmitPost *struct {
-		Post     *PostModified
-		InReview bool
+		Post *PostModified
 	} `graphql:"submitPost(input: $input)"`
 }
 type AccountPosts struct {
@@ -141,7 +137,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
-	moderatorAccountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -356,8 +351,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStatePublished, post.Post.State)
 	require.Equal(t, 2, len(post.Post.Content), "should have only 2 content at the end")
 
-	client = getGraphqlClientWithAuthenticatedAccount(t, moderatorAccountId)
-
 	// make a random client so we can test post permissions
 	client = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
 
@@ -433,7 +426,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Club.Id).GetID(), data.ClubId, "should have correct club ID assigned")
-	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Moderator.Id).GetID(), data.ModeratorId, "should have correct moderator ID assigned")
 
 	var postsEntities PostsEntities
 	err = client.Query(context.Background(), &postsEntities, map[string]interface{}{
@@ -465,7 +457,7 @@ func TestCreatePost_Publish(t *testing.T) {
 	require.NoError(t, e)
 
 	env := getWorkflowEnvironment(t)
-	env.RegisterActivity(workflows.UpdateTotalPostsForPostTags)
+	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -511,7 +503,7 @@ func TestCreatePost_Discard(t *testing.T) {
 
 type DeletePost struct {
 	DeletePost *struct {
-		Post *PostModified
+		PostId *relay.ID
 	} `graphql:"deletePost(input: $input)"`
 }
 

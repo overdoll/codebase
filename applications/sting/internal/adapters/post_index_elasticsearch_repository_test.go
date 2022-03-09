@@ -81,8 +81,6 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	filters, err := post.NewPostFilters(
 		"new",
 		&state,
-
-		nil,
 		nil,
 		nil,
 		[]string{testClubId},

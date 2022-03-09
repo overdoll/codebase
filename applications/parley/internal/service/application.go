@@ -74,7 +74,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
 			RemoveModeratorFromPostQueue:       command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
-			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, eventRepo, eva, sting, stella),
+			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting, stella),
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, moderatorRepo, eventRepo, eva, sting),
 			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting, stella),
 

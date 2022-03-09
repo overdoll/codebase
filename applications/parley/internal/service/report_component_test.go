@@ -51,7 +51,7 @@ func TestReportPost(t *testing.T) {
 
 	// post ID has to be random since we can only report once
 	postIdRelay := convertPostIdToRelayId(uuid.New().String())
-	rule := seedRule(t)
+	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
 	var reportPost ReportPost

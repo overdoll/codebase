@@ -309,9 +309,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 	if err := r.session.
 		Query(postTable.Update(
 			"state",
-			"moderator_reassignment_at",
 			"posted_at",
-			"moderator_account_id",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).

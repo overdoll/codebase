@@ -27,14 +27,14 @@ func (r ClubResolver) SupporterSubscriptionPrice(ctx context.Context, obj *types
 
 	for _, res := range allResults {
 		results = append(results, &types.Price{
-			Amount:   res.Amount(),
+			Amount:   int(res.Amount()),
 			Currency: types.MarshalCurrencyToGraphQL(ctx, res.Currency()),
 		})
 	}
 
 	return &types.LocalizedPricingPoint{
 		LocalizedPrice: &types.Price{
-			Amount:   localizedResult.Amount(),
+			Amount:   int(localizedResult.Amount()),
 			Currency: types.MarshalCurrencyToGraphQL(ctx, localizedResult.Currency()),
 		},
 		Prices: results,

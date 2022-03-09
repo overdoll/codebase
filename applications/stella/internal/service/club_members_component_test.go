@@ -206,6 +206,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error withdrawing club membership")
 
 	env = getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
 	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())

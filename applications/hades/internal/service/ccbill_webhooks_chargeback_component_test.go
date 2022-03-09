@@ -25,7 +25,7 @@ type AccountTransactionHistoryChargeback struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
 							CCBillReason                  string `graphql:"ccbillReason"`
-							Amount                        float64
+							Amount                        int
 							Currency                      types.Currency
 							PaymentMethod                 types.PaymentMethod
 							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`

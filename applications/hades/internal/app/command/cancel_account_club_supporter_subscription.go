@@ -36,7 +36,7 @@ func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Contex
 
 	clubSupporterSubscription, err := h.br.UpdateAccountClubSupporterCancel(ctx, cmd.Principal, cmd.AccountId, cmd.ClubId, cmd.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 
-		if err := h.cr.CancelSubscription(ctx, subscription.CCBillSubscriptionId()); err != nil {
+		if err := h.cr.CancelSubscription(ctx, *subscription.CCBillSubscriptionId()); err != nil {
 			return err
 		}
 
