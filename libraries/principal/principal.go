@@ -20,6 +20,7 @@ var (
 type Principal struct {
 	accountId string
 	roles     []string
+	email     string
 	verified  bool
 	locked    bool
 }
@@ -40,6 +41,7 @@ func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 		roles:     proto.Roles,
 		verified:  proto.Verified,
 		locked:    proto.Locked,
+		email:     proto.Email,
 	}
 }
 
@@ -55,6 +57,10 @@ func (p *Principal) BelongsToAccount(accountId string) error {
 
 func (p *Principal) AccountId() string {
 	return p.accountId
+}
+
+func (p *Principal) Email() string {
+	return p.email
 }
 
 func (p *Principal) IsVerified() bool {

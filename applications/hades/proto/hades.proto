@@ -27,6 +27,7 @@ message HeaderConfiguration {
 
 message CCBillFlexFormsDetails {
   string pricingDigest = 1;
+  string email = 2;
 }
 
 message CCBillPricingDetails {

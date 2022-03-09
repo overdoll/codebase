@@ -177,15 +177,9 @@ func (r PostsIndexElasticSearchRepository) IndexSeries(ctx context.Context, seri
 		return fmt.Errorf("failed to index series: %v", err)
 	}
 
-	s, err := json.Marshal(ss)
-
-	if err != nil {
-		return err
-	}
-
 	_, err = r.client.UpdateByQuery(CharacterIndexName).
-		Query(elastic.NewMatchQuery("series.id", series.ID())).
-		Script(elastic.NewScriptStored("ctx._source.series=params.series").Param("series", s)).
+		Query(elastic.NewNestedQuery("series", elastic.NewTermsQuery("series.id", series.ID()))).
+		Script(elastic.NewScript("ctx._source.series= params.updatedSeries").Param("updatedSeries", ss).Lang("painless")).
 		Do(ctx)
 
 	if err != nil {

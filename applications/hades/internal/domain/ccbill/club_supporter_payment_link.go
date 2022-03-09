@@ -14,6 +14,7 @@ type ClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
+	email              string
 
 	amount   int64
 	currency int
@@ -25,6 +26,7 @@ func NewClubSupporterPaymentLink(requester *principal.Principal, clubId string, 
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
 		amount:             price.Amount(),
+		email:              requester.Email(),
 		currency:           currencyStringToCCBillCode[price.Currency().String()],
 	}, nil
 }
@@ -92,6 +94,7 @@ func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, err
 		},
 		CcbillFlexFormsDetails: &hades.CCBillFlexFormsDetails{
 			PricingDigest: ccbillFormDigest,
+			Email:         c.email,
 		},
 		CcbillPricingDetails: &hades.CCBillPricingDetails{
 			InitialPrice:    billInitialPrice,

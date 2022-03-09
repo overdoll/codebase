@@ -44,6 +44,7 @@ func (c *FlexFormsPaymentLink) GenerateFlexFormsPaymentUrl() string {
 
 	return os.Getenv("CCBILL_FLEXFORMS_URL") +
 		"?clientSubacc=" + os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER") +
+		"&email=" + ccbillFlexFormsDetails.Email +
 		"&initialPrice=" + ccbillPricingDetails.InitialPrice +
 		"&initialPeriod=" + ccbillPricingDetails.InitialPeriod +
 		"&recurringPrice=" + ccbillPricingDetails.RecurringPrice +
