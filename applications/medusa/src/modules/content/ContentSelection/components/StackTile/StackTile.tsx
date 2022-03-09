@@ -1,16 +1,16 @@
-import { Box, BoxProps } from '@chakra-ui/react'
+import { BoxProps, Flex } from '@chakra-ui/react'
 
 export default function StackTile ({
   children,
   ...rest
 }: BoxProps): JSX.Element {
   return (
-    <Box
+    <Flex
       w='100%'
       minH={58}
       {...rest}
     >
       {children}
-    </Box>
+    </Flex>
   )
 }

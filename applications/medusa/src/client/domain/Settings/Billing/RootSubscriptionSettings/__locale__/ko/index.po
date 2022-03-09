@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-03-09 15:28-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:35
+msgid "All of the clubs where you are a paid supporter and you have access to exclusive content."
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:105
+msgid "Benefits expire on"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:115
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:129
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:164
+msgid "Cancel Subscription"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:145
+msgid "Cancelled on"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/ManageSubscriptionButton.tsx:29
+msgid "Expires in {cancelledRemainingDays} days"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:30
+msgid "My Subscriptions"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:119
+msgid "Next renewal on"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:140
+msgid "Please tell us why you would like to cancel the subscription."
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:98
+msgid "Subscription was cancelled. You will no longer be billed when it expires."
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:133
+msgid "Supported for"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:93
+msgid "Supporter since"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:106
+msgid "There was an error cancelling your subscription."
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:150
+msgid "{cancelledAt}"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:110
+msgid "{lastBillingDate}"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionPreview/SubscriptionPreview.tsx:138
+msgid "{supporterDurationInMonths} months"
+msgstr ""

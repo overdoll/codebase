@@ -52,7 +52,8 @@ msgstr ""
 #~ msgid "Character Thumbnail"
 #~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:112
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:112
 msgid "Deprecated"
 msgstr ""
 
@@ -81,8 +82,8 @@ msgid "Error updating rule title"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
-msgid "Infraction"
-msgstr ""
+#~ msgid "Infraction"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:133
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:132
@@ -109,9 +110,9 @@ msgstr ""
 msgid "Rule Title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:124
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:124
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
 msgid "Submit"
 msgstr ""

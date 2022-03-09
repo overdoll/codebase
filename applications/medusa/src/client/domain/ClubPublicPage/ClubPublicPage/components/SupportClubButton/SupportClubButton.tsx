@@ -101,18 +101,20 @@ export default function SupportClubButton ({
           <Stack spacing={1}>
             <Text fontSize='md' color='gray.00'>
               <Trans>
-                Thanks for supporting this club! You can access all of its exclusive content.
+                Thanks for supporting this club! You can now access all of its exclusive content.
               </Trans>
             </Text>
-            <Button
+            <LinkButton
               colorScheme='gray'
               size='md'
+              w='100%'
               {...rest}
+              to='/settings/billing/subscriptions'
             >
               <Trans>
-                View Subscription
+                My Subscriptions
               </Trans>
-            </Button>
+            </LinkButton>
           </Stack>)
         : (
           <Stack spacing={1}>

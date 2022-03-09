@@ -148,7 +148,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:35
+#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:38
 msgid "Load More"
 msgstr ""
 
@@ -294,7 +294,11 @@ msgid "Please enter an email"
 msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
-msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgstr ""
+
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
+msgid "Please review the<0>Community Guidelines</0>to make sure this doesn't happen again."
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:104
@@ -392,7 +396,11 @@ msgid "The name must be at least 3 characters"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:112
-msgid "There was an erro submitting the report"
+#~ msgid "There was an erro submitting the report"
+#~ msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:112
+msgid "There was an error submitting the report"
 msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
@@ -453,7 +461,7 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:89
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
@@ -461,7 +469,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:94
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:107
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
@@ -490,7 +498,7 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:104
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
 msgid "{countdown}"
 msgstr ""
 

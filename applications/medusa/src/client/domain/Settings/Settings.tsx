@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useLocation } from '@//:modules/routing'
 import Redirect from '@//:modules/routing/Redirect'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons/navigation'
+import { BillingIdentifier, SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
@@ -52,6 +52,16 @@ export default function Settings ({ children }: Props): JSX.Element {
             </Trans>
           }
           icon={CategoryIdentifier}
+        />
+        <VerticalNavigation.Button
+          to='/settings/billing'
+          colorScheme='green'
+          title={
+            <Trans>
+              Billing
+            </Trans>
+          }
+          icon={BillingIdentifier}
         />
         <Can I='moderate' a='Post'>
           <VerticalNavigation.Button

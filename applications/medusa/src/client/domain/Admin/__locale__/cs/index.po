@@ -143,7 +143,7 @@ msgstr ""
 msgid "Category {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:133
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:136
 msgid "Causes an infraction"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgid "Characters"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:90
-#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:159
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:166
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience.tsx:30
 msgid "Create Audience"
 msgstr ""
@@ -236,7 +236,7 @@ msgid "Create Character"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:108
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:141
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:148
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule.tsx:30
 msgid "Create Rule"
 msgstr ""
@@ -247,7 +247,8 @@ msgstr ""
 msgid "Create Series"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:112
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:112
 msgid "Deprecated"
 msgstr ""
 
@@ -359,8 +360,8 @@ msgid "Error updating series title"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
-msgid "Infraction"
-msgstr ""
+#~ msgid "Infraction"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:33
 msgid "Infractions"
@@ -575,21 +576,21 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:151
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:110
+#: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:154
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:113
 msgid "Standard"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:118
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:125
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:124
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:117
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:124
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144

@@ -168,27 +168,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/test-payment-flow',
-        exact: true,
-        component: loadable(async () =>
-          await import(
-            './domain/TestPaymentFlow/TestPaymentFlow'
-          )
-        ),
-        prepare: () => {
-          const TestPaymentFlowTransaction = require('@//:artifacts/TestPaymentFlowTransactionQuery.graphql')
-          return {
-            testPaymentFlowTransactionQuery: {
-              query: TestPaymentFlowTransaction,
-              variables: { token: '' },
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        }
-      },
-      {
         path: '/join',
         exact: true,
         dependencies: [
@@ -1533,13 +1512,6 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
-            middleware: [
-              ({ environment }) => {
-                const ability = getAbilityFromUser(environment)
-
-                return ability.can('moderate', 'Post')
-              }
-            ],
             prepare: () => {
               const Query = require('@//:artifacts/CurationSettingsQuery.graphql')
               return {
@@ -1552,6 +1524,56 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/settings/billing',
+            component: loadable(async () =>
+              await import(
+                './domain/Settings/Billing/Billing'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Billing/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            routes: [
+              {
+                path: '/settings/billing/subscriptions',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/RootSubscriptionSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings'
+                  )
+                ),
+                prepare: () => {
+                  const Query = require('@//:artifacts/SubscriptionSettingsQuery.graphql')
+                  return {
+                    subscriptionsQuery: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         ]
       },

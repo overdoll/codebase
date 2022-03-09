@@ -13,7 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubExclusivePostsFragment on Club {
     slug
-    exclusivePosts: posts(first: 10, sortBy: NEW) {
+    exclusivePosts: posts(first: 10, sortBy: NEW, supporterOnlyStatus: [FULL, PARTIAL]) {
       ...PostsHorizontalPreviewFragment
     }
   }

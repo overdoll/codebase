@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c86ce03788f83ea5455332b104b75d00>>
+ * @generated SignedSource<<bf7b8e8e448418ea3c949bf61ee8b496>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,6 +48,14 @@ const node: ReaderFragment = {
           "kind": "Literal",
           "name": "sortBy",
           "value": "NEW"
+        },
+        {
+          "kind": "Literal",
+          "name": "supporterOnlyStatus",
+          "value": [
+            "FULL",
+            "PARTIAL"
+          ]
         }
       ],
       "concreteType": "PostConnection",
@@ -61,13 +69,13 @@ const node: ReaderFragment = {
           "name": "PostsHorizontalPreviewFragment"
         }
       ],
-      "storageKey": "posts(first:10,sortBy:\"NEW\")"
+      "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "ef8eeef048a46db8cee979cdc5bb6415";
+(node as any).hash = "c66a673ed4a14761f558038e9dac2476";
 
 export default node;

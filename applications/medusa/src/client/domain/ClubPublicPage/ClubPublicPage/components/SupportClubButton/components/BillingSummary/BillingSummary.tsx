@@ -78,7 +78,7 @@ export default function BillingSummary ({
         <Text fontSize='sm' color='gray.300'>
           <Trans>
             Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your
-            Subscriptions page, which is located in your Account Settings.
+            Billing page, which is located in your Account Settings.
           </Trans>
         </Text>
       </Box>

@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:133
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:136
 msgid "Causes an infraction"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:141
+#: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:148
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule.tsx:30
 msgid "Create Rule"
 msgstr ""

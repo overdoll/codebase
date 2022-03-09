@@ -45,7 +45,7 @@ msgstr ""
 msgid "Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:71
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
 msgid "All characters must be of legal age"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 #~ msgid "Arrange your uploads"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:65
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:64
 msgid "As a reminder of the guidelines"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:179
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:180
 msgid "Create Club"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:109
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:116
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
@@ -252,12 +252,16 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:69
 msgid "Nothing extremely offensive or shocking"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:80
-msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgstr ""
+
+#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:80
+msgid "Please review the<0>Club Guidelines</0>to make sure this doesn't happen again."
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowFooter/FlowFooter.tsx:43
@@ -496,7 +500,7 @@ msgstr ""
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:98
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:105
 msgid "This post was already submitted"
 msgstr ""
 
@@ -514,7 +518,11 @@ msgid "Upload one or more files by dragging and dropping them or by tapping here
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:77
-msgid "Upstanding netizens will read all the rules before posting"
+#~ msgid "Upstanding netizens will read all the rules before posting"
+#~ msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
+msgid "Upstanding netizens will read the<0>Club Guidelines</0>carefully before posting"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:53
@@ -550,7 +558,7 @@ msgstr ""
 msgid "You have added the maximum amount of aliases. You'll have to remove at least one alias to be able to add another."
 msgstr ""
 
-#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:89
+#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:96
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
@@ -558,7 +566,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:72
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:71
 msgid "You own the rights to the content you upload"
 msgstr ""
 
@@ -578,7 +586,7 @@ msgstr ""
 msgid "Your Unique Club Link"
 msgstr ""
 
-#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:94
+#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:101
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
@@ -599,6 +607,6 @@ msgstr ""
 msgid "overdoll.com/"
 msgstr ""
 
-#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:104
+#: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:111
 msgid "{countdown}"
 msgstr ""

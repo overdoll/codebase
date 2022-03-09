@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8e80aed215455329cbe4ed12e12855f9>>
- * @relayHash 830ca84be9194cd624c09ecf6adc9d74
+ * @generated SignedSource<<6add70ad15f5265f600a381c533a1828>>
+ * @relayHash e28e31a5071499928a7bd675495b3f10
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 830ca84be9194cd624c09ecf6adc9d74
+// @relayRequestID e28e31a5071499928a7bd675495b3f10
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -509,6 +509,14 @@ return {
                 "kind": "Literal",
                 "name": "sortBy",
                 "value": "NEW"
+              },
+              {
+                "kind": "Literal",
+                "name": "supporterOnlyStatus",
+                "value": [
+                  "FULL",
+                  "PARTIAL"
+                ]
               }
             ],
             "concreteType": "PostConnection",
@@ -516,7 +524,7 @@ return {
             "name": "posts",
             "plural": false,
             "selections": (v11/*: any*/),
-            "storageKey": "posts(first:10,sortBy:\"NEW\")"
+            "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
           },
           {
             "alias": null,
@@ -660,7 +668,7 @@ return {
     ]
   },
   "params": {
-    "id": "830ca84be9194cd624c09ecf6adc9d74",
+    "id": "e28e31a5071499928a7bd675495b3f10",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

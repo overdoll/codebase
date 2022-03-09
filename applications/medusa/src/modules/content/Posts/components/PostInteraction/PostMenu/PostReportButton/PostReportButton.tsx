@@ -109,7 +109,7 @@ export default function PostReportButton ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an erro submitting the report`
+          title: t`There was an error submitting the report`
         })
       }
     })

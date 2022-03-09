@@ -28,6 +28,7 @@ export default function Choice ({
     <Box
       id={id}
       h='100%'
+      w='inherit'
       borderRadius='md'
       borderColor={isActive ? 'green.500' : 'transparent'}
       borderWidth={2}

@@ -21,7 +21,7 @@ msgstr ""
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:179
+#: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:180
 msgid "Create Club"
 msgstr ""
 

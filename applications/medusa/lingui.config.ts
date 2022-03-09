@@ -69,8 +69,16 @@ export default {
       include: ['src/client/domain/Settings/Preferences']
     },
     {
+      path: 'src/client/domain/Settings/Billing/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/RootSubscriptionSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootSubscriptionSettings']
+    },
+    {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/Moderation.tsx']
+      include: ['src/client/domain/Moderation/Moderation']
     },
     {
       path: 'src/client/domain/Moderation/pages/History/__locale__/{locale}/index',
