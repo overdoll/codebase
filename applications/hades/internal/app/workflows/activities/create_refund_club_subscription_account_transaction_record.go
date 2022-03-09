@@ -3,22 +3,22 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
+	"time"
 )
 
 type CreateRefundClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
 	ClubId    string
-	Timestamp string
+	Timestamp time.Time
 
 	Currency string
-	Amount   string
+	Amount   int64
 	Reason   string
 
+	CardBin            string
 	CardType           string
 	CardLast4          string
 	CardExpirationDate string
@@ -26,7 +26,7 @@ type CreateRefundClubSubscriptionAccountTransactionRecordInput struct {
 
 func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateRefundClubSubscriptionAccountTransactionRecordInput) error {
 
-	card, err := billing.NewCard("", input.CardType, input.CardLast4, input.CardExpirationDate)
+	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
@@ -38,28 +38,20 @@ func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx co
 		return err
 	}
 
-	amount, err := strconv.ParseFloat(input.Amount, 64)
-
-	if err != nil {
-		return err
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	transaction, err := billing.NewRefundClubSubscriptionAccountTransactionFromCCBill(
+	transaction, err := billing.NewRefundClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
-		timestamp,
-		amount,
+		input.Timestamp,
+		input.Amount,
 		input.Currency,
 		input.Reason,
 		paymentMethod,
 	)
+
+	if err != nil {
+		return err
+	}
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err

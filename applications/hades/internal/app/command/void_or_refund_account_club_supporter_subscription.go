@@ -12,7 +12,7 @@ type VoidOrRefundAccountClubSupporterSubscription struct {
 	AccountId                          string
 	ClubId                             string
 	AccountClubSupporterSubscriptionId string
-	Amount                             float64
+	Amount                             int64
 }
 
 type VoidOrRefundAccountClubSupporterSubscriptionHandler struct {
@@ -36,12 +36,11 @@ func (h VoidOrRefundAccountClubSupporterSubscriptionHandler) Handle(ctx context.
 		return err
 	}
 
-	var voidOrRefund *ccbill.VoidOrRefund
-
-	voidOrRefund, err = ccbill.NewVoidOrRefundWithCustomAmount(
-		clubSupporterSubscription.CCBillSubscriptionId(),
+	voidOrRefund, err := ccbill.NewVoidOrRefundWithCustomAmount(
+		*clubSupporterSubscription.CCBillSubscriptionId(),
 		cmd.Amount,
 		clubSupporterSubscription.BillingAmount(),
+		clubSupporterSubscription.BillingCurrency().String(),
 	)
 
 	if err != nil {

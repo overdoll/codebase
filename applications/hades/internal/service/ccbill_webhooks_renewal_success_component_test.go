@@ -88,7 +88,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
 	require.Equal(t, types.CurrencyUsd, subscription.Node.BillingCurrency, "USD currency is used")
-	require.Equal(t, 6.99, subscription.Node.BillingAmount, "correct billing amount")
+	require.Equal(t, 699, subscription.Node.BillingAmount, "correct billing amount")
 	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
 	require.Equal(t, "2024-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
 
@@ -111,7 +111,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 

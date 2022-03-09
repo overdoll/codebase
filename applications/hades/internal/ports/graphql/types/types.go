@@ -61,7 +61,9 @@ type AccountChargebackTransactionHistory struct {
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged back.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 	// The currency charged back in.
 	Currency Currency `json:"currency"`
 	// The club that was supported as part of this transaction history.
@@ -98,7 +100,7 @@ type AccountClubSupporterSubscription struct {
 	// When this subscription was cancelled.
 	CancelledAt *time.Time `json:"cancelledAt"`
 	// The billing amount.
-	BillingAmount float64 `json:"billingAmount"`
+	BillingAmount int `json:"billingAmount"`
 	// The currency.
 	BillingCurrency Currency `json:"billingCurrency"`
 	// The payment method linked to this subscription.
@@ -175,7 +177,9 @@ type AccountInvoiceTransactionHistory struct {
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 	// The currency charged in.
 	Currency Currency `json:"currency"`
 	// When the billing occurred.
@@ -204,7 +208,9 @@ type AccountNewTransactionHistory struct {
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount charged.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 	// The currency charged in.
 	Currency Currency `json:"currency"`
 	// When the billing occurred.
@@ -254,7 +260,9 @@ type AccountRefundTransactionHistory struct {
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount refunded.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 	// The currency refunded in.
 	Currency Currency `json:"currency"`
 	// The club that was supported as part of this transaction history.
@@ -318,7 +326,9 @@ type AccountVoidTransactionHistory struct {
 	// The account linked to this transaction history.
 	Account *Account `json:"account"`
 	// The amount voided.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 	// The currency voided in.
 	Currency Currency `json:"currency"`
 	// The club that was supported as part of this transaction history.
@@ -390,16 +400,16 @@ type CCBillSubscriptionDetails struct {
 	// The account linked to this ccbill subscription.
 	Account *Account `json:"account"`
 	// Subscription details.
-	SubscriptionInitialPrice   float64  `json:"subscriptionInitialPrice"`
-	SubscriptionRecurringPrice float64  `json:"subscriptionRecurringPrice"`
+	SubscriptionInitialPrice   int      `json:"subscriptionInitialPrice"`
+	SubscriptionRecurringPrice int      `json:"subscriptionRecurringPrice"`
 	SubscriptionCurrency       Currency `json:"subscriptionCurrency"`
 	// Billed details.
-	BilledInitialPrice   float64  `json:"billedInitialPrice"`
-	BilledRecurringPrice float64  `json:"billedRecurringPrice"`
+	BilledInitialPrice   int      `json:"billedInitialPrice"`
+	BilledRecurringPrice int      `json:"billedRecurringPrice"`
 	BilledCurrency       Currency `json:"billedCurrency"`
 	// Accounting details.
-	AccountingInitialPrice   float64  `json:"accountingInitialPrice"`
-	AccountingRecurringPrice float64  `json:"accountingRecurringPrice"`
+	AccountingInitialPrice   int      `json:"accountingInitialPrice"`
+	AccountingRecurringPrice int      `json:"accountingRecurringPrice"`
 	AccountingCurrency       Currency `json:"accountingCurrency"`
 	// Whether or not this is recurring, or a one-time charge.
 	IsRecurring bool `json:"isRecurring"`
@@ -611,16 +621,24 @@ type PaymentMethod struct {
 
 // Type describing a price.
 type Price struct {
-	Amount   float64  `json:"amount"`
+	// The amount.
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
+	// The currency the amount is represented in.
 	Currency Currency `json:"currency"`
 }
 
 // A generated refund amount.
 type RefundAmount struct {
 	// A prorated refund amount, based on the first date and last date of billing / billing duration.
-	ProratedAmount float64 `json:"proratedAmount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	ProratedAmount int `json:"proratedAmount"`
 	// The maximum amount you can issue a refund for.
-	MaximumAmount float64 `json:"maximumAmount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	MaximumAmount int `json:"maximumAmount"`
 	// The currency.
 	Currency Currency `json:"currency"`
 }
@@ -667,7 +685,9 @@ type VoidOrRefundAccountClubSupporterSubscriptionInput struct {
 	// The id of the subscription.
 	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
 	// The amount to refund.
-	Amount float64 `json:"amount"`
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
 }
 
 // Payload for voiding or refunding account club supporter subscription.

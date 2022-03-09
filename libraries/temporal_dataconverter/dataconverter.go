@@ -26,7 +26,7 @@ type encryptDataConverterV1 struct {
 	orderedEncodings  []string
 }
 
-type nightfallTemporalEncodings struct {
+type temporalEncodings struct {
 	encoding string
 	isAESV1  bool
 }
@@ -198,30 +198,30 @@ func (dc *encryptDataConverterV1) encryptPayload(unencryptedPayload *commonpb.Pa
 }
 
 // decryptPayload figures out from metadata whether the payload needs to be decrypted
-func (dc *encryptDataConverterV1) decryptPayload(payload *commonpb.Payload) (nightfallTemporalEncodings, error) {
-	nightfallEncodings, err := encoding(payload)
+func (dc *encryptDataConverterV1) decryptPayload(payload *commonpb.Payload) (temporalEncodings, error) {
+	encodings, err := encoding(payload)
 	if err != nil {
-		return nightfallTemporalEncodings{}, err
+		return temporalEncodings{}, err
 	}
-	if nightfallEncodings.isAESV1 {
+	if encodings.isAESV1 {
 		if payload.Data, err = dc.encryptionService.Decrypt(payload.GetData()); err != nil {
-			return nightfallTemporalEncodings{}, err
+			return temporalEncodings{}, err
 		}
 	}
-	return nightfallEncodings, nil
+	return encodings, nil
 }
 
-func encoding(payload *commonpb.Payload) (nightfallTemporalEncodings, error) {
+func encoding(payload *commonpb.Payload) (temporalEncodings, error) {
 	metadata := payload.GetMetadata()
 	if metadata == nil {
-		return nightfallTemporalEncodings{}, ErrMetadataIsNotSet
+		return temporalEncodings{}, ErrMetadataIsNotSet
 	}
 	encryptionType, hasEncryption := metadata[metadataEncryptionKey]
 	if encoding, ok := metadata[converter.MetadataEncoding]; ok {
-		return nightfallTemporalEncodings{
+		return temporalEncodings{
 			encoding: string(encoding),
 			isAESV1:  hasEncryption && (string(encryptionType) == metadataEncryptedAESV1),
 		}, nil
 	}
-	return nightfallTemporalEncodings{}, ErrEncodingIsNotSet
+	return temporalEncodings{}, ErrEncodingIsNotSet
 }

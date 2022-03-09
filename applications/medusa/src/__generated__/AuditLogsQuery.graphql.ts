@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cce55798c55ec5bd6dca362d3ef3ad91>>
- * @relayHash fadcac37147ee4b1add8c65cf40f6e50
+ * @generated SignedSource<<53e17eea914db8c33143ccf7d1b8e17d>>
+ * @relayHash 91f9911174a76074968db8b7e35b763c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fadcac37147ee4b1add8c65cf40f6e50
+// @relayRequestID 91f9911174a76074968db8b7e35b763c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -44,25 +44,19 @@ var v0 = [
 ],
 v1 = [
   {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "from",
-        "variableName": "from"
-      },
-      {
-        "kind": "Variable",
-        "name": "to",
-        "variableName": "to"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "dateRange"
-  },
-  {
     "kind": "Literal",
     "name": "first",
     "value": 5
+  },
+  {
+    "kind": "Variable",
+    "name": "from",
+    "variableName": "from"
+  },
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
   }
 ],
 v2 = {
@@ -395,7 +389,8 @@ return {
             "alias": null,
             "args": (v1/*: any*/),
             "filters": [
-              "dateRange"
+              "from",
+              "to"
             ],
             "handle": "connection",
             "key": "AuditLogsAccount_postAuditLogs",
@@ -409,7 +404,7 @@ return {
     ]
   },
   "params": {
-    "id": "fadcac37147ee4b1add8c65cf40f6e50",
+    "id": "91f9911174a76074968db8b7e35b763c",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

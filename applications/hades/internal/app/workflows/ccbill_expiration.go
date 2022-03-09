@@ -3,6 +3,7 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CCBillExpirationInput struct {
@@ -25,13 +26,19 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 		return err
 	}
 
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
 	// create expired record
 	if err := workflow.ExecuteActivity(ctx, a.CreateExpiredClubSubscriptionAccountTransactionRecord,
 		activities.CreateExpiredClubSubscriptionAccountTransactionRecordInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: input.SubscriptionId,
-			Timestamp:            input.Timestamp,
+			CCBillSubscriptionId: &input.SubscriptionId,
+			Timestamp:            timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -42,7 +49,7 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 		activities.RemoveAccountClubSupportSubscriptionInput{
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

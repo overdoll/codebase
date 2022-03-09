@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3b95e3122e2ecb27a1487b74504bb6c1>>
- * @relayHash 89f44bcb143b2ddf9c77f21bdbde4406
+ * @generated SignedSource<<febe5c99bffc143a7b68b11b648af766>>
+ * @relayHash 7ef08502181bf8c03472866198be2206
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 89f44bcb143b2ddf9c77f21bdbde4406
+// @relayRequestID 7ef08502181bf8c03472866198be2206
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RejectPostInput = {
@@ -24,11 +24,8 @@ export type ModeratePostRejectMutation$variables = {
 export type ModeratePostRejectMutationVariables = ModeratePostRejectMutation$variables;
 export type ModeratePostRejectMutation$data = {
   readonly rejectPost: {
-    readonly postAuditLog: {
+    readonly post: {
       readonly id: string;
-      readonly post: {
-        readonly id: string;
-      };
     } | null;
   } | null;
 };
@@ -84,24 +81,12 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostAuditLog",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "postAuditLog",
+            "name": "post",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Post",
-                "kind": "LinkedField",
-                "name": "post",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           }
@@ -132,39 +117,27 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostAuditLog",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "postAuditLog",
+            "name": "post",
             "plural": false,
             "selections": [
               (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Post",
-                "kind": "LinkedField",
-                "name": "post",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
+                "filters": null,
+                "handle": "deleteEdge",
+                "key": "",
+                "kind": "ScalarHandle",
+                "name": "id",
+                "handleArgs": [
                   {
-                    "alias": null,
-                    "args": null,
-                    "filters": null,
-                    "handle": "deleteEdge",
-                    "key": "",
-                    "kind": "ScalarHandle",
-                    "name": "id",
-                    "handleArgs": [
-                      {
-                        "kind": "Variable",
-                        "name": "connections",
-                        "variableName": "connections"
-                      }
-                    ]
+                    "kind": "Variable",
+                    "name": "connections",
+                    "variableName": "connections"
                   }
-                ],
-                "storageKey": null
+                ]
               }
             ],
             "storageKey": null
@@ -175,7 +148,7 @@ return {
     ]
   },
   "params": {
-    "id": "89f44bcb143b2ddf9c77f21bdbde4406",
+    "id": "7ef08502181bf8c03472866198be2206",
     "metadata": {},
     "name": "ModeratePostRejectMutation",
     "operationKind": "mutation",
@@ -184,6 +157,6 @@ return {
 };
 })();
 
-(node as any).hash = "43c3f00a14f96a925f1ccec977fabbb9";
+(node as any).hash = "437cfbac12649689ce300715dfdb1751";
 
 export default node;

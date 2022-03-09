@@ -3,9 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
-	"strings"
+	"time"
 )
 
 type CreateAccountClubSupportSubscriptionInput struct {
@@ -13,19 +11,20 @@ type CreateAccountClubSupportSubscriptionInput struct {
 
 	AccountId            string
 	ClubId               string
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
-	Timestamp string
+	Timestamp time.Time
 
-	Amount   string
+	Amount   int64
 	Currency string
 
-	NextRenewalDate string
+	LastRenewalDate time.Time
+	NextRenewalDate time.Time
 }
 
 func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, input CreateAccountClubSupportSubscriptionInput) error {
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *input.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
@@ -34,7 +33,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 	// save payment details for later
 	if input.SavePaymentDetails && input.Currency == "USD" {
 
-		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(input.AccountId, input.CCBillSubscriptionId, ccbillSubscription.PaymentMethod(), input.Currency)
+		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(input.AccountId, *input.CCBillSubscriptionId, ccbillSubscription.PaymentMethod(), input.Currency)
 
 		if err != nil {
 			return err
@@ -45,38 +44,14 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 		}
 	}
 
-	amount, err := strconv.ParseFloat(input.Amount, 64)
-
-	if err != nil {
-		return err
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	lastBillingDate, err := ccbill.ParseCCBillDate(strings.Split(input.Timestamp, " ")[0])
-
-	if err != nil {
-		return err
-	}
-
-	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
-
-	if err != nil {
-		return err
-	}
-
 	newSubscription, err := billing.NewAccountClubSupporterSubscriptionFromCCBill(
 		input.AccountId,
 		input.ClubId,
-		input.CCBillSubscriptionId,
-		timestamp,
-		lastBillingDate,
-		nextBillingDate,
-		amount,
+		*input.CCBillSubscriptionId,
+		input.Timestamp,
+		input.LastRenewalDate,
+		input.NextRenewalDate,
+		input.Amount,
 		input.Currency,
 		ccbillSubscription.PaymentMethod(),
 	)

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<29d8cea768e06544b89f5b7760cafc50>>
- * @relayHash 537727d784ad1cb04dd4666cf1930cc7
+ * @generated SignedSource<<e4291ac44b6986142a367cc9333c10f3>>
+ * @relayHash ed59323f91ddac3053f19a666e45c953
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,17 +9,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 537727d784ad1cb04dd4666cf1930cc7
+// @relayRequestID ed59323f91ddac3053f19a666e45c953
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostReportDateRange = {
-  from: any;
-  to: any;
-};
 export type ViewPostReportsQuery$variables = {
   reference: string;
-  dateRange: PostReportDateRange;
+  from: any;
+  to?: any | null;
 };
 export type ViewPostReportsQueryVariables = ViewPostReportsQuery$variables;
 export type ViewPostReportsQuery$data = {
@@ -37,33 +34,43 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "dateRange"
+  "name": "from"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
   "name": "reference"
 },
-v2 = [
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "to"
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "reference",
     "variableName": "reference"
   }
 ],
-v3 = [
-  {
-    "kind": "Variable",
-    "name": "dateRange",
-    "variableName": "dateRange"
-  },
+v4 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 5
+  },
+  {
+    "kind": "Variable",
+    "name": "from",
+    "variableName": "from"
+  },
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
   }
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -74,7 +81,8 @@ return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -84,7 +92,7 @@ return {
         "kind": "RequiredField",
         "field": {
           "alias": null,
-          "args": (v2/*: any*/),
+          "args": (v3/*: any*/),
           "concreteType": "Post",
           "kind": "LinkedField",
           "name": "post",
@@ -109,14 +117,15 @@ return {
   "operation": {
     "argumentDefinitions": [
       (v1/*: any*/),
-      (v0/*: any*/)
+      (v0/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "ViewPostReportsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "Post",
         "kind": "LinkedField",
         "name": "post",
@@ -124,7 +133,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "PostReportConnection",
             "kind": "LinkedField",
             "name": "reports",
@@ -146,7 +155,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -162,7 +171,7 @@ return {
                             "name": "username",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -181,7 +190,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -235,23 +244,24 @@ return {
           },
           {
             "alias": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "filters": [
-              "dateRange"
+              "from",
+              "to"
             ],
             "handle": "connection",
             "key": "ViewPostReports_reports",
             "kind": "LinkedHandle",
             "name": "reports"
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "537727d784ad1cb04dd4666cf1930cc7",
+    "id": "ed59323f91ddac3053f19a666e45c953",
     "metadata": {},
     "name": "ViewPostReportsQuery",
     "operationKind": "query",
@@ -260,6 +270,6 @@ return {
 };
 })();
 
-(node as any).hash = "ed299a2d16a9560391525c11cc69aa6b";
+(node as any).hash = "5c3df2b901cc3f818ff45d95425113c5";
 
 export default node;

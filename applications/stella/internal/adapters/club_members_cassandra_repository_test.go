@@ -25,7 +25,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	principalItem := principal.NewPrincipal(testAccountId, nil, false, false)
 
 	// create a new club for testing
-	err := clubRepo.CreateClub(ctx, club.UnmarshalClubFromDatabase(testClubId, testClubId, nil, nil, "", 0, testAccountId, false, nil))
+	err := clubRepo.CreateClub(ctx, club.UnmarshalClubFromDatabase(testClubId, testClubId, nil, nil, nil, 0, testAccountId, false, nil))
 	require.NoError(t, err, "no error creating a club")
 
 	// add members

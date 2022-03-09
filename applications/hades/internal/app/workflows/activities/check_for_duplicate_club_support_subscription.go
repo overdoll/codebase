@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"strconv"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
@@ -114,37 +114,37 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
-	accountingInitialPrice, err := strconv.ParseFloat(input.AccountingInitialPrice, 64)
+	accountingInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
 
 	if err != nil {
 		return nil, err
 	}
 
-	accountingRecurringPrice, err := strconv.ParseFloat(input.AccountingRecurringPrice, 64)
+	accountingRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingRecurringPrice, input.AccountingCurrency)
 
 	if err != nil {
 		return nil, err
 	}
 
-	subscriptionInitialPrice, err := strconv.ParseFloat(input.SubscriptionInitialPrice, 64)
+	subscriptionInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionInitialPrice, input.SubscriptionCurrency)
 
 	if err != nil {
 		return nil, err
 	}
 
-	subscriptionRecurringPrice, err := strconv.ParseFloat(input.SubscriptionRecurringPrice, 64)
+	subscriptionRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionRecurringPrice, input.SubscriptionCurrency)
 
 	if err != nil {
 		return nil, err
 	}
 
-	billedInitialPrice, err := strconv.ParseFloat(input.BilledInitialPrice, 64)
+	billedInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledInitialPrice, input.BilledCurrency)
 
 	if err != nil {
 		return nil, err
 	}
 
-	billedRecurringPrice, err := strconv.ParseFloat(input.BilledRecurringPrice, 64)
+	billedRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledRecurringPrice, input.BilledCurrency)
 
 	if err != nil {
 		return nil, err

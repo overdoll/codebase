@@ -97,7 +97,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

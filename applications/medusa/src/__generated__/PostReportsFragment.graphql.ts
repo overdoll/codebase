@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85ec30cff152e0c9fbd9ea6c5ea70b71>>
+ * @generated SignedSource<<8a35aa388288d52ce3161e5244367ab0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,13 +47,17 @@ return {
       "name": "after"
     },
     {
-      "kind": "RootArgument",
-      "name": "dateRange"
-    },
-    {
       "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "from"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "to"
     }
   ],
   "kind": "Fragment",
@@ -86,8 +90,13 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "dateRange",
-          "variableName": "dateRange"
+          "name": "from",
+          "variableName": "from"
+        },
+        {
+          "kind": "Variable",
+          "name": "to",
+          "variableName": "to"
         }
       ],
       "concreteType": "PostReportConnection",
@@ -226,6 +235,6 @@ return {
 };
 })();
 
-(node as any).hash = "c30fa10987a7d6cd59d9167199c98725";
+(node as any).hash = "aedec6f581a255fa59ef5dd104945398";
 
 export default node;

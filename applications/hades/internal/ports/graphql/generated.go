@@ -2254,8 +2254,12 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged in."""
   currency: Currency!
@@ -2290,8 +2294,12 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged in."""
   currency: Currency!
@@ -2399,8 +2407,12 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount refunded."""
-  amount: Float!
+  """
+  The amount refunded.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency refunded in."""
   currency: Currency!
@@ -2432,8 +2444,12 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount voided."""
-  amount: Float!
+  """
+  The amount voided.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency voided in."""
   currency: Currency!
@@ -2462,8 +2478,12 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged back."""
-  amount: Float!
+  """
+  The amount charged back.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged back in."""
   currency: Currency!
@@ -2512,11 +2532,19 @@ type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
 A generated refund amount.
 """
 type RefundAmount {
-  """A prorated refund amount, based on the first date and last date of billing / billing duration."""
-  proratedAmount: Float!
+  """
+  A prorated refund amount, based on the first date and last date of billing / billing duration.
 
-  """The maximum amount you can issue a refund for."""
-  maximumAmount: Float!
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  proratedAmount: Int!
+
+  """
+  The maximum amount you can issue a refund for.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  maximumAmount: Int!
 
   """The currency."""
   currency: Currency!
@@ -2548,18 +2576,18 @@ type CCBillSubscriptionDetails {
   account: Account!
 
   """Subscription details."""
-  subscriptionInitialPrice: Float!
-  subscriptionRecurringPrice: Float!
+  subscriptionInitialPrice: Int!
+  subscriptionRecurringPrice: Int!
   subscriptionCurrency: Currency!
 
   """Billed details."""
-  billedInitialPrice: Float!
-  billedRecurringPrice: Float!
+  billedInitialPrice: Int!
+  billedRecurringPrice: Int!
   billedCurrency: Currency!
 
   """Accounting details."""
-  accountingInitialPrice: Float!
-  accountingRecurringPrice: Float!
+  accountingInitialPrice: Int!
+  accountingRecurringPrice: Int!
   accountingCurrency: Currency!
 
   """Whether or not this is recurring, or a one-time charge."""
@@ -2647,7 +2675,7 @@ type AccountClubSupporterSubscription {
   cancelledAt: Time
 
   """The billing amount."""
-  billingAmount: Float!
+  billingAmount: Int!
 
   """The currency."""
   billingCurrency: Currency!
@@ -2741,7 +2769,16 @@ enum CCBillDeclineError {
 
 """Type describing a price."""
 type Price {
-  amount: Float!
+  """
+  The amount.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
+
+  """
+  The currency the amount is represented in.
+  """
   currency: Currency!
 }
 
@@ -2887,8 +2924,12 @@ input VoidOrRefundAccountClubSupporterSubscriptionInput {
   """The id of the subscription."""
   clubSupporterSubscriptionId: ID!
 
-  """The amount to refund."""
-  amount: Float!
+  """
+  The amount to refund.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 }
 
 """Generate club supporter receipt input."""
@@ -4354,9 +4395,9 @@ func (ec *executionContext) _AccountChargebackTransactionHistory_amount(ctx cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountChargebackTransactionHistory_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountChargebackTransactionHistory) (ret graphql.Marshaler) {
@@ -4867,9 +4908,9 @@ func (ec *executionContext) _AccountClubSupporterSubscription_billingAmount(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountClubSupporterSubscription_billingCurrency(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -5823,9 +5864,9 @@ func (ec *executionContext) _AccountInvoiceTransactionHistory_amount(ctx context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountInvoiceTransactionHistory_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountInvoiceTransactionHistory) (ret graphql.Marshaler) {
@@ -6202,9 +6243,9 @@ func (ec *executionContext) _AccountNewTransactionHistory_amount(ctx context.Con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountNewTransactionHistory_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountNewTransactionHistory) (ret graphql.Marshaler) {
@@ -6820,9 +6861,9 @@ func (ec *executionContext) _AccountRefundTransactionHistory_amount(ctx context.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountRefundTransactionHistory_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountRefundTransactionHistory) (ret graphql.Marshaler) {
@@ -7613,9 +7654,9 @@ func (ec *executionContext) _AccountVoidTransactionHistory_amount(ctx context.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountVoidTransactionHistory_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountVoidTransactionHistory) (ret graphql.Marshaler) {
@@ -8438,9 +8479,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_subscriptionInitialPrice(
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_subscriptionRecurringPrice(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8473,9 +8514,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_subscriptionRecurringPric
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_subscriptionCurrency(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8543,9 +8584,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_billedInitialPrice(ctx co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_billedRecurringPrice(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8578,9 +8619,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_billedRecurringPrice(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_billedCurrency(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8648,9 +8689,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_accountingInitialPrice(ct
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_accountingRecurringPrice(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8683,9 +8724,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_accountingRecurringPrice(
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_accountingCurrency(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -10943,9 +10984,9 @@ func (ec *executionContext) _Price_amount(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Price_currency(ctx context.Context, field graphql.CollectedField, obj *types.Price) (ret graphql.Marshaler) {
@@ -11320,9 +11361,9 @@ func (ec *executionContext) _RefundAmount_proratedAmount(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RefundAmount_maximumAmount(ctx context.Context, field graphql.CollectedField, obj *types.RefundAmount) (ret graphql.Marshaler) {
@@ -11355,9 +11396,9 @@ func (ec *executionContext) _RefundAmount_maximumAmount(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RefundAmount_currency(ctx context.Context, field graphql.CollectedField, obj *types.RefundAmount) (ret graphql.Marshaler) {
@@ -13048,7 +13089,7 @@ func (ec *executionContext) unmarshalInputVoidOrRefundAccountClubSupporterSubscr
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("amount"))
-			it.Amount, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Amount, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17435,21 +17476,6 @@ func (ec *executionContext) unmarshalNDeleteAccountSavedPaymentMethodInput2overd
 func (ec *executionContext) unmarshalNExtendAccountClubSupporterSubscriptionInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐExtendAccountClubSupporterSubscriptionInput(ctx context.Context, v interface{}) (types.ExtendAccountClubSupporterSubscriptionInput, error) {
 	res, err := ec.unmarshalInputExtendAccountClubSupporterSubscriptionInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
-	res, err := graphql.UnmarshalFloat(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
-	res := graphql.MarshalFloat(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) unmarshalNGenerateCCBillClubSupporterPaymentLinkInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCCBillClubSupporterPaymentLinkInput(ctx context.Context, v interface{}) (types.GenerateCCBillClubSupporterPaymentLinkInput, error) {

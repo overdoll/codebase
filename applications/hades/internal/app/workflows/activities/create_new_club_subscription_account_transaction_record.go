@@ -4,62 +4,40 @@ import (
 	"context"
 	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
-	"strings"
+	"time"
 )
 
 type CreateNewClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
 	ClubId    string
-	Timestamp string
+	Timestamp time.Time
 
 	Currency string
-	Amount   string
+	Amount   int64
 
-	BillingDate     string
-	NextBillingDate string
+	BillingDate     time.Time
+	NextBillingDate time.Time
 }
 
 func (h *Activities) CreateNewClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateNewClubSubscriptionAccountTransactionRecordInput) error {
 
-	amount, err := strconv.ParseFloat(input.Amount, 64)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse amount: %s", err)
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse timestamp: %s", err)
-	}
-
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.BillingDate, " ")[0])
-
-	if err != nil {
-		return fmt.Errorf("failed to parse date: %s", err)
-	}
-
-	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextBillingDate)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse date: %s", err)
-	}
-
-	transaction, err := billing.NewNewClubSubscriptionAccountTransactionFromCCBill(
+	transaction, err := billing.NewNewClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
-		timestamp,
-		billedAtDate,
-		nextBillingDate,
-		amount,
+		input.Timestamp,
+		input.BillingDate,
+		input.NextBillingDate,
+		input.Amount,
 		input.Currency,
 	)
+
+	if err != nil {
+		return err
+	}
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return fmt.Errorf("failed to create transaction history: %s", err)

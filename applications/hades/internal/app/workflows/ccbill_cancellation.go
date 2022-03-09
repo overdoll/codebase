@@ -3,6 +3,7 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CCBillCancellationInput struct {
@@ -26,13 +27,19 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return err
 	}
 
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
 	// create cancelled record
 	if err := workflow.ExecuteActivity(ctx, a.CreateCancelledAccountTransactionRecord,
 		activities.CreateCancelledClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            input.Timestamp,
+			Timestamp:            timestamp,
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
@@ -42,10 +49,10 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 	// mark as cancelled to tell the user the new state
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupportCancelled,
 		activities.MarkAccountClubSupportCancelledInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CancelledAt:          input.Timestamp,
+			CancelledAt:          timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

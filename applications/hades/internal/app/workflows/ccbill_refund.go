@@ -3,6 +3,7 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CCBillRefundInput struct {
@@ -38,15 +39,27 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
+
+	if err != nil {
+		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
 	// create refund record
 	if err := workflow.ExecuteActivity(ctx, a.CreateRefundClubSubscriptionAccountTransactionRecord,
 		activities.CreateRefundClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            input.Timestamp,
+			Timestamp:            timestamp,
 			Currency:             input.Currency,
-			Amount:               input.Amount,
+			Amount:               amount,
 			Reason:               input.Reason,
 			CardLast4:            input.Last4,
 			CardType:             input.CardType,

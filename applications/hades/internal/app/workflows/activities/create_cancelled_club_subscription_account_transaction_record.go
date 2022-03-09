@@ -3,33 +3,27 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CreateCancelledClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 	ClubId    string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
-	Timestamp string
+	Timestamp time.Time
 
 	Reason string
 }
 
 func (h *Activities) CreateCancelledAccountTransactionRecord(ctx context.Context, input CreateCancelledClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	transaction, err := billing.NewCancelledClubSubscriptionAccountTransactionFromCCBill(
+	transaction, err := billing.NewCancelledClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
-		timestamp,
+		input.Timestamp,
 		input.Reason,
 	)
 

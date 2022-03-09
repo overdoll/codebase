@@ -3,6 +3,8 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
+	"strings"
 )
 
 type CCBillRenewalSuccessInput struct {
@@ -39,20 +41,40 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
+	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
+
+	if err != nil {
+		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.RenewalDate, " ")[0])
+
+	if err != nil {
+		return err
+	}
+
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
+
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransactionRecord,
 		activities.CreateInvoiceClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            input.Timestamp,
+			Timestamp:            timestamp,
 			CardLast4:            input.Last4,
 			CardType:             input.CardType,
 			CardExpirationDate:   input.ExpDate,
-			Amount:               input.BilledAmount,
+			Amount:               amount,
 			Currency:             input.BilledCurrency,
-			BillingDate:          input.RenewalDate,
-			NextBillingDate:      input.NextRenewalDate,
+			BillingDate:          billedAtDate,
+			NextBillingDate:      nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -61,10 +83,10 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			NextBillingDate:      input.NextRenewalDate,
+			NextBillingDate:      nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

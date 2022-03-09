@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b1752b70631e1141b60deea398ebadd5>>
- * @relayHash fc056777b778fda15f938f1d4d494945
+ * @generated SignedSource<<35bd839098729dab35143e512469600f>>
+ * @relayHash 550ba3e2f8611d5d2292d8fcd6278b23
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,16 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fc056777b778fda15f938f1d4d494945
+// @relayRequestID 550ba3e2f8611d5d2292d8fcd6278b23
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostReportDateRange = {
-  from: any;
-  to: any;
-};
 export type PostReportsQuery$variables = {
-  dateRange: PostReportDateRange;
+  from: any;
+  to?: any | null;
 };
 export type PostReportsQueryVariables = PostReportsQuery$variables;
 export type PostReportsQuery$data = {
@@ -35,19 +32,29 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "dateRange"
+    "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "to"
   }
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "dateRange",
-    "variableName": "dateRange"
-  },
-  {
     "kind": "Literal",
     "name": "first",
     "value": 5
+  },
+  {
+    "kind": "Variable",
+    "name": "from",
+    "variableName": "from"
+  },
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
   }
 ],
 v2 = {
@@ -213,7 +220,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "dateRange"
+          "from",
+          "to"
         ],
         "handle": "connection",
         "key": "PostReports_postReports",
@@ -223,7 +231,7 @@ return {
     ]
   },
   "params": {
-    "id": "fc056777b778fda15f938f1d4d494945",
+    "id": "550ba3e2f8611d5d2292d8fcd6278b23",
     "metadata": {},
     "name": "PostReportsQuery",
     "operationKind": "query",
@@ -232,6 +240,6 @@ return {
 };
 })();
 
-(node as any).hash = "9458bac39fe2a30b78df470a100974d4";
+(node as any).hash = "87dbfb96df78b2108c2784c6205d8e74";
 
 export default node;

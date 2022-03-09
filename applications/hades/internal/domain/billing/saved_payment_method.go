@@ -22,14 +22,14 @@ type SavedPaymentMethod struct {
 
 	updatedAt time.Time
 
-	ccbillSubscriptionId string
+	ccbillSubscriptionId *string
 }
 
-func NewSavedPaymentMethodFromCCBill(accountId, ccbillSubscriptionId string, paymentMethod *PaymentMethod, currency string) (*SavedPaymentMethod, error) {
+func NewSavedPaymentMethodFromCCBill(accountId string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, currency string) (*SavedPaymentMethod, error) {
 	cr, _ := CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,
-		id:                   ccbillSubscriptionId,
+		id:                   *ccbillSubscriptionId,
 		currency:             cr,
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
@@ -49,12 +49,12 @@ func (c *SavedPaymentMethod) UpdatedAt() time.Time {
 	return c.updatedAt
 }
 
-func (c *SavedPaymentMethod) CCBillSubscriptionId() string {
+func (c *SavedPaymentMethod) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
 }
 
 func (c *SavedPaymentMethod) IsCCBill() bool {
-	return c.ccbillSubscriptionId != ""
+	return c.ccbillSubscriptionId != nil
 }
 
 func (c *SavedPaymentMethod) PaymentMethod() *PaymentMethod {
@@ -79,7 +79,7 @@ func (c *SavedPaymentMethod) CanDelete(requester *principal.Principal) error {
 	return requester.BelongsToAccount(c.accountId)
 }
 
-func UnmarshalSavedPaymentMethodFromDatabase(accountId, id, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time, currency string) *SavedPaymentMethod {
+func UnmarshalSavedPaymentMethodFromDatabase(accountId, id string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, updatedAt time.Time, currency string) *SavedPaymentMethod {
 	cr, _ := CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,

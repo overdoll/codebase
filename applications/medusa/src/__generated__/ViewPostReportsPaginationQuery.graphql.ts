@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<18437b7bff49af3b1d8b4cab05993055>>
- * @relayHash a439b7fb05127dd9c270ca324ac0378a
+ * @generated SignedSource<<dbb3f593f625a5e1e8a71ba3c94dbae5>>
+ * @relayHash 2cfec37cadc1e20492ab7f5fc4d1b4bb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a439b7fb05127dd9c270ca324ac0378a
+// @relayRequestID 2cfec37cadc1e20492ab7f5fc4d1b4bb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostReportDateRange = {
-  from: any;
-  to: any;
-};
 export type ViewPostReportsPaginationQuery$variables = {
   after?: string | null;
-  dateRange: PostReportDateRange;
   first?: number | null;
+  from: any;
+  to?: any | null;
   id: string;
 };
 export type ViewPostReportsPaginationQueryVariables = ViewPostReportsPaginationQuery$variables;
@@ -36,78 +33,92 @@ export type ViewPostReportsPaginationQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "dateRange"
-  },
-  {
-    "defaultValue": 5,
-    "kind": "LocalArgument",
-    "name": "first"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "id"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
+},
+v1 = {
+  "defaultValue": 5,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "from"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "id"
+},
+v4 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "to"
+},
+v5 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "id"
   }
 ],
-v2 = {
+v6 = {
   "kind": "Variable",
   "name": "after",
   "variableName": "after"
 },
-v3 = {
+v7 = {
   "kind": "Variable",
   "name": "first",
   "variableName": "first"
 },
-v4 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v5 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
-  (v2/*: any*/),
+v10 = [
+  (v6/*: any*/),
+  (v7/*: any*/),
   {
     "kind": "Variable",
-    "name": "dateRange",
-    "variableName": "dateRange"
+    "name": "from",
+    "variableName": "from"
   },
-  (v3/*: any*/)
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
+  }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/),
+      (v4/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "ViewPostReportsPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
@@ -115,8 +126,8 @@ return {
         "selections": [
           {
             "args": [
-              (v2/*: any*/),
-              (v3/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "kind": "FragmentSpread",
             "name": "ViewPostReportsFragment"
@@ -130,26 +141,32 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v4/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Operation",
     "name": "ViewPostReportsPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v5/*: any*/),
+          (v8/*: any*/),
+          (v9/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v10/*: any*/),
                 "concreteType": "PostReportConnection",
                 "kind": "LinkedField",
                 "name": "reports",
@@ -171,7 +188,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -187,7 +204,7 @@ return {
                                 "name": "username",
                                 "storageKey": null
                               },
-                              (v5/*: any*/)
+                              (v9/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -206,11 +223,11 @@ return {
                                 "name": "title",
                                 "storageKey": null
                               },
-                              (v5/*: any*/)
+                              (v9/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v8/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -254,9 +271,10 @@ return {
               },
               {
                 "alias": null,
-                "args": (v6/*: any*/),
+                "args": (v10/*: any*/),
                 "filters": [
-                  "dateRange"
+                  "from",
+                  "to"
                 ],
                 "handle": "connection",
                 "key": "ViewPostReports_reports",
@@ -273,7 +291,7 @@ return {
     ]
   },
   "params": {
-    "id": "a439b7fb05127dd9c270ca324ac0378a",
+    "id": "2cfec37cadc1e20492ab7f5fc4d1b4bb",
     "metadata": {},
     "name": "ViewPostReportsPaginationQuery",
     "operationKind": "query",
@@ -282,6 +300,6 @@ return {
 };
 })();
 
-(node as any).hash = "61138866fc4a12754bea3e8e2766f7af";
+(node as any).hash = "c7213c9bfc0e3233f71e09c36a769087";
 
 export default node;

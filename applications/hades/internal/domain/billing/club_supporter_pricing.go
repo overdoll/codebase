@@ -3,11 +3,12 @@ package billing
 import (
 	"golang.org/x/text/currency"
 	"golang.org/x/text/language"
+	"math"
 	"overdoll/libraries/location"
 )
 
 const (
-	clubSupporterBasePrice = 6.99
+	clubSupporterBasePrice = 699
 )
 
 var (
@@ -20,6 +21,10 @@ var (
 		EUR: 1.10,
 	}
 )
+
+func getRoundedPriceInInteger(price float64) int64 {
+	return int64(math.Round(price))
+}
 
 func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Price, error) {
 
@@ -39,7 +44,7 @@ func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Pric
 	curr, ok := currency.FromRegion(region)
 
 	if !ok {
-		return UnmarshalPricingFromDatabase(USD, clubSupporterPricingRatios[USD]*clubSupporterBasePrice), nil
+		return UnmarshalPricingFromDatabase(USD, getRoundedPriceInInteger(clubSupporterPricingRatios[USD]*clubSupporterBasePrice)), nil
 	}
 
 	newCurrency, err := CurrencyFromString(curr.String())
@@ -48,11 +53,11 @@ func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Pric
 		return nil, err
 	}
 
-	return UnmarshalPricingFromDatabase(newCurrency, clubSupporterPricingRatios[newCurrency]*clubSupporterBasePrice), nil
+	return UnmarshalPricingFromDatabase(newCurrency, getRoundedPriceInInteger(clubSupporterPricingRatios[newCurrency]*clubSupporterBasePrice)), nil
 }
 
 func GetClubSupporterPricingForCurrency(currency Currency) (*Price, error) {
-	return UnmarshalPricingFromDatabase(currency, clubSupporterPricingRatios[currency]*clubSupporterBasePrice), nil
+	return UnmarshalPricingFromDatabase(currency, getRoundedPriceInInteger(clubSupporterPricingRatios[currency]*clubSupporterBasePrice)), nil
 }
 
 func GetClubSupporterAllPricingDetails() ([]*Price, error) {
@@ -60,7 +65,7 @@ func GetClubSupporterAllPricingDetails() ([]*Price, error) {
 	var prc []*Price
 
 	for c, val := range clubSupporterPricingRatios {
-		prc = append(prc, UnmarshalPricingFromDatabase(c, val*clubSupporterBasePrice))
+		prc = append(prc, UnmarshalPricingFromDatabase(c, getRoundedPriceInInteger(val*clubSupporterBasePrice)))
 	}
 
 	return prc, nil

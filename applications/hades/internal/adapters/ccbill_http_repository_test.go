@@ -39,7 +39,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 		requester,
 		uuid.New().String(),
 		existingSubscriptionId,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 6.99),
+		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")
@@ -94,7 +94,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 		requester,
 		uuid.New().String(),
 		existingSubscriptionId2,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 6.99),
+		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")

@@ -13,7 +13,7 @@ type ChargeByPreviousClubSupporterPaymentUrl struct {
 	accountId            string
 	ccbillSubscriptionId string
 
-	amount   float64
+	amount   int64
 	currency int
 }
 
@@ -47,10 +47,16 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 	ccbillUsername := os.Getenv("CCBILL_DATALINK_USERNAME")
 	ccbillPassword := os.Getenv("CCBILL_DATALINK_PASSWORD")
 
-	billInitialPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
+	amount, err := ConvertAmountToFloat(c.amount, c.currency)
+
+	if err != nil {
+		return "", nil, err
+	}
+
+	billInitialPrice := strconv.FormatFloat(amount, 'f', 2, 64)
 	billInitialPeriod := strconv.Itoa(ccbillInitialPeriod)
 
-	billRecurringPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
+	billRecurringPrice := strconv.FormatFloat(amount, 'f', 2, 64)
 	billRecurringPeriod := strconv.Itoa(ccbillRecurringPeriod)
 	billNumberRebills := strconv.Itoa(ccbillNumRebills)
 

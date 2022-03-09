@@ -21,6 +21,7 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/app/workflows/activities",
+        "//applications/hades/internal/domain/ccbill",
         "//applications/hades/proto:v1_go_proto",
         "//libraries/uuid",
         "@io_temporal_go_sdk//temporal",

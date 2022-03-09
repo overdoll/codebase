@@ -3,6 +3,7 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CCBillRenewalFailureInput struct {
@@ -32,16 +33,28 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 		return err
 	}
 
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	nextRetryDate, err := ccbill.ParseCCBillDate(input.NextRetryDate)
+
+	if err != nil {
+		return err
+	}
+
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateFailedClubSubscriptionAccountTransactionRecord,
 		activities.CreateFailedClubSubscriptionAccountTransactionRecordInput{
-			NextRetryDate:        input.NextRetryDate,
+			NextRetryDate:        nextRetryDate,
 			FailureReason:        input.FailureReason,
 			FailureCode:          input.FailureCode,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: input.SubscriptionId,
-			Timestamp:            input.Timestamp,
+			CCBillSubscriptionId: &input.SubscriptionId,
+			Timestamp:            timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

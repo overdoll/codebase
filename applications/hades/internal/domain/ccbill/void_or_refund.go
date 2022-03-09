@@ -9,11 +9,12 @@ var (
 )
 
 type VoidOrRefund struct {
-	amount         *float64
+	amount         *int64
+	currency       int
 	subscriptionId string
 }
 
-func NewVoidOrRefundWithCustomAmount(subscriptionId string, customAmount float64, actualAmount float64) (*VoidOrRefund, error) {
+func NewVoidOrRefundWithCustomAmount(subscriptionId string, customAmount int64, actualAmount int64, currency string) (*VoidOrRefund, error) {
 
 	if customAmount > actualAmount {
 		return nil, ErrInvalidRefundAmount
@@ -22,6 +23,7 @@ func NewVoidOrRefundWithCustomAmount(subscriptionId string, customAmount float64
 	return &VoidOrRefund{
 		amount:         nil,
 		subscriptionId: subscriptionId,
+		currency:       currencyStringToCCBillCode[currency],
 	}, nil
 }
 
@@ -36,6 +38,17 @@ func (v *VoidOrRefund) SubscriptionId() string {
 	return v.subscriptionId
 }
 
-func (v *VoidOrRefund) Amount() *float64 {
-	return v.amount
+func (v *VoidOrRefund) Amount() (*float64, error) {
+
+	if v.amount == nil {
+		return nil, nil
+	}
+
+	amt, err := ConvertAmountToFloat(*v.amount, v.currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &amt, nil
 }

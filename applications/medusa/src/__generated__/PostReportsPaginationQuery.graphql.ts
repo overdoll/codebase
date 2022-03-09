@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f37bd768700fd32259a85b8065e741a4>>
- * @relayHash 953d1f29cdcf0962b09b525deeabb6fe
+ * @generated SignedSource<<5d12161128ffcccc45a175471b9a4fa3>>
+ * @relayHash 7ff03b3de6f52af6e8dce5de75c05639
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 953d1f29cdcf0962b09b525deeabb6fe
+// @relayRequestID 7ff03b3de6f52af6e8dce5de75c05639
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostReportDateRange = {
-  from: any;
-  to: any;
-};
 export type PostReportsPaginationQuery$variables = {
   after?: string | null;
-  dateRange: PostReportDateRange;
   first?: number | null;
+  from: any;
+  to?: any | null;
 };
 export type PostReportsPaginationQueryVariables = PostReportsPaginationQuery$variables;
 export type PostReportsPaginationQuery$data = {
@@ -40,14 +37,19 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "dateRange"
-  },
-  {
     "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "to"
   }
 ],
 v1 = {
@@ -62,12 +64,17 @@ v2 = {
 },
 v3 = [
   (v1/*: any*/),
+  (v2/*: any*/),
   {
     "kind": "Variable",
-    "name": "dateRange",
-    "variableName": "dateRange"
+    "name": "from",
+    "variableName": "from"
   },
-  (v2/*: any*/)
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
+  }
 ],
 v4 = {
   "alias": null,
@@ -235,7 +242,8 @@ return {
         "alias": null,
         "args": (v3/*: any*/),
         "filters": [
-          "dateRange"
+          "from",
+          "to"
         ],
         "handle": "connection",
         "key": "PostReports_postReports",
@@ -245,7 +253,7 @@ return {
     ]
   },
   "params": {
-    "id": "953d1f29cdcf0962b09b525deeabb6fe",
+    "id": "7ff03b3de6f52af6e8dce5de75c05639",
     "metadata": {},
     "name": "PostReportsPaginationQuery",
     "operationKind": "query",
@@ -254,6 +262,6 @@ return {
 };
 })();
 
-(node as any).hash = "c30fa10987a7d6cd59d9167199c98725";
+(node as any).hash = "aedec6f581a255fa59ef5dd104945398";
 
 export default node;

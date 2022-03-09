@@ -3,6 +3,7 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type CCBillVoidInput struct {
@@ -33,14 +34,34 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	var amount int64
+
+	if input.Amount != "" {
+		amt, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
+
+		if err != nil {
+			return err
+		}
+
+		amount = amt
+	}
+
 	// create void record
 	if err := workflow.ExecuteActivity(ctx, a.CreateVoidClubSubscriptionAccountTransactionRecord,
 		activities.CreateVoidClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            input.Timestamp,
+			Timestamp:            timestamp,
 			Reason:               input.Reason,
+			Amount:               amount,
+			Currency:             input.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

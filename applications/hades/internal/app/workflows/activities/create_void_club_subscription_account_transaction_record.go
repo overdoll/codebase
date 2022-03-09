@@ -3,46 +3,35 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
+	"time"
 )
 
 type CreateVoidClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
 	ClubId    string
-	Timestamp string
+	Timestamp time.Time
 
 	Currency string
-	Amount   string
+	Amount   int64
 	Reason   string
 }
 
 func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateRefundClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	var amount float64
+	var amount int64
 	var currency string
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *input.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
 	}
 
-	if input.Amount != "" {
-		amount, err = strconv.ParseFloat(input.Amount, 64)
-
-		if err != nil {
-			return err
-		}
+	if input.Amount != 0 {
+		amount = input.Amount
 
 	} else {
 		amount = ccbillSubscription.BilledInitialPrice()
@@ -54,15 +43,19 @@ func (h *Activities) CreateVoidClubSubscriptionAccountTransactionRecord(ctx cont
 		currency = ccbillSubscription.BilledCurrency().String()
 	}
 
-	transaction, err := billing.NewVoidClubSubscriptionAccountTransactionFromCCBill(
+	transaction, err := billing.NewVoidClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
-		timestamp,
+		input.Timestamp,
 		amount,
 		currency,
 		input.Reason,
 	)
+
+	if err != nil {
+		return err
+	}
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err

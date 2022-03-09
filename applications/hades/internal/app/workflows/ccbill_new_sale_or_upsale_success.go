@@ -1,10 +1,13 @@
 package workflows
 
 import (
+	"fmt"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/uuid"
+	"strings"
 )
 
 type CCBillNewSaleOrUpsaleSuccessInput struct {
@@ -148,17 +151,41 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return nil
 	}
 
+	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledRecurringPrice, input.BilledCurrency)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse amount: %s", err)
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse timestamp: %s", err)
+	}
+
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.Timestamp, " ")[0])
+
+	if err != nil {
+		return fmt.Errorf("failed to parse date: %s", err)
+	}
+
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse date: %s", err)
+	}
+
 	// create record for new transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
 		activities.CreateNewClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
-			Timestamp:            input.Timestamp,
-			Amount:               input.BilledRecurringPrice,
+			Timestamp:            timestamp,
+			Amount:               amount,
 			Currency:             input.BilledCurrency,
-			NextBillingDate:      input.NextRenewalDate,
-			BillingDate:          input.Timestamp,
+			NextBillingDate:      nextBillingDate,
+			BillingDate:          billedAtDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -181,12 +208,13 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			// save payment details
 			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
 
-			CCBillSubscriptionId: input.SubscriptionId,
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
-			NextRenewalDate:      input.NextRenewalDate,
-			Timestamp:            input.Timestamp,
-			Amount:               input.BilledRecurringPrice,
+			LastRenewalDate:      billedAtDate,
+			NextRenewalDate:      nextBillingDate,
+			Timestamp:            timestamp,
+			Amount:               amount,
 			Currency:             input.BilledCurrency,
 		},
 	).Get(ctx, &details); err != nil {
