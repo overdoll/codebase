@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
@@ -146,4 +147,70 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
 	require.NotNil(t, series.Thumbnail, "has a thumbnail")
+}
+
+func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
+
+	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
+	relaySeriesId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, seriesId))))
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	fake := TestCharacter{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err, "no error creating fake category")
+	currentCharacterSlug := fake.Slug
+
+	var createCharacter CreateCharacter
+
+	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
+		"input": types.CreateCharacterInput{
+			SeriesID: relaySeriesId,
+			Slug:     currentCharacterSlug,
+			Name:     fake.Name,
+		},
+	})
+
+	require.NoError(t, err, "no error creating character")
+
+	refreshCharacterIndex(t)
+
+	series := getSeriesBySlug(t, client, "foreigner_on_mars")
+	seriesTitle := series.Title
+
+	var searchCharacters SearchCharacters
+
+	err = client.Query(context.Background(), &searchCharacters, map[string]interface{}{
+		"name": graphql.String(fake.Name),
+	})
+
+	require.NoError(t, err)
+	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, seriesTitle, searchCharacters.Characters.Edges[0].Node.Series.Title, "correct title")
+
+	fakeSeries := TestSeries{}
+	err = faker.FakeData(&fakeSeries)
+	require.NoError(t, err, "no error generating series")
+
+	var updateSeriesTitle UpdateSeriesTitle
+
+	err = client.Mutate(context.Background(), &updateSeriesTitle, map[string]interface{}{
+		"input": types.UpdateSeriesTitleInput{
+			ID:     series.Id,
+			Title:  fakeSeries.Title,
+			Locale: "en",
+		},
+	})
+
+	require.NoError(t, err, "no error updating series title")
+
+	refreshCharacterIndex(t)
+
+	err = client.Query(context.Background(), &searchCharacters, map[string]interface{}{
+		"name": graphql.String(fake.Name),
+	})
+
+	require.NoError(t, err)
+	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, fakeSeries.Title, searchCharacters.Characters.Edges[0].Node.Series.Title, "correct updated title for the series when it was updated")
 }

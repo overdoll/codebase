@@ -1857,10 +1857,18 @@ type Query {
 
 """Create a new rule input."""
 input CreateRuleInput {
-  """The title."""
+  """
+  The title.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
-  """The description."""
+  """
+  The description.
+
+  Validation: Max 25 characters. Markdown allowed.
+  """
   description: String!
 
   """If breaking this rule would cause an infraction."""
@@ -1878,7 +1886,11 @@ input UpdateRuleTitleInput {
   """The rule to update."""
   ruleId: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """The localization for this title."""
@@ -1896,7 +1908,11 @@ input UpdateRuleDescriptionInput {
   """The rule to update."""
   ruleId: ID!
 
-  """The description to update"""
+  """
+  The description to update.
+
+  Validation: Max 25 characters. Markdown allowed.
+  """
   description: String!
 
   """The localization for this description."""

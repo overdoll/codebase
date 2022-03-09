@@ -2,10 +2,10 @@ package post_audit_log
 
 import (
 	"errors"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 )
 
 var (
@@ -43,7 +43,7 @@ func CanRemovePost(requester *principal.Principal, ruleInstance *rule.Rule) erro
 
 func NewRemovePostAuditLog(accountId string, postId string, ruleId string, notes *string) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
 		moderatorId: accountId,
 		action:      PostAuditLogActionRemoved,
@@ -54,7 +54,7 @@ func NewRemovePostAuditLog(accountId string, postId string, ruleId string, notes
 
 func NewApprovePostAuditLog(accountId, postId string) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
 		moderatorId: accountId,
 		action:      PostAuditLogActionApproved,
@@ -68,7 +68,7 @@ func NewRejectPostAuditLog(moderatorId, postId, ruleId string, notes *string) (*
 	id := ruleId
 
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
 		moderatorId: moderatorId,
 		action:      PostAuditLogActionDenied,

@@ -5,10 +5,9 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 	"strings"
 	"time"
-
-	"github.com/segmentio/ksuid"
 )
 
 type ConfirmEmail struct {
@@ -44,7 +43,7 @@ func NewConfirmEmail(accountId, email string) (*ConfirmEmail, string, error) {
 	}
 
 	return &ConfirmEmail{
-		id:        ksuid.New().String(),
+		id:        uuid.New().String(),
 		accountId: accountId,
 		confirmed: false,
 		email:     strings.ToLower(email),

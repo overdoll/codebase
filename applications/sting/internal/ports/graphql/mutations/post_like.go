@@ -20,7 +20,7 @@ func (r *MutationResolver) LikePost(ctx context.Context, input types.LikePostInp
 			ctx,
 			command.LikePost{
 				Principal: principal.FromContext(ctx),
-				PostId:    input.PostID.GetID(),
+				PostId:    input.ID.GetID(),
 			},
 		)
 
@@ -43,13 +43,13 @@ func (r *MutationResolver) UndoLikePost(ctx context.Context, input types.UndoLik
 				ctx,
 				command.UndoLikePost{
 					Principal: principal.FromContext(ctx),
-					PostId:    input.PostID.GetID(),
+					PostId:    input.ID.GetID(),
 				},
 			); err != nil {
 		return nil, err
 	}
 
-	id := relay.NewID(types.PostLike{}, input.PostID.GetID(), principal.FromContext(ctx).AccountId())
+	id := relay.NewID(types.PostLike{}, input.ID.GetID(), principal.FromContext(ctx).AccountId())
 
 	return &types.UndoLikePostPayload{PostLikeID: &id}, nil
 }

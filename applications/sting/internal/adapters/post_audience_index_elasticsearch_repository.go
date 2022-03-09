@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"overdoll/libraries/uuid"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
@@ -66,7 +66,7 @@ const AudienceIndexName = "audience"
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
-	parse, err := ksuid.Parse(cat.ID())
+	parse, err := uuid.Parse(cat.ID())
 
 	if err != nil {
 		return nil, err
@@ -200,7 +200,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 
 		for iter.StructScan(&m) {
 
-			parse, err := ksuid.Parse(m.Id)
+			parse, err := uuid.Parse(m.Id)
 
 			if err != nil {
 				return err

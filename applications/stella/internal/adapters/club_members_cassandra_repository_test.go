@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/domain/club"
@@ -35,7 +34,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	// create x new members
 	for i := 1; i <= createNewMembers; i++ {
 
-		newAccountId := ksuid.New().String()
+		newAccountId := uuid.New().String()
 
 		newMember :=
 			club.UnmarshalMemberFromDatabase(

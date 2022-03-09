@@ -52,7 +52,7 @@ export default function ModerationPost ({ query }: Props): JSX.Element {
     loadQuery
   } = useSearch<SearchProps>({
     defaultValue: {
-      dateRange: getDateRangeDefault(),
+      ...getDateRangeDefault(),
       reference: queryData.post.reference
     }
   })

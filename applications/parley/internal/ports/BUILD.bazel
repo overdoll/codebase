@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/internal/app",
+        "//applications/parley/internal/app/command",
         "//applications/parley/internal/ports/graphql",
         "//applications/parley/proto:v1_go_proto",
         "//libraries/graphql",

@@ -2,10 +2,13 @@ package service_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/parley/internal/app/workflows"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -25,9 +28,11 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 	rule := seedRuleInfraction(t)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
-	clubId := convertClubIdToRelayId(ksuid.New().String())
+	clubId := convertClubIdToRelayId(uuid.New().String())
 
 	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.IssueClubInfraction, mock.Anything)
 
 	var issueClubInfraction IssueClubInfraction
 
@@ -40,6 +45,11 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error issuing manual infraction")
+
+	env := getWorkflowEnvironment(t)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted(), "issue manual infraction correct")
+	require.NoError(t, env.GetWorkflowError(), "issue manual infraction no error")
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 

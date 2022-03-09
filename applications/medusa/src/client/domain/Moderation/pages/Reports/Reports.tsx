@@ -23,7 +23,7 @@ export default function Reports (): JSX.Element | null {
     loadQuery
   } = useSearch<SearchProps>({
     defaultValue: {
-      dateRange: getDateRangeDefault()
+      ...getDateRangeDefault()
     }
   })
 

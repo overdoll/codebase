@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 )
 
 type EvaServiceMock struct {
@@ -68,7 +68,7 @@ func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Conte
 	var newContent []*post.NewContent
 
 	for _, n := range resourceIds {
-		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, ksuid.New().String()))
+		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, uuid.New().String()))
 	}
 
 	return newContent, nil
@@ -84,4 +84,10 @@ func (l LoaderServiceMock) DeleteResources(ctx context.Context, itemId string, r
 
 func (l LoaderServiceMock) AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error) {
 	return true, nil
+}
+
+type ParleyServiceMock struct{}
+
+func (p ParleyServiceMock) PutPostIntoModeratorQueueOrPublish(ctx context.Context, s string) (bool, error) {
+	return false, nil
 }

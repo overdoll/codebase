@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"overdoll/libraries/uuid"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
@@ -62,7 +62,7 @@ const CategoryIndexName = "categories"
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
-	parse, err := ksuid.Parse(cat.ID())
+	parse, err := uuid.Parse(cat.ID())
 
 	if err != nil {
 		return nil, err
@@ -196,7 +196,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 		for iter.StructScan(&c) {
 
-			parse, err := ksuid.Parse(c.Id)
+			parse, err := uuid.Parse(c.Id)
 
 			if err != nil {
 				return err

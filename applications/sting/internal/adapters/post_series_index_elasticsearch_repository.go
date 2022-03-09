@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"overdoll/libraries/uuid"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
@@ -62,7 +62,7 @@ const SeriesIndexName = "series"
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
-	parse, err := ksuid.Parse(s.ID())
+	parse, err := uuid.Parse(s.ID())
 
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 
 		for iter.StructScan(&m) {
 
-			parse, err := ksuid.Parse(m.Id)
+			parse, err := uuid.Parse(m.Id)
 
 			if err != nil {
 				return err

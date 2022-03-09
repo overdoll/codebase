@@ -34,6 +34,26 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 	return nil
 }
 
+func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, requester *principal.Principal, clubId, ruleId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "IssueClubInfraction_" + clubId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.IssueClubInfraction, workflows.IssueClubInfractionInput{
+		AccountId: requester.AccountId(),
+		ClubId:    clubId,
+		RuleId:    ruleId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *principal.Principal, clubId, postId, ruleId string, notes *string) error {
 
 	options := client.StartWorkflowOptions{

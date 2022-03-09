@@ -45,8 +45,8 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 
 		var clubSuspensionLength int64
 
-		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfraction,
-			activities.IssueClubInfractionInput{
+		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfractionPostModeration,
+			activities.IssueClubInfractionPostModerationInput{
 				AccountId: input.AccountId,
 				ClubId:    input.ClubId,
 				RuleId:    input.RuleId,

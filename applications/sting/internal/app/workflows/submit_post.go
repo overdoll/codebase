@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
 	"time"
 
 	"go.temporal.io/sdk/workflow"
@@ -54,11 +55,21 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			return err
 		}
 	} else {
-		if err := workflow.ExecuteActivity(ctx, a.PublishPost,
-			activities.PublishPostInput{
+
+		childWorkflowOptions := workflow.ChildWorkflowOptions{
+			WorkflowID:        "PublishPost_" + input.PostId,
+			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		}
+
+		ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+		if err := workflow.ExecuteChildWorkflow(ctx, PublishPost,
+			PublishPostInput{
 				PostId: input.PostId,
 			},
-		).Get(ctx, nil); err != nil {
+		).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil {
 			return err
 		}
 	}

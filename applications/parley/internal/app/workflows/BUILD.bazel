@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "workflows",
+    srcs = [
+        "approve_post.go",
+        "issue_club_infraction.go",
+        "options.go",
+        "put_post_into_moderator_queue.go",
+        "reject_post.go",
+        "remove_post.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/app/workflows",
+    visibility = ["//applications/parley:__subpackages__"],
+    deps = [
+        "//applications/parley/internal/app/workflows/activities",
+        "@io_temporal_go_sdk//temporal",
+        "@io_temporal_go_sdk//workflow",
+    ],
+)

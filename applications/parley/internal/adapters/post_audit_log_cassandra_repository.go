@@ -78,7 +78,7 @@ func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCass
 
 func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLog, error) {
 
-	buck, err := bucket.MakeWeeklyBucketFromKSUID(auditLog.ID())
+	buck, err := bucket.MakeWeeklyBucketFromUUID(auditLog.ID())
 
 	if err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -13,6 +12,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -139,13 +139,13 @@ type RemovePost struct {
 func TestModeratePost_remove(t *testing.T) {
 	t.Parallel()
 
-	accountId := ksuid.New().String()
+	accountId := uuid.New().String()
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	var removePost RemovePost
 
-	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
+	postIdRelay := convertPostIdToRelayId(uuid.New().String())
 	rule := seedRule(t)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
@@ -189,12 +189,12 @@ type RejectPost struct {
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
-	accountId := ksuid.New().String()
+	accountId := uuid.New().String()
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	notes := "some additional notes"
-	postId := ksuid.New().String()
+	postId := uuid.New().String()
 	postIdRelay := convertPostIdToRelayId(postId)
 
 	rule := seedRule(t)
@@ -253,11 +253,11 @@ func TestModeratePost_reject(t *testing.T) {
 func TestModeratePost_reject_with_infraction(t *testing.T) {
 	t.Parallel()
 
-	accountId := ksuid.New().String()
+	accountId := uuid.New().String()
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
-	postId := ksuid.New().String()
+	postId := uuid.New().String()
 	postIdRelay := convertPostIdToRelayId(postId)
 	clubId := convertClubIdToRelayId(postId)
 
@@ -349,7 +349,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	postId := ksuid.New().String()
+	postId := uuid.New().String()
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.PutPostIntoModeratorQueue, mock.Anything)
 
@@ -387,7 +387,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 		// now, go through the motion of actually approving our post
 		var approvePost ApprovePost
 
-		postIdRelay := convertPostIdToRelayId(ksuid.New().String())
+		postIdRelay := convertPostIdToRelayId(uuid.New().String())
 
 		err = client.Mutate(context.Background(), &approvePost, map[string]interface{}{
 			"input": types.ApprovePostInput{

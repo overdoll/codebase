@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"github.com/stretchr/testify/mock"
-	"go.temporal.io/sdk/mocks"
 	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
@@ -79,28 +78,21 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflow := workflows.AddPostLike
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, mock.Anything)
 
 	var likePost LikePost
 
 	err := client.Mutate(context.Background(), &likePost, map[string]interface{}{
 		"input": types.LikePostInput{
-			PostID: relayId,
+			ID: relayId,
 		},
 	})
 
 	require.NoError(t, err, "no error liking a post")
 
 	env := getWorkflowEnvironment(t)
-
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
-
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -113,30 +105,23 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	require.Equal(t, 1, postAfterLiked.Post.Likes, "post has 1 like")
 
-	newWorkflow := workflows.RemovePostLike
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, newWorkflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	removeLikeWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePostLike, mock.Anything)
 
 	var undoLikePost UndoLikePost
 
 	err = client.Mutate(context.Background(), &undoLikePost, map[string]interface{}{
 		"input": types.UndoLikePostInput{
-			PostID: relayId,
+			ID: relayId,
 		},
 	})
 
 	require.NoError(t, err, "no error removing like from post")
 
-	env = getWorkflowEnvironment(t)
-
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
-
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(newWorkflow, args...)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	newEnv := getWorkflowEnvironment(t)
+	newEnv.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	removeLikeWorkflowExecution.FindAndExecuteWorkflow(t, newEnv)
+	require.True(t, newEnv.IsWorkflowCompleted())
+	require.NoError(t, newEnv.GetWorkflowError())
 
 	postAfterLikeRemoved := getPostWithViewerLike(t, testingAccountId, postId)
 

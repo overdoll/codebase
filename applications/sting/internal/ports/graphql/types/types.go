@@ -177,8 +177,12 @@ func (Club) IsEntity() {}
 // Create a new audience.
 type CreateAudienceInput struct {
 	// The chosen slug for the audience.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the audience.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// If the audience is standard or not.
 	Standard bool `json:"standard"`
@@ -195,8 +199,12 @@ type CreateAudiencePayload struct {
 // Create a new category.
 type CreateCategoryInput struct {
 	// The chosen slug for the category.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the category.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 }
 
@@ -213,8 +221,12 @@ type CreateCharacterInput struct {
 	// The chosen series for the character.
 	SeriesID relay.ID `json:"seriesId"`
 	// The chosen slug for the character.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen name for the character.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
 }
 
@@ -241,8 +253,12 @@ type CreatePostPayload struct {
 // Create a new series.
 type CreateSeriesInput struct {
 	// The chosen slug for the series.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the series.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 }
 
@@ -298,7 +314,7 @@ type Language struct {
 // Like a post.
 type LikePostInput struct {
 	// The post ID that you want to like
-	PostID relay.ID `json:"postId"`
+	ID relay.ID `json:"id"`
 }
 
 // Payload for the liked post
@@ -464,7 +480,7 @@ type UnArchivePostPayload struct {
 // Undo like on a post.
 type UndoLikePostInput struct {
 	// The post ID that you want to unlike
-	PostID relay.ID `json:"postId"`
+	ID relay.ID `json:"id"`
 }
 
 // Payload for undoing a post like
@@ -505,7 +521,9 @@ type UpdateAudienceThumbnailPayload struct {
 type UpdateAudienceTitleInput struct {
 	// The audience to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The localization for this title
 	Locale string `json:"locale"`
@@ -535,7 +553,9 @@ type UpdateCategoryThumbnailPayload struct {
 type UpdateCategoryTitleInput struct {
 	// The category to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The localization for this title
 	Locale string `json:"locale"`
@@ -551,9 +571,13 @@ type UpdateCategoryTitlePayload struct {
 type UpdateCharacterNameInput struct {
 	// The character to update
 	ID relay.ID `json:"id"`
-	// The name to update
+	// The name to update.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
-	// The localization for this name
+	// The localization for this name.
+	//
+	// Validation: Must be one of the languages from the languages query.
 	Locale string `json:"locale"`
 }
 
@@ -715,9 +739,13 @@ type UpdateSeriesThumbnailPayload struct {
 type UpdateSeriesTitleInput struct {
 	// The series to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
-	// The localization for this title
+	// The localization for this title.
+	//
+	// Locale must be one from the languages query, or else the locale won't be accepted.
 	Locale string `json:"locale"`
 }
 

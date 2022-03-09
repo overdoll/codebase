@@ -2,9 +2,10 @@ package club_infraction
 
 import (
 	"errors"
+	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/uuid"
 	"time"
 
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -45,7 +46,7 @@ func newClubInfraction(issuerAccountId string, source ClubInfractionHistorySourc
 	// This will be the club's last ban (this one locks club indefinitely)
 	if len(activeInfractions)+1 > len(LengthPeriodSuspensions) {
 		return &ClubInfractionHistory{
-			id:                   ksuid.New().String(),
+			id:                   uuid.New().String(),
 			clubId:               clubId,
 			ruleId:               ruleId,
 			source:               source,
@@ -69,7 +70,7 @@ func newClubInfraction(issuerAccountId string, source ClubInfractionHistorySourc
 	// club is locked /4 of expiration
 	clubSuspensionLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
 	return &ClubInfractionHistory{
-		id:                   ksuid.New().String(),
+		id:                   uuid.New().String(),
 		clubId:               clubId,
 		issuerAccountId:      issuerAccountId,
 		ruleId:               ruleId,
@@ -156,6 +157,19 @@ func UnmarshalClubInfractionHistoryFromDatabase(id, clubId, issuerAccountId, sou
 		expiresAt:            expiresAt,
 		clubSuspensionLength: clubSuspensionLength,
 	}
+}
+
+func CanIssueInfraction(requester *principal.Principal, ruleInstance *rule.Rule) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if ruleInstance.Deprecated() {
+		return rule.ErrRuleDeprecated
+	}
+
+	return nil
 }
 
 func CanViewClubInfractionHistory(requester *principal.Principal) error {

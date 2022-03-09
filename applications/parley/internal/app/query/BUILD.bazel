@@ -12,6 +12,7 @@ go_library(
         "principal_by_id.go",
         "rule_by_id.go",
         "rules.go",
+        "search_post_moderator_queue.go",
         "search_post_reports.go",
         "search_posts_audit_logs.go",
         "services.go",

@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "billing",
@@ -31,9 +31,19 @@ go_library(
         "//libraries/location",
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/uuid",
         "@com_github_jung_kurt_gofpdf//:gofpdf",
-        "@com_github_segmentio_ksuid//:ksuid",
         "@org_golang_x_text//currency",
         "@org_golang_x_text//language",
+    ],
+)
+
+go_test(
+    name = "billing_test",
+    srcs = ["club_supporter_pricing_test.go"],
+    embed = [":billing"],
+    deps = [
+        "//libraries/location",
+        "@com_github_stretchr_testify//require",
     ],
 )

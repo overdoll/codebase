@@ -18,7 +18,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/principal",
-        "@com_github_segmentio_ksuid//:ksuid",
+        "//libraries/uuid",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//mocks",
         "@org_golang_google_grpc//codes",
@@ -29,6 +29,7 @@ go_library(
 go_test(
     name = "service_test",
     srcs = [
+        "archive_post_component_test.go",
         "audience_component_test.go",
         "category_component_test.go",
         "character_component_test.go",
@@ -59,7 +60,6 @@ go_test(
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
-        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",

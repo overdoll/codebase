@@ -2335,10 +2335,18 @@ extend type Post {
 
 """Create a new audience."""
 input CreateAudienceInput {
-  """The chosen slug for the audience."""
+  """
+  The chosen slug for the audience.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the audience."""
+  """
+  The chosen title for the audience.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """If the audience is standard or not."""
@@ -2364,7 +2372,11 @@ input UpdateAudienceTitleInput {
   """The audience to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """The localization for this title"""
@@ -2513,10 +2525,18 @@ extend type Post {
 
 """Create a new category."""
 input CreateCategoryInput {
-  """The chosen slug for the category."""
+  """
+  The chosen slug for the category.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the category."""
+  """
+  The chosen title for the category.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 }
 
@@ -2539,7 +2559,11 @@ input UpdateCategoryTitleInput {
   """The category to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """The localization for this title"""
@@ -2684,10 +2708,18 @@ input CreateCharacterInput {
   """The chosen series for the character."""
   seriesId: ID!
 
-  """The chosen slug for the character."""
+  """
+  The chosen slug for the character.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen name for the character."""
+  """
+  The chosen name for the character.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
@@ -2710,10 +2742,18 @@ input UpdateCharacterNameInput {
   """The character to update"""
   id: ID!
 
-  """The name to update"""
+  """
+  The name to update.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 
-  """The localization for this name"""
+  """
+  The localization for this name.
+
+  Validation: Must be one of the languages from the languages query.
+  """
   locale: BCP47!
 }
 
@@ -2889,13 +2929,13 @@ extend type Mutation {
 """Undo like on a post."""
 input UndoLikePostInput {
   """The post ID that you want to unlike"""
-  postId: ID!
+  id: ID!
 }
 
 """Like a post."""
 input LikePostInput {
   """The post ID that you want to like"""
-  postId: ID!
+  id: ID!
 }
 
 """Payload for the liked post"""
@@ -3642,10 +3682,18 @@ extend type Query {
 
 """Create a new series."""
 input CreateSeriesInput {
-  """The chosen slug for the series."""
+  """
+  The chosen slug for the series.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the series."""
+  """
+  The chosen title for the series.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 }
 
@@ -3668,10 +3716,18 @@ input UpdateSeriesTitleInput {
   """The series to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
-  """The localization for this title"""
+  """
+  The localization for this title.
+
+  Locale must be one from the languages query, or else the locale won't be accepted.
+  """
   locale: BCP47!
 }
 
@@ -14019,11 +14075,11 @@ func (ec *executionContext) unmarshalInputLikePostInput(ctx context.Context, obj
 
 	for k, v := range asMap {
 		switch k {
-		case "postId":
+		case "id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postId"))
-			it.PostID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14119,11 +14175,11 @@ func (ec *executionContext) unmarshalInputUndoLikePostInput(ctx context.Context,
 
 	for k, v := range asMap {
 		switch k {
-		case "postId":
+		case "id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postId"))
-			it.PostID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}

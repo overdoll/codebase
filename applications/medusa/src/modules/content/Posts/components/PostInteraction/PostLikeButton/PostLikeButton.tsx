@@ -66,7 +66,7 @@ export default function PostLikeButton ({
 
     likePost({
       variables: {
-        postId: data?.id
+        id: data?.id
       },
       optimisticUpdater: (store) => {
         const node = store.get(data.id)
@@ -88,7 +88,7 @@ export default function PostLikeButton ({
 
     undoLike({
       variables: {
-        postId: data?.id
+        id: data?.id
       },
       optimisticUpdater: (store) => {
         const node = store.get(data.id)

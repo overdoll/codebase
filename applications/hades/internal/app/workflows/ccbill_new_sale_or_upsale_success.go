@@ -1,10 +1,10 @@
 package workflows
 
 import (
-	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/uuid"
 )
 
 type CCBillNewSaleOrUpsaleSuccessInput struct {
@@ -81,7 +81,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 
 	// create an idempotency key - in case the following activity fails but the record is still created
 	idempotencyKey := workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
-		return ksuid.New().String()
+		return uuid.New().String()
 	})
 
 	var idempotentKey string

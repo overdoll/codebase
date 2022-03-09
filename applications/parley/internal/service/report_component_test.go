@@ -2,7 +2,7 @@ package service_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 
@@ -50,7 +50,7 @@ func TestReportPost(t *testing.T) {
 	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	// post ID has to be random since we can only report once
-	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
+	postIdRelay := convertPostIdToRelayId(uuid.New().String())
 	rule := seedRule(t)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 

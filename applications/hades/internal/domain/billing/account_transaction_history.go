@@ -1,9 +1,9 @@
 package billing
 
 import (
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 	"time"
 )
 
@@ -39,7 +39,7 @@ type AccountTransactionHistory struct {
 }
 
 func NewReactivatedClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp, nextBillingDate time.Time) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func NewReactivatedClubSubscriptionAccountTransactionFromCCBill(accountId, clubI
 }
 
 func NewFailedClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp, nextRetryDate time.Time, failureReason, failureCode string) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func NewFailedClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, cc
 }
 
 func NewExpiredClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func NewExpiredClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, c
 }
 
 func NewRefundClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time, amount float64, currency, reason string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func NewRefundClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, cc
 }
 
 func NewVoidClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time, amount float64, currency, reason string) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func NewVoidClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbi
 }
 
 func NewInvoiceClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func NewInvoiceClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, c
 }
 
 func NewNewClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount float64, currency string) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +192,7 @@ func NewNewClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbil
 }
 
 func NewChargebackClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time, reason string, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func NewChargebackClubSubscriptionAccountTransactionFromCCBill(accountId, clubId
 }
 
 func NewCancelledClubSubscriptionAccountTransactionFromCCBill(accountId, clubId, ccbillSubscriptionId string, timestamp time.Time, reason string) (*AccountTransactionHistory, error) {
-	k, err := ksuid.NewRandomWithTime(timestamp)
+	k, err := uuid.NewRandomWithTime(timestamp)
 	if err != nil {
 		return nil, err
 	}

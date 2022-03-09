@@ -31,7 +31,7 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "PostReportsPaginationQuery" ) {
-    postReports (first: $first, after: $after, dateRange: $dateRange)
+    postReports (first: $first, after: $after, from: $from, to: $to)
     @connection(key: "PostReports_postReports") {
       edges {
         node {

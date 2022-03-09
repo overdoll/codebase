@@ -2,16 +2,15 @@ package service_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	workflows "overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -70,16 +69,16 @@ func getClubViewer(t *testing.T, client *graphql.Client, id string) ClubViewer {
 	return club
 }
 
-type BecomeClubMember struct {
-	BecomeClubMember *struct {
+type JoinClub struct {
+	JoinClub *struct {
 		ClubMember *ClubMemberModified
-	} `graphql:"becomeClubMember(input: $input)"`
+	} `graphql:"joinClub(input: $input)"`
 }
 
-type WithdrawClubMembership struct {
-	WithdrawClubMembership *struct {
+type LeaveClub struct {
+	LeaveClub *struct {
 		ClubMemberId string
-	} `graphql:"withdrawClubMembership(input: $input)"`
+	} `graphql:"leaveClub(input: $input)"`
 }
 
 // TestCreateClub_edit_name - create a club and edit the name
@@ -89,26 +88,22 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	testingAccountId := newFakeAccount(t)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := seedClub(t, ksuid.New().String())
+	clb := seedClub(t, uuid.New().String())
 	clubId := clb.ID()
 	relayId := convertClubIdToRelayId(clb.ID())
 
-	workflow := workflows.AddClubMember
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubMember, mock.Anything)
 
 	// become a club member
-	var becomeClubMember BecomeClubMember
-	err := client.Mutate(context.Background(), &becomeClubMember, map[string]interface{}{
-		"input": types.BecomeClubMemberInput{ClubID: relayId},
+	var joinClub JoinClub
+	err := client.Mutate(context.Background(), &joinClub, map[string]interface{}{
+		"input": types.JoinClubInput{ClubID: relayId},
 	})
 	require.NoError(t, err, "no error becoming a club member")
 
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -162,9 +157,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error getting permission for supporter")
 	require.True(t, canBecomeSupporter.Allowed, "allowed to become a supporter")
 
-	supporterWorkflow := workflows.AddClubSupporter
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, supporterWorkflow, mock.Anything, mock.Anything, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.AddClubSupporter(context.Background(), &stella.AddClubSupporterRequest{
@@ -177,18 +170,14 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// run supporter method
 	env = getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, supporterWorkflow, mock.Anything, mock.Anything, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(supporterWorkflow, args...)
+	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
 
-	supporterRemoveWorkflow := workflows.RemoveClubSupporter
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, supporterRemoveWorkflow, mock.Anything, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemoveClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.RemoveClubSupporter(context.Background(), &stella.RemoveClubSupporterRequest{
@@ -200,32 +189,24 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// run supporter method
 	env = getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(supporterRemoveWorkflow, args...)
+	removeSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
 
-	removeMemberWorkflow := workflows.RemoveClubMember
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, removeMemberWorkflow, mock.Anything, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemoveClubMember, mock.Anything)
 
 	// withdraw club membership
-	var withdrawClubMembership WithdrawClubMembership
-	err = client.Mutate(context.Background(), &withdrawClubMembership, map[string]interface{}{
-		"input": types.WithdrawClubMembershipInput{ClubID: relayId},
+	var leaveClub LeaveClub
+	err = client.Mutate(context.Background(), &leaveClub, map[string]interface{}{
+		"input": types.LeaveClubInput{ClubID: relayId},
 	})
 	require.NoError(t, err, "no error withdrawing club membership")
 
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, removeMemberWorkflow, mock.Anything, mock.Anything)
-
 	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(removeMemberWorkflow, args...)
+	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

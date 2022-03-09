@@ -46,8 +46,8 @@ func RejectPost(ctx workflow.Context, input RejectPostInput) error {
 
 		var clubSuspensionLength int64
 
-		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfraction,
-			activities.IssueClubInfractionInput{
+		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfractionPostModeration,
+			activities.IssueClubInfractionPostModerationInput{
 				AccountId: input.AccountId,
 				ClubId:    input.ClubId,
 				RuleId:    input.RuleId,
@@ -61,7 +61,7 @@ func RejectPost(ctx workflow.Context, input RejectPostInput) error {
 				ClubId:   input.ClubId,
 				Duration: clubSuspensionLength,
 			},
-		).Get(ctx, &clubSuspensionLength); err != nil {
+		).Get(ctx, nil); err != nil {
 			return err
 		}
 
