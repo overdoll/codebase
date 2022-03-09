@@ -379,9 +379,7 @@ func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, clubId s
 		return nil, err
 	}
 
-	err = updateFn(currentClub)
-
-	if err != nil {
+	if err := updateFn(currentClub); err != nil {
 		return nil, err
 	}
 

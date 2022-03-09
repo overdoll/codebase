@@ -96,8 +96,12 @@ type ClubInfractionHistoryEdge struct {
 // Create a new rule input.
 type CreateRuleInput struct {
 	// The title.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The description.
+	//
+	// Validation: Max 25 characters. Markdown allowed.
 	Description string `json:"description"`
 	// If breaking this rule would cause an infraction.
 	Infraction bool `json:"infraction"`
@@ -365,7 +369,9 @@ type UpdateRuleDeprecatedPayload struct {
 type UpdateRuleDescriptionInput struct {
 	// The rule to update.
 	RuleID relay.ID `json:"ruleId"`
-	// The description to update
+	// The description to update.
+	//
+	// Validation: Max 25 characters. Markdown allowed.
 	Description string `json:"description"`
 	// The localization for this description.
 	Locale string `json:"locale"`
@@ -395,7 +401,9 @@ type UpdateRuleInfractionPayload struct {
 type UpdateRuleTitleInput struct {
 	// The rule to update.
 	RuleID relay.ID `json:"ruleId"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The localization for this title.
 	Locale string `json:"locale"`

@@ -89,9 +89,18 @@ func UnmarshalPostModeratorFromDatabase(accountId, postId string, placedAt, reas
 }
 
 func CanViewPostModerator(requester *principal.Principal, accountId string) error {
-	if err := requester.BelongsToAccount(accountId); err != nil {
-		return err
+
+	if !requester.IsStaff() {
+
+		if requester.IsModerator() {
+
+			if err := requester.BelongsToAccount(accountId); err != nil {
+				return err
+			}
+
+			return nil
+		}
 	}
 
-	return nil
+	return principal.ErrNotAuthorized
 }

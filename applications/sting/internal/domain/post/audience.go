@@ -49,6 +49,10 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		return nil, err
 	}
 
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	return &Audience{
 		id:                  uuid.New().String(),
 		slug:                slug,

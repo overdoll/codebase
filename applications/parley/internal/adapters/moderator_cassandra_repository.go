@@ -177,7 +177,7 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 			AccountId: accountId,
 		}).
 		Select(&postModeratorQueueItems); err != nil {
-		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
+		return nil, fmt.Errorf("failed to get post moderators for account: %v", err)
 	}
 
 	var postQueue []*moderator.PostModerator

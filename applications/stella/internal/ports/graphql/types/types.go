@@ -33,6 +33,8 @@ type AddClubSlugAliasInput struct {
 	// The club to update
 	ID relay.ID `json:"id"`
 	// The chosen slug for the club.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 }
 
@@ -42,18 +44,6 @@ type AddClubSlugAliasPayload struct {
 	Club *Club `json:"club"`
 	// Validation for adding a new club
 	Validation *AddClubSlugAliasValidation `json:"validation"`
-}
-
-// Become a club member.
-type BecomeClubMemberInput struct {
-	// The chosen club ID.
-	ClubID relay.ID `json:"clubId"`
-}
-
-// Payload for a new club member
-type BecomeClubMemberPayload struct {
-	// The membership after creation
-	ClubMember *ClubMember `json:"clubMember"`
 }
 
 type Club struct {
@@ -75,6 +65,8 @@ type Club struct {
 	Owner *Account `json:"owner"`
 	// Whether or not this club is suspended.
 	Suspension *ClubSuspension `json:"suspension"`
+	// Whether or not the viewer is the owner of the club.
+	ViewerIsOwner bool `json:"viewerIsOwner"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.
@@ -138,8 +130,12 @@ type ClubSuspension struct {
 // Create club.
 type CreateClubInput struct {
 	// The chosen slug for the club.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen name for the club.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
 }
 
@@ -151,11 +147,35 @@ type CreateClubPayload struct {
 	Validation *CreateClubValidation `json:"validation"`
 }
 
+// Join a club input.
+type JoinClubInput struct {
+	// The chosen club ID.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for a new club member
+type JoinClubPayload struct {
+	// The membership after creation
+	ClubMember *ClubMember `json:"clubMember"`
+}
+
 type Language struct {
 	// BCP47 locale
 	Locale string `json:"locale"`
 	// Fully qualified name
 	Name string `json:"name"`
+}
+
+// Leave a club.
+type LeaveClubInput struct {
+	// The chosen club ID.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for leaving a club
+type LeaveClubPayload struct {
+	// The club membership that was removed
+	ClubMemberID relay.ID `json:"clubMemberId"`
 }
 
 // Update alias slug to default.
@@ -230,6 +250,8 @@ type UpdateClubNameInput struct {
 	// The club to update
 	ID relay.ID `json:"id"`
 	// The chosen name for the club.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
 }
 
@@ -251,18 +273,6 @@ type UpdateClubThumbnailInput struct {
 type UpdateClubThumbnailPayload struct {
 	// The club after update
 	Club *Club `json:"club"`
-}
-
-// Withdraw club membership.
-type WithdrawClubMembershipInput struct {
-	// The chosen club ID.
-	ClubID relay.ID `json:"clubId"`
-}
-
-// Payload for withdrawing club membership
-type WithdrawClubMembershipPayload struct {
-	// The club membership that was removed
-	ClubMemberID relay.ID `json:"clubMemberId"`
 }
 
 // Validation for adding a new slug to a club

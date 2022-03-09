@@ -39,16 +39,23 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		suspension = &ClubSuspension{Expires: *result.SuspendedUntil()}
 	}
 
+	accountId := ""
+
+	if passport.FromContext(ctx).Authenticated() == nil {
+		accountId = passport.FromContext(ctx).AccountID()
+	}
+
 	return &Club{
-		ID:           relay.NewID(Club{}, result.ID()),
-		Reference:    result.ID(),
-		Name:         result.Name().Translate(passport.FromContext(ctx).Language(), ""),
-		Slug:         result.Slug(),
-		SlugAliases:  slugAliases,
-		MembersCount: result.MembersCount(),
-		Thumbnail:    res,
-		Owner:        &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-		Suspension:   suspension,
+		ID:            relay.NewID(Club{}, result.ID()),
+		Reference:     result.ID(),
+		Name:          result.Name().Translate(passport.FromContext(ctx).Language(), ""),
+		Slug:          result.Slug(),
+		SlugAliases:   slugAliases,
+		MembersCount:  result.MembersCount(),
+		Thumbnail:     res,
+		Owner:         &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:    suspension,
+		ViewerIsOwner: accountId == result.OwnerAccountId(),
 	}
 }
 

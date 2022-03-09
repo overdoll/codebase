@@ -47,6 +47,10 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 		return nil, err
 	}
 
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	return &Series{
 		id:                  uuid.New().String(),
 		slug:                slug,

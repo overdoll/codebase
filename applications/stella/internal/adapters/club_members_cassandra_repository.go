@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	maxClubMembersPerPartition   = 10000
-	initialClubMembersPartitions = 2
+	maxClubMembersPerPartition     = 10000
+	initialClubMembersPartitions   = 1
+	incrementClubMembersPartitions = 1
 )
 
 var (
@@ -128,6 +129,25 @@ type clubMembersPartition struct {
 	LastJoinedAtCount gocql.UUID `db:"last_joined_at_count"`
 	MembersCount      int        `db:"members_count"`
 	MaxMembersCount   int        `db:"max_members_count"`
+}
+
+func (r ClubCassandraRepository) addClubPartitions(ctx context.Context, clubId string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := clubMembersPartitionsTable.Insert()
+
+	// create partitions based on increment
+	for i := 0; i <= incrementClubMembersPartitions; i++ {
+		tm := gocql.TimeUUID()
+		batch.Query(stmt, clubId, tm, tm, 0, maxClubMembersPerPartition)
+	}
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) (gocql.UUID, error) {
@@ -468,7 +488,8 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 
 	// Grab the sum of all partitions counters
 	type clubMembersPartitionSum struct {
-		SumMembersCount int `db:"system.sum(members_count)"`
+		SumMembersCount    int `db:"system.sum(members_count)"`
+		SumMaxMembersCount int `db:"system.sum(max_members_count)"`
 	}
 
 	var clubMembersPartitionSums clubMembersPartitionSum
@@ -476,12 +497,20 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 	if err := clubMembersPartitionsTable.
 		SelectBuilder().
 		Sum("members_count").
+		Sum("max_members_count").
 		Query(r.session).
 		BindStruct(clubMemberByClub{
 			ClubId: clubId,
 		}).
 		Get(&clubMembersPartitionSums); err != nil {
 		return fmt.Errorf("failed to get club by id: %v", err)
+	}
+
+	// partition more than half full, insert new partitions
+	if float64(clubMembersPartitionSums.SumMaxMembersCount)/float64(clubMembersPartitionSums.SumMembersCount) >= 0.5 {
+		if err := r.addClubPartitions(ctx, clubId); err != nil {
+			return err
+		}
 	}
 
 	// update club member count

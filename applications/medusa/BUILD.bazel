@@ -39,6 +39,7 @@ _BUILD_DEPS = [
     "@npm//@babel/plugin-transform-modules-commonjs",
     "@npm//@babel/plugin-proposal-optional-chaining",
     "@npm//@babel/plugin-proposal-nullish-coalescing-operator",
+    "@npm//@babel/plugin-syntax-top-level-await",
     "@npm//webpack-dev-middleware",
     "@npm//webpack-hot-middleware",
     "@npm//webpack",

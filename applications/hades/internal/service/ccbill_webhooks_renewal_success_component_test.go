@@ -5,7 +5,6 @@ import (
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -50,8 +49,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
 
-	workflow := workflows.CCBillRenewalSuccess
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalSuccess, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "RenewalSuccess", map[string]string{
@@ -74,10 +72,8 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 		"subscriptionId":         ccbillSubscriptionId,
 	})
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

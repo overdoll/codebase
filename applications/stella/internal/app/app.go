@@ -21,8 +21,8 @@ type Commands struct {
 	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
 	AddClubSlugAlias              command.AddClubSlugAliasHandler
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
-	BecomeClubMember              command.BecomeClubMemberHandler
-	WithdrawClubMembership        command.WithdrawClubMembershipHandler
+	JoinClub                      command.JoinClubHandler
+	LeaveClub                     command.LeaveClubHandler
 
 	AddClubSupporter    command.AddClubSupporterHandler
 	RemoveClubSupporter command.RemoveClubSupporterHandler

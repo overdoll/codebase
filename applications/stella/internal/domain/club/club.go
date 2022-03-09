@@ -391,7 +391,7 @@ func validateName(name string) error {
 
 func validateSlug(slug string) error {
 
-	err := validator.New().Var(slug, "required,max=25,excludesall= ")
+	err := validator.New().Var(slug, "required,max=25,excludesall= ,alphanum")
 
 	if err != nil {
 		return err

@@ -48,6 +48,10 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		return nil, err
 	}
 
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	return &Character{
 		id:                  uuid.New().String(),
 		slug:                slug,

@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/command"
 	"overdoll/applications/parley/internal/app/query"
+	"overdoll/applications/parley/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
@@ -32,7 +33,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -43,10 +44,15 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 	// mock sting, because it performs destructive operations and we dont want to
 	// re-seed data every single time we run this test
 	// also, the endpoints are already tested on sting, so we don't worry about potential failures
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), StellaServiceMock{}, StingServiceMock{}, temporalClient),
+	return createApplication(ctx,
+			EvaServiceMock{adapters.NewEvaGrpc(evaClient)},
+			StellaServiceMock{},
+			StingServiceMock{},
+			temporalClient),
 		func() {
 			cleanup()
-		}
+		},
+		temporalClient
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) app.Application {
@@ -90,6 +96,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			RuleById:      query.NewRuleByIdHandler(ruleRepo),
 			Rules:         query.NewRulesHandler(ruleRepo),
 
+			SearchPostModeratorQueue: query.NewSearchPostModeratorQueueHandler(moderatorRepo),
+
 			PostReportById:             query.NewPostReportByIdHandler(reportRepo),
 			PostReportByAccountAndPost: query.NewPostReportByAccountAndPostHandler(reportRepo),
 			SearchPostReports:          query.NewSearchPostReportsHandler(reportRepo),
@@ -98,5 +106,6 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			PostAuditLogById:           query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:              query.NewModeratorByIdHandler(moderatorRepo),
 		},
+		Activities: activities.NewActivitiesHandler(moderatorRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, stella),
 	}
 }

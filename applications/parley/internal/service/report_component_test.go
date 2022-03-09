@@ -31,7 +31,7 @@ type ReportsOnPost struct {
 				Edges []struct {
 					Node PostReportModified
 				}
-			} `graphql:"reports(dateRange: $dateRange)"`
+			} `graphql:"reports(from: $from)"`
 		} `graphql:"... on Post"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -41,7 +41,7 @@ type PostReports struct {
 		Edges []struct {
 			Node PostReportModified
 		}
-	} `graphql:"postReports(dateRange: $dateRange)"`
+	} `graphql:"postReports(from: $from)"`
 }
 
 func TestReportPost(t *testing.T) {
@@ -74,10 +74,7 @@ func TestReportPost(t *testing.T) {
 				"id":         string(postIdRelay),
 			},
 		},
-		"dateRange": types.PostReportDateRange{
-			From: time.Now(),
-			To:   time.Now(),
-		},
+		"from": time.Now(),
 	})
 
 	require.NoError(t, err, "no error getting reports on a post")
@@ -91,10 +88,7 @@ func TestReportPost(t *testing.T) {
 	var postReports PostReports
 
 	err = client.Query(context.Background(), &postReports, map[string]interface{}{
-		"dateRange": types.PostReportDateRange{
-			From: time.Now(),
-			To:   time.Now(),
-		},
+		"from": time.Now(),
 	})
 
 	require.NoError(t, err, "no error getting all reports")

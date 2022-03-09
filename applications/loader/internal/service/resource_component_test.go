@@ -7,7 +7,6 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"image/png"
 	"os"
 	"overdoll/applications/loader/internal/app/workflows"
@@ -45,8 +44,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflow := workflows.ProcessResources
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, itemId, mock.Anything)
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -58,9 +56,9 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	require.NoError(t, err, "no error creating new resources from uploads")
 
 	env := getWorkflowEnvironment(t)
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, itemId, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+
 	require.True(t, env.IsWorkflowCompleted(), "processed resources")
 	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
 
@@ -244,8 +242,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflow := workflows.ProcessResources
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, itemId, mock.Anything)
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -342,9 +339,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, 2, assertions, "expected to have checked 2 files")
 
 	env := getWorkflowEnvironment(t)
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, itemId, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "processed resources")
 	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
 
@@ -448,8 +443,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 4, processedAssertions, "expected to have checked 4 files")
 
-	deleteWorkflow := workflows.DeleteResources
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteResources, itemId, mock.Anything)
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
@@ -460,9 +454,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// run workflow to delete resources
 	env = getWorkflowEnvironment(t)
-	args = testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, deleteWorkflow, itemId, mock.Anything)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(deleteWorkflow, args...)
+	deleteWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "deleted resources")
 	require.NoError(t, env.GetWorkflowError(), "deleted resources without error")
 

@@ -46,6 +46,10 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		return nil, err
 	}
 
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	return &Category{
 		id:                  uuid.New().String(),
 		slug:                slug,
