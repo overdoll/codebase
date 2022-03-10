@@ -1572,6 +1572,36 @@ const routes: Route[] = [
                     }
                   }
                 }
+              },
+              {
+                path: '/settings/billing/payment-methods',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/RootPaymentMethodSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/RootPaymentMethodSettings/RootPaymentMethodSettings'
+                  )
+                ),
+                prepare: () => {
+                  const Query = require('@//:artifacts/PaymentMethodSettingsQuery.graphql')
+                  return {
+                    paymentMethodsQuery: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
               }
             ]
           }

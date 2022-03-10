@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<59426d0c2f33839be7398eb03d321db2>>
+ * @generated SignedSource<<e009d5bd39e19a75bca178fdffcaaf8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,7 @@ export type SelectPaymentMethodFragment$data = {
       readonly node: {
         readonly id: string;
         readonly paymentMethod: {
-          readonly card: {
-            readonly last4: string;
-            readonly expiration: string;
-            readonly " $fragmentSpreads": FragmentRefs<"DisplayCardFragment">;
-          };
+          readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodFragment">;
         };
       };
     }>;
@@ -79,34 +75,9 @@ const node: ReaderFragment = {
                   "plural": false,
                   "selections": [
                     {
-                      "alias": null,
                       "args": null,
-                      "concreteType": "Card",
-                      "kind": "LinkedField",
-                      "name": "card",
-                      "plural": false,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "last4",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "expiration",
-                          "storageKey": null
-                        },
-                        {
-                          "args": null,
-                          "kind": "FragmentSpread",
-                          "name": "DisplayCardFragment"
-                        }
-                      ],
-                      "storageKey": null
+                      "kind": "FragmentSpread",
+                      "name": "PaymentMethodFragment"
                     }
                   ],
                   "storageKey": null
@@ -125,6 +96,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "021508f9939827a8c69de427f7558ba1";
+(node as any).hash = "a7cfcd82ca85f182c37df940f06d38cb";
 
 export default node;

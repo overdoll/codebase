@@ -56,7 +56,7 @@ export default function SubscriptionSettings (props: Props): JSX.Element {
   }
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={2}>
       {data.clubSupporterSubscriptions.edges.map((item, index) => (
         <StackTile key={index}>
           <SubscriptionPreview query={item.node} />

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f2cf329ecfeb059c31d3681fe71dcb1>>
+ * @generated SignedSource<<d36b849a6d4fc9b63c8158961a2b1f39>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ManageSubscriptionButtonFragment$data = {
   readonly nextBillingDate: any;
   readonly status: AccountClubSupporterSubscriptionStatus;
-  readonly " $fragmentSpreads": FragmentRefs<"CancelSubscriptionButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CancelSubscriptionButtonFragment" | "UpdatePaymentMethodButtonFragment">;
   readonly " $fragmentType": "ManageSubscriptionButtonFragment";
 };
 export type ManageSubscriptionButtonFragment = ManageSubscriptionButtonFragment$data;
@@ -47,12 +47,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "CancelSubscriptionButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UpdatePaymentMethodButtonFragment"
     }
   ],
   "type": "AccountClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "9619b6379c2842ec348e9896afb3872b";
+(node as any).hash = "e56ed53556c6e2228935540b3a890d40";
 
 export default node;

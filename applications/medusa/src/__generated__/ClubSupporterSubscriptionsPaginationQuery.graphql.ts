@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<06fe62f0abaca8b4120eaf9a1785d42f>>
- * @relayHash c838ff5636f1c7698bb2fd1a21faf6af
+ * @generated SignedSource<<92d0f3f3d361c29e7805787ae5ba959a>>
+ * @relayHash 5e06407ee07027d4136685a321569134
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c838ff5636f1c7698bb2fd1a21faf6af
+// @relayRequestID 5e06407ee07027d4136685a321569134
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -86,6 +86,13 @@ v5 = {
   "args": null,
   "kind": "ScalarField",
   "name": "url",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
   "storageKey": null
 };
 return {
@@ -254,13 +261,7 @@ return {
                                     ],
                                     "storageKey": null
                                   },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "type",
-                                    "storageKey": null
-                                  },
+                                  (v6/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
@@ -270,6 +271,75 @@ return {
                             "storageKey": null
                           },
                           (v4/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "PaymentMethod",
+                            "kind": "LinkedField",
+                            "name": "paymentMethod",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Card",
+                                "kind": "LinkedField",
+                                "name": "card",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "last4",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "expiration",
+                                    "storageKey": null
+                                  },
+                                  (v6/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "CCBillSubscription",
+                            "kind": "LinkedField",
+                            "name": "ccbillSubscription",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "ccbillSubscriptionId",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "email",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "paymentMethod",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -331,7 +401,7 @@ return {
     ]
   },
   "params": {
-    "id": "c838ff5636f1c7698bb2fd1a21faf6af",
+    "id": "5e06407ee07027d4136685a321569134",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

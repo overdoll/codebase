@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-03-09 20:24-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+
+#: src/client/domain/Settings/Billing/RootPaymentMethodSettings/RootPaymentMethodSettings.tsx:33
+msgid "Payment Methods"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/RootPaymentMethodSettings/RootPaymentMethodSettings.tsx:38
+msgid "When you become a club supporter, you'll have the option to remember the payment method for next time."
+msgstr ""

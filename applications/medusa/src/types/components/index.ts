@@ -1,4 +1,5 @@
 import { ForwardedRef, ReactNode } from 'react'
+import { ThemeTypings } from '@chakra-ui/styled-system'
 
 export type MaybeRenderProp<P> =
   | ReactNode
@@ -15,3 +16,5 @@ export interface ConnectionProp {
 export interface InputPlaceholder {
   placeholder: string
 }
+
+export type ColorScheme = ThemeTypings['colorSchemes'] | (string & {})
