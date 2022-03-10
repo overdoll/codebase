@@ -24,7 +24,7 @@ func (c *CCBillSupport) GenerateUrl() string {
 	urls, _ := url.Parse("https://support.ccbill.com/index.cgi")
 
 	q := urls.Query()
-	q.Set("Email", c.email)
+	//q.Set("Email", c.email)
 	q.Set("SubscriptionId", c.ccbillSubscriptionId)
 	q.Set("lookupType", "creditcards")
 
