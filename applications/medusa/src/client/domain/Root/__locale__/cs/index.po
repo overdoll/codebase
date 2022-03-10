@@ -240,6 +240,10 @@ msgstr ""
 msgid "No series were found{0}"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:8
+msgid "No subscriptions were found"
+msgstr ""
+
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:111
 #~ msgid "Nothing was found"
 #~ msgstr ""

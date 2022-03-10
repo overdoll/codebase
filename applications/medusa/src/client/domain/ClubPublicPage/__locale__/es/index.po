@@ -197,6 +197,10 @@ msgstr ""
 #~ msgid "View Subscription"
 #~ msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/components/BillingSummary/BillingSummary.tsx:85
+msgid "We cannot offer refunds after you have subscribed to a club."
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/components/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:182
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
 msgstr ""

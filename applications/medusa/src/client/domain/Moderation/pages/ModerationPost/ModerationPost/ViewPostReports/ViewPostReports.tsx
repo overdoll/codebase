@@ -1,17 +1,19 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import { Stack } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import {
-  TableHeaderBackground,
-  TableHeaderText,
-  TableRow,
-  TableRowBackground,
-  TableRowColumnText
-} from '@//:modules/content/ThemeComponents/TableRow/TableRow'
-import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
+  Table,
+  TableBody,
+  TableBodyColumn,
+  TableBodyRow,
+  TableBodyRowBackground,
+  TableBodyRowLoadMore,
+  TableHeader,
+  TableHeaderColumnText,
+  TableHeaderRow
+} from '@//:modules/content/ThemeComponents/Table/Table'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { ViewPostReportsQuery } from '@//:artifacts/ViewPostReportsQuery.graphql'
 
@@ -70,40 +72,40 @@ export default function ViewPostReports ({ searchArguments }: Props): JSX.Elemen
       fallback={<SmallBackgroundBox><Trans>No reports found</Trans></SmallBackgroundBox>}
       condition={data.reports.edges.length < 1}
     >
-      <Stack spacing={1}>
-        <TableHeaderBackground>
-          <TableRow columns={6}>
-            <TableHeaderText column={2}>
+      <Table>
+        <TableHeader>
+          <TableHeaderRow columns={6}>
+            <TableHeaderColumnText column={2}>
               <Trans>
                 Username
               </Trans>
-            </TableHeaderText>
-            <TableHeaderText column={4}>
+            </TableHeaderColumnText>
+            <TableHeaderColumnText column={4}>
               <Trans>
                 Rule
               </Trans>
-            </TableHeaderText>
-          </TableRow>
-        </TableHeaderBackground>
-        <Stack spacing={2}>
+            </TableHeaderColumnText>
+          </TableHeaderRow>
+        </TableHeader>
+        <TableBody>
           {data.reports.edges.map((item, index) => (
-            <TableRowBackground key={index}>
-              <TableRow columns={6}>
-                <TableRowColumnText column={2}>
+            <TableBodyRowBackground key={index}>
+              <TableBodyRow columns={6}>
+                <TableBodyColumn column={2}>
                   {item.node.account.username}
-                </TableRowColumnText>
-                <TableRowColumnText column={4}>
+                </TableBodyColumn>
+                <TableBodyColumn column={4}>
                   {item.node.rule.title}
-                </TableRowColumnText>
-              </TableRow>
-            </TableRowBackground>))}
-          <LoadMoreStackTile
+                </TableBodyColumn>
+              </TableBodyRow>
+            </TableBodyRowBackground>))}
+          <TableBodyRowLoadMore
             hasNext={hasNext}
             onLoadNext={() => loadNext(5)}
             isLoadingNext={isLoadingNext}
           />
-        </Stack>
-      </Stack>
+        </TableBody>
+      </Table>
     </EmptyBoundary>
   )
 }

@@ -4,6 +4,7 @@ import { LargeBackgroundBox, ResourceIcon } from '@//:modules/content/PageLayout
 import { Badge, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import format from 'date-fns/format'
+import { dateFormatWithTime, dateFormat } from '@//:modules/constants/format'
 
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -31,8 +32,6 @@ const Fragment = graphql`
     ...ManageSubscriptionButtonFragment
   }
 `
-const dateFormat = 'LLLL Lo, y'
-const dateFormatWithTime = 'LLLL Lo, y p'
 
 export default function SubscriptionPreview ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)

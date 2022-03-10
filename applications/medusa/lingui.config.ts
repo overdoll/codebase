@@ -219,6 +219,10 @@ export default {
     {
       path: 'src/client/domain/Admin/pages/AdminClub/__locale__/{locale}/index',
       include: ['src/client/domain/Admin/pages/AdminClub']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCCBillSubscriptionDetails/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCCBillSubscriptionDetails']
     }
   ],
   format: 'po',

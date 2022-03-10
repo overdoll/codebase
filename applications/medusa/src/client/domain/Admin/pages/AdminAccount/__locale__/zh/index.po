@@ -23,6 +23,14 @@ msgstr ""
 msgid "Assign Staff"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:58
+msgid "Billing"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:84
+msgid "Club"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:95
 msgid "Duration of Lock"
 msgstr ""
@@ -40,6 +48,10 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:53
+msgid "Permissions"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:70
 msgid "Revoke Moderator"
@@ -52,6 +64,14 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:30
 msgid "Staff"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:94
+msgid "Status"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
+msgid "Subscriptions"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:49
@@ -76,6 +96,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:50
 msgid "Successfully unlocked account"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:89
+msgid "Supporting Since"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:55

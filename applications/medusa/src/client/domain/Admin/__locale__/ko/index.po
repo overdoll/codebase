@@ -119,6 +119,10 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:58
+msgid "Billing"
+msgstr ""
+
 #: src/client/domain/Admin/Admin.tsx:64
 msgid "Categories"
 msgstr ""
@@ -217,6 +221,10 @@ msgstr ""
 msgid "Characters"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:84
+msgid "Club"
+msgstr ""
+
 #: src/client/domain/Admin/Admin.tsx:90
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:166
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience.tsx:30
@@ -252,7 +260,7 @@ msgstr ""
 msgid "Deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:77
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
 msgid "Duration"
 msgstr ""
 
@@ -376,7 +384,7 @@ msgstr ""
 msgid "Issue Infraction"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:67
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:71
 msgid "Issued"
 msgstr ""
 
@@ -406,8 +414,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:60
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:63
 msgid "No infractions found"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:53
+msgid "Permissions"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:21
@@ -448,7 +460,7 @@ msgstr ""
 msgid "Revoke Staff"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:72
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:76
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
 msgid "Rule"
 msgstr ""
@@ -581,6 +593,10 @@ msgstr ""
 msgid "Standard"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:94
+msgid "Status"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:125
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
@@ -595,6 +611,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
 msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
+msgid "Subscriptions"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:49
@@ -659,6 +679,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
 msgid "Successfully updated series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:89
+msgid "Supporting Since"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108

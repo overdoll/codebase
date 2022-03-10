@@ -8,14 +8,13 @@ interface Props extends HTMLChakraProps<any> {
 
 export default function LinkTile ({
   to,
-  children
+  children,
+  ...rest
 }: Props): JSX.Element {
-  //
-
   return (
     <Link to={to}>
       {({ isPending }) => (
-        <ClickableTile isPending={isPending}>
+        <ClickableTile isPending={isPending} {...rest}>
           {children}
         </ClickableTile>
       )}

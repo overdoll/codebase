@@ -21,6 +21,7 @@ export default function ClickableTile ({
       w='100%'
       borderRadius='md'
       position='relative'
+      overflow='hidden'
       {...rest}
     >
       {children}

@@ -29,7 +29,7 @@ import format from 'date-fns/format'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
-import { ControlPauseButton } from '@//:assets/icons'
+import { DeleteCircle } from '@//:assets/icons'
 
 interface Props {
   query: CancelSubscriptionButtonFragment$key
@@ -129,7 +129,7 @@ export default function CancelSubscriptionButton ({ query }: Props): JSX.Element
     <>
       <MenuItem
         onClick={onOpen}
-        icon={ControlPauseButton}
+        icon={DeleteCircle}
         text={(
           <Trans>
             Cancel Subscription

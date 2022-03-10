@@ -25,7 +25,7 @@ msgstr ""
 msgid "Moderate Post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:70
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:72
 msgid "No reports found"
 msgstr ""
 
@@ -33,10 +33,10 @@ msgstr ""
 msgid "Reports"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:82
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:84
 msgid "Rule"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:77
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:79
 msgid "Username"
 msgstr ""

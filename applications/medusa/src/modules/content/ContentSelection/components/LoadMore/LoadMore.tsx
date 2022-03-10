@@ -15,7 +15,7 @@ export default function LoadMore ({
   text
 }: LoadMoreProps): JSX.Element {
   return (
-    <Flex w='100%' align='center' justify='center'>
+    <Flex h='100%' w='100%' align='center' justify='center'>
       {isLoadingNext
         ? <Spinner color='gray.100' />
         : (
@@ -31,7 +31,7 @@ export default function LoadMore ({
               justify='center'
               align='center'
             >
-              <Heading align='center' color='gray.00' fontSize='md'>
+              <Heading align='center' color='gray.00' fontSize='sm'>
                 {text != null
                   ? text
                   : (

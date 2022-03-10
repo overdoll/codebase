@@ -16,9 +16,13 @@ interface Tags {
   kind: 'Tags'
 }
 
+interface Billing {
+  kind: 'Billing'
+}
+
 type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
 ['configure', InferSubjects<Account> | InferSubjects<Club>] |
-['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post>]
+['admin', InferSubjects<Account> | InferSubjects<Tags> | InferSubjects<Club> | InferSubjects<Post> | InferSubjects<Billing>]
 
 export type AppAbility = Ability<Abilities>
 export const App = Ability as AbilityClass<AppAbility>
