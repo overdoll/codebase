@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"log"
 	"os"
 
 	"github.com/olivere/elastic/v7"
@@ -15,7 +14,7 @@ func InitializeElasticSearchSession() *elastic.Client {
 		// USEFUL FOR DEBUGGING QUERIES!
 		//elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
 		//elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),
-		elastic.SetTraceLog(log.New(os.Stderr, "[[ELASTIC]]", 0)),
+		//elastic.SetTraceLog(log.New(os.Stderr, "[[ELASTIC]]", 0)),
 	)
 
 	if err != nil {

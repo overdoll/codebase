@@ -103,7 +103,7 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                   {item.node.rule.title}
                 </TableRowColumnText>
                 <TableRowColumnText column={2}>
-                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference}`}>
+                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference as string}`}>
                     <Trans>
                       View Post
                     </Trans>

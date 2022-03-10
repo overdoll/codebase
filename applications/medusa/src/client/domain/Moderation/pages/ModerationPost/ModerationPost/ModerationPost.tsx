@@ -7,8 +7,7 @@ import { Trans } from '@lingui/macro'
 import { PostHeaderClub, PostHeaderContributor } from '@//:modules/content/Posts'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SearchDateRange, {
-  getDateRangeDefault,
-  SearchDateRangeProps
+  getDateRangeDefault
 } from '@//:modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange'
 import QueryErrorBoundary
   from '../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -21,7 +20,8 @@ interface Props {
 }
 
 interface SearchProps {
-  dateRange: SearchDateRangeProps
+  from: Date
+  to: Date
   reference: string
 }
 
