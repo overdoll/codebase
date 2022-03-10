@@ -3,30 +3,28 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
-type CreateExpiredClubSubscriptionAccountTransactionRecord struct {
+type CreateExpiredClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId            string
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 	ClubId               string
-	Timestamp            string
+	Timestamp            time.Time
 }
 
-func (h *Activities) CreateExpiredClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateExpiredClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateExpiredClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateExpiredClubSubscriptionAccountTransactionRecordInput) error {
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
+	transaction, err := billing.NewExpiredClubSubscriptionAccountTransaction(
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
+		input.Timestamp,
+	)
 
 	if err != nil {
 		return err
 	}
-
-	transaction, err := billing.NewExpiredClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
-		timestamp,
-	)
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err

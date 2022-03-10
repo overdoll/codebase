@@ -221,7 +221,9 @@ type ConfirmAccountEmailPayload struct {
 type CreateAccountWithAuthenticationTokenInput struct {
 	// The original token
 	Token string `json:"token"`
-	// The username to create the account with
+	// The username to create the account with.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Username string `json:"username"`
 }
 

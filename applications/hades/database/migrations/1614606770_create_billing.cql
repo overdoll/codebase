@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     supporter_since          timestamp,
     last_billing_date        date,
     next_billing_date        date,
-    billing_amount           double,
+    billing_amount           bigint,
     billing_currency         text,
 
     cancelled_at             timestamp,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
 CREATE TABLE IF NOT EXISTS account_transaction_history
 (
     account_id                 text,
-    bucket                     int,
+    bucket                     bigint,
     id                         text,
 
     timestamp                  timestamp,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
 
     encrypted_payment_method   text,
 
-    amount                     double,
+    amount                     bigint,
     currency                   text,
 
     is_recurring               boolean,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
 CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
 (
     account_id                 text,
-    bucket                     int,
+    bucket                     bigint,
     id                         text,
 
     timestamp                  timestamp,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
 
     encrypted_payment_method   text,
 
-    amount                     double,
+    amount                     bigint,
     currency                   text,
 
     is_recurring               boolean,
@@ -122,16 +122,16 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 
     updated_at                   timestamp,
 
-    subscription_initial_price   double,
-    subscription_recurring_price double,
+    subscription_initial_price   bigint,
+    subscription_recurring_price bigint,
     subscription_currency        text,
 
-    billed_initial_price         double,
-    billed_recurring_price       double,
+    billed_initial_price         bigint,
+    billed_recurring_price       bigint,
     billed_currency              text,
 
-    accounting_initial_price     double,
-    accounting_recurring_price   double,
+    accounting_initial_price     bigint,
+    accounting_recurring_price   bigint,
     accounting_currency          text,
 
     idempotency_key              text,

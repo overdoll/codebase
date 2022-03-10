@@ -82,10 +82,18 @@ extend type Post {
 
 """Create a new category."""
 input CreateCategoryInput {
-  """The chosen slug for the category."""
+  """
+  The chosen slug for the category.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the category."""
+  """
+  The chosen title for the category.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 }
 
@@ -108,7 +116,11 @@ input UpdateCategoryTitleInput {
   """The category to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """The localization for this title"""

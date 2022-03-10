@@ -66,10 +66,6 @@ type ComplexityRoot struct {
 		Validation func(childComplexity int) int
 	}
 
-	BecomeClubMemberPayload struct {
-		ClubMember func(childComplexity int) int
-	}
-
 	Club struct {
 		ID               func(childComplexity int) int
 		Members          func(childComplexity int, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) int
@@ -82,6 +78,7 @@ type ComplexityRoot struct {
 		SlugAliasesLimit func(childComplexity int) int
 		Suspension       func(childComplexity int) int
 		Thumbnail        func(childComplexity int, size *int) int
+		ViewerIsOwner    func(childComplexity int) int
 		ViewerMember     func(childComplexity int) int
 	}
 
@@ -133,22 +130,30 @@ type ComplexityRoot struct {
 		FindClubMemberByID func(childComplexity int, id relay.ID) int
 	}
 
+	JoinClubPayload struct {
+		ClubMember func(childComplexity int) int
+	}
+
 	Language struct {
 		Locale func(childComplexity int) int
 		Name   func(childComplexity int) int
 	}
 
+	LeaveClubPayload struct {
+		ClubMemberID func(childComplexity int) int
+	}
+
 	Mutation struct {
 		AddClubSlugAlias              func(childComplexity int, input types.AddClubSlugAliasInput) int
-		BecomeClubMember              func(childComplexity int, input types.BecomeClubMemberInput) int
 		CreateClub                    func(childComplexity int, input types.CreateClubInput) int
+		JoinClub                      func(childComplexity int, input types.JoinClubInput) int
+		LeaveClub                     func(childComplexity int, input types.LeaveClubInput) int
 		PromoteClubSlugAliasToDefault func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
 		RemoveClubSlugAlias           func(childComplexity int, input types.RemoveClubSlugAliasInput) int
 		SuspendClub                   func(childComplexity int, input types.SuspendClubInput) int
 		UnSuspendClub                 func(childComplexity int, input types.UnSuspendClubInput) int
 		UpdateClubName                func(childComplexity int, input types.UpdateClubNameInput) int
 		UpdateClubThumbnail           func(childComplexity int, input types.UpdateClubThumbnailInput) int
-		WithdrawClubMembership        func(childComplexity int, input types.WithdrawClubMembershipInput) int
 	}
 
 	PageInfo struct {
@@ -198,10 +203,6 @@ type ComplexityRoot struct {
 		Club func(childComplexity int) int
 	}
 
-	WithdrawClubMembershipPayload struct {
-		ClubMemberID func(childComplexity int) int
-	}
-
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -230,8 +231,8 @@ type EntityResolver interface {
 	FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error)
 }
 type MutationResolver interface {
-	BecomeClubMember(ctx context.Context, input types.BecomeClubMemberInput) (*types.BecomeClubMemberPayload, error)
-	WithdrawClubMembership(ctx context.Context, input types.WithdrawClubMembershipInput) (*types.WithdrawClubMembershipPayload, error)
+	JoinClub(ctx context.Context, input types.JoinClubInput) (*types.JoinClubPayload, error)
+	LeaveClub(ctx context.Context, input types.LeaveClubInput) (*types.LeaveClubPayload, error)
 	CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error)
 	AddClubSlugAlias(ctx context.Context, input types.AddClubSlugAliasInput) (*types.AddClubSlugAliasPayload, error)
 	RemoveClubSlugAlias(ctx context.Context, input types.RemoveClubSlugAliasInput) (*types.RemoveClubSlugAliasPayload, error)
@@ -334,13 +335,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddClubSlugAliasPayload.Validation(childComplexity), true
 
-	case "BecomeClubMemberPayload.clubMember":
-		if e.complexity.BecomeClubMemberPayload.ClubMember == nil {
-			break
-		}
-
-		return e.complexity.BecomeClubMemberPayload.ClubMember(childComplexity), true
-
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
 			break
@@ -427,6 +421,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.Thumbnail(childComplexity, args["size"].(*int)), true
+
+	case "Club.viewerIsOwner":
+		if e.complexity.Club.ViewerIsOwner == nil {
+			break
+		}
+
+		return e.complexity.Club.ViewerIsOwner(childComplexity), true
 
 	case "Club.viewerMember":
 		if e.complexity.Club.ViewerMember == nil {
@@ -597,6 +598,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindClubMemberByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "JoinClubPayload.clubMember":
+		if e.complexity.JoinClubPayload.ClubMember == nil {
+			break
+		}
+
+		return e.complexity.JoinClubPayload.ClubMember(childComplexity), true
+
 	case "Language.locale":
 		if e.complexity.Language.Locale == nil {
 			break
@@ -611,6 +619,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Language.Name(childComplexity), true
 
+	case "LeaveClubPayload.clubMemberId":
+		if e.complexity.LeaveClubPayload.ClubMemberID == nil {
+			break
+		}
+
+		return e.complexity.LeaveClubPayload.ClubMemberID(childComplexity), true
+
 	case "Mutation.addClubSlugAlias":
 		if e.complexity.Mutation.AddClubSlugAlias == nil {
 			break
@@ -623,18 +638,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddClubSlugAlias(childComplexity, args["input"].(types.AddClubSlugAliasInput)), true
 
-	case "Mutation.becomeClubMember":
-		if e.complexity.Mutation.BecomeClubMember == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_becomeClubMember_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.BecomeClubMember(childComplexity, args["input"].(types.BecomeClubMemberInput)), true
-
 	case "Mutation.createClub":
 		if e.complexity.Mutation.CreateClub == nil {
 			break
@@ -646,6 +649,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateClub(childComplexity, args["input"].(types.CreateClubInput)), true
+
+	case "Mutation.joinClub":
+		if e.complexity.Mutation.JoinClub == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_joinClub_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.JoinClub(childComplexity, args["input"].(types.JoinClubInput)), true
+
+	case "Mutation.leaveClub":
+		if e.complexity.Mutation.LeaveClub == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_leaveClub_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LeaveClub(childComplexity, args["input"].(types.LeaveClubInput)), true
 
 	case "Mutation.promoteClubSlugAliasToDefault":
 		if e.complexity.Mutation.PromoteClubSlugAliasToDefault == nil {
@@ -718,18 +745,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateClubThumbnail(childComplexity, args["input"].(types.UpdateClubThumbnailInput)), true
-
-	case "Mutation.withdrawClubMembership":
-		if e.complexity.Mutation.WithdrawClubMembership == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_withdrawClubMembership_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.WithdrawClubMembership(childComplexity, args["input"].(types.WithdrawClubMembershipInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -865,13 +880,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateClubThumbnailPayload.Club(childComplexity), true
 
-	case "WithdrawClubMembershipPayload.clubMemberId":
-		if e.complexity.WithdrawClubMembershipPayload.ClubMemberID == nil {
-			break
-		}
-
-		return e.complexity.WithdrawClubMembershipPayload.ClubMemberID(childComplexity), true
-
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
 			break
@@ -975,6 +983,11 @@ var sources = []*ast.Source{
   """
   suspension: ClubSuspension
 
+  """
+  Whether or not the viewer is the owner of the club.
+  """
+  viewerIsOwner: Boolean!
+
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 
@@ -1062,7 +1075,11 @@ input AddClubSlugAliasInput {
   """The club to update"""
   id: ID!
 
-  """The chosen slug for the club."""
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 }
 
@@ -1077,21 +1094,29 @@ input RemoveClubSlugAliasInput {
 
 """Create club."""
 input CreateClubInput {
-  """The chosen slug for the club."""
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen name for the club."""
+  """
+  The chosen name for the club.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
-"""Become a club member."""
-input BecomeClubMemberInput {
+"""Join a club input."""
+input JoinClubInput {
   """The chosen club ID."""
   clubId: ID!
 }
 
-"""Withdraw club membership."""
-input WithdrawClubMembershipInput {
+"""Leave a club."""
+input LeaveClubInput {
   """The chosen club ID."""
   clubId: ID!
 }
@@ -1101,7 +1126,11 @@ input UpdateClubNameInput {
   """The club to update"""
   id: ID!
 
-  """The chosen name for the club."""
+  """
+  The chosen name for the club.
+  
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
@@ -1138,13 +1167,13 @@ type CreateClubPayload {
 }
 
 """Payload for a new club member"""
-type BecomeClubMemberPayload {
+type JoinClubPayload {
   """The membership after creation"""
   clubMember: ClubMember
 }
 
-"""Payload for withdrawing club membership"""
-type WithdrawClubMembershipPayload {
+"""Payload for leaving a club"""
+type LeaveClubPayload {
   """The club membership that was removed"""
   clubMemberId: ID!
 }
@@ -1222,14 +1251,16 @@ type SuspendClubPayload {
 
 type Mutation {
   """
-  Become a member of a club
+  Join the club, becoming a member.
   """
-  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
+  joinClub(input: JoinClubInput!): JoinClubPayload
 
   """
-  Withdraw membership from a club
+  Leave the club.
+
+  If you are the owner of the club, you cannot leave the club.
   """
-  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
+  leaveClub(input: LeaveClubInput!): LeaveClubPayload
 
   """
   Create a new club
@@ -1723,13 +1754,13 @@ func (ec *executionContext) field_Mutation_addClubSlugAlias_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_becomeClubMember_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.BecomeClubMemberInput
+	var arg0 types.CreateClubInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNBecomeClubMemberInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1738,13 +1769,28 @@ func (ec *executionContext) field_Mutation_becomeClubMember_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_joinClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.CreateClubInput
+	var arg0 types.JoinClubInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateClubInput(ctx, tmp)
+		arg0, err = ec.unmarshalNJoinClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐJoinClubInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_leaveClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.LeaveClubInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNLeaveClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLeaveClubInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1835,21 +1881,6 @@ func (ec *executionContext) field_Mutation_updateClubThumbnail_args(ctx context.
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateClubThumbnailInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubThumbnailInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_withdrawClubMembership_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.WithdrawClubMembershipInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNWithdrawClubMembershipInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2348,38 +2379,6 @@ func (ec *executionContext) _AddClubSlugAliasPayload_validation(ctx context.Cont
 	return ec.marshalOAddClubSlugAliasValidation2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasValidation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BecomeClubMemberPayload_clubMember(ctx context.Context, field graphql.CollectedField, obj *types.BecomeClubMemberPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BecomeClubMemberPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ClubMember, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.ClubMember)
-	fc.Result = res
-	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2694,6 +2693,41 @@ func (ec *executionContext) _Club_suspension(ctx context.Context, field graphql.
 	res := resTmp.(*types.ClubSuspension)
 	fc.Result = res
 	return ec.marshalOClubSuspension2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubSuspension(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_viewerIsOwner(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ViewerIsOwner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_viewerMember(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -3552,6 +3586,38 @@ func (ec *executionContext) _Entity_findClubMemberByID(ctx context.Context, fiel
 	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _JoinClubPayload_clubMember(ctx context.Context, field graphql.CollectedField, obj *types.JoinClubPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "JoinClubPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubMember, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubMember)
+	fc.Result = res
+	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3622,7 +3688,7 @@ func (ec *executionContext) _Language_name(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_becomeClubMember(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _LeaveClubPayload_clubMemberId(ctx context.Context, field graphql.CollectedField, obj *types.LeaveClubPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3630,38 +3696,34 @@ func (ec *executionContext) _Mutation_becomeClubMember(ctx context.Context, fiel
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Mutation",
+		Object:     "LeaveClubPayload",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_becomeClubMember_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().BecomeClubMember(rctx, args["input"].(types.BecomeClubMemberInput))
+		return obj.ClubMemberID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.BecomeClubMemberPayload)
+	res := resTmp.(relay.ID)
 	fc.Result = res
-	return ec.marshalOBecomeClubMemberPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberPayload(ctx, field.Selections, res)
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_withdrawClubMembership(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_joinClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3678,7 +3740,7 @@ func (ec *executionContext) _Mutation_withdrawClubMembership(ctx context.Context
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_withdrawClubMembership_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_joinClub_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -3686,7 +3748,7 @@ func (ec *executionContext) _Mutation_withdrawClubMembership(ctx context.Context
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().WithdrawClubMembership(rctx, args["input"].(types.WithdrawClubMembershipInput))
+		return ec.resolvers.Mutation().JoinClub(rctx, args["input"].(types.JoinClubInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3695,9 +3757,48 @@ func (ec *executionContext) _Mutation_withdrawClubMembership(ctx context.Context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.WithdrawClubMembershipPayload)
+	res := resTmp.(*types.JoinClubPayload)
 	fc.Result = res
-	return ec.marshalOWithdrawClubMembershipPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipPayload(ctx, field.Selections, res)
+	return ec.marshalOJoinClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐJoinClubPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_leaveClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_leaveClub_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().LeaveClub(rctx, args["input"].(types.LeaveClubInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.LeaveClubPayload)
+	fc.Result = res
+	return ec.marshalOLeaveClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLeaveClubPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4670,41 +4771,6 @@ func (ec *executionContext) _UpdateClubThumbnailPayload_club(ctx context.Context
 	res := resTmp.(*types.Club)
 	fc.Result = res
 	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _WithdrawClubMembershipPayload_clubMemberId(ctx context.Context, field graphql.CollectedField, obj *types.WithdrawClubMembershipPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "WithdrawClubMembershipPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ClubMemberID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -5899,29 +5965,6 @@ func (ec *executionContext) unmarshalInputAddClubSlugAliasInput(ctx context.Cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputBecomeClubMemberInput(ctx context.Context, obj interface{}) (types.BecomeClubMemberInput, error) {
-	var it types.BecomeClubMemberInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, obj interface{}) (types.CreateClubInput, error) {
 	var it types.CreateClubInput
 	asMap := map[string]interface{}{}
@@ -5944,6 +5987,52 @@ func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
 			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputJoinClubInput(ctx context.Context, obj interface{}) (types.JoinClubInput, error) {
+	var it types.JoinClubInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputLeaveClubInput(ctx context.Context, obj interface{}) (types.LeaveClubInput, error) {
+	var it types.LeaveClubInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6122,29 +6211,6 @@ func (ec *executionContext) unmarshalInputUpdateClubThumbnailInput(ctx context.C
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
 			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputWithdrawClubMembershipInput(ctx context.Context, obj interface{}) (types.WithdrawClubMembershipInput, error) {
-	var it types.WithdrawClubMembershipInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "clubId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
-			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6408,34 +6474,6 @@ func (ec *executionContext) _AddClubSlugAliasPayload(ctx context.Context, sel as
 	return out
 }
 
-var becomeClubMemberPayloadImplementors = []string{"BecomeClubMemberPayload"}
-
-func (ec *executionContext) _BecomeClubMemberPayload(ctx context.Context, sel ast.SelectionSet, obj *types.BecomeClubMemberPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, becomeClubMemberPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("BecomeClubMemberPayload")
-		case "clubMember":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BecomeClubMemberPayload_clubMember(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var clubImplementors = []string{"Club", "Node", "_Entity"}
 
 func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
@@ -6550,6 +6588,16 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = innerFunc(ctx)
 
+		case "viewerIsOwner":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Club_viewerIsOwner(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "viewerMember":
 			field := field
 
@@ -7046,6 +7094,34 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var joinClubPayloadImplementors = []string{"JoinClubPayload"}
+
+func (ec *executionContext) _JoinClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.JoinClubPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, joinClubPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("JoinClubPayload")
+		case "clubMember":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._JoinClubPayload_clubMember(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var languageImplementors = []string{"Language"}
 
 func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
@@ -7087,6 +7163,37 @@ func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var leaveClubPayloadImplementors = []string{"LeaveClubPayload"}
+
+func (ec *executionContext) _LeaveClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.LeaveClubPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, leaveClubPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LeaveClubPayload")
+		case "clubMemberId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._LeaveClubPayload_clubMemberId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -7106,16 +7213,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "becomeClubMember":
+		case "joinClub":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_becomeClubMember(ctx, field)
+				return ec._Mutation_joinClub(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "withdrawClubMembership":
+		case "leaveClub":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_withdrawClubMembership(ctx, field)
+				return ec._Mutation_leaveClub(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -7615,37 +7722,6 @@ func (ec *executionContext) _UpdateClubThumbnailPayload(ctx context.Context, sel
 	return out
 }
 
-var withdrawClubMembershipPayloadImplementors = []string{"WithdrawClubMembershipPayload"}
-
-func (ec *executionContext) _WithdrawClubMembershipPayload(ctx context.Context, sel ast.SelectionSet, obj *types.WithdrawClubMembershipPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, withdrawClubMembershipPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("WithdrawClubMembershipPayload")
-		case "clubMemberId":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._WithdrawClubMembershipPayload_clubMemberId(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var _ServiceImplementors = []string{"_Service"}
 
 func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet, obj *fedruntime.Service) graphql.Marshaler {
@@ -8117,11 +8193,6 @@ func (ec *executionContext) marshalNBCP472string(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNBecomeClubMemberInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberInput(ctx context.Context, v interface{}) (types.BecomeClubMemberInput, error) {
-	res, err := ec.unmarshalInputBecomeClubMemberInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -8405,6 +8476,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) unmarshalNJoinClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐJoinClubInput(ctx context.Context, v interface{}) (types.JoinClubInput, error) {
+	res, err := ec.unmarshalInputJoinClubInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -8413,6 +8489,11 @@ func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋstella
 		return graphql.Null
 	}
 	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNLeaveClubInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLeaveClubInput(ctx context.Context, v interface{}) (types.LeaveClubInput, error) {
+	res, err := ec.unmarshalInputLeaveClubInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
@@ -8482,11 +8563,6 @@ func (ec *executionContext) unmarshalNUpdateClubNameInput2overdollᚋapplication
 
 func (ec *executionContext) unmarshalNUpdateClubThumbnailInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubThumbnailInput(ctx context.Context, v interface{}) (types.UpdateClubThumbnailInput, error) {
 	res, err := ec.unmarshalInputUpdateClubThumbnailInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNWithdrawClubMembershipInput2overdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipInput(ctx context.Context, v interface{}) (types.WithdrawClubMembershipInput, error) {
-	res, err := ec.unmarshalInputWithdrawClubMembershipInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -8884,13 +8960,6 @@ func (ec *executionContext) marshalOAddClubSlugAliasValidation2ᚖoverdollᚋapp
 	return v
 }
 
-func (ec *executionContext) marshalOBecomeClubMemberPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubMemberPayload(ctx context.Context, sel ast.SelectionSet, v *types.BecomeClubMemberPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._BecomeClubMemberPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -8972,6 +9041,20 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) marshalOJoinClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐJoinClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.JoinClubPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._JoinClubPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOLeaveClubPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLeaveClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.LeaveClubPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._LeaveClubPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPromoteClubSlugAliasToDefaultPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultPayload(ctx context.Context, sel ast.SelectionSet, v *types.PromoteClubSlugAliasToDefaultPayload) graphql.Marshaler {
@@ -9102,13 +9185,6 @@ func (ec *executionContext) marshalOUpdateClubThumbnailPayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._UpdateClubThumbnailPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOWithdrawClubMembershipPayload2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐWithdrawClubMembershipPayload(ctx context.Context, sel ast.SelectionSet, v *types.WithdrawClubMembershipPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._WithdrawClubMembershipPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

@@ -4,14 +4,18 @@ import (
 	"context"
 )
 
-func (h *Activities) UpdateClubMemberTotalCount(ctx context.Context, clubId string) error {
+type UpdateClubMemberTotalCountInput struct {
+	ClubId string
+}
+
+func (h *Activities) UpdateClubMemberTotalCount(ctx context.Context, input UpdateClubMemberTotalCountInput) error {
 
 	// update count
-	if err := h.cr.UpdateClubMembersTotalCount(ctx, clubId); err != nil {
+	if err := h.cr.UpdateClubMembersTotalCount(ctx, input.ClubId); err != nil {
 		return err
 	}
 
-	clb, err := h.cr.GetClubById(ctx, clubId)
+	clb, err := h.cr.GetClubById(ctx, input.ClubId)
 
 	if err != nil {
 		return err

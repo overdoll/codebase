@@ -81,7 +81,11 @@ input CreateAccountWithAuthenticationTokenInput {
   """The original token"""
   token: String!
 
-  """The username to create the account with"""
+  """
+  The username to create the account with.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   username: String!
 }
 

@@ -1,2 +1,5 @@
 [db]
 keyspace = "parley"
+
+[temporal]
+queue = "parley"

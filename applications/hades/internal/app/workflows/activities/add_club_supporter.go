@@ -5,19 +5,19 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type AddClubSupporter struct {
+type AddClubSupporterInput struct {
 	AccountId   string
 	ClubId      string
 	SupportedAt string
 }
 
-func (h *Activities) AddClubSupporter(ctx context.Context, payload AddClubSupporter) error {
+func (h *Activities) AddClubSupporter(ctx context.Context, input AddClubSupporterInput) error {
 
-	res, err := ccbill.ParseCCBillDateWithTime(payload.SupportedAt)
+	res, err := ccbill.ParseCCBillDateWithTime(input.SupportedAt)
 
 	if err != nil {
 		return err
 	}
 
-	return h.stella.AddClubSupporter(ctx, payload.ClubId, payload.AccountId, res)
+	return h.stella.AddClubSupporter(ctx, input.ClubId, input.AccountId, res)
 }

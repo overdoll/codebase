@@ -23,7 +23,12 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 		ID:        "ProcessResourcesForUpload" + uuid.New().String(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources, itemId, resourceIds)
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
+		workflows.ProcessResourcesInput{
+			ItemId:      itemId,
+			ResourceIds: resourceIds,
+		},
+	)
 
 	if err != nil {
 		return err
@@ -39,7 +44,12 @@ func (r EventTemporalRepository) DeleteResources(ctx context.Context, itemId str
 		ID:        "DeleteProcessedResources" + uuid.New().String(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResources, itemId, resourceIds)
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResources,
+		workflows.DeleteResourcesInput{
+			ItemId:      itemId,
+			ResourceIds: resourceIds,
+		},
+	)
 
 	if err != nil {
 		return err

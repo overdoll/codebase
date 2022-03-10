@@ -5,9 +5,12 @@ import (
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
+	"go.temporal.io/sdk/testsuite"
 	"log"
 	"os"
 	"overdoll/applications/parley/internal/adapters"
+	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -32,6 +35,10 @@ const ParleyHttpClientAddr = "http://:8888/api/graphql"
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
 
+var (
+	temporalClientMock *mocks.Client
+)
+
 type _Any map[string]interface{}
 
 type TestRule struct {
@@ -49,6 +56,10 @@ func convertClubIdToRelayId(ruleId string) relay.ID {
 
 func convertPostIdToRelayId(postId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Post{}, postId))))
+}
+
+func convertAccountIdToRelayId(accountId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
 }
 
 func createRule(t *testing.T, infraction bool) *rule.Rule {
@@ -73,8 +84,32 @@ func seedRuleInfraction(t *testing.T) *rule.Rule {
 	return pst
 }
 
-func seedRule(t *testing.T) *rule.Rule {
-	pst := createRule(t, false)
+func clearModeratorsTableAndSeedModerator(t *testing.T, accountId string) {
+	session := bootstrap.InitializeDatabaseSession()
+	err := session.Query("TRUNCATE moderators", nil).ExecRelease()
+	require.NoError(t, err)
+
+	m, err := moderator.NewModerator(principal.NewPrincipal(accountId, []string{"moderator"}, false, false), accountId)
+	require.NoError(t, err)
+	adapter := adapters.NewModeratorCassandraRepository(session)
+	err = adapter.CreateModerator(context.Background(), m)
+}
+
+func seedPostModerator(t *testing.T, accountId, postId string) *moderator.PostModerator {
+	pst, err := moderator.NewPostModerator(accountId, postId)
+	require.NoError(t, err)
+
+	session := bootstrap.InitializeDatabaseSession()
+
+	adapter := adapters.NewModeratorCassandraRepository(session)
+	err = adapter.CreatePostModerator(context.Background(), pst)
+	require.NoError(t, err)
+
+	return pst
+}
+
+func seedRule(t *testing.T, infraction bool) *rule.Rule {
+	pst := createRule(t, infraction)
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -83,6 +118,15 @@ func seedRule(t *testing.T) *rule.Rule {
 	require.NoError(t, err)
 
 	return pst
+}
+
+func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+
+	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(newApp.Activities)
+
+	return env
 }
 
 func getHttpClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
@@ -102,7 +146,9 @@ func getGrpcClient(t *testing.T) parley.ParleyClient {
 func startService() bool {
 	config.Read("applications/parley")
 
-	application, _ := service.NewComponentTestApplication(context.Background())
+	application, _, temporalClient := service.NewComponentTestApplication(context.Background())
+
+	temporalClientMock = temporalClient
 
 	srv := ports.NewHttpServer(&application)
 

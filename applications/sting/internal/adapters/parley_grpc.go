@@ -14,13 +14,15 @@ func NewParleyGrpc(client parley.ParleyClient) ParleyGrpc {
 	return ParleyGrpc{client: client}
 }
 
-func (s ParleyGrpc) GetNextModeratorId(ctx context.Context) (string, error) {
+func (s ParleyGrpc) PutPostIntoModeratorQueueOrPublish(ctx context.Context, postId string) (bool, error) {
 
-	md, err := s.client.GetNextModerator(ctx, &parley.GetModeratorRequest{})
+	res, err := s.client.PutPostIntoModeratorQueueOrPublish(ctx, &parley.PutPostIntoModeratorQueueOrPublishRequest{
+		PostId: postId,
+	})
 
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
-	return md.Id, nil
+	return res.PutIntoReview, nil
 }

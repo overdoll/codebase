@@ -6,28 +6,41 @@ import (
 	"overdoll/applications/stella/internal/app/workflows/activities"
 )
 
-func AddClubMember(ctx workflow.Context, clubId, accountId string) error {
+type AddClubMemberInput struct {
+	ClubId    string
+	AccountId string
+}
+
+func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
 	// adds the member to the list - the account's own list and the club's list
-	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList, clubId, accountId).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList,
+		activities.AddClubMemberToListInput{
+			ClubId:    input.ClubId,
+			AccountId: input.AccountId,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
 	// spawn a child workflow asynchronously to count the total club member count
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdateClubMemberTotalCount_" + clubId,
+		WorkflowID:        "UpdateClubMemberTotalCount_" + input.ClubId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
 	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
-	childWorkflowFuture := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount, clubId)
 
-	if err := childWorkflowFuture.GetChildWorkflowExecution().Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount,
+		UpdateClubMemberTotalCountInput{
+			ClubId: input.ClubId,
+		},
+	).GetChildWorkflowExecution().Get(ctx, nil); err != nil {
 		return err
 	}
 

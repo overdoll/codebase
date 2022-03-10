@@ -3,9 +3,9 @@ package session
 import (
 	"errors"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/uuid"
 	"time"
 
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -49,7 +49,7 @@ func NewSession(accountId, userAgent, ip string, location *location.Location) (*
 	// account ID is hashed so you dont know who the session belongs to
 
 	return &Session{
-		id:        ksuid.New().String() + ":account:" + accountId,
+		id:        uuid.New().String() + ":account:" + accountId,
 		device:    userAgent,
 		ip:        ip,
 		location:  location,

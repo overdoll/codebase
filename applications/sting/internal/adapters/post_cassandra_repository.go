@@ -24,7 +24,6 @@ var postTable = table.New(table.Metadata{
 		"content_resource_ids",
 		"content_supporter_only",
 		"content_supporter_only_resource_ids",
-		"moderator_account_id",
 		"contributor_account_id",
 		"club_id",
 		"audience_id",
@@ -33,7 +32,6 @@ var postTable = table.New(table.Metadata{
 		"series_ids",
 		"created_at",
 		"posted_at",
-		"moderator_reassignment_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -46,7 +44,6 @@ type posts struct {
 	ContentResourceIds              []string          `db:"content_resource_ids"`
 	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
 	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
-	ModeratorId                     *string           `db:"moderator_account_id"`
 	ContributorId                   string            `db:"contributor_account_id"`
 	ClubId                          string            `db:"club_id"`
 	AudienceId                      *string           `db:"audience_id"`
@@ -55,7 +52,6 @@ type posts struct {
 	SeriesIds                       []string          `db:"series_ids"`
 	CreatedAt                       time.Time         `db:"created_at"`
 	PostedAt                        *time.Time        `db:"posted_at"`
-	ReassignmentAt                  *time.Time        `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -85,7 +81,6 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		Id:                              pending.ID(),
 		State:                           pending.State().String(),
 		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
-		ModeratorId:                     pending.ModeratorId(),
 		ClubId:                          pending.ClubId(),
 		AudienceId:                      pending.AudienceId(),
 		ContributorId:                   pending.ContributorId(),
@@ -97,7 +92,6 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		SeriesIds:                       pending.SeriesIds(),
 		CreatedAt:                       pending.CreatedAt(),
 		PostedAt:                        pending.PostedAt(),
-		ReassignmentAt:                  pending.ReassignmentAt(),
 	}, nil
 }
 
@@ -114,7 +108,6 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.State,
 		postPending.SupporterOnlyStatus,
 		likes,
-		postPending.ModeratorId,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
 		postPending.ContentSupporterOnly,
@@ -126,7 +119,6 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.CategoryIds,
 		postPending.CreatedAt,
 		postPending.PostedAt,
-		postPending.ReassignmentAt,
 		requester,
 		supportedClubIds,
 	), nil
@@ -317,9 +309,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 	if err := r.session.
 		Query(postTable.Update(
 			"state",
-			"moderator_reassignment_at",
 			"posted_at",
-			"moderator_account_id",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).

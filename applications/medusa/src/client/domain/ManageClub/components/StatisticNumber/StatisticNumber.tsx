@@ -14,19 +14,19 @@ export default function StatisticNumber ({
   value,
   text,
   colorScheme,
-  icon,
+  icon
 }: Props): JSX.Element {
   const colors = [
     'purple',
     'orange',
     'teal',
     'green',
-    'primary',
+    'primary'
   ]
 
   const randomColor = colors[Math.floor(Math.random() * 5)]
 
-  const currentColor = colorScheme == null ? randomColor : colorScheme
+  const currentColor: string = colorScheme == null ? randomColor : colorScheme
 
   return (
     <TileOverlay backdrop={<Box bg='gray.800' h={150} />}>

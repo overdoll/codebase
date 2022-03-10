@@ -8,13 +8,15 @@ import (
 type PostReportFilters struct {
 	postId *string
 	from   time.Time
-	to     time.Time
+	to     *time.Time
 }
 
-func NewPostReportFilters(postId *string, from, to time.Time) (*PostReportFilters, error) {
+func NewPostReportFilters(postId *string, from time.Time, to *time.Time) (*PostReportFilters, error) {
 
-	if to.Before(from) {
-		return nil, errors.New("to must be after from")
+	if to != nil {
+		if to.Before(from) {
+			return nil, errors.New("to must be after from")
+		}
 	}
 
 	return &PostReportFilters{
@@ -32,6 +34,6 @@ func (e *PostReportFilters) From() time.Time {
 	return e.from
 }
 
-func (e *PostReportFilters) To() time.Time {
+func (e *PostReportFilters) To() *time.Time {
 	return e.to
 }

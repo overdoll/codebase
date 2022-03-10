@@ -6,7 +6,7 @@ import (
 )
 
 type ParleyService interface {
-	GetNextModeratorId(context.Context) (string, error)
+	PutPostIntoModeratorQueueOrPublish(context.Context, string) (bool, error)
 }
 
 type StellaService interface {

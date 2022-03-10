@@ -8,5 +8,6 @@ go_library(
     deps = [
         "//applications/parley/internal/app/command",
         "//applications/parley/internal/app/query",
+        "//applications/parley/internal/app/workflows/activities",
     ],
 )

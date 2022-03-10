@@ -55,7 +55,7 @@ go_test(
         "//applications/hades/internal/domain/ccbill",
         "//libraries/config",
         "//libraries/principal",
-        "@com_github_segmentio_ksuid//:ksuid",
+        "//libraries/uuid",
         "@com_github_stretchr_testify//require",
     ],
 )

@@ -3,8 +3,8 @@ package report
 import (
 	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/uuid"
 
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -33,7 +33,7 @@ func NewPostReport(requester *principal.Principal, postId string, ruleInstance *
 	}
 
 	return &PostReport{
-		id:                 ksuid.New().String(),
+		id:                 uuid.New().String(),
 		postId:             postId,
 		reportingAccountId: requester.AccountId(),
 		ruleId:             ruleInstance.ID(),

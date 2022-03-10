@@ -6,27 +6,40 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
-func PublishPost(ctx workflow.Context, postId string) error {
+type PublishPostInput struct {
+	PostId string
+}
+
+func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.PublishPost, postId).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.PublishPost,
+		activities.PublishPostInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
 	// spawn a child workflow asynchronously to count the total posts
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdatePostTagsTotalPostsCount_" + postId,
+		WorkflowID:        "UpdatePostTagsTotalPostsCount_" + input.PostId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
 	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
-	childWorkflowFuture := workflow.ExecuteChildWorkflow(ctx, UpdateTotalPostsForPostTags, postId)
 
-	if err := childWorkflowFuture.GetChildWorkflowExecution().Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteChildWorkflow(ctx, UpdateTotalPostsForPostTags,
+		UpdateTotalPostsForPostTagsInput{
+			PostId: input.PostId,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(ctx, nil); err != nil {
 		return err
 	}
 

@@ -98,10 +98,18 @@ input CreateCharacterInput {
   """The chosen series for the character."""
   seriesId: ID!
 
-  """The chosen slug for the character."""
+  """
+  The chosen slug for the character.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen name for the character."""
+  """
+  The chosen name for the character.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
@@ -124,10 +132,18 @@ input UpdateCharacterNameInput {
   """The character to update"""
   id: ID!
 
-  """The name to update"""
+  """
+  The name to update.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 
-  """The localization for this name"""
+  """
+  The localization for this name.
+
+  Validation: Must be one of the languages from the languages query.
+  """
   locale: BCP47!
 }
 

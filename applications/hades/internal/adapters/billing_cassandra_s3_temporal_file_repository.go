@@ -194,7 +194,7 @@ func (r BillingCassandraS3TemporalFileRepository) CreateClubSupporterReceiptFrom
 		ID:        workflowId,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory, history.Id()); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory, workflows.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput{AccountTransactionHistoryId: history.Id()}); err != nil {
 		return nil, err
 	}
 

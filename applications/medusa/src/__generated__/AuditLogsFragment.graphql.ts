@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dae21cd9ee58da6b73580cb1ac43ffe6>>
+ * @generated SignedSource<<d5ef9e995b2c3606a400e9969c2f11ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -84,20 +84,14 @@ return {
       "alias": "postAuditLogs",
       "args": [
         {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "from",
-              "variableName": "from"
-            },
-            {
-              "kind": "Variable",
-              "name": "to",
-              "variableName": "to"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "dateRange"
+          "kind": "Variable",
+          "name": "from",
+          "variableName": "from"
+        },
+        {
+          "kind": "Variable",
+          "name": "to",
+          "variableName": "to"
         }
       ],
       "concreteType": "PostAuditLogConnection",
@@ -187,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "349f729a9bb99751140cc7dc2ce2c5d3";
+(node as any).hash = "9e48b41821b4768855f604989e03da42";
 
 export default node;

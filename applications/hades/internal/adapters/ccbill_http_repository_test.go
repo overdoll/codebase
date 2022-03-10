@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -29,7 +29,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 	repository := newCCBillHttpRepository(t)
 
 	requester := principal.NewPrincipal(
-		ksuid.New().String(),
+		uuid.New().String(),
 		[]string{},
 		false,
 		false,
@@ -37,9 +37,9 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
-		ksuid.New().String(),
+		uuid.New().String(),
 		existingSubscriptionId,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 6.99),
+		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")
@@ -84,7 +84,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 	repository := newCCBillHttpRepository(t)
 
 	requester := principal.NewPrincipal(
-		ksuid.New().String(),
+		uuid.New().String(),
 		[]string{},
 		false,
 		false,
@@ -92,9 +92,9 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
-		ksuid.New().String(),
+		uuid.New().String(),
 		existingSubscriptionId2,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 6.99),
+		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")

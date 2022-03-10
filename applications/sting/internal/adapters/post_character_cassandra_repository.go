@@ -33,7 +33,7 @@ type character struct {
 	Id                  string            `db:"id"`
 	Slug                string            `db:"slug"`
 	Name                map[string]string `db:"name"`
-	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	SeriesId            string            `db:"series_id"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`

@@ -10,13 +10,14 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func (r QueryResolver) PostReports(ctx context.Context, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error) {
+func (r QueryResolver) PostReports(ctx context.Context, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -32,8 +33,8 @@ func (r QueryResolver) PostReports(ctx context.Context, after *string, before *s
 		Cursor:    cursor,
 		PostId:    nil,
 		Principal: principal.FromContext(ctx),
-		From:      dateRange.From,
-		To:        dateRange.To,
+		From:      from,
+		To:        to,
 	})
 
 	if err != nil {

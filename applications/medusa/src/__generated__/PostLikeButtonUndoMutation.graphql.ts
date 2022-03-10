@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5ac1301426354cfb641ed208249d7f79>>
- * @relayHash 4babf55feb150e59ac42b0e02d92241d
+ * @generated SignedSource<<3a5d60de9d4488294ab00da5455a2de7>>
+ * @relayHash 46442a2e632818c647dea45c8eaf6766
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4babf55feb150e59ac42b0e02d92241d
+// @relayRequestID 46442a2e632818c647dea45c8eaf6766
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PostLikeButtonUndoMutation$variables = {
@@ -43,7 +43,7 @@ v1 = [
         "fields": [
           {
             "kind": "Variable",
-            "name": "postId",
+            "name": "id",
             "variableName": "postId"
           }
         ],
@@ -85,7 +85,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "4babf55feb150e59ac42b0e02d92241d",
+    "id": "46442a2e632818c647dea45c8eaf6766",
     "metadata": {},
     "name": "PostLikeButtonUndoMutation",
     "operationKind": "mutation",
@@ -94,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "a18fec8f59444e652aa13e9b62d8abe6";
+(node as any).hash = "f79b5426f629f58f741d2c013caf301f";
 
 export default node;

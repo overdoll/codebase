@@ -10,10 +10,6 @@ type EvaService interface {
 	GetAccount(ctx context.Context, accountId string) (*principal.Principal, error)
 }
 
-type ParleyService interface {
-	GetNextModeratorId(ctx context.Context) (string, error)
-}
-
 type LoaderService interface {
 	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error)
 	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error)

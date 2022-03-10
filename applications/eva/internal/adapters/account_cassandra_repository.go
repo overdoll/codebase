@@ -41,7 +41,7 @@ type accounts struct {
 	Email              string     `db:"email"`
 	Roles              []string   `db:"roles"`
 	Verified           bool       `db:"verified"`
-	AvatarResourceId   string     `db:"avatar_resource_id"`
+	AvatarResourceId   *string    `db:"avatar_resource_id"`
 	Language           string     `db:"language"`
 	Locked             bool       `db:"locked"`
 	LockedUntil        *time.Time `db:"locked_until"`

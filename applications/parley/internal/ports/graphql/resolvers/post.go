@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
@@ -41,7 +42,7 @@ func (r PostResolver) ViewerReport(ctx context.Context, obj *types.Post) (*types
 	return types.MarshalPostReportToGraphQL(ctx, rep), nil
 }
 
-func (r PostResolver) Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error) {
+func (r PostResolver) Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -59,8 +60,8 @@ func (r PostResolver) Reports(ctx context.Context, obj *types.Post, after *strin
 		Cursor:    cursor,
 		PostId:    &postId,
 		Principal: principal.FromContext(ctx),
-		From:      dateRange.From,
-		To:        dateRange.To,
+		From:      from,
+		To:        to,
 	})
 
 	if err != nil {

@@ -2,14 +2,13 @@ package post_audit_log
 
 import (
 	"errors"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 )
 
 var (
-	ErrInvalidModerator     = errors.New("moderator does not match")
 	ErrPostAuditLogNotFound = errors.New("post audit log not found")
 )
 
@@ -29,64 +28,47 @@ type PostAuditLog struct {
 	ruleId *string
 }
 
-func NewRemovePostAuditLog(requester *principal.Principal, postId string, ruleInstance *rule.Rule, notes *string) (*PostAuditLog, error) {
+func CanRemovePost(requester *principal.Principal, ruleInstance *rule.Rule) error {
+
 	if !requester.IsStaff() {
-		return nil, principal.ErrNotAuthorized
+		return principal.ErrNotAuthorized
 	}
 
 	if ruleInstance.Deprecated() {
-		return nil, rule.ErrRuleDeprecated
+		return rule.ErrRuleDeprecated
 	}
-	id := ruleInstance.ID()
+
+	return nil
+}
+
+func NewRemovePostAuditLog(accountId string, postId string, ruleId string, notes *string) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
-		moderatorId: requester.AccountId(),
+		moderatorId: accountId,
 		action:      PostAuditLogActionRemoved,
-		ruleId:      &id,
+		ruleId:      &ruleId,
 		notes:       notes,
 	}, nil
 }
 
-func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId string) (*PostAuditLog, error) {
-	if !requester.IsStaff() {
-		// ensure moderator is the same as the one who is doing the moderation
-		if requester.AccountId() != moderatorId {
-			return nil, ErrInvalidModerator
-		}
-	}
-
+func NewApprovePostAuditLog(accountId, postId string) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
-		moderatorId: moderatorId,
+		moderatorId: accountId,
 		action:      PostAuditLogActionApproved,
 		ruleId:      nil,
 		notes:       nil,
 	}, nil
 }
 
-func NewRejectPostAuditLog(requester *principal.Principal, postId, moderatorId string, ruleInstance *rule.Rule, notes *string) (*PostAuditLog, error) {
-	// Do some permission checks here to make sure the proper user is doing everything
+func NewRejectPostAuditLog(moderatorId, postId, ruleId string, notes *string) (*PostAuditLog, error) {
 
-	if ruleInstance.Deprecated() {
-		return nil, rule.ErrRuleDeprecated
-	}
-
-	if requester.IsLocked() {
-		return nil, principal.ErrLocked
-	}
-
-	if !requester.IsStaff() {
-		// ensure moderator is the same as the one who is doing the moderation
-		if requester.AccountId() != moderatorId {
-			return nil, ErrInvalidModerator
-		}
-	}
-	id := ruleInstance.ID()
+	id := ruleId
 
 	return &PostAuditLog{
-		id:          ksuid.New().String(),
+		id:          uuid.New().String(),
 		postId:      postId,
 		moderatorId: moderatorId,
 		action:      PostAuditLogActionDenied,

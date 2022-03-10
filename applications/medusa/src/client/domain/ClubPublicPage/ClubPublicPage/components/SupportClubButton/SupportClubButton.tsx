@@ -48,7 +48,6 @@ export default function SupportClubButton ({
   ...rest
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
-
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const { i18n } = useLingui()

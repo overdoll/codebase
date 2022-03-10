@@ -30,6 +30,11 @@ type Club implements Node @key(fields: "id") {
   """
   suspension: ClubSuspension
 
+  """
+  Whether or not the viewer is the owner of the club.
+  """
+  viewerIsOwner: Boolean!
+
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 
@@ -117,7 +122,11 @@ input AddClubSlugAliasInput {
   """The club to update"""
   id: ID!
 
-  """The chosen slug for the club."""
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 }
 
@@ -132,21 +141,29 @@ input RemoveClubSlugAliasInput {
 
 """Create club."""
 input CreateClubInput {
-  """The chosen slug for the club."""
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen name for the club."""
+  """
+  The chosen name for the club.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
-"""Become a club member."""
-input BecomeClubMemberInput {
+"""Join a club input."""
+input JoinClubInput {
   """The chosen club ID."""
   clubId: ID!
 }
 
-"""Withdraw club membership."""
-input WithdrawClubMembershipInput {
+"""Leave a club."""
+input LeaveClubInput {
   """The chosen club ID."""
   clubId: ID!
 }
@@ -156,7 +173,11 @@ input UpdateClubNameInput {
   """The club to update"""
   id: ID!
 
-  """The chosen name for the club."""
+  """
+  The chosen name for the club.
+
+  Validation: Max 25 characters.
+  """
   name: String!
 }
 
@@ -193,13 +214,13 @@ type CreateClubPayload {
 }
 
 """Payload for a new club member"""
-type BecomeClubMemberPayload {
+type JoinClubPayload {
   """The membership after creation"""
   clubMember: ClubMember
 }
 
-"""Payload for withdrawing club membership"""
-type WithdrawClubMembershipPayload {
+"""Payload for leaving a club"""
+type LeaveClubPayload {
   """The club membership that was removed"""
   clubMemberId: ID!
 }
@@ -277,14 +298,16 @@ type SuspendClubPayload {
 
 type Mutation {
   """
-  Become a member of a club
+  Join the club, becoming a member.
   """
-  becomeClubMember(input: BecomeClubMemberInput!): BecomeClubMemberPayload
+  joinClub(input: JoinClubInput!): JoinClubPayload
 
   """
-  Withdraw membership from a club
+  Leave the club.
+
+  If you are the owner of the club, you cannot leave the club.
   """
-  withdrawClubMembership(input: WithdrawClubMembershipInput!): WithdrawClubMembershipPayload
+  leaveClub(input: LeaveClubInput!): LeaveClubPayload
 
   """
   Create a new club

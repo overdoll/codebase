@@ -3,7 +3,8 @@
     "baseUrl": "./",
     "sourceMap": true,
     "target": "esnext",
-    "module": "commonjs",
+    "module": "es2022",
+    "moduleResolution": "Node",
     "lib": [
       "dom",
       "dom.iterable",

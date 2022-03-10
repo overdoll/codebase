@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9cad989a488470c962dc9b959d557a2e>>
- * @relayHash e615c2a8304cd1f54fe689491fefa291
+ * @generated SignedSource<<8100743382f10da1081521dd0838e731>>
+ * @relayHash a0fad07776196ade427749cd66960d32
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e615c2a8304cd1f54fe689491fefa291
+// @relayRequestID a0fad07776196ade427749cd66960d32
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type WithdrawMembershipButtonMutation$variables = {
@@ -17,7 +17,7 @@ export type WithdrawMembershipButtonMutation$variables = {
 };
 export type WithdrawMembershipButtonMutationVariables = WithdrawMembershipButtonMutation$variables;
 export type WithdrawMembershipButtonMutation$data = {
-  readonly withdrawClubMembership: {
+  readonly leaveClub: {
     readonly clubMemberId: string;
   } | null;
 };
@@ -51,9 +51,9 @@ v1 = [
         "name": "input"
       }
     ],
-    "concreteType": "WithdrawClubMembershipPayload",
+    "concreteType": "LeaveClubPayload",
     "kind": "LinkedField",
-    "name": "withdrawClubMembership",
+    "name": "leaveClub",
     "plural": false,
     "selections": [
       {
@@ -85,7 +85,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "e615c2a8304cd1f54fe689491fefa291",
+    "id": "a0fad07776196ade427749cd66960d32",
     "metadata": {},
     "name": "WithdrawMembershipButtonMutation",
     "operationKind": "mutation",
@@ -94,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "f50d90e489ac3a7756beb33894fc75ab";
+(node as any).hash = "80cf7f868860c15a9562d5e2fc3f550f";
 
 export default node;

@@ -10,7 +10,6 @@ import (
 type SearchPosts struct {
 	Principal     *principal.Principal
 	Cursor        *paging.Cursor
-	ModeratorId   *string
 	ContributorId *string
 	ClubIds       []string
 
@@ -83,7 +82,6 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 	filters, err := post.NewPostFilters(
 		query.SortBy,
 		query.State,
-		query.ModeratorId,
 		query.ContributorId,
 		query.SupporterOnlyStatus,
 		query.ClubIds,

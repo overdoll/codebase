@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "add_post_to_queue.go",
+        "create_approved_post_audit_log.go",
+        "create_rejected_post_audit_log.go",
+        "create_removed_post_audit_log.go",
+        "discard_post.go",
+        "get_next_moderator.go",
+        "get_rule_details.go",
+        "is_post_assigned_a_moderator.go",
+        "issue_club_infraction_manual.go",
+        "issue_club_infraction_post_moderation.go",
+        "publish_post.go",
+        "reject_post.go",
+        "remove_post.go",
+        "remove_post_from_moderator_queue.go",
+        "services.go",
+        "suspend_club.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/app/workflows/activities",
+    visibility = ["//applications/parley:__subpackages__"],
+    deps = [
+        "//applications/parley/internal/domain/club_infraction",
+        "//applications/parley/internal/domain/moderator",
+        "//applications/parley/internal/domain/post_audit_log",
+        "//applications/parley/internal/domain/rule",
+        "@com_github_pkg_errors//:errors",
+    ],
+)

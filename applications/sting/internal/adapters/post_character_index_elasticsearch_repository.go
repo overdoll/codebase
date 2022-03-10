@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"overdoll/libraries/uuid"
 	"strconv"
 
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
@@ -20,7 +20,7 @@ import (
 type characterDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Name                map[string]string `json:"name"`
 	Series              seriesDocument    `json:"series"`
 	CreatedAt           string            `json:"created_at"`
@@ -67,7 +67,7 @@ const characterIndex = `
 const CharacterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-	parse, err := ksuid.Parse(char.ID())
+	parse, err := uuid.Parse(char.ID())
 
 	if err != nil {
 		return nil, err
@@ -224,13 +224,13 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				return err
 			}
 
-			parse, err := ksuid.Parse(c.Id)
+			parse, err := uuid.Parse(c.Id)
 
 			if err != nil {
 				return err
 			}
 
-			parse2, err := ksuid.Parse(m.Id)
+			parse2, err := uuid.Parse(m.Id)
 
 			if err != nil {
 				return err

@@ -3,30 +3,30 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
+	"time"
 )
 
-type CreateRefundClubSubscriptionAccountTransactionRecord struct {
+type CreateRefundClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
 	ClubId    string
-	Timestamp string
+	Timestamp time.Time
 
 	Currency string
-	Amount   string
+	Amount   int64
 	Reason   string
 
+	CardBin            string
 	CardType           string
 	CardLast4          string
 	CardExpirationDate string
 }
 
-func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateRefundClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateRefundClubSubscriptionAccountTransactionRecordInput) error {
 
-	card, err := billing.NewCard("", request.CardType, request.CardLast4, request.CardExpirationDate)
+	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
@@ -38,28 +38,20 @@ func (h *Activities) CreateRefundClubSubscriptionAccountTransactionRecord(ctx co
 		return err
 	}
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
-
-	if err != nil {
-		return err
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	transaction, err := billing.NewRefundClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
-		timestamp,
-		amount,
-		request.Currency,
-		request.Reason,
+	transaction, err := billing.NewRefundClubSubscriptionAccountTransaction(
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
+		input.Timestamp,
+		input.Amount,
+		input.Currency,
+		input.Reason,
 		paymentMethod,
 	)
+
+	if err != nil {
+		return err
+	}
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err

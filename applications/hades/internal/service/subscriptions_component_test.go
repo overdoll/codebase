@@ -18,7 +18,7 @@ type ClubSupporterSubscriptionsEdges struct {
 			LastBillingDate    time.Time
 			NextBillingDate    time.Time
 			CancelledAt        *time.Time
-			BillingAmount      float64
+			BillingAmount      int
 			BillingCurrency    types.Currency
 			PaymentMethod      types.PaymentMethod
 			CcbillSubscription types.CCBillSubscription
@@ -96,16 +96,16 @@ type CCBillSubscriptionDetailsCustom struct {
 	Status        types.CCBillSubscriptionStatus
 	PaymentMethod types.PaymentMethod
 
-	SubscriptionInitialPrice   float64
-	SubscriptionRecurringPrice float64
+	SubscriptionInitialPrice   int
+	SubscriptionRecurringPrice int
 	SubscriptionCurrency       types.Currency
 
-	BilledInitialPrice   float64
-	BilledRecurringPrice float64
+	BilledInitialPrice   int
+	BilledRecurringPrice int
 	BilledCurrency       types.Currency
 
-	AccountingInitialPrice   float64
-	AccountingRecurringPrice float64
+	AccountingInitialPrice   int
+	AccountingRecurringPrice int
 	AccountingCurrency       types.Currency
 
 	IsRecurring       bool

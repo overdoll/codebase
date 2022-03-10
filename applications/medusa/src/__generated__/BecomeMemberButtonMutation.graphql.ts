@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<727318dbd8be02b8862789eff3cb648f>>
- * @relayHash e7cb73e99697764bb651d0792fa56da7
+ * @generated SignedSource<<a6d18bdff7ddc11cc7945736ea2146fa>>
+ * @relayHash ddb71e3866e383b6acf382feba7ef43d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e7cb73e99697764bb651d0792fa56da7
+// @relayRequestID ddb71e3866e383b6acf382feba7ef43d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type BecomeMemberButtonMutation$variables = {
@@ -17,7 +17,7 @@ export type BecomeMemberButtonMutation$variables = {
 };
 export type BecomeMemberButtonMutationVariables = BecomeMemberButtonMutation$variables;
 export type BecomeMemberButtonMutation$data = {
-  readonly becomeClubMember: {
+  readonly joinClub: {
     readonly clubMember: {
       readonly id: string;
       readonly club: {
@@ -72,9 +72,9 @@ v3 = [
         "name": "input"
       }
     ],
-    "concreteType": "BecomeClubMemberPayload",
+    "concreteType": "JoinClubPayload",
     "kind": "LinkedField",
-    "name": "becomeClubMember",
+    "name": "joinClub",
     "plural": false,
     "selections": [
       {
@@ -143,7 +143,7 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "e7cb73e99697764bb651d0792fa56da7",
+    "id": "ddb71e3866e383b6acf382feba7ef43d",
     "metadata": {},
     "name": "BecomeMemberButtonMutation",
     "operationKind": "mutation",
@@ -152,6 +152,6 @@ return {
 };
 })();
 
-(node as any).hash = "502e25d2b62fd3d0d5669d429b4d18d9";
+(node as any).hash = "1095e45fb7e9a2856542f57ac26c83f3";
 
 export default node;

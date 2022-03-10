@@ -6,9 +6,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) AddLikeToPost(ctx context.Context, postId string) error {
+type AddLikeToPostInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePostLikesOperator(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) AddLikeToPost(ctx context.Context, input AddLikeToPostInput) error {
+
+	pendingPost, err := h.pr.UpdatePostLikesOperator(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.AddLike()
 	})
 

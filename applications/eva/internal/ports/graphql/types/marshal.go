@@ -28,9 +28,9 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 
 	var accountAvatar *Resource
 
-	if result.AvatarResourceId() != "" {
+	if result.AvatarResourceId() != nil {
 		accountAvatar = &Resource{
-			ID: relay.NewID(Resource{}, result.ID(), result.AvatarResourceId()),
+			ID: relay.NewID(Resource{}, result.ID(), *result.AvatarResourceId()),
 		}
 	}
 

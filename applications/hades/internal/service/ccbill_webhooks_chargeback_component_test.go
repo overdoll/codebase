@@ -5,7 +5,6 @@ import (
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -26,7 +25,7 @@ type AccountTransactionHistoryChargeback struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
 							CCBillReason                  string `graphql:"ccbillReason"`
-							Amount                        float64
+							Amount                        int
 							Currency                      types.Currency
 							PaymentMethod                 types.PaymentMethod
 							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
@@ -49,8 +48,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
 
-	workflow := workflows.CCBillChargeback
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillChargeback, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Chargeback", map[string]string{
@@ -69,10 +67,8 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 		"subscriptionId":         ccbillSubscriptionId,
 	})
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -98,7 +94,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

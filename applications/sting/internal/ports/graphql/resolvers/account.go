@@ -59,31 +59,6 @@ func (r AccountResolver) CurationProfile(ctx context.Context, obj *types.Account
 	return types.MarshalCurationProfileToGraphQL(ctx, profile), nil
 }
 
-func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	results, err := r.App.Queries.ModeratorPostsQueue.Handle(ctx, query.ModeratorPostsQueue{
-		Cursor:             cursor,
-		ModeratorAccountId: obj.ID.GetID(),
-		Principal:          principal.FromContext(ctx),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
-}
-
 func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

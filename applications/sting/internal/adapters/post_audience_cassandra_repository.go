@@ -31,7 +31,7 @@ type audience struct {
 	Id                  string            `db:"id"`
 	Slug                string            `db:"slug"`
 	Title               map[string]string `db:"title"`
-	ThumbnailResourceId string            `db:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	Standard            int               `db:"standard"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`

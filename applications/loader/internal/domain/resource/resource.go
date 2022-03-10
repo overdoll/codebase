@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
-	"github.com/segmentio/ksuid"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"image"
 	_ "image/png"
@@ -75,7 +74,7 @@ type Resource struct {
 }
 
 func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int) (*Resource, error) {
-	id := ksuid.New().String()
+	id := uuid.New().String()
 	return &Resource{
 		id:           id,
 		itemId:       itemId,

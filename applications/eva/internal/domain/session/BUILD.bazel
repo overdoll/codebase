@@ -13,6 +13,6 @@ go_library(
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",
-        "@com_github_segmentio_ksuid//:ksuid",
+        "//libraries/uuid",
     ],
 )

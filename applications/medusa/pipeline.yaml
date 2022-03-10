@@ -4,7 +4,7 @@ steps:
       - bazel build //applications/medusa:packages
       - npm run locale:compile
       - npm run check:tsc
-      #- npm run check:eslint
+      - npm run check:eslint
     targets:
       - //applications/medusa:bundle
 

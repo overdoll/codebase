@@ -14,12 +14,13 @@ var (
 // principal contains all methods required for authorization checks
 // it's purposely bare to ensure that it's used properly
 
-// it's recommended that each service builds their own middleware that will grab the current account in the request,
+// Principal it's recommended that each service builds their own middleware that will grab the current account in the request,
 // which can be parsed from the passport in order to save on additional calls due to graphql nesting
 // see "eva" or "sting" for implementation examples
 type Principal struct {
 	accountId string
 	roles     []string
+	email     string
 	verified  bool
 	locked    bool
 }
@@ -33,17 +34,18 @@ func NewPrincipal(accountId string, roles []string, verified, locked bool) *Prin
 	}
 }
 
-// helper to unmarshal from eva proto, as the principal will most often be grabbed from the eva service
+// UnmarshalFromEvaProto helper to unmarshal from eva proto, as the principal will most often be grabbed from the eva service
 func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 	return &Principal{
 		accountId: proto.Id,
 		roles:     proto.Roles,
 		verified:  proto.Verified,
 		locked:    proto.Locked,
+		email:     proto.Email,
 	}
 }
 
-// basically a simple check to make sure this principal is a specific account
+// BelongsToAccount basically a simple check to make sure this principal is a specific account
 func (p *Principal) BelongsToAccount(accountId string) error {
 
 	if p.accountId != accountId {
@@ -55,6 +57,10 @@ func (p *Principal) BelongsToAccount(accountId string) error {
 
 func (p *Principal) AccountId() string {
 	return p.accountId
+}
+
+func (p *Principal) Email() string {
+	return p.email
 }
 
 func (p *Principal) IsVerified() bool {

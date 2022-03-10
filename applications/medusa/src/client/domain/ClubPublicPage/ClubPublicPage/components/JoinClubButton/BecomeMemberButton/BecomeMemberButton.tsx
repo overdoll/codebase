@@ -32,7 +32,7 @@ const ViewerFragment = graphql`
 
 const JoinClubMutation = graphql`
   mutation BecomeMemberButtonMutation($clubId: ID!) {
-    becomeClubMember(input: {clubId: $clubId}) {
+    joinClub(input: {clubId: $clubId}) {
       clubMember {
         id
         club {

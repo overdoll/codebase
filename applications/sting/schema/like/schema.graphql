@@ -15,13 +15,13 @@ type PostLike implements Node @key(fields: "id") {
 """Undo like on a post."""
 input UndoLikePostInput {
   """The post ID that you want to unlike"""
-  postId: ID!
+  id: ID!
 }
 
 """Like a post."""
 input LikePostInput {
   """The post ID that you want to like"""
-  postId: ID!
+  id: ID!
 }
 
 """Payload for the liked post"""

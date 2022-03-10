@@ -48,8 +48,12 @@ type AccountNewTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged in."""
   currency: Currency!
@@ -84,8 +88,12 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged."""
-  amount: Float!
+  """
+  The amount charged.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged in."""
   currency: Currency!
@@ -193,8 +201,12 @@ type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount refunded."""
-  amount: Float!
+  """
+  The amount refunded.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency refunded in."""
   currency: Currency!
@@ -226,8 +238,12 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount voided."""
-  amount: Float!
+  """
+  The amount voided.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency voided in."""
   currency: Currency!
@@ -256,8 +272,12 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   """The account linked to this transaction history."""
   account: Account!
 
-  """The amount charged back."""
-  amount: Float!
+  """
+  The amount charged back.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 
   """The currency charged back in."""
   currency: Currency!
@@ -306,11 +326,19 @@ type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
 A generated refund amount.
 """
 type RefundAmount {
-  """A prorated refund amount, based on the first date and last date of billing / billing duration."""
-  proratedAmount: Float!
+  """
+  A prorated refund amount, based on the first date and last date of billing / billing duration.
 
-  """The maximum amount you can issue a refund for."""
-  maximumAmount: Float!
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  proratedAmount: Int!
+
+  """
+  The maximum amount you can issue a refund for.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  maximumAmount: Int!
 
   """The currency."""
   currency: Currency!
@@ -342,18 +370,18 @@ type CCBillSubscriptionDetails {
   account: Account!
 
   """Subscription details."""
-  subscriptionInitialPrice: Float!
-  subscriptionRecurringPrice: Float!
+  subscriptionInitialPrice: Int!
+  subscriptionRecurringPrice: Int!
   subscriptionCurrency: Currency!
 
   """Billed details."""
-  billedInitialPrice: Float!
-  billedRecurringPrice: Float!
+  billedInitialPrice: Int!
+  billedRecurringPrice: Int!
   billedCurrency: Currency!
 
   """Accounting details."""
-  accountingInitialPrice: Float!
-  accountingRecurringPrice: Float!
+  accountingInitialPrice: Int!
+  accountingRecurringPrice: Int!
   accountingCurrency: Currency!
 
   """Whether or not this is recurring, or a one-time charge."""
@@ -392,9 +420,17 @@ When this object is present, this means that it can only be updated through CCBi
 For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
 """
 type CCBillSubscription {
+  """The payment method belonging to this subscription."""
   paymentMethod: String!
+
+  """The identifier for this subscription."""
   ccbillSubscriptionId: String!
+
+  """The email belonging to this subscription."""
   email: String!
+
+  """A link to modify the subscription."""
+  link: URI!
 }
 
 type AccountSavedPaymentMethod  {
@@ -441,7 +477,7 @@ type AccountClubSupporterSubscription {
   cancelledAt: Time
 
   """The billing amount."""
-  billingAmount: Float!
+  billingAmount: Int!
 
   """The currency."""
   billingCurrency: Currency!
@@ -535,7 +571,16 @@ enum CCBillDeclineError {
 
 """Type describing a price."""
 type Price {
-  amount: Float!
+  """
+  The amount.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
+
+  """
+  The currency the amount is represented in.
+  """
   currency: Currency!
 }
 
@@ -681,8 +726,12 @@ input VoidOrRefundAccountClubSupporterSubscriptionInput {
   """The id of the subscription."""
   clubSupporterSubscriptionId: ID!
 
-  """The amount to refund."""
-  amount: Float!
+  """
+  The amount to refund.
+
+  A positive integer representing the currency in the smallest currency unit.
+  """
+  amount: Int!
 }
 
 """Generate club supporter receipt input."""

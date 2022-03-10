@@ -44,7 +44,25 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
+
+	if os.Getenv("DISABLE_WORKER") == "" {
+		go RunWorker(cmd, args)
+	}
+
 	RunGrpc(cmd, args)
+}
+
+func RunWorker(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, _ := service.NewApplication(ctx)
+
+	srv, cleanup := ports.NewWorker(&app)
+
+	defer cleanup()
+
+	bootstrap.InitializeWorkerServer(srv)
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {

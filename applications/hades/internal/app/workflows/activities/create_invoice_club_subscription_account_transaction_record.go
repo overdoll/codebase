@@ -3,34 +3,33 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
-	"strings"
+	"time"
 )
 
-type CreateInvoiceClubSubscriptionAccountTransactionRecord struct {
+type CreateInvoiceClubSubscriptionAccountTransactionRecordInput struct {
 	AccountId string
 
-	CCBillSubscriptionId string
+	CCBillSubscriptionId *string
 
 	ClubId    string
-	Timestamp string
+	Timestamp time.Time
 
 	Currency string
-	Amount   string
+	Amount   int64
 
-	BillingDate     string
-	NextBillingDate string
+	BillingDate     time.Time
+	NextBillingDate time.Time
 
+	CardBin            string
 	CardType           string
 	CardLast4          string
 	CardExpirationDate string
 }
 
-func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, request CreateInvoiceClubSubscriptionAccountTransactionRecord) error {
+func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateInvoiceClubSubscriptionAccountTransactionRecordInput) error {
 
 	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, request.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *input.CCBillSubscriptionId)
 
 	if err != nil {
 		return err
@@ -38,7 +37,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 
 	paymentMethod := ccbillSubscription.PaymentMethod()
 
-	card, err := billing.NewCard("", request.CardType, request.CardLast4, request.CardExpirationDate)
+	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
 	if err != nil {
 		return err
@@ -49,41 +48,21 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		return err
 	}
 
-	amount, err := strconv.ParseFloat(request.Amount, 64)
-
-	if err != nil {
-		return err
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(request.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(request.BillingDate, " ")[0])
-
-	if err != nil {
-		return err
-	}
-
-	nextBillingDate, err := ccbill.ParseCCBillDate(request.NextBillingDate)
-
-	if err != nil {
-		return err
-	}
-
-	transaction, err := billing.NewInvoiceClubSubscriptionAccountTransactionFromCCBill(
-		request.AccountId,
-		request.ClubId,
-		request.CCBillSubscriptionId,
-		timestamp,
-		billedAtDate,
-		nextBillingDate,
-		amount,
-		request.Currency,
+	transaction, err := billing.NewInvoiceClubSubscriptionAccountTransaction(
+		input.AccountId,
+		input.ClubId,
+		input.CCBillSubscriptionId,
+		input.Timestamp,
+		input.BillingDate,
+		input.NextBillingDate,
+		input.Amount,
+		input.Currency,
 		paymentMethod,
 	)
+
+	if err != nil {
+		return err
+	}
 
 	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
 		return err

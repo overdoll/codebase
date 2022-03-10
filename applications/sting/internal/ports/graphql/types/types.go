@@ -15,8 +15,6 @@ type Account struct {
 	CurationProfile *CurationProfile `json:"curationProfile"`
 	// Posts feed for the clubs that the account currently is a member of.
 	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
-	// Posts queue specific to this account (when moderator)
-	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
 	Posts *PostConnection `json:"posts"`
 	ID    relay.ID        `json:"id"`
@@ -35,6 +33,18 @@ type AddPostContentInput struct {
 // Payload for updating a post
 type AddPostContentPayload struct {
 	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Archive post.
+type ArchivePostInput struct {
+	// The post to archive
+	ID relay.ID `json:"id"`
+}
+
+// Payload for archiving a post
+type ArchivePostPayload struct {
+	// The archived post.
 	Post *Post `json:"post"`
 }
 
@@ -167,8 +177,12 @@ func (Club) IsEntity() {}
 // Create a new audience.
 type CreateAudienceInput struct {
 	// The chosen slug for the audience.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the audience.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// If the audience is standard or not.
 	Standard bool `json:"standard"`
@@ -185,8 +199,12 @@ type CreateAudiencePayload struct {
 // Create a new category.
 type CreateCategoryInput struct {
 	// The chosen slug for the category.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the category.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 }
 
@@ -203,8 +221,12 @@ type CreateCharacterInput struct {
 	// The chosen series for the character.
 	SeriesID relay.ID `json:"seriesId"`
 	// The chosen slug for the character.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen name for the character.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
 }
 
@@ -231,8 +253,12 @@ type CreatePostPayload struct {
 // Create a new series.
 type CreateSeriesInput struct {
 	// The chosen slug for the series.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
 	Slug string `json:"slug"`
 	// The chosen title for the series.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 }
 
@@ -266,6 +292,18 @@ type DateOfBirthCurationProfile struct {
 	DateOfBirth *time.Time `json:"dateOfBirth"`
 }
 
+// Delete post.
+type DeletePostInput struct {
+	// The post to delete
+	ID relay.ID `json:"id"`
+}
+
+// Payload for deleting a post
+type DeletePostPayload struct {
+	// The deleted post.
+	PostID *relay.ID `json:"postId"`
+}
+
 type Language struct {
 	// BCP47 locale
 	Locale string `json:"locale"`
@@ -276,7 +314,7 @@ type Language struct {
 // Like a post.
 type LikePostInput struct {
 	// The post ID that you want to like
-	PostID relay.ID `json:"postId"`
+	ID relay.ID `json:"id"`
 }
 
 // Payload for the liked post
@@ -293,8 +331,6 @@ type Post struct {
 	State PostState `json:"state"`
 	// The supporter-only status.
 	SupporterOnlyStatus SupporterOnlyStatus `json:"supporterOnlyStatus"`
-	// The moderator to whom this pending post was assigned
-	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
 	// The club belonging to the post
@@ -305,8 +341,6 @@ type Post struct {
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
 	PostedAt *time.Time `json:"postedAt"`
-	// The date at which this pending post will be reassigned
-	ReassignmentAt *time.Time `json:"reassignmentAt"`
 	// Suggested posts for this post.
 	SuggestedPosts *PostConnection `json:"suggestedPosts"`
 	// Represents the audience that this post belongs to
@@ -422,8 +456,6 @@ type SubmitPostInput struct {
 type SubmitPostPayload struct {
 	// The post after being submitted
 	Post *Post `json:"post"`
-	// Whether or not the submitted post is going in review
-	InReview *bool `json:"inReview"`
 }
 
 type Translation struct {
@@ -433,10 +465,22 @@ type Translation struct {
 	Text string `json:"text"`
 }
 
+// Un-Archive post.
+type UnArchivePostInput struct {
+	// The post to un-archive
+	ID relay.ID `json:"id"`
+}
+
+// Payload for un-archiving a post
+type UnArchivePostPayload struct {
+	// The un-archived post.
+	Post *Post `json:"post"`
+}
+
 // Undo like on a post.
 type UndoLikePostInput struct {
 	// The post ID that you want to unlike
-	PostID relay.ID `json:"postId"`
+	ID relay.ID `json:"id"`
 }
 
 // Payload for undoing a post like
@@ -477,7 +521,9 @@ type UpdateAudienceThumbnailPayload struct {
 type UpdateAudienceTitleInput struct {
 	// The audience to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The localization for this title
 	Locale string `json:"locale"`
@@ -507,7 +553,9 @@ type UpdateCategoryThumbnailPayload struct {
 type UpdateCategoryTitleInput struct {
 	// The category to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
 	// The localization for this title
 	Locale string `json:"locale"`
@@ -523,9 +571,13 @@ type UpdateCategoryTitlePayload struct {
 type UpdateCharacterNameInput struct {
 	// The character to update
 	ID relay.ID `json:"id"`
-	// The name to update
+	// The name to update.
+	//
+	// Validation: Max 25 characters.
 	Name string `json:"name"`
-	// The localization for this name
+	// The localization for this name.
+	//
+	// Validation: Must be one of the languages from the languages query.
 	Locale string `json:"locale"`
 }
 
@@ -687,9 +739,13 @@ type UpdateSeriesThumbnailPayload struct {
 type UpdateSeriesTitleInput struct {
 	// The series to update
 	ID relay.ID `json:"id"`
-	// The title to update
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
 	Title string `json:"title"`
-	// The localization for this title
+	// The localization for this title.
+	//
+	// Locale must be one from the languages query, or else the locale won't be accepted.
 	Locale string `json:"locale"`
 }
 
@@ -1003,34 +1059,28 @@ func (e CreateSeriesValidation) MarshalGQL(w io.Writer) {
 type PostState string
 
 const (
-	PostStateDraft      PostState = "DRAFT"
-	PostStatePublishing PostState = "PUBLISHING"
-	PostStateReview     PostState = "REVIEW"
-	PostStatePublished  PostState = "PUBLISHED"
-	PostStateDiscarding PostState = "DISCARDING"
-	PostStateDiscarded  PostState = "DISCARDED"
-	PostStateRejected   PostState = "REJECTED"
-	PostStateProcessing PostState = "PROCESSING"
-	PostStateRemoving   PostState = "REMOVING"
-	PostStateRemoved    PostState = "REMOVED"
+	PostStateDraft     PostState = "DRAFT"
+	PostStateReview    PostState = "REVIEW"
+	PostStatePublished PostState = "PUBLISHED"
+	PostStateDiscarded PostState = "DISCARDED"
+	PostStateRejected  PostState = "REJECTED"
+	PostStateRemoved   PostState = "REMOVED"
+	PostStateArchived  PostState = "ARCHIVED"
 )
 
 var AllPostState = []PostState{
 	PostStateDraft,
-	PostStatePublishing,
 	PostStateReview,
 	PostStatePublished,
-	PostStateDiscarding,
 	PostStateDiscarded,
 	PostStateRejected,
-	PostStateProcessing,
-	PostStateRemoving,
 	PostStateRemoved,
+	PostStateArchived,
 }
 
 func (e PostState) IsValid() bool {
 	switch e {
-	case PostStateDraft, PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing, PostStateRemoving, PostStateRemoved:
+	case PostStateDraft, PostStateReview, PostStatePublished, PostStateDiscarded, PostStateRejected, PostStateRemoved, PostStateArchived:
 		return true
 	}
 	return false

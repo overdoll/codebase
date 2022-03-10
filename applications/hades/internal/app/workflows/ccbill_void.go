@@ -3,9 +3,10 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type CCBillVoidPayload struct {
+type CCBillVoidInput struct {
 	TransactionId          string `json:"transactionId"`
 	SubscriptionId         string `json:"subscriptionId"`
 	ClientAccnum           string `json:"clientAccnum"`
@@ -20,7 +21,7 @@ type CCBillVoidPayload struct {
 	Reason                 string `json:"reason"`
 }
 
-func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
+func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -29,18 +30,38 @@ func CCBillVoid(ctx workflow.Context, payload CCBillVoidPayload) error {
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	var amount int64
+
+	if input.Amount != "" {
+		amt, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
+
+		if err != nil {
+			return err
+		}
+
+		amount = amt
 	}
 
 	// create void record
 	if err := workflow.ExecuteActivity(ctx, a.CreateVoidClubSubscriptionAccountTransactionRecord,
-		activities.CreateVoidClubSubscriptionAccountTransactionRecord{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.CreateVoidClubSubscriptionAccountTransactionRecordInput{
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
-			Reason:               payload.Reason,
+			Timestamp:            timestamp,
+			Reason:               input.Reason,
+			Amount:               amount,
+			Currency:             input.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

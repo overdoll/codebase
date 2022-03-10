@@ -8,21 +8,21 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type BecomeClubMember struct {
+type JoinClub struct {
 	Principal *principal.Principal
 	ClubId    string
 }
 
-type BecomeClubMemberHandler struct {
+type JoinClubHandler struct {
 	cr    club.Repository
 	event event.Repository
 }
 
-func NewBecomeClubMemberHandler(cr club.Repository, event event.Repository) BecomeClubMemberHandler {
-	return BecomeClubMemberHandler{cr: cr, event: event}
+func NewJoinClubHandler(cr club.Repository, event event.Repository) JoinClubHandler {
+	return JoinClubHandler{cr: cr, event: event}
 }
 
-func (h BecomeClubMemberHandler) Handle(ctx context.Context, cmd BecomeClubMember) (*club.Member, error) {
+func (h JoinClubHandler) Handle(ctx context.Context, cmd JoinClub) (*club.Member, error) {
 
 	clb, err := h.cr.GetClubById(ctx, cmd.ClubId)
 

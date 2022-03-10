@@ -1,7 +1,7 @@
 package billing
 
 import (
-	"github.com/segmentio/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 type ClubSupporterReceiptBuilder struct {
@@ -34,7 +34,7 @@ func (c *ClubSupporterReceiptBuilder) BuildPDF() error {
 		return err
 	}
 
-	fileName := ksuid.New().String() + ".pdf"
+	fileName := uuid.New().String() + ".pdf"
 
 	if err := pdf.OutputFileAndClose(fileName); err != nil {
 		return err

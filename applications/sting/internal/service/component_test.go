@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
@@ -60,12 +59,12 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(principal.NewPrincipal(accountId, nil, false, false), post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "standard_audience", map[string]string{"en": "Standard Audience"}, "", 1, 0, 0,
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "standard_audience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0,
 	))
 
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(principal.NewPrincipal(accountId, nil, false, false), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", true)
+	err = pst.SubmitPostRequest(principal.NewPrincipal(accountId, nil, false, false), true)
 
 	require.NoError(t, err)
 	return pst
@@ -73,9 +72,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 func newPublishedPost(t *testing.T, accountId string) *post.Post {
 
-	publishingPost := newPublishingPost(t, accountId, ksuid.New().String())
-
-	publishingPost.MakePublishing()
+	publishingPost := newPublishingPost(t, accountId, uuid.New().String())
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -86,7 +83,6 @@ func newPublishedPost(t *testing.T, accountId string) *post.Post {
 func newPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
 
 	publishingPost := newPublishingPost(t, accountId, accountId)
-	publishingPost.MakePublishing()
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -128,7 +124,15 @@ func seedPublishedPost(t *testing.T, accountId string) *post.Post {
 }
 
 func seedPublishingPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId, ksuid.New().String())
+	pst := newPublishingPost(t, accountId, uuid.New().String())
+	seedPost(t, pst)
+	return pst
+}
+
+func seedReviewPost(t *testing.T, accountId string) *post.Post {
+	pst := newPublishingPost(t, accountId, uuid.New().String())
+	err := pst.MakeReview()
+	require.NoError(t, err)
 	seedPost(t, pst)
 	return pst
 }
