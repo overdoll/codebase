@@ -10,6 +10,7 @@ go_library(
         "card.go",
         "card_type.go",
         "ccbill_subscription_details.go",
+        "ccbill_support.go",
         "club_support_receipt_pdf.go",
         "club_supporter_pricing.go",
         "club_supporter_receipt.go",
