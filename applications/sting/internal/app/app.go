@@ -13,12 +13,15 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePost  command.CreatePostHandler
-	DiscardPost command.DiscardPostHandler
-	PublishPost command.PublishPostHandler
-	RejectPost  command.RejectPostHandler
-	SubmitPost  command.SubmitPostHandler
-	RemovePost  command.RemovePostHandler
+	CreatePost    command.CreatePostHandler
+	DiscardPost   command.DiscardPostHandler
+	PublishPost   command.PublishPostHandler
+	RejectPost    command.RejectPostHandler
+	SubmitPost    command.SubmitPostHandler
+	RemovePost    command.RemovePostHandler
+	DeletePost    command.DeletePostHandler
+	ArchivePost   command.ArchivePostHandler
+	UnArchivePost command.UnArchivePostHandler
 
 	RemovePostContent                command.RemovePostContentHandler
 	AddPostContent                   command.AddPostContentHandler
@@ -92,5 +95,4 @@ type Queries struct {
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler
 	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
-	ModeratorPostsQueue   query.ModeratorPostsQueueHandler
 }

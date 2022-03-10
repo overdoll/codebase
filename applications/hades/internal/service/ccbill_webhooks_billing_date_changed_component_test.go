@@ -4,7 +4,6 @@ import (
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -21,9 +20,7 @@ func TestBillingFlow_BillingDateChanged(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
 
-	workflow := workflows.CCBillBillingDateChange
-
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillBillingDateChange, mock.Anything)
 
 	// run webhook - customer data update
 	runWebhookAction(t, "BillingDateChange", map[string]string{
@@ -34,11 +31,8 @@ func TestBillingFlow_BillingDateChanged(t *testing.T) {
 		"timestamp":       "2022-02-26 20:18:00",
 	})
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
-
 	env := getWorkflowEnvironment(t)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 

@@ -14,15 +14,15 @@ func NewStingGrpc(client sting.StingClient) StingGrpc {
 	return StingGrpc{client: client}
 }
 
-func (s StingGrpc) GetPost(ctx context.Context, id string) (string, string, error) {
+func (s StingGrpc) GetPost(ctx context.Context, id string) (string, error) {
 
 	md, err := s.client.GetPost(ctx, &sting.PostRequest{Id: id})
 
 	if err != nil {
-		return "", "", err
+		return "", err
 	}
 
-	return md.ModeratorId, md.ClubId, nil
+	return md.ClubId, nil
 }
 
 func (s StingGrpc) PublishPost(ctx context.Context, id string) error {

@@ -3,12 +3,12 @@ package service_test
 import (
 	"context"
 	"github.com/bxcodec/faker/v3"
-	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -24,6 +24,7 @@ type ClubModified struct {
 	Thumbnail *struct {
 		ID relay.ID
 	}
+	ViewerIsOwner    bool
 	SlugAliasesLimit int
 	Suspension       *types.ClubSuspension
 }
@@ -96,6 +97,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 
 	newClb := getClub(t, client, fake.Slug)
 	require.Equal(t, newClb.Club.Slug, fake.Slug, "should see club with correct slug")
+	require.True(t, newClb.Club.ViewerIsOwner, "creator should be owner of club")
 
 	// refresh index or else we don't see it
 	refreshClubESIndex(t)
@@ -358,7 +360,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	// check permissions for a random account
 	res, err = grpcClient.CanAccountViewPostUnderClub(context.Background(), &stella.CanAccountViewPostUnderClubRequest{
 		ClubId:    clubId,
-		AccountId: ksuid.New().String(),
+		AccountId: uuid.New().String(),
 	})
 
 	require.NoError(t, err, "no error getting permission")

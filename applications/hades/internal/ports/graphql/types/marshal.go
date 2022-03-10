@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -176,6 +177,18 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		status = AccountClubSupporterSubscriptionStatusCancelled
 	}
 
+	var ccbillSub *CCBillSubscription
+
+	if result.CCBillSubscriptionId() != nil {
+		support := result.GetSupport()
+		ccbillSub = &CCBillSubscription{
+			PaymentMethod:        support.LookupType(),
+			CcbillSubscriptionID: support.SubscriptionId(),
+			Email:                support.Email(),
+			Link:                 graphql.URI(support.GenerateUrl()),
+		}
+	}
+
 	return &AccountClubSupporterSubscription{
 		ID: relay.NewID(AccountClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
 		Account: &Account{
@@ -184,19 +197,15 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		Club: &Club{
 			ID: relay.NewID(Club{}, result.ClubId()),
 		},
-		Status:          status,
-		SupporterSince:  result.SupporterSince(),
-		LastBillingDate: result.LastBillingDate(),
-		NextBillingDate: result.NextBillingDate(),
-		CancelledAt:     result.CancelledAt(),
-		BillingAmount:   result.BillingAmount(),
-		BillingCurrency: MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
-		PaymentMethod:   MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-		CcbillSubscription: &CCBillSubscription{
-			PaymentMethod:        "Credit Card",
-			CcbillSubscriptionID: result.CCBillSubscriptionId(),
-			Email:                result.PaymentMethod().BillingContact().Email(),
-		},
+		Status:             status,
+		SupporterSince:     result.SupporterSince(),
+		LastBillingDate:    result.LastBillingDate(),
+		NextBillingDate:    result.NextBillingDate(),
+		CancelledAt:        result.CancelledAt(),
+		BillingAmount:      int(result.BillingAmount()),
+		BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+		PaymentMethod:      MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
+		CcbillSubscription: ccbillSub,
 		UpdatedAt:          result.UpdatedAt(),
 		CancellationReason: cancellationReason,
 	}
@@ -262,18 +271,27 @@ func MarshalAccountClubSupporterSubscriptionToGraphQLConnection(ctx context.Cont
 }
 
 func MarshalAccountSavedPaymentMethodToGraphQL(ctx context.Context, result *billing.SavedPaymentMethod) *AccountSavedPaymentMethod {
+
+	var ccbillSub *CCBillSubscription
+
+	if result.CCBillSubscriptionId() != nil {
+		support := result.GetSupport()
+		ccbillSub = &CCBillSubscription{
+			PaymentMethod:        support.LookupType(),
+			CcbillSubscriptionID: support.SubscriptionId(),
+			Email:                support.Email(),
+			Link:                 graphql.URI(support.GenerateUrl()),
+		}
+	}
+
 	return &AccountSavedPaymentMethod{
 		ID: relay.NewID(AccountSavedPaymentMethod{}, result.AccountId(), result.Id()),
 		Account: &Account{
 			ID: relay.NewID(Account{}, result.AccountId()),
 		},
-		PaymentMethod: MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-		CcbillSubscription: &CCBillSubscription{
-			PaymentMethod:        "Credit Card",
-			CcbillSubscriptionID: result.CCBillSubscriptionId(),
-			Email:                result.PaymentMethod().BillingContact().Email(),
-		},
-		UpdatedAt: result.UpdatedAt(),
+		PaymentMethod:      MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
+		CcbillSubscription: ccbillSub,
+		UpdatedAt:          result.UpdatedAt(),
 	}
 }
 
@@ -357,8 +375,12 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 
 	id := relay.NewID(AccountNewTransactionHistory{}, result.Id())
 
-	subscriptionDetails := &CCBillSubscriptionTransaction{
-		CcbillSubscriptionID: result.CCBillSubscriptionId(),
+	var subscriptionDetails *CCBillSubscriptionTransaction
+
+	if result.CCBillSubscriptionId() != nil {
+		subscriptionDetails = &CCBillSubscriptionTransaction{
+			CcbillSubscriptionID: *result.CCBillSubscriptionId(),
+		}
 	}
 
 	if result.Transaction() == billing.New {
@@ -366,7 +388,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			ID:                            id,
 			Transaction:                   tp,
 			Account:                       account,
-			Amount:                        *result.Amount(),
+			Amount:                        int(*result.Amount()),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
 			BilledAtDate:                  *result.BilledAtDate(),
 			NextBillingDate:               *result.NextBillingDate(),
@@ -382,7 +404,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			ID:                            id,
 			Transaction:                   tp,
 			Account:                       account,
-			Amount:                        *result.Amount(),
+			Amount:                        int(*result.Amount()),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
 			BilledAtDate:                  *result.BilledAtDate(),
 			NextBillingDate:               *result.NextBillingDate(),
@@ -398,7 +420,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			ID:                            id,
 			Transaction:                   tp,
 			Account:                       account,
-			Amount:                        *result.Amount(),
+			Amount:                        int(*result.Amount()),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
 			SupportedClub:                 club,
 			CcbillReason:                  result.CCBillReason(),
@@ -412,7 +434,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			ID:                            id,
 			Transaction:                   tp,
 			Account:                       account,
-			Amount:                        *result.Amount(),
+			Amount:                        int(*result.Amount()),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
 			SupportedClub:                 club,
 			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
@@ -450,7 +472,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 			ID:                            id,
 			Transaction:                   tp,
 			Account:                       account,
-			Amount:                        *result.Amount(),
+			Amount:                        int(*result.Amount()),
 			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
 			SupportedClub:                 club,
 			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),

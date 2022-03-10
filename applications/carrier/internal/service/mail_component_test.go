@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
 	carrier "overdoll/applications/carrier/proto"
+	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 	"time"
@@ -85,8 +85,8 @@ func TestConfirmAccountEmail(t *testing.T) {
 	client := getGrpcClient()
 
 	email := generateEmail("carrier-confirm_account_email")
-	token := ksuid.New().String()
-	secret := ksuid.New().String()
+	token := uuid.New().String()
+	secret := uuid.New().String()
 
 	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Id: token, Secret: secret})
 
@@ -108,8 +108,8 @@ func TestNewLoginTokenEmail(t *testing.T) {
 	client := getGrpcClient()
 
 	email := generateEmail("carrier-new_login_token")
-	token := ksuid.New().String()
-	secret := ksuid.New().String()
+	token := uuid.New().String()
+	secret := uuid.New().String()
 
 	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token, Secret: secret})
 

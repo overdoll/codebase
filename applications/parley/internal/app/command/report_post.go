@@ -29,7 +29,7 @@ func NewReportPostHandler(rr report.Repository, rur rule.Repository, eva EvaServ
 func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.PostReport, error) {
 
 	// Get post - just ensuring it exists
-	_, _, err := h.sting.GetPost(ctx, cmd.PostId)
+	_, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")

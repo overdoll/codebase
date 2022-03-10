@@ -16,7 +16,7 @@ type SearchPostReports struct {
 	PostId *string
 
 	From time.Time
-	To   time.Time
+	To   *time.Time
 }
 
 type SearchPostReportsHandler struct {

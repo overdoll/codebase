@@ -19,7 +19,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 type Props = ComponentSearchArguments<any>
 
 const Query = graphql`
-  query PostReportsQuery ($dateRange: PostReportDateRange!) {
+  query PostReportsQuery ($from: Time!, $to: Time) {
     ...PostReportsFragment
   }
 `
@@ -31,7 +31,7 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "PostReportsPaginationQuery" ) {
-    postReports (first: $first, after: $after, dateRange: $dateRange)
+    postReports (first: $first, after: $after, from: $from, to: $to)
     @connection(key: "PostReports_postReports") {
       edges {
         node {
@@ -103,7 +103,7 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                   {item.node.rule.title}
                 </TableRowColumnText>
                 <TableRowColumnText column={2}>
-                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference}`}>
+                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference as string}`}>
                     <Trans>
                       View Post
                     </Trans>

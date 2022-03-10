@@ -379,3 +379,75 @@ func MarshalRuleToGraphQLConnection(ctx context.Context, results []*rule.Rule, c
 
 	return conn
 }
+
+func MarshalPostModeratorQueueToGraphQL(ctx context.Context, result *moderator.PostModerator) *PostModerator {
+	return &PostModerator{
+		ID: relay.NewID(PostModerator{}, result.AccountId(), result.PostId()),
+		Post: &Post{
+			ID: relay.NewID(Post{}, result.PostId()),
+		},
+		Moderator: &Account{
+			ID: relay.NewID(Account{}, result.AccountId()),
+		},
+		PlacedAt:       result.PlacedAt(),
+		ReassignmentAt: result.ReassignmentAt(),
+	}
+}
+
+func MarshalPostModeratorQueueToGraphQLConnection(ctx context.Context, results []*moderator.PostModerator, cursor *paging.Cursor) *PostModeratorConnection {
+	var posts []*PostModeratorEdge
+
+	conn := &PostModeratorConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: posts,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *moderator.PostModerator
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *moderator.PostModerator {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *moderator.PostModerator {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		posts = append(posts, &PostModeratorEdge{
+			Node:   MarshalPostModeratorQueueToGraphQL(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = posts
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}

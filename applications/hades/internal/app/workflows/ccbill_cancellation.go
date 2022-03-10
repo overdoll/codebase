@@ -3,9 +3,10 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type CCBillCancellationPayload struct {
+type CCBillCancellationInput struct {
 	SubscriptionId string `json:"subscriptionId"`
 	ClientAccnum   string `json:"clientAccnum"`
 	ClientSubacc   string `json:"clientSubacc"`
@@ -13,7 +14,7 @@ type CCBillCancellationPayload struct {
 	Reason         string `json:"reason"`
 }
 
-func CCBillCancellation(ctx workflow.Context, payload CCBillCancellationPayload) error {
+func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -22,18 +23,24 @@ func CCBillCancellation(ctx workflow.Context, payload CCBillCancellationPayload)
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
 		return err
 	}
 
 	// create cancelled record
 	if err := workflow.ExecuteActivity(ctx, a.CreateCancelledAccountTransactionRecord,
-		activities.CreateCancelledClubSubscriptionAccountTransactionRecord{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.CreateCancelledClubSubscriptionAccountTransactionRecordInput{
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
-			Reason:               payload.Reason,
+			Timestamp:            timestamp,
+			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -41,11 +48,11 @@ func CCBillCancellation(ctx workflow.Context, payload CCBillCancellationPayload)
 
 	// mark as cancelled to tell the user the new state
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupportCancelled,
-		activities.MarkAccountClubSupportCancelled{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.MarkAccountClubSupportCancelledInput{
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CancelledAt:          payload.Timestamp,
+			CancelledAt:          timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

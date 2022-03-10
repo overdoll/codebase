@@ -171,7 +171,7 @@ func (r *MutationResolver) UpdateClubThumbnail(ctx context.Context, input types.
 	}, nil
 }
 
-func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.BecomeClubMemberInput) (*types.BecomeClubMemberPayload, error) {
+func (r *MutationResolver) JoinClub(ctx context.Context, input types.JoinClubInput) (*types.JoinClubPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -179,10 +179,10 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 
 	clubId := input.ClubID.GetID()
 
-	clb, err := r.App.Commands.BecomeClubMember.
+	clb, err := r.App.Commands.JoinClub.
 		Handle(
 			ctx,
-			command.BecomeClubMember{
+			command.JoinClub{
 				Principal: principal.FromContext(ctx),
 				ClubId:    clubId,
 			},
@@ -192,12 +192,12 @@ func (r *MutationResolver) BecomeClubMember(ctx context.Context, input types.Bec
 		return nil, err
 	}
 
-	return &types.BecomeClubMemberPayload{
+	return &types.JoinClubPayload{
 		ClubMember: types.MarshalClubMemberToGraphql(ctx, clb),
 	}, nil
 }
 
-func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input types.WithdrawClubMembershipInput) (*types.WithdrawClubMembershipPayload, error) {
+func (r *MutationResolver) LeaveClub(ctx context.Context, input types.LeaveClubInput) (*types.LeaveClubPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -205,10 +205,10 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 
 	clubId := input.ClubID.GetID()
 
-	if err := r.App.Commands.WithdrawClubMembership.
+	if err := r.App.Commands.LeaveClub.
 		Handle(
 			ctx,
-			command.WithdrawClubMembership{
+			command.LeaveClub{
 				Principal: principal.FromContext(ctx),
 				ClubId:    clubId,
 			},
@@ -216,7 +216,7 @@ func (r *MutationResolver) WithdrawClubMembership(ctx context.Context, input typ
 		return nil, err
 	}
 
-	return &types.WithdrawClubMembershipPayload{
+	return &types.LeaveClubPayload{
 		ClubMemberID: input.ClubID,
 	}, nil
 }

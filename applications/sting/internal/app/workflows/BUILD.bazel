@@ -3,6 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
+        "archive_post.go",
+        "delete_post.go",
         "delete_post_like.go",
         "discard_post.go",
         "new_post_like.go",
@@ -10,6 +12,7 @@ go_library(
         "publish_post.go",
         "remove_post.go",
         "submit_post.go",
+        "un_archive_post.go",
         "update_total_likes_for_post_tags.go",
         "update_total_posts_for_post_tags.go",
     ],

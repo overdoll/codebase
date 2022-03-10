@@ -6,12 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/uuid"
 	"strconv"
 	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -22,7 +22,7 @@ type clubDocument struct {
 	Id                  string            `json:"id"`
 	Slug                string            `json:"slug"`
 	SlugAliases         []string          `json:"slug_aliases"`
-	ThumbnailResourceId string            `json:"thumbnail_resource_id"`
+	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Name                map[string]string `json:"name"`
 	CreatedAt           string            `json:"created_at"`
 	MembersCount        int               `json:"members_count"`
@@ -85,7 +85,7 @@ func NewClubIndexElasticSearchRepository(client *elastic.Client, session gocqlx.
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
-	parse, err := ksuid.Parse(cat.ID())
+	parse, err := uuid.Parse(cat.ID())
 
 	if err != nil {
 		return nil, err
@@ -250,7 +250,7 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 
 		for iter.StructScan(&m) {
 
-			parse, err := ksuid.Parse(m.Id)
+			parse, err := uuid.Parse(m.Id)
 
 			if err != nil {
 				return err

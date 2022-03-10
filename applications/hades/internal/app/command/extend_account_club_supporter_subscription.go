@@ -36,7 +36,7 @@ func (h ExtendAccountClubSupporterSubscriptionHandler) Handle(ctx context.Contex
 		return nil, err
 	}
 
-	if err := h.cr.ExtendSubscription(ctx, clubSupporterSubscription.CCBillSubscriptionId(), cmd.Days); err != nil {
+	if err := h.cr.ExtendSubscription(ctx, *clubSupporterSubscription.CCBillSubscriptionId(), cmd.Days); err != nil {
 		return nil, err
 	}
 

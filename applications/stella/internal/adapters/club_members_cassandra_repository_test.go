@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/domain/club"
@@ -26,7 +25,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	principalItem := principal.NewPrincipal(testAccountId, nil, false, false)
 
 	// create a new club for testing
-	err := clubRepo.CreateClub(ctx, club.UnmarshalClubFromDatabase(testClubId, testClubId, nil, nil, "", 0, testAccountId, false, nil))
+	err := clubRepo.CreateClub(ctx, club.UnmarshalClubFromDatabase(testClubId, testClubId, nil, nil, nil, 0, testAccountId, false, nil))
 	require.NoError(t, err, "no error creating a club")
 
 	// add members
@@ -35,7 +34,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	// create x new members
 	for i := 1; i <= createNewMembers; i++ {
 
-		newAccountId := ksuid.New().String()
+		newAccountId := uuid.New().String()
 
 		newMember :=
 			club.UnmarshalMemberFromDatabase(

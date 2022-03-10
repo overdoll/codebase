@@ -3,6 +3,8 @@ package command
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/club_infraction"
+	"overdoll/applications/parley/internal/domain/event"
+	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/rule"
 
@@ -18,8 +20,10 @@ type RejectPost struct {
 }
 
 type RejectPostHandler struct {
-	pr post_audit_log.Repository
-	cr club_infraction.Repository
+	pr    post_audit_log.Repository
+	cr    club_infraction.Repository
+	mr    moderator.Repository
+	event event.Repository
 
 	rr     rule.Repository
 	eva    EvaService
@@ -27,74 +31,37 @@ type RejectPostHandler struct {
 	stella StellaService
 }
 
-func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, eva EvaService, sting StingService, stella StellaService) RejectPostHandler {
-	return RejectPostHandler{sting: sting, eva: eva, pr: pr, rr: rr, cr: cr, stella: stella}
+func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService, stella StellaService) RejectPostHandler {
+	return RejectPostHandler{sting: sting, eva: eva, mr: mr, event: event, pr: pr, rr: rr, cr: cr, stella: stella}
 }
 
-func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*post_audit_log.PostAuditLog, error) {
+func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 
-	postModeratorId, clubId, err := h.sting.GetPost(ctx, cmd.PostId)
+	clubId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get post")
+		return errors.Wrap(err, "failed to get post")
 	}
 
 	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// create new audit log - all necessary permission checks will be performed
-	postAuditLog, err := post_audit_log.NewRejectPostAuditLog(
-		cmd.Principal,
-		cmd.PostId,
-		postModeratorId,
-		ruleItem,
-		cmd.Notes,
-	)
+	postModerator, err := h.mr.GetPostModeratorByPostId(ctx, cmd.Principal, cmd.PostId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// create audit log record
-	if err := h.pr.CreatePostAuditLog(ctx, postAuditLog); err != nil {
-		return nil, err
+	if err := postModerator.CanRejectPost(cmd.Principal, ruleItem); err != nil {
+		return err
 	}
 
-	if ruleItem.Infraction() {
-
-		pastInfractionHistory, err := h.cr.GetClubInfractionHistoryByClubId(ctx, cmd.Principal, nil, clubId)
-
-		if err != nil {
-			return nil, err
-		}
-
-		// create a new infraction for this club
-		infraction, err := club_infraction.IssueClubInfractionHistoryFromPostModeration(cmd.Principal, clubId, pastInfractionHistory, ruleItem)
-
-		if err != nil {
-			return nil, err
-		}
-
-		if err := h.cr.CreateClubInfractionHistory(ctx, infraction); err != nil {
-			return nil, err
-		}
-
-		if err := h.stella.SuspendClub(ctx, clubId, infraction.ClubSuspensionLength()); err != nil {
-			return nil, err
-		}
-
-		if err := h.sting.DiscardPost(ctx, postAuditLog.PostId()); err != nil {
-			return nil, errors.Wrap(err, "failed to discard post")
-		}
-
-	} else {
-		if err := h.sting.RejectPost(ctx, postAuditLog.PostId()); err != nil {
-			return nil, errors.Wrap(err, "failed to reject post")
-		}
+	if err := h.event.RejectPost(ctx, cmd.Principal, clubId, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+		return err
 	}
 
-	return postAuditLog, nil
+	return nil
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<466c0108e707a8e3dc556811ad164e61>>
+ * @generated SignedSource<<0927d0e8298b34e56e556657cf1a492e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostHeaderFragment$data = {
-  readonly reassignmentAt: any | null;
-  readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment">;
+  readonly reassignmentAt: any;
+  readonly post: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment">;
+  };
   readonly " $fragmentType": "PostHeaderFragment";
 };
 export type PostHeaderFragment = PostHeaderFragment$data;
@@ -35,15 +37,26 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostHeaderClubFragment"
+      "concreteType": "Post",
+      "kind": "LinkedField",
+      "name": "post",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostHeaderClubFragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
-  "type": "Post",
+  "type": "PostModerator",
   "abstractKey": null
 };
 
-(node as any).hash = "7e11147528c37f19210164add4613fa9";
+(node as any).hash = "6fae96d6289352cdfd95fedfd7accc2d";
 
 export default node;

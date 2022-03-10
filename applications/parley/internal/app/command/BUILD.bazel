@@ -6,8 +6,8 @@ go_library(
         "add_moderator_to_post_queue.go",
         "approve_post.go",
         "create_rule.go",
-        "get_next_moderator.go",
         "issue_club_infraction.go",
+        "put_post_into_moderator_queue_or_publish.go",
         "reject_post.go",
         "remove_club_infraction_history.go",
         "remove_moderator_from_post_queue.go",
@@ -23,11 +23,13 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/internal/domain/club_infraction",
+        "//applications/parley/internal/domain/event",
         "//applications/parley/internal/domain/moderator",
         "//applications/parley/internal/domain/post_audit_log",
         "//applications/parley/internal/domain/report",
         "//applications/parley/internal/domain/rule",
         "//libraries/principal",
+        "//libraries/uuid",
         "@com_github_pkg_errors//:errors",
     ],
 )

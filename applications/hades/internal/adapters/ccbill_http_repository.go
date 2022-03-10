@@ -220,8 +220,14 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	q.Add("subscriptionId", refund.SubscriptionId())
 	q.Add("action", "voidOrRefundTransaction")
 
-	if refund.Amount() != nil {
-		q.Add("amount", fmt.Sprintf("%.2f", *refund.Amount()))
+	amt, err := refund.Amount()
+
+	if err != nil {
+		return err
+	}
+
+	if amt != nil {
+		q.Add("amount", fmt.Sprintf("%.2f", *amt))
 	}
 
 	req.URL.RawQuery = q.Encode()

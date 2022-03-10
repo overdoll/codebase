@@ -28,7 +28,7 @@ const Fragment = graphql`
 
 const LikeMutation = graphql`
   mutation PostLikeButtonLikeMutation($postId: ID!) {
-    likePost(input: {postId: $postId}) {
+    likePost(input: {id: $postId}) {
       postLike {
         post {
           viewerLiked {
@@ -42,7 +42,7 @@ const LikeMutation = graphql`
 
 const UndoMutation = graphql`
   mutation PostLikeButtonUndoMutation($postId: ID!) {
-    undoLikePost(input: {postId: $postId}) {
+    undoLikePost(input: {id: $postId}) {
       postLikeId
     }
   }
@@ -66,7 +66,7 @@ export default function PostLikeButton ({
 
     likePost({
       variables: {
-        postId: data?.id
+        id: data?.id
       },
       optimisticUpdater: (store) => {
         const node = store.get(data.id)
@@ -88,7 +88,7 @@ export default function PostLikeButton ({
 
     undoLike({
       variables: {
-        postId: data?.id
+        id: data?.id
       },
       optimisticUpdater: (store) => {
         const node = store.get(data.id)

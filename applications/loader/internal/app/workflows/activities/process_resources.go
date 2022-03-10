@@ -7,10 +7,15 @@ import (
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
-func (h *Activities) ProcessResources(ctx context.Context, itemId string, resourceIds []string) error {
+type ProcessResourcesInput struct {
+	ItemId      string
+	ResourceIds []string
+}
+
+func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
 
 	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{itemId}, resourceIds)
+	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
 
 	if err != nil {
 		return err

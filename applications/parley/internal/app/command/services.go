@@ -10,7 +10,7 @@ type EvaService interface {
 }
 
 type StingService interface {
-	GetPost(context.Context, string) (string, string, error)
+	GetPost(context.Context, string) (string, error)
 	PublishPost(context.Context, string) error
 	RejectPost(context.Context, string) error
 	DiscardPost(context.Context, string) error

@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/moderator"
+	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
@@ -17,7 +18,7 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error) {
+func (r AccountResolver) PostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostAuditLogConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -35,8 +36,8 @@ func (r AccountResolver) PostAuditLogs(ctx context.Context, obj *types.Account, 
 		Cursor:             cursor,
 		ModeratorAccountId: &id,
 		Principal:          principal.FromContext(ctx),
-		From:               &dateRange.From,
-		To:                 &dateRange.To,
+		From:               &from,
+		To:                 to,
 	})
 
 	if err != nil {
@@ -62,4 +63,29 @@ func (r AccountResolver) ModeratorSettings(ctx context.Context, obj *types.Accou
 	}
 
 	return types.MarshalModeratorSettingsToGraphQL(mod), nil
+}
+
+func (r AccountResolver) PostModeratorQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostModeratorConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	posts, err := r.App.Queries.SearchPostModeratorQueue.Handle(ctx, query.SearchPostModeratorQueue{
+		Cursor:    cursor,
+		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostModeratorQueueToGraphQLConnection(ctx, posts, cursor), nil
 }

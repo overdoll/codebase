@@ -78,7 +78,6 @@ CREATE TABLE IF NOT EXISTS posts
     id                                  text,
     state                               text,
     supporter_only_status               text,
-    moderator_account_id                text,
     contributor_account_id              text,
     club_id                             text,
     audience_id                         text,
@@ -90,7 +89,6 @@ CREATE TABLE IF NOT EXISTS posts
     content_supporter_only_resource_ids map<text, text>,
     created_at                          timestamp,
     posted_at                           timestamp,
-    moderator_reassignment_at           timestamp,
     primary key ( id )
 );
 

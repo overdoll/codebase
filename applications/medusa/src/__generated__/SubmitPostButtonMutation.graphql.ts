@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d8b0667ddc963608d15c6e16aec7d575>>
- * @relayHash c49b64df64e1f7fc65b3512b5927b2f4
+ * @generated SignedSource<<708be44bfa2dcf91654b9e4f11e19923>>
+ * @relayHash 54ce97eb0a119c5089ee326c98213071
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c49b64df64e1f7fc65b3512b5927b2f4
+// @relayRequestID 54ce97eb0a119c5089ee326c98213071
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type PostState = "DISCARDED" | "DISCARDING" | "DRAFT" | "PROCESSING" | "PUBLISHED" | "PUBLISHING" | "REJECTED" | "REMOVED" | "REMOVING" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 export type SubmitPostInput = {
   id: string;
 };
@@ -26,7 +26,6 @@ export type SubmitPostButtonMutation$data = {
       readonly id: string;
       readonly state: PostState;
     } | null;
-    readonly inReview: boolean | null;
   } | null;
 };
 export type SubmitPostButtonMutationResponse = SubmitPostButtonMutation$data;
@@ -82,13 +81,6 @@ v1 = [
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "inReview",
-        "storageKey": null
       }
     ],
     "storageKey": null
@@ -112,7 +104,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "c49b64df64e1f7fc65b3512b5927b2f4",
+    "id": "54ce97eb0a119c5089ee326c98213071",
     "metadata": {},
     "name": "SubmitPostButtonMutation",
     "operationKind": "mutation",
@@ -121,6 +113,6 @@ return {
 };
 })();
 
-(node as any).hash = "9c0fe6b3a76981a02f9ddc4226799997";
+(node as any).hash = "c235b80e32afa292d8128f666a4d9fd7";
 
 export default node;

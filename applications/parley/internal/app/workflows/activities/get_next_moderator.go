@@ -1,21 +1,16 @@
-package command
+package activities
 
 import (
 	"context"
-	"sort"
-
 	"overdoll/applications/parley/internal/domain/moderator"
+	"sort"
 )
 
-type GetNextModeratorHandler struct {
-	mr moderator.Repository
+type GetNextModeratorPayload struct {
+	ModeratorAccountId string
 }
 
-func NewGetNextModeratorHandler(mr moderator.Repository) GetNextModeratorHandler {
-	return GetNextModeratorHandler{mr: mr}
-}
-
-func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderator, error) {
+func (h *Activities) GetNextModerator(ctx context.Context) (*GetNextModeratorPayload, error) {
 
 	mods, err := h.mr.GetModerators(ctx)
 
@@ -45,5 +40,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 		return nil, err
 	}
 
-	return m, nil
+	return &GetNextModeratorPayload{
+		ModeratorAccountId: m.ID(),
+	}, nil
 }

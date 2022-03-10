@@ -7,7 +7,13 @@ import (
 	"time"
 )
 
-func AddClubSupporter(ctx workflow.Context, clubId, accountId string, supportedAt time.Time) error {
+type AddClubSupporterInput struct {
+	ClubId      string
+	AccountId   string
+	SupportedAt time.Time
+}
+
+func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -16,34 +22,53 @@ func AddClubSupporter(ctx workflow.Context, clubId, accountId string, supportedA
 	var alreadyAMember bool
 
 	// adds the club member if it doesn't exist
-	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberIfNotExists, clubId, accountId).Get(ctx, &alreadyAMember); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberIfNotExists,
+		activities.AddClubMemberIfNotExistsInput{
+			ClubId:    input.ClubId,
+			AccountId: input.AccountId,
+		},
+	).Get(ctx, &alreadyAMember); err != nil {
 		return err
 	}
 
 	// was not already a member, update total count
 	if !alreadyAMember {
 		// adds the member to the list - the account's own list and the club's list
-		if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList, clubId, accountId).Get(ctx, nil); err != nil {
+		if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList,
+			activities.AddClubMemberToListInput{
+				ClubId:    input.ClubId,
+				AccountId: input.AccountId,
+			},
+		).Get(ctx, nil); err != nil {
 			return err
 		}
 
 		// spawn a child workflow asynchronously to count the total club member count
 		// will also ensure we only have 1 of this workflow running at any time
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:        "UpdateClubMemberTotalCount_" + clubId,
+			WorkflowID:        "UpdateClubMemberTotalCount_" + input.ClubId,
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 
 		ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
-		childWorkflowFuture := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount, clubId)
 
-		if err := childWorkflowFuture.GetChildWorkflowExecution().Get(ctx, nil); err != nil {
+		if err := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount,
+			UpdateClubMemberTotalCountInput{
+				ClubId: input.ClubId,
+			},
+		).GetChildWorkflowExecution().Get(ctx, nil); err != nil {
 			return err
 		}
 	}
 
 	// mark the member as supporter
-	if err := workflow.ExecuteActivity(ctx, a.MarkClubMemberAsSupporter, clubId, accountId, supportedAt).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubMemberAsSupporter,
+		activities.MarkClubMemberAsSupporterInput{
+			ClubId:      input.ClubId,
+			AccountId:   input.AccountId,
+			SupportedAt: input.SupportedAt,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

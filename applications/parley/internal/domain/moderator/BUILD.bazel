@@ -4,9 +4,14 @@ go_library(
     name = "moderator",
     srcs = [
         "moderator.go",
+        "post_moderator.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/parley/internal/domain/moderator",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/principal"],
+    deps = [
+        "//applications/parley/internal/domain/rule",
+        "//libraries/paging",
+        "//libraries/principal",
+    ],
 )

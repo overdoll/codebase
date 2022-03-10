@@ -315,9 +315,18 @@ export default async function graphql (index): Promise<void> {
     index.get('/api/graphql', renderPlayground)
   }
 
-  await server.start()
-  server.applyMiddleware({
-    path: '/api/graphql',
-    app: index.use('/api/graphql', matchQueryMiddleware)
-  })
+  // @ts-expect-error
+  if (server.state.phase === 'initialized') {
+    server.start()
+      .then(() => {
+        server.applyMiddleware({
+          path: '/api/graphql',
+          app: index.use('/api/graphql', matchQueryMiddleware)
+        })
+      })
+      .catch(error => {
+        console.log(`error starting server: ${error as string}`)
+        process.exit(1)
+      })
+  }
 }

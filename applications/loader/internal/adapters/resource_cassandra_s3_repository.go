@@ -21,6 +21,7 @@ import (
 	"overdoll/applications/loader/internal/domain/resource"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -270,6 +271,8 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 	// execute batch.
 	return r.session.ExecuteBatch(batch)
 }
+
+// GetResourcesByIdsWithUrls - concurrently generate resource IDs with urls because RSA signing can be slow
 func (r ResourceCassandraS3Repository) GetResourcesByIdsWithUrls(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
 
 	b, err := r.getResourcesByIds(ctx, itemId, resourceIds)
@@ -278,16 +281,37 @@ func (r ResourceCassandraS3Repository) GetResourcesByIdsWithUrls(ctx context.Con
 		return nil, err
 	}
 
-	var resourcesResult []*resource.Resource
+	var wg sync.WaitGroup
 
-	for _, i := range b {
-		result, err := unmarshalResourceFromDatabaseWithSignedUrls(r.resourcesSigner, r.aws, i)
+	wg.Add(len(b))
 
+	errs := make(chan error)
+
+	resourcesResult := make([]*resource.Resource, len(b))
+
+	for i, z := range b {
+		go func(index int, z resources) {
+			defer wg.Done()
+			result, err := unmarshalResourceFromDatabaseWithSignedUrls(r.resourcesSigner, r.aws, z)
+
+			if err == nil {
+				resourcesResult[index] = result
+			} else {
+				errs <- fmt.Errorf("error unmarshalling resource: %s", err)
+			}
+		}(i, z)
+	}
+
+	go func() {
+		wg.Wait()
+		close(errs)
+	}()
+
+	// return the first error
+	for err := range errs {
 		if err != nil {
 			return nil, err
 		}
-
-		resourcesResult = append(resourcesResult, result)
 	}
 
 	return resourcesResult, nil

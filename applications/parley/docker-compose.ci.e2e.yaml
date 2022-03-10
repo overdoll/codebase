@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  parley-worker:
+    image: $CONTAINER_REGISTRY/parley/dev:$BUILDKITE_COMMIT
+    entrypoint: ""
+    command: /bin/sh -c "/app/applications/parley/internal/image.binary db migrate keyspace && /app/applications/parley/internal/image.binary db seed && /app/applications/parley/internal/image.binary worker"
+    env_file: ../../applications/parley/.env.ci
+    depends_on:
+      - temporal
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 20
+
+  run:
+    depends_on:
+      - parley-worker

@@ -12,9 +12,6 @@ import (
 var (
 	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
-	ErrNotReview        = errors.New("post must be in review")
-	ErrNotRemoving      = errors.New("post must be removing")
-	ErrNotComplete      = errors.New("post is incomplete")
 	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
 )
@@ -28,7 +25,6 @@ type Post struct {
 
 	supporterOnlyStatus SupporterOnlyStatus
 
-	moderatorId   *string
 	contributorId string
 
 	clubId string
@@ -41,9 +37,8 @@ type Post struct {
 
 	content []Content
 
-	createdAt      time.Time
-	postedAt       *time.Time
-	reassignmentAt *time.Time
+	createdAt time.Time
+	postedAt  *time.Time
 
 	likes int
 }
@@ -65,7 +60,7 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, moderatorId *string, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt, reassignmentAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -93,7 +88,6 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	return &Post{
 		id:                  id,
-		moderatorId:         moderatorId,
 		state:               ps,
 		supporterOnlyStatus: so,
 		clubId:              clubId,
@@ -106,16 +100,11 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		categoryIds:         categoryIds,
 		createdAt:           createdAt,
 		postedAt:            postedAt,
-		reassignmentAt:      reassignmentAt,
 	}
 }
 
 func (p *Post) ID() string {
 	return p.id
-}
-
-func (p *Post) ModeratorId() *string {
-	return p.moderatorId
 }
 
 func (p *Post) ContributorId() string {
@@ -160,20 +149,6 @@ func (p *Post) AllContentResourceIds() []string {
 	return append(resourceIdsToDelete, resourceIds2ToDelete...)
 }
 
-func (p *Post) UpdateModerator(moderatorId string) error {
-
-	if p.state != Review {
-		return ErrAlreadyModerated
-	}
-
-	newTime := time.Now().Add(time.Hour * 24)
-
-	p.moderatorId = &moderatorId
-	p.reassignmentAt = &newTime
-
-	return nil
-}
-
 func (p *Post) CategoryIds() []string {
 	return p.categoryIds
 }
@@ -194,16 +169,7 @@ func (p *Post) PostedAt() *time.Time {
 	return p.postedAt
 }
 
-func (p *Post) ReassignmentAt() *time.Time {
-	return p.reassignmentAt
-}
-
 func (p *Post) MakePublish() error {
-
-	// State of the post needs to be "publishing" before "published"
-	if p.state != Publishing {
-		return ErrNotPublishing
-	}
 
 	p.state = Published
 
@@ -220,22 +186,7 @@ func (p *Post) RemoveLike() error {
 	return nil
 }
 
-func (p *Post) MakeDiscarding() error {
-
-	if p.state != Review {
-		return ErrNotReview
-	}
-
-	p.state = Discarding
-
-	return nil
-}
-
 func (p *Post) MakeDiscarded() error {
-
-	if p.state != Discarding {
-		return ErrNotReview
-	}
 
 	p.state = Discarded
 
@@ -251,33 +202,11 @@ func (p *Post) MakeRejected() error {
 	return nil
 }
 
-func (p *Post) MakeRemoving() error {
-
-	p.state = Removing
-
-	return nil
-}
-
 func (p *Post) MakeRemoved() error {
-
-	if p.state != Removing {
-		return ErrNotRemoving
-	}
 
 	p.state = Removed
 
 	p.content = []Content{}
-
-	return nil
-}
-
-func (p *Post) MakePublishing() {
-	p.state = Publishing
-}
-
-func (p *Post) MakeProcessing() error {
-
-	p.state = Processing
 
 	return nil
 }
@@ -294,32 +223,20 @@ func (p *Post) IsPublished() bool {
 	return p.state == Published
 }
 
-func (p *Post) IsRemoving() bool {
-	return p.state == Removing
-}
-
 func (p *Post) IsRemoved() bool {
 	return p.state == Removed
-}
-
-func (p *Post) IsPublishing() bool {
-	return p.state == Publishing
-}
-
-func (p *Post) IsProcessing() bool {
-	return p.state == Processing
 }
 
 func (p *Post) IsRejected() bool {
 	return p.state == Rejected
 }
 
-func (p *Post) IsDiscarded() bool {
-	return p.state == Discarded
+func (p *Post) IsArchived() bool {
+	return p.state == Archived
 }
 
-func (p *Post) IsDiscarding() bool {
-	return p.state == Discarding
+func (p *Post) IsDiscarded() bool {
+	return p.state == Discarded
 }
 
 func (p *Post) MakeReview() error {
@@ -328,7 +245,17 @@ func (p *Post) MakeReview() error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string, allResourcesProcessed bool) error {
+func (p *Post) MakeArchived() error {
+	p.state = Archived
+	return nil
+}
+
+func (p *Post) UpdatePostPostedDate(date time.Time) error {
+	p.postedAt = &date
+	return nil
+}
+
+func (p *Post) SubmitPostRequest(requester *principal.Principal, allResourcesProcessed bool) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -341,14 +268,6 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	if p.state != Draft {
 		return ErrNotDraft
 	}
-
-	postTime := time.Now()
-	reassignmentAt := time.Now().Add(time.Hour * 24)
-
-	p.moderatorId = &moderatorId
-	p.postedAt = &postTime
-	p.reassignmentAt = &reassignmentAt
-	p.state = Processing
 
 	return nil
 }
@@ -535,6 +454,33 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 
 	p.categoryIds = categoryIds
 	return nil
+}
+
+func (p *Post) CanDelete(requester *principal.Principal) error {
+
+	if p.state != Published && p.state != Archived && p.state != Removed && p.state != Rejected && p.state != Discarded {
+		return errors.New("invalid deletion state for post: post must be archived, draft, removed, rejected, discarded")
+	}
+
+	return nil
+}
+
+func (p *Post) CanArchive(requester *principal.Principal) error {
+
+	if p.state != Published {
+		return errors.New("only published posts can be archived")
+	}
+
+	return p.MakeArchived()
+}
+
+func (p *Post) CanUnArchive(requester *principal.Principal) error {
+
+	if p.state != Archived {
+		return errors.New("only archived posts can be unarchived")
+	}
+
+	return p.MakePublish()
 }
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {

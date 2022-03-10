@@ -70,7 +70,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 		return nil, err
 	}
 
-	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, cmd.ClubId, savedPaymentMethod.CCBillSubscriptionId(), price)
+	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, cmd.ClubId, *savedPaymentMethod.CCBillSubscriptionId(), price)
 
 	if err != nil {
 		return nil, err

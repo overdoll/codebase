@@ -1,12 +1,3 @@
-"""Date range for post reports"""
-input PostReportDateRange {
-  """The starting date range"""
-  from: Time!
-
-  """The ending date range"""
-  to: Time!
-}
-
 """Post report"""
 type PostReport implements Node @key(fields: "id") {
   """ID of the report"""
@@ -51,8 +42,11 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostReportConnection! @goField(forceResolver: true)
 }
 
@@ -76,8 +70,11 @@ extend type Post {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """The date range for post reports. Required."""
-    dateRange: PostReportDateRange!
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
   ): PostReportConnection! @goField(forceResolver: true)
 }
 

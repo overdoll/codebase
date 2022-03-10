@@ -6,5 +6,7 @@
     }
   },
   "projectId": "svdd6z",
-  "experimentalSessionSupport": true
+  "experimentalSessionSupport": true,
+  "video": true,
+  "videoUploadOnPasses": false
 }

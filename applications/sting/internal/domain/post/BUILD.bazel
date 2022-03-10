@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "post",
@@ -9,7 +9,6 @@ go_library(
         "character_filters.go",
         "character_series.go",
         "club_members_posts_feed.go",
-        "moderator_posts_queue.go",
         "object_filters.go",
         "post.go",
         "post_content.go",
@@ -20,6 +19,7 @@ go_library(
         "post_state.go",
         "post_supporter_only_status.go",
         "repository.go",
+        "slug_validation.go",
         "sorting.go",
         "suggested_posts_by_post.go",
     ],
@@ -31,5 +31,16 @@ go_library(
         "//libraries/principal",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
+    ],
+)
+
+go_test(
+    name = "post_test",
+    srcs = ["post_content_test.go"],
+    embed = [":post"],
+    deps = [
+        "//libraries/principal",
+        "//libraries/uuid",
+        "@com_github_stretchr_testify//require",
     ],
 )

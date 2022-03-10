@@ -21,7 +21,7 @@ type Series struct {
 	id                  string
 	slug                string
 	title               *localization.Translation
-	thumbnailResourceId string
+	thumbnailResourceId *string
 
 	totalLikes int
 	totalPosts int
@@ -47,11 +47,15 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 		return nil, err
 	}
 
+	if err := validateSlug(slug); err != nil {
+		return nil, err
+	}
+
 	return &Series{
 		id:                  uuid.New().String(),
 		slug:                slug,
 		title:               lc,
-		thumbnailResourceId: "",
+		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
 	}, nil
@@ -69,7 +73,7 @@ func (m *Series) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *Series) ThumbnailResourceId() string {
+func (m *Series) ThumbnailResourceId() *string {
 	return m.thumbnailResourceId
 }
 
@@ -114,7 +118,7 @@ func (m *Series) UpdateThumbnail(requester *principal.Principal, thumbnail strin
 		return err
 	}
 
-	m.thumbnailResourceId = thumbnail
+	m.thumbnailResourceId = &thumbnail
 
 	return nil
 }
@@ -132,7 +136,7 @@ func (m *Series) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail string, totalLikes, totalPosts int) *Series {
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int) *Series {
 	return &Series{
 		id:                  id,
 		slug:                slug,

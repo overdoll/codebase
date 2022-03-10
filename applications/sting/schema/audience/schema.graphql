@@ -85,10 +85,18 @@ extend type Post {
 
 """Create a new audience."""
 input CreateAudienceInput {
-  """The chosen slug for the audience."""
+  """
+  The chosen slug for the audience.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the audience."""
+  """
+  The chosen title for the audience.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """If the audience is standard or not."""
@@ -114,7 +122,11 @@ input UpdateAudienceTitleInput {
   """The audience to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
   """The localization for this title"""

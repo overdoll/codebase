@@ -7,13 +7,13 @@ import { Trans } from '@lingui/macro'
 import PostReports from './PostReports/PostReports'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SearchDateRange, {
-  getDateRangeDefault,
-  SearchDateRangeProps
+  getDateRangeDefault
 } from '@//:modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange'
 import { Stack } from '@chakra-ui/react'
 
 interface SearchProps {
-  dateRange: SearchDateRangeProps
+  from: Date
+  to: Date
 }
 
 export default function Reports (): JSX.Element | null {
@@ -23,7 +23,7 @@ export default function Reports (): JSX.Element | null {
     loadQuery
   } = useSearch<SearchProps>({
     defaultValue: {
-      dateRange: getDateRangeDefault()
+      ...getDateRangeDefault()
     }
   })
 

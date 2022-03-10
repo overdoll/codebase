@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
@@ -34,7 +33,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 
 		postTime := time.Now()
 
-		id, _ := ksuid.NewRandomWithTime(postTime)
+		id, _ := uuid.NewRandomWithTime(postTime)
 
 		audienceId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
 
@@ -44,8 +43,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				"published",
 				"none",
 				0,
-				&testClubId,
-				testAccountId,
+				testClubId,
 				nil,
 				nil,
 				nil,
@@ -55,7 +53,6 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				nil,
 				nil,
 				time.Now(),
-				&postTime,
 				&postTime,
 				nil,
 				[]string{},
@@ -84,8 +81,6 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	filters, err := post.NewPostFilters(
 		"new",
 		&state,
-
-		nil,
 		nil,
 		nil,
 		[]string{testClubId},

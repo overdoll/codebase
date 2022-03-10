@@ -2,14 +2,20 @@ package activities
 
 import (
 	"context"
+	"time"
 
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
+type SubmitPostInput struct {
+	PostId   string
+	PostDate time.Time
+}
 
-	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
-		return pending.MakeReview()
+func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) error {
+
+	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+		return pending.UpdatePostPostedDate(input.PostDate)
 	})
 
 	if err != nil {

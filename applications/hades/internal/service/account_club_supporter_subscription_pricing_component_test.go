@@ -44,7 +44,7 @@ func TestAccountClubSupporterSubscriptionPricing(t *testing.T) {
 
 	pricingItem := clubSupporterPricing.Entities[0].Club.SupporterSubscriptionPrice
 
-	require.Equal(t, 6.99, pricingItem.LocalizedPrice.Amount, "correct amount")
+	require.Equal(t, 699, pricingItem.LocalizedPrice.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, pricingItem.LocalizedPrice.Currency, "correct currency")
 
 	require.Len(t, pricingItem.Prices, 6, "all 6 currencies are here")

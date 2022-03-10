@@ -23,7 +23,10 @@ func (r EventTemporalRepository) AddClubMember(ctx context.Context, clubId, acco
 		ID:        "AddClubMember_" + clubId + "_" + accountId,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, clubId, accountId); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, workflows.AddClubMemberInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	}); err != nil {
 		return err
 	}
 
@@ -37,7 +40,10 @@ func (r EventTemporalRepository) RemoveClubMember(ctx context.Context, clubId, a
 		ID:        "RemoveClubMember_" + clubId + "_" + accountId,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, clubId, accountId); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, workflows.RemoveClubMemberInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	}); err != nil {
 		return err
 	}
 
@@ -51,7 +57,11 @@ func (r EventTemporalRepository) AddClubSupporter(ctx context.Context, clubId, a
 		ID:        "AddClubSupporter_" + clubId + "_" + accountId,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubSupporter, clubId, accountId, supportedAt); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubSupporter, workflows.AddClubSupporterInput{
+		ClubId:      clubId,
+		AccountId:   accountId,
+		SupportedAt: supportedAt,
+	}); err != nil {
 		return err
 	}
 
@@ -65,7 +75,10 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 		ID:        "RemoveClubSupporter_" + clubId + "_" + accountId,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubSupporter, clubId, accountId); err != nil {
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubSupporter, workflows.RemoveClubSupporterInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	}); err != nil {
 		return err
 	}
 

@@ -58,7 +58,7 @@ type accountSavedPaymentMethod struct {
 	Id                     string    `db:"id"`
 	EncryptedPaymentMethod string    `db:"encrypted_payment_method"`
 	Currency               string    `db:"currency"`
-	CCBillSubscriptionId   string    `db:"ccbill_subscription_id"`
+	CCBillSubscriptionId   *string   `db:"ccbill_subscription_id"`
 	UpdatedAt              time.Time `db:"updated_at"`
 }
 
@@ -94,12 +94,12 @@ type accountClubSupporterSubscription struct {
 	SupporterSince         time.Time  `db:"supporter_since"`
 	LastBillingDate        time.Time  `db:"last_billing_date"`
 	NextBillingDate        time.Time  `db:"next_billing_date"`
-	BillingAmount          float64    `db:"billing_amount"`
+	BillingAmount          int64      `db:"billing_amount"`
 	BillingCurrency        string     `db:"billing_currency"`
 	Id                     string     `db:"id"`
 	CancelledAt            *time.Time `db:"cancelled_at"`
 	EncryptedPaymentMethod string     `db:"encrypted_payment_method"`
-	CCBillSubscriptionId   string     `db:"ccbill_subscription_id"`
+	CCBillSubscriptionId   *string    `db:"ccbill_subscription_id"`
 	UpdatedAt              time.Time  `db:"updated_at"`
 	CancellationReasonId   *string    `db:"cancellation_reason_id"`
 }
@@ -185,8 +185,8 @@ type accountTransactionHistory struct {
 	SupportedClubId        *string `db:"supported_club_id"`
 	EncryptedPaymentMethod *string `db:"encrypted_payment_method"`
 
-	Amount   *float64 `db:"amount"`
-	Currency *string  `db:"currency"`
+	Amount   *int64  `db:"amount"`
+	Currency *string `db:"currency"`
 
 	IsRecurring *bool `db:"is_recurring"`
 
@@ -198,7 +198,7 @@ type accountTransactionHistory struct {
 	CCBillErrorText      *string `db:"ccbill_error_text"`
 	CCBillErrorCode      *string `db:"ccbill_error_code"`
 	CCBillReason         *string `db:"ccbill_reason"`
-	CCBillSubscriptionId string  `db:"ccbill_subscription_id"`
+	CCBillSubscriptionId *string `db:"ccbill_subscription_id"`
 }
 
 var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
@@ -235,17 +235,17 @@ type ccbillSubscriptionDetails struct {
 	EncryptedPaymentMethod string    `db:"encrypted_payment_method"`
 	UpdatedAt              time.Time `db:"updated_at"`
 
-	SubscriptionInitialPrice   float64 `db:"subscription_initial_price"`
-	SubscriptionRecurringPrice float64 `db:"subscription_recurring_price"`
-	SubscriptionCurrency       string  `db:"subscription_currency"`
+	SubscriptionInitialPrice   int64  `db:"subscription_initial_price"`
+	SubscriptionRecurringPrice int64  `db:"subscription_recurring_price"`
+	SubscriptionCurrency       string `db:"subscription_currency"`
 
-	BilledInitialPrice   float64 `db:"billed_initial_price"`
-	BilledRecurringPrice float64 `db:"billed_recurring_price"`
-	BilledCurrency       string  `db:"billed_currency"`
+	BilledInitialPrice   int64  `db:"billed_initial_price"`
+	BilledRecurringPrice int64  `db:"billed_recurring_price"`
+	BilledCurrency       string `db:"billed_currency"`
 
-	AccountingInitialPrice   float64 `db:"accounting_initial_price"`
-	AccountingRecurringPrice float64 `db:"accounting_recurring_price"`
-	AccountingCurrency       string  `db:"accounting_currency"`
+	AccountingInitialPrice   int64  `db:"accounting_initial_price"`
+	AccountingRecurringPrice int64  `db:"accounting_recurring_price"`
+	AccountingCurrency       string `db:"accounting_currency"`
 
 	IdempotencyKey string `db:"idempotency_key"`
 }
@@ -935,9 +935,9 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 	} else {
 
 		// new/invoice transactions - grab billing details from ccbill (these details are not added automatically)
-		if accountHistory.CCBillSubscriptionId() != "" && (accountHistory.Transaction() == billing.New || accountHistory.Transaction() == billing.Invoice) {
+		if accountHistory.CCBillSubscriptionId() != nil && (accountHistory.Transaction() == billing.New || accountHistory.Transaction() == billing.Invoice) {
 
-			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, accountHistory.CCBillSubscriptionId())
+			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, *accountHistory.CCBillSubscriptionId())
 
 			if err != nil {
 				return fmt.Errorf("failed to get subscription details: %s", err)

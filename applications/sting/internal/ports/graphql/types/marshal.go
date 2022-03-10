@@ -37,32 +37,20 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		state = PostStateReview
 	}
 
-	if result.IsProcessing() {
-		state = PostStateProcessing
-	}
-
-	if result.IsPublishing() {
-		state = PostStatePublishing
-	}
-
 	if result.IsDiscarded() {
 		state = PostStateDiscarded
-	}
-
-	if result.IsDiscarding() {
-		state = PostStateDiscarding
-	}
-
-	if result.IsPublished() {
-		state = PostStatePublished
 	}
 
 	if result.IsRejected() {
 		state = PostStateRejected
 	}
 
-	if result.IsRemoving() {
-		state = PostStateRemoving
+	if result.IsPublished() {
+		state = PostStatePublished
+	}
+
+	if result.IsArchived() {
+		state = PostStateArchived
 	}
 
 	if result.IsRemoved() {
@@ -88,27 +76,19 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
-	var moderator *Account
-
-	if result.ModeratorId() != nil {
-		moderator = &Account{ID: relay.NewID(Account{}, *result.ModeratorId())}
-	}
-
 	return &Post{
-		ID:             relay.NewID(Post{}, result.ID()),
-		Reference:      result.ID(),
-		Moderator:      moderator,
-		Contributor:    &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:           &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Audience:       audience,
-		State:          state,
-		Content:        content,
-		Categories:     categories,
-		Characters:     characters,
-		CreatedAt:      result.CreatedAt(),
-		PostedAt:       result.PostedAt(),
-		ReassignmentAt: result.ReassignmentAt(),
-		Likes:          result.Likes(),
+		ID:          relay.NewID(Post{}, result.ID()),
+		Reference:   result.ID(),
+		Contributor: &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Club:        &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Audience:    audience,
+		State:       state,
+		Content:     content,
+		Categories:  categories,
+		Characters:  characters,
+		CreatedAt:   result.CreatedAt(),
+		PostedAt:    result.PostedAt(),
+		Likes:       result.Likes(),
 	}
 }
 
@@ -163,8 +143,8 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -194,8 +174,8 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -224,8 +204,8 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var titleTranslations []*Translation
@@ -254,8 +234,8 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	var res *Resource
 
-	if result.ThumbnailResourceId() != "" {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), result.ThumbnailResourceId())}
+	if result.ThumbnailResourceId() != nil {
+		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
 	var nameTranslations []*Translation

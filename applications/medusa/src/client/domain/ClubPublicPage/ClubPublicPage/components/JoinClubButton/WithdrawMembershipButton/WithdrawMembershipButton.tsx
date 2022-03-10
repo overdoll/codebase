@@ -23,7 +23,7 @@ const ClubFragment = graphql`
 
 const LeaveClubMutation = graphql`
   mutation WithdrawMembershipButtonMutation($clubId: ID!) {
-    withdrawClubMembership(input: {clubId: $clubId}) {
+    leaveClub(input: {clubId: $clubId}) {
       clubMemberId
     }
   }

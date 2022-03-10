@@ -112,8 +112,8 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error generating prorated refund")
-	require.Less(t, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.ProratedAmount, 6.99, "correct amount")
-	require.Equal(t, 6.99, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.MaximumAmount, "correct max amount")
+	require.Less(t, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.ProratedAmount, 699, "correct amount")
+	require.Equal(t, 699, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.MaximumAmount, "correct max amount")
 	require.Equal(t, types.CurrencyUsd, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.Currency, "correct max amount")
 
 	// void or refund subscription

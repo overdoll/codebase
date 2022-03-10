@@ -77,10 +77,18 @@ extend type Query {
 
 """Create a new series."""
 input CreateSeriesInput {
-  """The chosen slug for the series."""
+  """
+  The chosen slug for the series.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
   slug: String!
 
-  """The chosen title for the series."""
+  """
+  The chosen title for the series.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 }
 
@@ -103,10 +111,18 @@ input UpdateSeriesTitleInput {
   """The series to update"""
   id: ID!
 
-  """The title to update"""
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
   title: String!
 
-  """The localization for this title"""
+  """
+  The localization for this title.
+
+  Locale must be one from the languages query, or else the locale won't be accepted.
+  """
   locale: BCP47!
 }
 

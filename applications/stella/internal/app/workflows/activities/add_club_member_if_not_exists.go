@@ -5,9 +5,14 @@ import (
 	"overdoll/applications/stella/internal/domain/club"
 )
 
-func (h *Activities) AddClubMemberIfNotExists(ctx context.Context, clubId, accountId string) (bool, error) {
+type AddClubMemberIfNotExistsInput struct {
+	ClubId    string
+	AccountId string
+}
 
-	clubMember, err := h.cr.GetClubMemberByIdOperator(ctx, clubId, accountId)
+func (h *Activities) AddClubMemberIfNotExists(ctx context.Context, input AddClubMemberIfNotExistsInput) (bool, error) {
+
+	clubMember, err := h.cr.GetClubMemberByIdOperator(ctx, input.ClubId, input.AccountId)
 
 	if err != nil && err != club.ErrClubMemberNotFound {
 		return false, err
@@ -15,7 +20,7 @@ func (h *Activities) AddClubMemberIfNotExists(ctx context.Context, clubId, accou
 
 	if clubMember == nil {
 
-		clubMember, err = club.NewMemberOperator(accountId, clubId)
+		clubMember, err = club.NewMemberOperator(input.AccountId, input.ClubId)
 
 		if err != nil {
 			return false, err

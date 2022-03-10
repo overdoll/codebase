@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/event"
 
 	"overdoll/applications/sting/internal/domain/post"
 )
@@ -11,27 +12,22 @@ type RemovePost struct {
 }
 
 type RemovePostHandler struct {
-	pi post.IndexRepository
-	pr post.Repository
+	pi    post.IndexRepository
+	pr    post.Repository
+	event event.Repository
 }
 
-func NewRemovePostHandler(pr post.Repository, pi post.IndexRepository) RemovePostHandler {
-	return RemovePostHandler{pr: pr, pi: pi}
+func NewRemovePostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) RemovePostHandler {
+	return RemovePostHandler{pr: pr, pi: pi, event: event}
 }
 
 func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
-		return pending.MakeRemoving()
-	})
+	pst, err := h.pr.GetPostByIdOperator(ctx, cmd.PostId)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
-		return err
-	}
-
-	return nil
+	return h.event.RemovePost(ctx, pst.ID())
 }

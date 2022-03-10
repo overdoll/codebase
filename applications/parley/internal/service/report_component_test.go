@@ -2,7 +2,7 @@ package service_test
 
 import (
 	"context"
-	"github.com/segmentio/ksuid"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 
@@ -31,7 +31,7 @@ type ReportsOnPost struct {
 				Edges []struct {
 					Node PostReportModified
 				}
-			} `graphql:"reports(dateRange: $dateRange)"`
+			} `graphql:"reports(from: $from)"`
 		} `graphql:"... on Post"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -41,7 +41,7 @@ type PostReports struct {
 		Edges []struct {
 			Node PostReportModified
 		}
-	} `graphql:"postReports(dateRange: $dateRange)"`
+	} `graphql:"postReports(from: $from)"`
 }
 
 func TestReportPost(t *testing.T) {
@@ -50,8 +50,8 @@ func TestReportPost(t *testing.T) {
 	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
 	// post ID has to be random since we can only report once
-	postIdRelay := convertPostIdToRelayId(ksuid.New().String())
-	rule := seedRule(t)
+	postIdRelay := convertPostIdToRelayId(uuid.New().String())
+	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
 	var reportPost ReportPost
@@ -74,10 +74,7 @@ func TestReportPost(t *testing.T) {
 				"id":         string(postIdRelay),
 			},
 		},
-		"dateRange": types.PostReportDateRange{
-			From: time.Now(),
-			To:   time.Now(),
-		},
+		"from": time.Now(),
 	})
 
 	require.NoError(t, err, "no error getting reports on a post")
@@ -91,10 +88,7 @@ func TestReportPost(t *testing.T) {
 	var postReports PostReports
 
 	err = client.Query(context.Background(), &postReports, map[string]interface{}{
-		"dateRange": types.PostReportDateRange{
-			From: time.Now(),
-			To:   time.Now(),
-		},
+		"from": time.Now(),
 	})
 
 	require.NoError(t, err, "no error getting all reports")

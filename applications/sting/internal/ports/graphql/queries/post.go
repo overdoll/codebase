@@ -55,7 +55,6 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:             cursor,
-		ModeratorId:        nil,
 		ContributorId:      nil,
 		AudienceSlugs:      audienceSlugs,
 		CategorySlugs:      categorySlugs,

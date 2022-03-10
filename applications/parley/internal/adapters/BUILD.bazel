@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "club_infraction_cassandra_repository.go",
         "eva_grpc.go",
+        "event_temporal_repository.go",
         "moderator_cassandra_repository.go",
         "post_audit_log_cassandra_repository.go",
         "report_cassandra_repository.go",
@@ -16,6 +17,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/parley/internal/app/workflows",
         "//applications/parley/internal/domain/club_infraction",
         "//applications/parley/internal/domain/moderator",
         "//applications/parley/internal/domain/post_audit_log",
@@ -31,5 +33,7 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",
+        "@com_github_spf13_viper//:viper",
+        "@io_temporal_go_sdk//client",
     ],
 )

@@ -30,17 +30,17 @@ type AccountClubSupporterSubscription struct {
 
 	cancelledAt *time.Time
 
-	billingAmount   float64
+	billingAmount   int64
 	billingCurrency Currency
 
 	paymentMethod *PaymentMethod
 
-	ccbillSubscriptionId string
+	ccbillSubscriptionId *string
 
 	cancellationReasonId *string
 }
 
-func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount float64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
+func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
 
 	currenc, err := CurrencyFromString(currency)
 
@@ -61,7 +61,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId, ccbillSubs
 		billingCurrency:      currenc,
 		paymentMethod:        paymentMethod,
 		updatedAt:            time.Now(),
-		ccbillSubscriptionId: ccbillSubscriptionId,
+		ccbillSubscriptionId: &ccbillSubscriptionId,
 	}, nil
 }
 
@@ -105,7 +105,7 @@ func (c *AccountClubSupporterSubscription) NextBillingDate() time.Time {
 	return c.nextBillingDate
 }
 
-func (c *AccountClubSupporterSubscription) BillingAmount() float64 {
+func (c *AccountClubSupporterSubscription) BillingAmount() int64 {
 	return c.billingAmount
 }
 
@@ -117,12 +117,19 @@ func (c *AccountClubSupporterSubscription) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
-func (c *AccountClubSupporterSubscription) CCBillSubscriptionId() string {
+func (c *AccountClubSupporterSubscription) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
 }
 
+func (c *AccountClubSupporterSubscription) GetSupport() *CCBillSupport {
+	return &CCBillSupport{
+		ccbillSubscriptionId: *c.ccbillSubscriptionId,
+		email:                c.paymentMethod.billingContact.email,
+	}
+}
+
 func (c *AccountClubSupporterSubscription) IsCCBill() bool {
-	return c.ccbillSubscriptionId != ""
+	return c.ccbillSubscriptionId != nil
 }
 
 func (c *AccountClubSupporterSubscription) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
@@ -180,7 +187,7 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
 }
 
-func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount float64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string) *AccountClubSupporterSubscription {
+func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupporterSubscription{

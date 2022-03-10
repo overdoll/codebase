@@ -18,7 +18,7 @@ import { ViewPostReportsQuery } from '@//:artifacts/ViewPostReportsQuery.graphql
 type Props = ComponentSearchArguments<any>
 
 const Query = graphql`
-  query ViewPostReportsQuery($reference: String!, $dateRange: PostReportDateRange!) {
+  query ViewPostReportsQuery($reference: String!, $from: Time!, $to: Time) {
     post(reference: $reference) @required(action: THROW) {
       ...ViewPostReportsFragment
     }
@@ -32,7 +32,7 @@ const Fragment = graphql`
     after: {type: String},
   )
   @refetchable(queryName: "ViewPostReportsPaginationQuery" ) {
-    reports (first: $first, after: $after, dateRange: $dateRange)
+    reports (first: $first, after: $after, from: $from, to: $to)
     @connection(key: "ViewPostReports_reports") {
       edges {
         node {

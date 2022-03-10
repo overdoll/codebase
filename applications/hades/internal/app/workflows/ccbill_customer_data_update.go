@@ -5,7 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CCBillCustomerDataUpdatePayload struct {
+type CCBillCustomerDataUpdateInput struct {
 	SubscriptionId string `json:"subscriptionId"`
 	ClientAccnum   string `json:"clientAccnum"`
 	ClientSubacc   string `json:"clientSubacc"`
@@ -29,7 +29,7 @@ type CCBillCustomerDataUpdatePayload struct {
 	PaymentAccount string `json:"paymentAccount"`
 }
 
-func CCBillCustomerDataUpdate(ctx workflow.Context, payload CCBillCustomerDataUpdatePayload) error {
+func CCBillCustomerDataUpdate(ctx workflow.Context, input CCBillCustomerDataUpdateInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -37,22 +37,22 @@ func CCBillCustomerDataUpdate(ctx workflow.Context, payload CCBillCustomerDataUp
 
 	// update with new payment details data
 	if err := workflow.ExecuteActivity(ctx, a.UpdateCCBillSubscriptionDetails,
-		activities.UpdateCCBillSubscriptionDetails{
-			CCBillSubscriptionId: payload.SubscriptionId,
-			CardBin:              payload.Bin,
-			CardType:             payload.CardType,
-			CardLast4:            payload.Last4,
-			CardExpirationDate:   payload.ExpDate,
-			FirstName:            payload.FirstName,
-			Email:                payload.Email,
-			LastName:             payload.LastName,
-			PhoneNumber:          payload.PhoneNumber,
-			AddressLine1:         payload.Address1,
-			City:                 payload.City,
-			Country:              payload.Country,
-			State:                payload.State,
-			PostalCode:           payload.PostalCode,
-			Timestamp:            payload.Timestamp,
+		activities.UpdateCCBillSubscriptionDetailsInput{
+			CCBillSubscriptionId: input.SubscriptionId,
+			CardBin:              input.Bin,
+			CardType:             input.CardType,
+			CardLast4:            input.Last4,
+			CardExpirationDate:   input.ExpDate,
+			FirstName:            input.FirstName,
+			Email:                input.Email,
+			LastName:             input.LastName,
+			PhoneNumber:          input.PhoneNumber,
+			AddressLine1:         input.Address1,
+			City:                 input.City,
+			Country:              input.Country,
+			State:                input.State,
+			PostalCode:           input.PostalCode,
+			Timestamp:            input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

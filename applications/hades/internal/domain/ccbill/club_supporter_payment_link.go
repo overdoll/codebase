@@ -14,8 +14,9 @@ type ClubSupporterPaymentLink struct {
 	savePaymentDetails bool
 	clubId             string
 	accountId          string
+	email              string
 
-	amount   float64
+	amount   int64
 	currency int
 }
 
@@ -25,6 +26,7 @@ func NewClubSupporterPaymentLink(requester *principal.Principal, clubId string, 
 		clubId:             clubId,
 		accountId:          requester.AccountId(),
 		amount:             price.Amount(),
+		email:              requester.Email(),
 		currency:           currencyStringToCCBillCode[price.Currency().String()],
 	}, nil
 }
@@ -53,10 +55,16 @@ func (c *ClubSupporterPaymentLink) GenerateLink() (*string, error) {
 // GenerateEncryptedPaymentToken - basically lock down the price at generation time
 func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, error) {
 
-	billInitialPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
+	amount, err := ConvertAmountToCCBillFloat(c.amount, c.currency)
+
+	if err != nil {
+		return nil, err
+	}
+
+	billInitialPrice := strconv.FormatFloat(amount, 'f', 2, 64)
 	billInitialPeriod := strconv.Itoa(ccbillInitialPeriod)
 
-	billRecurringPrice := strconv.FormatFloat(c.amount, 'f', 2, 64)
+	billRecurringPrice := strconv.FormatFloat(amount, 'f', 2, 64)
 	billRecurringPeriod := strconv.Itoa(ccbillRecurringPeriod)
 	billNumberRebills := strconv.Itoa(ccbillNumRebills)
 
@@ -86,6 +94,7 @@ func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, err
 		},
 		CcbillFlexFormsDetails: &hades.CCBillFlexFormsDetails{
 			PricingDigest: ccbillFormDigest,
+			Email:         c.email,
 		},
 		CcbillPricingDetails: &hades.CCBillPricingDetails{
 			InitialPrice:    billInitialPrice,

@@ -3,9 +3,10 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
-type CCBillRenewalFailurePayload struct {
+type CCBillRenewalFailureInput struct {
 	TransactionId  string `json:"transactionId"`
 	SubscriptionId string `json:"subscriptionId"`
 	ClientAccnum   string `json:"clientAccnum"`
@@ -19,7 +20,7 @@ type CCBillRenewalFailurePayload struct {
 	FailureCode    string `json:"failureCode"`
 }
 
-func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayload) error {
+func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -28,20 +29,32 @@ func CCBillRenewalFailure(ctx workflow.Context, payload CCBillRenewalFailurePayl
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	nextRetryDate, err := ccbill.ParseCCBillDate(input.NextRetryDate)
+
+	if err != nil {
 		return err
 	}
 
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateFailedClubSubscriptionAccountTransactionRecord,
-		activities.CreateFailedClubSubscriptionAccountTransactionRecord{
-			NextRetryDate:        payload.NextRetryDate,
-			FailureReason:        payload.FailureReason,
-			FailureCode:          payload.FailureCode,
+		activities.CreateFailedClubSubscriptionAccountTransactionRecordInput{
+			NextRetryDate:        nextRetryDate,
+			FailureReason:        input.FailureReason,
+			FailureCode:          input.FailureCode,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: payload.SubscriptionId,
-			Timestamp:            payload.Timestamp,
+			CCBillSubscriptionId: &input.SubscriptionId,
+			Timestamp:            timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

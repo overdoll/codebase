@@ -1,46 +1,77 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
 	"time"
 
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
-func SubmitPost(ctx workflow.Context, id string) error {
+type SubmitPostInput struct {
+	PostId   string
+	PostDate time.Time
+}
+
+func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.CreatePixelatedResourcesForSupporterOnlyContent, id).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.CreatePixelatedResourcesForSupporterOnlyContent,
+		activities.CreatePixelatedResourcesForSupporterOnlyContentInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.SubmitPost, id).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
+		activities.SubmitPostInput{
+			PostId:   input.PostId,
+			PostDate: input.PostDate,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	// reassign moderator every day
-	for {
-		if err := workflow.Sleep(ctx, time.Hour*24); err != nil {
+	var inReview bool
+
+	if err := workflow.ExecuteActivity(ctx, a.PutPostIntoModeratorQueueOrPublish,
+		activities.PutPostIntoModeratorQueueOrPublishInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, &inReview); err != nil {
+		return err
+	}
+
+	if inReview {
+		if err := workflow.ExecuteActivity(ctx, a.ReviewPost,
+			activities.ReviewPostInput{
+				PostId: input.PostId,
+			},
+		).Get(ctx, nil); err != nil {
 			return err
 		}
+	} else {
 
-		var assignedNewModerator bool
+		childWorkflowOptions := workflow.ChildWorkflowOptions{
+			WorkflowID:        "PublishPost_" + input.PostId,
+			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		}
 
-		err := workflow.ExecuteActivity(ctx, a.ReassignModerator, id).Get(ctx, &assignedNewModerator)
+		ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-		if err != nil {
+		if err := workflow.ExecuteChildWorkflow(ctx, PublishPost,
+			PublishPostInput{
+				PostId: input.PostId,
+			},
+		).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil {
 			return err
 		}
-
-		if assignedNewModerator {
-			continue
-		}
-
-		// if a moderator was not assigned this loop (post was moderated successfully), then break out of loop
-		break
 	}
 
 	return nil

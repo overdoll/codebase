@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ef652fff95ad16275d0e746c4c2126ba>>
- * @relayHash f81c14c69e7b0e527a9a72997e4e6bd0
+ * @generated SignedSource<<bb99f4418d91d509bca4f1b001218352>>
+ * @relayHash 1ad9d8178ff1099c5ba6a4dd244d9cb0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f81c14c69e7b0e527a9a72997e4e6bd0
+// @relayRequestID 1ad9d8178ff1099c5ba6a4dd244d9cb0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type AuditLogsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   from: any;
-  to: any;
+  to?: any | null;
   id: string;
 };
 export type AuditLogsPaginationQueryVariables = AuditLogsPaginationQuery$variables;
@@ -91,23 +91,17 @@ v9 = {
 },
 v10 = [
   (v6/*: any*/),
+  (v7/*: any*/),
   {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "from",
-        "variableName": "from"
-      },
-      {
-        "kind": "Variable",
-        "name": "to",
-        "variableName": "to"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "dateRange"
+    "kind": "Variable",
+    "name": "from",
+    "variableName": "from"
   },
-  (v7/*: any*/)
+  {
+    "kind": "Variable",
+    "name": "to",
+    "variableName": "to"
+  }
 ],
 v11 = {
   "alias": null,
@@ -446,7 +440,8 @@ return {
                 "alias": null,
                 "args": (v10/*: any*/),
                 "filters": [
-                  "dateRange"
+                  "from",
+                  "to"
                 ],
                 "handle": "connection",
                 "key": "AuditLogsAccount_postAuditLogs",
@@ -463,7 +458,7 @@ return {
     ]
   },
   "params": {
-    "id": "f81c14c69e7b0e527a9a72997e4e6bd0",
+    "id": "1ad9d8178ff1099c5ba6a4dd244d9cb0",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -472,6 +467,6 @@ return {
 };
 })();
 
-(node as any).hash = "349f729a9bb99751140cc7dc2ce2c5d3";
+(node as any).hash = "9e48b41821b4768855f604989e03da42";
 
 export default node;

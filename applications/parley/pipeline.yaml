@@ -39,6 +39,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/parley/docker-compose.ci.yaml
+        - ./applications/stella/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: parley
         port: 8000

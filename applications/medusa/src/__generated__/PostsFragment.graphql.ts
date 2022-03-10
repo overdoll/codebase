@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2e902fe4d8f9ccbf4db2934da0b0fa5>>
+ * @generated SignedSource<<819a8371395baff37d3c4233fd461d94>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,15 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsFragment$data = {
-  readonly moderatorPostsQueue: {
+  readonly postModeratorQueue: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly id: string;
-        readonly postedAt: any | null;
-        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
+        readonly post: {
+          readonly id: string;
+          readonly postedAt: any | null;
+          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
+        };
       };
     }>;
   };
@@ -33,7 +35,7 @@ export type PostsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "moderatorPostsQueue"
+  "postModeratorQueue"
 ],
 v1 = {
   "alias": null,
@@ -89,17 +91,17 @@ return {
       "name": "NoPostsPlaceholderFragment"
     },
     {
-      "alias": "moderatorPostsQueue",
+      "alias": "postModeratorQueue",
       "args": null,
-      "concreteType": "PostConnection",
+      "concreteType": "PostModeratorConnection",
       "kind": "LinkedField",
-      "name": "__Posts_moderatorPostsQueue_connection",
+      "name": "__Posts_postModeratorQueue_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "PostEdge",
+          "concreteType": "PostModeratorEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -107,27 +109,38 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Post",
+              "concreteType": "PostModerator",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PostPreviewFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ModeratePostFragment"
-                },
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "postedAt",
+                  "concreteType": "Post",
+                  "kind": "LinkedField",
+                  "name": "post",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "PostPreviewFragment"
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "ModeratePostFragment"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "postedAt",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -197,6 +210,6 @@ return {
 };
 })();
 
-(node as any).hash = "4a36f5398b846432a905467a7dad4b91";
+(node as any).hash = "2f6f2e987ae8c8bd6614d014f1e4d7ee";
 
 export default node;

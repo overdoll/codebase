@@ -30,7 +30,7 @@ type Club struct {
 	slug                string
 	slugAliases         []string
 	name                *localization.Translation
-	thumbnailResourceId string
+	thumbnailResourceId *string
 
 	suspended      bool
 	suspendedUntil *time.Time
@@ -78,13 +78,13 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		slug:                slug,
 		name:                lc,
 		slugAliases:         []string{},
-		thumbnailResourceId: "",
+		thumbnailResourceId: nil,
 		membersCount:        1,
 		ownerAccountId:      requester.AccountId(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil *time.Time) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil *time.Time) *Club {
 	return &Club{
 		id:                  id,
 		slug:                slug,
@@ -114,7 +114,7 @@ func (m *Club) Name() *localization.Translation {
 	return m.name
 }
 
-func (m *Club) ThumbnailResourceId() string {
+func (m *Club) ThumbnailResourceId() *string {
 	return m.thumbnailResourceId
 }
 
@@ -255,7 +255,7 @@ func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail string)
 		return err
 	}
 
-	m.thumbnailResourceId = thumbnail
+	m.thumbnailResourceId = &thumbnail
 
 	return nil
 }
@@ -391,7 +391,7 @@ func validateName(name string) error {
 
 func validateSlug(slug string) error {
 
-	err := validator.New().Var(slug, "required,max=25,excludesall= ")
+	err := validator.New().Var(slug, "required,max=25,excludesall= ,alphanum")
 
 	if err != nil {
 		return err

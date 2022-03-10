@@ -5,7 +5,6 @@ import (
 	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -26,7 +25,7 @@ type AccountTransactionHistoryRefund struct {
 							Id                            relay.ID
 							Transaction                   types.AccountTransactionType
 							CCBillReason                  string `graphql:"ccbillReason"`
-							Amount                        float64
+							Amount                        int
 							Currency                      types.Currency
 							PaymentMethod                 types.PaymentMethod
 							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
@@ -49,8 +48,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
 
-	workflow := workflows.CCBillRefund
-	testing_tools.MockWorkflowWithArgs(t, temporalClientMock, workflow, mock.Anything).Return(&mocks.WorkflowRun{}, nil)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRefund, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Refund", map[string]string{
@@ -72,10 +70,8 @@ func TestBillingFlow_Refund(t *testing.T) {
 		"timestamp":              "2022-02-28 20:27:56",
 	})
 
-	args := testing_tools.GetArgumentsForWorkflowCall(t, temporalClientMock, workflow, mock.Anything)
 	env := getWorkflowEnvironment(t)
-	// execute workflow manually since it won't be
-	env.ExecuteWorkflow(workflow, args...)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
@@ -101,7 +97,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, 6.99, transaction.Amount, "correct amount")
+	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", transaction.CCBillReason, "correct reason")
 	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")

@@ -111,7 +111,7 @@ func (r *MutationResolver) VoidOrRefundAccountClubSupporterSubscription(ctx cont
 				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
 				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
 				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				Amount:                             input.Amount,
+				Amount:                             int64(input.Amount),
 			},
 		); err != nil {
 		return nil, err
@@ -172,8 +172,8 @@ func (r *MutationResolver) GenerateRefundAmountForAccountClubSupporterSubscripti
 
 	return &types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload{
 		RefundAmount: &types.RefundAmount{
-			ProratedAmount: result.ProratedAmount(),
-			MaximumAmount:  result.MaxAmount(),
+			ProratedAmount: int(result.ProratedAmount()),
+			MaximumAmount:  int(result.MaxAmount()),
 			Currency:       types.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		},
 	}, nil

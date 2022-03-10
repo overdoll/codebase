@@ -66,7 +66,7 @@ module.exports = {
     // Exclude from file-loader
     config.module.rules[
       config.module.rules.findIndex(Helpers.makeLoaderFinder('file-loader'))
-    ].exclude.push(/\.(svg)$/)
+      ].exclude.push(/\.(svg)$/)
 
     config.module.unsafeCache = true
 
@@ -141,6 +141,11 @@ module.exports = {
     // }
 
     if (opts.env.target === 'node') {
+      config.experiments = {
+        ...config.experiments,
+        topLevelAwait: true
+      }
+
       if (!opts.env.dev) {
         //  config.externals = {}
       }

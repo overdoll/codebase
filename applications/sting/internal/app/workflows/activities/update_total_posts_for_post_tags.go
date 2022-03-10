@@ -5,9 +5,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, postId string) error {
+type UpdateTotalPostsForPostTagsInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.GetPostByIdOperator(ctx, postId)
+func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input UpdateTotalPostsForPostTagsInput) error {
+
+	pendingPost, err := h.pr.GetPostByIdOperator(ctx, input.PostId)
 
 	if err != nil {
 		return err

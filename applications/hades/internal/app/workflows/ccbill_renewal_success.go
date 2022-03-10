@@ -3,9 +3,11 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/applications/hades/internal/domain/ccbill"
+	"strings"
 )
 
-type CCBillRenewalSuccessPayload struct {
+type CCBillRenewalSuccessInput struct {
 	TransactionId          string `json:"transactionId"`
 	SubscriptionId         string `json:"subscriptionId"`
 	ClientAccnum           string `json:"clientAccnum"`
@@ -26,7 +28,7 @@ type CCBillRenewalSuccessPayload struct {
 	ExpDate                string `json:"expDate"`
 }
 
-func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayload) error {
+func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -35,24 +37,44 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 	var subscriptionDetails *activities.GetCCBillSubscriptionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, payload.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
 		return err
 	}
 
+	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
+
+	if err != nil {
+		return err
+	}
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+
+	if err != nil {
+		return err
+	}
+
+	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.RenewalDate, " ")[0])
+
+	if err != nil {
+		return err
+	}
+
+	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
+
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransactionRecord,
-		activities.CreateInvoiceClubSubscriptionAccountTransactionRecord{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.CreateInvoiceClubSubscriptionAccountTransactionRecordInput{
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            payload.Timestamp,
-			CardLast4:            payload.Last4,
-			CardType:             payload.CardType,
-			CardExpirationDate:   payload.ExpDate,
-			Amount:               payload.BilledAmount,
-			Currency:             payload.BilledCurrency,
-			BillingDate:          payload.RenewalDate,
-			NextBillingDate:      payload.NextRenewalDate,
+			Timestamp:            timestamp,
+			CardLast4:            input.Last4,
+			CardType:             input.CardType,
+			CardExpirationDate:   input.ExpDate,
+			Amount:               amount,
+			Currency:             input.BilledCurrency,
+			BillingDate:          billedAtDate,
+			NextBillingDate:      nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -60,11 +82,11 @@ func CCBillRenewalSuccess(ctx workflow.Context, payload CCBillRenewalSuccessPayl
 
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
-		activities.UpdateAccountClubSupportBillingDate{
-			CCBillSubscriptionId: payload.SubscriptionId,
+		activities.UpdateAccountClubSupportBillingDateInput{
+			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
-			NextBillingDate:      payload.NextRenewalDate,
+			NextBillingDate:      nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

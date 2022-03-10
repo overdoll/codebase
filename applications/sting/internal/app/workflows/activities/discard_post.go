@@ -6,11 +6,15 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) DiscardPost(ctx context.Context, postId string) error {
+type DiscardPostInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
+func (h *Activities) DiscardPost(ctx context.Context, input DiscardPostInput) error {
+
+	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		// Delete all resources
-		if err := h.loader.DeleteResources(ctx, postId, pending.AllContentResourceIds()); err != nil {
+		if err := h.loader.DeleteResources(ctx, input.PostId, pending.AllContentResourceIds()); err != nil {
 			return err
 		}
 
