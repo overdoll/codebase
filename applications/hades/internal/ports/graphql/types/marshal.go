@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -179,10 +180,12 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 	var ccbillSub *CCBillSubscription
 
 	if result.CCBillSubscriptionId() != nil {
+		support := result.GetSupport()
 		ccbillSub = &CCBillSubscription{
-			PaymentMethod:        "Credit Card",
-			CcbillSubscriptionID: *result.CCBillSubscriptionId(),
-			Email:                result.PaymentMethod().BillingContact().Email(),
+			PaymentMethod:        support.LookupType(),
+			CcbillSubscriptionID: support.SubscriptionId(),
+			Email:                support.Email(),
+			Link:                 graphql.URI(support.GenerateUrl()),
 		}
 	}
 
@@ -272,10 +275,12 @@ func MarshalAccountSavedPaymentMethodToGraphQL(ctx context.Context, result *bill
 	var ccbillSub *CCBillSubscription
 
 	if result.CCBillSubscriptionId() != nil {
+		support := result.GetSupport()
 		ccbillSub = &CCBillSubscription{
-			PaymentMethod:        "Credit Card",
-			CcbillSubscriptionID: *result.CCBillSubscriptionId(),
-			Email:                result.PaymentMethod().BillingContact().Email(),
+			PaymentMethod:        support.LookupType(),
+			CcbillSubscriptionID: support.SubscriptionId(),
+			Email:                support.Email(),
+			Link:                 graphql.URI(support.GenerateUrl()),
 		}
 	}
 

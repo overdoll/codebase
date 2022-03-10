@@ -65,6 +65,13 @@ func (c *SavedPaymentMethod) Currency() Currency {
 	return c.currency
 }
 
+func (c *SavedPaymentMethod) GetSupport() *CCBillSupport {
+	return &CCBillSupport{
+		ccbillSubscriptionId: *c.ccbillSubscriptionId,
+		email:                c.paymentMethod.billingContact.email,
+	}
+}
+
 func (c *SavedPaymentMethod) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
 	c.paymentMethod = paymentMethod
 	c.updatedAt = time.Now()

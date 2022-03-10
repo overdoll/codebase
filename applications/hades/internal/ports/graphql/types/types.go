@@ -383,9 +383,14 @@ type BillingContact struct {
 //
 // For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
 type CCBillSubscription struct {
-	PaymentMethod        string `json:"paymentMethod"`
+	// The payment method belonging to this subscription.
+	PaymentMethod string `json:"paymentMethod"`
+	// The identifier for this subscription.
 	CcbillSubscriptionID string `json:"ccbillSubscriptionId"`
-	Email                string `json:"email"`
+	// The email belonging to this subscription.
+	Email string `json:"email"`
+	// A link to modify the subscription.
+	Link graphql1.URI `json:"link"`
 }
 
 type CCBillSubscriptionDetails struct {

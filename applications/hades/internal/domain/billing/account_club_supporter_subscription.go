@@ -121,6 +121,13 @@ func (c *AccountClubSupporterSubscription) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
 }
 
+func (c *AccountClubSupporterSubscription) GetSupport() *CCBillSupport {
+	return &CCBillSupport{
+		ccbillSubscriptionId: *c.ccbillSubscriptionId,
+		email:                c.paymentMethod.billingContact.email,
+	}
+}
+
 func (c *AccountClubSupporterSubscription) IsCCBill() bool {
 	return c.ccbillSubscriptionId != nil
 }

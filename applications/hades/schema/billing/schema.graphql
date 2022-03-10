@@ -420,9 +420,17 @@ When this object is present, this means that it can only be updated through CCBi
 For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
 """
 type CCBillSubscription {
+  """The payment method belonging to this subscription."""
   paymentMethod: String!
+
+  """The identifier for this subscription."""
   ccbillSubscriptionId: String!
+
+  """The email belonging to this subscription."""
   email: String!
+
+  """A link to modify the subscription."""
+  link: URI!
 }
 
 type AccountSavedPaymentMethod  {

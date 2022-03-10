@@ -245,6 +245,7 @@ type ComplexityRoot struct {
 	CCBillSubscription struct {
 		CcbillSubscriptionID func(childComplexity int) int
 		Email                func(childComplexity int) int
+		Link                 func(childComplexity int) int
 		PaymentMethod        func(childComplexity int) int
 	}
 
@@ -1386,6 +1387,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CCBillSubscription.Email(childComplexity), true
+
+	case "CCBillSubscription.link":
+		if e.complexity.CCBillSubscription.Link == nil {
+			break
+		}
+
+		return e.complexity.CCBillSubscription.Link(childComplexity), true
 
 	case "CCBillSubscription.paymentMethod":
 		if e.complexity.CCBillSubscription.PaymentMethod == nil {
@@ -2626,9 +2634,17 @@ When this object is present, this means that it can only be updated through CCBi
 For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
 """
 type CCBillSubscription {
+  """The payment method belonging to this subscription."""
   paymentMethod: String!
+
+  """The identifier for this subscription."""
   ccbillSubscriptionId: String!
+
+  """The email belonging to this subscription."""
   email: String!
+
+  """A link to modify the subscription."""
+  link: URI!
 }
 
 type AccountSavedPaymentMethod  {
@@ -8275,6 +8291,41 @@ func (ec *executionContext) _CCBillSubscription_email(ctx context.Context, field
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CCBillSubscription_link(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscription) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillSubscription",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Link, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_id(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -14981,6 +15032,16 @@ func (ec *executionContext) _CCBillSubscription(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "link":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillSubscription_link(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -17712,6 +17773,16 @@ func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋhad
 		return graphql.Null
 	}
 	return ec._Translation(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (graphql1.URI, error) {
+	var res graphql1.URI
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, sel ast.SelectionSet, v graphql1.URI) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNUpdateCancellationReasonDeprecatedInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCancellationReasonDeprecatedInput(ctx context.Context, v interface{}) (types.UpdateCancellationReasonDeprecatedInput, error) {
