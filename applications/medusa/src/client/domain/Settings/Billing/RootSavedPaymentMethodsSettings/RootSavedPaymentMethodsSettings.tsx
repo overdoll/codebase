@@ -1,26 +1,28 @@
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type {
-  PaymentMethodSettingsQuery as PaymentMethodSettingsQueryType
-} from '@//:artifacts/PaymentMethodSettingsQuery.graphql'
-import PaymentMethodSettingsQuery from '@//:artifacts/PaymentMethodSettingsQuery.graphql'
+  SavedPaymentMethodsSettingsQuery as SavedPaymentMethodsSettingsQueryType
+} from '@//:artifacts/SavedPaymentMethodsSettingsQuery.graphql'
+import SavedPaymentMethodsSettingsQuery from '@//:artifacts/SavedPaymentMethodsSettingsQuery.graphql'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
-import PaymentMethodSettings from './PaymentMethodSettings/PaymentMethodSettings'
+import SavedPaymentMethodsSettings from './PaymentMethodSettings/SavedPaymentMethodsSettings'
+import ConfigureBackButton
+  from '../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
 interface Props {
   prepared: {
-    paymentMethodsQuery: PreloadedQuery<PaymentMethodSettingsQueryType>
+    paymentMethodsQuery: PreloadedQuery<SavedPaymentMethodsSettingsQueryType>
   }
 }
 
-export default function RootPaymentMethodSettings (props: Props): JSX.Element | null {
+export default function RootSavedPaymentMethodsSettings (props: Props): JSX.Element | null {
   const [queryRef, loadQuery] = useQueryLoader(
-    PaymentMethodSettingsQuery,
+    SavedPaymentMethodsSettingsQuery,
     props.prepared.paymentMethodsQuery
   )
 
@@ -28,6 +30,7 @@ export default function RootPaymentMethodSettings (props: Props): JSX.Element | 
     <>
       <Helmet title='payment methods' />
       <PageWrapper>
+        <ConfigureBackButton to='/settings/billing' />
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>
@@ -37,12 +40,13 @@ export default function RootPaymentMethodSettings (props: Props): JSX.Element | 
           <PageSectionDescription>
             <Trans>
               When you become a club supporter, you'll have the option to remember the payment method for next time.
+              Note that you can only modify a payment method through the My Subscriptions page.
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
-            <PaymentMethodSettings query={queryRef as PreloadedQuery<PaymentMethodSettingsQueryType>} />
+            <SavedPaymentMethodsSettings query={queryRef as PreloadedQuery<SavedPaymentMethodsSettingsQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
       </PageWrapper>

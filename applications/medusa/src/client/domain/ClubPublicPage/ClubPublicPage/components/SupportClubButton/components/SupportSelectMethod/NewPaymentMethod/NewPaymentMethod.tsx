@@ -14,9 +14,6 @@ import QueryErrorBoundary
   from '../../../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import CCBillDisplayTransaction from '../CCBillDisplayTransaction/CCBillDisplayTransaction'
-import useHistoryDisclosureContext
-  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
-import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import ClosePaymentModalButton from '../../ClosePaymentModalButton/ClosePaymentModalButton'
 
 interface Props {

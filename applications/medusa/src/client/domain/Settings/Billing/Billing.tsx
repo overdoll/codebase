@@ -7,8 +7,8 @@ import {
   PageSectionWrap,
   PageWrapper
 } from '@//:modules/content/PageLayout'
-import { Stack } from '@chakra-ui/react'
-import { PaymentMethodIdentifier, PremiumStar, SubscriptionIdentifier } from '@//:assets/icons'
+import { Box, Stack } from '@chakra-ui/react'
+import { Barcode, PaymentMethodIdentifier, PremiumStar, SubscriptionIdentifier } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 
@@ -22,51 +22,77 @@ export default function Billing ({ children }: Props): JSX.Element {
       <>
         <Helmet title='billing settings' />
         <PageWrapper>
-          <PageSectionWrap>
-            <PageSectionTitle colorScheme='green'>
-              <Trans>
-                Billing
-              </Trans>
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <Stack spacing={2}>
-            <PagePanelWrap path='/settings/billing/subscriptions'>
-              <PagePanelIcon icon={SubscriptionIdentifier} colorScheme='green' />
-              <PagePanelText
-                title={
-                  <Trans>My Subscriptions</Trans>
-                }
-                description={(
+          <Stack spacing={8}>
+            <Box>
+              <PageSectionWrap>
+                <PageSectionTitle colorScheme='green'>
                   <Trans>
-                    View and manage your subscriptions
+                    Billing
                   </Trans>
-                )}
-              />
-            </PagePanelWrap>
-            <PagePanelWrap path='/settings/billing/payment-methods'>
-              <PagePanelIcon icon={PaymentMethodIdentifier} colorScheme='teal' />
-              <PagePanelText
-                title={
-                  <Trans>Payment Methods</Trans>
-                }
-                description={(
+                </PageSectionTitle>
+              </PageSectionWrap>
+              <Stack spacing={2}>
+                <PagePanelWrap path='/settings/billing/subscriptions'>
+                  <PagePanelIcon icon={SubscriptionIdentifier} colorScheme='green' />
+                  <PagePanelText
+                    title={
+                      <Trans>My Subscriptions</Trans>
+                    }
+                    description={(
+                      <Trans>
+                        View and manage your subscriptions
+                      </Trans>
+                    )}
+                  />
+                </PagePanelWrap>
+                <PagePanelWrap path='/settings/billing/payment-methods'>
+                  <PagePanelIcon icon={PaymentMethodIdentifier} colorScheme='teal' />
+                  <PagePanelText
+                    title={
+                      <Trans>Payment Methods</Trans>
+                    }
+                    description={(
+                      <Trans>
+                        Your saved payment methods
+                      </Trans>
+                    )}
+                  />
+                </PagePanelWrap>
+              </Stack>
+            </Box>
+            <Box>
+              <PageSectionWrap>
+                <PageSectionTitle colorScheme='green'>
                   <Trans>
-                    Your saved payment methods
+                    Help
                   </Trans>
-                )}
-              />
-            </PagePanelWrap>
-            <PagePanelWrap isExternal path='www.corpodoll.com/supporter-guidelines/'>
-              <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
-              <PagePanelText
-                title={
-                  <Trans>Supporter Guidelines</Trans>
-                }
-                description={(
-                  <Trans>Get help with billing</Trans>
-                )}
-              />
-            </PagePanelWrap>
+                </PageSectionTitle>
+              </PageSectionWrap>
+              <Stack spacing={2}>
+                <PagePanelWrap isExternal path='www.corpodoll.com/supporter-guidelines/'>
+                  <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
+                  <PagePanelText
+                    title={
+                      <Trans>Supporter Guidelines</Trans>
+                    }
+                    description={(
+                      <Trans>Get help with billing</Trans>
+                    )}
+                  />
+                </PagePanelWrap>
+                <PagePanelWrap isExternal path='www.corpodoll.com/subscriptions/'>
+                  <PagePanelIcon icon={Barcode} colorScheme='purple' />
+                  <PagePanelText
+                    title={
+                      <Trans>Subscription Agreement</Trans>
+                    }
+                    description={(
+                      <Trans>Subscription agreement</Trans>
+                    )}
+                  />
+                </PagePanelWrap>
+              </Stack>
+            </Box>
           </Stack>
         </PageWrapper>
       </>

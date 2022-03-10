@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b57d9418f2ca4cbde0b6a530866e8429>>
- * @relayHash d7548d0ae1d9a007f5d9f7803ef3c767
+ * @generated SignedSource<<072156f117a18ec66821d597ffb98b4e>>
+ * @relayHash c80ce2583b039b77e48661ff4f3b2d7e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d7548d0ae1d9a007f5d9f7803ef3c767
+// @relayRequestID c80ce2583b039b77e48661ff4f3b2d7e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PaymentMethodSettingsQuery$variables = {};
-export type PaymentMethodSettingsQueryVariables = PaymentMethodSettingsQuery$variables;
-export type PaymentMethodSettingsQuery$data = {
+export type SavedPaymentMethodsSettingsQuery$variables = {};
+export type SavedPaymentMethodsSettingsQueryVariables = SavedPaymentMethodsSettingsQuery$variables;
+export type SavedPaymentMethodsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
   };
 };
-export type PaymentMethodSettingsQueryResponse = PaymentMethodSettingsQuery$data;
-export type PaymentMethodSettingsQuery = {
-  variables: PaymentMethodSettingsQueryVariables;
-  response: PaymentMethodSettingsQuery$data;
+export type SavedPaymentMethodsSettingsQueryResponse = SavedPaymentMethodsSettingsQuery$data;
+export type SavedPaymentMethodsSettingsQuery = {
+  variables: SavedPaymentMethodsSettingsQueryVariables;
+  response: SavedPaymentMethodsSettingsQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -31,7 +31,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 3
+    "value": 5
   }
 ],
 v1 = {
@@ -46,7 +46,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "PaymentMethodSettingsQuery",
+    "name": "SavedPaymentMethodsSettingsQuery",
     "selections": [
       {
         "kind": "RequiredField",
@@ -61,7 +61,7 @@ return {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "PaymentMethodSettingsFragment"
+              "name": "SavedPaymentMethodsSettingsFragment"
             }
           ],
           "storageKey": null
@@ -77,7 +77,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "PaymentMethodSettingsQuery",
+    "name": "SavedPaymentMethodsSettingsQuery",
     "selections": [
       {
         "alias": null,
@@ -199,9 +199,21 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
-            "storageKey": "savedPaymentMethods(first:3)"
+            "storageKey": "savedPaymentMethods(first:5)"
           },
           {
             "alias": null,
@@ -219,15 +231,15 @@ return {
     ]
   },
   "params": {
-    "id": "d7548d0ae1d9a007f5d9f7803ef3c767",
+    "id": "c80ce2583b039b77e48661ff4f3b2d7e",
     "metadata": {},
-    "name": "PaymentMethodSettingsQuery",
+    "name": "SavedPaymentMethodsSettingsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "3e41519e17e3e3f21e009462155c7b15";
+(node as any).hash = "19584f7ba5d19a249d15a0a928abfcf4";
 
 export default node;

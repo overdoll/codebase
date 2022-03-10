@@ -4,7 +4,9 @@ import type { SubscriptionSettingsQuery } from '@//:artifacts/SubscriptionSettin
 import SubscriptionPreview from './SubscriptionPreview/SubscriptionPreview'
 import { usePaginationFragment } from 'react-relay'
 import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
-import { Stack } from '@chakra-ui/react'
+import { Stack, Text } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: PreloadedQuery<SubscriptionSettingsQuery>
@@ -52,7 +54,15 @@ export default function SubscriptionSettings (props: Props): JSX.Element {
   )
 
   if (data.clubSupporterSubscriptions.edges.length < 1) {
-    return <></>
+    return (
+      <SmallBackgroundBox>
+        <Text fontSize='sm'>
+          <Trans>
+            You haven't supported any clubs yet
+          </Trans>
+        </Text>
+      </SmallBackgroundBox>
+    )
   }
 
   return (

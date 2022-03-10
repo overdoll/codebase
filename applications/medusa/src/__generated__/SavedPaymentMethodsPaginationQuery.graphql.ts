@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<19432b98a92170d347209cc3439f3cf7>>
- * @relayHash b0d7240da148a3efbdb0ff4ec6e4750a
+ * @generated SignedSource<<a7d0e2a9c1e141d9dca93430f124fd3c>>
+ * @relayHash 5664d783af7fa33eaf295ae0d08fbeb1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b0d7240da148a3efbdb0ff4ec6e4750a
+// @relayRequestID 5664d783af7fa33eaf295ae0d08fbeb1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type SavedPaymentMethodsPaginationQuery$variables = {
 export type SavedPaymentMethodsPaginationQueryVariables = SavedPaymentMethodsPaginationQuery$variables;
 export type SavedPaymentMethodsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
   } | null;
 };
 export type SavedPaymentMethodsPaginationQueryResponse = SavedPaymentMethodsPaginationQuery$data;
@@ -38,7 +38,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 3,
+    "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -99,7 +99,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "PaymentMethodSettingsFragment"
+            "name": "SavedPaymentMethodsSettingsFragment"
           }
         ],
         "storageKey": null
@@ -233,6 +233,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   }
                 ],
                 "storageKey": null
@@ -256,7 +268,7 @@ return {
     ]
   },
   "params": {
-    "id": "b0d7240da148a3efbdb0ff4ec6e4750a",
+    "id": "5664d783af7fa33eaf295ae0d08fbeb1",
     "metadata": {},
     "name": "SavedPaymentMethodsPaginationQuery",
     "operationKind": "query",
@@ -265,6 +277,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c1f6668713870f716710813a9fe1535";
+(node as any).hash = "28bb24c438d59e9d55b621d2579267c3";
 
 export default node;

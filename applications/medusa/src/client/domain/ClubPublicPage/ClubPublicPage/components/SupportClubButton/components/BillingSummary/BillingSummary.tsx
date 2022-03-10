@@ -81,6 +81,11 @@ export default function BillingSummary ({
             Billing page, which is located in your Account Settings.
           </Trans>
         </Text>
+        <Text fontSize='sm' color='gray.300'>
+          <Trans>
+            We cannot offer refunds after you have subscribed to a club.
+          </Trans>
+        </Text>
       </Box>
     </Stack>
   )

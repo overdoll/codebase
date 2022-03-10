@@ -59,7 +59,7 @@ export default function SupportSelectMethod ({
   const methods = useSequence<SequenceProps>({
     defaultValue: {
       currency: clubData.supporterSubscriptionPrice.localizedPrice.currency,
-      savePayment: true,
+      savePayment: false,
       guidelines: false
     },
     resolver: {

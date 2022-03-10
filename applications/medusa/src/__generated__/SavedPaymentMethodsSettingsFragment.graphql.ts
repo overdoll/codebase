@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd7484e671ffffa4881569a1108f8009>>
+ * @generated SignedSource<<22bdb0e99aecc3b2c87f7356de341f1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,23 +10,25 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PaymentMethodSettingsFragment$data = {
+export type SavedPaymentMethodsSettingsFragment$data = {
   readonly savedPaymentMethods: {
+    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly paymentMethod: {
           readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodFragment">;
         };
+        readonly " $fragmentSpreads": FragmentRefs<"ManageSavedPaymentMethodButtonFragment">;
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "PaymentMethodSettingsFragment";
+  readonly " $fragmentType": "SavedPaymentMethodsSettingsFragment";
 };
-export type PaymentMethodSettingsFragment = PaymentMethodSettingsFragment$data;
-export type PaymentMethodSettingsFragment$key = {
-  readonly " $data"?: PaymentMethodSettingsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodSettingsFragment">;
+export type SavedPaymentMethodsSettingsFragment = SavedPaymentMethodsSettingsFragment$data;
+export type SavedPaymentMethodsSettingsFragment$key = {
+  readonly " $data"?: SavedPaymentMethodsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -41,7 +43,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 3,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -72,7 +74,7 @@ return {
       "identifierField": "id"
     }
   },
-  "name": "PaymentMethodSettingsFragment",
+  "name": "SavedPaymentMethodsSettingsFragment",
   "selections": [
     {
       "alias": "savedPaymentMethods",
@@ -113,6 +115,11 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ManageSavedPaymentMethodButtonFragment"
                 },
                 {
                   "alias": null,
@@ -158,6 +165,18 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -175,6 +194,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c1f6668713870f716710813a9fe1535";
+(node as any).hash = "28bb24c438d59e9d55b621d2579267c3";
 
 export default node;
