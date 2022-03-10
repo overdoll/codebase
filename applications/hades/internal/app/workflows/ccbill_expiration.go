@@ -47,8 +47,6 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 	// remove account club support
 	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
 		activities.RemoveAccountClubSupportSubscriptionInput{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
 			CCBillSubscriptionId: &input.SubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {

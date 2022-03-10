@@ -8,10 +8,26 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
+
+type postRule struct {
+	PostId string `db:"post_id"`
+	RuleId string `db:"rule_id"`
+}
+
+var postRuleTable = table.New(table.Metadata{
+	Name: "post_rules",
+	Columns: []string{
+		"post_id",
+		"rule_id",
+	},
+	PartKey: []string{"post_id"},
+	SortKey: []string{},
+})
 
 type postAuditLog struct {
 	Id                 string  `db:"id"`
@@ -141,6 +157,15 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 		marshalledAuditLog.Notes,
 	)
 
+	if marshalledAuditLog.RuleId != nil {
+		stmt, _ = postRuleTable.Insert()
+
+		batch.Query(stmt,
+			marshalledAuditLog.PostId,
+			*marshalledAuditLog.RuleId,
+		)
+	}
+
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create audit log: %v", err)
 	}
@@ -195,6 +220,28 @@ func (r PostAuditLogCassandraRepository) GetPostAuditLogById(ctx context.Context
 	}
 
 	return auditLog, nil
+}
+
+func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, requester *principal.Principal, postId string) (*string, error) {
+
+	var postR postRule
+
+	if err := r.session.
+		Query(postAuditLogTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&postRule{
+			PostId: postId,
+		}).
+		Get(&postR); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, rule.ErrRuleNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get post rule id for post: %v", err)
+	}
+
+	return &postR.RuleId, nil
 }
 
 func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post_audit_log.PostAuditLogFilters) ([]*post_audit_log.PostAuditLog, error) {

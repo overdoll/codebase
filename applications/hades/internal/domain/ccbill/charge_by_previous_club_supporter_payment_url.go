@@ -1,6 +1,7 @@
 package ccbill
 
 import (
+	"errors"
 	"os"
 	"overdoll/applications/hades/internal/domain/billing"
 	hades "overdoll/applications/hades/proto"
@@ -18,6 +19,11 @@ type ChargeByPreviousClubSupporterPaymentUrl struct {
 }
 
 func NewChargeByPreviousClubSupporterPaymentUrl(requester *principal.Principal, clubId, ccbillSubscriptionId string, price *billing.Price) (*ChargeByPreviousClubSupporterPaymentUrl, error) {
+
+	if !requester.IsSecure() {
+		return nil, errors.New("account must be secure to use charge by previous id")
+	}
+
 	return &ChargeByPreviousClubSupporterPaymentUrl{
 		clubId:               clubId,
 		accountId:            requester.AccountId(),

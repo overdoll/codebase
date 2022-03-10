@@ -29,7 +29,44 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
 
     cancellation_reason_id   text,
 
+    primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
+(
+    account_id               text,
+    club_id                  text,
+    status                   text,
+    supporter_since          timestamp,
+    last_billing_date        date,
+    next_billing_date        date,
+    billing_amount           bigint,
+    billing_currency         text,
+
+    cancelled_at             timestamp,
+
+    encrypted_payment_method text,
+
+    id                       text,
+    ccbill_subscription_id   text,
+
+    updated_at               timestamp,
+
+    cancellation_reason_id   text,
+
     primary key ( account_id, club_id, id )
+);
+
+CREATE TABLE IF NOT EXISTS expired_account_club_supporter_subscriptions_by_account
+(
+    account_id             text,
+    club_id                text,
+    supporter_since        timestamp,
+    expired_at             timestamp,
+    cancelled_at           timestamp,
+    ccbill_subscription_id text,
+    cancellation_reason_id text,
+    primary key ( account_id, club_id )
 );
 
 CREATE TABLE IF NOT EXISTS account_saved_payment_methods

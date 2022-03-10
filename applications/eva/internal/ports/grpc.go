@@ -32,6 +32,7 @@ func marshalAccountToProto(usr *account.Account) *eva.Account {
 		Verified: usr.Verified(),
 		Email:    usr.Email(),
 		Locked:   usr.IsLocked(),
+		Secure:   usr.IsSecure(),
 	}
 }
 

@@ -16,6 +16,35 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) ExpiredClubSupporterSubscriptions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.ExpiredAccountClubSupporterSubscriptionConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.ExpiredAccountClubSupporterSubscriptionsByAccount.
+		Handle(
+			ctx,
+			query.ExpiredAccountClubSupporterSubscriptionsByAccount{
+				Principal: principal.FromContext(ctx),
+				Cursor:    cursor,
+				AccountId: obj.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalExpiredAccountClubSupporterSubscriptionToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountClubSupporterSubscriptionConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -28,10 +57,10 @@ func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *ty
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountClubSupporterSubscriptions.
+	results, err := r.App.Queries.AccountClubSupporterSubscriptionsByAccount.
 		Handle(
 			ctx,
-			query.AccountClubSupporterSubscriptions{
+			query.AccountClubSupporterSubscriptionsByAccount{
 				Principal: principal.FromContext(ctx),
 				Cursor:    cursor,
 				AccountId: obj.ID.GetID(),
@@ -86,10 +115,10 @@ func (r AccountResolver) TransactionHistory(ctx context.Context, obj *types.Acco
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountTransactionHistory.
+	results, err := r.App.Queries.SearchAccountTransactionHistory.
 		Handle(
 			ctx,
-			query.AccountTransactionHistory{
+			query.SearchAccountTransactionHistory{
 				Principal: principal.FromContext(ctx),
 				Cursor:    cursor,
 				AccountId: obj.ID.GetID(),

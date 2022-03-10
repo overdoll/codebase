@@ -50,6 +50,13 @@ CREATE TABLE IF NOT EXISTS club_infraction_history
     primary key ( club_id, id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
+CREATE TABLE IF NOT EXISTS post_rules
+(
+    post_id text,
+    rule_id text,
+    primary key ( post_id ),
+);
+
 CREATE TABLE IF NOT EXISTS post_audit_logs
 (
     id                   text,

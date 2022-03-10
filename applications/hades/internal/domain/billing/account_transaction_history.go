@@ -1,10 +1,15 @@
 package billing
 
 import (
+	"errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"time"
+)
+
+var (
+	ErrAccountTransactionHistoryNotFound = errors.New("account transaction history not found")
 )
 
 type AccountTransactionHistory struct {

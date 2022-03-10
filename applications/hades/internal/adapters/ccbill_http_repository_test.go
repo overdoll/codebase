@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
-	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -28,12 +28,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 
 	repository := newCCBillHttpRepository(t)
 
-	requester := principal.NewPrincipal(
-		uuid.New().String(),
-		[]string{},
-		false,
-		false,
-	)
+	requester := testing_tools.NewDefaultPrincipal(uuid.New().String())
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
@@ -83,12 +78,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 
 	repository := newCCBillHttpRepository(t)
 
-	requester := principal.NewPrincipal(
-		uuid.New().String(),
-		[]string{},
-		false,
-		false,
-	)
+	requester := testing_tools.NewDefaultPrincipal(uuid.New().String())
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,

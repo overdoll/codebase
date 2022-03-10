@@ -21,6 +21,9 @@ interface IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
+  """A reference, used to look up this transaction."""
+  reference: String!
+
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
 
@@ -41,6 +44,9 @@ interface IAccountTransactionHistory {
 type AccountNewTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
+
+  """A reference, used to look up this transaction."""
+  reference: String!
 
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
@@ -82,6 +88,9 @@ type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
+  """A reference, used to look up this transaction."""
+  reference: String!
+
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
 
@@ -122,6 +131,9 @@ type AccountReactivatedTransactionHistory implements IAccountTransactionHistory 
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
+  """A reference, used to look up this transaction."""
+  reference: String!
+
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
 
@@ -145,6 +157,9 @@ type AccountReactivatedTransactionHistory implements IAccountTransactionHistory 
 type AccountFailedTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
+
+  """A reference, used to look up this transaction."""
+  reference: String!
 
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
@@ -174,6 +189,9 @@ type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
+  """A reference, used to look up this transaction."""
+  reference: String!
+
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
 
@@ -194,6 +212,9 @@ type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
 type AccountRefundTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
+
+  """A reference, used to look up this transaction."""
+  reference: String!
 
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
@@ -232,6 +253,9 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
+  """A reference, used to look up this transaction."""
+  reference: String!
+
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
 
@@ -265,6 +289,9 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
 type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
+
+  """A reference, used to look up this transaction."""
+  reference: String!
 
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
@@ -302,6 +329,9 @@ type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
 type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
   """An ID to uniquely identify this transaction history."""
   id: ID!
+
+  """A reference, used to look up this transaction."""
+  reference: String!
 
   """The type of account transaction history, or what it belongs to."""
   transaction: AccountTransactionType!
@@ -455,6 +485,9 @@ type AccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
+  """A reference, used to look up this subscription."""
+  reference: String!
+
   """The account linked to this subscription."""
   account: Account!
 
@@ -493,6 +526,30 @@ type AccountClubSupporterSubscription {
 
   """The reason this subscription was cancelled, if there is one."""
   cancellationReason: CancellationReason @goField(forceResolver: true)
+}
+
+"""An expired account club supporter subscription."""
+type ExpiredAccountClubSupporterSubscription {
+  """An ID to uniquely identify this expired subscription."""
+  id: ID!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """When the account first became a supporter. Note that when subscribing next time, this date will be kept, but subtracted by the amount of days they were not a supporter, and normalized to the current date."""
+  supporterSince: Time!
+
+  """Wen this subscription expired."""
+  expiredAt: Time!
+
+  """When this subscription was originally cancelled."""
+  cancelledAt: Time!
+
+  """The reason this subscription was originally cancelled, if there is one."""
+  cancellationReason: CancellationReason! @goField(forceResolver: true)
 }
 
 enum AccountClubSupporterSubscriptionStatus {
@@ -602,6 +659,18 @@ type AccountClubSupporterSubscriptionEdge {
 """Connection of the account club supporter subscription"""
 type AccountClubSupporterSubscriptionConnection {
   edges: [AccountClubSupporterSubscriptionEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the expired account club supporter subscriptions"""
+type ExpiredAccountClubSupporterSubscriptionEdge {
+  node: ExpiredAccountClubSupporterSubscription!
+  cursor: String!
+}
+
+"""Connection of the expired account club supporter subscription"""
+type ExpiredAccountClubSupporterSubscriptionConnection {
+  edges: [ExpiredAccountClubSupporterSubscriptionEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -794,6 +863,23 @@ extend type Account {
     last: Int
   ): AccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
 
+  """Expired club supporter subscriptions linked to this account."""
+  expiredClubSupporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ExpiredAccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
+
   """Saved payment methods linked to this account."""
   savedPaymentMethods(
     """Returns the elements in the list that come after the specified cursor."""
@@ -899,6 +985,16 @@ extend type Query {
   Staff+ only.
   """
   ccbillSubscriptionDetails(ccbillSubscriptionId: String!): CCBillSubscriptionDetails
+
+  """
+  Grab a single account subscription by the reference.
+  """
+  accountClubSupporterSubscription(reference: String!): AccountClubSupporterSubscription
+
+  """
+  Grab a single account transaction history by the reference.
+  """
+  accountTransactionHistory(reference: String!): AccountTransactionHistory
 
   """
   After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),

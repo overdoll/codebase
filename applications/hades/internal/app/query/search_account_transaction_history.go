@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type AccountTransactionHistory struct {
+type SearchAccountTransactionHistory struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
 	AccountId string
@@ -16,15 +16,15 @@ type AccountTransactionHistory struct {
 	To        *time.Time
 }
 
-type AccountTransactionHistoryHandler struct {
+type SearchAccountTransactionHistoryHandler struct {
 	br billing.Repository
 }
 
-func NewAccountTransactionHistoryHandler(br billing.Repository) AccountTransactionHistoryHandler {
-	return AccountTransactionHistoryHandler{br: br}
+func NewSearchAccountTransactionHistoryHandler(br billing.Repository) SearchAccountTransactionHistoryHandler {
+	return SearchAccountTransactionHistoryHandler{br: br}
 }
 
-func (h AccountTransactionHistoryHandler) Handle(ctx context.Context, cmd AccountTransactionHistory) ([]*billing.AccountTransactionHistory, error) {
+func (h SearchAccountTransactionHistoryHandler) Handle(ctx context.Context, cmd SearchAccountTransactionHistory) ([]*billing.AccountTransactionHistory, error) {
 
 	filters, err := billing.NewAccountTransactionHistoryFilters(cmd.AccountId, cmd.From, cmd.To)
 

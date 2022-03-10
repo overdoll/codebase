@@ -157,6 +157,23 @@ func MarshalPaymentMethodToGraphQL(ctx context.Context, result *billing.PaymentM
 	}
 }
 
+func MarshalExpiredAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, result *billing.ExpiredAccountClubSupporterSubscription) *ExpiredAccountClubSupporterSubscription {
+	return &ExpiredAccountClubSupporterSubscription{
+		ID: relay.NewID(ExpiredAccountClubSupporterSubscription{}, result.AccountId(), result.ClubId()),
+		Account: &Account{
+			ID: relay.NewID(Account{}, result.AccountId()),
+		},
+		Club: &Club{
+			ID: relay.NewID(Club{}, result.ClubId()),
+		},
+		SupporterSince: result.SupporterSince(),
+		ExpiredAt:      result.CancelledAt(),
+		CancelledAt:    result.ExpiredAt(),
+		CancellationReason: &CancellationReason{
+			ID: relay.NewID(CancellationReason{}, result.CancellationReasonId()),
+		}}
+}
+
 func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, result *billing.AccountClubSupporterSubscription) *AccountClubSupporterSubscription {
 
 	var cancellationReason *CancellationReason
@@ -209,6 +226,64 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		UpdatedAt:          result.UpdatedAt(),
 		CancellationReason: cancellationReason,
 	}
+}
+
+func MarshalExpiredAccountClubSupporterSubscriptionToGraphQLConnection(ctx context.Context, results []*billing.ExpiredAccountClubSupporterSubscription, cursor *paging.Cursor) *ExpiredAccountClubSupporterSubscriptionConnection {
+	var subscriptions []*ExpiredAccountClubSupporterSubscriptionEdge
+
+	conn := &ExpiredAccountClubSupporterSubscriptionConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: subscriptions,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *billing.ExpiredAccountClubSupporterSubscription
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *billing.ExpiredAccountClubSupporterSubscription {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *billing.ExpiredAccountClubSupporterSubscription {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		subscriptions = append(subscriptions, &ExpiredAccountClubSupporterSubscriptionEdge{
+			Node:   MarshalExpiredAccountClubSupporterSubscriptionToGraphQL(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = subscriptions
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalAccountClubSupporterSubscriptionToGraphQLConnection(ctx context.Context, results []*billing.AccountClubSupporterSubscription, cursor *paging.Cursor) *AccountClubSupporterSubscriptionConnection {

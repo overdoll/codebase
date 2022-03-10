@@ -22,6 +22,8 @@ type IAccountTransactionHistory interface {
 type Account struct {
 	// Club supporter subscriptions linked to this account.
 	ClubSupporterSubscriptions *AccountClubSupporterSubscriptionConnection `json:"clubSupporterSubscriptions"`
+	// Expired club supporter subscriptions linked to this account.
+	ExpiredClubSupporterSubscriptions *ExpiredAccountClubSupporterSubscriptionConnection `json:"expiredClubSupporterSubscriptions"`
 	// Saved payment methods linked to this account.
 	SavedPaymentMethods *AccountSavedPaymentMethodConnection `json:"savedPaymentMethods"`
 	// Transaction history for this account.
@@ -35,6 +37,8 @@ func (Account) IsEntity() {}
 type AccountCancelledTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -56,6 +60,8 @@ func (AccountCancelledTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountChargebackTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -85,6 +91,8 @@ func (AccountChargebackTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountClubSupporterSubscription struct {
 	// An ID to uniquely identify this subscription.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this subscription.
+	Reference string `json:"reference"`
 	// The account linked to this subscription.
 	Account *Account `json:"account"`
 	// The club linked to this subscription.
@@ -129,6 +137,8 @@ type AccountClubSupporterSubscriptionEdge struct {
 type AccountExpiredTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -148,6 +158,8 @@ func (AccountExpiredTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountFailedTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -172,6 +184,8 @@ func (AccountFailedTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountInvoiceTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -203,6 +217,8 @@ func (AccountInvoiceTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountNewTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -234,6 +250,8 @@ func (AccountNewTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountReactivatedTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -255,6 +273,8 @@ func (AccountReactivatedTransactionHistory) IsIAccountTransactionHistory() {}
 type AccountRefundTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -321,6 +341,8 @@ type AccountTransactionHistoryEdge struct {
 type AccountVoidTransactionHistory struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
+	// A reference, used to look up this transaction.
+	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
 	Transaction AccountTransactionType `json:"transaction"`
 	// The account linked to this transaction history.
@@ -543,6 +565,36 @@ type DeleteAccountSavedPaymentMethodInput struct {
 type DeleteAccountSavedPaymentMethodPayload struct {
 	// The deleted saved payment method.
 	DeletedAccountSavedPaymentMethodID relay.ID `json:"deletedAccountSavedPaymentMethodId"`
+}
+
+// An expired account club supporter subscription.
+type ExpiredAccountClubSupporterSubscription struct {
+	// An ID to uniquely identify this expired subscription.
+	ID relay.ID `json:"id"`
+	// The account linked to this subscription.
+	Account *Account `json:"account"`
+	// The club linked to this subscription.
+	Club *Club `json:"club"`
+	// When the account first became a supporter. Note that when subscribing next time, this date will be kept, but subtracted by the amount of days they were not a supporter, and normalized to the current date.
+	SupporterSince time.Time `json:"supporterSince"`
+	// Wen this subscription expired.
+	ExpiredAt time.Time `json:"expiredAt"`
+	// When this subscription was originally cancelled.
+	CancelledAt time.Time `json:"cancelledAt"`
+	// The reason this subscription was originally cancelled, if there is one.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
+}
+
+// Connection of the expired account club supporter subscription
+type ExpiredAccountClubSupporterSubscriptionConnection struct {
+	Edges    []*ExpiredAccountClubSupporterSubscriptionEdge `json:"edges"`
+	PageInfo *relay.PageInfo                                `json:"pageInfo"`
+}
+
+// Edge of the expired account club supporter subscriptions
+type ExpiredAccountClubSupporterSubscriptionEdge struct {
+	Node   *ExpiredAccountClubSupporterSubscription `json:"node"`
+	Cursor string                                   `json:"cursor"`
 }
 
 // Extend account club supporter subscription input.

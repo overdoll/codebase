@@ -119,6 +119,10 @@ func (a *Account) IsLocked() bool {
 	return a.locked
 }
 
+func (a *Account) IsSecure() bool {
+	return a.multiFactorEnabled
+}
+
 func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
 }
@@ -402,5 +406,5 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 }
 
 func ToPrincipal(acc *Account) *principal.Principal {
-	return principal.NewPrincipal(acc.id, acc.RolesAsString(), acc.verified, acc.locked)
+	return principal.NewPrincipal(acc.id, acc.email, acc.RolesAsString(), acc.verified, acc.locked, acc.IsSecure())
 }

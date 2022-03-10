@@ -52,6 +52,12 @@ func (r *Resolver) AccountClubSupporterSubscription() AccountClubSupporterSubscr
 	}
 }
 
+func (r *Resolver) ExpiredAccountClubSupporterSubscription() ExpiredAccountClubSupporterSubscriptionResolver {
+	return &resolvers.ExpiredAccountClubSupporterSubscriptionResolver{
+		App: r.app,
+	}
+}
+
 func (r *Resolver) CCBillTransactionDetails() CCBillTransactionDetailsResolver {
 	return &resolvers.CCBillTransactionDetailsResolver{
 		App: r.app,

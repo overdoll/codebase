@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 )
 
@@ -25,7 +26,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return principal.NewPrincipal(s, nil, false, false), nil
+				return testing_tools.NewDefaultPrincipal(s), nil
 			}
 		}
 

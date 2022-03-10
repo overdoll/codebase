@@ -67,7 +67,7 @@ type TestClub struct {
 }
 
 func newPrincipal(t *testing.T, accountId string) *principal.Principal {
-	return principal.NewPrincipal(accountId, nil, false, false)
+	return testing_tools.NewDefaultPrincipal(accountId)
 }
 
 func newClub(t *testing.T, accountId string) *club.Club {
