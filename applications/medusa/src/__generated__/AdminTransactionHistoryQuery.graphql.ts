@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f3eb30dbbce2a14833befbdef23e7a46>>
- * @relayHash 9234f05ab59ba6f75713ee787befe534
+ * @generated SignedSource<<cbb581764737a964a9a4e3e7682951c7>>
+ * @relayHash f299c1b5428ed2baf07bb34ac067bd6b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9234f05ab59ba6f75713ee787befe534
+// @relayRequestID f299c1b5428ed2baf07bb34ac067bd6b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -74,11 +74,58 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "timestamp",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
-  (v5/*: any*/)
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Club",
+  "kind": "LinkedField",
+  "name": "supportedClub",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v8 = [
+  (v5/*: any*/),
+  (v7/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "amount",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "currency",
+    "storageKey": null
+  },
+  (v6/*: any*/)
+],
+v9 = [
+  (v5/*: any*/),
+  (v7/*: any*/),
+  (v6/*: any*/)
 ];
 return {
   "fragment": {
@@ -161,56 +208,82 @@ return {
                         "storageKey": null
                       },
                       {
+                        "kind": "TypeDiscriminator",
+                        "abstractKey": "__isAccountTransactionHistory"
+                      },
+                      {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": [
+                          (v5/*: any*/),
+                          (v7/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "ccbillReason",
+                            "storageKey": null
+                          },
+                          (v6/*: any*/)
+                        ],
                         "type": "AccountCancelledTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v8/*: any*/),
                         "type": "AccountChargebackTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v9/*: any*/),
                         "type": "AccountExpiredTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": [
+                          (v5/*: any*/),
+                          (v7/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "ccbillErrorCode",
+                            "storageKey": null
+                          },
+                          (v6/*: any*/)
+                        ],
                         "type": "AccountFailedTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v8/*: any*/),
                         "type": "AccountInvoiceTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v8/*: any*/),
                         "type": "AccountNewTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v9/*: any*/),
                         "type": "AccountReactivatedTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v8/*: any*/),
                         "type": "AccountRefundTransactionHistory",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v6/*: any*/),
+                        "selections": (v8/*: any*/),
                         "type": "AccountVoidTransactionHistory",
                         "abstractKey": null
                       }
@@ -267,14 +340,14 @@ return {
             "kind": "LinkedHandle",
             "name": "transactionHistory"
           },
-          (v5/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "9234f05ab59ba6f75713ee787befe534",
+    "id": "f299c1b5428ed2baf07bb34ac067bd6b",
     "metadata": {},
     "name": "AdminTransactionHistoryQuery",
     "operationKind": "query",

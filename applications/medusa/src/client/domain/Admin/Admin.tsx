@@ -115,6 +115,24 @@ export default function Admin (props: Props): JSX.Element {
             }
           />
         </VerticalNavigation.Group>
+        <VerticalNavigation.Group
+          title={<Trans>Cancellation Reasons</Trans>}
+          icon={FlagReport}
+          baseUrl='/admin/cancellation-reason'
+        >
+          <VerticalNavigation.Button
+            to='/admin/cancellation-reason/create'
+            title={
+              <Trans>Create Cancellation Reason</Trans>
+            }
+          />
+          <VerticalNavigation.Button
+            to='/admin/cancellation-reason/search'
+            title={
+              <Trans>Search Cancellation Reasons</Trans>
+            }
+          />
+        </VerticalNavigation.Group>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
         {props.children}

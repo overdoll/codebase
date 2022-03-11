@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-03-10 20:07-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:131
+msgid "BCP 47 Locale Code"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:106
+msgid "Cancellation Reason Deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:32
+msgid "Cancellation Reason Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:116
+msgid "Cancellaton Reason Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:57
+msgid "Change Cancellation Reason Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:37
+msgid "Change Deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:113
+msgid "Deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:121
+msgid "Enter a title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:98
+msgid "Error updating cancellation reason title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:136
+msgid "Locale"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:125
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:147
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:82
+msgid "Successfully updated cancellation reason deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:88
+msgid "There was an error updating cancellation reason deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:92
+msgid "Updated cancellation reason title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:43
+msgid "View Translations"
+msgstr ""

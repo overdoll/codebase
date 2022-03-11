@@ -212,7 +212,7 @@ msgstr ""
 #~ msgid "Step 6"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:90
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
 msgid "Submit"
 msgstr ""
 
@@ -244,7 +244,7 @@ msgstr ""
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:77
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:76
 msgid "There was an error submitting your post"
 msgstr ""
 

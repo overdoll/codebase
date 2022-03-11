@@ -1249,6 +1249,117 @@ const routes: Route[] = [
             )
           },
           {
+            path: '/admin/cancellation-reason/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/RootAdminCreateCancellationReason'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCancellationReasonQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/cancellation-reason/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/RootAdminSearchCancellationReasons'
+              )
+            )
+          },
+          {
+            path: '/admin/cancellation-reason/search/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason'
+              )
+            )
+          },
+          {
             path: '/admin/account/:username',
             dependencies: [
               {

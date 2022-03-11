@@ -5,18 +5,15 @@ import { AdminTransactionHistoryQuery } from '@//:artifacts/AdminTransactionHist
 import {
   Table,
   TableBody,
-  TableBodyColumnText,
-  TableBodyRow,
-  TableBodyRowLink,
+  TableBodyRowBackground,
   TableBodyRowLoadMore,
   TableHeader,
   TableHeaderColumnText,
   TableHeaderRow
 } from '@//:modules/content/ThemeComponents/Table/Table'
 import { EmptyBoundary, EmptyTransactions } from '@//:modules/content/Placeholder'
-import { useLingui } from '@lingui/react'
-import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import AccountTransactionHistoryCard from './AccountTransactionHistory/AccountTransactionHistoryCard'
 
 type Props = ComponentSearchArguments<any>
 
@@ -39,7 +36,7 @@ const Fragment = graphql`
     @connection(key: "AdminTransactionHistory_transactionHistory") {
       edges {
         node {
-          __typename
+          ...AccountTransactionHistoryCardFragment
         }
       }
     }
@@ -64,9 +61,6 @@ export default function AdminTransactionHistory ({
     queryData.account
   )
 
-  const { i18n } = useLingui()
-  const locale = dateFnsLocaleFromI18n(i18n)
-
   return (
     <EmptyBoundary
       fallback={<EmptyTransactions />}
@@ -74,26 +68,34 @@ export default function AdminTransactionHistory ({
     >
       <Table>
         <TableHeader>
-          <TableHeaderRow columns={2}>
+          <TableHeaderRow columns={9}>
+            <TableHeaderColumnText column={2}>
+              <Trans>
+                Type
+              </Trans>
+            </TableHeaderColumnText>
             <TableHeaderColumnText column={2}>
               <Trans>
                 Club
+              </Trans>
+            </TableHeaderColumnText>
+            <TableHeaderColumnText column={2}>
+              <Trans>
+                Date
+              </Trans>
+            </TableHeaderColumnText>
+            <TableHeaderColumnText column={3}>
+              <Trans>
+                Info
               </Trans>
             </TableHeaderColumnText>
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
           {data.transactionHistory.edges.map((item, index) => (
-            <TableBodyRowLink
-              key={index}
-              to='#'
-            >
-              <TableBodyRow columns={2}>
-                <TableBodyColumnText column={2}>
-                  {item.node.__typename}
-                </TableBodyColumnText>
-              </TableBodyRow>
-            </TableBodyRowLink>
+            <TableBodyRowBackground key={index}>
+              <AccountTransactionHistoryCard query={item.node} />
+            </TableBodyRowBackground>
           ))}
           <TableBodyRowLoadMore
             hasNext={hasNext}

@@ -10,7 +10,7 @@ import {
   TableBody,
   TableBodyColumnText,
   TableBodyRow,
-  TableBodyRowLink,
+  TableBodyRowBackground,
   TableBodyRowLoadMore,
   TableHeader,
   TableHeaderColumnText,
@@ -94,9 +94,8 @@ export default function AdminClubSupporterSubscriptions ({ query }: Props): JSX.
         </TableHeader>
         <TableBody>
           {data.clubSupporterSubscriptions.edges.map((item, index) => (
-            <TableBodyRowLink
+            <TableBodyRowBackground
               key={index}
-              to='#'
             >
               <TableBodyRow columns={6}>
                 <TableBodyColumnText column={2}>
@@ -111,7 +110,7 @@ export default function AdminClubSupporterSubscriptions ({ query }: Props): JSX.
                   </Badge>
                 </TableBodyColumnText>
               </TableBodyRow>
-            </TableBodyRowLink>
+            </TableBodyRowBackground>
           ))}
           <TableBodyRowLoadMore
             hasNext={hasNext}

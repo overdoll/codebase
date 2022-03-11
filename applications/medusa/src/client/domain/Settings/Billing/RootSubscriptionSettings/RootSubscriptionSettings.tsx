@@ -30,7 +30,11 @@ export default function RootSubscriptionSettings (props: Props): JSX.Element | n
     <>
       <Helmet title='my subscriptions' />
       <PageWrapper>
-        <ConfigureBackButton to='/settings/billing' />
+        <ConfigureBackButton to='/settings/billing'>
+          <Trans>
+            Go back to billing
+          </Trans>
+        </ConfigureBackButton>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='green'>
             <Trans>

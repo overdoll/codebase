@@ -113,7 +113,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:21
+#: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:28
 msgid "Go back to settings"
 msgstr ""
 
@@ -242,6 +242,10 @@ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:8
 msgid "No subscriptions were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTransactions/EmptyTransactions.tsx:8
+msgid "No transactions were found"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:111

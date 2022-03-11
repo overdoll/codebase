@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { AdminAccountQuery as AdminAccountQueryType } from '@//:artifacts/AdminAccountQuery.graphql'
@@ -9,6 +8,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useParams } from '@//:modules/routing/useParams'
 import AdminAccount from './AdminAccount/AdminAccount'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
+import PageWrapperDesktop from '../../components/PageWrapperDesktop/PageWrapperDesktop'
 
 interface Props {
   prepared: {
@@ -27,13 +27,13 @@ export default function RootAdminAccount (props: Props): JSX.Element {
   return (
     <>
       <Helmet title='admin account' />
-      <PageWrapper>
+      <PageWrapperDesktop>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: match.username as string })}>
           <Suspense fallback={<SkeletonStack />}>
             <AdminAccount query={queryRef as PreloadedQuery<AdminAccountQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageWrapperDesktop>
     </>
   )
 }

@@ -10,7 +10,7 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
-import SavedPaymentMethodsSettings from './PaymentMethodSettings/SavedPaymentMethodsSettings'
+import SavedPaymentMethodsSettings from './SavedPaymentMethodsSettings/SavedPaymentMethodsSettings'
 import ConfigureBackButton
   from '../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 
@@ -30,7 +30,11 @@ export default function RootSavedPaymentMethodsSettings (props: Props): JSX.Elem
     <>
       <Helmet title='payment methods' />
       <PageWrapper>
-        <ConfigureBackButton to='/settings/billing' />
+        <ConfigureBackButton to='/settings/billing'>
+          <Trans>
+            Go back to billing
+          </Trans>
+        </ConfigureBackButton>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>

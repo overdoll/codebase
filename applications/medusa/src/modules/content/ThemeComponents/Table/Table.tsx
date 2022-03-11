@@ -44,7 +44,7 @@ export function Table ({ children }: TableProps): JSX.Element {
 
 export function TableBodyRowBackground ({ children }: TableRowBackgroundProps): JSX.Element {
   return (
-    <Flex align='center' h={10} bg='gray.800' borderRadius='base' p={1}>
+    <Flex align='center' h={9} bg='gray.800' borderRadius='base' p={1}>
       {children}
     </Flex>
   )
@@ -95,8 +95,10 @@ export function TableBodyColumn ({
   column = 1
 }: TableRowColumnProps): JSX.Element {
   return (
-    <GridItem colSpan={column}>
-      {children}
+    <GridItem overflow='hidden' colSpan={column}>
+      <Flex align='center' h='100%'>
+        {children}
+      </Flex>
     </GridItem>
   )
 }
@@ -106,8 +108,8 @@ export function TableBodyColumnText ({
   column = 1
 }: TableRowColumnProps): JSX.Element {
   return (
-    <GridItem colSpan={column}>
-      <Text textAlign='left' isTruncated fontSize='sm'>
+    <GridItem overflow='hidden' colSpan={column}>
+      <Text isTruncated fontSize='sm'>
         {children}
       </Text>
     </GridItem>
@@ -131,6 +133,10 @@ export function TableBodyRowLoadMore ({
   hasNext,
   ...rest
 }: TableBodyRowLoadMoreProps): JSX.Element {
+  if (!hasNext) {
+    return <></>
+  }
+
   return (
     <TableBodyRowBackground>
       <LoadMore

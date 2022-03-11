@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc0d9dbc10fea55b060bade595c08ad5>>
+ * @generated SignedSource<<1799d35499f98f62ee1e829856c87016>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AdminTransactionHistoryFragment$data = {
   readonly transactionHistory: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AccountTransactionHistoryCardFragment">;
       };
     }>;
   };
@@ -116,6 +116,11 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "AccountTransactionHistoryCardFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -176,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "843d75ae10985c761157cd6e6e39bee9";
+(node as any).hash = "6ad838dcc10245dae51930778e144849";
 
 export default node;

@@ -400,7 +400,7 @@ msgstr ""
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:116
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:111
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:132
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:90
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
 msgid "Submit"
 msgstr ""
 
@@ -472,7 +472,7 @@ msgstr ""
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:77
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:76
 msgid "There was an error submitting your post"
 msgstr ""
 

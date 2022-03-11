@@ -3,12 +3,17 @@ import { Trans } from '@lingui/macro'
 import { ArrowButtonLeft } from '@//:assets/icons/navigation'
 import { Icon } from '../../index'
 import LinkButton from '../../../ThemeComponents/LinkButton/LinkButton'
+import { ReactNode } from 'react'
 
 interface Props {
   to: string
+  children?: ReactNode
 }
 
-export default function ConfigureBackButton ({ to }: Props): JSX.Element {
+export default function ConfigureBackButton ({
+  to,
+  children
+}: Props): JSX.Element {
   return (
     <Box w='100%' mb={4}>
       <LinkButton
@@ -18,9 +23,12 @@ export default function ConfigureBackButton ({ to }: Props): JSX.Element {
         variant='solid'
         to={to}
       >
-        <Trans>
-          Go back to settings
-        </Trans>
+        {children == null
+          ? (
+            <Trans>
+              Go back to settings
+            </Trans>)
+          : children}
       </LinkButton>
     </Box>
   )

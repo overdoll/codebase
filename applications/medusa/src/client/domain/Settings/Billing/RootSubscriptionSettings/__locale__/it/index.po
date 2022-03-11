@@ -21,7 +21,7 @@ msgstr ""
 msgid "After cancelling your subscription, you will no longer be billed. You will keep your benefits until {nextBillingDate}. After this date, they will expire."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:41
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:45
 msgid "All of the clubs where you are a paid supporter and you have access to exclusive content."
 msgstr ""
 
@@ -51,6 +51,10 @@ msgstr ""
 #~ msgid "Expires in {cancelledRemainingDays} days"
 #~ msgstr ""
 
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:34
+msgid "Go back to billing"
+msgstr ""
+
 #: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:96
 msgid "In the section where it asks <0>Enter 2 of the following pieces of information to run a search</0>, enter these two pieces of information and click <1>Search</1>"
 msgstr ""
@@ -71,7 +75,7 @@ msgstr ""
 msgid "Manually Enter Information"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:36
+#: src/client/domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings.tsx:40
 msgid "My Subscriptions"
 msgstr ""
 
@@ -133,8 +137,8 @@ msgid "You can renew your benefits only after the subscription has fully expired
 msgstr ""
 
 #: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/SubscriptionSettings.tsx:60
-msgid "You haven't supported any clubs yet"
-msgstr ""
+#~ msgid "You haven't supported any clubs yet"
+#~ msgstr ""
 
 #: src/client/domain/Settings/Billing/RootSubscriptionSettings/SubscriptionSettings/ManageSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:85
 msgid "Your payment method cannot be directly updated through our platform. To update your payment method, please follow the steps below to update it through our billing provider's website."

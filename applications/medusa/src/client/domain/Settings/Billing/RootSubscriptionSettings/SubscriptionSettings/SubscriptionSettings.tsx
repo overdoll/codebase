@@ -7,6 +7,7 @@ import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelecti
 import { Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { EmptySubscriptions } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<SubscriptionSettingsQuery>
@@ -55,13 +56,7 @@ export default function SubscriptionSettings (props: Props): JSX.Element {
 
   if (data.clubSupporterSubscriptions.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
-        <Text fontSize='sm'>
-          <Trans>
-            You haven't supported any clubs yet
-          </Trans>
-        </Text>
-      </SmallBackgroundBox>
+      <EmptySubscriptions />
     )
   }
 

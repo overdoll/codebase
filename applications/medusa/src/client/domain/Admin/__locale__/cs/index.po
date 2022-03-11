@@ -107,6 +107,7 @@ msgid "Audiences"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:127
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:131
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:126
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:128
@@ -120,7 +121,33 @@ msgid "Back to search"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:58
-msgid "Billing"
+#~ msgid "Billing"
+#~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:106
+msgid "Cancellation Reason Deprecated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:91
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:32
+msgid "Cancellation Reason Title"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:119
+msgid "Cancellation Reasons"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:69
+msgid "Cancellation reason {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:116
+msgid "Cancellaton Reason Title"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountCancelledTransactionHistory/AccountCancelledTransactionHistoryCard.tsx:43
+msgid "Cancelled"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:64
@@ -155,6 +182,10 @@ msgstr ""
 msgid "Change Audience Title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:57
+msgid "Change Cancellation Reason Title"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:57
 msgid "Change Category Title"
 msgstr ""
@@ -163,6 +194,7 @@ msgstr ""
 msgid "Change Character Name"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:37
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:37
 msgid "Change Deprecated"
 msgstr ""
@@ -221,7 +253,12 @@ msgstr ""
 msgid "Characters"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:84
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountChargebackTransactionHistory/AccountChargebackTransactionHistoryCard.tsx:50
+msgid "Chargeback"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:79
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:78
 msgid "Club"
 msgstr ""
 
@@ -229,6 +266,12 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:166
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience.tsx:30
 msgid "Create Audience"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:126
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:106
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/RootAdminCreateCancellationReason.tsx:30
+msgid "Create Cancellation Reason"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:72
@@ -255,6 +298,11 @@ msgstr ""
 msgid "Create Series"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:83
+msgid "Date"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:113
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:112
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:112
 msgid "Deprecated"
@@ -266,6 +314,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:95
 msgid "Duration of Lock"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:96
+msgid "Enter a cancellation reason title"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:132
@@ -310,6 +362,7 @@ msgstr ""
 msgid "Enter a series title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:121
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:117
 msgid "Enter a title"
 msgstr ""
@@ -325,6 +378,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:98
 msgid "Error creating audience {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:75
+msgid "Error creating cancellation reason {0}"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/AdminCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:92
@@ -347,6 +404,10 @@ msgstr ""
 msgid "Error updating audience title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:98
+msgid "Error updating cancellation reason title"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:93
 msgid "Error updating category title"
 msgstr ""
@@ -367,6 +428,18 @@ msgstr ""
 msgid "Error updating series title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountExpiredTransactionHistory/AccountExpiredTransactionHistoryCard.tsx:42
+msgid "Expired"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountFailedTransactionHistory/AccountFailedTransactionHistoryCard.tsx:43
+msgid "Failed"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:88
+msgid "Info"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
 #~ msgid "Infraction"
 #~ msgstr ""
@@ -379,6 +452,10 @@ msgstr ""
 #~ msgid "Instant"
 #~ msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountInvoiceTransactionHistory/AccountInvoiceTransactionHistoryCard.tsx:49
+msgid "Invoice"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/AdminClubInfractions.tsx:44
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
 msgid "Issue Infraction"
@@ -389,6 +466,7 @@ msgid "Issued"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:136
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:133
@@ -410,6 +488,10 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountNewTransactionHistory/AccountNewTransactionHistoryCard.tsx:50
+msgid "New"
+msgstr ""
+
 #: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:27
 msgid "No"
 msgstr ""
@@ -418,7 +500,7 @@ msgstr ""
 msgid "No infractions found"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:53
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:55
 msgid "Permissions"
 msgstr ""
 
@@ -444,6 +526,14 @@ msgstr ""
 
 #: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:50
 msgid "Purge"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountReactivatedTransactionHistory/AccountReactivatedTransactionHistoryCard.tsx:43
+msgid "Reactivated"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountRefundTransactionHistory/AccountRefundTransactionHistoryCard.tsx:50
+msgid "Refund"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:64
@@ -499,6 +589,11 @@ msgstr ""
 #: src/client/domain/Admin/Admin.tsx:96
 #: src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences.tsx:32
 msgid "Search Audiences"
+msgstr ""
+
+#: src/client/domain/Admin/Admin.tsx:132
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/RootAdminSearchCancellationReasons.tsx:23
+msgid "Search Cancellation Reasons"
 msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:78
@@ -593,13 +688,15 @@ msgstr ""
 msgid "Standard"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:94
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:89
 msgid "Status"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:125
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:125
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:147
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
@@ -613,7 +710,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:60
 msgid "Subscriptions"
 msgstr ""
 
@@ -661,6 +758,10 @@ msgstr ""
 msgid "Successfully updated audience thumbnail"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:82
+msgid "Successfully updated cancellation reason deprecated"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:74
 msgid "Successfully updated category thumbnail"
 msgstr ""
@@ -681,7 +782,7 @@ msgstr ""
 msgid "Successfully updated series thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:89
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:84
 msgid "Supporting Since"
 msgstr ""
 
@@ -778,6 +879,10 @@ msgstr ""
 msgid "There was an error updating audience standard"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:88
+msgid "There was an error updating cancellation reason deprecated"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:87
 msgid "There was an error updating rule deprecated"
 msgstr ""
@@ -802,6 +907,14 @@ msgstr ""
 msgid "There was an error updating the series thumbnail"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:65
+msgid "Transactions"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:73
+msgid "Type"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubUnSuspendButton/AdminClubUnSuspendButton.tsx:72
 msgid "Un-Suspend Club"
 msgstr ""
@@ -811,8 +924,16 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountTransactionHistoryCard.tsx:104
+msgid "Unsupported transaction {0}"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:88
 msgid "Updated audience title to {0} for {1}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:92
+msgid "Updated cancellation reason title to {0} for {1}"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:87
@@ -836,12 +957,17 @@ msgid "Updated series title to {0} for {1}"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:43
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:43
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:44
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:43
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:43
 msgid "View Translations"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountVoidTransactionHistory/AccountVoidTransactionHistoryCard.tsx:50
+msgid "Void"
 msgstr ""
 
 #: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:14
