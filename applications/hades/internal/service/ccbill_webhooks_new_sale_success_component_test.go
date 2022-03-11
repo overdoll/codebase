@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	uuid2 "github.com/google/uuid"
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/mocks"
@@ -44,6 +45,10 @@ type AccountTransactionHistoryNew struct {
 
 type GenerateClubSupporterReceiptFromAccountTransactionHistory struct {
 	GenerateClubSupporterReceiptFromAccountTransactionHistory *types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload `graphql:"generateClubSupporterReceiptFromAccountTransactionHistory(input: $input)"`
+}
+
+type AccountClubSupporterSubscription struct {
+	AccountClubSupporterSubscription *AccountClubSupporterSubscriptionModified `graphql:"accountClubSupporterSubscription(reference: $reference)"`
 }
 
 // test a bunch of webhooks at the same time
@@ -144,6 +149,15 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, 699, subscription.Node.BillingAmount, "correct billing amount")
 	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
 	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
+
+	var accountClubSupporterSub AccountClubSupporterSubscription
+
+	err = gqlClient.Query(context.Background(), &accountClubSupporterSub, map[string]interface{}{
+		"reference": graphql.String(subscription.Node.Reference),
+	})
+
+	require.NoError(t, err, "no error looking up supporter subscription")
+	require.NotNil(t, accountClubSupporterSub.AccountClubSupporterSubscription, "subscription exists")
 
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscription.Node.PaymentMethod)

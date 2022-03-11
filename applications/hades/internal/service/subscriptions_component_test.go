@@ -10,19 +10,22 @@ import (
 	"time"
 )
 
+type AccountClubSupporterSubscriptionModified struct {
+	Id                 relay.ID
+	Status             types.AccountClubSupporterSubscriptionStatus
+	Reference          string
+	LastBillingDate    time.Time
+	NextBillingDate    time.Time
+	CancelledAt        *time.Time
+	BillingAmount      int
+	BillingCurrency    types.Currency
+	PaymentMethod      types.PaymentMethod
+	CcbillSubscription types.CCBillSubscription
+}
+
 type ClubSupporterSubscriptionsEdges struct {
 	Edges []*struct {
-		Node struct {
-			Id                 relay.ID
-			Status             types.AccountClubSupporterSubscriptionStatus
-			LastBillingDate    time.Time
-			NextBillingDate    time.Time
-			CancelledAt        *time.Time
-			BillingAmount      int
-			BillingCurrency    types.Currency
-			PaymentMethod      types.PaymentMethod
-			CcbillSubscription types.CCBillSubscription
-		}
+		Node AccountClubSupporterSubscriptionModified
 	}
 }
 

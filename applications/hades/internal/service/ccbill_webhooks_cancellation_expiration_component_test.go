@@ -55,6 +55,27 @@ type AccountTransactionHistoryExpired struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
+type ExpiredAccountClubSupporterSubscriptions struct {
+	Entities []struct {
+		Account struct {
+			Id                                relay.ID
+			ExpiredClubSupporterSubscriptions struct {
+				Edges []*struct {
+					Node struct {
+						Id                 relay.ID
+						SupporterSince     time.Time
+						ExpiredAt          time.Time
+						CancelledAt        time.Time
+						CancellationReason struct {
+							Id relay.ID
+						}
+					}
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
 // test a bunch of webhooks at the same time
 func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	t.Parallel()
@@ -154,4 +175,23 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, expiredTransaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredTransaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, ccbillSubscriptionId, expiredTransaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
+
+	var expiredAccountClubSupporterSubscriptions ExpiredAccountClubSupporterSubscriptions
+
+	err = gqlClient.Query(context.Background(), &expiredAccountClubSupporterSubscriptions, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error looking up expired subscriptions")
+
+	expiredSubscription := expiredAccountClubSupporterSubscriptions.Entities[0].Account.ExpiredClubSupporterSubscriptions.Edges[0].Node
+
+	require.Equal(t, "2022-02-28 20:18:00", expiredSubscription.ExpiredAt.String(), "correct expiration date")
+	require.Equal(t, "2022-02-26 20:18:00", expiredSubscription.CancelledAt.String(), "correct cancellation date")
+	require.Equal(t, "2022-02-26 08:21:49", expiredSubscription.SupporterSince.String(), "correct supporter date")
 }

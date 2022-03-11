@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	uuid2 "github.com/google/uuid"
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -14,6 +15,18 @@ import (
 	"time"
 )
 
+type AccountTransactionHistoryRefundModified struct {
+	Id                            relay.ID
+	Reference                     string
+	Transaction                   types.AccountTransactionType
+	CCBillReason                  string `graphql:"ccbillReason"`
+	Amount                        int
+	Currency                      types.Currency
+	PaymentMethod                 types.PaymentMethod
+	CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
+	Timestamp                     time.Time
+}
+
 type AccountTransactionHistoryRefund struct {
 	Entities []struct {
 		Account struct {
@@ -21,21 +34,16 @@ type AccountTransactionHistoryRefund struct {
 			TransactionHistory struct {
 				Edges []*struct {
 					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							CCBillReason                  string `graphql:"ccbillReason"`
-							Amount                        int
-							Currency                      types.Currency
-							PaymentMethod                 types.PaymentMethod
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-							Timestamp                     time.Time
-						} `graphql:"... on AccountRefundTransactionHistory"`
+						Item AccountTransactionHistoryRefundModified `graphql:"... on AccountRefundTransactionHistory"`
 					}
 				}
 			} `graphql:"transactionHistory(startDate: $startDate)"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountTransactionHistory struct {
+	AccountTransactionHistory *AccountTransactionHistoryRefundModified `graphql:"accountTransactionHistory(reference: $reference)"`
 }
 
 // test a bunch of webhooks at the same time
@@ -105,4 +113,13 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.Equal(t, "1111", transaction.PaymentMethod.Card.Last4, "correct last 4 digits on the card")
 	require.Equal(t, types.CardTypeVisa, transaction.PaymentMethod.Card.Type, "is a VISA card")
 	require.Equal(t, "01/2023", transaction.PaymentMethod.Card.Expiration, "correct expiration date")
+
+	var accountTransactionHistory AccountTransactionHistory
+
+	err = gqlClient.Query(context.Background(), &accountTransactionHistory, map[string]interface{}{
+		"reference": graphql.String(transaction.Reference),
+	})
+
+	require.NoError(t, err, "no error looking up transaction")
+	require.NotNil(t, accountTransactionHistory.AccountTransactionHistory, "account transaction history should exist")
 }
