@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f09a9d7596c895cfdfb0a498772c6786>>
- * @relayHash eea49859b6027079cb6fa3e2de9e627b
+ * @generated SignedSource<<1d6ec0d75badba7a7aeaf1024cc14176>>
+ * @relayHash d7cfbba76755f2ecc42e9d31243ede3f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eea49859b6027079cb6fa3e2de9e627b
+// @relayRequestID d7cfbba76755f2ecc42e9d31243ede3f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type UpdateRuleDeprecatedInput = {
+export type UpdateCancellationReasonDeprecatedInput = {
+  cancellationReasonId: string;
   deprecated: boolean;
-  ruleId: string;
 };
 export type ChangeCancellationReasonDeprecatedFormMutation$variables = {
-  input: UpdateRuleDeprecatedInput;
+  input: UpdateCancellationReasonDeprecatedInput;
 };
 export type ChangeCancellationReasonDeprecatedFormMutationVariables = ChangeCancellationReasonDeprecatedFormMutation$variables;
 export type ChangeCancellationReasonDeprecatedFormMutation$data = {
-  readonly updateRuleDeprecated: {
-    readonly rule: {
+  readonly updateCancellationReasonDeprecated: {
+    readonly cancellationReason: {
       readonly id: string;
       readonly deprecated: boolean;
     } | null;
@@ -52,17 +52,17 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdateRuleDeprecatedPayload",
+    "concreteType": "UpdateCancellationReasonDeprecatedPayload",
     "kind": "LinkedField",
-    "name": "updateRuleDeprecated",
+    "name": "updateCancellationReasonDeprecated",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Rule",
+        "concreteType": "CancellationReason",
         "kind": "LinkedField",
-        "name": "rule",
+        "name": "cancellationReason",
         "plural": false,
         "selections": [
           {
@@ -104,7 +104,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "eea49859b6027079cb6fa3e2de9e627b",
+    "id": "d7cfbba76755f2ecc42e9d31243ede3f",
     "metadata": {},
     "name": "ChangeCancellationReasonDeprecatedFormMutation",
     "operationKind": "mutation",
@@ -113,6 +113,6 @@ return {
 };
 })();
 
-(node as any).hash = "40f7416b1c36986d9c3ed0da84f148f7";
+(node as any).hash = "44832ae2b7b942f2135f5a54b9a5c825";
 
 export default node;

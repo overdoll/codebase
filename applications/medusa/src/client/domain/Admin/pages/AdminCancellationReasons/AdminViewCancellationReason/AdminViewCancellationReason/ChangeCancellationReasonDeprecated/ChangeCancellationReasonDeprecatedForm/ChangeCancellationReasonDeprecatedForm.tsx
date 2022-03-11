@@ -36,9 +36,9 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation ChangeCancellationReasonDeprecatedFormMutation($input: UpdateRuleDeprecatedInput!) {
-    updateRuleDeprecated(input: $input) {
-      rule {
+  mutation ChangeCancellationReasonDeprecatedFormMutation($input: UpdateCancellationReasonDeprecatedInput!) {
+    updateCancellationReasonDeprecated(input: $input) {
+      cancellationReason {
         id
         deprecated
       }
@@ -72,7 +72,7 @@ export default function ChangeCancellationReasonDeprecatedForm ({
     commit({
       variables: {
         input: {
-          id: data.id,
+          cancellationReasonId: data.id,
           ...formValues
         }
       },

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3b3fb778f9e35d2908e0f629abafa020>>
- * @relayHash 76eaad0b9bcb6842268f13a3718806e0
+ * @generated SignedSource<<923c6c1cd673e7754d62922c35dd4306>>
+ * @relayHash 76e14e76a32a49d86b8b0f6e320a9790
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 76eaad0b9bcb6842268f13a3718806e0
+// @relayRequestID 76e14e76a32a49d86b8b0f6e320a9790
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -74,7 +74,7 @@ const node: ConcreteRequest = {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "reference",
                     "storageKey": null
                   },
                   {
@@ -82,6 +82,13 @@ const node: ConcreteRequest = {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
@@ -144,7 +151,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "76eaad0b9bcb6842268f13a3718806e0",
+    "id": "76e14e76a32a49d86b8b0f6e320a9790",
     "metadata": {},
     "name": "AdminSearchCancellationReasonsQuery",
     "operationKind": "query",

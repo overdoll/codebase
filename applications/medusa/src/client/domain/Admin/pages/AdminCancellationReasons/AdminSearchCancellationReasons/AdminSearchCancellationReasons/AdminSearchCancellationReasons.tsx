@@ -2,15 +2,10 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { AdminSearchCancellationReasonsQuery } from '@//:artifacts/AdminSearchCancellationReasonsQuery.graphql'
 import { removeNode } from '@//:modules/support'
-import {
-  CancellationReasonOverlay,
-  LinkTile,
-  LoadMoreStackTile,
-  StackTile
-} from '@//:modules/content/ContentSelection'
+import { CancellationReasonOverlay, LinkTile, LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyGeneralSearch } from '@//:modules/content/Placeholder'
-import { ListSpacer } from '@//:modules/content/PageLayout'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { Stack } from '@chakra-ui/react'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -36,7 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
-          id
+          reference
           ...CancellationReasonOverlayFragment
         }
       }
@@ -67,10 +62,10 @@ export default function AdminSearchCancellationReasons ({ searchArguments }: Pro
       fallback={<EmptyGeneralSearch />}
       condition={cancellationReasons.length < 1}
     >
-      <ListSpacer>
+      <Stack spacing={2}>
         {cancellationReasons.map((item, index) => (
           <StackTile key={index}>
-            <LinkTile to={`/admin/cancellation-reason/search/${item.id as string}`}>
+            <LinkTile to={`/admin/cancellation-reason/search/${item.reference as string}`}>
               <CancellationReasonOverlay query={item} />
             </LinkTile>
           </StackTile>
@@ -81,7 +76,7 @@ export default function AdminSearchCancellationReasons ({ searchArguments }: Pro
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}
         />
-      </ListSpacer>
+      </Stack>
     </EmptyBoundary>
   )
 }

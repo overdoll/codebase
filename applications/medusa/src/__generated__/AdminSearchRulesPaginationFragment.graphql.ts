@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<328bae5f78fb2b5cbc14952688755978>>
- * @relayHash 97ce3e3155d5f7f1e0d5d89b0d16e3af
+ * @generated SignedSource<<ea55cd66b7a082fe94f61361b378be2d>>
+ * @relayHash 45996aaf306a4e6fbc3fcba97742edce
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 97ce3e3155d5f7f1e0d5d89b0d16e3af
+// @relayRequestID 45996aaf306a4e6fbc3fcba97742edce
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -102,7 +102,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "reference",
                     "storageKey": null
                   },
                   {
@@ -117,6 +117,13 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
@@ -179,7 +186,7 @@ return {
     ]
   },
   "params": {
-    "id": "97ce3e3155d5f7f1e0d5d89b0d16e3af",
+    "id": "45996aaf306a4e6fbc3fcba97742edce",
     "metadata": {},
     "name": "AdminSearchRulesPaginationFragment",
     "operationKind": "query",
@@ -188,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "8abbb91db0e62309a828c56a07b90b7d";
+(node as any).hash = "f285adde0d36615808899e46260ea62c";
 
 export default node;

@@ -1246,7 +1246,22 @@ const routes: Route[] = [
               await import(
                 './domain/Admin/pages/AdminRules/AdminViewRule/RootAdminViewRule'
               )
-            )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewRuleQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/admin/cancellation-reason/create',
@@ -1357,7 +1372,22 @@ const routes: Route[] = [
               await import(
                 './domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason'
               )
-            )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCancellationReasonQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/admin/account/:username',

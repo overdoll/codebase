@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CancellationReasonOverlayFragment$key } from '@//:artifacts/CancellationReasonOverlayFragment.graphql'
 
@@ -18,14 +18,14 @@ export default function CancellationReasonOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Box w='100%' px={4} py={3} bg='gray.900' borderRadius='inherit'>
+    <Flex align='center' w='100%' px={4} py={3} h='100%' bg='gray.900' borderRadius='inherit'>
       <Text
         fontSize='md'
         color='gray.00'
       >
         {data.title}
       </Text>
-    </Box>
+    </Flex>
 
   )
 }

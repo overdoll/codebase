@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b1118d30c0dbce03aa1444a862211f6>>
+ * @generated SignedSource<<91d2e4c176eb912d78968083e7c1d17b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AdminSearchRulesFragment$data = {
   readonly rules: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly id: string;
+        readonly reference: string;
         readonly " $fragmentSpreads": FragmentRefs<"RuleTileOverlayFragment">;
       };
     }>;
@@ -97,7 +97,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "id",
+                  "name": "reference",
                   "storageKey": null
                 },
                 {
@@ -159,6 +159,6 @@ return {
 };
 })();
 
-(node as any).hash = "8abbb91db0e62309a828c56a07b90b7d";
+(node as any).hash = "f285adde0d36615808899e46260ea62c";
 
 export default node;

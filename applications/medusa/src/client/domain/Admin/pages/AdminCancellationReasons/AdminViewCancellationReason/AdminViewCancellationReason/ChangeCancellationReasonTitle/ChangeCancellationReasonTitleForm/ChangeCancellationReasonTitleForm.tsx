@@ -82,7 +82,7 @@ export default function ChangeCancellationReasonTitleForm ({
     commit({
       variables: {
         input: {
-          id: data.id,
+          cancellationReasonId: data.id,
           ...formValues
         }
       },
