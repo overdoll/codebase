@@ -10,7 +10,7 @@ import type {
 } from '@//:artifacts/CCBillSelectSavedPaymentFormMutation.graphql'
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
-import { HStack, Link, Stack, Text } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -27,6 +27,7 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import SelectPaymentMethodInput from './SelectPaymentMethodInput/SelectPaymentMethodInput'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import SupporterGuidelinesAgreement from '../../../SupporterGuidelinesAgreement/SupporterGuidelinesAgreement'
 
 interface Props {
   query: CCBillSelectSavedPaymentFormFragment$key
@@ -84,7 +85,7 @@ export default function CCBillSelectSavedPaymentForm ({
       .required()
       .valid(true)
       .messages({
-        'any.only': i18n._(t`You must agree to follow the guidelines`)
+        'any.only': i18n._(t`You must agree to the guidelines`)
       }),
     savedPaymentMethodId: Joi
       .string()
@@ -139,7 +140,7 @@ export default function CCBillSelectSavedPaymentForm ({
         >
           <InputHeader>
             <Trans>
-              Select a card
+              Select a saved payment method
             </Trans>
           </InputHeader>
           <SelectPaymentMethodInput query={viewerData} />
@@ -152,17 +153,7 @@ export default function CCBillSelectSavedPaymentForm ({
           >
             <HStack spacing={2}>
               <SwitchInput colorScheme='teal' />
-              <Text fontSize='md' color='gray.00'>
-                <Trans>
-                  I agree to follow the
-                </Trans>
-                {' '}
-                <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/supporter-guidelines/'>
-                  <Trans>
-                    Supporter Guidelines
-                  </Trans>
-                </Link>
-              </Text>
+              <SupporterGuidelinesAgreement />
             </HStack>
             <InputFooter />
           </FormInput>

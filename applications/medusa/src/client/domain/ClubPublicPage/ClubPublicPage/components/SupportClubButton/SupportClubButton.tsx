@@ -13,6 +13,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
 import SupportSelectMethod from './SupportSelectMethod/SupportSelectMethod'
+import Can from '@//:modules/authorization/Can'
 
 interface Props extends ButtonProps {
   clubQuery: SupportClubButtonClubFragment$key
@@ -122,11 +123,15 @@ export default function SupportClubButton ({
                 Support this club and get access to all of its exclusive content!
               </Trans>
             </Text>
-            <Button
-              onClick={onOpen}
-              {...buttonProps}
-              {...rest}
-            />
+            <Can I='interact' a='Club' passThrough>
+              {allowed => (
+                <Button
+                  isDisabled={allowed === false}
+                  onClick={onOpen}
+                  {...buttonProps}
+                  {...rest}
+                />)}
+            </Can>
           </Stack>
           )}
       <Modal

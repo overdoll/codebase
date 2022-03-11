@@ -48,10 +48,7 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
               <Stack spacing={1}>
                 <Text fontSize='sm' color='gray.00'>
                   <Trans>
-                    Open the CCBill Support Center link using the button below and click <Highlight
-                      colorScheme='teal'
-                                                                                         >Search
-                    </Highlight>
+                    Open the CCBill Support Center link using the button below
                   </Trans>
                 </Text>
                 <ExternalLink to='https://support.ccbill.com/'>
@@ -61,6 +58,26 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                     </Trans>
                   </Button>
                 </ExternalLink>
+              </Stack>
+              <Stack spacing={1}>
+                <Text fontSize='sm' color='gray.00'>
+                  <Trans>
+                    In the section where it asks <Highlight colorScheme='teal'>Enter 2 of the following pieces of
+                      information to
+                      run a search
+                                                 </Highlight>, enter this information and click <Highlight colorScheme='teal'>Search</Highlight>
+                  </Trans>
+                </Text>
+                <Box>
+                  <Text fontSize='sm' color='gray.100'>
+                    <Trans>
+                      Email
+                    </Trans>
+                  </Text>
+                  <CopyCodeToClipboard>
+                    {data.ccbillSubscription.email}
+                  </CopyCodeToClipboard>
+                </Box>
               </Stack>
             </Stack>
           </TabPanel>

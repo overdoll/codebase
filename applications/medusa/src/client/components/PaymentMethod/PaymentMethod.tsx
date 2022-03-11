@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay'
 import type { PaymentMethodFragment$key } from '@//:artifacts/PaymentMethodFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { Flex, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { TableBodyColumn, TableBodyRow } from '@//:modules/content/ThemeComponents/Table/Table'
 import DisplayCard from './DisplayCard/DisplayCard'
 
@@ -25,23 +25,19 @@ export default function PaymentMethod ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TableBodyRow columns={4}>
+    <TableBodyRow columns={3}>
       <TableBodyColumn column={1}>
         <DisplayCard query={data.card} />
       </TableBodyColumn>
-      <TableBodyColumn column={2}>
-        <Flex justify='center'>
-          <Text fontFamily='mono' fontSize='lg' color='gray.00'>
-            **** {data.card.last4}
-          </Text>
-        </Flex>
+      <TableBodyColumn column={1}>
+        <Text w='100%' align='center' isTruncated fontFamily='mono' fontSize='lg' color='gray.00'>
+          **** {data.card.last4}
+        </Text>
       </TableBodyColumn>
       <TableBodyColumn column={1}>
-        <Flex justify='flex-end'>
-          <Text fontFamily='mono' fontSize='lg' color='gray.00'>
-            {data.card.expiration}
-          </Text>
-        </Flex>
+        <Text w='100%' align='end' isTruncated fontFamily='mono' fontSize='lg' color='gray.00'>
+          {data.card.expiration}
+        </Text>
       </TableBodyColumn>
     </TableBodyRow>
   )

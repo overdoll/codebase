@@ -75,7 +75,7 @@ export default function SavedPaymentMethodsSettings (props: Props): JSX.Element 
       {data.savedPaymentMethods.edges.map((item, index) => (
         <StackTile key={index}>
           <LargeBackgroundBox w='100%'>
-            <HStack h='100%' align='center' spacing={4} justify='space-between'>
+            <HStack h='100%' align='center' spacing={3} justify='space-between'>
               <PaymentMethod query={item.node.paymentMethod} />
               <ManageSavedPaymentMethodButton connectionId={data.savedPaymentMethods.__id} query={item.node} />
             </HStack>

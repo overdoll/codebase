@@ -37,7 +37,7 @@ export default function SelectCancellationReasonList ({
       fallback={<></>}
       condition={queryData.cancellationReasons.edges.length < 1}
     >
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         {queryData.cancellationReasons.edges.map((item, index) => (
           <StackTile key={index}>
             <Choice

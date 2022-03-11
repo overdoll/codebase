@@ -9,7 +9,6 @@ import {
   PageWrapper
 } from '@//:modules/content/PageLayout'
 import {
-  Barcode,
   ClubMembers,
   ClubPeopleGroup,
   FlagReport,
@@ -33,7 +32,7 @@ export default function Help (): JSX.Element {
             <PageSectionWrap>
               <PageSectionTitle>
                 <Trans>
-                  Members
+                  Platform
                 </Trans>
               </PageSectionTitle>
               <ListSpacer>
@@ -55,7 +54,7 @@ export default function Help (): JSX.Element {
                       <Trans>Community Guidelines</Trans>
                     }
                     description={(
-                      <Trans>General platform rules</Trans>
+                      <Trans>General platform rules for everyone</Trans>
                     )}
                   />
                 </PagePanelWrap>
@@ -77,7 +76,7 @@ export default function Help (): JSX.Element {
                       <Trans>Supporter Guidelines</Trans>
                     }
                     description={(
-                      <Trans>Billing and account</Trans>
+                      <Trans>Billing help and subscriptions</Trans>
                     )}
                   />
                 </PagePanelWrap>
@@ -101,17 +100,6 @@ export default function Help (): JSX.Element {
                   }
                   description={(
                     <Trans>How you use our platform</Trans>
-                  )}
-                />
-              </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/subscriptions/'>
-                <PagePanelIcon icon={Barcode} colorScheme='green' />
-                <PagePanelText
-                  title={
-                    <Trans>Subscription Agreement</Trans>
-                  }
-                  description={(
-                    <Trans>Subscription agreement</Trans>
                   )}
                 />
               </PagePanelWrap>

@@ -12,6 +12,7 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import SupporterGuidelinesAgreement from '../../../SupporterGuidelinesAgreement/SupporterGuidelinesAgreement'
 
 interface Props {
   query: CCBillSubscribeFormFragment$key
@@ -62,7 +63,7 @@ export default function CCBillSubscribeForm ({
       .required()
       .valid(true)
       .messages({
-        'any.only': i18n._(t`You must agree to follow the guidelines`)
+        'any.only': i18n._(t`You must agree to the guidelines`)
       }),
     savePayment: Joi
       .boolean()
@@ -122,17 +123,7 @@ export default function CCBillSubscribeForm ({
         >
           <HStack spacing={2}>
             <SwitchInput colorScheme='teal' />
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                I agree to follow the
-              </Trans>
-              {' '}
-              <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/supporter-guidelines/'>
-                <Trans>
-                  Supporter Guidelines
-                </Trans>
-              </Link>
-            </Text>
+            <SupporterGuidelinesAgreement />
           </HStack>
           <InputFooter />
         </FormInput>
