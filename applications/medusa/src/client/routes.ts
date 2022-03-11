@@ -1484,54 +1484,6 @@ const routes: Route[] = [
                 }
               }
             }
-          },
-          {
-            path: '/admin/subscription/:id',
-            dependencies: [
-              {
-                resource: loadable(async (environment) =>
-                  await import(
-                    `./domain/Admin/pages/AdminCCBillSubscriptionDetails/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-                  )
-                ),
-                then: loadMessages
-              }
-            ],
-            middleware: [
-              ({
-                environment,
-                history
-              }) => {
-                const ability = getAbilityFromUser(environment)
-
-                if (ability.can('admin', 'Billing')) {
-                  return true
-                }
-                history.push('/join')
-                return false
-              }
-            ],
-            exact: true,
-            component: loadable(async () =>
-              await import(
-                './domain/Admin/pages/AdminCCBillSubscriptionDetails/RootAdminCCBillSubscriptionDetails'
-              )
-            ),
-            prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminCCBillSubscriptionDetailsQuery.graphql')
-
-              return {
-                query: {
-                  query: Query,
-                  variables: {
-                    ccbillSubscriptionId: params.id
-                  },
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                }
-              }
-            }
           }
         ]
       },
