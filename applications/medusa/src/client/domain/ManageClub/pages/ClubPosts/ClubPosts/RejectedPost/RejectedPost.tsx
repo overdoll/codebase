@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import type { RejectedPostFragment$key } from '@//:artifacts/RejectedPostFragment.graphql'

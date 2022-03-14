@@ -1,12 +1,12 @@
 export {
   default as PostGalleryPublicSimple
-} from './components/PostContent/PostGalleryPublicSimple/PostGalleryPublicSimple'
-export { default as PostHeaderClub } from './components/PostContent/PostHeaderClub/PostHeaderClub'
-export { default as PostHeaderContributor } from './components/PostContent/PostHeaderContributor/PostHeaderContributor'
-export { default as PostPreviewContent } from './components/PostContent/PostPreviewContent/PostPreviewContent'
-export { default as PostStaticAudience } from './components/PostContent/PostStaticAudience/PostStaticAudience'
-export { default as PostStaticCategories } from './components/PostContent/PostStaticCategories/PostStaticCategories'
-export { default as PostStaticCharacters } from './components/PostContent/PostStaticCharacters/PostStaticCharacters'
+} from './components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple'
+export { default as PostHeaderClub } from './components/PostData/PostHeaderClub/PostHeaderClub'
+export { default as PostHeaderContributor } from './components/PostData/PostHeaderContributor/PostHeaderContributor'
+export { default as PostPreviewContent } from './components/PostData/PostPreviewContent/PostPreviewContent'
+export { default as PostStaticAudience } from './components/PostData/PostStaticAudience/PostStaticAudience'
+export { default as PostStaticCategories } from './components/PostData/PostStaticCategories/PostStaticCategories'
+export { default as PostStaticCharacters } from './components/PostData/PostStaticCharacters/PostStaticCharacters'
 export {
   default as PostClickableCategories
 } from './components/PostInteraction/PostClickableCategories/PostClickableCategories'

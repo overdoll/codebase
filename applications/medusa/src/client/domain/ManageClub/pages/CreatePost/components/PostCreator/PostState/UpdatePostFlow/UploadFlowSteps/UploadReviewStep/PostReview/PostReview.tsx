@@ -12,7 +12,7 @@ import {
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 
 interface Props {
   query: PostReviewFragment$key | null
@@ -20,11 +20,11 @@ interface Props {
 
 const PostFragment = graphql`
   fragment PostReviewFragment on Post {
-    reference
     ...PostGalleryPublicDetailedFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
+    ...PostIndexerFragment
   }
 `
 
@@ -46,6 +46,7 @@ export default function PostReview ({
       <PostGalleryPublicDetailed query={data} />
       <PostFooter
         centerItem={<PostIndexer
+          query={data}
           length={slidesCount}
           currentIndex={currentSlide}
                     />}

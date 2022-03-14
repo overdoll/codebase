@@ -10,6 +10,7 @@ import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
 import { Trans } from '@lingui/macro'
 import { ArrowButtonRight } from '@//:assets/icons'
 import Icon from '../../../../PageLayout/Flair/Icon/Icon'
+import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null
@@ -23,7 +24,10 @@ const Fragment = graphql`
       resource {
         ...PostMediaFragment
       }
-
+      ...PostSupporterContentFragment
+    }
+    club {
+      ...PostSupporterContentClubFragment
     }
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
@@ -54,7 +58,16 @@ export default function PostGalleryPublicSimple ({
             >
               <Flex bg='gray.800' w='100%' h='72vh' align='center' justify='center'>
                 <Stack spacing={1}>
-                  <PostMedia query={item.resource} index={index} reference={data.reference} />
+                  <PostSupporterContent
+                    query={item}
+                    clubQuery={data.club}
+                  >
+                    <PostMedia
+                      query={item.resource}
+                      index={index}
+                      reference={data.reference}
+                    />
+                  </PostSupporterContent>
                   <Flex px={1} justify='flex-end'>
                     <LinkButton
                       size='sm'

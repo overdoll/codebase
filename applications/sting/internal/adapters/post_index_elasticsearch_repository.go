@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/olivere/elastic/v7"
-	"github.com/scylladb/gocqlx/v2"
+	elastic "github.com/olivere/elastic/v7"
+	gocqlx "github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -711,18 +711,20 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			}
 
 			doc := postDocument{
-				Id:                 p.Id,
-				State:              p.State,
-				Likes:              likes,
-				ContributorId:      p.ContributorId,
-				ContentResourceIds: p.ContentResourceIds,
-				ClubId:             p.ClubId,
-				AudienceId:         audienceId,
-				CategoryIds:        p.CategoryIds,
-				CharacterIds:       p.CharacterIds,
-				SeriesIds:          p.SeriesIds,
-				CreatedAt:          strconv.FormatInt(p.CreatedAt.Unix(), 10),
-				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
+				Id:                              p.Id,
+				State:                           p.State,
+				Likes:                           likes,
+				ContributorId:                   p.ContributorId,
+				ContentResourceIds:              p.ContentResourceIds,
+				ClubId:                          p.ClubId,
+				AudienceId:                      audienceId,
+				CategoryIds:                     p.CategoryIds,
+				CharacterIds:                    p.CharacterIds,
+				SeriesIds:                       p.SeriesIds,
+				CreatedAt:                       strconv.FormatInt(p.CreatedAt.Unix(), 10),
+				PostedAt:                        strconv.FormatInt(p.PostedAt.Unix(), 10),
+				ContentSupporterOnly:            p.ContentSupporterOnly,
+				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
 			}
 
 			_, err = r.client.

@@ -1,15 +1,15 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import PostStaticAudience
-  from '@//:modules/content/Posts/components/PostContent/PostStaticAudience/PostStaticAudience'
+  from '@//:modules/content/Posts/components/PostData/PostStaticAudience/PostStaticAudience'
 import PostStaticCharacters
-  from '@//:modules/content/Posts/components/PostContent/PostStaticCharacters/PostStaticCharacters'
+  from '@//:modules/content/Posts/components/PostData/PostStaticCharacters/PostStaticCharacters'
 import PostStaticCategories
-  from '@//:modules/content/Posts/components/PostContent/PostStaticCategories/PostStaticCategories'
+  from '@//:modules/content/Posts/components/PostData/PostStaticCategories/PostStaticCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
 import { Trans } from '@lingui/macro'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import { PostFooter, PostHeaderClub, PostIndexer, PostVideoManagerContext } from '@//:modules/content/Posts'
 import { useContext } from 'react'
 
@@ -24,6 +24,7 @@ const PostPreviewGQL = graphql`
     ...PostStaticCategoriesFragment
     ...PostGalleryPublicDetailedFragment
     ...PostHeaderClubFragment
+    ...PostIndexerFragment
   }
 `
 
@@ -42,6 +43,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
         <PostGalleryPublicDetailed query={data} />
         <PostFooter
           centerItem={<PostIndexer
+            query={data}
             length={slidesCount}
             currentIndex={currentSlide}
                       />}

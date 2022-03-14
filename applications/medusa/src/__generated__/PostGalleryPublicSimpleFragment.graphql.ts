@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65f267d753046ca3fa992042dd9471cf>>
+ * @generated SignedSource<<6cbc928ff8939792f5ad5c2ef707f842>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,11 @@ export type PostGalleryPublicSimpleFragment$data = {
     readonly resource: {
       readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
+  readonly club: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
 };
@@ -70,6 +74,27 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSupporterContentFragment"
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSupporterContentClubFragment"
         }
       ],
       "storageKey": null
@@ -89,6 +114,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "221edf0f3cf9a6c15684f8088e276039";
+(node as any).hash = "c50bfa2648252d29404686cce55be482";
 
 export default node;

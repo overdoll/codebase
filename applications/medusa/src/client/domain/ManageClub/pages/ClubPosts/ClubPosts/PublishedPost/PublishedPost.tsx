@@ -3,7 +3,7 @@ import type { PublishedPostFragment$key } from '@//:artifacts/PublishedPostFragm
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostCopyLinkButton

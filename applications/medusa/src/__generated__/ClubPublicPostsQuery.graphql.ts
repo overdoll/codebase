@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d6eaa8e24f6b1b26921776a12e32c27>>
- * @relayHash 36f1543a2736f9af662bea64b29ba315
+ * @generated SignedSource<<79484cf583af60f945f82c7bd9ecc236>>
+ * @relayHash dd5a530f997f51deccea573c766d582d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 36f1543a2736f9af662bea64b29ba315
+// @relayRequestID dd5a530f997f51deccea573c766d582d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -155,7 +155,7 @@ v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "name",
   "storageKey": null
 },
 v14 = {
@@ -188,7 +188,7 @@ v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 };
 return {
@@ -325,7 +325,55 @@ return {
                             ],
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "viewerCanViewSupporterOnlyContent",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isSupporterOnly",
+                            "storageKey": null
+                          },
                           (v9/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v6/*: any*/),
+                          (v9/*: any*/),
+                          (v13/*: any*/),
+                          (v14/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ClubMember",
+                            "kind": "LinkedField",
+                            "name": "viewerMember",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "isSupporter",
+                                "storageKey": null
+                              },
+                              (v9/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       },
@@ -338,7 +386,7 @@ return {
                         "plural": true,
                         "selections": [
                           (v6/*: any*/),
-                          (v13/*: any*/),
+                          (v15/*: any*/),
                           (v14/*: any*/),
                           (v9/*: any*/)
                         ],
@@ -360,13 +408,13 @@ return {
                             "name": "series",
                             "plural": false,
                             "selections": [
-                              (v13/*: any*/),
+                              (v15/*: any*/),
                               (v6/*: any*/),
                               (v9/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v15/*: any*/),
+                          (v13/*: any*/),
                           (v6/*: any*/),
                           (v14/*: any*/),
                           (v9/*: any*/)
@@ -391,40 +439,6 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "likes",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Club",
-                        "kind": "LinkedField",
-                        "name": "club",
-                        "plural": false,
-                        "selections": [
-                          (v15/*: any*/),
-                          (v6/*: any*/),
-                          (v14/*: any*/),
-                          (v9/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ClubMember",
-                            "kind": "LinkedField",
-                            "name": "viewerMember",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "isSupporter",
-                                "storageKey": null
-                              },
-                              (v9/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
                         "storageKey": null
                       }
                     ],
@@ -508,7 +522,7 @@ return {
     ]
   },
   "params": {
-    "id": "36f1543a2736f9af662bea64b29ba315",
+    "id": "dd5a530f997f51deccea573c766d582d",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",

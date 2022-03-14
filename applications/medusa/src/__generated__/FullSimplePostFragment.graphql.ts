@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf92367a1b04aa5877525f347c3d4019>>
+ * @generated SignedSource<<966f509cd7546c7a96a60d88042b4b3f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,8 +14,7 @@ export type FullSimplePostFragment$data = {
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment">;
   };
-  readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostIndexerFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
 };
 export type FullSimplePostFragment = FullSimplePostFragment$data;
@@ -76,6 +75,11 @@ const node: ReaderFragment = {
       "name": "PostClickableCategoriesFragment"
     },
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostIndexerFragment"
+    },
+    {
       "alias": null,
       "args": null,
       "concreteType": "Club",
@@ -90,19 +94,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "85facb88e9ed8416f459c62cf93403b4";
+(node as any).hash = "6667912c86a4d665d8ee82bfa5376e27";
 
 export default node;

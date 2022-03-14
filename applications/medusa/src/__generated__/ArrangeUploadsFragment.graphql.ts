@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b6e3e94463c801bd2d2af2f39403541d>>
+ * @generated SignedSource<<a22c1c6d81724b7c58cab042b4badcfe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,14 @@ export type ArrangeUploadsFragment$data = {
   readonly id: string;
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly isSupporterOnly: boolean;
     readonly resource: {
       readonly id: string;
       readonly urls: ReadonlyArray<{
         readonly url: string;
       }>;
-      readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
   }>;
   readonly " $fragmentType": "ArrangeUploadsFragment";
 };
@@ -57,6 +58,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporterOnly",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Resource",
           "kind": "LinkedField",
           "name": "resource",
@@ -80,14 +88,14 @@ return {
                 }
               ],
               "storageKey": null
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "DraggableContentFragment"
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "DraggableContentFragment"
         }
       ],
       "storageKey": null
@@ -98,6 +106,6 @@ return {
 };
 })();
 
-(node as any).hash = "632ee9b9ff26226bf3650dbf3b7821b1";
+(node as any).hash = "969986fdfcd554b722bd6e458d7f11ae";
 
 export default node;

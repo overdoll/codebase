@@ -38,10 +38,10 @@ const PostFragment = graphql`
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
+    ...PostIndexerFragment
     club {
       ...JoinClubButtonClubFragment
     }
-    reference
   }
 `
 
@@ -81,6 +81,7 @@ export default function FullSimplePost ({
           )}
           centerItem={(
             <PostIndexer
+              query={data}
               length={slidesCount}
               currentIndex={currentSlide}
             />)}

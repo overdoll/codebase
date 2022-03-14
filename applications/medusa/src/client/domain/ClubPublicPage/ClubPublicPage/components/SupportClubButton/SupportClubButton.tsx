@@ -14,6 +14,10 @@ import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
 import SupportSelectMethod from './SupportSelectMethod/SupportSelectMethod'
 import Can from '@//:modules/authorization/Can'
+import { useQueryParam } from 'use-query-params'
+import { Icon } from '@//:modules/content/PageLayout'
+import { PremiumStar } from '@//:assets/icons'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props extends ButtonProps {
   clubQuery: SupportClubButtonClubFragment$key
@@ -50,6 +54,7 @@ export default function SupportClubButton ({
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
+  const [supportParam, setSupportParam] = useQueryParam<boolean | null | undefined>('support')
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
@@ -66,7 +71,14 @@ export default function SupportClubButton ({
         Become a Supporter {price}/mo
       </Trans>),
     colorScheme: 'orange',
-    size: 'lg'
+    size: 'lg',
+    leftIcon: (
+      <Icon
+        icon={PremiumStar}
+        fill='orange.900'
+        h={4}
+        w={4}
+      />)
   }
 
   if (viewerData == null) {
@@ -86,13 +98,21 @@ export default function SupportClubButton ({
     )
   }
 
-  const methods = useHistoryDisclosure()
+  const methods = useHistoryDisclosure({
+    defaultIsOpen: supportParam != null
+  })
 
   const {
     isOpen,
     onClose,
     onOpen
   } = methods
+
+  useUpdateEffect(() => {
+    if (!isOpen) {
+      setSupportParam(undefined)
+    }
+  }, [isOpen])
 
   return (
     <HistoryDisclosureProvider {...methods}>

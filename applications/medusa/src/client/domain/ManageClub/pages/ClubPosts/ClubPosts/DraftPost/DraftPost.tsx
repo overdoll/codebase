@@ -3,7 +3,7 @@ import type { DraftPostFragment$key } from '@//:artifacts/DraftPostFragment.grap
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import generatePath from '../../../../../../../modules/routing/generatePath'
 import { useParams } from '@//:modules/routing'
 import { PostMenu } from '@//:modules/content/Posts'

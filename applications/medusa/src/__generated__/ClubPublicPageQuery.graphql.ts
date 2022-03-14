@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6c1624c00de1d8dccb9b31cdff8418d6>>
- * @relayHash 6f8620a23341f8f26c26c0e09edcd929
+ * @generated SignedSource<<347603da18bdd1cfd17b7b17d01c48cc>>
+ * @relayHash c2c0e04a26f50a9e41820afc72c29f9f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6f8620a23341f8f26c26c0e09edcd929
+// @relayRequestID c2c0e04a26f50a9e41820afc72c29f9f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -168,6 +168,13 @@ v11 = [
             "name": "content",
             "plural": true,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isSupporterOnly",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -668,7 +675,7 @@ return {
     ]
   },
   "params": {
-    "id": "6f8620a23341f8f26c26c0e09edcd929",
+    "id": "c2c0e04a26f50a9e41820afc72c29f9f",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

@@ -69,11 +69,14 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox mt={14}>
-        <Trans>
-          No posts found
-        </Trans>
-      </SmallBackgroundBox>
+      <Box h='calc(100vh - 54px)'>
+        <Box pb={14} />
+        <SmallBackgroundBox>
+          <Trans>
+            No posts found
+          </Trans>
+        </SmallBackgroundBox>
+      </Box>
     )
   }
 

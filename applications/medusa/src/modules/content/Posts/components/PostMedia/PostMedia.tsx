@@ -7,10 +7,14 @@ import ControlledVideo from './ControlledVideo/ControlledVideo'
 import { PostVideoManagerContext } from '../../helpers/PostVideoManager/PostVideoManager'
 import { GlobalVideoManagerContext } from '../../helpers/GlobalVideoManager/GlobalVideoManager'
 
-interface Props {
-  query: PostMediaFragment$key
+export interface PostMediaProps {
   index: number
   reference: string
+}
+
+interface Props extends PostMediaProps {
+  query: PostMediaFragment$key
+
 }
 
 const Fragment = graphql`

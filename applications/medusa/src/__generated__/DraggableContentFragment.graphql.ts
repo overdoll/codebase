@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d63cd30129bccaf994fa617a5c854db0>>
+ * @generated SignedSource<<f89094a38c4423c86256154063f2684b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,16 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type DraggableContentFragment$data = {
-  readonly id: string;
-  readonly type: ResourceType;
-  readonly urls: ReadonlyArray<{
-    readonly url: string;
-    readonly mimeType: string;
-  }>;
-  readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
+  readonly isSupporterOnly: boolean;
+  readonly resource: {
+    readonly id: string;
+    readonly type: ResourceType;
+    readonly urls: ReadonlyArray<{
+      readonly url: string;
+      readonly mimeType: string;
+    }>;
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
+  };
   readonly " $fragmentType": "DraggableContentFragment";
 };
 export type DraggableContentFragment = DraggableContentFragment$data;
@@ -37,51 +40,69 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
+      "name": "isSupporterOnly",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
+      "concreteType": "Resource",
       "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
+      "name": "resource",
+      "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "url",
+          "name": "id",
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "mimeType",
+          "name": "type",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ResourceUrl",
+          "kind": "LinkedField",
+          "name": "urls",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mimeType",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ResourceInfoFragment"
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceInfoFragment"
     }
   ],
-  "type": "Resource",
+  "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "7777cf09d01745ccfff9fb1b4afc35df";
+(node as any).hash = "05a04ede9b98d5d78d0d594f4a702470";
 
 export default node;

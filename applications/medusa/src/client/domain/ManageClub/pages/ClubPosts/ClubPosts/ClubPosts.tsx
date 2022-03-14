@@ -8,7 +8,7 @@ import { NotFoundClub } from '@//:modules/content/Placeholder'
 import DraftPost from './DraftPost/DraftPost'
 import PublishedPost from './PublishedPost/PublishedPost'
 import PostPreviewContent
-  from '../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import ReviewPost from './ReviewPost/ReviewPost'
 import RejectedPost from './RejectedPost/RejectedPost'
 

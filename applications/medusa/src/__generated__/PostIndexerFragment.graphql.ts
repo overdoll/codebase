@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75fcfb451f897a1337384406022ba1ac>>
+ * @generated SignedSource<<96fcfa04e507872207289de39e24fae1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,27 +9,28 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type PostPreviewContentFragment$data = {
+export type PostIndexerFragment$data = {
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
     readonly resource: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
+      readonly type: ResourceType;
     };
   }>;
-  readonly " $fragmentType": "PostPreviewContentFragment";
+  readonly " $fragmentType": "PostIndexerFragment";
 };
-export type PostPreviewContentFragment = PostPreviewContentFragment$data;
-export type PostPreviewContentFragment$key = {
-  readonly " $data"?: PostPreviewContentFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
+export type PostIndexerFragment = PostIndexerFragment$data;
+export type PostIndexerFragment$key = {
+  readonly " $data"?: PostIndexerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostIndexerFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostPreviewContentFragment",
+  "name": "PostIndexerFragment",
   "selections": [
     {
       "alias": null,
@@ -55,9 +56,11 @@ const node: ReaderFragment = {
           "plural": false,
           "selections": [
             {
+              "alias": null,
               "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceInfoFragment"
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -70,6 +73,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3ff4045c0252c3faae359b556b199d5a";
+(node as any).hash = "d89007b6e64574052dba02546ec67c5b";
 
 export default node;

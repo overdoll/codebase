@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bbaafd3e1aa9fe1f615671ad4542767a>>
- * @relayHash 7e9253ba7015898be3cb482451b56bfe
+ * @generated SignedSource<<7c8aa5a0a5de00c851fbf8f7601fd83f>>
+ * @relayHash 860671652025407b9facb4fd1db89f11
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7e9253ba7015898be3cb482451b56bfe
+// @relayRequestID 860671652025407b9facb4fd1db89f11
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -445,7 +445,37 @@ return {
                             ],
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "viewerCanViewSupporterOnlyContent",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isSupporterOnly",
+                            "storageKey": null
+                          },
                           (v4/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v4/*: any*/),
+                          (v5/*: any*/),
+                          (v11/*: any*/),
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -512,22 +542,6 @@ return {
                         "kind": "ScalarField",
                         "name": "likes",
                         "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Club",
-                        "kind": "LinkedField",
-                        "name": "club",
-                        "plural": false,
-                        "selections": [
-                          (v5/*: any*/),
-                          (v3/*: any*/),
-                          (v11/*: any*/),
-                          (v4/*: any*/),
-                          (v6/*: any*/)
-                        ],
-                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -563,7 +577,7 @@ return {
     ]
   },
   "params": {
-    "id": "7e9253ba7015898be3cb482451b56bfe",
+    "id": "860671652025407b9facb4fd1db89f11",
     "metadata": {},
     "name": "MyClubsQuery",
     "operationKind": "query",

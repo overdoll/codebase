@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDisclosure, UseDisclosureReturn } from '@chakra-ui/react'
+import { useDisclosure, UseDisclosureProps, UseDisclosureReturn } from '@chakra-ui/react'
 import { useHistory } from '../../../../../routing'
 
 /**
@@ -12,14 +12,14 @@ interface HistoryDisclosureState {
   hasModal?: boolean
 }
 
-export default function useHistoryDisclosure (): UseDisclosureReturn {
+export default function useHistoryDisclosure (props: UseDisclosureProps): UseDisclosureReturn {
   const {
     isOpen,
     onOpen: onOpenAction,
     onClose: onCloseAction,
     onToggle: onToggleAction,
     ...rest
-  } = useDisclosure()
+  } = useDisclosure(props)
 
   const history = useHistory()
 

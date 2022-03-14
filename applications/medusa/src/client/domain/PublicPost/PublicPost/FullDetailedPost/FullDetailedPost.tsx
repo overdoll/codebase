@@ -14,7 +14,7 @@ import {
 } from '@//:modules/content/Posts'
 import JoinClubButton from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
@@ -42,6 +42,7 @@ const PostFragment = graphql`
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
+    ...PostIndexerFragment
     club {
       ...JoinClubButtonClubFragment
     }
@@ -77,6 +78,7 @@ export default function FullDetailedPost ({
         <PostFooter
           leftItem={<PostLikeButton size='sm' query={data} />}
           centerItem={<PostIndexer
+            query={data}
             length={slidesCount}
             currentIndex={currentSlide}
                       />}

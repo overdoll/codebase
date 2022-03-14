@@ -14,6 +14,7 @@ const shadows = {
   'dark-lg':
     'rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 5px 10px, rgba(0, 0, 0, 0.4) 0px 15px 40px',
   drag: '0 0 0 2px hsla(342,100%,58%,1)',
+  premium: '0 0 0 2px hsla(33,100%,58%,1)',
   select: '0 0 0 2px hsla(149,100%,49%,1)'
 }
 

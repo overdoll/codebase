@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewContentFragment$key } from '@//:artifacts/PostPreviewContentFragment.graphql'
-import { Flex, Text } from '@chakra-ui/react'
-import { FileMultiple } from '@//:assets/icons/navigation'
+import { Flex, HStack, Text } from '@chakra-ui/react'
+import { FileMultiple, PremiumStar } from '@//:assets/icons'
 import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 import ResourceInfo from '../../../../DataDisplay/ResourceInfo/ResourceInfo'
 
@@ -12,6 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
     content {
+      isSupporterOnly
       resource {
         ...ResourceInfoFragment
       }
@@ -28,6 +29,9 @@ export default function PostPreviewContent ({
 
   const hasMoreThanOne = data.content.length > 1
 
+  const supporterOnlyCount = data.content.filter((item) => item.isSupporterOnly).length
+  const freeContentCount = data.content.filter((item) => !item.isSupporterOnly).length
+
   return (
     <Flex
       bg='gray.800'
@@ -41,10 +45,11 @@ export default function PostPreviewContent ({
     >
       <ResourceInfo query={firstContent} />
       {hasMoreThanOne &&
-        <Flex
+        <HStack
           align='center'
           borderRadius='xl'
           bg='dimmers.400'
+          spacing={2}
           m={2}
           position='absolute'
           py={1}
@@ -52,11 +57,21 @@ export default function PostPreviewContent ({
           right={0}
           bottom={0}
         >
-          <Icon icon={FileMultiple} w={3} h={3} mr={1} fill='gray.00' />
-          <Text fontWeight='semibold' color='gray.00'>
-            {data.content.length}
-          </Text>
-        </Flex>}
+          {freeContentCount > 0 && (
+            <Flex align='center'>
+              <Icon icon={FileMultiple} w={3} h={3} mr={1} fill='gray.00' />
+              <Text fontWeight='semibold' color='gray.00'>
+                {freeContentCount}
+              </Text>
+            </Flex>)}
+          {supporterOnlyCount > 0 && (
+            <Flex align='center'>
+              <Icon icon={PremiumStar} w={3} h={3} mr={1} fill='gray.00' />
+              <Text fontWeight='semibold' color='gray.00'>
+                {supporterOnlyCount}
+              </Text>
+            </Flex>)}
+        </HStack>}
     </Flex>
   )
 }

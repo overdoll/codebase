@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c23104489ea8315b4b90093413afb98>>
+ * @generated SignedSource<<1a07347eea33d6b909d00b2fcda27e0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostReviewFragment$data = {
-  readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostIndexerFragment">;
   readonly " $fragmentType": "PostReviewFragment";
 };
 export type PostReviewFragment = PostReviewFragment$data;
@@ -27,13 +26,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostReviewFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
-    },
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -53,12 +45,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostClickableCategoriesFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostIndexerFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "41a41872c0fab4abdca68b422b6c9d39";
+(node as any).hash = "503c9ae5316fb4fc75c3e02bfbd78ce8";
 
 export default node;
