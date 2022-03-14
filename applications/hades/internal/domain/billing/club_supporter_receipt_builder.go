@@ -5,18 +5,18 @@ import (
 )
 
 type ClubSupporterReceiptBuilder struct {
-	history *AccountTransactionHistory
+	history *AccountTransaction
 
 	fileName string
 }
 
-func NewClubSupporterReceiptBuilder(history *AccountTransactionHistory) (*ClubSupporterReceiptBuilder, error) {
+func NewClubSupporterReceiptBuilder(history *AccountTransaction) (*ClubSupporterReceiptBuilder, error) {
 	return &ClubSupporterReceiptBuilder{
 		history: history,
 	}, nil
 }
 
-func (c *ClubSupporterReceiptBuilder) AccountTransactionHistory() *AccountTransactionHistory {
+func (c *ClubSupporterReceiptBuilder) AccountTransactionHistory() *AccountTransaction {
 	return c.history
 }
 

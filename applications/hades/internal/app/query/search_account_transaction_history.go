@@ -24,7 +24,7 @@ func NewSearchAccountTransactionHistoryHandler(br billing.Repository) SearchAcco
 	return SearchAccountTransactionHistoryHandler{br: br}
 }
 
-func (h SearchAccountTransactionHistoryHandler) Handle(ctx context.Context, cmd SearchAccountTransactionHistory) ([]*billing.AccountTransactionHistory, error) {
+func (h SearchAccountTransactionHistoryHandler) Handle(ctx context.Context, cmd SearchAccountTransactionHistory) ([]*billing.AccountTransaction, error) {
 
 	filters, err := billing.NewAccountTransactionHistoryFilters(cmd.AccountId, cmd.From, cmd.To)
 

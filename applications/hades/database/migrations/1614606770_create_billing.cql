@@ -34,28 +34,36 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
 
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
 (
-    account_id               text,
-    club_id                  text,
-    status                   text,
-    supporter_since          timestamp,
-    last_billing_date        date,
-    next_billing_date        date,
-    billing_amount           bigint,
-    billing_currency         text,
+    account_id                      text,
+    club_id                         text,
+    status                          text,
+    supporter_since                 timestamp,
+    last_billing_date               date,
+    next_billing_date               date,
+    billing_amount                  bigint,
+    billing_currency                text,
 
-    cancelled_at             timestamp,
+    cancelled_at                    timestamp,
+    expired_at                      timestamp,
 
-    encrypted_payment_method text,
+    failed_at                       timestamp,
+    ccbill_error_text               text,
+    ccbill_error_code               text,
+    billing_failure_next_retry_date date,
 
-    id                       text,
-    ccbill_subscription_id   text,
+    encrypted_payment_method        text,
 
-    updated_at               timestamp,
+    id                              text,
+    ccbill_subscription_id          text,
 
-    cancellation_reason_id   text,
+    updated_at                      timestamp,
+
+    cancellation_reason_id          text,
 
     primary key ( account_id, club_id, id )
 );
+
+CREATE INDEX account_club_supporter_subscriptions_by_account_status ON account_club_supporter_subscriptions_by_account (status);
 
 CREATE TABLE IF NOT EXISTS expired_account_club_supporter_subscriptions_by_account
 (
@@ -65,7 +73,6 @@ CREATE TABLE IF NOT EXISTS expired_account_club_supporter_subscriptions_by_accou
     expired_at             timestamp,
     cancelled_at           timestamp,
     ccbill_subscription_id text,
-    cancellation_reason_id text,
     primary key ( account_id, club_id )
 );
 
@@ -84,7 +91,7 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
     primary key ( account_id, id )
 );
 
-CREATE TABLE IF NOT EXISTS account_transaction_history
+CREATE TABLE IF NOT EXISTS account_transactions
 (
     account_id                 text,
     bucket                     bigint,
@@ -112,41 +119,12 @@ CREATE TABLE IF NOT EXISTS account_transaction_history
     ccbill_error_code          text,
     ccbill_reason              text,
     ccbill_subscription_id     text,
+    ccbill_transaction_id      text,
+
+    events                     list<text>,
 
     primary key ( id )
 );
-
-CREATE TABLE IF NOT EXISTS account_transaction_history_by_account
-(
-    account_id                 text,
-    bucket                     bigint,
-    id                         text,
-
-    timestamp                  timestamp,
-
-    transaction_type           text,
-
-    supported_club_id          text,
-
-    encrypted_payment_method   text,
-
-    amount                     bigint,
-    currency                   text,
-
-    is_recurring               boolean,
-
-    billing_failure_retry_date date,
-
-    billed_at_date             date,
-    next_billing_date          date,
-
-    ccbill_error_text          text,
-    ccbill_error_code          text,
-    ccbill_reason              text,
-    ccbill_subscription_id     text,
-
-    primary key ( (account_id, bucket), id )
-) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 (

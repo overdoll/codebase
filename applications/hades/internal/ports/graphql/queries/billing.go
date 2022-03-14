@@ -47,7 +47,7 @@ func (r QueryResolver) AccountTransactionHistory(ctx context.Context, reference 
 
 	if err != nil {
 
-		if err == billing.ErrAccountTransactionHistoryNotFound {
+		if err == billing.ErrAccountTransactionNotFound {
 			return nil, nil
 		}
 

@@ -957,7 +957,7 @@ func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptionsByAccoun
 	return accountSupport, nil
 }
 
-func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*billing.AccountTransactionHistory, error) {
+func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*billing.AccountTransaction, error) {
 
 	var transaction accountTransactionHistory
 
@@ -969,7 +969,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx
 		Get(&transaction); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountTransactionHistoryNotFound
+			return nil, billing.ErrAccountTransactionNotFound
 		}
 
 		return nil, fmt.Errorf("failed to account transaction history: %v", err)
@@ -1007,7 +1007,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryByIdOperator(ctx
 	), nil
 }
 
-func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*billing.AccountTransactionHistory, error) {
+func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*billing.AccountTransaction, error) {
 
 	transaction, err := r.GetAccountTransactionHistoryByIdOperator(ctx, transactionHistoryId)
 
@@ -1022,7 +1022,7 @@ func (r BillingCassandraRepository) GetAccountTransactionHistoryById(ctx context
 	return transaction, nil
 }
 
-func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransactionHistory) error {
+func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *billing.AccountTransaction) error {
 
 	var encrypted *string
 
@@ -1038,7 +1038,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 	} else {
 
 		// new/invoice transactions - grab billing details from ccbill (these details are not added automatically)
-		if accountHistory.CCBillSubscriptionId() != nil && (accountHistory.Transaction() == billing.New || accountHistory.Transaction() == billing.Invoice) {
+		if accountHistory.CCBillSubscriptionId() != nil && (accountHistory.Transaction() == billing.Initial || accountHistory.Transaction() == billing.Invoice) {
 
 			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, *accountHistory.CCBillSubscriptionId())
 
@@ -1137,13 +1137,13 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 	return nil
 }
 
-func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransactionHistory, error) {
+func (r BillingCassandraRepository) SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransaction, error) {
 
 	if err := billing.CanViewAccountTransactionHistory(requester, filters.AccountId()); err != nil {
 		return nil, err
 	}
 
-	var accountTransactionsMorphed []*billing.AccountTransactionHistory
+	var accountTransactionsMorphed []*billing.AccountTransaction
 
 	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(filters.From())
 

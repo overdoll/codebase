@@ -2,14 +2,15 @@ package activities
 
 import (
 	"context"
+	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
 	"time"
 )
 
-type CreateInvoiceClubSubscriptionAccountTransactionRecordInput struct {
-	AccountId string
-
-	CCBillSubscriptionId *string
+type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
+	AccountId                          string
+	TransactionId                      string
+	AccountClubSupporterSubscriptionId string
 
 	ClubId    string
 	Timestamp time.Time
@@ -26,10 +27,10 @@ type CreateInvoiceClubSubscriptionAccountTransactionRecordInput struct {
 	CardExpirationDate string
 }
 
-func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx context.Context, input CreateInvoiceClubSubscriptionAccountTransactionRecordInput) error {
+func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context.Context, input CreateInvoiceClubSubscriptionAccountTransactionInput) error {
 
 	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *input.CCBillSubscriptionId)
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
 		return err
@@ -48,24 +49,24 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransactionRecord(ctx c
 		return err
 	}
 
-	transaction, err := billing.NewInvoiceClubSubscriptionAccountTransaction(
+	transaction, err := billing.NewInitialPaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
-		input.CCBillSubscriptionId,
+		input.TransactionId,
+		input.AccountClubSupporterSubscriptionId,
 		input.Timestamp,
 		input.BillingDate,
 		input.NextBillingDate,
 		input.Amount,
 		input.Currency,
-		paymentMethod,
 	)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.billing.CreateAccountTransactionHistoryOperator(ctx, transaction); err != nil {
-		return err
+	if err := h.billing.CreateAccountTransactionOperator(ctx, transaction); err != nil {
+		return fmt.Errorf("failed to create transaction history: %s", err)
 	}
 
 	return nil

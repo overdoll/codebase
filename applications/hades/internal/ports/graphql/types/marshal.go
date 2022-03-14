@@ -429,7 +429,7 @@ func MarshalAccountSavedPaymentMethodsToGraphQLConnection(ctx context.Context, r
 	return conn
 }
 
-func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *billing.AccountTransactionHistory) AccountTransactionHistory {
+func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *billing.AccountTransaction) AccountTransactionHistory {
 
 	var accountTransactionHistory AccountTransactionHistory
 
@@ -458,7 +458,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 		}
 	}
 
-	if result.Transaction() == billing.New {
+	if result.Transaction() == billing.Initial {
 		accountTransactionHistory = AccountNewTransactionHistory{
 			ID:                            id,
 			Transaction:                   tp,
@@ -586,7 +586,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 	return accountTransactionHistory
 }
 
-func MarshalAccountTransactionHistoryToGraphQLConnection(ctx context.Context, results []*billing.AccountTransactionHistory, cursor *paging.Cursor) *AccountTransactionHistoryConnection {
+func MarshalAccountTransactionHistoryToGraphQLConnection(ctx context.Context, results []*billing.AccountTransaction, cursor *paging.Cursor) *AccountTransactionHistoryConnection {
 	var transactions []*AccountTransactionHistoryEdge
 
 	conn := &AccountTransactionHistoryConnection{
@@ -611,15 +611,15 @@ func MarshalAccountTransactionHistoryToGraphQLConnection(ctx context.Context, re
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *billing.AccountTransactionHistory
+	var nodeAt func(int) *billing.AccountTransaction
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *billing.AccountTransactionHistory {
+		nodeAt = func(i int) *billing.AccountTransaction {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *billing.AccountTransactionHistory {
+		nodeAt = func(i int) *billing.AccountTransaction {
 			return results[i]
 		}
 	}

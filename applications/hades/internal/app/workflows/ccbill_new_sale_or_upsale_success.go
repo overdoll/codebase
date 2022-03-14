@@ -176,16 +176,17 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	}
 
 	// create record for new transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
-		activities.CreateNewClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            details.AccountInitiator.AccountId,
-			ClubId:               details.CcbillClubSupporter.ClubId,
-			Timestamp:            timestamp,
-			Amount:               amount,
-			Currency:             input.BilledCurrency,
-			NextBillingDate:      nextBillingDate,
-			BillingDate:          billedAtDate,
+	if err := workflow.ExecuteActivity(ctx, a.CreateInitialClubSubscriptionAccountTransaction,
+		activities.CreateInitialClubSubscriptionAccountTransactionInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			TransactionId:                      input.TransactionId,
+			AccountId:                          details.AccountInitiator.AccountId,
+			ClubId:                             details.CcbillClubSupporter.ClubId,
+			Timestamp:                          timestamp,
+			Amount:                             amount,
+			Currency:                           input.BilledCurrency,
+			NextBillingDate:                    nextBillingDate,
+			BillingDate:                        billedAtDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

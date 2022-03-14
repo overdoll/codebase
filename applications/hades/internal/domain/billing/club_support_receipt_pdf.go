@@ -23,7 +23,7 @@ func newClubSupportReceiptPdf() *ClubSupportReceiptPdf {
 }
 
 // Build pdf document from data provided
-func (doc *ClubSupportReceiptPdf) Build(history *AccountTransactionHistory) (*gofpdf.Fpdf, error) {
+func (doc *ClubSupportReceiptPdf) Build(history *AccountTransaction) (*gofpdf.Fpdf, error) {
 
 	// Build base doc
 	doc.pdf.SetMargins(BaseMargin, BaseMarginTop, BaseMargin)

@@ -29,6 +29,7 @@ type AccountClubSupporterSubscription struct {
 	updatedAt time.Time
 
 	cancelledAt *time.Time
+	expiredAt   *time.Time
 
 	billingAmount   int64
 	billingCurrency Currency
@@ -38,6 +39,11 @@ type AccountClubSupporterSubscription struct {
 	ccbillSubscriptionId *string
 
 	cancellationReasonId *string
+
+	failedAt                    *time.Time
+	ccbillErrorText             *string
+	ccbillErrorCode             *string
+	billingFailureNextRetryDate *time.Time
 }
 
 func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
@@ -57,6 +63,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccb
 		lastBillingDate:      lastBillingDate,
 		nextBillingDate:      nextBillingDate,
 		cancelledAt:          nil,
+		expiredAt:            nil,
 		billingAmount:        amount,
 		billingCurrency:      currenc,
 		paymentMethod:        paymentMethod,
@@ -137,9 +144,23 @@ func (c *AccountClubSupporterSubscription) UpdatePaymentMethod(paymentMethod *Pa
 	return nil
 }
 
+func (c *AccountClubSupporterSubscription) UpdateCCBillPaymentError(failedAt time.Time, errorText, errorCode string, nextRetryDate time.Time) error {
+	c.failedAt = &failedAt
+	c.ccbillErrorText = &errorText
+	c.ccbillErrorCode = &errorCode
+	c.billingFailureNextRetryDate = &nextRetryDate
+	return nil
+}
+
 func (c *AccountClubSupporterSubscription) MarkCancelled(cancelledAt time.Time) error {
 	c.cancelledAt = &cancelledAt
 	c.status = Cancelled
+	return nil
+}
+
+func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) error {
+	c.cancelledAt = &expiredAt
+	c.status = Expired
 	return nil
 }
 

@@ -35,25 +35,11 @@ func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationIn
 		return err
 	}
 
-	// create reactivated record
-	if err := workflow.ExecuteActivity(ctx, a.CreateReactivatedClubSubscriptionAccountTransactionRecord,
-		activities.CreateReactivatedClubSubscriptionAccountTransactionRecordInput{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: &input.SubscriptionId,
-			NextBillingDate:      nextBillingDate,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
 	// update supporter status to display the new reactivation
-	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupportReactivated,
-		activities.MarkAccountClubSupportReactivatedInput{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: &input.SubscriptionId,
-			NextBillingDate:      nextBillingDate,
+	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionReactivated,
+		activities.MarkAccountClubSupporterSubscriptionReactivatedInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

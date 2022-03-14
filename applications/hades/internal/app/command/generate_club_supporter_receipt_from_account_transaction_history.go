@@ -22,7 +22,7 @@ func NewGenerateClubSupporterReceiptFromAccountTransactionHistory(br billing.Rep
 
 func (h GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler) Handle(ctx context.Context, cmd GenerateClubSupporterReceiptFromAccountTransactionHistory) (*billing.ClubSupporterReceipt, error) {
 
-	transactionHistory, err := h.br.GetAccountTransactionHistoryById(ctx, cmd.Principal, cmd.AccountTransactionHistoryId)
+	transactionHistory, err := h.br.GetAccountTransactionById(ctx, cmd.Principal, cmd.AccountTransactionHistoryId)
 
 	if err != nil {
 		return nil, err

@@ -21,7 +21,6 @@ type ExpiredAccountClubSupporterSubscription struct {
 	cancelledAt    time.Time
 	expiredAt      time.Time
 
-	cancellationReasonId string
 	ccbillSubscriptionId *string
 }
 
@@ -33,7 +32,6 @@ func NewExpiredAccountClubSupporterSubscriptionFromSubscription(subscription *Ac
 		cancelledAt:          *subscription.CancelledAt(),
 		expiredAt:            expiredAt,
 		ccbillSubscriptionId: subscription.CCBillSubscriptionId(),
-		cancellationReasonId: *subscription.CancellationReasonId(),
 	}, nil
 }
 
@@ -43,10 +41,6 @@ func (c *ExpiredAccountClubSupporterSubscription) AccountId() string {
 
 func (c *ExpiredAccountClubSupporterSubscription) ClubId() string {
 	return c.clubId
-}
-
-func (c *ExpiredAccountClubSupporterSubscription) CancellationReasonId() string {
-	return c.cancellationReasonId
 }
 
 func (c *ExpiredAccountClubSupporterSubscription) SupporterSince() time.Time {
@@ -69,7 +63,7 @@ func (c *ExpiredAccountClubSupporterSubscription) CCBillSubscriptionId() *string
 	return c.ccbillSubscriptionId
 }
 
-func UnmarshalExpiredAccountClubSupporterSubscriptionFromDatabase(accountId, clubId string, ccbillSubscriptionId *string, supporterSince, cancelledAt, expiredAt time.Time, cancellationReasonId string) *ExpiredAccountClubSupporterSubscription {
+func UnmarshalExpiredAccountClubSupporterSubscriptionFromDatabase(accountId, clubId string, ccbillSubscriptionId *string, supporterSince, cancelledAt, expiredAt time.Time) *ExpiredAccountClubSupporterSubscription {
 	return &ExpiredAccountClubSupporterSubscription{
 		accountId:            accountId,
 		clubId:               clubId,
@@ -77,7 +71,6 @@ func UnmarshalExpiredAccountClubSupporterSubscriptionFromDatabase(accountId, clu
 		cancelledAt:          cancelledAt,
 		expiredAt:            expiredAt,
 		ccbillSubscriptionId: ccbillSubscriptionId,
-		cancellationReasonId: cancellationReasonId,
 	}
 }
 

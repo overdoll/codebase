@@ -19,9 +19,9 @@ func NewAccountTransactionHistoryByIdHandler(br billing.Repository) AccountTrans
 	return AccountTransactionHistoryByIdHandler{br: br}
 }
 
-func (h AccountTransactionHistoryByIdHandler) Handle(ctx context.Context, cmd AccountTransactionHistoryById) (*billing.AccountTransactionHistory, error) {
+func (h AccountTransactionHistoryByIdHandler) Handle(ctx context.Context, cmd AccountTransactionHistoryById) (*billing.AccountTransaction, error) {
 
-	accountTransactionHistory, err := h.br.GetAccountTransactionHistoryById(ctx, cmd.Principal, cmd.Id)
+	accountTransactionHistory, err := h.br.GetAccountTransactionById(ctx, cmd.Principal, cmd.Id)
 
 	if err != nil {
 		return nil, err

@@ -108,7 +108,7 @@ func (r BillingCassandraS3TemporalFileRepository) waitForClubSupportReceiptWorkf
 	return r.unmarshalClubSupportReceipt(ctx, receiptFile)
 }
 
-func (r BillingCassandraS3TemporalFileRepository) GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *billing.AccountTransactionHistory) (*billing.ClubSupporterReceipt, error) {
+func (r BillingCassandraS3TemporalFileRepository) GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *billing.AccountTransaction) (*billing.ClubSupporterReceipt, error) {
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
 
@@ -169,7 +169,7 @@ func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterReceiptWith
 	return nil
 }
 
-func (r BillingCassandraS3TemporalFileRepository) CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *billing.AccountTransactionHistory) (*billing.ClubSupporterReceipt, error) {
+func (r BillingCassandraS3TemporalFileRepository) CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *billing.AccountTransaction) (*billing.ClubSupporterReceipt, error) {
 
 	if err := billing.CanCreateClubSupporterReceiptFromTransactionHistory(requester, history); err != nil {
 		return nil, err

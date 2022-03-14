@@ -12,7 +12,7 @@ type Repository interface {
 	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
-	SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransactionHistory, error)
+	SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	GetAccountSavedPaymentMethodById(ctx context.Context, requester *principal.Principal, accountId, id string) (*SavedPaymentMethod, error)
 
@@ -35,18 +35,23 @@ type Repository interface {
 	GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*SavedPaymentMethod, error)
 	UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *SavedPaymentMethod) error) (*SavedPaymentMethod, error)
 
-	GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransactionHistory, error)
-	CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *AccountTransactionHistory) error
-	GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransactionHistory, error)
+	GetAccountTransactionById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransaction, error)
+	CreateAccountTransactionOperator(ctx context.Context, accountHistory *AccountTransaction) error
+	GetAccountTransactionByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransaction, error)
+	UpdateAccountTransactionOperator(ctx context.Context, id string, updateFn func(transaction *AccountTransaction) error) (*AccountTransaction, error)
 
 	GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	CreateCCBillSubscriptionDetailsOperator(ctx context.Context, subscription *CCBillSubscriptionDetails) error
 	UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *CCBillSubscriptionDetails) error) (*CCBillSubscriptionDetails, error)
 }
 
+type IndexRepository interface {
+	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
+}
+
 type FileRepository interface {
-	GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
-	CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
+	GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *AccountTransaction) (*ClubSupporterReceipt, error)
+	CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *AccountTransaction) (*ClubSupporterReceipt, error)
 	UpdateClubSupporterReceiptWithNewFile(ctx context.Context, builder *ClubSupporterReceiptBuilder) error
 }
 

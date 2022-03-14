@@ -11,7 +11,7 @@ type GenerateClubSupporterReceiptFromAccountTransactionHistoryInput struct {
 
 func (h *Activities) GenerateClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, input GenerateClubSupporterReceiptFromAccountTransactionHistoryInput) error {
 
-	transactionHistory, err := h.billing.GetAccountTransactionHistoryByIdOperator(ctx, input.AccountTransactionHistoryId)
+	transactionHistory, err := h.billing.GetAccountTransactionByIdOperator(ctx, input.AccountTransactionHistoryId)
 
 	if err != nil {
 		return err

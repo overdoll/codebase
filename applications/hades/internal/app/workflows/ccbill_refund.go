@@ -52,18 +52,13 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	}
 
 	// create refund record
-	if err := workflow.ExecuteActivity(ctx, a.CreateRefundClubSubscriptionAccountTransactionRecord,
-		activities.CreateRefundClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            timestamp,
-			Currency:             input.Currency,
-			Amount:               amount,
-			Reason:               input.Reason,
-			CardLast4:            input.Last4,
-			CardType:             input.CardType,
-			CardExpirationDate:   input.ExpDate,
+	if err := workflow.ExecuteActivity(ctx, a.UpdateRefundClubSubscriptionAccountTransaction,
+		activities.UpdateRefundClubSubscriptionAccountTransactionInput{
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Currency:      input.Currency,
+			Amount:        amount,
+			Reason:        input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
