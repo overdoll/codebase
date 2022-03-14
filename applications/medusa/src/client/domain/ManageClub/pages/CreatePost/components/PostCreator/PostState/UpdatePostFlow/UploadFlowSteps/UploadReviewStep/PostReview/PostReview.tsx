@@ -15,7 +15,7 @@ import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 
 interface Props {
-  query: PostReviewFragment$key | null
+  query: PostReviewFragment$key
 }
 
 const PostFragment = graphql`

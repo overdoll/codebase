@@ -8,6 +8,7 @@ import { PremiumStar } from '@//:assets/icons'
 import { Icon } from '../../../../PageLayout'
 import { Trans } from '@lingui/macro'
 import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
+import Can from '../../../../../authorization/Can'
 
 interface Props {
   query: PostSupporterContentFragment$key
@@ -74,22 +75,26 @@ export default function PostSupporterContent ({
                   This content can only be seen if you are a supporter of the club
                 </Trans>
               </Heading>
-              <LinkButton
-                to={`/${clubData.slug}?support=true`}
-                leftIcon={(
-                  <Icon
-                    icon={PremiumStar}
-                    fill='orange.900'
-                    h={4}
-                    w={4}
-                  />)}
-                size='lg'
-                colorScheme='orange'
-              >
-                <Trans>
-                  Become a Supporter
-                </Trans>
-              </LinkButton>
+              <Can I='interact' a='Club' passThrough>
+                {allowed => (
+                  <LinkButton
+                    to={allowed === false ? `/${clubData.slug}` : `/${clubData.slug}?support=true`}
+                    leftIcon={(
+                      <Icon
+                        icon={PremiumStar}
+                        fill='orange.900'
+                        h={4}
+                        w={4}
+                      />)}
+                    size='lg'
+                    colorScheme='orange'
+                  >
+                    <Trans>
+                      Become a Supporter
+                    </Trans>
+                  </LinkButton>
+                )}
+              </Can>
             </Stack>
           </Box>)
         : children}

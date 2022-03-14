@@ -2351,10 +2351,7 @@ const routes: Route[] = [
               query: Query,
               variables: {
                 slug: params.slug,
-                sortBy: query.get('sort') ?? 'TOP',
-                categorySlugs: query.get('categories'),
-                seriesSlugs: query.get('series'),
-                characterSlugs: query.get('characters')
+                ...decodeRouterArguments(query)
               },
               options: {
                 fetchPolicy: 'store-or-network'

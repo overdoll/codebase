@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<347603da18bdd1cfd17b7b17d01c48cc>>
- * @relayHash c2c0e04a26f50a9e41820afc72c29f9f
+ * @generated SignedSource<<0d24bc2e10d4a607c159016c668491c8>>
+ * @relayHash 3014e09f58160e0ff747df3bee1e31f3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c2c0e04a26f50a9e41820afc72c29f9f
+// @relayRequestID 3014e09f58160e0ff747df3bee1e31f3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -137,6 +137,21 @@ v10 = {
   "value": 10
 },
 v11 = [
+  (v10/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "TOP"
+  }
+],
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v13 = [
   {
     "alias": null,
     "args": null,
@@ -145,6 +160,14 @@ v11 = [
     "name": "edges",
     "plural": true,
     "selections": [
+      (v12/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cursor",
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -153,6 +176,8 @@ v11 = [
         "name": "node",
         "plural": false,
         "selections": [
+          (v12/*: any*/),
+          (v9/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -201,34 +226,67 @@ v11 = [
               (v9/*: any*/)
             ],
             "storageKey": null
-          },
-          (v9/*: any*/)
+          }
         ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "kind": "LinkedField",
+    "name": "pageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "endCursor",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hasNextPage",
         "storageKey": null
       }
     ],
     "storageKey": null
   }
 ],
-v12 = {
+v14 = [
+  (v10/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "NEW"
+  },
+  {
+    "kind": "Literal",
+    "name": "supporterOnlyStatus",
+    "value": [
+      "FULL",
+      "PARTIAL"
+    ]
+  }
+],
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "amount",
   "storageKey": null
 },
-v13 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "currency",
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -493,45 +551,46 @@ return {
           },
           {
             "alias": "topPosts",
-            "args": [
-              (v10/*: any*/),
-              {
-                "kind": "Literal",
-                "name": "sortBy",
-                "value": "TOP"
-              }
-            ],
+            "args": (v11/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v13/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"TOP\")"
           },
           {
-            "alias": "exclusivePosts",
-            "args": [
-              (v10/*: any*/),
-              {
-                "kind": "Literal",
-                "name": "sortBy",
-                "value": "NEW"
-              },
-              {
-                "kind": "Literal",
-                "name": "supporterOnlyStatus",
-                "value": [
-                  "FULL",
-                  "PARTIAL"
-                ]
-              }
+            "alias": "topPosts",
+            "args": (v11/*: any*/),
+            "filters": [
+              "sortBy"
             ],
+            "handle": "connection",
+            "key": "ClubTopPosts_topPosts",
+            "kind": "LinkedHandle",
+            "name": "posts"
+          },
+          {
+            "alias": "exclusivePosts",
+            "args": (v14/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v13/*: any*/),
             "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
+          },
+          {
+            "alias": "exclusivePosts",
+            "args": (v14/*: any*/),
+            "filters": [
+              "sortBy",
+              "supporterOnlyStatus"
+            ],
+            "handle": "connection",
+            "key": "ClubExclusivePosts_exclusivePosts",
+            "kind": "LinkedHandle",
+            "name": "posts"
           },
           {
             "alias": null,
@@ -549,8 +608,8 @@ return {
                 "name": "localizedPrice",
                 "plural": false,
                 "selections": [
-                  (v12/*: any*/),
-                  (v13/*: any*/)
+                  (v15/*: any*/),
+                  (v16/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -562,8 +621,8 @@ return {
                 "name": "prices",
                 "plural": true,
                 "selections": [
-                  (v13/*: any*/),
-                  (v12/*: any*/)
+                  (v16/*: any*/),
+                  (v15/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -595,7 +654,7 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v14/*: any*/),
+          (v12/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -620,7 +679,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v14/*: any*/),
+                      (v12/*: any*/),
                       (v9/*: any*/),
                       {
                         "alias": null,
@@ -675,7 +734,7 @@ return {
     ]
   },
   "params": {
-    "id": "c2c0e04a26f50a9e41820afc72c29f9f",
+    "id": "3014e09f58160e0ff747df3bee1e31f3",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",

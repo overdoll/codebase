@@ -7,11 +7,12 @@ import { PostPreviewContent } from '@//:modules/content/Posts'
 import type { PostsHorizontalPreviewFragment$key } from '@//:artifacts/PostsHorizontalPreviewFragment.graphql'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { GridTile, GridWrap, LinkTile } from '@//:modules/content/ContentSelection'
+import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {
   query: PostsHorizontalPreviewFragment$key | null
   to: string
+  hasNext: boolean
 }
 
 const PostFragment = graphql`
@@ -27,7 +28,8 @@ const PostFragment = graphql`
 
 export default function PostsHorizontalPreview ({
   query,
-  to
+  to,
+  hasNext
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
@@ -45,26 +47,24 @@ export default function PostsHorizontalPreview ({
     <Box>
       <Swiper
         spaceBetween={16}
-        slidesPerView='auto'
+        centeredSlides={data?.edges != null && data?.edges.length < 3}
+        slidesPerView={data?.edges != null && data?.edges.length < 3 ? 2 : 2.5}
       >
         {data?.edges.map((item, index) =>
           <SwiperSlide
             key={index}
-            virtualIndex={index}
           >
-            <GridWrap>
-              <GridTile>
-                <LinkTile to={`/p/${item.node.reference}`}>
-                  <PostPreviewContent query={item.node} />
-                </LinkTile>
-              </GridTile>
-            </GridWrap>
+            <GridTile>
+              <LinkTile to={`/p/${item.node.reference}`}>
+                <PostPreviewContent query={item.node} />
+              </LinkTile>
+            </GridTile>
           </SwiperSlide>)}
-        <SwiperSlide>
-          <GridWrap>
+        {hasNext && (
+          <SwiperSlide>
             <GridTile>
               <LinkTile to={to}>
-                <Flex h='100%' w='100%' align='center' justify='center'>
+                <Flex bg='gray.800' h='100%' w='100%' align='center' justify='center'>
                   <Heading fontSize='lg' color='gray.00'>
                     <Trans>
                       See all
@@ -73,8 +73,7 @@ export default function PostsHorizontalPreview ({
                 </Flex>
               </LinkTile>
             </GridTile>
-          </GridWrap>
-        </SwiperSlide>
+          </SwiperSlide>)}
       </Swiper>
     </Box>
   )

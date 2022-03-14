@@ -1,26 +1,41 @@
-import { useFragment } from 'react-relay/hooks'
-import { graphql } from 'react-relay'
+import { graphql, usePaginationFragment } from 'react-relay'
 import { Box } from '@chakra-ui/react'
 import type { ClubTopPostsFragment$key } from '@//:artifacts/ClubTopPostsFragment.graphql'
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
+import { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 
 interface Props {
   query: ClubTopPostsFragment$key
 }
 
 const Fragment = graphql`
-  fragment ClubTopPostsFragment on Club {
+  fragment ClubTopPostsFragment on Club
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 10}
+    after: {type: String}
+  )
+  @refetchable(queryName: "ClubTopPostsPaginationQuery" ) {
     slug
-    topPosts: posts(first: 10, sortBy: TOP) {
+    topPosts: posts(first: $first, after: $after, sortBy: TOP)
+    @connection (key: "ClubTopPosts_topPosts") {
+      edges {
+        __typename
+      }
       ...PostsHorizontalPreviewFragment
     }
   }
 `
 
 export default function ClubTopPosts ({ query }: Props): JSX.Element {
-  const data = useFragment<ClubTopPostsFragment$key>(Fragment, query)
+  const {
+    data,
+    hasNext
+  } = usePaginationFragment<ClubPublicPageQuery, any>(
+    Fragment,
+    query
+  )
 
   const topPostsEncodedQuery = encodeQueryParams({
     sort: StringParam
@@ -31,8 +46,9 @@ export default function ClubTopPosts ({ query }: Props): JSX.Element {
   return (
     <Box>
       <PostsHorizontalPreview
-        to={`/${data.slug}/posts?${stringify(topPostsEncodedQuery)}`}
-        query={data?.topPosts}
+        hasNext={hasNext}
+        to={`/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
+        query={data.topPosts}
       />
     </Box>
   )

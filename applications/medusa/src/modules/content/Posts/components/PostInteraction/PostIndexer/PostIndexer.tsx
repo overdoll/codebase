@@ -1,4 +1,4 @@
-import { Box, HStack } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import { graphql } from 'react-relay'
 import { PostIndexerFragment$key } from '@//:artifacts/PostIndexerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
@@ -15,9 +15,6 @@ const Fragment = graphql`
   fragment PostIndexerFragment on Post {
     content {
       isSupporterOnly
-      resource {
-        type
-      }
     }
   }
 `
@@ -56,11 +53,11 @@ export default function PostIndexer ({
         const isSupporterOnly = checkSupporter(key)
 
         return (
-          <Box
+          <Flex
             w={isActive ? 2 : 1}
             h={isActive ? 2 : 1}
             bg={isSupporterOnly ? 'orange.400' : 'gray.300'}
-            borderRadius='base'
+            borderRadius='md'
             key={key}
           />
         )

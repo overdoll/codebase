@@ -126,7 +126,7 @@ export default function SupportClubButton ({
             </Text>
             <LinkButton
               colorScheme='gray'
-              size='md'
+              size='lg'
               w='100%'
               {...rest}
               to='/settings/billing/subscriptions'

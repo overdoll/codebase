@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f8b23bc0cc7e9213b764abfc1a336b31>>
- * @relayHash c71963c01cb77a760d748c62617a662a
+ * @generated SignedSource<<ce4b280921563959167f06f55d6de013>>
+ * @relayHash 52bc0e46a7390a949006c38ecd93dbc4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c71963c01cb77a760d748c62617a662a
+// @relayRequestID 52bc0e46a7390a949006c38ecd93dbc4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -418,7 +418,7 @@ return {
     ]
   },
   "params": {
-    "id": "c71963c01cb77a760d748c62617a662a",
+    "id": "52bc0e46a7390a949006c38ecd93dbc4",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

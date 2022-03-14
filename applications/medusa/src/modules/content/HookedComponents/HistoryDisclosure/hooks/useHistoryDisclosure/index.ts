@@ -12,7 +12,7 @@ interface HistoryDisclosureState {
   hasModal?: boolean
 }
 
-export default function useHistoryDisclosure (props: UseDisclosureProps): UseDisclosureReturn {
+export default function useHistoryDisclosure (props: UseDisclosureProps = {}): UseDisclosureReturn {
   const {
     isOpen,
     onOpen: onOpenAction,
