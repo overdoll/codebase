@@ -98,7 +98,7 @@ func (c *AccountTransaction) Timestamp() time.Time {
 	return c.timestamp
 }
 
-func (c *AccountTransaction) Transaction() Transaction {
+func (c *AccountTransaction) Type() Transaction {
 	return c.transaction
 }
 
@@ -128,6 +128,10 @@ func (c *AccountTransaction) NextBillingDate() *time.Time {
 
 func (c *AccountTransaction) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
+}
+
+func (c *AccountTransaction) CCBillTransactionId() *string {
+	return c.ccbillTransactionId
 }
 
 func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, currency Currency, reason string) error {

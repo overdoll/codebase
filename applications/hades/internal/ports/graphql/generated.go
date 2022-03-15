@@ -44,6 +44,7 @@ type ResolverRoot interface {
 	AccountActiveClubSupporterSubscription() AccountActiveClubSupporterSubscriptionResolver
 	AccountCancelledClubSupporterSubscription() AccountCancelledClubSupporterSubscriptionResolver
 	AccountInactiveClubSupporterSubscription() AccountInactiveClubSupporterSubscriptionResolver
+	AccountTransaction() AccountTransactionResolver
 	CCBillTransactionDetails() CCBillTransactionDetailsResolver
 	Club() ClubResolver
 	Entity() EntityResolver
@@ -61,7 +62,7 @@ type ComplexityRoot struct {
 		ExpiredClubSupporterSubscriptions func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID                                func(childComplexity int) int
 		SavedPaymentMethods               func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Transactions                      func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, startDate time.Time, endDate *time.Time) int
+		Transactions                      func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
 		TransactionsChargebackCount       func(childComplexity int) int
 		TransactionsPaymentCount          func(childComplexity int) int
 		TransactionsRefundCount           func(childComplexity int) int
@@ -81,7 +82,7 @@ type ComplexityRoot struct {
 		PaymentMethod      func(childComplexity int) int
 		Reference          func(childComplexity int) int
 		SupporterSince     func(childComplexity int) int
-		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) int
+		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
 		UpdatedAt          func(childComplexity int) int
 	}
 
@@ -99,15 +100,16 @@ type ComplexityRoot struct {
 		PaymentMethod      func(childComplexity int) int
 		Reference          func(childComplexity int) int
 		SupporterSince     func(childComplexity int) int
-		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) int
+		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
 		UpdatedAt          func(childComplexity int) int
 	}
 
 	AccountClubSupporterSubscriptionBillingError struct {
-		CcbillErrorCode func(childComplexity int) int
-		CcbillErrorText func(childComplexity int) int
-		FailedAt        func(childComplexity int) int
-		NextRetryDate   func(childComplexity int) int
+		CcbillDeclineError func(childComplexity int) int
+		CcbillErrorCode    func(childComplexity int) int
+		CcbillErrorText    func(childComplexity int) int
+		FailedAt           func(childComplexity int) int
+		NextRetryDate      func(childComplexity int) int
 	}
 
 	AccountClubSupporterSubscriptionConnection struct {
@@ -132,7 +134,7 @@ type ComplexityRoot struct {
 		ID                 func(childComplexity int) int
 		Reference          func(childComplexity int) int
 		SupporterSince     func(childComplexity int) int
-		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) int
+		Transactions       func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
 		UpdatedAt          func(childComplexity int) int
 	}
 
@@ -429,20 +431,23 @@ type AccountResolver interface {
 	TransactionsPaymentCount(ctx context.Context, obj *types.Account) (int, error)
 	TransactionsRefundCount(ctx context.Context, obj *types.Account) (int, error)
 	TransactionsChargebackCount(ctx context.Context, obj *types.Account) (int, error)
-	Transactions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, startDate time.Time, endDate *time.Time) (*types.AccountTransactionConnection, error)
+	Transactions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
 }
 type AccountActiveClubSupporterSubscriptionResolver interface {
-	Transactions(ctx context.Context, obj *types.AccountActiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) (*types.AccountTransactionConnection, error)
+	Transactions(ctx context.Context, obj *types.AccountActiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
 }
 type AccountCancelledClubSupporterSubscriptionResolver interface {
-	Transactions(ctx context.Context, obj *types.AccountCancelledClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) (*types.AccountTransactionConnection, error)
+	Transactions(ctx context.Context, obj *types.AccountCancelledClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
 
 	CancellationReason(ctx context.Context, obj *types.AccountCancelledClubSupporterSubscription) (*types.CancellationReason, error)
 }
 type AccountInactiveClubSupporterSubscriptionResolver interface {
-	Transactions(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType) (*types.AccountTransactionConnection, error)
+	Transactions(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
 
 	CancellationReason(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription) (*types.CancellationReason, error)
+}
+type AccountTransactionResolver interface {
+	ClubSupporterSubscription(ctx context.Context, obj *types.AccountTransaction) (types.AccountClubSupporterSubscription, error)
 }
 type CCBillTransactionDetailsResolver interface {
 	LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (types.AccountClubSupporterSubscription, error)
@@ -546,7 +551,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["startDate"].(time.Time), args["endDate"].(*time.Time)), true
+		return e.complexity.Account.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
 
 	case "Account.transactionsChargebackCount":
 		if e.complexity.Account.TransactionsChargebackCount == nil {
@@ -670,7 +675,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.AccountActiveClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType)), true
+		return e.complexity.AccountActiveClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
 
 	case "AccountActiveClubSupporterSubscription.updatedAt":
 		if e.complexity.AccountActiveClubSupporterSubscription.UpdatedAt == nil {
@@ -780,7 +785,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.AccountCancelledClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType)), true
+		return e.complexity.AccountCancelledClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
 
 	case "AccountCancelledClubSupporterSubscription.updatedAt":
 		if e.complexity.AccountCancelledClubSupporterSubscription.UpdatedAt == nil {
@@ -788,6 +793,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountCancelledClubSupporterSubscription.UpdatedAt(childComplexity), true
+
+	case "AccountClubSupporterSubscriptionBillingError.ccbillDeclineError":
+		if e.complexity.AccountClubSupporterSubscriptionBillingError.CcbillDeclineError == nil {
+			break
+		}
+
+		return e.complexity.AccountClubSupporterSubscriptionBillingError.CcbillDeclineError(childComplexity), true
 
 	case "AccountClubSupporterSubscriptionBillingError.ccbillErrorCode":
 		if e.complexity.AccountClubSupporterSubscriptionBillingError.CcbillErrorCode == nil {
@@ -932,7 +944,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType)), true
+		return e.complexity.AccountInactiveClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
 
 	case "AccountInactiveClubSupporterSubscription.updatedAt":
 		if e.complexity.AccountInactiveClubSupporterSubscription.UpdatedAt == nil {
@@ -2265,7 +2277,7 @@ type AccountTransaction {
   ccbillTransaction: CCBillTransaction
 
   """The subscription linked to this transaction, if it's a club supporter subscription."""
-  clubSupporterSubscription: AccountClubSupporterSubscription
+  clubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
 }
 
 """
@@ -2429,6 +2441,12 @@ interface IAccountClubSupporterSubscription {
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -2459,6 +2477,9 @@ type AccountClubSupporterSubscriptionBillingError {
 
   """The error code from CCBill."""
   ccbillErrorCode: String
+
+  """The decline error, parsed in a friendlier way."""
+  ccbillDeclineError: CCBillDeclineError
 
   """The next date the billing will be retried."""
   nextRetryDate: Time!
@@ -2495,6 +2516,12 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -2556,6 +2583,12 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -2620,6 +2653,12 @@ type AccountInactiveClubSupporterSubscription implements IAccountClubSupporterSu
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -2903,8 +2942,8 @@ input ExtendAccountClubSupporterSubscriptionInput {
 
 """Generate a refund amount."""
 input GenerateRefundAmountForAccountTransactionInput {
-  """The id of the subscription."""
-  clubSupporterSubscriptionId: ID!
+  """The id of the transaction."""
+  accountTransactionId: ID!
 }
 
 """Refund an account transaction."""
@@ -3064,10 +3103,10 @@ extend type Account {
     type: AccountTransactionType
 
     """The start date for the transaction history."""
-    startDate: Time!
+    from: Time
 
     """The end date, optional (will search until end of time)."""
-    endDate: Time
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 }
 
@@ -3427,6 +3466,24 @@ func (ec *executionContext) field_AccountActiveClubSupporterSubscription_transac
 		}
 	}
 	args["type"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["from"] = arg5
+	var arg6 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg6, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg6
 	return args, nil
 }
 
@@ -3478,6 +3535,24 @@ func (ec *executionContext) field_AccountCancelledClubSupporterSubscription_tran
 		}
 	}
 	args["type"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["from"] = arg5
+	var arg6 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg6, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg6
 	return args, nil
 }
 
@@ -3529,6 +3604,24 @@ func (ec *executionContext) field_AccountInactiveClubSupporterSubscription_trans
 		}
 	}
 	args["type"] = arg4
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["from"] = arg5
+	var arg6 *time.Time
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
+		arg6, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["to"] = arg6
 	return args, nil
 }
 
@@ -3715,24 +3808,24 @@ func (ec *executionContext) field_Account_transactions_args(ctx context.Context,
 		}
 	}
 	args["type"] = arg4
-	var arg5 time.Time
-	if tmp, ok := rawArgs["startDate"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startDate"))
-		arg5, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
+	var arg5 *time.Time
+	if tmp, ok := rawArgs["from"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("from"))
+		arg5, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["startDate"] = arg5
+	args["from"] = arg5
 	var arg6 *time.Time
-	if tmp, ok := rawArgs["endDate"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("endDate"))
+	if tmp, ok := rawArgs["to"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("to"))
 		arg6, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["endDate"] = arg6
+	args["to"] = arg6
 	return args, nil
 }
 
@@ -4461,7 +4554,7 @@ func (ec *executionContext) _Account_transactions(ctx context.Context, field gra
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["startDate"].(time.Time), args["endDate"].(*time.Time))
+		return ec.resolvers.Account().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4678,7 +4771,7 @@ func (ec *executionContext) _AccountActiveClubSupporterSubscription_transactions
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountActiveClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType))
+		return ec.resolvers.AccountActiveClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5169,7 +5262,7 @@ func (ec *executionContext) _AccountCancelledClubSupporterSubscription_transacti
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountCancelledClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType))
+		return ec.resolvers.AccountCancelledClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5626,6 +5719,38 @@ func (ec *executionContext) _AccountClubSupporterSubscriptionBillingError_ccbill
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccountClubSupporterSubscriptionBillingError_ccbillDeclineError(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscriptionBillingError) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountClubSupporterSubscriptionBillingError",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CcbillDeclineError, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CCBillDeclineError)
+	fc.Result = res
+	return ec.marshalOCCBillDeclineError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillDeclineError(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccountClubSupporterSubscriptionBillingError_nextRetryDate(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscriptionBillingError) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5966,7 +6091,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactio
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountInactiveClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType))
+		return ec.resolvers.AccountInactiveClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6956,14 +7081,14 @@ func (ec *executionContext) _AccountTransaction_clubSupporterSubscription(ctx co
 		Object:     "AccountTransaction",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ClubSupporterSubscription, nil
+		return ec.resolvers.AccountTransaction().ClubSupporterSubscription(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13045,11 +13170,11 @@ func (ec *executionContext) unmarshalInputGenerateRefundAmountForAccountTransact
 
 	for k, v := range asMap {
 		switch k {
-		case "clubSupporterSubscriptionId":
+		case "accountTransactionId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubSupporterSubscriptionId"))
-			it.ClubSupporterSubscriptionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountTransactionId"))
+			it.AccountTransactionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13846,6 +13971,13 @@ func (ec *executionContext) _AccountClubSupporterSubscriptionBillingError(ctx co
 
 			out.Values[i] = innerFunc(ctx)
 
+		case "ccbillDeclineError":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountClubSupporterSubscriptionBillingError_ccbillDeclineError(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "nextRetryDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AccountClubSupporterSubscriptionBillingError_nextRetryDate(ctx, field, obj)
@@ -14279,7 +14411,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "reference":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14289,7 +14421,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "type":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14299,7 +14431,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "events":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14309,7 +14441,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "amount":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14319,7 +14451,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "currency":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14329,7 +14461,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "billedAtDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14339,7 +14471,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "nextBillingDate":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14356,7 +14488,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "timestamp":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14366,7 +14498,7 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "ccbillTransaction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -14376,12 +14508,22 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 		case "clubSupporterSubscription":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountTransaction_clubSupporterSubscription(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccountTransaction_clubSupporterSubscription(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

@@ -12,7 +12,6 @@ type Repository interface {
 	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
-	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	GetAccountSavedPaymentMethodById(ctx context.Context, requester *principal.Principal, accountId, id string) (*SavedPaymentMethod, error)
 
@@ -21,6 +20,7 @@ type Repository interface {
 	DeleteExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) error
 	CreateExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, expired *ExpiredAccountClubSupporterSubscription) error
 
+	GetAccountClubSupporterSubscriptionsByAccountIdOperator(ctx context.Context, id string) ([]*AccountClubSupporterSubscription, error)
 	GetAccountClubSupporterSubscriptionByIdOperator(ctx context.Context, id string) (*AccountClubSupporterSubscription, error)
 	DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, subscription *AccountClubSupporterSubscription) error
 	CreateAccountClubSupporterSubscriptionOperator(ctx context.Context, accountClubSupp *AccountClubSupporterSubscription) error
@@ -46,14 +46,15 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, state *Transaction) (*int64, error)
-
+	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
+	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
 }
 
 type FileRepository interface {
 	GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction, eventId string) (*ClubSupporterReceipt, error)
 	GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction) (*ClubSupporterReceipt, error)
+	UpdateClubSupporterRefundReceiptWithNewFile(ctx context.Context, builder *ClubSupporterRefundReceiptBuilder) error
 	UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *ClubSupporterPaymentReceiptBuilder) error
 }
 

@@ -97,7 +97,6 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
     primary key ( account_id, id )
 );
 
-
 CREATE TABLE IF NOT EXISTS account_transactions
 (
     account_id                     text,

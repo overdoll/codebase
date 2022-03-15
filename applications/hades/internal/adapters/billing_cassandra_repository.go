@@ -1038,7 +1038,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 	} else {
 
 		// new/invoice transactions - grab billing details from ccbill (these details are not added automatically)
-		if accountHistory.CCBillSubscriptionId() != nil && (accountHistory.Transaction() == billing.Initial || accountHistory.Transaction() == billing.Invoice) {
+		if accountHistory.CCBillSubscriptionId() != nil && (accountHistory.Type() == billing.Initial || accountHistory.Type() == billing.Invoice) {
 
 			ccbill, err := r.GetCCBillSubscriptionDetailsByIdOperator(ctx, *accountHistory.CCBillSubscriptionId())
 
@@ -1067,7 +1067,7 @@ func (r BillingCassandraRepository) CreateAccountTransactionHistoryOperator(ctx 
 		AccountId:               accountHistory.AccountId(),
 		Bucket:                  bucket.MakeMonthlyBucketFromTimestamp(time.Now()),
 		Id:                      accountHistory.Id(),
-		TransactionType:         accountHistory.Transaction().String(),
+		TransactionType:         accountHistory.Type().String(),
 		SupportedClubId:         accountHistory.SupportedClubId(),
 		EncryptedPaymentMethod:  encrypted,
 		Amount:                  accountHistory.Amount(),

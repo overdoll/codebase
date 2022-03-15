@@ -11,7 +11,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r QueryResolver) AccountClubSupporterSubscription(ctx context.Context, reference string) (*types.AccountClubSupporterSubscription, error) {
+func (r QueryResolver) AccountClubSupporterSubscription(ctx context.Context, reference string) (types.AccountClubSupporterSubscription, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -34,13 +34,13 @@ func (r QueryResolver) AccountClubSupporterSubscription(ctx context.Context, ref
 	return types.MarshalAccountClubSupporterSubscriptionToGraphQL(ctx, result), nil
 }
 
-func (r QueryResolver) AccountTransactionHistory(ctx context.Context, reference string) (types.AccountTransactionHistory, error) {
+func (r QueryResolver) AccountTransaction(ctx context.Context, reference string) (*types.AccountTransaction, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	result, err := r.App.Queries.AccountTransactionHistoryById.Handle(ctx, query.AccountTransactionById{
+	result, err := r.App.Queries.AccountTransactionById.Handle(ctx, query.AccountTransactionById{
 		Principal: principal.FromContext(ctx),
 		Id:        reference,
 	})
@@ -54,7 +54,7 @@ func (r QueryResolver) AccountTransactionHistory(ctx context.Context, reference 
 		return nil, err
 	}
 
-	return types.MarshalAccountTransactionHistoryToGraphQL(ctx, result), nil
+	return types.MarshalAccountTransactionToGraphQL(ctx, result), nil
 }
 
 func (r QueryResolver) CcbillSubscriptionDetails(ctx context.Context, ccbillSubscriptionID string) (*types.CCBillSubscriptionDetails, error) {

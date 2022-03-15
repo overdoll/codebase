@@ -13,17 +13,17 @@ type SearchAccountTransactions struct {
 	Cursor                             *paging.Cursor
 	AccountId                          *string
 	AccountClubSupporterSubscriptionId *string
-	From                               time.Time
+	From                               *time.Time
 	To                                 *time.Time
 	Type                               *string
 }
 
 type SearchAccountTransactionsHandler struct {
-	br billing.Repository
+	bi billing.IndexRepository
 }
 
-func NewSearchAccountTransactionsHandler(br billing.Repository) SearchAccountTransactionsHandler {
-	return SearchAccountTransactionsHandler{br: br}
+func NewSearchAccountTransactionsHandler(bi billing.IndexRepository) SearchAccountTransactionsHandler {
+	return SearchAccountTransactionsHandler{bi: bi}
 }
 
 func (h SearchAccountTransactionsHandler) Handle(ctx context.Context, query SearchAccountTransactions) ([]*billing.AccountTransaction, error) {
@@ -34,7 +34,7 @@ func (h SearchAccountTransactionsHandler) Handle(ctx context.Context, query Sear
 		return nil, err
 	}
 
-	accountTransactions, err := h.br.SearchAccountTransactions(ctx, query.Principal, query.Cursor, filters)
+	accountTransactions, err := h.bi.SearchAccountTransactions(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

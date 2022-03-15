@@ -92,6 +92,10 @@ func (c *AccountClubSupporterSubscription) UpdatedAt() time.Time {
 	return c.updatedAt
 }
 
+func (c *AccountClubSupporterSubscription) IsActive() bool {
+	return c.status == Active
+}
+
 func (c *AccountClubSupporterSubscription) Status() SupportStatus {
 	return c.status
 }
@@ -126,6 +130,26 @@ func (c *AccountClubSupporterSubscription) PaymentMethod() *PaymentMethod {
 
 func (c *AccountClubSupporterSubscription) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
+}
+
+func (c *AccountClubSupporterSubscription) FailedAt() *time.Time {
+	return c.failedAt
+}
+
+func (c *AccountClubSupporterSubscription) ExpiredAt() *time.Time {
+	return c.expiredAt
+}
+
+func (c *AccountClubSupporterSubscription) CCBillErrorText() *string {
+	return c.ccbillErrorText
+}
+
+func (c *AccountClubSupporterSubscription) CCBillErrorCode() *string {
+	return c.ccbillErrorCode
+}
+
+func (c *AccountClubSupporterSubscription) BillingFailureNextRetryDate() *time.Time {
+	return c.billingFailureNextRetryDate
 }
 
 func (c *AccountClubSupporterSubscription) GetSupport() *CCBillSupport {

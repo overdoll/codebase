@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
-	"overdoll/libraries/uuid"
 )
 
 type EvaServiceMock struct {
@@ -69,7 +68,7 @@ func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Conte
 	var newContent []*post.NewContent
 
 	for _, n := range resourceIds {
-		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, uuid.New().String()))
+		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, "hidden_id_"+n))
 	}
 
 	return newContent, nil

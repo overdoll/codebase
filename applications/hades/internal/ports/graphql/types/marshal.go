@@ -169,12 +169,10 @@ func MarshalExpiredAccountClubSupporterSubscriptionToGraphQL(ctx context.Context
 		SupporterSince: result.SupporterSince(),
 		ExpiredAt:      result.CancelledAt(),
 		CancelledAt:    result.ExpiredAt(),
-		CancellationReason: &CancellationReason{
-			ID: relay.NewID(CancellationReason{}, result.CancellationReasonId()),
-		}}
+	}
 }
 
-func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, result *billing.AccountClubSupporterSubscription) *AccountClubSupporterSubscription {
+func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, result *billing.AccountClubSupporterSubscription) AccountClubSupporterSubscription {
 
 	var cancellationReason *CancellationReason
 
@@ -182,16 +180,6 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		cancellationReason = &CancellationReason{
 			ID: relay.NewID(CancellationReason{}, *result.CancellationReasonId()),
 		}
-	}
-
-	var status AccountClubSupporterSubscriptionStatus
-
-	if result.Status() == billing.Active {
-		status = AccountClubSupporterSubscriptionStatusActive
-	}
-
-	if result.Status() == billing.Cancelled {
-		status = AccountClubSupporterSubscriptionStatusCancelled
 	}
 
 	var ccbillSub *CCBillSubscription
@@ -206,26 +194,88 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		}
 	}
 
-	return &AccountClubSupporterSubscription{
-		ID: relay.NewID(AccountClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
-		Account: &Account{
-			ID: relay.NewID(Account{}, result.AccountId()),
-		},
-		Club: &Club{
-			ID: relay.NewID(Club{}, result.ClubId()),
-		},
-		Status:             status,
-		SupporterSince:     result.SupporterSince(),
-		LastBillingDate:    result.LastBillingDate(),
-		NextBillingDate:    result.NextBillingDate(),
-		CancelledAt:        result.CancelledAt(),
-		BillingAmount:      int(result.BillingAmount()),
-		BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
-		PaymentMethod:      MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-		CcbillSubscription: ccbillSub,
-		UpdatedAt:          result.UpdatedAt(),
-		CancellationReason: cancellationReason,
+	var billingError *AccountClubSupporterSubscriptionBillingError
+
+	if result.FailedAt() != nil {
+
+		declineError := MarshalCCBillDeclineCodeToGraphQL(ctx, *result.CCBillErrorCode())
+
+		billingError = &AccountClubSupporterSubscriptionBillingError{
+			FailedAt:           *result.FailedAt(),
+			CcbillErrorText:    result.CCBillErrorText(),
+			CcbillErrorCode:    result.CCBillErrorCode(),
+			CcbillDeclineError: &declineError,
+			NextRetryDate:      *result.BillingFailureNextRetryDate(),
+		}
 	}
+
+	if result.Status() == billing.Active {
+		return &AccountActiveClubSupporterSubscription{
+			ID:        relay.NewID(AccountActiveClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
+			Reference: result.Id(),
+			Account: &Account{
+				ID: relay.NewID(Account{}, result.AccountId()),
+			},
+			Club: &Club{
+				ID: relay.NewID(Club{}, result.ClubId()),
+			},
+			BillingAmount:      int(result.BillingAmount()),
+			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			SupporterSince:     result.SupporterSince(),
+			LastBillingDate:    result.LastBillingDate(),
+			NextBillingDate:    result.NextBillingDate(),
+			PaymentMethod:      MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
+			CcbillSubscription: ccbillSub,
+			UpdatedAt:          result.UpdatedAt(),
+			BillingError:       billingError,
+		}
+	}
+
+	if result.Status() == billing.Cancelled {
+		return &AccountCancelledClubSupporterSubscription{
+			ID:        relay.NewID(AccountActiveClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
+			Reference: result.Id(),
+			Account: &Account{
+				ID: relay.NewID(Account{}, result.AccountId()),
+			},
+			Club: &Club{
+				ID: relay.NewID(Club{}, result.ClubId()),
+			},
+			BillingAmount:      int(result.BillingAmount()),
+			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			SupporterSince:     result.SupporterSince(),
+			CancelledAt:        *result.CancelledAt(),
+			EndDate:            result.NextBillingDate(),
+			PaymentMethod:      MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
+			CcbillSubscription: ccbillSub,
+			UpdatedAt:          result.UpdatedAt(),
+			BillingError:       billingError,
+			CancellationReason: cancellationReason,
+		}
+	}
+
+	if result.Status() == billing.Inactive {
+		return &AccountInactiveClubSupporterSubscription{
+			ID:        relay.NewID(AccountActiveClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
+			Reference: result.Id(),
+			Account: &Account{
+				ID: relay.NewID(Account{}, result.AccountId()),
+			},
+			Club: &Club{
+				ID: relay.NewID(Club{}, result.ClubId()),
+			},
+			BillingAmount:      int(result.BillingAmount()),
+			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			SupporterSince:     result.SupporterSince(),
+			CcbillSubscription: ccbillSub,
+			UpdatedAt:          result.UpdatedAt(),
+			ExpiredAt:          *result.ExpiredAt(),
+			BillingError:       billingError,
+			CancellationReason: cancellationReason,
+		}
+	}
+
+	return nil
 }
 
 func MarshalExpiredAccountClubSupporterSubscriptionToGraphQLConnection(ctx context.Context, results []*billing.ExpiredAccountClubSupporterSubscription, cursor *paging.Cursor) *ExpiredAccountClubSupporterSubscriptionConnection {
@@ -429,167 +479,63 @@ func MarshalAccountSavedPaymentMethodsToGraphQLConnection(ctx context.Context, r
 	return conn
 }
 
-func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *billing.AccountTransaction) AccountTransactionHistory {
-
-	var accountTransactionHistory AccountTransactionHistory
+func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.AccountTransaction) *AccountTransaction {
 
 	var tp AccountTransactionType
 
-	var club *Club
+	var clubSubscription *AccountActiveClubSupporterSubscription
 
-	if result.SupportedClubId() != nil {
-		tp = AccountTransactionTypeClubSupporterSubscription
-		club = &Club{
-			ID: relay.NewID(Club{}, *result.SupportedClubId()),
+	if result.Type() == billing.Void {
+		tp = AccountTransactionTypeVoid
+	}
+
+	if result.Type() == billing.Refund {
+		tp = AccountTransactionTypeRefund
+	}
+
+	if result.Type() == billing.Payment {
+		tp = AccountTransactionTypePayment
+	}
+
+	if result.Type() == billing.Chargeback {
+		tp = AccountTransactionTypeChargeback
+	}
+
+	if result.ClubSupporterSubscriptionId() != nil {
+		clubSubscription = &AccountActiveClubSupporterSubscription{
+			ID: relay.NewID(AccountActiveClubSupporterSubscription{}, *result.ClubSupporterSubscriptionId()),
 		}
 	}
 
-	account := &Account{
-		ID: relay.NewID(Account{}, result.AccountId()),
-	}
-
-	id := relay.NewID(AccountNewTransactionHistory{}, result.Id())
-
-	var subscriptionDetails *CCBillSubscriptionTransaction
+	var subscriptionDetails *CCBillTransaction
 
 	if result.CCBillSubscriptionId() != nil {
-		subscriptionDetails = &CCBillSubscriptionTransaction{
+		subscriptionDetails = &CCBillTransaction{
 			CcbillSubscriptionID: *result.CCBillSubscriptionId(),
+			CcbillTransactionID:  result.CCBillTransactionId(),
 		}
 	}
 
-	if result.Transaction() == billing.Initial {
-		accountTransactionHistory = AccountNewTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			Amount:                        int(*result.Amount()),
-			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
-			BilledAtDate:                  *result.BilledAtDate(),
-			NextBillingDate:               *result.NextBillingDate(),
-			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-			SupportedClub:                 club,
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
+	return &AccountTransaction{
+		ID:                        relay.NewID(AccountTransaction{}, result.Id()),
+		Reference:                 result.Id(),
+		Type:                      tp,
+		Events:                    nil,
+		Amount:                    int(result.Amount()),
+		Currency:                  MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		BilledAtDate:              result.BilledAtDate(),
+		NextBillingDate:           result.NextBillingDate(),
+		PaymentMethod:             MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
+		Timestamp:                 result.Timestamp(),
+		CcbillTransaction:         subscriptionDetails,
+		ClubSupporterSubscription: clubSubscription,
 	}
-
-	if result.Transaction() == billing.Invoice {
-		accountTransactionHistory = AccountInvoiceTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			Amount:                        int(*result.Amount()),
-			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
-			BilledAtDate:                  *result.BilledAtDate(),
-			NextBillingDate:               *result.NextBillingDate(),
-			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-			SupportedClub:                 club,
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Void {
-		accountTransactionHistory = AccountVoidTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			Amount:                        int(*result.Amount()),
-			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
-			SupportedClub:                 club,
-			CcbillReason:                  result.CCBillReason(),
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Chargeback {
-		accountTransactionHistory = AccountChargebackTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			Amount:                        int(*result.Amount()),
-			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
-			SupportedClub:                 club,
-			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			CcbillReason:                  result.CCBillReason(),
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Cancel {
-		accountTransactionHistory = AccountCancelledTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			SupportedClub:                 club,
-			CcbillReason:                  result.CCBillReason(),
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Inactive {
-		accountTransactionHistory = AccountExpiredTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			SupportedClub:                 club,
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Refund {
-		accountTransactionHistory = AccountRefundTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			Amount:                        int(*result.Amount()),
-			Currency:                      MarshalCurrencyToGraphQL(ctx, *result.Currency()),
-			SupportedClub:                 club,
-			PaymentMethod:                 MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-			CcbillReason:                  result.CCBillReason(),
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Failed {
-		accountTransactionHistory = AccountFailedTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			NextRetryDate:                 *result.BillingFailureNextRetryDate(),
-			SupportedClub:                 club,
-			CcbillErrorCode:               result.CCBillErrorCode(),
-			CcbillErrorText:               result.CCBillErrorText(),
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	if result.Transaction() == billing.Reactivate {
-		accountTransactionHistory = AccountReactivatedTransactionHistory{
-			ID:                            id,
-			Transaction:                   tp,
-			Account:                       account,
-			NextBillingDate:               *result.NextBillingDate(),
-			SupportedClub:                 club,
-			CcbillSubscriptionTransaction: subscriptionDetails,
-			Timestamp:                     result.Timestamp(),
-		}
-	}
-
-	return accountTransactionHistory
 }
 
-func MarshalAccountTransactionHistoryToGraphQLConnection(ctx context.Context, results []*billing.AccountTransaction, cursor *paging.Cursor) *AccountTransactionHistoryConnection {
-	var transactions []*AccountTransactionHistoryEdge
+func MarshalAccountTransactionToGraphQLConnection(ctx context.Context, results []*billing.AccountTransaction, cursor *paging.Cursor) *AccountTransactionConnection {
+	var transactions []*AccountTransactionEdge
 
-	conn := &AccountTransactionHistoryConnection{
+	conn := &AccountTransactionConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
@@ -626,8 +572,8 @@ func MarshalAccountTransactionHistoryToGraphQLConnection(ctx context.Context, re
 
 	for i := range results {
 		node := nodeAt(i)
-		transactions = append(transactions, &AccountTransactionHistoryEdge{
-			Node:   MarshalAccountTransactionHistoryToGraphQL(ctx, node),
+		transactions = append(transactions, &AccountTransactionEdge{
+			Node:   MarshalAccountTransactionToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -664,4 +610,29 @@ func MarshalCurrencyToGraphQL(ctx context.Context, result billing.Currency) Curr
 	}
 
 	return currency
+}
+
+func MarshalCCBillDeclineCodeToGraphQL(ctx context.Context, code string) CCBillDeclineError {
+	var declineError CCBillDeclineError
+
+	switch code {
+	case "11":
+		declineError = CCBillDeclineErrorTransactionDeclined
+	case "24":
+		declineError = CCBillDeclineErrorTransactionDeniedOrRefusedByBank
+	case "29":
+		declineError = CCBillDeclineErrorCardExpired
+	case "31":
+		declineError = CCBillDeclineErrorInsufficientFunds
+	case "38":
+		declineError = CCBillDeclineErrorTransactionDeniedOrRefusedByBank
+	case "39":
+		declineError = CCBillDeclineErrorRateLimitError
+	case "45":
+		declineError = CCBillDeclineErrorTransactionApprovalRequired
+	default:
+		declineError = CCBillDeclineErrorGeneralSystemError
+	}
+
+	return declineError
 }

@@ -43,26 +43,7 @@ func (r QueryResolver) CcbillTransactionDetails(ctx context.Context, token strin
 
 	if result.DeclineCode() != nil {
 
-		var declineError types.CCBillDeclineError
-
-		switch *result.DeclineCode() {
-		case "11":
-			declineError = types.CCBillDeclineErrorTransactionDeclined
-		case "24":
-			declineError = types.CCBillDeclineErrorTransactionDeniedOrRefusedByBank
-		case "29":
-			declineError = types.CCBillDeclineErrorCardExpired
-		case "31":
-			declineError = types.CCBillDeclineErrorInsufficientFunds
-		case "38":
-			declineError = types.CCBillDeclineErrorTransactionDeniedOrRefusedByBank
-		case "39":
-			declineError = types.CCBillDeclineErrorRateLimitError
-		case "45":
-			declineError = types.CCBillDeclineErrorTransactionApprovalRequired
-		default:
-			declineError = types.CCBillDeclineErrorGeneralSystemError
-		}
+		declineError := types.MarshalCCBillDeclineCodeToGraphQL(ctx, *result.DeclineCode())
 
 		transaction.DeclineError = &declineError
 	}

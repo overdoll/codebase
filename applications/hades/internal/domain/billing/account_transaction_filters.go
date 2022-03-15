@@ -7,12 +7,12 @@ import (
 type AccountTransactionHistoryFilters struct {
 	accountId                          *string
 	accountClubSupporterSubscriptionId *string
-	from                               time.Time
+	from                               *time.Time
 	to                                 *time.Time
 	transaction                        *Transaction
 }
 
-func NewAccountTransactionHistoryFilters(accountId, accountClubSupporterSubscriptionId *string, from time.Time, to *time.Time, transaction *string) (*AccountTransactionHistoryFilters, error) {
+func NewAccountTransactionHistoryFilters(accountId, accountClubSupporterSubscriptionId *string, from *time.Time, to *time.Time, transaction *string) (*AccountTransactionHistoryFilters, error) {
 
 	var trans *Transaction
 
@@ -41,7 +41,7 @@ func (e *AccountTransactionHistoryFilters) AccountClubSupporterSubscriptionId() 
 	return e.accountClubSupporterSubscriptionId
 }
 
-func (e *AccountTransactionHistoryFilters) From() time.Time {
+func (e *AccountTransactionHistoryFilters) From() *time.Time {
 	return e.from
 }
 

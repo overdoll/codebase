@@ -26,6 +26,7 @@ func PaymentFlow(app *app.Application) gin.HandlerFunc {
 
 		// redirect to ccbill payment flow
 		c.Redirect(http.StatusFound, link)
+
 		return
 	}
 }

@@ -22,32 +22,32 @@ func NewRefundAccountTransactionHandler(br billing.Repository, cr ccbill.Reposit
 	return RefundAccountTransactionHandler{br: br, cr: cr}
 }
 
-func (h RefundAccountTransactionHandler) Handle(ctx context.Context, cmd RefundAccountTransaction) error {
+func (h RefundAccountTransactionHandler) Handle(ctx context.Context, cmd RefundAccountTransaction) (*billing.AccountTransaction, error) {
 
 	accountTransaction, err := h.br.GetAccountTransactionById(ctx, cmd.Principal, cmd.TransactionId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := accountTransaction.RequestRefund(cmd.Principal, cmd.Amount); err != nil {
-		return err
+		return nil, err
 	}
 
 	refund, err := ccbill.NewRefundWithCustomAmount(
 		*accountTransaction.CCBillSubscriptionId(),
 		cmd.Amount,
-		*accountTransaction.Amount(),
+		accountTransaction.Amount(),
 		accountTransaction.Currency().String(),
 	)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := h.cr.RefundSubscription(ctx, refund); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return accountTransaction, nil
 }

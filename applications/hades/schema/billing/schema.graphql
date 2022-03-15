@@ -84,7 +84,7 @@ type AccountTransaction {
   ccbillTransaction: CCBillTransaction
 
   """The subscription linked to this transaction, if it's a club supporter subscription."""
-  clubSupporterSubscription: AccountClubSupporterSubscription
+  clubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
 }
 
 """
@@ -248,6 +248,12 @@ interface IAccountClubSupporterSubscription {
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -278,6 +284,9 @@ type AccountClubSupporterSubscriptionBillingError {
 
   """The error code from CCBill."""
   ccbillErrorCode: String
+
+  """The decline error, parsed in a friendlier way."""
+  ccbillDeclineError: CCBillDeclineError
 
   """The next date the billing will be retried."""
   nextRetryDate: Time!
@@ -314,6 +323,12 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -375,6 +390,12 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -439,6 +460,12 @@ type AccountInactiveClubSupporterSubscription implements IAccountClubSupporterSu
 
     """Filter by the type."""
     type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
@@ -722,8 +749,8 @@ input ExtendAccountClubSupporterSubscriptionInput {
 
 """Generate a refund amount."""
 input GenerateRefundAmountForAccountTransactionInput {
-  """The id of the subscription."""
-  clubSupporterSubscriptionId: ID!
+  """The id of the transaction."""
+  accountTransactionId: ID!
 }
 
 """Refund an account transaction."""
@@ -883,10 +910,10 @@ extend type Account {
     type: AccountTransactionType
 
     """The start date for the transaction history."""
-    startDate: Time!
+    from: Time
 
     """The end date, optional (will search until end of time)."""
-    endDate: Time
+    to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
 }
 

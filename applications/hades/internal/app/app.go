@@ -18,12 +18,11 @@ type Commands struct {
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
 	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
-	GenerateProratedRefundAmountForAccountClubSubscription           command.GenerateProratedRefundAmountForAccountTransactionHandler
+	GenerateProratedRefundAmountForAccountTransaction                command.GenerateProratedRefundAmountForAccountTransactionHandler
 	BecomeClubSupporterWithAccountSavedPaymentMethod                 command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
 	CancelAccountClubSupporterSubscription                           command.CancelAccountClubSupporterSubscriptionHandler
 	DeleteAccountSavedPaymentMethod                                  command.DeleteAccountSavedPaymentMethodHandler
 	RefundAccountTransaction                                         command.RefundAccountTransactionHandler
-	VoidAccountTransaction                                           command.VoidAccountTransactionHandler
 	ExtendAccountClubSupporterSubscription                           command.ExtendAccountClubSupporterSubscriptionHandler
 	GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory command.GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler
 	GenerateClubSupporterRefundReceiptFromAccountTransactionHistory  command.GenerateClubSupporterRefundReceiptFromAccountTransactionHandler
@@ -49,7 +48,10 @@ type Queries struct {
 	CancellationReasons    query.CancellationReasonsHandler
 	CancellationReasonById query.CancellationReasonByIdHandler
 
-	AccountTransactionHistoryById   query.AccountTransactionByIdHandler
-	SearchAccountTransactionHistory query.SearchAccountTransactionsHandler
-	AccountTransactionsCount        query.AccountTransactionsCountHandler
+	AccountTransactionById             query.AccountTransactionByIdHandler
+	SearchAccountTransactionHistory    query.SearchAccountTransactionsHandler
+	AccountTransactionsTotalCount      query.AccountTransactionsTotalCountHandler
+	AccountTransactionsChargebackCount query.AccountTransactionsChargebackCountHandler
+	AccountTransactionsPaymentCount    query.AccountTransactionsPaymentCountHandler
+	AccountTransactionsRefundCount     query.AccountTransactionsRefundCountHandler
 }

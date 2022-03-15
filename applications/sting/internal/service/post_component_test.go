@@ -351,6 +351,19 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStatePublished, post.Post.State)
 	require.Equal(t, 2, len(post.Post.Content), "should have only 2 content at the end")
 
+	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
+	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
+
+	originalId := post.Post.Content[1].ID
+
+	post = getPost(t, client, postId)
+
+	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
+	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
+
+	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
+	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+
 	// make a random client so we can test post permissions
 	client = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
 
@@ -361,17 +374,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-
-	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
-	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
-
-	post = getPost(t, client, postId)
-
-	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
-	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
-
-	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
-	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+	require.NotEqual(t, originalId, post.Post.Content[1].ID, "should be showing a different resource id")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 

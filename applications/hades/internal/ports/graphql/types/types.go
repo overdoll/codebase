@@ -118,6 +118,8 @@ type AccountClubSupporterSubscriptionBillingError struct {
 	CcbillErrorText *string `json:"ccbillErrorText"`
 	// The error code from CCBill.
 	CcbillErrorCode *string `json:"ccbillErrorCode"`
+	// The decline error, parsed in a friendlier way.
+	CcbillDeclineError *CCBillDeclineError `json:"ccbillDeclineError"`
 	// The next date the billing will be retried.
 	NextRetryDate time.Time `json:"nextRetryDate"`
 }
@@ -546,8 +548,8 @@ type GenerateClubSupporterRefundReceiptFromAccountTransactionPayload struct {
 
 // Generate a refund amount.
 type GenerateRefundAmountForAccountTransactionInput struct {
-	// The id of the subscription.
-	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
+	// The id of the transaction.
+	AccountTransactionID relay.ID `json:"accountTransactionId"`
 }
 
 // Payload for generating the receipt.
