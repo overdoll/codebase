@@ -4,7 +4,6 @@ import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
-import { useLocation, useParams } from '@//:modules/routing'
 
 interface Props {
   windowReference: MutableRefObject<Window | null>
@@ -21,10 +20,6 @@ export default function CCBillWindowListener ({
 }: Props): JSX.Element {
   const { isOpen } = useHistoryDisclosureContext()
 
-  const location = useLocation()
-
-  const match = useParams()
-
   // Only allow messages from a specific window source
   const messageEvent = (event): void => {
     if (event.origin !== originLink) {
@@ -34,7 +29,6 @@ export default function CCBillWindowListener ({
     if (event.data.source !== 'overdoll-ccbill-flexforms-payment-flow') {
       return
     }
-
     setArguments({ token: event.data.payload.token })
     closeWindow()
   }
