@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Link, Text } from '@chakra-ui/react'
+import { SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
 
 export default function SupporterGuidelinesAgreement (): JSX.Element {
   return (
@@ -9,7 +10,7 @@ export default function SupporterGuidelinesAgreement (): JSX.Element {
           color='teal.400'
           fontSize='md'
           isExternal
-          href='https://www.corpodoll.com/supporter-guidelines/'
+          href={SUPPORTER_GUIDELINES}
                                      >
           Supporter Guidelines
                                      </Link>
