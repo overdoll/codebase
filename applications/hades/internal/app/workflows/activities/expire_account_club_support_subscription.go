@@ -14,7 +14,7 @@ type ExpireAccountClubSupportSubscriptionInput struct {
 func (h *Activities) ExpireAccountClubSupportSubscription(ctx context.Context, input ExpireAccountClubSupportSubscriptionInput) error {
 
 	subscription, err := h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, input.SubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
-		return subscription.MarkExpired(input.ExpiredAt)
+		return subscription.MarkInactive(input.ExpiredAt)
 	})
 
 	if err != nil {

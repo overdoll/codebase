@@ -43,5 +43,14 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return err
 	}
 
+	// send cancellation notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionCancellationNotification,
+		activities.SendAccountClubSupporterSubscriptionCancellationNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

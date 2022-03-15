@@ -25,7 +25,7 @@ func (h *Activities) UpdateRefundClubSubscriptionAccountTransaction(ctx context.
 	}
 
 	transaction, err := h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
-		return transaction.MakeRefunded(input.Timestamp, input.Amount, cr)
+		return transaction.MakeRefunded(input.Timestamp, input.Amount, cr, input.Reason)
 	})
 
 	if err != nil {

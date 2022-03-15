@@ -58,5 +58,14 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 		return err
 	}
 
+	// send failure notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionFailureNotification,
+		activities.SendAccountClubSupporterSubscriptionFailureNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

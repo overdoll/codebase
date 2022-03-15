@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-type AccountTransactionHistory interface {
-	IsAccountTransactionHistory()
+type AccountClubSupporterSubscription interface {
+	IsAccountClubSupporterSubscription()
 }
 
-type IAccountTransactionHistory interface {
-	IsIAccountTransactionHistory()
+type IAccountClubSupporterSubscription interface {
+	IsIAccountClubSupporterSubscription()
 }
 
 type Account struct {
@@ -26,69 +26,22 @@ type Account struct {
 	ExpiredClubSupporterSubscriptions *ExpiredAccountClubSupporterSubscriptionConnection `json:"expiredClubSupporterSubscriptions"`
 	// Saved payment methods linked to this account.
 	SavedPaymentMethods *AccountSavedPaymentMethodConnection `json:"savedPaymentMethods"`
-	// Transaction history for this account.
-	TransactionHistory *AccountTransactionHistoryConnection `json:"transactionHistory"`
-	ID                 relay.ID                             `json:"id"`
+	// Total amount of transactions, excluding voids.
+	TransactionsTotalCount int `json:"transactionsTotalCount"`
+	// Total amount of payment transactions.
+	TransactionsPaymentCount int `json:"transactionsPaymentCount"`
+	// Total amount of refund transactions.
+	TransactionsRefundCount int `json:"transactionsRefundCount"`
+	// Total amount of chargeback transactions.
+	TransactionsChargebackCount int `json:"transactionsChargebackCount"`
+	// Transactions for this account.
+	Transactions *AccountTransactionConnection `json:"transactions"`
+	ID           relay.ID                      `json:"id"`
 }
 
 func (Account) IsEntity() {}
 
-// Occurs when a club supporter subscription is cancelled.
-type AccountCancelledTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// If this is a ccbill transaction, the reason for the cancellation.
-	CcbillReason *string `json:"ccbillReason"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountCancelledTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountCancelledTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a transaction is charged back.
-type AccountChargebackTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The amount charged back.
-	//
-	// A positive integer representing the currency in the smallest currency unit.
-	Amount int `json:"amount"`
-	// The currency charged back in.
-	Currency Currency `json:"currency"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// If this is a ccbill transaction, the reason for the chargeback.
-	CcbillReason *string `json:"ccbillReason"`
-	// The payment method linked to this chargeback (only card will be available).
-	PaymentMethod *PaymentMethod `json:"paymentMethod"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountChargebackTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountChargebackTransactionHistory) IsIAccountTransactionHistory() {}
-
-// An account club supporter subscription.
-type AccountClubSupporterSubscription struct {
+type AccountActiveClubSupporterSubscription struct {
 	// An ID to uniquely identify this subscription.
 	ID relay.ID `json:"id"`
 	// A reference, used to look up this subscription.
@@ -97,28 +50,76 @@ type AccountClubSupporterSubscription struct {
 	Account *Account `json:"account"`
 	// The club linked to this subscription.
 	Club *Club `json:"club"`
-	// The status of this subscription.
-	Status AccountClubSupporterSubscriptionStatus `json:"status"`
+	// Transactions for this account.
+	Transactions *AccountTransactionConnection `json:"transactions"`
+	// The billing amount.
+	BillingAmount int `json:"billingAmount"`
+	// The currency.
+	BillingCurrency Currency `json:"billingCurrency"`
 	// When the account first became a supporter.
 	SupporterSince time.Time `json:"supporterSince"`
 	// The last billing date for this subscription.
 	LastBillingDate time.Time `json:"lastBillingDate"`
 	// The next billing date for this subscription.
 	NextBillingDate time.Time `json:"nextBillingDate"`
-	// When this subscription was cancelled.
-	CancelledAt *time.Time `json:"cancelledAt"`
-	// The billing amount.
-	BillingAmount int `json:"billingAmount"`
-	// The currency.
-	BillingCurrency Currency `json:"billingCurrency"`
 	// The payment method linked to this subscription.
 	PaymentMethod *PaymentMethod `json:"paymentMethod"`
 	// The ccbill subscription.
 	CcbillSubscription *CCBillSubscription `json:"ccbillSubscription"`
 	// When this subscription was last updated.
 	UpdatedAt time.Time `json:"updatedAt"`
+	// If a subscription is failed to be billed, it will be updated with this error object.
+	BillingError *AccountClubSupporterSubscriptionBillingError `json:"billingError"`
+}
+
+func (AccountActiveClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
+func (AccountActiveClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+
+type AccountCancelledClubSupporterSubscription struct {
+	// An ID to uniquely identify this subscription.
+	ID relay.ID `json:"id"`
+	// A reference, used to look up this subscription.
+	Reference string `json:"reference"`
+	// The account linked to this subscription.
+	Account *Account `json:"account"`
+	// The club linked to this subscription.
+	Club *Club `json:"club"`
+	// Transactions for this account.
+	Transactions *AccountTransactionConnection `json:"transactions"`
+	// The billing amount.
+	BillingAmount int `json:"billingAmount"`
+	// The currency.
+	BillingCurrency Currency `json:"billingCurrency"`
+	// When the account first became a supporter.
+	SupporterSince time.Time `json:"supporterSince"`
+	// When this subscription was cancelled.
+	CancelledAt time.Time `json:"cancelledAt"`
+	// When this subscription will end.
+	EndDate time.Time `json:"endDate"`
+	// The payment method linked to this subscription.
+	PaymentMethod *PaymentMethod `json:"paymentMethod"`
+	// The ccbill subscription.
+	CcbillSubscription *CCBillSubscription `json:"ccbillSubscription"`
+	// When this subscription was last updated.
+	UpdatedAt time.Time `json:"updatedAt"`
+	// If a subscription is failed to be billed, it will be updated with this error object.
+	BillingError *AccountClubSupporterSubscriptionBillingError `json:"billingError"`
 	// The reason this subscription was cancelled, if there is one.
 	CancellationReason *CancellationReason `json:"cancellationReason"`
+}
+
+func (AccountCancelledClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
+func (AccountCancelledClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+
+type AccountClubSupporterSubscriptionBillingError struct {
+	// When this subscription failed to bill.
+	FailedAt time.Time `json:"failedAt"`
+	// The error text from CCBill.
+	CcbillErrorText *string `json:"ccbillErrorText"`
+	// The error code from CCBill.
+	CcbillErrorCode *string `json:"ccbillErrorCode"`
+	// The next date the billing will be retried.
+	NextRetryDate time.Time `json:"nextRetryDate"`
 }
 
 // Connection of the account club supporter subscription
@@ -129,176 +130,41 @@ type AccountClubSupporterSubscriptionConnection struct {
 
 // Edge of the account club supporter subscriptions
 type AccountClubSupporterSubscriptionEdge struct {
-	Node   *AccountClubSupporterSubscription `json:"node"`
-	Cursor string                            `json:"cursor"`
+	Node   AccountClubSupporterSubscription `json:"node"`
+	Cursor string                           `json:"cursor"`
 }
 
-// Occurs when a transaction subscription is expired (cancelled and the subscription end was reached).
-type AccountExpiredTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
+type AccountInactiveClubSupporterSubscription struct {
+	// An ID to uniquely identify this subscription.
 	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
+	// A reference, used to look up this subscription.
 	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
+	// The account linked to this subscription.
 	Account *Account `json:"account"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
+	// The club linked to this subscription.
+	Club *Club `json:"club"`
+	// Transactions for this account.
+	Transactions *AccountTransactionConnection `json:"transactions"`
+	// The billing amount.
+	BillingAmount int `json:"billingAmount"`
+	// The currency.
+	BillingCurrency Currency `json:"billingCurrency"`
+	// When the account first became a supporter.
+	SupporterSince time.Time `json:"supporterSince"`
+	// The ccbill subscription.
+	CcbillSubscription *CCBillSubscription `json:"ccbillSubscription"`
+	// When this subscription was last updated.
+	UpdatedAt time.Time `json:"updatedAt"`
+	// When this subscription expired.
+	ExpiredAt time.Time `json:"expiredAt"`
+	// If a subscription is failed to be billed, it will be updated with this error object.
+	BillingError *AccountClubSupporterSubscriptionBillingError `json:"billingError"`
+	// The reason this subscription was cancelled, if there is one.
+	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
-func (AccountExpiredTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountExpiredTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a transaction subscription is failed to be billed.
-type AccountFailedTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The next retry date for this transaction.
-	NextRetryDate time.Time `json:"nextRetryDate"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// If this is a CCBill transaction, the error code and error text.
-	CcbillErrorCode *string `json:"ccbillErrorCode"`
-	CcbillErrorText *string `json:"ccbillErrorText"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountFailedTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountFailedTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a subscription is rebilled.
-type AccountInvoiceTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The amount charged.
-	//
-	// A positive integer representing the currency in the smallest currency unit.
-	Amount int `json:"amount"`
-	// The currency charged in.
-	Currency Currency `json:"currency"`
-	// When the billing occurred.
-	BilledAtDate time.Time `json:"billedAtDate"`
-	// The next billing date for this subscription.
-	NextBillingDate time.Time `json:"nextBillingDate"`
-	// The payment method linked to this new transaction history.
-	PaymentMethod *PaymentMethod `json:"paymentMethod"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountInvoiceTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountInvoiceTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a new transaction history is created (usually a new subscription).
-type AccountNewTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The amount charged.
-	//
-	// A positive integer representing the currency in the smallest currency unit.
-	Amount int `json:"amount"`
-	// The currency charged in.
-	Currency Currency `json:"currency"`
-	// When the billing occurred.
-	BilledAtDate time.Time `json:"billedAtDate"`
-	// The next billing date for this subscription.
-	NextBillingDate time.Time `json:"nextBillingDate"`
-	// The payment method linked to this new transaction history.
-	PaymentMethod *PaymentMethod `json:"paymentMethod"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountNewTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountNewTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a transaction subscription is reactivated (after being cancelled).
-type AccountReactivatedTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The next billing date for this subscription.
-	NextBillingDate time.Time `json:"nextBillingDate"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountReactivatedTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountReactivatedTransactionHistory) IsIAccountTransactionHistory() {}
-
-// Occurs when a transaction is refunded.
-type AccountRefundTransactionHistory struct {
-	// An ID to uniquely identify this transaction history.
-	ID relay.ID `json:"id"`
-	// A reference, used to look up this transaction.
-	Reference string `json:"reference"`
-	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
-	// The amount refunded.
-	//
-	// A positive integer representing the currency in the smallest currency unit.
-	Amount int `json:"amount"`
-	// The currency refunded in.
-	Currency Currency `json:"currency"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// The payment method linked to this refund (only card will be available).
-	PaymentMethod *PaymentMethod `json:"paymentMethod"`
-	// If this is a ccbill transaction, the reason for the refund.
-	CcbillReason *string `json:"ccbillReason"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
-	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
-}
-
-func (AccountRefundTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountRefundTransactionHistory) IsIAccountTransactionHistory() {}
+func (AccountInactiveClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
+func (AccountInactiveClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
 
 type AccountSavedPaymentMethod struct {
 	// An ID to uniquely identify this payment method.
@@ -325,46 +191,72 @@ type AccountSavedPaymentMethodEdge struct {
 	Cursor string                     `json:"cursor"`
 }
 
-// Connection of the account transaction history.
-type AccountTransactionHistoryConnection struct {
-	Edges    []*AccountTransactionHistoryEdge `json:"edges"`
-	PageInfo *relay.PageInfo                  `json:"pageInfo"`
-}
-
-// Edge of the the account transaction history.
-type AccountTransactionHistoryEdge struct {
-	Node   AccountTransactionHistory `json:"node"`
-	Cursor string                    `json:"cursor"`
-}
-
-// Occurs when a transaction is voided.
-type AccountVoidTransactionHistory struct {
+// A transaction item.
+//
+// All transactions start off in the "PAYMENT" type.
+//
+// Once a transaction is refunded once, it turns into a REFUND transaction + an event is added.
+//
+// If a transaction is charged back, it turns into a CHARGEBACK transaction + an event is added.
+//
+// If a transaction is voided, it turns into a VOID transaction.
+type AccountTransaction struct {
 	// An ID to uniquely identify this transaction history.
 	ID relay.ID `json:"id"`
 	// A reference, used to look up this transaction.
 	Reference string `json:"reference"`
 	// The type of account transaction history, or what it belongs to.
-	Transaction AccountTransactionType `json:"transaction"`
-	// The account linked to this transaction history.
-	Account *Account `json:"account"`
+	Type AccountTransactionType `json:"type"`
+	// The events for this transaction.
+	//
+	// If the transaction was refunded, an event will show up with the refund amount.
+	//
+	// If the transaction was charged back, an event will show up with the chargeback amount.
+	Events []*AccountTransactionEvent `json:"events"`
 	// The amount voided.
 	//
 	// A positive integer representing the currency in the smallest currency unit.
 	Amount int `json:"amount"`
 	// The currency voided in.
 	Currency Currency `json:"currency"`
-	// The club that was supported as part of this transaction history.
-	SupportedClub *Club `json:"supportedClub"`
-	// If this is a ccbill transaction, the reason for the void.
-	CcbillReason *string `json:"ccbillReason"`
-	// A ccbill subscription transaction, if this transaction originated from ccbill.
-	CcbillSubscriptionTransaction *CCBillSubscriptionTransaction `json:"ccbillSubscriptionTransaction"`
+	// When the billing occurred.
+	BilledAtDate time.Time `json:"billedAtDate"`
+	// The next billing date for this transaction, if its a subscription.
+	NextBillingDate *time.Time `json:"nextBillingDate"`
+	// The payment method linked to this transaction.
+	PaymentMethod *PaymentMethod `json:"paymentMethod"`
 	// When this transaction occurred.
 	Timestamp time.Time `json:"timestamp"`
+	// A ccbill transaction, if this transaction originated from ccbill.
+	CcbillTransaction *CCBillTransaction `json:"ccbillTransaction"`
+	// The subscription linked to this transaction, if it's a club supporter subscription.
+	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
 }
 
-func (AccountVoidTransactionHistory) IsAccountTransactionHistory()  {}
-func (AccountVoidTransactionHistory) IsIAccountTransactionHistory() {}
+// Connection of the account transaction.
+type AccountTransactionConnection struct {
+	Edges    []*AccountTransactionEdge `json:"edges"`
+	PageInfo *relay.PageInfo           `json:"pageInfo"`
+}
+
+// Edge of the the account transaction.
+type AccountTransactionEdge struct {
+	Node   *AccountTransaction `json:"node"`
+	Cursor string              `json:"cursor"`
+}
+
+type AccountTransactionEvent struct {
+	// An ID to uniquely identify account transaction.
+	ID relay.ID `json:"id"`
+	// The amount.
+	Amount int `json:"amount"`
+	// The currency.
+	Currency Currency `json:"currency"`
+	// The reason for this event.
+	Reason string `json:"reason"`
+	// When this event occurred.
+	Timestamp time.Time `json:"timestamp"`
+}
 
 // Become club supporter with saved payment method.
 type BecomeClubSupporterWithAccountSavedPaymentMethodInput struct {
@@ -459,8 +351,9 @@ type CCBillSubscriptionDetails struct {
 }
 
 // Represents a CCBill transaction, which may or may not contain these fields.
-type CCBillSubscriptionTransaction struct {
-	CcbillSubscriptionID string `json:"ccbillSubscriptionId"`
+type CCBillTransaction struct {
+	CcbillSubscriptionID string  `json:"ccbillSubscriptionId"`
+	CcbillTransactionID  *string `json:"ccbillTransactionId"`
 }
 
 type CCBillTransactionDetails struct {
@@ -479,7 +372,7 @@ type CCBillTransactionDetails struct {
 	// This signifies that the transaction has processed successfully (on our end),
 	//
 	// and the supporter benefits are now available.
-	LinkedAccountClubSupporterSubscription *AccountClubSupporterSubscription `json:"linkedAccountClubSupporterSubscription"`
+	LinkedAccountClubSupporterSubscription AccountClubSupporterSubscription `json:"linkedAccountClubSupporterSubscription"`
 }
 
 // Cancel account club supporter subscription input.
@@ -493,7 +386,7 @@ type CancelAccountClubSupporterSubscriptionInput struct {
 // Payload for cancelling the account club supporter.
 type CancelAccountClubSupporterSubscriptionPayload struct {
 	// The new subscription.
-	ClubSupporterSubscription *AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
+	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
 }
 
 // Cancellation reason.
@@ -581,8 +474,6 @@ type ExpiredAccountClubSupporterSubscription struct {
 	ExpiredAt time.Time `json:"expiredAt"`
 	// When this subscription was originally cancelled.
 	CancelledAt time.Time `json:"cancelledAt"`
-	// The reason this subscription was originally cancelled, if there is one.
-	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
 // Connection of the expired account club supporter subscription
@@ -608,7 +499,7 @@ type ExtendAccountClubSupporterSubscriptionInput struct {
 // Payload for extending the account club supporter.
 type ExtendAccountClubSupporterSubscriptionPayload struct {
 	// The new subscription.
-	ClubSupporterSubscription *AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
+	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
 }
 
 // Generate ccbill club supporter payment link.
@@ -628,25 +519,39 @@ type GenerateCCBillClubSupporterPaymentLinkPayload struct {
 }
 
 // Generate club supporter receipt input.
-type GenerateClubSupporterReceiptFromAccountTransactionHistoryInput struct {
-	// The id of the transaction history.
-	TransactionHistoryID relay.ID `json:"transactionHistoryId"`
+type GenerateClubSupporterPaymentReceiptFromAccountTransactionInput struct {
+	// The id of the transaction.
+	TransactionID relay.ID `json:"transactionId"`
 }
 
 // Payload for generating the receipt.
-type GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload struct {
+type GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload struct {
+	// The link to the receipt.
+	Link *graphql1.URI `json:"link"`
+}
+
+// Generate club supporter receipt input.
+type GenerateClubSupporterRefundReceiptFromAccountTransactionInput struct {
+	// The id of the transaction.
+	TransactionID relay.ID `json:"transactionId"`
+	// The id of the transaction event, since we can have multiple refunds.
+	TransactionEventID relay.ID `json:"transactionEventId"`
+}
+
+// Payload for generating the receipt.
+type GenerateClubSupporterRefundReceiptFromAccountTransactionPayload struct {
 	// The link to the receipt.
 	Link *graphql1.URI `json:"link"`
 }
 
 // Generate a refund amount.
-type GenerateRefundAmountForAccountClubSupporterSubscriptionInput struct {
+type GenerateRefundAmountForAccountTransactionInput struct {
 	// The id of the subscription.
 	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
 }
 
 // Payload for generating the receipt.
-type GenerateRefundAmountForAccountClubSupporterSubscriptionPayload struct {
+type GenerateRefundAmountForAccountTransactionPayload struct {
 	// The refund amount.
 	RefundAmount *RefundAmount `json:"refundAmount"`
 }
@@ -684,6 +589,22 @@ type Price struct {
 	Amount int `json:"amount"`
 	// The currency the amount is represented in.
 	Currency Currency `json:"currency"`
+}
+
+// Refund an account transaction.
+type RefundAccountTransactionInput struct {
+	// The id of the subscription.
+	AccountTransactionID relay.ID `json:"accountTransactionId"`
+	// The amount to refund.
+	//
+	// A positive integer representing the currency in the smallest currency unit.
+	Amount int `json:"amount"`
+}
+
+// Payload for refunding an account transaction.
+type RefundAccountTransactionPayload struct {
+	// The updated account transaction.
+	AccountTransaction *AccountTransaction `json:"accountTransaction"`
 }
 
 // A generated refund amount.
@@ -737,37 +658,23 @@ type UpdateCancellationReasonTitlePayload struct {
 	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
-// Void or refund account club supporter subscription.
-type VoidOrRefundAccountClubSupporterSubscriptionInput struct {
-	// The id of the subscription.
-	ClubSupporterSubscriptionID relay.ID `json:"clubSupporterSubscriptionId"`
-	// The amount to refund.
-	//
-	// A positive integer representing the currency in the smallest currency unit.
-	Amount int `json:"amount"`
-}
-
-// Payload for voiding or refunding account club supporter subscription.
-type VoidOrRefundAccountClubSupporterSubscriptionPayload struct {
-	// The id of the subscription, deleted.
-	DeletedClubSupporterSubscriptionID relay.ID `json:"deletedClubSupporterSubscriptionId"`
-}
-
 type AccountClubSupporterSubscriptionStatus string
 
 const (
 	AccountClubSupporterSubscriptionStatusActive    AccountClubSupporterSubscriptionStatus = "ACTIVE"
 	AccountClubSupporterSubscriptionStatusCancelled AccountClubSupporterSubscriptionStatus = "CANCELLED"
+	AccountClubSupporterSubscriptionStatusInactive  AccountClubSupporterSubscriptionStatus = "INACTIVE"
 )
 
 var AllAccountClubSupporterSubscriptionStatus = []AccountClubSupporterSubscriptionStatus{
 	AccountClubSupporterSubscriptionStatusActive,
 	AccountClubSupporterSubscriptionStatusCancelled,
+	AccountClubSupporterSubscriptionStatusInactive,
 }
 
 func (e AccountClubSupporterSubscriptionStatus) IsValid() bool {
 	switch e {
-	case AccountClubSupporterSubscriptionStatusActive, AccountClubSupporterSubscriptionStatusCancelled:
+	case AccountClubSupporterSubscriptionStatusActive, AccountClubSupporterSubscriptionStatusCancelled, AccountClubSupporterSubscriptionStatusInactive:
 		return true
 	}
 	return false
@@ -797,16 +704,22 @@ func (e AccountClubSupporterSubscriptionStatus) MarshalGQL(w io.Writer) {
 type AccountTransactionType string
 
 const (
-	AccountTransactionTypeClubSupporterSubscription AccountTransactionType = "CLUB_SUPPORTER_SUBSCRIPTION"
+	AccountTransactionTypePayment    AccountTransactionType = "PAYMENT"
+	AccountTransactionTypeVoid       AccountTransactionType = "VOID"
+	AccountTransactionTypeRefund     AccountTransactionType = "REFUND"
+	AccountTransactionTypeChargeback AccountTransactionType = "CHARGEBACK"
 )
 
 var AllAccountTransactionType = []AccountTransactionType{
-	AccountTransactionTypeClubSupporterSubscription,
+	AccountTransactionTypePayment,
+	AccountTransactionTypeVoid,
+	AccountTransactionTypeRefund,
+	AccountTransactionTypeChargeback,
 }
 
 func (e AccountTransactionType) IsValid() bool {
 	switch e {
-	case AccountTransactionTypeClubSupporterSubscription:
+	case AccountTransactionTypePayment, AccountTransactionTypeVoid, AccountTransactionTypeRefund, AccountTransactionTypeChargeback:
 		return true
 	}
 	return false

@@ -531,7 +531,7 @@ func MarshalAccountTransactionHistoryToGraphQL(ctx context.Context, result *bill
 		}
 	}
 
-	if result.Transaction() == billing.Expired {
+	if result.Transaction() == billing.Inactive {
 		accountTransactionHistory = AccountExpiredTransactionHistory{
 			ID:                            id,
 			Transaction:                   tp,

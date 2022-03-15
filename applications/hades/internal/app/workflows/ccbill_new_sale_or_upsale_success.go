@@ -222,5 +222,14 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return err
 	}
 
+	// send success notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionSuccessNotification,
+		activities.SendAccountClubSupporterSubscriptionSuccessNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -11,7 +11,6 @@ service Carrier {
   rpc NewClubSupporterSubscription(NewClubSupporterSubscriptionRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionCancelled(ClubSupporterSubscriptionCancelledRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionRefunded(ClubSupporterSubscriptionRefundedRequest) returns (google.protobuf.Empty) {}
-  rpc ClubSupporterSubscriptionVoided(ClubSupporterSubscriptionVoidedRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionPaymentFailure(ClubSupporterSubscriptionPaymentFailureRequest) returns (google.protobuf.Empty) {}
   rpc UpcomingClubSupporterSubscriptionRenewals(UpcomingClubSupporterSubscriptionRenewalsRequest) returns (google.protobuf.Empty) {}
 }

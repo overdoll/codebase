@@ -23,18 +23,21 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 
 	ccbillClient := &http.Client{}
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			ccbillClient,
 			clients.NewTemporalClient(ctx),
 		),
 		func() {
 			cleanup()
 			cleanup2()
+			cleanup3()
 		}
 }
 
@@ -60,7 +63,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 		temporalClient
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -105,6 +108,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CancellationReasons:                               query.NewCancellationReasonsHandler(cancelRepo),
 			CCBillTransactionDetails:                          query.NewCCBillTransactionDetailsHandler(),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella),
+		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella, carrier),
 	}
 }

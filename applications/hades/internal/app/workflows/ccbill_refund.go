@@ -64,5 +64,17 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	// send cancellation notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionRefundNotification,
+		activities.SendAccountClubSupporterSubscriptionRefundNotificationInput{
+			SubscriptionId: input.SubscriptionId,
+			TransactionId:  input.TransactionId,
+			Currency:       input.Currency,
+			Amount:         amount,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

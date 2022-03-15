@@ -42,26 +42,14 @@ func (s CarrierGrpc) ClubSupporterSubscriptionCancelled(ctx context.Context, sub
 	return err
 }
 
-func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, event *billing.AccountTransactionEvent) error {
+func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
 
 	_, err := s.client.ClubSupporterSubscriptionRefunded(ctx, &carrier.ClubSupporterSubscriptionRefundedRequest{
 		Account:      &carrier.Account{Id: subscription.AccountId()},
 		Club:         &carrier.Club{Id: subscription.ClubId()},
 		Subscription: &carrier.Subscription{Id: subscription.Id()},
 		Transaction:  &carrier.Transaction{Id: transaction.Id()},
-		Refund:       &carrier.Payment{Amount: event.Amount(), Currency: event.Currency().String()},
-	})
-
-	return err
-}
-
-func (s CarrierGrpc) ClubSupporterSubscriptionVoided(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction) error {
-
-	_, err := s.client.ClubSupporterSubscriptionVoided(ctx, &carrier.ClubSupporterSubscriptionVoidedRequest{
-		Account:      &carrier.Account{Id: subscription.AccountId()},
-		Club:         &carrier.Club{Id: subscription.ClubId()},
-		Subscription: &carrier.Subscription{Id: subscription.Id()},
-		Transaction:  &carrier.Transaction{Id: transaction.Id()},
+		Refund:       &carrier.Payment{Amount: amount, Currency: currency},
 	})
 
 	return err

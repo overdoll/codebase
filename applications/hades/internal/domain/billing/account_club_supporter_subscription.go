@@ -158,9 +158,9 @@ func (c *AccountClubSupporterSubscription) MarkCancelled(cancelledAt time.Time) 
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) error {
+func (c *AccountClubSupporterSubscription) MarkInactive(expiredAt time.Time) error {
 	c.cancelledAt = &expiredAt
-	c.status = Expired
+	c.status = Inactive
 	return nil
 }
 
@@ -186,6 +186,10 @@ func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Pr
 
 func (c *AccountClubSupporterSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
 	c.nextBillingDate = nextBillingDate
+	c.failedAt = nil
+	c.ccbillErrorText = nil
+	c.ccbillErrorCode = nil
+	c.billingFailureNextRetryDate = nil
 	return nil
 }
 
