@@ -7,6 +7,7 @@ go_library(
         "account_club_supporter_subscription.go",
         "ccbill_transaction_details.go",
         "club.go",
+        "expired_account_club_supporter_subscription.go",
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/resolvers",
     visibility = ["//applications/hades:__subpackages__"],

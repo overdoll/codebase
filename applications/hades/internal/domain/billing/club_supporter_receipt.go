@@ -21,6 +21,24 @@ func UnmarshalClubSupporterReceiptFromDatabase(link string) *ClubSupporterReceip
 	return &ClubSupporterReceipt{link: link}
 }
 
-func CanCreateClubSupporterReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransaction) error {
+func CanCreateClubSupporterPaymentReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransaction) error {
+	return requester.BelongsToAccount(transaction.accountId)
+}
+
+func CanCreateClubSupporterRefundReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransaction, eventId string) error {
+
+	foundEvent := false
+
+	for _, e := range transaction.events {
+		if e.id == eventId {
+			foundEvent = true
+			break
+		}
+	}
+
+	if !foundEvent {
+		return errors.New("invalid event id")
+	}
+
 	return requester.BelongsToAccount(transaction.accountId)
 }

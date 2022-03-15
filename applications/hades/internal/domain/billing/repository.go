@@ -8,11 +8,11 @@ import (
 )
 
 type Repository interface {
-	GetAccountClubSupporterSubscriptionsByAccount(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*AccountClubSupporterSubscription, error)
+	SearchAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountClubSupporterSubscriptionFilters) ([]*AccountClubSupporterSubscription, error)
 	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
-	SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
+	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	GetAccountSavedPaymentMethodById(ctx context.Context, requester *principal.Principal, accountId, id string) (*SavedPaymentMethod, error)
 
@@ -46,13 +46,15 @@ type Repository interface {
 }
 
 type IndexRepository interface {
+	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, state *Transaction) (*int64, error)
+
 	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
 }
 
 type FileRepository interface {
-	GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *AccountTransaction) (*ClubSupporterReceipt, error)
-	CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *AccountTransaction) (*ClubSupporterReceipt, error)
-	UpdateClubSupporterReceiptWithNewFile(ctx context.Context, builder *ClubSupporterReceiptBuilder) error
+	GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction, eventId string) (*ClubSupporterReceipt, error)
+	GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction) (*ClubSupporterReceipt, error)
+	UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *ClubSupporterPaymentReceiptBuilder) error
 }
 
 type PricingRepository interface {

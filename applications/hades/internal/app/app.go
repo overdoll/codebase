@@ -17,14 +17,16 @@ type Commands struct {
 	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
-	ProcessCCBillWebhook                                      command.ProcessCCBillWebhookHandler
-	GenerateProratedRefundAmountForAccountClubSubscription    command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
-	BecomeClubSupporterWithAccountSavedPaymentMethod          command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
-	CancelAccountClubSupporterSubscription                    command.CancelAccountClubSupporterSubscriptionHandler
-	DeleteAccountSavedPaymentMethod                           command.DeleteAccountSavedPaymentMethodHandler
-	VoidOrRefundAccountClubSupporterSubscription              command.VoidOrRefundAccountClubSupporterSubscriptionHandler
-	ExtendAccountClubSupporterSubscription                    command.ExtendAccountClubSupporterSubscriptionHandler
-	GenerateClubSupporterReceiptFromAccountTransactionHistory command.GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler
+	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
+	GenerateProratedRefundAmountForAccountClubSubscription           command.GenerateProratedRefundAmountForAccountTransactionHandler
+	BecomeClubSupporterWithAccountSavedPaymentMethod                 command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
+	CancelAccountClubSupporterSubscription                           command.CancelAccountClubSupporterSubscriptionHandler
+	DeleteAccountSavedPaymentMethod                                  command.DeleteAccountSavedPaymentMethodHandler
+	RefundAccountTransaction                                         command.RefundAccountTransactionHandler
+	VoidAccountTransaction                                           command.VoidAccountTransactionHandler
+	ExtendAccountClubSupporterSubscription                           command.ExtendAccountClubSupporterSubscriptionHandler
+	GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory command.GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler
+	GenerateClubSupporterRefundReceiptFromAccountTransactionHistory  command.GenerateClubSupporterRefundReceiptFromAccountTransactionHandler
 
 	CreateCancellationReason           command.CreateCancellationReasonHandler
 	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
@@ -39,13 +41,15 @@ type Queries struct {
 
 	ExpiredAccountClubSupporterSubscriptionsByAccount query.ExpiredAccountClubSupporterSubscriptionsByAccountHandler
 	AccountClubSupporterSubscriptionById              query.AccountClubSupporterSubscriptionByIdHandler
-	AccountClubSupporterSubscriptionsByAccount        query.AccountClubSupporterSubscriptionsByAccountHandler
+	SearchAccountClubSupporterSubscription            query.SearchAccountClubSupporterSubscriptionsHandler
 	AccountSavedPaymentMethods                        query.AccountSavedPaymentMethodsHandler
-	AccountTransactionHistoryById                     query.AccountTransactionHistoryByIdHandler
-	SearchAccountTransactionHistory                   query.SearchAccountTransactionHistoryHandler
 	ClubSupporterPricing                              query.ClubSupporterPricingHandler
 	ClubSupporterSubscriptionFinalized                query.ClubSupporterSubscriptionFinalizedHandler
 
 	CancellationReasons    query.CancellationReasonsHandler
 	CancellationReasonById query.CancellationReasonByIdHandler
+
+	AccountTransactionHistoryById   query.AccountTransactionByIdHandler
+	SearchAccountTransactionHistory query.SearchAccountTransactionsHandler
+	AccountTransactionsCount        query.AccountTransactionsCountHandler
 }

@@ -164,14 +164,6 @@ func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) erro
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) RequestVoidOrRefund(requester *principal.Principal) error {
-	if !requester.IsStaff() {
-		return errors.New("only staff can issue void or refunds")
-	}
-
-	return c.MarkCancelled(time.Now())
-}
-
 func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
 	if err := requester.BelongsToAccount(c.accountId); err != nil {
 		return err

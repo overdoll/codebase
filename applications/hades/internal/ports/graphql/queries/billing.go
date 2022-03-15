@@ -40,7 +40,7 @@ func (r QueryResolver) AccountTransactionHistory(ctx context.Context, reference 
 		return nil, err
 	}
 
-	result, err := r.App.Queries.AccountTransactionHistoryById.Handle(ctx, query.AccountTransactionHistoryById{
+	result, err := r.App.Queries.AccountTransactionHistoryById.Handle(ctx, query.AccountTransactionById{
 		Principal: principal.FromContext(ctx),
 		Id:        reference,
 	})

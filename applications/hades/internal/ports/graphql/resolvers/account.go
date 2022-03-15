@@ -57,10 +57,10 @@ func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *ty
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountClubSupporterSubscriptionsByAccount.
+	results, err := r.App.Queries.SearchAccountClubSupporterSubscription.
 		Handle(
 			ctx,
-			query.AccountClubSupporterSubscriptionsByAccount{
+			query.SearchAccountClubSupporterSubscriptions{
 				Principal: principal.FromContext(ctx),
 				Cursor:    cursor,
 				AccountId: obj.ID.GetID(),
@@ -118,7 +118,7 @@ func (r AccountResolver) TransactionHistory(ctx context.Context, obj *types.Acco
 	results, err := r.App.Queries.SearchAccountTransactionHistory.
 		Handle(
 			ctx,
-			query.SearchAccountTransactionHistory{
+			query.SearchAccountTransactions{
 				Principal: principal.FromContext(ctx),
 				Cursor:    cursor,
 				AccountId: obj.ID.GetID(),

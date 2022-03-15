@@ -1,16 +1,47 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 package applications.grpc.carrier.v1;
 
 service Carrier {
   rpc ConfirmAccountEmail(ConfirmAccountEmailRequest) returns (google.protobuf.Empty) {}
   rpc NewLoginToken(NewLoginTokenRequest) returns (google.protobuf.Empty) {}
+  rpc NewClubSupporterSubscription(NewClubSupporterSubscriptionRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSupporterSubscriptionCancelled(ClubSupporterSubscriptionCancelledRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSupporterSubscriptionRefunded(ClubSupporterSubscriptionRefundedRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSupporterSubscriptionVoided(ClubSupporterSubscriptionVoidedRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSupporterSubscriptionPaymentFailure(ClubSupporterSubscriptionPaymentFailureRequest) returns (google.protobuf.Empty) {}
+  rpc UpcomingClubSupporterSubscriptionRenewals(UpcomingClubSupporterSubscriptionRenewalsRequest) returns (google.protobuf.Empty) {}
 }
 
 message Account {
   string id = 1;
+}
+
+message Club {
+  string id = 1;
+}
+
+message Subscription {
+  string id = 1;
+}
+
+message Transaction {
+  string id = 1;
+}
+
+message Payment {
+  int64 amount = 1;
+  string currency = 2;
+}
+
+message SubscriptionRenewal {
+  Club club = 1;
+  Subscription subscription = 2;
+  Payment payment = 3;
+  google.protobuf.Timestamp billingDate = 4;
 }
 
 message ConfirmAccountEmailRequest {
@@ -25,4 +56,46 @@ message NewLoginTokenRequest {
   string token = 2;
   string secret = 3;
   string language = 4;
+}
+
+message NewClubSupporterSubscriptionRequest {
+  Account account = 1;
+  Club club = 2;
+  Subscription subscription = 3;
+  Payment payment = 4;
+  google.protobuf.Timestamp billingDate = 5;
+  google.protobuf.Timestamp nextBillingDate = 6;
+}
+
+message ClubSupporterSubscriptionCancelledRequest {
+  Account account = 1;
+  Club club = 2;
+  Subscription subscription = 3;
+  google.protobuf.Timestamp expirationDate = 4;
+}
+
+message ClubSupporterSubscriptionRefundedRequest {
+  Account account = 1;
+  Club club = 2;
+  Subscription subscription = 3;
+  Transaction transaction = 4;
+  Payment refund = 5;
+}
+
+message ClubSupporterSubscriptionVoidedRequest {
+  Account account = 1;
+  Club club = 2;
+  Subscription subscription = 3;
+  Transaction transaction = 4;
+}
+
+message ClubSupporterSubscriptionPaymentFailureRequest {
+  Account account = 1;
+  Club club = 2;
+  Subscription subscription = 3;
+}
+
+message UpcomingClubSupporterSubscriptionRenewalsRequest {
+  Account account = 1;
+  repeated SubscriptionRenewal renewals = 2;
 }

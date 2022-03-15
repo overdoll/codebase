@@ -55,7 +55,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 	require.NotNil(t, status.NextBillingDate(), "should have an issued void")
 	require.Equal(t, ccbill.ActiveAndNotCancelled, status.SubscriptionStatus(), "should be active and not cancelled")
 
-	voidOrRefund, err := ccbill.NewVoidOrRefundWithoutAmount(newSubscriptionId)
+	voidOrRefund, err := ccbill.NewRefundWithoutAmount(newSubscriptionId)
 	require.NoError(t, err, "no error creating void or refund")
 
 	err = repository.VoidOrRefundSubscription(context.Background(), voidOrRefund)

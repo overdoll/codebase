@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/ccbill"
 )
 
 type VoidOrRefundCCBillSubscriptionInput struct {
@@ -10,12 +9,5 @@ type VoidOrRefundCCBillSubscriptionInput struct {
 }
 
 func (h *Activities) VoidOrRefundCCBillSubscription(ctx context.Context, input VoidOrRefundCCBillSubscriptionInput) error {
-
-	voidOrRefund, err := ccbill.NewVoidOrRefundWithoutAmount(input.CCBillSubscriptionId)
-
-	if err != nil {
-		return err
-	}
-
-	return h.ccbill.VoidOrRefundSubscription(ctx, voidOrRefund)
+	return h.ccbill.VoidOrRefundSubscription(ctx, input.CCBillSubscriptionId)
 }

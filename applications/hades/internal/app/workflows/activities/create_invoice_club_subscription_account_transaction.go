@@ -49,7 +49,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 		return err
 	}
 
-	transaction, err := billing.NewInitialPaymentClubSubscriptionAccountTransaction(
+	transaction, err := billing.NewInvoicePaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.ClubId,
 		input.TransactionId,
@@ -59,6 +59,7 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 		input.NextBillingDate,
 		input.Amount,
 		input.Currency,
+		paymentMethod,
 	)
 
 	if err != nil {

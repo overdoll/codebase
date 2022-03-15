@@ -214,7 +214,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate.String(), "correct next billing date")
 	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate.String(), "correct billing date")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 

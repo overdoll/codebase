@@ -17,14 +17,16 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient)),
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewStellaGrpc(stellaClient)),
 		func() {
 			cleanup()
+			cleanup2()
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) app.Application {
 
 	awsSession := bootstrap.InitializeAWSSession()
 	client := ses.New(awsSession)
@@ -33,8 +35,14 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 
 	return app.Application{
 		Commands: app.Commands{
-			ConfirmAccountEmail: command.NewConfirmAccountEmailHandler(mailingRepo, eva),
-			NewLoginToken:       command.NewNewLoginTokenHandler(mailingRepo),
+			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(mailingRepo, eva),
+			NewLoginToken:                             command.NewNewLoginTokenHandler(mailingRepo),
+			NewClubSupporterSubscription:              command.NewNewClubSupporterSubscriptionHandler(mailingRepo, eva, stella),
+			ClubSupporterSubscriptionCancelled:        command.NewClubSupporterSubscriptionCancelledHandler(mailingRepo, eva, stella),
+			ClubSupporterSubscriptionPaymentFailure:   command.NewClubSupporterSubscriptionPaymentFailureHandler(mailingRepo, eva, stella),
+			ClubSupporterSubscriptionRefunded:         command.NewClubSupporterSubscriptionRefundedHandler(mailingRepo, eva, stella),
+			ClubSupporterSubscriptionVoided:           command.NewClubSupporterSubscriptionVoidedHandler(mailingRepo, eva, stella),
+			UpcomingClubSupporterSubscriptionRenewals: command.NewUpcomingClubSupporterSubscriptionRenewalsHandler(mailingRepo, eva, stella),
 		},
 		Queries: app.Queries{},
 	}

@@ -61,7 +61,7 @@ go_test(
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/paging",
-        "//libraries/principal",
+        "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_stretchr_testify//require",
     ],

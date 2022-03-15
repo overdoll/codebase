@@ -103,15 +103,15 @@ func (r *MutationResolver) VoidOrRefundAccountClubSupporterSubscription(ctx cont
 		return nil, err
 	}
 
-	if err := r.App.Commands.VoidOrRefundAccountClubSupporterSubscription.
+	if err := r.App.Commands.RefundAccountTransaction.
 		Handle(
 			ctx,
-			command.VoidOrRefundAccountClubSupporterSubscription{
-				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				Amount:                             int64(input.Amount),
+			command.RefundAccountTransaction{
+				Principal:     principal.FromContext(ctx),
+				ClubId:        input.ClubSupporterSubscriptionID.GetCompositePartID(1),
+				AccountId:     input.ClubSupporterSubscriptionID.GetCompositePartID(2),
+				TransactionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
+				Amount:        int64(input.Amount),
 			},
 		); err != nil {
 		return nil, err
@@ -158,7 +158,7 @@ func (r *MutationResolver) GenerateRefundAmountForAccountClubSupporterSubscripti
 	result, err := r.App.Commands.GenerateProratedRefundAmountForAccountClubSubscription.
 		Handle(
 			ctx,
-			command.GenerateProratedRefundAmountForAccountClubSubscription{
+			command.GenerateProratedRefundAmountForAccountTransaction{
 				Principal:                          principal.FromContext(ctx),
 				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
 				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
@@ -208,10 +208,10 @@ func (r *MutationResolver) GenerateClubSupporterReceiptFromAccountTransactionHis
 		return nil, err
 	}
 
-	result, err := r.App.Commands.GenerateClubSupporterReceiptFromAccountTransactionHistory.
+	result, err := r.App.Commands.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory.
 		Handle(
 			ctx,
-			command.GenerateClubSupporterReceiptFromAccountTransactionHistory{
+			command.GenerateClubSupporterPaymentReceiptFromAccountTransaction{
 				Principal:                   principal.FromContext(ctx),
 				AccountTransactionHistoryId: input.TransactionHistoryID.GetID(),
 			},

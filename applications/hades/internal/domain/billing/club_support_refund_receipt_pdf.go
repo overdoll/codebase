@@ -4,26 +4,16 @@ import (
 	"github.com/jung-kurt/gofpdf"
 )
 
-const (
-
-	// BaseMargin define base margin used in documents
-	BaseMargin float64 = 10
-
-	// BaseMarginTop define base margin top used in documents
-	BaseMarginTop float64 = 20
-)
-
-// ClubSupportReceiptPdf define base document
-type ClubSupportReceiptPdf struct {
+type ClubSupporterRefundReceiptPdf struct {
 	pdf *gofpdf.Fpdf
 }
 
-func newClubSupportReceiptPdf() *ClubSupportReceiptPdf {
-	return &ClubSupportReceiptPdf{pdf: gofpdf.New("P", "mm", "A4", "")}
+func newClubSupporterRefundReceiptPdf() *ClubSupporterRefundReceiptPdf {
+	return &ClubSupporterRefundReceiptPdf{pdf: gofpdf.New("P", "mm", "A4", "")}
 }
 
 // Build pdf document from data provided
-func (doc *ClubSupportReceiptPdf) Build(history *AccountTransaction) (*gofpdf.Fpdf, error) {
+func (doc *ClubSupporterRefundReceiptPdf) Build(history *AccountTransaction, event *AccountTransactionEvent) (*gofpdf.Fpdf, error) {
 
 	// Build base doc
 	doc.pdf.SetMargins(BaseMargin, BaseMarginTop, BaseMargin)
@@ -45,7 +35,7 @@ func (doc *ClubSupportReceiptPdf) Build(history *AccountTransaction) (*gofpdf.Fp
 	// receipt details
 	doc.pdf.SetFont("Arial", "", 12)
 	doc.pdf.SetXY(10, BaseMarginTop+19)
-	doc.pdf.Cellf(40, 10, "Transaction # %s", history.accountId+"-"+history.id)
+	doc.pdf.Cellf(40, 10, "Refund # %s", history.accountId+"-"+history.id)
 
 	doc.pdf.SetXY(10, BaseMarginTop+21)
 	doc.pdf.Cellf(40, 10, "Date Paid %s", history.billedAtDate.Format("January 2, 2006"))

@@ -48,7 +48,8 @@ func (c *ExpiredAccountClubSupporterSubscription) SupporterSince() time.Time {
 }
 
 func (c *ExpiredAccountClubSupporterSubscription) CalculateNewSupporterDate(newDate time.Time) time.Time {
-	return c.supporterSince
+	oldDuration := c.expiredAt.Sub(c.supporterSince)
+	return newDate.Add(-oldDuration)
 }
 
 func (c *ExpiredAccountClubSupporterSubscription) CancelledAt() time.Time {

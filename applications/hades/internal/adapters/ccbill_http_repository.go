@@ -206,7 +206,7 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 	return nil
 }
 
-func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refund *ccbill.VoidOrRefund) error {
+func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refund *ccbill.Refund) error {
 
 	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
 

@@ -2,8 +2,8 @@ package ports
 
 import (
 	"context"
-
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/applications/carrier/internal/app"
 	"overdoll/applications/carrier/internal/app/command"
 	carrier "overdoll/applications/carrier/proto"
@@ -44,4 +44,34 @@ func (s Server) NewLoginToken(ctx context.Context, request *carrier.NewLoginToke
 	}
 
 	return &empty.Empty{}, nil
+}
+
+func (s Server) NewClubSupporterSubscription(ctx context.Context, request *carrier.NewClubSupporterSubscriptionRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Server) ClubSupporterSubscriptionCancelled(ctx context.Context, request *carrier.ClubSupporterSubscriptionCancelledRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Server) ClubSupporterSubscriptionRefunded(ctx context.Context, request *carrier.ClubSupporterSubscriptionRefundedRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Server) ClubSupporterSubscriptionVoided(ctx context.Context, request *carrier.ClubSupporterSubscriptionVoidedRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Server) ClubSupporterSubscriptionPaymentFailure(ctx context.Context, request *carrier.ClubSupporterSubscriptionPaymentFailureRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s Server) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, request *carrier.UpcomingClubSupporterSubscriptionRenewalsRequest) (*emptypb.Empty, error) {
+	//TODO implement me
+	panic("implement me")
 }

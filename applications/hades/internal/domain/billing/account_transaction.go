@@ -4,6 +4,7 @@ import (
 	"errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/uuid"
 	"time"
 )
 
@@ -21,32 +22,26 @@ type AccountTransaction struct {
 
 	transaction Transaction
 
-	supportedClubId             *string
 	clubSupporterSubscriptionId *string
 
 	paymentMethod *PaymentMethod
 
-	amount   *int64
-	currency *Currency
+	amount   int64
+	currency Currency
 
-	isRecurring *bool
-
-	billingFailureNextRetryDate *time.Time
-
-	billedAtDate    *time.Time
+	billedAtDate    time.Time
 	nextBillingDate *time.Time
-	voidedAt        *time.Time
-	voidReason      *string
+
+	voidedAt   *time.Time
+	voidReason *string
 
 	ccbillSubscriptionId *string
 	ccbillTransactionId  *string
 
-	ccbillReason *string
-
 	events []*AccountTransactionEvent
 }
 
-func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, clubId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string) (*AccountTransaction, error) {
+func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string) (*AccountTransaction, error) {
 	cr, err := CurrencyFromString(currency)
 
 	if err != nil {
@@ -58,18 +53,17 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, clubId, id, 
 		id:                          id,
 		timestamp:                   timestamp,
 		transaction:                 Payment,
-		supportedClubId:             &clubId,
-		amount:                      &amount,
-		billedAtDate:                &billedAtDate,
+		amount:                      amount,
+		billedAtDate:                billedAtDate,
 		nextBillingDate:             &nextBillingDate,
-		currency:                    &cr,
+		currency:                    cr,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
 		ccbillTransactionId:         &id,
 	}, nil
 }
 
-func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, clubId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
+func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	cr, err := CurrencyFromString(currency)
 
 	if err != nil {
@@ -81,11 +75,10 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, clubId, id, 
 		id:                          id,
 		timestamp:                   timestamp,
 		transaction:                 Payment,
-		supportedClubId:             &clubId,
-		amount:                      &amount,
-		billedAtDate:                &billedAtDate,
+		amount:                      amount,
+		billedAtDate:                billedAtDate,
 		nextBillingDate:             &nextBillingDate,
-		currency:                    &cr,
+		currency:                    cr,
 		ccbillTransactionId:         &id,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
@@ -109,31 +102,23 @@ func (c *AccountTransaction) Transaction() Transaction {
 	return c.transaction
 }
 
-func (c *AccountTransaction) SupportedClubId() *string {
-	return c.supportedClubId
+func (c *AccountTransaction) ClubSupporterSubscriptionId() *string {
+	return c.clubSupporterSubscriptionId
 }
 
 func (c *AccountTransaction) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
-func (c *AccountTransaction) Amount() *int64 {
+func (c *AccountTransaction) Amount() int64 {
 	return c.amount
 }
 
-func (c *AccountTransaction) Currency() *Currency {
+func (c *AccountTransaction) Currency() Currency {
 	return c.currency
 }
 
-func (c *AccountTransaction) IsRecurring() *bool {
-	return c.isRecurring
-}
-
-func (c *AccountTransaction) BillingFailureNextRetryDate() *time.Time {
-	return c.billingFailureNextRetryDate
-}
-
-func (c *AccountTransaction) BilledAtDate() *time.Time {
+func (c *AccountTransaction) BilledAtDate() time.Time {
 	return c.billedAtDate
 }
 
@@ -148,6 +133,7 @@ func (c *AccountTransaction) CCBillSubscriptionId() *string {
 func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, currency Currency, reason string) error {
 	c.transaction = Refund
 	c.events = append(c.events, &AccountTransactionEvent{
+		id:        uuid.New().String(),
 		timestamp: timestamp,
 		amount:    amount,
 		currency:  currency,
@@ -159,6 +145,7 @@ func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, cur
 func (c *AccountTransaction) MakeChargeback(timestamp time.Time, amount int64, currency Currency, reason string) error {
 	c.transaction = Chargeback
 	c.events = append(c.events, &AccountTransactionEvent{
+		id:        uuid.New().String(),
 		timestamp: timestamp,
 		amount:    amount,
 		currency:  currency,
@@ -174,39 +161,95 @@ func (c *AccountTransaction) MakeVoid(timestamp time.Time, reason string) error 
 	return nil
 }
 
+func (c *AccountTransaction) getTotalRefunded() int64 {
+
+	var sum int64
+
+	for _, i := range c.events {
+		sum += i.amount
+	}
+
+	return sum
+}
+
+func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amount int64) error {
+
+	if c.transaction != Payment && c.transaction != Refund {
+		return errors.New("transaction in incorrect state")
+	}
+
+	sum := c.getTotalRefunded()
+
+	if sum+amount >= c.amount {
+		return errors.New("over refund threshold")
+	}
+
+	if !requester.IsStaff() {
+		return errors.New("only staff can issue refunds")
+	}
+
+	return nil
+}
+
+func (c *AccountTransaction) RequestVoid(requester *principal.Principal) error {
+
+	if c.transaction != Payment {
+		return errors.New("transaction in incorrect state")
+	}
+
+	if !requester.IsStaff() {
+		return errors.New("only staff can issue voids")
+	}
+
+	return nil
+}
+
 func (c *AccountTransaction) CanView(requester *principal.Principal) error {
 	return requester.BelongsToAccount(c.accountId)
 }
 
-func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, supportedClubId *string, paymentMethod *PaymentMethod, amount *int64, currency *string, isRecurring *bool, billingFailureNextRetryDate, billedAtDate, nextBillingDate *time.Time, ccbillSubscriptionId, ccbillReason *string) *AccountTransaction {
-	tr, _ := TransactionFromString(transaction)
+func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.Principal) (*RefundAmount, error) {
 
-	var cr *Currency
+	// subtract the amount already refunded from the total amount
+	newAmount := c.Amount() - c.getTotalRefunded()
 
-	if currency != nil {
-		newCr, _ := CurrencyFromString(*currency)
-		cr = &newCr
+	refund, err := newRefundAmountWithProrated(
+		newAmount,
+		c.Currency(),
+		c.BilledAtDate(),
+		*c.NextBillingDate(),
+	)
+
+	if err != nil {
+		return nil, err
 	}
+
+	return refund, nil
+}
+
+func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate time.Time, nextBillingDate *time.Time, ccbillSubscriptionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string) *AccountTransaction {
+	tr, _ := TransactionFromString(transaction)
+	cr, _ := CurrencyFromString(currency)
 
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
 		timestamp:                   timestamp,
 		transaction:                 tr,
-		supportedClubId:             supportedClubId,
 		paymentMethod:               paymentMethod,
 		amount:                      amount,
 		currency:                    cr,
-		isRecurring:                 isRecurring,
-		billingFailureNextRetryDate: billingFailureNextRetryDate,
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
 		ccbillSubscriptionId:        ccbillSubscriptionId,
-		ccbillReason:                ccbillReason,
+		clubSupporterSubscriptionId: clubSupporterSubscriptionId,
+		voidReason:                  voidReason,
+		voidedAt:                    voidedAt,
 	}
 }
 
 func CanViewAccountTransactionHistory(requester *principal.Principal, accountId string) error {
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
 	}
