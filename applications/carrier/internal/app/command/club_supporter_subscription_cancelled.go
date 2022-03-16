@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"github.com/pkg/errors"
+	"overdoll/applications/carrier/internal/domain/links"
 	"time"
 
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -33,7 +34,34 @@ func (h ClubSupporterSubscriptionCancelledHandler) Handle(ctx context.Context, c
 		return errors.Wrap(err, "failed to get account")
 	}
 
-	template, err := mailing.NewTemplate("cancelled", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n  \n            cancelled\n          </a>\n    </body>\n  </html>\n", "cancelled")
+	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to get club")
+	}
+
+	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())
+
+	if err != nil {
+		return err
+	}
+
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+
+	if err != nil {
+		return err
+	}
+
+	template, err := mailing.NewTemplate(
+		"club_supporter_subscription_cancelled",
+		map[string]interface{}{
+			"Username":         acc.Username(),
+			"ClubName":         clubDetails.Name(),
+			"ClubLink":         clubUrl.String(),
+			"SubscriptionLink": subscriptionUrl.String(),
+			"ExpirationDate":   cmd.ExpirationDate.Format("January 02"),
+		},
+	)
 
 	if err != nil {
 		return err

@@ -234,7 +234,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 
 	// spawn an async child workflow
 	// that will run this notification reminder at the beginning of each month to tell you how many subscriptions
-	// you have left
+	// you have re-billing this month
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
 		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + details.AccountInitiator.AccountId,
 		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,

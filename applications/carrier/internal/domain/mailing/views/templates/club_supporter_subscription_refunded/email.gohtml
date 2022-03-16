@@ -1,0 +1,17 @@
+{{template "layout.html" .}}
+
+{{define "title"}}Subscription Refunded{{end}}
+
+{{define "content"}}
+    {{.Username}}
+    {{.ClubName}}
+    {{.ClubLink}}
+
+    <br/>
+
+    {{.SubscriptionLink}}
+    {{.FormattedAmount}}
+    {{.TransactionLink}}
+{{end}}
+
+

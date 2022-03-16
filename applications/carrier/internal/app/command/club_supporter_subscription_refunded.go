@@ -3,6 +3,8 @@ package command
 import (
 	"context"
 	"github.com/pkg/errors"
+	"overdoll/applications/carrier/internal/domain/formatters"
+	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -33,7 +35,47 @@ func (h ClubSupporterSubscriptionRefundedHandler) Handle(ctx context.Context, cm
 		return errors.Wrap(err, "failed to get account")
 	}
 
-	template, err := mailing.NewTemplate("refunded", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n  \n            refunded\n          </a>\n    </body>\n  </html>\n", "refunded")
+	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to get club")
+	}
+
+	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())
+
+	if err != nil {
+		return err
+	}
+
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+
+	if err != nil {
+		return err
+	}
+
+	transactionUrl, err := links.CreateTransactionDetailsUrl(cmd.TransactionId)
+
+	if err != nil {
+		return err
+	}
+
+	formattedCurrency, err := formatters.Currency(cmd.Amount, cmd.Currency)
+
+	if err != nil {
+		return err
+	}
+
+	template, err := mailing.NewTemplate(
+		"club_supporter_subscription_refunded",
+		map[string]interface{}{
+			"Username":         acc.Username(),
+			"ClubName":         clubDetails.Name(),
+			"ClubLink":         clubUrl.String(),
+			"SubscriptionLink": subscriptionUrl.String(),
+			"TransactionLink":  transactionUrl.String(),
+			"FormattedAmount":  *formattedCurrency,
+		},
+	)
 
 	if err != nil {
 		return err

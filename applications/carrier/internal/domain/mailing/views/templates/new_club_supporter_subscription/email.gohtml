@@ -1,0 +1,18 @@
+{{template "layout.html" .}}
+
+{{define "title"}}New Subscription{{end}}
+
+{{define "content"}}
+    {{.Username}}
+    {{.ClubName}}
+    {{.ClubLink}}
+
+    <br/>
+
+    {{.SubscriptionLink}}
+    {{.FormattedAmount}}
+    {{.BillingDateStart}}
+    {{.BillingDateEnd}}
+{{end}}
+
+

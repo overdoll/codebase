@@ -3,6 +3,8 @@ package command
 import (
 	"context"
 	"github.com/pkg/errors"
+	"overdoll/applications/carrier/internal/domain/formatters"
+	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 	"time"
 )
@@ -36,7 +38,50 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 		return errors.Wrap(err, "failed to get account")
 	}
 
-	template, err := mailing.NewTemplate("upcoming renewals", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n  \n            upcoming renewals\n          </a>\n    </body>\n  </html>\n", "upcoming renewals")
+	var clubRenewals []map[string]interface{}
+
+	for _, renewal := range cmd.Renewals {
+
+		clubDetails, err := h.stella.GetClub(ctx, renewal.ClubId)
+
+		if err != nil {
+			return errors.Wrap(err, "failed to get club")
+		}
+
+		clubUrl, err := links.CreateClubUrl(clubDetails.Slug())
+
+		if err != nil {
+			return err
+		}
+
+		subscriptionUrl, err := links.CreateManageSubscriptionUrl(renewal.SubscriptionId)
+
+		if err != nil {
+			return err
+		}
+
+		formattedCurrency, err := formatters.Currency(renewal.Amount, renewal.Currency)
+
+		if err != nil {
+			return err
+		}
+
+		clubRenewals = append(clubRenewals, map[string]interface{}{
+			"ClubName":         clubDetails.Name(),
+			"ClubLink":         clubUrl.String(),
+			"SubscriptionLink": subscriptionUrl.String(),
+			"FormattedAmount":  *formattedCurrency,
+			"BillingDate":      renewal.BillingDate.Format("MM/DD"),
+		})
+	}
+
+	template, err := mailing.NewTemplate(
+		"upcoming_club_supporter_subscription_renewals",
+		map[string]interface{}{
+			"Username": acc.Username(),
+			"Renewals": clubRenewals,
+		},
+	)
 
 	if err != nil {
 		return err

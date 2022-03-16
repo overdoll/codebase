@@ -1,0 +1,16 @@
+{{template "layout.html" .}}
+
+{{define "title"}}Subscription Cancelled{{end}}
+
+{{define "content"}}
+    {{.Username}}
+    {{.ClubName}}
+    {{.ClubLink}}
+
+    <br/>
+
+    {{.SubscriptionLink}}
+    {{.ExpirationDate}}
+{{end}}
+
+
