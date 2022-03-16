@@ -184,7 +184,7 @@ func (c *AccountClubSupporterSubscription) MarkCancelled(cancelledAt time.Time) 
 
 func (c *AccountClubSupporterSubscription) MarkInactive(expiredAt time.Time) error {
 	c.cancelledAt = &expiredAt
-	c.status = Inactive
+	c.status = Expired
 	return nil
 }
 

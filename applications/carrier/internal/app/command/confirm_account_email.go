@@ -38,7 +38,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 	}
 
 	template, err := mailing.NewTemplate(
-		"confirm_account",
+		"confirm_account_email",
 		map[string]interface{}{
 			"Link": link.String(),
 		},

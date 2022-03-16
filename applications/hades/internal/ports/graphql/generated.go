@@ -43,7 +43,7 @@ type ResolverRoot interface {
 	Account() AccountResolver
 	AccountActiveClubSupporterSubscription() AccountActiveClubSupporterSubscriptionResolver
 	AccountCancelledClubSupporterSubscription() AccountCancelledClubSupporterSubscriptionResolver
-	AccountInactiveClubSupporterSubscription() AccountInactiveClubSupporterSubscriptionResolver
+	AccountExpiredClubSupporterSubscription() AccountExpiredClubSupporterSubscriptionResolver
 	AccountTransaction() AccountTransactionResolver
 	CCBillTransactionDetails() CCBillTransactionDetailsResolver
 	Club() ClubResolver
@@ -122,7 +122,7 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	AccountInactiveClubSupporterSubscription struct {
+	AccountExpiredClubSupporterSubscription struct {
 		Account            func(childComplexity int) int
 		BillingAmount      func(childComplexity int) int
 		BillingCurrency    func(childComplexity int) int
@@ -441,10 +441,10 @@ type AccountCancelledClubSupporterSubscriptionResolver interface {
 
 	CancellationReason(ctx context.Context, obj *types.AccountCancelledClubSupporterSubscription) (*types.CancellationReason, error)
 }
-type AccountInactiveClubSupporterSubscriptionResolver interface {
-	Transactions(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
+type AccountExpiredClubSupporterSubscriptionResolver interface {
+	Transactions(ctx context.Context, obj *types.AccountExpiredClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
 
-	CancellationReason(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription) (*types.CancellationReason, error)
+	CancellationReason(ctx context.Context, obj *types.AccountExpiredClubSupporterSubscription) (*types.CancellationReason, error)
 }
 type AccountTransactionResolver interface {
 	ClubSupporterSubscription(ctx context.Context, obj *types.AccountTransaction) (types.AccountClubSupporterSubscription, error)
@@ -857,101 +857,101 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountClubSupporterSubscriptionEdge.Node(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.account":
-		if e.complexity.AccountInactiveClubSupporterSubscription.Account == nil {
+	case "AccountExpiredClubSupporterSubscription.account":
+		if e.complexity.AccountExpiredClubSupporterSubscription.Account == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.Account(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.Account(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.billingAmount":
-		if e.complexity.AccountInactiveClubSupporterSubscription.BillingAmount == nil {
+	case "AccountExpiredClubSupporterSubscription.billingAmount":
+		if e.complexity.AccountExpiredClubSupporterSubscription.BillingAmount == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.BillingAmount(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.BillingAmount(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.billingCurrency":
-		if e.complexity.AccountInactiveClubSupporterSubscription.BillingCurrency == nil {
+	case "AccountExpiredClubSupporterSubscription.billingCurrency":
+		if e.complexity.AccountExpiredClubSupporterSubscription.BillingCurrency == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.BillingCurrency(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.BillingCurrency(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.billingError":
-		if e.complexity.AccountInactiveClubSupporterSubscription.BillingError == nil {
+	case "AccountExpiredClubSupporterSubscription.billingError":
+		if e.complexity.AccountExpiredClubSupporterSubscription.BillingError == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.BillingError(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.BillingError(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.cancellationReason":
-		if e.complexity.AccountInactiveClubSupporterSubscription.CancellationReason == nil {
+	case "AccountExpiredClubSupporterSubscription.cancellationReason":
+		if e.complexity.AccountExpiredClubSupporterSubscription.CancellationReason == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.CancellationReason(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.CancellationReason(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.ccbillSubscription":
-		if e.complexity.AccountInactiveClubSupporterSubscription.CcbillSubscription == nil {
+	case "AccountExpiredClubSupporterSubscription.ccbillSubscription":
+		if e.complexity.AccountExpiredClubSupporterSubscription.CcbillSubscription == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.CcbillSubscription(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.CcbillSubscription(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.club":
-		if e.complexity.AccountInactiveClubSupporterSubscription.Club == nil {
+	case "AccountExpiredClubSupporterSubscription.club":
+		if e.complexity.AccountExpiredClubSupporterSubscription.Club == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.Club(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.Club(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.expiredAt":
-		if e.complexity.AccountInactiveClubSupporterSubscription.ExpiredAt == nil {
+	case "AccountExpiredClubSupporterSubscription.expiredAt":
+		if e.complexity.AccountExpiredClubSupporterSubscription.ExpiredAt == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.ExpiredAt(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.ExpiredAt(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.id":
-		if e.complexity.AccountInactiveClubSupporterSubscription.ID == nil {
+	case "AccountExpiredClubSupporterSubscription.id":
+		if e.complexity.AccountExpiredClubSupporterSubscription.ID == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.ID(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.ID(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.reference":
-		if e.complexity.AccountInactiveClubSupporterSubscription.Reference == nil {
+	case "AccountExpiredClubSupporterSubscription.reference":
+		if e.complexity.AccountExpiredClubSupporterSubscription.Reference == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.Reference(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.Reference(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.supporterSince":
-		if e.complexity.AccountInactiveClubSupporterSubscription.SupporterSince == nil {
+	case "AccountExpiredClubSupporterSubscription.supporterSince":
+		if e.complexity.AccountExpiredClubSupporterSubscription.SupporterSince == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.SupporterSince(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.SupporterSince(childComplexity), true
 
-	case "AccountInactiveClubSupporterSubscription.transactions":
-		if e.complexity.AccountInactiveClubSupporterSubscription.Transactions == nil {
+	case "AccountExpiredClubSupporterSubscription.transactions":
+		if e.complexity.AccountExpiredClubSupporterSubscription.Transactions == nil {
 			break
 		}
 
-		args, err := ec.field_AccountInactiveClubSupporterSubscription_transactions_args(context.TODO(), rawArgs)
+		args, err := ec.field_AccountExpiredClubSupporterSubscription_transactions_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.Transactions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time)), true
 
-	case "AccountInactiveClubSupporterSubscription.updatedAt":
-		if e.complexity.AccountInactiveClubSupporterSubscription.UpdatedAt == nil {
+	case "AccountExpiredClubSupporterSubscription.updatedAt":
+		if e.complexity.AccountExpiredClubSupporterSubscription.UpdatedAt == nil {
 			break
 		}
 
-		return e.complexity.AccountInactiveClubSupporterSubscription.UpdatedAt(childComplexity), true
+		return e.complexity.AccountExpiredClubSupporterSubscription.UpdatedAt(childComplexity), true
 
 	case "AccountSavedPaymentMethod.account":
 		if e.complexity.AccountSavedPaymentMethod.Account == nil {
@@ -2408,7 +2408,7 @@ type AccountSavedPaymentMethod {
   updatedAt: Time!
 }
 
-union AccountClubSupporterSubscription = AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountInactiveClubSupporterSubscription
+union AccountClubSupporterSubscription = AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountExpiredClubSupporterSubscription
 
 interface IAccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
@@ -2622,7 +2622,7 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
   cancellationReason: CancellationReason @goField(forceResolver: true)
 }
 
-type AccountInactiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
@@ -2710,7 +2710,7 @@ type ExpiredAccountClubSupporterSubscription {
 enum AccountClubSupporterSubscriptionStatus {
   ACTIVE
   CANCELLED
-  INACTIVE
+  EXPIRED
 }
 
 enum CardType {
@@ -3558,7 +3558,7 @@ func (ec *executionContext) field_AccountCancelledClubSupporterSubscription_tran
 	return args, nil
 }
 
-func (ec *executionContext) field_AccountInactiveClubSupporterSubscription_transactions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_AccountExpiredClubSupporterSubscription_transactions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -5928,7 +5928,7 @@ func (ec *executionContext) _AccountClubSupporterSubscriptionEdge_cursor(ctx con
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5936,7 +5936,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_id(ctx con
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5963,7 +5963,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_id(ctx con
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_reference(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_reference(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5971,7 +5971,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_reference(
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5998,7 +5998,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_reference(
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_account(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_account(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6006,7 +6006,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_account(ct
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6033,7 +6033,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_account(ct
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_club(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_club(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6041,7 +6041,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_club(ctx c
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6068,7 +6068,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_club(ctx c
 	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactions(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_transactions(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6076,7 +6076,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactio
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
@@ -6085,7 +6085,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactio
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_AccountInactiveClubSupporterSubscription_transactions_args(ctx, rawArgs)
+	args, err := ec.field_AccountExpiredClubSupporterSubscription_transactions_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -6093,7 +6093,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactio
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountInactiveClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
+		return ec.resolvers.AccountExpiredClubSupporterSubscription().Transactions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["type"].(*types.AccountTransactionType), args["from"].(*time.Time), args["to"].(*time.Time))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6110,7 +6110,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_transactio
 	return ec.marshalNAccountTransactionConnection2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingAmount(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_billingAmount(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6118,7 +6118,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingAmo
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6145,7 +6145,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingAmo
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingCurrency(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_billingCurrency(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6153,7 +6153,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingCur
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6180,7 +6180,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingCur
 	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6188,7 +6188,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_supporterS
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6215,7 +6215,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_supporterS
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_ccbillSubscription(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_ccbillSubscription(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6223,7 +6223,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_ccbillSubs
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6247,7 +6247,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_ccbillSubs
 	return ec.marshalOCCBillSubscription2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillSubscription(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_updatedAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_updatedAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6255,7 +6255,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_updatedAt(
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6282,7 +6282,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_updatedAt(
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_expiredAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_expiredAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6290,7 +6290,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_expiredAt(
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6317,7 +6317,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_expiredAt(
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingError(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_billingError(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6325,7 +6325,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingErr
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -6349,7 +6349,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_billingErr
 	return ec.marshalOAccountClubSupporterSubscriptionBillingError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscriptionBillingError(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.AccountInactiveClubSupporterSubscription) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription_cancellationReason(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6357,7 +6357,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_cancellati
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountInactiveClubSupporterSubscription",
+		Object:     "AccountExpiredClubSupporterSubscription",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
@@ -6367,7 +6367,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription_cancellati
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccountInactiveClubSupporterSubscription().CancellationReason(rctx, obj)
+		return ec.resolvers.AccountExpiredClubSupporterSubscription().CancellationReason(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13309,13 +13309,13 @@ func (ec *executionContext) _AccountClubSupporterSubscription(ctx context.Contex
 			return graphql.Null
 		}
 		return ec._AccountCancelledClubSupporterSubscription(ctx, sel, obj)
-	case types.AccountInactiveClubSupporterSubscription:
-		return ec._AccountInactiveClubSupporterSubscription(ctx, sel, &obj)
-	case *types.AccountInactiveClubSupporterSubscription:
+	case types.AccountExpiredClubSupporterSubscription:
+		return ec._AccountExpiredClubSupporterSubscription(ctx, sel, &obj)
+	case *types.AccountExpiredClubSupporterSubscription:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._AccountInactiveClubSupporterSubscription(ctx, sel, obj)
+		return ec._AccountExpiredClubSupporterSubscription(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -13339,13 +13339,13 @@ func (ec *executionContext) _IAccountClubSupporterSubscription(ctx context.Conte
 			return graphql.Null
 		}
 		return ec._AccountCancelledClubSupporterSubscription(ctx, sel, obj)
-	case types.AccountInactiveClubSupporterSubscription:
-		return ec._AccountInactiveClubSupporterSubscription(ctx, sel, &obj)
-	case *types.AccountInactiveClubSupporterSubscription:
+	case types.AccountExpiredClubSupporterSubscription:
+		return ec._AccountExpiredClubSupporterSubscription(ctx, sel, &obj)
+	case *types.AccountExpiredClubSupporterSubscription:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._AccountInactiveClubSupporterSubscription(ctx, sel, obj)
+		return ec._AccountExpiredClubSupporterSubscription(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -14083,19 +14083,19 @@ func (ec *executionContext) _AccountClubSupporterSubscriptionEdge(ctx context.Co
 	return out
 }
 
-var accountInactiveClubSupporterSubscriptionImplementors = []string{"AccountInactiveClubSupporterSubscription", "AccountClubSupporterSubscription", "IAccountClubSupporterSubscription"}
+var accountExpiredClubSupporterSubscriptionImplementors = []string{"AccountExpiredClubSupporterSubscription", "AccountClubSupporterSubscription", "IAccountClubSupporterSubscription"}
 
-func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx context.Context, sel ast.SelectionSet, obj *types.AccountInactiveClubSupporterSubscription) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountInactiveClubSupporterSubscriptionImplementors)
+func (ec *executionContext) _AccountExpiredClubSupporterSubscription(ctx context.Context, sel ast.SelectionSet, obj *types.AccountExpiredClubSupporterSubscription) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountExpiredClubSupporterSubscriptionImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountInactiveClubSupporterSubscription")
+			out.Values[i] = graphql.MarshalString("AccountExpiredClubSupporterSubscription")
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_id(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_id(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14105,7 +14105,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "reference":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_reference(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_reference(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14115,7 +14115,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "account":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_account(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_account(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14125,7 +14125,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "club":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_club(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_club(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14142,7 +14142,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._AccountInactiveClubSupporterSubscription_transactions(ctx, field, obj)
+				res = ec._AccountExpiredClubSupporterSubscription_transactions(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -14155,7 +14155,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			})
 		case "billingAmount":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_billingAmount(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_billingAmount(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14165,7 +14165,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "billingCurrency":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_billingCurrency(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_billingCurrency(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14175,7 +14175,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "supporterSince":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_supporterSince(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_supporterSince(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14185,14 +14185,14 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "ccbillSubscription":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_ccbillSubscription(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_ccbillSubscription(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
 
 		case "updatedAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_updatedAt(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_updatedAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14202,7 +14202,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "expiredAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_expiredAt(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_expiredAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14212,7 +14212,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 			}
 		case "billingError":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountInactiveClubSupporterSubscription_billingError(ctx, field, obj)
+				return ec._AccountExpiredClubSupporterSubscription_billingError(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -14226,7 +14226,7 @@ func (ec *executionContext) _AccountInactiveClubSupporterSubscription(ctx contex
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._AccountInactiveClubSupporterSubscription_cancellationReason(ctx, field, obj)
+				res = ec._AccountExpiredClubSupporterSubscription_cancellationReason(ctx, field, obj)
 				return res
 			}
 

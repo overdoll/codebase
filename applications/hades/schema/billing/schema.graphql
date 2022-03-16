@@ -215,7 +215,7 @@ type AccountSavedPaymentMethod {
   updatedAt: Time!
 }
 
-union AccountClubSupporterSubscription = AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountInactiveClubSupporterSubscription
+union AccountClubSupporterSubscription = AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountExpiredClubSupporterSubscription
 
 interface IAccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
@@ -429,7 +429,7 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
   cancellationReason: CancellationReason @goField(forceResolver: true)
 }
 
-type AccountInactiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
@@ -517,7 +517,7 @@ type ExpiredAccountClubSupporterSubscription {
 enum AccountClubSupporterSubscriptionStatus {
   ACTIVE
   CANCELLED
-  INACTIVE
+  EXPIRED
 }
 
 enum CardType {

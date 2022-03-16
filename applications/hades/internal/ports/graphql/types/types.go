@@ -136,7 +136,7 @@ type AccountClubSupporterSubscriptionEdge struct {
 	Cursor string                           `json:"cursor"`
 }
 
-type AccountInactiveClubSupporterSubscription struct {
+type AccountExpiredClubSupporterSubscription struct {
 	// An ID to uniquely identify this subscription.
 	ID relay.ID `json:"id"`
 	// A reference, used to look up this subscription.
@@ -165,8 +165,8 @@ type AccountInactiveClubSupporterSubscription struct {
 	CancellationReason *CancellationReason `json:"cancellationReason"`
 }
 
-func (AccountInactiveClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
-func (AccountInactiveClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+func (AccountExpiredClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
+func (AccountExpiredClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
 
 type AccountSavedPaymentMethod struct {
 	// An ID to uniquely identify this payment method.
@@ -665,18 +665,18 @@ type AccountClubSupporterSubscriptionStatus string
 const (
 	AccountClubSupporterSubscriptionStatusActive    AccountClubSupporterSubscriptionStatus = "ACTIVE"
 	AccountClubSupporterSubscriptionStatusCancelled AccountClubSupporterSubscriptionStatus = "CANCELLED"
-	AccountClubSupporterSubscriptionStatusInactive  AccountClubSupporterSubscriptionStatus = "INACTIVE"
+	AccountClubSupporterSubscriptionStatusExpired   AccountClubSupporterSubscriptionStatus = "EXPIRED"
 )
 
 var AllAccountClubSupporterSubscriptionStatus = []AccountClubSupporterSubscriptionStatus{
 	AccountClubSupporterSubscriptionStatusActive,
 	AccountClubSupporterSubscriptionStatusCancelled,
-	AccountClubSupporterSubscriptionStatusInactive,
+	AccountClubSupporterSubscriptionStatusExpired,
 }
 
 func (e AccountClubSupporterSubscriptionStatus) IsValid() bool {
 	switch e {
-	case AccountClubSupporterSubscriptionStatusActive, AccountClubSupporterSubscriptionStatusCancelled, AccountClubSupporterSubscriptionStatusInactive:
+	case AccountClubSupporterSubscriptionStatusActive, AccountClubSupporterSubscriptionStatusCancelled, AccountClubSupporterSubscriptionStatusExpired:
 		return true
 	}
 	return false

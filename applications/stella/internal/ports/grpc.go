@@ -44,7 +44,7 @@ func (s Server) GetAccountClubMembershipIds(ctx context.Context, request *stella
 
 func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequest) (*stella.GetClubByIdResponse, error) {
 
-	_, err := s.app.Queries.ClubById.Handle(ctx, query.ClubById{
+	clb, err := s.app.Queries.ClubById.Handle(ctx, query.ClubById{
 		Id: request.ClubId,
 	})
 
@@ -52,7 +52,12 @@ func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequ
 		return nil, err
 	}
 
-	return &stella.GetClubByIdResponse{}, nil
+	return &stella.GetClubByIdResponse{
+		Club: &stella.Club{
+			Slug: clb.Slug(),
+			Name: clb.Name().TranslateDefault(""),
+		},
+	}, nil
 }
 
 func (s Server) SuspendClub(ctx context.Context, request *stella.SuspendClubRequest) (*stella.SuspendClubResponse, error) {

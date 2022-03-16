@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -14,47 +13,6 @@ import (
 	"time"
 )
 
-type AccountTransactionHistoryCancelled struct {
-	Entities []struct {
-		Account struct {
-			Id                 relay.ID
-			TransactionHistory *struct {
-				Edges []*struct {
-					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							CCBillReason                  string                              `graphql:"ccbillReason"`
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-							Timestamp                     time.Time
-						} `graphql:"... on AccountCancelledTransactionHistory"`
-					}
-				}
-			} `graphql:"transactionHistory(startDate: $startDate)"`
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-type AccountTransactionHistoryExpired struct {
-	Entities []struct {
-		Account struct {
-			Id                 relay.ID
-			TransactionHistory struct {
-				Edges []*struct {
-					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-							Timestamp                     time.Time
-						} `graphql:"... on AccountExpiredTransactionHistory"`
-					}
-				}
-			} `graphql:"transactionHistory(startDate: $startDate)"`
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
 type ExpiredAccountClubSupporterSubscriptions struct {
 	Entities []struct {
 		Account struct {
@@ -62,13 +20,70 @@ type ExpiredAccountClubSupporterSubscriptions struct {
 			ExpiredClubSupporterSubscriptions struct {
 				Edges []*struct {
 					Node struct {
-						Id                 relay.ID
-						SupporterSince     time.Time
-						ExpiredAt          time.Time
-						CancelledAt        time.Time
-						CancellationReason struct {
-							Id relay.ID
-						}
+						Id             relay.ID
+						SupporterSince time.Time
+						ExpiredAt      time.Time
+						CancelledAt    time.Time
+					}
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountCancelledClubSupporterSubscriptions struct {
+	Entities []struct {
+		Account struct {
+			Id                         relay.ID
+			ClubSupporterSubscriptions struct {
+				Edges []*struct {
+					Node struct {
+						Item struct {
+							Id                 relay.ID
+							Status             types.AccountClubSupporterSubscriptionStatus
+							Reference          string
+							EndDate            time.Time
+							CancelledAt        time.Time
+							BillingAmount      int
+							BillingCurrency    types.Currency
+							PaymentMethod      types.PaymentMethod
+							CcbillSubscription types.CCBillSubscription
+							CancellationReason types.CancellationReason
+							Transactions       struct {
+								Edges []*struct {
+									Node struct {
+										Id relay.ID
+									}
+								}
+							}
+						} `graphql:"... on AccountCancelledClubSupporterSubscription"`
+					}
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type AccountExpiredClubSupporterSubscriptions struct {
+	Entities []struct {
+		Account struct {
+			Id                         relay.ID
+			ClubSupporterSubscriptions struct {
+				Edges []*struct {
+					Node struct {
+						Item struct {
+							Id           relay.ID
+							Status       types.AccountClubSupporterSubscriptionStatus
+							Reference    string
+							ExpiredAt    time.Time
+							Transactions struct {
+								Edges []*struct {
+									Node struct {
+										Id relay.ID
+									}
+								}
+							}
+						} `graphql:"... on AccountExpiredClubSupporterSubscription"`
 					}
 				}
 			}
@@ -81,10 +96,11 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCancellation, mock.Anything)
 
@@ -106,34 +122,28 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
-	// get club supporter subscriptions
-	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+	var cancelledSubscriptions AccountCancelledClubSupporterSubscriptions
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusCancelled, subscriptions.Edges[0].Node.Status, "subscription is cancelled now")
-
-	var accountTransactionsCancelled AccountTransactionHistoryCancelled
-
-	err := gqlClient.Query(context.Background(), &accountTransactionsCancelled, map[string]interface{}{
+	err := gqlClient.Query(context.Background(), &cancelledSubscriptions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
 				"id":         convertAccountIdToRelayId(accountId),
 			},
 		},
-		"startDate": time.Now(),
 	})
 
-	require.NoError(t, err, "no error grabbing account transaction history")
+	require.NoError(t, err, "no error grabbing cancelled subscriptions")
 
-	require.Len(t, accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
+	require.Len(t, cancelledSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "should have 1 subscription")
 
-	transaction := accountTransactionsCancelled.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
+	subscription := cancelledSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, "Transaction Voided", transaction.CCBillReason, "correct reason")
-	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusCancelled, subscription.Status, "subscription is cancelled now")
+	require.Equal(t, "2022-02-26 20:18:00", subscription.CancelledAt, "subscription correct cancellation date")
+	require.Equal(t, "2022-02-26 20:18:00", subscription.EndDate, "subscription correct end date")
+	require.NotNil(t, subscription.CancellationReason, "subscription correct cancellation reason")
+	require.Len(t, subscription.Transactions.Edges, 1, "should have 1 transaction")
 
 	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillExpiration, mock.Anything)
 
@@ -150,31 +160,26 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	// get club supporter subscriptions
-	subscriptions = getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 0, "should no longer have the subscription")
+	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
 
-	var accountTransactionsExpired AccountTransactionHistoryExpired
-
-	err = gqlClient.Query(context.Background(), &accountTransactionsExpired, map[string]interface{}{
+	err = gqlClient.Query(context.Background(), &cancelledSubscriptions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
 				"id":         convertAccountIdToRelayId(accountId),
 			},
 		},
-		"startDate": time.Now(),
 	})
 
-	require.NoError(t, err, "no error grabbing account transaction history")
+	require.NoError(t, err, "no error grabbing expired subscriptions")
 
-	require.Len(t, accountTransactionsExpired.Entities[0].Account.TransactionHistory.Edges, 3, "3 transaction items")
+	require.Len(t, expiredSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "should have 1 subscription")
 
-	expiredTransaction := accountTransactionsExpired.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
+	expiredSubscription := expiredSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, expiredTransaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredTransaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, ccbillSubscriptionId, expiredTransaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusExpired, expiredSubscription.Status, "subscription is expired now")
+	require.Equal(t, "2022-02-26 20:18:00", expiredSubscription.ExpiredAt, "subscription correct end date")
+	require.Len(t, expiredSubscription.Transactions.Edges, 1, "should have 1 transaction")
 
 	var expiredAccountClubSupporterSubscriptions ExpiredAccountClubSupporterSubscriptions
 
@@ -189,9 +194,9 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.NoError(t, err, "no error looking up expired subscriptions")
 
-	expiredSubscription := expiredAccountClubSupporterSubscriptions.Entities[0].Account.ExpiredClubSupporterSubscriptions.Edges[0].Node
+	expiredSubscriptionNew := expiredAccountClubSupporterSubscriptions.Entities[0].Account.ExpiredClubSupporterSubscriptions.Edges[0].Node
 
-	require.Equal(t, "2022-02-28 20:18:00", expiredSubscription.ExpiredAt.String(), "correct expiration date")
-	require.Equal(t, "2022-02-26 20:18:00", expiredSubscription.CancelledAt.String(), "correct cancellation date")
-	require.Equal(t, "2022-02-26 08:21:49", expiredSubscription.SupporterSince.String(), "correct supporter date")
+	require.Equal(t, "2022-02-28 20:18:00", expiredSubscriptionNew.ExpiredAt.String(), "correct expiration date")
+	require.Equal(t, "2022-02-26 20:18:00", expiredSubscriptionNew.CancelledAt.String(), "correct cancellation date")
+	require.Equal(t, "2022-02-26 08:21:49", expiredSubscriptionNew.SupporterSince.String(), "correct supporter date")
 }

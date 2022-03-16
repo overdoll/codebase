@@ -1,7 +1,6 @@
 package service_test
 
 import (
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -16,10 +15,11 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillUserReactivation, mock.Anything)
 
@@ -40,11 +40,10 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// get club supporter subscriptions
-	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "1 subscription exists")
+	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	subscription := subscriptions.Edges[0]
-
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
-	require.Equal(t, "2025-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Status, "subscription is active")
+	require.Equal(t, "2025-03-28 00:00:00 +0000 UTC", subscription.NextBillingDate.String(), "correct next billing date")
 }

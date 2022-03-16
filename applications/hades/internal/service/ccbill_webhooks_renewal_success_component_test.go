@@ -1,53 +1,25 @@
 package service_test
 
 import (
-	"context"
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
-	"time"
 )
-
-type AccountTransactionHistoryInvoice struct {
-	Entities []struct {
-		Account struct {
-			Id                 relay.ID
-			TransactionHistory struct {
-				Edges []*struct {
-					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							Amount                        int
-							Currency                      types.Currency
-							BilledAtDate                  time.Time
-							NextBillingDate               time.Time
-							PaymentMethod                 types.PaymentMethod
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-							Timestamp                     time.Time
-						} `graphql:"... on AccountInvoiceTransactionHistory"`
-					}
-				}
-			} `graphql:"transactionHistory(startDate: $startDate)"`
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
 
 // test a bunch of webhooks at the same time
 func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalSuccess, mock.Anything)
 
@@ -70,6 +42,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 		"paymentType":            "CREDIT",
 		"timestamp":              "2022-02-28 08:21:49",
 		"subscriptionId":         ccbillSubscriptionId,
+		"transactionId":          ccbillTransactionId,
 	})
 
 	env := getWorkflowEnvironment(t)
@@ -81,39 +54,24 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// get club supporter subscriptions
-	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "1 subscription exists")
+	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	subscription := subscriptions.Edges[0]
+	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Status, "subscription is active")
+	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2024-03-28 00:00:00 +0000 UTC", subscription.NextBillingDate.String(), "correct next billing date")
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
-	require.Equal(t, types.CurrencyUsd, subscription.Node.BillingCurrency, "USD currency is used")
-	require.Equal(t, 699, subscription.Node.BillingAmount, "correct billing amount")
-	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
-	require.Equal(t, "2024-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
+	accountTransactionsInvoice := getAccountTransactions(t, gqlClient, accountId)
 
-	var accountTransactionsInvoice AccountTransactionHistoryInvoice
+	require.Len(t, accountTransactionsInvoice.Entities[0].Account.Transactions.Edges, 2, "2 transaction items")
+	transaction := accountTransactionsInvoice.Entities[0].Account.Transactions.Edges[0].Node
 
-	err := gqlClient.Query(context.Background(), &accountTransactionsInvoice, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(accountId),
-			},
-		},
-		"startDate": time.Now(),
-	})
-
-	require.NoError(t, err, "no error grabbing account transaction history")
-
-	require.Len(t, accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
-	transaction := accountTransactionsInvoice.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
-
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, types.AccountTransactionTypePayment, transaction.Transaction, "correct transaction type")
 	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
-	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
 
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)

@@ -16,7 +16,6 @@ type Commands struct {
 	ClubSupporterSubscriptionCancelled        command.ClubSupporterSubscriptionCancelledHandler
 	ClubSupporterSubscriptionPaymentFailure   command.ClubSupporterSubscriptionPaymentFailureHandler
 	ClubSupporterSubscriptionRefunded         command.ClubSupporterSubscriptionRefundedHandler
-	ClubSupporterSubscriptionVoided           command.ClubSupporterSubscriptionVoidedHandler
 	UpcomingClubSupporterSubscriptionRenewals command.UpcomingClubSupporterSubscriptionRenewalsHandler
 }
 

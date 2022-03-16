@@ -233,7 +233,7 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 
 	if result.Status() == billing.Cancelled {
 		return &AccountCancelledClubSupporterSubscription{
-			ID:        relay.NewID(AccountActiveClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
+			ID:        relay.NewID(AccountCancelledClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
 			Reference: result.Id(),
 			Account: &Account{
 				ID: relay.NewID(Account{}, result.AccountId()),
@@ -254,9 +254,9 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 		}
 	}
 
-	if result.Status() == billing.Inactive {
-		return &AccountInactiveClubSupporterSubscription{
-			ID:        relay.NewID(AccountActiveClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
+	if result.Status() == billing.Expired {
+		return &AccountExpiredClubSupporterSubscription{
+			ID:        relay.NewID(AccountExpiredClubSupporterSubscription{}, result.AccountId(), result.ClubId(), result.Id()),
 			Reference: result.Id(),
 			Account: &Account{
 				ID: relay.NewID(Account{}, result.AccountId()),

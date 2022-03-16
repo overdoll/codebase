@@ -20,7 +20,7 @@ var (
 	voidedSubscriptionId    = "0122061301000154282"
 )
 
-func Test_ChargeByPrevious_Void(t *testing.T) {
+func Test_ChargeByPrevious_Refund(t *testing.T) {
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -55,10 +55,10 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 	require.NotNil(t, status.NextBillingDate(), "should have an issued void")
 	require.Equal(t, ccbill.ActiveAndNotCancelled, status.SubscriptionStatus(), "should be active and not cancelled")
 
-	voidOrRefund, err := ccbill.NewRefundWithoutAmount(newSubscriptionId)
+	voidOrRefund, err := ccbill.NewRefundWithCustomAmount(newSubscriptionId, 1, 1, "USD")
 	require.NoError(t, err, "no error creating void or refund")
 
-	err = repository.VoidOrRefundSubscription(context.Background(), voidOrRefund)
+	err = repository.RefundTransaction(context.Background(), voidOrRefund)
 	require.NoError(t, err, "no error voiding or refunding subscription")
 
 	status, err = repository.ViewSubscriptionStatus(context.Background(), newSubscriptionId)

@@ -10,7 +10,7 @@ var (
 	UnknownSupportStatus = SupportStatus{""}
 	Active               = SupportStatus{"active"}
 	Cancelled            = SupportStatus{"cancelled"}
-	Inactive             = SupportStatus{"inactive"}
+	Expired              = SupportStatus{"expired"}
 )
 
 func (r SupportStatus) String() string {
@@ -23,8 +23,8 @@ func SupportStatusFromString(s string) (SupportStatus, error) {
 		return Active, nil
 	case Cancelled.slug:
 		return Cancelled, nil
-	case Inactive.slug:
-		return Inactive, nil
+	case Expired.slug:
+		return Expired, nil
 	}
 
 	return UnknownSupportStatus, errors.New("unknown support status: " + s)

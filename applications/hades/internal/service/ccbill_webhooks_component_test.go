@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, clubId string, customToken *string) {
+func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId string, customToken *string) {
 
 	var token *string
 
@@ -85,7 +85,7 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 		SubscriptionRecurringPrice:     "6.99",
 		SubscriptionTypeId:             "0000001458",
 		Timestamp:                      "2022-02-26 08:21:49",
-		TransactionId:                  "0222057601000107735",
+		TransactionId:                  ccbillTransactionId,
 		XFormDigest:                    "5e118a92ac1ff6cec8bbe64e13acb7c5",
 		XCurrencyCode:                  "840",
 		SubscriptionId:                 ccbillSubscriptionId,

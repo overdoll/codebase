@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
-	carrier "overdoll/applications/carrier/proto"
-	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 	"time"
@@ -77,50 +75,4 @@ func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
 	require.NoError(t, err, "no error for parsing html document")
 
 	return doc
-}
-
-func TestConfirmAccountEmail(t *testing.T) {
-	t.Parallel()
-
-	client := getGrpcClient()
-
-	email := generateEmail("carrier-confirm_account_email")
-	token := uuid.New().String()
-	secret := uuid.New().String()
-
-	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Id: token, Secret: secret})
-
-	require.NoError(t, err, "no error for sending confirm account email")
-
-	doc := waitForEmailAndGetDocument(t, email)
-
-	link := doc.Find("a").First()
-
-	val, exists := link.Attr("href")
-	require.True(t, exists)
-
-	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token+"&secret="+secret, val)
-}
-
-func TestNewLoginTokenEmail(t *testing.T) {
-	t.Parallel()
-
-	client := getGrpcClient()
-
-	email := generateEmail("carrier-new_login_token")
-	token := uuid.New().String()
-	secret := uuid.New().String()
-
-	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token, Secret: secret})
-
-	require.NoError(t, err, "no error for sending login token email")
-
-	doc := waitForEmailAndGetDocument(t, email)
-
-	link := doc.Find("a").First()
-
-	val, exists := link.Attr("href")
-	require.True(t, exists)
-
-	require.Contains(t, os.Getenv("APP_URL")+"/verify-token?token="+token+"&secret="+secret, val)
 }
