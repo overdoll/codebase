@@ -110,9 +110,9 @@ func (r BillingCassandraS3TemporalFileRepository) waitForClubSupportReceiptWorkf
 	return r.unmarshalClubSupportReceipt(ctx, receiptFile)
 }
 
-func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *billing.ClubSupporterPaymentReceiptBuilder) error {
+func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWithNewFile(ctx context.Context, id, fileKeyPrefix, fileName string) error {
 
-	receiptFile, err := r.getClubSupportReceipt(ctx, builder.AccountTransactionHistory().Id())
+	receiptFile, err := r.getClubSupportReceipt(ctx, id)
 
 	if err != nil {
 		return err
@@ -120,10 +120,10 @@ func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterPaymentRece
 
 	uploader := s3manager.NewUploader(r.aws)
 
-	fileKey := "/club-supporter-receipts/payments/" + builder.FileName()
+	fileKey := fileKeyPrefix + fileName
 
 	// open the file
-	file, err := os.Open(builder.FileName())
+	file, err := os.Open(fileName)
 
 	if err != nil {
 		return err
@@ -155,54 +155,12 @@ func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterPaymentRece
 	return nil
 }
 
-func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymentReceiptFromTransaction(ctx context.Context, requester *principal.Principal, history *billing.AccountTransaction) (*billing.ClubSupporterReceipt, error) {
+func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *billing.ClubSupporterPaymentReceiptBuilder) error {
+	return r.updateClubSupporterReceiptWithNewFile(ctx, builder.AccountTransaction().Id(), "/club-supporter-receipts/payments/", builder.FileName())
+}
 
-	if err := billing.CanCreateClubSupporterPaymentReceiptFromTransactionHistory(requester, history); err != nil {
-		return nil, err
-	}
-
-	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
-
-	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
-		return nil, err
-	}
-
-	// receipt file doesn't exist, create it
-	if receiptFile == nil {
-
-		workflowId := "ClubSupporterPaymentReceipt_" + history.Id()
-
-		if err := r.session.
-			Query(receiptFilesTable.Insert()).
-			Consistency(gocql.LocalQuorum).
-			BindStruct(&receiptFiles{
-				Id:                          history.Id(),
-				AccountTransactionHistoryId: history.Id(),
-				TemporalWorkflowId:          workflowId,
-			}).
-			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
-		}
-
-		options := client.StartWorkflowOptions{
-			TaskQueue: viper.GetString("temporal.queue"),
-			ID:        workflowId,
-		}
-
-		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistoryInput{AccountTransactionHistoryId: history.Id()}); err != nil {
-			return nil, err
-		}
-
-		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), workflowId)
-	}
-
-	// no file path, means a workflow was already started, so we wait for result
-	if receiptFile.FilePath != "" {
-		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), receiptFile.TemporalWorkflowId)
-	}
-
-	return r.unmarshalClubSupportReceipt(ctx, receiptFile)
-
+func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterRefundReceiptWithNewFile(ctx context.Context, builder *billing.ClubSupporterRefundReceiptBuilder) error {
+	return r.updateClubSupporterReceiptWithNewFile(ctx, builder.AccountTransaction().Id()+"-"+builder.Event().Id(), "/club-supporter-receipts/refunds/", builder.FileName())
 }
 
 func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *billing.AccountTransaction, eventId string) (*billing.ClubSupporterReceipt, error) {
@@ -257,6 +215,54 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 	// no file path, means a workflow was already started, so we wait for result
 	if receiptFile.FilePath != "" {
 		return r.waitForClubSupportReceiptWorkflow(ctx, id, receiptFile.TemporalWorkflowId)
+	}
+
+	return r.unmarshalClubSupportReceipt(ctx, receiptFile)
+}
+
+func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *billing.AccountTransaction) (*billing.ClubSupporterReceipt, error) {
+	if err := billing.CanCreateClubSupporterPaymentReceiptFromTransactionHistory(requester, history); err != nil {
+		return nil, err
+	}
+
+	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
+
+	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
+		return nil, err
+	}
+
+	// receipt file doesn't exist, create it
+	if receiptFile == nil {
+
+		workflowId := "ClubSupporterPaymentReceipt_" + history.Id()
+
+		if err := r.session.
+			Query(receiptFilesTable.Insert()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(&receiptFiles{
+				Id:                          history.Id(),
+				AccountTransactionHistoryId: history.Id(),
+				TemporalWorkflowId:          workflowId,
+			}).
+			ExecRelease(); err != nil {
+			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
+		}
+
+		options := client.StartWorkflowOptions{
+			TaskQueue: viper.GetString("temporal.queue"),
+			ID:        workflowId,
+		}
+
+		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistoryInput{AccountTransactionHistoryId: history.Id()}); err != nil {
+			return nil, err
+		}
+
+		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), workflowId)
+	}
+
+	// no file path, means a workflow was already started, so we wait for result
+	if receiptFile.FilePath != "" {
+		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), receiptFile.TemporalWorkflowId)
 	}
 
 	return r.unmarshalClubSupportReceipt(ctx, receiptFile)

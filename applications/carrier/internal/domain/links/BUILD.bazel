@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "links",
+    srcs = [
+        "club.go",
+        "confirm_email.go",
+        "manage_subscription.go",
+        "transaction_details.go",
+        "verify_token.go",
+    ],
+    importpath = "overdoll/applications/carrier/internal/domain/links",
+    visibility = ["//applications/carrier:__subpackages__"],
+)

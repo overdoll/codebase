@@ -48,12 +48,14 @@ type Repository interface {
 type IndexRepository interface {
 	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
 	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
+	IndexAllAccountTransactions(ctx context.Context) error
+	DeleteAccountTransactionsIndex(ctx context.Context) error
 	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
 }
 
 type FileRepository interface {
-	GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction, eventId string) (*ClubSupporterReceipt, error)
-	GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, history *AccountTransaction) (*ClubSupporterReceipt, error)
+	GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *AccountTransaction, eventId string) (*ClubSupporterReceipt, error)
+	GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *AccountTransaction) (*ClubSupporterReceipt, error)
 	UpdateClubSupporterRefundReceiptWithNewFile(ctx context.Context, builder *ClubSupporterRefundReceiptBuilder) error
 	UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *ClubSupporterPaymentReceiptBuilder) error
 }

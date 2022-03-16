@@ -26,3 +26,7 @@ func NewAccountClubSupporterSubscriptionFilters(accountId string, status []strin
 func (e *AccountClubSupporterSubscriptionFilters) AccountId() string {
 	return e.accountId
 }
+
+func (e *AccountClubSupporterSubscriptionFilters) Status() []SupportStatus {
+	return e.status
+}

@@ -2262,10 +2262,10 @@ type AccountTransaction {
   currency: Currency!
 
   """When the billing occurred."""
-  billedAtDate: Time!
+  billedAtDate: Date!
 
   """The next billing date for this transaction, if its a subscription."""
-  nextBillingDate: Time
+  nextBillingDate: Date
 
   """The payment method linked to this transaction."""
   paymentMethod: PaymentMethod!
@@ -2482,7 +2482,7 @@ type AccountClubSupporterSubscriptionBillingError {
   ccbillDeclineError: CCBillDeclineError
 
   """The next date the billing will be retried."""
-  nextRetryDate: Time!
+  nextRetryDate: Date!
 }
 
 type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
@@ -2534,10 +2534,10 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
   supporterSince: Time!
 
   """The last billing date for this subscription."""
-  lastBillingDate: Time!
+  lastBillingDate: Date!
 
   """The next billing date for this subscription."""
-  nextBillingDate: Time!
+  nextBillingDate: Date!
 
   """The payment method linked to this subscription."""
   paymentMethod: PaymentMethod!
@@ -2604,7 +2604,7 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
   cancelledAt: Time!
 
   """When this subscription will end."""
-  endDate: Time!
+  endDate: Date!
 
   """The payment method linked to this subscription."""
   paymentMethod: PaymentMethod!
@@ -3323,6 +3323,8 @@ extend type Account @key(fields: "id")  {
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
+
+scalar Date
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
@@ -4925,7 +4927,7 @@ func (ec *executionContext) _AccountActiveClubSupporterSubscription_lastBillingD
 	}
 	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountActiveClubSupporterSubscription_nextBillingDate(ctx context.Context, field graphql.CollectedField, obj *types.AccountActiveClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -4960,7 +4962,7 @@ func (ec *executionContext) _AccountActiveClubSupporterSubscription_nextBillingD
 	}
 	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountActiveClubSupporterSubscription_paymentMethod(ctx context.Context, field graphql.CollectedField, obj *types.AccountActiveClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -5451,7 +5453,7 @@ func (ec *executionContext) _AccountCancelledClubSupporterSubscription_endDate(c
 	}
 	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountCancelledClubSupporterSubscription_paymentMethod(ctx context.Context, field graphql.CollectedField, obj *types.AccountCancelledClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -5783,7 +5785,7 @@ func (ec *executionContext) _AccountClubSupporterSubscriptionBillingError_nextRe
 	}
 	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountClubSupporterSubscriptionConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.AccountClubSupporterSubscriptionConnection) (ret graphql.Marshaler) {
@@ -6933,7 +6935,7 @@ func (ec *executionContext) _AccountTransaction_billedAtDate(ctx context.Context
 	}
 	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransaction_nextBillingDate(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
@@ -6965,7 +6967,7 @@ func (ec *executionContext) _AccountTransaction_nextBillingDate(ctx context.Cont
 	}
 	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalODate2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransaction_paymentMethod(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
@@ -17746,6 +17748,21 @@ func (ec *executionContext) marshalNCurrency2overdollᚋapplicationsᚋhadesᚋi
 	return v
 }
 
+func (ec *executionContext) unmarshalNDate2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql1.UnmarshalDate(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDate2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql1.MarshalDate(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNDeleteAccountSavedPaymentMethodInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodInput(ctx context.Context, v interface{}) (types.DeleteAccountSavedPaymentMethodInput, error) {
 	res, err := ec.unmarshalInputDeleteAccountSavedPaymentMethodInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -18623,6 +18640,21 @@ func (ec *executionContext) marshalOCreateCancellationReasonPayload2ᚖoverdoll�
 		return graphql.Null
 	}
 	return ec._CreateCancellationReasonPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalODate2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql1.UnmarshalDate(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalODate2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql1.MarshalDate(*v)
 }
 
 func (ec *executionContext) marshalODeleteAccountSavedPaymentMethodPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountSavedPaymentMethodPayload) graphql.Marshaler {

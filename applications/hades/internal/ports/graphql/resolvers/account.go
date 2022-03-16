@@ -34,7 +34,7 @@ func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *ty
 		newStatus = append(newStatus, s.String())
 	}
 
-	results, err := r.App.Queries.SearchAccountClubSupporterSubscription.
+	results, err := r.App.Queries.SearchAccountClubSupporterSubscriptions.
 		Handle(
 			ctx,
 			query.SearchAccountClubSupporterSubscriptions{
@@ -161,7 +161,7 @@ func (r AccountResolver) Transactions(ctx context.Context, obj *types.Account, a
 
 	accountId := obj.ID.GetID()
 
-	results, err := r.App.Queries.SearchAccountTransactionHistory.
+	results, err := r.App.Queries.SearchAccountTransactions.
 		Handle(
 			ctx,
 			query.SearchAccountTransactions{

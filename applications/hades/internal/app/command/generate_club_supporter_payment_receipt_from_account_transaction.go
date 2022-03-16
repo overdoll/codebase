@@ -28,7 +28,7 @@ func (h GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler) Handle
 		return nil, err
 	}
 
-	clubSupporterReceipt, err := h.fr.GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx, transaction)
+	clubSupporterReceipt, err := h.fr.GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx, cmd.Principal, transaction)
 
 	if err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"overdoll/applications/hades/internal/adapters"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -100,4 +101,26 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 		Body:          ioutil.NopCloser(buff),
 		ContentLength: int64(buff.Len()),
 	}, nil
+}
+
+type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
 }

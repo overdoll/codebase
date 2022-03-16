@@ -66,7 +66,6 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		activities.CreateInvoiceClubSubscriptionAccountTransactionInput{
 			AccountClubSupporterSubscriptionId: input.SubscriptionId,
 			AccountId:                          subscriptionDetails.AccountId,
-			ClubId:                             subscriptionDetails.ClubId,
 			Timestamp:                          timestamp,
 			CardLast4:                          input.Last4,
 			CardType:                           input.CardType,

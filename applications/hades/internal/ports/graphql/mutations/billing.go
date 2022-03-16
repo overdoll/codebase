@@ -212,9 +212,7 @@ func (r *MutationResolver) ExtendAccountClubSupporterSubscription(ctx context.Co
 			ctx,
 			command.ExtendAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetID(),
 				Days:                               input.Days,
 			},
 		)

@@ -54,6 +54,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			StellaServiceMock{},
+			CarrierServiceMock{},
 			MockCCBillHttpClient{},
 			temporalClient,
 		),
@@ -66,7 +67,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
-
+	esClient := bootstrap.InitializeElasticSearchSession()
 	awsSession := bootstrap.InitializeAWSSession()
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
@@ -75,6 +76,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	cancelRepo := adapters.NewCancellationCassandraRepository(session)
+	billingIndexRepo := adapters.NewBillingIndexElasticSearchRepository(esClient, session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -90,24 +92,31 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, ccbillRepo, cancelRepo),
 			DeleteAccountSavedPaymentMethod:                                  command.NewDeleteAccountSavedPaymentMethodHandler(billingRepo),
 			RefundAccountTransaction:                                         command.NewRefundAccountTransactionHandler(billingRepo, ccbillRepo),
+			GenerateClubSupporterRefundReceiptFromAccountTransactionHistory:  command.NewGenerateClubSupporterRefundReceiptFromAccountTransaction(billingRepo, billingFileRepo),
 			ExtendAccountClubSupporterSubscription:                           command.NewExtendAccountClubSupporterSubscription(billingRepo, ccbillRepo),
 			GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory: command.NewGenerateClubSupporterPaymentReceiptFromAccountTransaction(billingRepo, billingFileRepo),
+			IndexAllAccountTransactions:                                      command.NewIndexAllAccountTransactionsHandler(billingIndexRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                                     query.NewPrincipalByIdHandler(eva),
-			SearchAccountClubSupporterSubscription:            query.NewSearchAccountClubSupporterSubscriptionsHandler(billingRepo),
+			SearchAccountClubSupporterSubscriptions:           query.NewSearchAccountClubSupporterSubscriptionsHandler(billingRepo),
 			ExpiredAccountClubSupporterSubscriptionsByAccount: query.NewExpiredAccountClubSupporterSubscriptionsByAccountHandler(billingRepo),
-			AccountTransactionById:                            query.NewAccountTransactionByIdHandler(billingRepo),
 			AccountClubSupporterSubscriptionById:              query.NewAccountClubSupporterSubscriptionByIdHandler(billingRepo),
 			AccountSavedPaymentMethods:                        query.NewAccountSavedPaymentMethodsHandler(billingRepo),
-			SearchAccountTransactionHistory:                   query.NewSearchAccountTransactionsHandler(billingRepo),
 			CCBillSubscriptionDetails:                         query.NewCCBillSubscriptionDetailsHandler(billingRepo, ccbillRepo),
 			ClubSupporterPricing:                              query.NewClubSupporterPricingHandler(pricingRepo, eva),
 			ClubSupporterSubscriptionFinalized:                query.NewClubSupporterSubscriptionFinalized(billingRepo),
 			CancellationReasonById:                            query.NewCancellationReasonByIdHandler(cancelRepo),
 			CancellationReasons:                               query.NewCancellationReasonsHandler(cancelRepo),
 			CCBillTransactionDetails:                          query.NewCCBillTransactionDetailsHandler(),
+
+			AccountTransactionById:             query.NewAccountTransactionByIdHandler(billingRepo),
+			SearchAccountTransactions:          query.NewSearchAccountTransactionsHandler(billingIndexRepo),
+			AccountTransactionsChargebackCount: query.NewAccountTransactionsChargebackCountHandler(billingIndexRepo),
+			AccountTransactionsRefundCount:     query.NewAccountTransactionsRefundCountHandler(billingIndexRepo),
+			AccountTransactionsPaymentCount:    query.NewAccountTransactionsPaymentCountHandler(billingIndexRepo),
+			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingIndexRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella, carrier),
+		Activities: activities.NewActivitiesHandler(billingRepo, billingIndexRepo, billingFileRepo, ccbillRepo, stella, carrier),
 	}
 }

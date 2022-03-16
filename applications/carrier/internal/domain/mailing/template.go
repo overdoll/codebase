@@ -6,11 +6,11 @@ import (
 	htmlTemplate "html/template"
 )
 
-//go:embed views/*.gohtml
+//go:embed views/support/*.gohtml views/templates/**/*.gohtml
 var htmlTmplFS embed.FS
 var htmlTemplates *htmlTemplate.Template
 
-//go:embed views/*.gotmpl
+//go:embed views/templates/**/*.gotmpl
 var textTmplFS embed.FS
 
 type Template struct {

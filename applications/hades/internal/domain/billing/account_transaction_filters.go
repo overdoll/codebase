@@ -48,3 +48,7 @@ func (e *AccountTransactionHistoryFilters) From() *time.Time {
 func (e *AccountTransactionHistoryFilters) To() *time.Time {
 	return e.to
 }
+
+func (e *AccountTransactionHistoryFilters) TransactionType() *Transaction {
+	return e.transaction
+}

@@ -16,7 +16,7 @@ func NewClubSupporterPaymentReceiptBuilder(history *AccountTransaction) (*ClubSu
 	}, nil
 }
 
-func (c *ClubSupporterPaymentReceiptBuilder) AccountTransactionHistory() *AccountTransaction {
+func (c *ClubSupporterPaymentReceiptBuilder) AccountTransaction() *AccountTransaction {
 	return c.history
 }
 

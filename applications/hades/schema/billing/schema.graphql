@@ -69,10 +69,10 @@ type AccountTransaction {
   currency: Currency!
 
   """When the billing occurred."""
-  billedAtDate: Time!
+  billedAtDate: Date!
 
   """The next billing date for this transaction, if its a subscription."""
-  nextBillingDate: Time
+  nextBillingDate: Date
 
   """The payment method linked to this transaction."""
   paymentMethod: PaymentMethod!
@@ -289,7 +289,7 @@ type AccountClubSupporterSubscriptionBillingError {
   ccbillDeclineError: CCBillDeclineError
 
   """The next date the billing will be retried."""
-  nextRetryDate: Time!
+  nextRetryDate: Date!
 }
 
 type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
@@ -341,10 +341,10 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
   supporterSince: Time!
 
   """The last billing date for this subscription."""
-  lastBillingDate: Time!
+  lastBillingDate: Date!
 
   """The next billing date for this subscription."""
-  nextBillingDate: Time!
+  nextBillingDate: Date!
 
   """The payment method linked to this subscription."""
   paymentMethod: PaymentMethod!
@@ -411,7 +411,7 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
   cancelledAt: Time!
 
   """When this subscription will end."""
-  endDate: Time!
+  endDate: Date!
 
   """The payment method linked to this subscription."""
   paymentMethod: PaymentMethod!

@@ -182,7 +182,6 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			AccountClubSupporterSubscriptionId: input.SubscriptionId,
 			TransactionId:                      input.TransactionId,
 			AccountId:                          details.AccountInitiator.AccountId,
-			ClubId:                             details.CcbillClubSupporter.ClubId,
 			Timestamp:                          timestamp,
 			Amount:                             amount,
 			Currency:                           input.BilledCurrency,
@@ -208,8 +207,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
 		activities.CreateAccountClubSupportSubscriptionInput{
 			// save payment details
-			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
-
+			SavePaymentDetails:   details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
 			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,

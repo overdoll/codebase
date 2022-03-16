@@ -99,9 +99,8 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
 
 CREATE TABLE IF NOT EXISTS account_transactions
 (
-    account_id                     text,
-    bucket                         bigint,
     id                             text,
+    account_id                     text,
 
     timestamp                      timestamp,
 
@@ -123,7 +122,7 @@ CREATE TABLE IF NOT EXISTS account_transactions
     ccbill_subscription_id         text,
     ccbill_transaction_id          text,
 
-    events                         list<text>,
+    events                         list<map<text, text>>,
 
     primary key ( id )
 );

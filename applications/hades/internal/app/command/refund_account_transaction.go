@@ -35,7 +35,7 @@ func (h RefundAccountTransactionHandler) Handle(ctx context.Context, cmd RefundA
 	}
 
 	refund, err := ccbill.NewRefundWithCustomAmount(
-		*accountTransaction.CCBillSubscriptionId(),
+		*accountTransaction.CCBillTransactionId(),
 		cmd.Amount,
 		accountTransaction.Amount(),
 		accountTransaction.Currency().String(),
@@ -45,7 +45,7 @@ func (h RefundAccountTransactionHandler) Handle(ctx context.Context, cmd RefundA
 		return nil, err
 	}
 
-	if err := h.cr.RefundSubscription(ctx, refund); err != nil {
+	if err := h.cr.RefundTransaction(ctx, refund); err != nil {
 		return nil, err
 	}
 

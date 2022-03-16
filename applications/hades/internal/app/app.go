@@ -17,6 +17,8 @@ type Commands struct {
 	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
+	IndexAllAccountTransactions command.IndexAllAccountTransactionsHandler
+
 	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
 	GenerateProratedRefundAmountForAccountTransaction                command.GenerateProratedRefundAmountForAccountTransactionHandler
 	BecomeClubSupporterWithAccountSavedPaymentMethod                 command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
@@ -40,7 +42,7 @@ type Queries struct {
 
 	ExpiredAccountClubSupporterSubscriptionsByAccount query.ExpiredAccountClubSupporterSubscriptionsByAccountHandler
 	AccountClubSupporterSubscriptionById              query.AccountClubSupporterSubscriptionByIdHandler
-	SearchAccountClubSupporterSubscription            query.SearchAccountClubSupporterSubscriptionsHandler
+	SearchAccountClubSupporterSubscriptions           query.SearchAccountClubSupporterSubscriptionsHandler
 	AccountSavedPaymentMethods                        query.AccountSavedPaymentMethodsHandler
 	ClubSupporterPricing                              query.ClubSupporterPricingHandler
 	ClubSupporterSubscriptionFinalized                query.ClubSupporterSubscriptionFinalizedHandler
@@ -49,7 +51,7 @@ type Queries struct {
 	CancellationReasonById query.CancellationReasonByIdHandler
 
 	AccountTransactionById             query.AccountTransactionByIdHandler
-	SearchAccountTransactionHistory    query.SearchAccountTransactionsHandler
+	SearchAccountTransactions          query.SearchAccountTransactionsHandler
 	AccountTransactionsTotalCount      query.AccountTransactionsTotalCountHandler
 	AccountTransactionsChargebackCount query.AccountTransactionsChargebackCountHandler
 	AccountTransactionsPaymentCount    query.AccountTransactionsPaymentCountHandler

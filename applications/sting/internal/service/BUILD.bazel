@@ -19,7 +19,6 @@ go_library(
         "//libraries/clients",
         "//libraries/principal",
         "//libraries/testing_tools",
-        "//libraries/uuid",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//mocks",
         "@org_golang_google_grpc//codes",

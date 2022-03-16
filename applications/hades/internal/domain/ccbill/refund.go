@@ -9,26 +9,26 @@ var (
 )
 
 type Refund struct {
-	amount         *int64
-	currency       int
-	subscriptionId string
+	amount        *int64
+	currency      int
+	transactionId string
 }
 
-func NewRefundWithCustomAmount(subscriptionId string, customAmount int64, actualAmount int64, currency string) (*Refund, error) {
+func NewRefundWithCustomAmount(transactionId string, customAmount int64, actualAmount int64, currency string) (*Refund, error) {
 
 	if customAmount > actualAmount {
 		return nil, ErrInvalidRefundAmount
 	}
 
 	return &Refund{
-		amount:         nil,
-		subscriptionId: subscriptionId,
-		currency:       currencyStringToCCBillCode[currency],
+		amount:        nil,
+		transactionId: transactionId,
+		currency:      currencyStringToCCBillCode[currency],
 	}, nil
 }
 
-func (v *Refund) SubscriptionId() string {
-	return v.subscriptionId
+func (v *Refund) TransactionId() string {
+	return v.transactionId
 }
 
 func (v *Refund) Amount() (*float64, error) {

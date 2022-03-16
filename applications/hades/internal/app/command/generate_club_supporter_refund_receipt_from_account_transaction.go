@@ -29,7 +29,7 @@ func (h GenerateClubSupporterRefundReceiptFromAccountTransactionHandler) Handle(
 		return nil, err
 	}
 
-	clubSupporterReceipt, err := h.fr.GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx, transaction, cmd.AccountTransactionHistoryEventId)
+	clubSupporterReceipt, err := h.fr.GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx, cmd.Principal, transaction, cmd.AccountTransactionHistoryEventId)
 
 	if err != nil {
 		return nil, err

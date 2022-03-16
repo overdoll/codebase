@@ -37,7 +37,7 @@ func (r AccountActiveClubSupporterSubscriptionResolver) Transactions(ctx context
 
 	accountId := obj.ID.GetID()
 
-	results, err := r.App.Queries.SearchAccountTransactionHistory.
+	results, err := r.App.Queries.SearchAccountTransactions.
 		Handle(
 			ctx,
 			query.SearchAccountTransactions{

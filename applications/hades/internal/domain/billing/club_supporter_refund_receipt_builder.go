@@ -32,6 +32,14 @@ func (c *ClubSupporterRefundReceiptBuilder) FileName() string {
 	return c.fileName
 }
 
+func (c *ClubSupporterRefundReceiptBuilder) Event() *AccountTransactionEvent {
+	return c.event
+}
+
+func (c *ClubSupporterRefundReceiptBuilder) AccountTransaction() *AccountTransaction {
+	return c.history
+}
+
 func (c *ClubSupporterRefundReceiptBuilder) BuildPDF() error {
 
 	doc := newClubSupporterRefundReceiptPdf()

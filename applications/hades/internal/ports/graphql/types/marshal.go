@@ -516,15 +516,29 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 		}
 	}
 
+	var transactionEvents []*AccountTransactionEvent
+
+	for _, event := range result.Events() {
+		transactionEvents = append(transactionEvents, &AccountTransactionEvent{
+			ID:        relay.NewID(AccountTransactionEvent{}, event.Id()),
+			Amount:    int(event.Amount()),
+			Currency:  MarshalCurrencyToGraphQL(ctx, event.Currency()),
+			Reason:    event.Reason(),
+			Timestamp: event.Timestamp(),
+		})
+	}
+
+	date := result.NextBillingDate()
+
 	return &AccountTransaction{
 		ID:                        relay.NewID(AccountTransaction{}, result.Id()),
 		Reference:                 result.Id(),
 		Type:                      tp,
-		Events:                    nil,
+		Events:                    transactionEvents,
 		Amount:                    int(result.Amount()),
 		Currency:                  MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BilledAtDate:              result.BilledAtDate(),
-		NextBillingDate:           result.NextBillingDate(),
+		NextBillingDate:           &date,
 		PaymentMethod:             MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
 		Timestamp:                 result.Timestamp(),
 		CcbillTransaction:         subscriptionDetails,

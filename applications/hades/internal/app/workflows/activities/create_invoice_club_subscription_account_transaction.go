@@ -12,7 +12,6 @@ type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
 	TransactionId                      string
 	AccountClubSupporterSubscriptionId string
 
-	ClubId    string
 	Timestamp time.Time
 
 	Currency string
@@ -51,7 +50,6 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 
 	transaction, err := billing.NewInvoicePaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
-		input.ClubId,
 		input.TransactionId,
 		input.AccountClubSupporterSubscriptionId,
 		input.Timestamp,
@@ -68,6 +66,10 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 
 	if err := h.billing.CreateAccountTransactionOperator(ctx, transaction); err != nil {
 		return fmt.Errorf("failed to create transaction history: %s", err)
+	}
+
+	if err := h.bi.IndexAccountTransaction(ctx, transaction); err != nil {
+		return err
 	}
 
 	return nil

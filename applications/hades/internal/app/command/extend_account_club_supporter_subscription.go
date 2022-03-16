@@ -9,8 +9,6 @@ import (
 
 type ExtendAccountClubSupporterSubscription struct {
 	Principal                          *principal.Principal
-	AccountId                          string
-	ClubId                             string
 	AccountClubSupporterSubscriptionId string
 	Days                               int
 }
@@ -26,7 +24,7 @@ func NewExtendAccountClubSupporterSubscription(br billing.Repository, cr ccbill.
 
 func (h ExtendAccountClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd ExtendAccountClubSupporterSubscription) (*billing.AccountClubSupporterSubscription, error) {
 
-	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.AccountId, cmd.ClubId, cmd.AccountClubSupporterSubscriptionId)
+	clubSupporterSubscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
 		return nil, err

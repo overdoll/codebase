@@ -30,7 +30,7 @@ type AccountTransaction struct {
 	currency Currency
 
 	billedAtDate    time.Time
-	nextBillingDate *time.Time
+	nextBillingDate time.Time
 
 	voidedAt   *time.Time
 	voidReason *string
@@ -55,7 +55,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		transaction:                 Payment,
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
-		nextBillingDate:             &nextBillingDate,
+		nextBillingDate:             nextBillingDate,
 		currency:                    cr,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
@@ -77,7 +77,7 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		transaction:                 Payment,
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
-		nextBillingDate:             &nextBillingDate,
+		nextBillingDate:             nextBillingDate,
 		currency:                    cr,
 		ccbillTransactionId:         &id,
 		clubSupporterSubscriptionId: &subscriptionId,
@@ -118,12 +118,24 @@ func (c *AccountTransaction) Currency() Currency {
 	return c.currency
 }
 
+func (c *AccountTransaction) VoidedAt() *time.Time {
+	return c.voidedAt
+}
+
+func (c *AccountTransaction) VoidReason() *string {
+	return c.voidReason
+}
+
 func (c *AccountTransaction) BilledAtDate() time.Time {
 	return c.billedAtDate
 }
 
-func (c *AccountTransaction) NextBillingDate() *time.Time {
+func (c *AccountTransaction) NextBillingDate() time.Time {
 	return c.nextBillingDate
+}
+
+func (c *AccountTransaction) Events() []*AccountTransactionEvent {
+	return c.events
 }
 
 func (c *AccountTransaction) CCBillSubscriptionId() *string {
@@ -221,7 +233,7 @@ func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.P
 		newAmount,
 		c.Currency(),
 		c.BilledAtDate(),
-		*c.NextBillingDate(),
+		c.NextBillingDate(),
 	)
 
 	if err != nil {
@@ -231,7 +243,7 @@ func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.P
 	return refund, nil
 }
 
-func UnmarshalAccountTransactionHistoryFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate time.Time, nextBillingDate *time.Time, ccbillSubscriptionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string) *AccountTransaction {
+func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string) *AccountTransaction {
 	tr, _ := TransactionFromString(transaction)
 	cr, _ := CurrencyFromString(currency)
 
