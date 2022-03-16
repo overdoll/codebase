@@ -25,7 +25,7 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:52
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:54
 msgid "Audience"
 msgstr ""
 
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:68
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:70
 msgid "Categories"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:60
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:62
 msgid "Characters"
 msgstr ""
 

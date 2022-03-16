@@ -8,12 +8,13 @@ import BillingSummary from '../../BillingSummary/BillingSummary'
 import { Suspense } from 'react'
 import { HStack, Stack } from '@chakra-ui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import QueryErrorBoundary
-  from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import CCBillDisplayTransaction from '../CCBillDisplayTransaction/CCBillDisplayTransaction'
 import CCBillSelectSavedPaymentForm from './CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm'
 import ClosePaymentModalButton from '../../ClosePaymentModalButton/ClosePaymentModalButton'
+import useHistoryDisclosureContext
+  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 
 interface Props {
   clubQuery: SavedPaymentMethodFragment$key
@@ -45,6 +46,7 @@ export default function SavedPaymentMethod ({
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
+  const { onClose } = useHistoryDisclosureContext()
 
   const {
     searchArguments,
@@ -60,7 +62,11 @@ export default function SavedPaymentMethod ({
     return (
       <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<SkeletonStack />}>
-          <CCBillDisplayTransaction loadQuery={loadQuery} searchArguments={searchArguments} />
+          <CCBillDisplayTransaction
+            onClose={onClose as () => void}
+            loadQuery={loadQuery}
+            searchArguments={searchArguments}
+          />
         </Suspense>
       </QueryErrorBoundary>
     )

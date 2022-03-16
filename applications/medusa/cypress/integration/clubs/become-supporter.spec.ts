@@ -2,6 +2,7 @@ import { generateUsernameAndEmail } from '../../support/generate'
 import ChanceJS from 'chance'
 import { createClubWithName } from '../../support/artist_actions'
 import { clickOnButton } from '../../support/user_actions'
+import { gotoNextStep } from '../../support/flow_builder'
 
 const chance = new ChanceJS()
 
@@ -55,8 +56,7 @@ describe('Club - Become Supporter', () => {
     // check if agreement blocking works
     clickOnButton(/Subscribe with CCBill/iu)
     cy.findByText(/You must agree to the guidelines/iu).should('be.visible')
-    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().findByRole('checkbox').click({ force: true })
-    cy.findByText(/Remember this payment method/iu).should('be.visible').parent().findByRole('checkbox').click({ force: true })
+    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
 
     // fill out payment details in new window
     cy.window().then((win) => {
@@ -69,24 +69,7 @@ describe('Club - Become Supporter', () => {
     clickOnButton(/Subscribe with CCBill/iu)
     cy.findByText(/CCBill is a designated payment processor/iu, { timeout: 20000 }).should('be.visible')
 
-    /*
-    let token = ''
-    cy.window().then(win => {
-      const listener = (e): void => {
-        if (e.data.source === 'overdoll-ccbill-flexforms-payment-flow') {
-          win.removeEventListener('message', listener)
-          token = e.data.payload.token
-        }
-      }
-      win.addEventListener('message', listener)
-    })
-
-     */
-
-    /*
-
-     */
-    // cy.get('@windowOpen', { timeout: 20000 })
+    // fill out billing details
     cy.get('input[name="firstName"]').type(testCardDetails.firstName)
     cy.get('input[name="lastName"]').type(testCardDetails.lastName)
     cy.get('input[name="address"]').type(testCardDetails.address)
@@ -102,31 +85,63 @@ describe('Club - Become Supporter', () => {
     cy.get('[id=placeOrder]').click()
     cy.url().should('include', Cypress.config().baseUrl as string)
     cy.document().then((doc) => {
-      cy.log(doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]').content as string)
+      // @ts-expect-error
+      cy.visit(`/ccbill-transaction-details/${doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]')?.content as string}`)
     })
-    /*
-    cy.intercept({
-      method: 'GET',
-      hostname: (Cypress.config().baseUrl as string).replace(/(^\w+:|^)\/\//, '')
-    })
+    cy.findByText(/Verifying Transaction/iu, { timeout: 10000 }).should('be.visible')
+    cy.findByText(/Transaction Approved/iu, { timeout: 40000 }).should('be.visible')
+    cy.visit(`/${newPaymentMethodClub}`)
+    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+  })
 
-     */
-    /*
-      .then(() => {
-      cy.window().then(win => {
-        const listener = (e): void => {
-          cy.log(e)
-          if (e.data.source === 'overdoll-ccbill-flexforms-payment-flow') {
-            win.removeEventListener('message', listener)
-            cy.visit(`/${e.data.payload.token as string}`)
-          }
-        }
-        win.addEventListener('message', listener)
+  it('enable two factor', () => {
+    // generate recovery codes
+    cy.visit('/configure/multi-factor/recovery-codes')
+    cy.findByRole('button', { name: /Generate Recovery Codes/ }).click()
+    cy.findByText(/Make sure you save these codes/iu).should('be.visible')
+
+    // enable totp
+    cy.visit('/configure/multi-factor/totp')
+    gotoNextStep()
+    cy.get('[aria-label="Copy"]').find('code').invoke('text').then(secret => {
+      // use a plugin to generate a one time password using the secret
+      cy.task('generateOTP', secret).then(token => {
+        gotoNextStep()
+        cy.get('form').findByPlaceholderText('123456').type(token as string)
+        cy.findByRole('button', { name: /Activate/iu }).click()
+        cy.findByText(/Two-factor setup complete/iu).should('exist')
       })
     })
-
-       */
-
-    // cy.findByText(/CCBill is a designated payment processor/iu, { timeout: 20000 }).should('not.exist')
   })
+
+  it('become supporter with saved payment method', () => {
+    cy.visit(`/${savedPaymentMethodClub}`)
+    clickOnButton(/Become a Supporter/iu)
+    cy.findByText(/How will you pay/iu).should('be.visible')
+
+    // check selections
+    cy.findByText(/Enter a new payment method/iu).should('not.be.disabled').click()
+    clickOnButton('Next')
+    cy.findByRole('button', { name: /Subscribe with CCBill/iu }).should('not.be.disabled')
+    cy.get('button[aria-label="Close"]').click()
+    cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click()
+    clickOnButton('Next')
+    cy.findByText(/Select a saved payment method/iu).should('be.visible')
+
+    // use saved payment method to subscribe
+    clickOnButton('Subscribe')
+    cy.findByText(/You must agree to the guidelines/iu).should('be.visible')
+    cy.findByText(/Please select a payment method/iu).should('be.visible')
+    cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click()
+    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().findByRole('checkbox').click({ force: true })
+    clickOnButton('Subscribe')
+    cy.findByText(/Verifying Transaction/iu, { timeout: 10000 }).should('be.visible')
+    cy.findByText(/Transaction Approved/iu, { timeout: 40000 }).should('be.visible')
+    cy.visit(`/${savedPaymentMethodClub}`)
+    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+  })
+
+  // cancel subscription
+  // update payment method
+  // remove saved payment method
 })

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d6f0d6271e39d916a6ff23b02f2e519f>>
- * @relayHash 696d020d9145fe80d8b1aef12a64a7e5
+ * @generated SignedSource<<3b98157bd9b8bbb3e818e81c656b2405>>
+ * @relayHash 132a7082c8b70a47a00f456d3d142044
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,12 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 696d020d9145fe80d8b1aef12a64a7e5
+// @relayRequestID 132a7082c8b70a47a00f456d3d142044
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type AccountClubSupporterSubscriptionStatus = "ACTIVE" | "CANCELLED" | "%future added value";
 export type CCBillDeclineError = "CARD_EXPIRED" | "GENERAL_SYSTEM_ERROR" | "INSUFFICIENT_FUNDS" | "RATE_LIMIT_ERROR" | "TRANSACTION_APPROVAL_REQUIRED" | "TRANSACTION_DECLINED" | "TRANSACTION_DENIED_OR_REFUSED_BY_BANK" | "%future added value";
+export type CardType = "AMEX" | "DISCOVER" | "JCB" | "MASTERCARD" | "OTHER" | "VISA" | "%future added value";
 export type CCBillDisplayTransactionQuery$variables = {
   token: string;
 };
@@ -31,6 +32,8 @@ export type CCBillDisplayTransactionQuery$data = {
       readonly paymentMethod: {
         readonly card: {
           readonly last4: string;
+          readonly expiration: string;
+          readonly type: CardType;
         };
       };
       readonly club: {
@@ -125,6 +128,20 @@ v8 = {
           "args": null,
           "kind": "ScalarField",
           "name": "last4",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "expiration",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
           "storageKey": null
         }
       ],
@@ -268,7 +285,7 @@ return {
     ]
   },
   "params": {
-    "id": "696d020d9145fe80d8b1aef12a64a7e5",
+    "id": "132a7082c8b70a47a00f456d3d142044",
     "metadata": {},
     "name": "CCBillDisplayTransactionQuery",
     "operationKind": "query",
@@ -277,6 +294,6 @@ return {
 };
 })();
 
-(node as any).hash = "2d1d677ec1fe868e0430cfa57f4f7b99";
+(node as any).hash = "e221b44ad081f5d6033bd1cda2b6b2c9";
 
 export default node;

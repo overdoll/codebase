@@ -4,9 +4,7 @@ import type { SubscriptionSettingsQuery } from '@//:artifacts/SubscriptionSettin
 import SubscriptionPreview from './SubscriptionPreview/SubscriptionPreview'
 import { usePaginationFragment } from 'react-relay'
 import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
-import { Stack, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { Stack } from '@chakra-ui/react'
 import { EmptySubscriptions } from '@//:modules/content/Placeholder'
 
 interface Props {

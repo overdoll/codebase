@@ -121,7 +121,11 @@ msgid "Google Authenticator App"
 msgstr ""
 
 #: src/client/domain/Settings/Security/RootSessionsSettings/RootSessionsSettings.tsx:31
-msgid "Here is a list of devices that have logged into your account. You can click on one to view the details."
+#~ msgid "Here is a list of devices that have logged into your account. You can click on one to view the details."
+#~ msgstr ""
+
+#: src/client/domain/Settings/Security/RootSessionsSettings/RootSessionsSettings.tsx:31
+msgid "Here is a list of devices that have logged into your account. You can tap on one to view the details."
 msgstr ""
 
 #: src/client/domain/Settings/Security/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:104

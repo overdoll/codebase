@@ -6,12 +6,11 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CheckMark, InfoCircle, RemoveCross } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import useHistoryDisclosureContext
-  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 import { useEffect } from 'react'
 
 interface Props extends ComponentSearchArguments<any> {
   loadQuery: () => void
+  onClose: () => void
 }
 
 const Query = graphql`
@@ -28,6 +27,8 @@ const Query = graphql`
         paymentMethod {
           card {
             last4
+            expiration
+            type
           }
         }
         club {
@@ -42,7 +43,8 @@ const Query = graphql`
 
 export default function CCBillDisplayTransaction ({
   searchArguments,
-  loadQuery
+  loadQuery,
+  onClose
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<CCBillDisplayTransactionQuery>(
     Query,
@@ -50,15 +52,14 @@ export default function CCBillDisplayTransaction ({
     searchArguments.options
   )
 
-  const { onClose } = useHistoryDisclosureContext()
-
   useEffect(() => {
     if (queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription != null) return
     const refreshLoop = (): void => {
+      if (queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription != null) return
       loadQuery()
-      setTimeout(refreshLoop, 1000)
+      setTimeout(refreshLoop, 2500)
     }
-    setTimeout(refreshLoop, 1000)
+    setTimeout(refreshLoop, 2500)
   }, [queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription])
 
   if (queryData?.ccbillTransactionDetails == null) {

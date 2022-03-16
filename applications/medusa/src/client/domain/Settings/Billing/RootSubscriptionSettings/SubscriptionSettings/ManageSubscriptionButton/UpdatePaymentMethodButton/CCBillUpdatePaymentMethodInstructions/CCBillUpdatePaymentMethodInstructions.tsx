@@ -3,7 +3,7 @@ import type {
   CCBillUpdatePaymentMethodInstructionsFragment$key
 } from '@//:artifacts/CCBillUpdatePaymentMethodInstructionsFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { Box, Link, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import { Box, Link, Stack, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import CopyCodeToClipboard
   from '../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import Highlight from '../../../../../../../../components/HighlightText/Highlight'
@@ -27,10 +27,9 @@ const Fragment = graphql`
 export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  return (
-    <Stack spacing={2}>
-      <Tabs colorScheme='gray' variant='soft-rounded'>
-        <TabList>
+  /*
+  use this tab list once you have the generated link
+  <TabList>
           <Tab fontSize='sm'>
             <Trans>
               Use Generated Link
@@ -42,6 +41,11 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
             </Trans>
           </Tab>
         </TabList>
+   */
+
+  return (
+    <Stack spacing={2}>
+      <Tabs defaultIndex={1} colorScheme='gray' variant='soft-rounded'>
         <TabPanels>
           <TabPanel>
             <Stack spacing={2}>
