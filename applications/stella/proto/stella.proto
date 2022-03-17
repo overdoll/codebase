@@ -4,6 +4,11 @@ package applications.grpc.stella.v1;
 
 import "google/protobuf/timestamp.proto";
 
+message Club {
+  string slug = 1;
+  string name = 2;
+}
+
 message CanAccountCreatePostUnderClubRequest {
   string clubId = 1;
   string accountId = 2;
@@ -35,7 +40,9 @@ message SuspendClubRequest {
   int64 endTimeUnix = 2;
 }
 
-message GetClubByIdResponse {}
+message GetClubByIdResponse {
+  Club club = 1;
+}
 
 message SuspendClubResponse {}
 

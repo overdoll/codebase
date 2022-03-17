@@ -51,19 +51,14 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 		return err
 	}
 
-	// create refund record
-	if err := workflow.ExecuteActivity(ctx, a.CreateChargebackClubSubscriptionAccountTransactionRecord,
-		activities.CreateChargebackClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            timestamp,
-			Currency:             input.Currency,
-			Amount:               amount,
-			Reason:               input.Reason,
-			CardLast4:            input.Last4,
-			CardType:             input.CardType,
-			CardExpirationDate:   input.ExpDate,
+	// create chargeback record
+	if err := workflow.ExecuteActivity(ctx, a.UpdateChargebackClubSubscriptionAccountTransaction,
+		activities.UpdateChargebackClubSubscriptionAccountTransactionRecordInput{
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Currency:      input.Currency,
+			Amount:        amount,
+			Reason:        input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

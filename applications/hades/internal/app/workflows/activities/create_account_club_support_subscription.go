@@ -24,6 +24,22 @@ type CreateAccountClubSupportSubscriptionInput struct {
 
 func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, input CreateAccountClubSupportSubscriptionInput) error {
 
+	// get an existing expired subscription, if it exists
+	expired, err := h.billing.GetExpiredAccountClubSupporterSubscriptionByAccountAndClubIdOperator(ctx, input.AccountId, input.ClubId)
+
+	if err != nil && err != billing.ErrExpiredAccountClubSupportSubscriptionNotFound {
+		return err
+	}
+
+	var supporterSince time.Time
+
+	if expired != nil {
+		// will use the expired subscription's supporterSince
+		supporterSince = expired.CalculateNewSupporterDate(input.Timestamp)
+	} else {
+		supporterSince = input.Timestamp
+	}
+
 	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *input.CCBillSubscriptionId)
 
 	if err != nil {
@@ -31,7 +47,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 	}
 
 	// save payment details for later
-	if input.SavePaymentDetails && input.Currency == "USD" {
+	if input.SavePaymentDetails {
 
 		savedPayment, err := billing.NewSavedPaymentMethodFromCCBill(input.AccountId, input.CCBillSubscriptionId, ccbillSubscription.PaymentMethod(), input.Currency)
 
@@ -48,7 +64,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 		input.AccountId,
 		input.ClubId,
 		*input.CCBillSubscriptionId,
-		input.Timestamp,
+		supporterSince,
 		input.LastRenewalDate,
 		input.NextRenewalDate,
 		input.Amount,
@@ -62,6 +78,11 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 
 	// create new subscription
 	if err := h.billing.CreateAccountClubSupporterSubscriptionOperator(ctx, newSubscription); err != nil {
+		return err
+	}
+
+	// delete expired subscription, if needed
+	if err := h.billing.DeleteExpiredAccountClubSupporterSubscriptionOperator(ctx, input.AccountId, input.ClubId); err != nil {
 		return err
 	}
 

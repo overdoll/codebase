@@ -17,6 +17,13 @@ type Account implements Node @key(fields: "id") {
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
+  """
+  Whether or not this account is secure.
+
+  At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
+  """
+  isSecure: Boolean!
+
   """The details of the account lock"""
   lock: AccountLock @goField(forceResolver: true)
 }

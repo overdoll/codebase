@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"github.com/PuerkitoBio/goquery"
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/url"
@@ -21,7 +20,8 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
 	httpClient := http.Client{}
@@ -93,7 +93,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	require.Equal(t, "Timeout", *ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineText, "correct decline text")
 	require.Equal(t, types.CCBillDeclineErrorGeneralSystemError, *ccbillTransactionDetailsFailure.CCBillTransactionDetails.DeclineError, "correct decline reason")
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, &queryParameterPaymentToken)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, &queryParameterPaymentToken)
 
 	// now, do a success callback
 	callbackSuccessAddressUrl, err := url.Parse(HadesHttpCCBillPaymentFlowCallbackAddr)

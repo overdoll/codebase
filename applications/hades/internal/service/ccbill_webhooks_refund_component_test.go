@@ -2,40 +2,27 @@ package service_test
 
 import (
 	"context"
-	uuid2 "github.com/google/uuid"
+	"encoding/base64"
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
-	"time"
 )
 
-type AccountTransactionHistoryRefund struct {
-	Entities []struct {
-		Account struct {
-			Id                 relay.ID
-			TransactionHistory struct {
-				Edges []*struct {
-					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							CCBillReason                  string `graphql:"ccbillReason"`
-							Amount                        int
-							Currency                      types.Currency
-							PaymentMethod                 types.PaymentMethod
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-							Timestamp                     time.Time
-						} `graphql:"... on AccountRefundTransactionHistory"`
-					}
-				}
-			} `graphql:"transactionHistory(startDate: $startDate)"`
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
+type GenerateClubSupporterRefundReceiptFromAccountTransaction struct {
+	GenerateClubSupporterRefundReceiptFromAccountTransaction *types.GenerateClubSupporterRefundReceiptFromAccountTransactionPayload `graphql:"generateClubSupporterRefundReceiptFromAccountTransaction(input: $input)"`
+}
+
+type AccountTransaction struct {
+	AccountTransaction *struct {
+		Id string
+	} `graphql:"accountTransaction(reference: $reference)"`
 }
 
 // test a bunch of webhooks at the same time
@@ -43,10 +30,11 @@ func TestBillingFlow_Refund(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRefund, mock.Anything)
 
@@ -67,6 +55,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		"paymentType":            "CREDIT",
 		"reason":                 "Refunded through Data Link: subscriptionManagement.cgi",
 		"subscriptionId":         ccbillSubscriptionId,
+		"transactionId":          ccbillTransactionId,
 		"timestamp":              "2022-02-28 20:27:56",
 	})
 
@@ -78,31 +67,70 @@ func TestBillingFlow_Refund(t *testing.T) {
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
-	var accountTransactionsRefund AccountTransactionHistoryRefund
+	accountTransactionsRefund := getAccountTransactions(t, gqlClient, accountId)
 
-	err := gqlClient.Query(context.Background(), &accountTransactionsRefund, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(accountId),
-			},
-		},
-		"startDate": time.Now(),
+	require.Len(t, accountTransactionsRefund.Entities[0].Account.Transactions.Edges, 1, "1 transaction items")
+	transaction := accountTransactionsRefund.Entities[0].Account.Transactions.Edges[0].Node
+
+	require.Equal(t, types.AccountTransactionTypeRefund, transaction.Type, "correct transaction type")
+	require.Equal(t, 1, accountTransactionsRefund.Entities[0].Account.TransactionsRefundCount, "correct refund count")
+	require.Equal(t, 0, accountTransactionsRefund.Entities[0].Account.TransactionsPaymentCount, "correct payment count")
+
+	require.Len(t, transaction.Events, 1, "should have 1 event")
+
+	event := transaction.Events[0]
+
+	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.Timestamp.String(), "correct timestamp")
+	require.Equal(t, 699, event.Amount, "correct amount")
+	require.Equal(t, types.CurrencyUsd, event.Currency, "correct currency")
+	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", event.Reason, "correct reason")
+
+	sDec, _ := base64.StdEncoding.DecodeString(event.ID.GetID())
+	eventId := relay.ID(sDec).GetID()
+
+	// look up a single transaction
+	var accountTransaction AccountTransaction
+
+	err := gqlClient.Query(context.Background(), &accountTransaction, map[string]interface{}{
+		"reference": graphql.String(transaction.Reference),
 	})
 
-	require.NoError(t, err, "no error grabbing account transaction history")
+	require.NoError(t, err, "no error looking up transaction")
+	require.NotNil(t, accountTransaction.AccountTransaction, "account transaction history should exist")
 
-	require.Len(t, accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges, 2, "2 transaction items")
-	transaction := accountTransactionsRefund.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory, mock.Anything)
 
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
-	require.Equal(t, 699, transaction.Amount, "correct amount")
-	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
-	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", transaction.CCBillReason, "correct reason")
-	require.Equal(t, ccbillSubscriptionId, transaction.CCBillSubscriptionTransaction.CcbillSubscriptionID, "correct ccbill subscription ID")
+	flowRun := &mocks.WorkflowRun{}
 
-	require.Equal(t, "1111", transaction.PaymentMethod.Card.Last4, "correct last 4 digits on the card")
-	require.Equal(t, types.CardTypeVisa, transaction.PaymentMethod.Card.Type, "is a VISA card")
-	require.Equal(t, "01/2023", transaction.PaymentMethod.Card.Expiration, "correct expiration date")
+	flowRun.
+		On("Get", mock.Anything, mock.Anything).
+		Return(nil)
+
+	temporalClientMock.
+		On("GetWorkflow", mock.Anything, "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
+		// on GetWorkflow command, this would check if the workflow was completed
+		// so we run our workflow to make sure it's completed
+		Run(
+			func(args mock.Arguments) {
+				env = getWorkflowEnvironment(t)
+				receiptWorkflowExecution.FindAndExecuteWorkflow(t, env)
+				require.True(t, env.IsWorkflowCompleted())
+				require.NoError(t, env.GetWorkflowError())
+			},
+		).
+		Return(flowRun)
+
+	var generateReceipt GenerateClubSupporterRefundReceiptFromAccountTransaction
+
+	err = gqlClient.Mutate(context.Background(), &generateReceipt, map[string]interface{}{
+		"input": types.GenerateClubSupporterRefundReceiptFromAccountTransactionInput{
+			TransactionID:      transaction.Id,
+			TransactionEventID: transaction.Events[0].ID,
+		},
+	})
+
+	require.NoError(t, err, "no error generating a refund receipt from transaction")
+
+	fileUrl := generateReceipt.GenerateClubSupporterRefundReceiptFromAccountTransaction.Link.String()
+	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
 }

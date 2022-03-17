@@ -12,7 +12,7 @@ type CCBillTransactionDetailsResolver struct {
 	App *app.Application
 }
 
-func (r CCBillTransactionDetailsResolver) LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (*types.AccountClubSupporterSubscription, error) {
+func (r CCBillTransactionDetailsResolver) LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (types.AccountClubSupporterSubscription, error) {
 
 	result, err := r.App.Queries.ClubSupporterSubscriptionFinalized.Handle(ctx, query.ClubSupporterSubscriptionFinalized{
 		ClubId:    obj.ID.GetCompositePartID(1),

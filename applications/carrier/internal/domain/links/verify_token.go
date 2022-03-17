@@ -1,0 +1,22 @@
+package links
+
+import (
+	"net/url"
+	"os"
+	"path"
+)
+
+func CreateVerifyTokenUrl(token, secret string) (*url.URL, error) {
+
+	u, err := url.Parse(os.Getenv("APP_URL"))
+
+	if err != nil {
+		return nil, err
+	}
+
+	u.Path = path.Join(u.Path, "verify-token")
+
+	u.RawQuery = "token=" + token + "&secret=" + secret
+
+	return u, nil
+}

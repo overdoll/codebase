@@ -10,8 +10,13 @@ type Application struct {
 }
 
 type Commands struct {
-	ConfirmAccountEmail command.ConfirmAccountEmailHandler
-	NewLoginToken       command.NewLoginTokenHandler
+	ConfirmAccountEmail                       command.ConfirmAccountEmailHandler
+	NewLoginToken                             command.NewLoginTokenHandler
+	NewClubSupporterSubscription              command.NewClubSupporterSubscriptionHandler
+	ClubSupporterSubscriptionCancelled        command.ClubSupporterSubscriptionCancelledHandler
+	ClubSupporterSubscriptionPaymentFailure   command.ClubSupporterSubscriptionPaymentFailureHandler
+	ClubSupporterSubscriptionRefunded         command.ClubSupporterSubscriptionRefundedHandler
+	UpcomingClubSupporterSubscriptionRenewals command.UpcomingClubSupporterSubscriptionRenewalsHandler
 }
 
 type Queries struct{}

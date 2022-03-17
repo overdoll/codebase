@@ -95,6 +95,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 			RuleById:      query.NewRuleByIdHandler(ruleRepo),
 			Rules:         query.NewRulesHandler(ruleRepo),
+			RuleByPostId:  query.NewRuleByPostIdIdHandler(ruleRepo, postAuditLogRepo),
 
 			SearchPostModeratorQueue: query.NewSearchPostModeratorQueueHandler(moderatorRepo),
 

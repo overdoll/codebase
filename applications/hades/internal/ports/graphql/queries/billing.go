@@ -11,6 +11,52 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r QueryResolver) AccountClubSupporterSubscription(ctx context.Context, reference string) (types.AccountClubSupporterSubscription, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Queries.AccountClubSupporterSubscriptionById.Handle(ctx, query.AccountClubSupporterSubscriptionById{
+		Principal: principal.FromContext(ctx),
+		Id:        reference,
+	})
+
+	if err != nil {
+
+		if err == billing.ErrAccountClubSupportSubscriptionNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalAccountClubSupporterSubscriptionToGraphQL(ctx, result), nil
+}
+
+func (r QueryResolver) AccountTransaction(ctx context.Context, reference string) (*types.AccountTransaction, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Queries.AccountTransactionById.Handle(ctx, query.AccountTransactionById{
+		Principal: principal.FromContext(ctx),
+		Id:        reference,
+	})
+
+	if err != nil {
+
+		if err == billing.ErrAccountTransactionNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalAccountTransactionToGraphQL(ctx, result), nil
+}
+
 func (r QueryResolver) CcbillSubscriptionDetails(ctx context.Context, ccbillSubscriptionID string) (*types.CCBillSubscriptionDetails, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

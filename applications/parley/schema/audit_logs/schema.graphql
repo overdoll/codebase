@@ -58,6 +58,11 @@ extend type Post {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostAuditLogConnection! @goField(forceResolver: true)
+
+  """
+  If this post was removed or rejected from the moderator queue, you can view the rule that was cited.
+  """
+  rule: Rule @goField(forceResolver: true)
 }
 
 extend type Account {

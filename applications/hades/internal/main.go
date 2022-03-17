@@ -22,6 +22,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/hades")
 
+	rootCmd.AddCommand(ports.Cli)
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",

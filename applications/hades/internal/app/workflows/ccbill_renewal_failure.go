@@ -45,16 +45,23 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 		return err
 	}
 
-	// create record for failed transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateFailedClubSubscriptionAccountTransactionRecord,
-		activities.CreateFailedClubSubscriptionAccountTransactionRecordInput{
-			NextRetryDate:        nextRetryDate,
-			FailureReason:        input.FailureReason,
-			FailureCode:          input.FailureCode,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: &input.SubscriptionId,
-			Timestamp:            timestamp,
+	// update to new billing date
+	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupporterSubscriptionCCBillFailure,
+		activities.UpdateAccountClubSupporterSubscriptionCCBillFailureInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			Timestamp:                          timestamp,
+			CCBillErrorText:                    input.FailureReason,
+			CCBillErrorCode:                    input.FailureCode,
+			NextRetryDate:                      nextRetryDate,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// send failure notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionFailureNotification,
+		activities.SendAccountClubSupporterSubscriptionFailureNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -3,10 +3,7 @@ package command
 import (
 	"context"
 	"github.com/pkg/errors"
-	"net/url"
-	"os"
-	"path"
-
+	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -34,19 +31,18 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 		return errors.Wrap(err, "failed to get account")
 	}
 
-	u, err := url.Parse(os.Getenv("APP_URL"))
+	link, err := links.CreateConfirmEmailUrl(cmd.EmailId, cmd.EmailSecret)
 
 	if err != nil {
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "confirm-email")
-
-	u.RawQuery = "id=" + cmd.EmailId + "&secret=" + cmd.EmailSecret
-
-	link := u.String()
-
-	template, err := mailing.NewTemplate("confirm email", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n     <a \n        href=\""+link+"\"\n        target=\"_blank\" \n     >\n            confirm email\n          </a>\n    </body>\n  </html>\n", link)
+	template, err := mailing.NewTemplate(
+		"confirm_account_email",
+		map[string]interface{}{
+			"Link": link.String(),
+		},
+	)
 
 	if err != nil {
 		return err

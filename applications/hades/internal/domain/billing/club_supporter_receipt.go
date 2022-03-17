@@ -21,10 +21,23 @@ func UnmarshalClubSupporterReceiptFromDatabase(link string) *ClubSupporterReceip
 	return &ClubSupporterReceipt{link: link}
 }
 
-func CanCreateClubSupporterReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransactionHistory) error {
+func CanCreateClubSupporterPaymentReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransaction) error {
+	return requester.BelongsToAccount(transaction.accountId)
+}
 
-	if transaction.transaction != New && transaction.transaction != Invoice {
-		return errors.New("can only generate a receipt from a new or invoice transaction type")
+func CanCreateClubSupporterRefundReceiptFromTransactionHistory(requester *principal.Principal, transaction *AccountTransaction, eventId string) error {
+
+	foundEvent := false
+
+	for _, e := range transaction.events {
+		if e.id == eventId {
+			foundEvent = true
+			break
+		}
+	}
+
+	if !foundEvent {
+		return errors.New("invalid event id")
 	}
 
 	return requester.BelongsToAccount(transaction.accountId)

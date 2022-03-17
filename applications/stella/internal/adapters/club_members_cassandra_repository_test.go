@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -22,7 +22,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 
 	testAccountId := uuid.New().String()
 	testClubId := uuid.New().String()
-	principalItem := principal.NewPrincipal(testAccountId, nil, false, false)
+	principalItem := testing_tools.NewDefaultPrincipal(testAccountId)
 
 	// create a new club for testing
 	err := clubRepo.CreateClub(ctx, club.UnmarshalClubFromDatabase(testClubId, testClubId, nil, nil, nil, 0, testAccountId, false, nil))

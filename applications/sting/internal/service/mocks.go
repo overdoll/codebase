@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/uuid"
+	"overdoll/libraries/testing_tools"
 )
 
 type EvaServiceMock struct {
@@ -25,7 +25,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return principal.NewPrincipal(s, nil, false, false), nil
+				return testing_tools.NewDefaultPrincipal(s), nil
 			}
 		}
 
@@ -68,7 +68,7 @@ func (l LoaderServiceMock) CopyResourcesAndApplyPixelateFilter(ctx context.Conte
 	var newContent []*post.NewContent
 
 	for _, n := range resourceIds {
-		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, uuid.New().String()))
+		newContent = append(newContent, post.UnmarshalNewContentFromDatabase(itemId, n, "hidden_id_"+n))
 	}
 
 	return newContent, nil

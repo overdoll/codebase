@@ -17,6 +17,7 @@ go_library(
         "//applications/parley/internal/app/query",
         "//applications/parley/internal/domain/moderator",
         "//applications/parley/internal/domain/report",
+        "//applications/parley/internal/domain/rule",
         "//applications/parley/internal/ports/graphql/types",
         "//libraries/paging",
         "//libraries/passport",

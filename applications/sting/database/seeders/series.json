@@ -1,7 +1,7 @@
 [
   {
     "id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
-    "slug": "foreigner_on_mars",
+    "slug": "ForeignerOnMars",
     "title": {
       "en": "Foreigner On Mars"
     },
@@ -10,7 +10,7 @@
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "slug": "veterans_of_our_future",
+    "slug": "VeteransOfOurFuture",
     "title": {
       "en": "Veterans Of Our Future"
     },
@@ -19,7 +19,7 @@
   },
   {
     "id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP",
-    "slug": "animal_of_the_ocean",
+    "slug": "AnimalOfTheOcean",
     "title": {
       "en": "Animal Of The Ocean"
     },
@@ -28,7 +28,7 @@
   },
   {
     "id": "1pcKic9sTP5KQpdGa1pTxgbDoKQ",
-    "slug": "heroes_and_companions",
+    "slug": "HeroesAndCompanions",
     "title": {
       "en": "Heroes And Companions"
     },
@@ -37,7 +37,7 @@
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
-    "slug": "cat_can_dance",
+    "slug": "CatCanDance",
     "title": {
       "en": "Cat Can Dance"
     },
@@ -46,7 +46,7 @@
   },
   {
     "id": "1pcKim45K1A3uvtZvPeYix5XO7T",
-    "slug": "suspicious_of_the_universe",
+    "slug": "SuspiciousOfTheUniverse",
     "title": {
       "en": "Suspicious Of The Universe"
     },
@@ -55,7 +55,7 @@
   },
   {
     "id": "1pcKinX7wXHlvVvrELgOKcwNAKw",
-    "slug": "fish_of_the_future",
+    "slug": "FishOfTheFuture",
     "title": {
       "en": "Fish Of The Future"
     },
@@ -64,7 +64,7 @@
   },
   {
     "id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
-    "slug": "wonders_of_chemistry",
+    "slug": "WondersOfChemistry",
     "title": {
       "en": "Wonders Of Chemistry"
     },
@@ -73,7 +73,7 @@
   },
   {
     "id": "1pcKitrRACXDRLpPoN3nVjo0p4j",
-    "slug": "dawn_of_the_swamps",
+    "slug": "DawnOfTheSwamps",
     "title": {
       "en": "Dawn Of The Swamps"
     },
@@ -82,7 +82,7 @@
   },
   {
     "id": "1pcKj395CsMusRZlJviwIG4qRCh",
-    "slug": "pilots_of_a_star",
+    "slug": "PilotsOfAStar",
     "title": {
       "en": "Pilots Of A Star"
     },

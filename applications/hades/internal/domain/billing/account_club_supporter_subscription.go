@@ -29,6 +29,7 @@ type AccountClubSupporterSubscription struct {
 	updatedAt time.Time
 
 	cancelledAt *time.Time
+	expiredAt   *time.Time
 
 	billingAmount   int64
 	billingCurrency Currency
@@ -38,6 +39,11 @@ type AccountClubSupporterSubscription struct {
 	ccbillSubscriptionId *string
 
 	cancellationReasonId *string
+
+	failedAt                    *time.Time
+	ccbillErrorText             *string
+	ccbillErrorCode             *string
+	billingFailureNextRetryDate *time.Time
 }
 
 func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
@@ -57,6 +63,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccb
 		lastBillingDate:      lastBillingDate,
 		nextBillingDate:      nextBillingDate,
 		cancelledAt:          nil,
+		expiredAt:            nil,
 		billingAmount:        amount,
 		billingCurrency:      currenc,
 		paymentMethod:        paymentMethod,
@@ -83,6 +90,10 @@ func (c *AccountClubSupporterSubscription) CancellationReasonId() *string {
 
 func (c *AccountClubSupporterSubscription) UpdatedAt() time.Time {
 	return c.updatedAt
+}
+
+func (c *AccountClubSupporterSubscription) IsActive() bool {
+	return c.status == Active
 }
 
 func (c *AccountClubSupporterSubscription) Status() SupportStatus {
@@ -121,6 +132,26 @@ func (c *AccountClubSupporterSubscription) CCBillSubscriptionId() *string {
 	return c.ccbillSubscriptionId
 }
 
+func (c *AccountClubSupporterSubscription) FailedAt() *time.Time {
+	return c.failedAt
+}
+
+func (c *AccountClubSupporterSubscription) ExpiredAt() *time.Time {
+	return c.expiredAt
+}
+
+func (c *AccountClubSupporterSubscription) CCBillErrorText() *string {
+	return c.ccbillErrorText
+}
+
+func (c *AccountClubSupporterSubscription) CCBillErrorCode() *string {
+	return c.ccbillErrorCode
+}
+
+func (c *AccountClubSupporterSubscription) BillingFailureNextRetryDate() *time.Time {
+	return c.billingFailureNextRetryDate
+}
+
 func (c *AccountClubSupporterSubscription) GetSupport() *CCBillSupport {
 	return &CCBillSupport{
 		ccbillSubscriptionId: *c.ccbillSubscriptionId,
@@ -137,18 +168,24 @@ func (c *AccountClubSupporterSubscription) UpdatePaymentMethod(paymentMethod *Pa
 	return nil
 }
 
+func (c *AccountClubSupporterSubscription) UpdateCCBillPaymentError(failedAt time.Time, errorText, errorCode string, nextRetryDate time.Time) error {
+	c.failedAt = &failedAt
+	c.ccbillErrorText = &errorText
+	c.ccbillErrorCode = &errorCode
+	c.billingFailureNextRetryDate = &nextRetryDate
+	return nil
+}
+
 func (c *AccountClubSupporterSubscription) MarkCancelled(cancelledAt time.Time) error {
 	c.cancelledAt = &cancelledAt
 	c.status = Cancelled
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) RequestVoidOrRefund(requester *principal.Principal) error {
-	if !requester.IsStaff() {
-		return errors.New("only staff can issue void or refunds")
-	}
-
-	return c.MarkCancelled(time.Now())
+func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) error {
+	c.expiredAt = &expiredAt
+	c.status = Expired
+	return nil
 }
 
 func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
@@ -173,6 +210,10 @@ func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Pr
 
 func (c *AccountClubSupporterSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
 	c.nextBillingDate = nextBillingDate
+	c.failedAt = nil
+	c.ccbillErrorText = nil
+	c.ccbillErrorCode = nil
+	c.billingFailureNextRetryDate = nil
 	return nil
 }
 
@@ -187,24 +228,33 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
 }
 
-func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string) *AccountClubSupporterSubscription {
+func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
+	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod,
+	ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
+	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
+) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupporterSubscription{
-		id:                   id,
-		accountId:            accountId,
-		clubId:               clubId,
-		status:               st,
-		cancelledAt:          cancelledAt,
-		supporterSince:       supporterSince,
-		lastBillingDate:      lastBillingDate,
-		nextBillingDate:      nextBillingDate,
-		billingAmount:        billingAmount,
-		billingCurrency:      cr,
-		paymentMethod:        paymentMethod,
-		ccbillSubscriptionId: ccbillSubscriptionId,
-		updatedAt:            updatedAt,
-		cancellationReasonId: cancellationReasonId,
+		id:                          id,
+		accountId:                   accountId,
+		clubId:                      clubId,
+		status:                      st,
+		cancelledAt:                 cancelledAt,
+		supporterSince:              supporterSince,
+		lastBillingDate:             lastBillingDate,
+		nextBillingDate:             nextBillingDate,
+		billingAmount:               billingAmount,
+		billingCurrency:             cr,
+		paymentMethod:               paymentMethod,
+		ccbillSubscriptionId:        ccbillSubscriptionId,
+		updatedAt:                   updatedAt,
+		expiredAt:                   expiredAt,
+		cancellationReasonId:        cancellationReasonId,
+		failedAt:                    failedAt,
+		ccbillErrorText:             ccbillErrorText,
+		ccbillErrorCode:             ccbillErrorCode,
+		billingFailureNextRetryDate: billingFailureNextRetryDate,
 	}
 }
 

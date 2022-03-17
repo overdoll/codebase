@@ -10,7 +10,7 @@ func TestParseCCBillDateWithTime(t *testing.T) {
 
 	tm, err := ParseCCBillDateWithTime("2022-02-26 08:21:49")
 	require.NoError(t, err, "no error parsing date with time")
-	require.Equal(t, "2022-02-26 08:21:49 -0700 MST", tm.String())
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", tm.String())
 }
 
 func TestParseCCBillDate(t *testing.T) {

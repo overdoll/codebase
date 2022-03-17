@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
-	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -20,7 +20,7 @@ var (
 	voidedSubscriptionId    = "0122061301000154282"
 )
 
-func Test_ChargeByPrevious_Void(t *testing.T) {
+func Test_ChargeByPrevious_Refund(t *testing.T) {
 
 	if os.Getenv("IS_CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -28,12 +28,7 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 
 	repository := newCCBillHttpRepository(t)
 
-	requester := principal.NewPrincipal(
-		uuid.New().String(),
-		[]string{},
-		false,
-		false,
-	)
+	requester := testing_tools.NewDefaultPrincipal(uuid.New().String())
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
@@ -60,10 +55,10 @@ func Test_ChargeByPrevious_Void(t *testing.T) {
 	require.NotNil(t, status.NextBillingDate(), "should have an issued void")
 	require.Equal(t, ccbill.ActiveAndNotCancelled, status.SubscriptionStatus(), "should be active and not cancelled")
 
-	voidOrRefund, err := ccbill.NewVoidOrRefundWithoutAmount(newSubscriptionId)
+	voidOrRefund, err := ccbill.NewRefundWithCustomAmount(newSubscriptionId, 1, 1, "USD")
 	require.NoError(t, err, "no error creating void or refund")
 
-	err = repository.VoidOrRefundSubscription(context.Background(), voidOrRefund)
+	err = repository.RefundTransaction(context.Background(), voidOrRefund)
 	require.NoError(t, err, "no error voiding or refunding subscription")
 
 	status, err = repository.ViewSubscriptionStatus(context.Background(), newSubscriptionId)
@@ -83,12 +78,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 
 	repository := newCCBillHttpRepository(t)
 
-	requester := principal.NewPrincipal(
-		uuid.New().String(),
-		[]string{},
-		false,
-		false,
-	)
+	requester := testing_tools.NewDefaultPrincipal(uuid.New().String())
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,

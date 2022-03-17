@@ -147,6 +147,8 @@ type ModeratorSettings struct {
 type Post struct {
 	// Audit logs belonging to this pending post
 	AuditLogs *PostAuditLogConnection `json:"auditLogs"`
+	// If this post was removed or rejected from the moderator queue, you can view the rule that was cited.
+	Rule *Rule `json:"rule"`
 	// Whether or not the post was reported by the viewer.
 	ViewerReport *PostReport `json:"viewerReport"`
 	// Reports belonging to a post

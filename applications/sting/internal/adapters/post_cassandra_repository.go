@@ -72,7 +72,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	for _, cont := range pending.Content() {
 		contentResourceIds = append(contentResourceIds, cont.ResourceId())
 		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() {
+		if cont.IsSupporterOnly() && cont.ResourceIdHidden() != "" {
 			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
 		}
 	}

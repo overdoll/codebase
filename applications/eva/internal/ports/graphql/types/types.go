@@ -23,6 +23,8 @@ type Account struct {
 	IsStaff bool `json:"isStaff"`
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
+	// Whether or not this account is secure.
+	IsSecure bool `json:"isSecure"`
 	// The details of the account lock
 	Lock *AccountLock `json:"lock"`
 	// The language of the account.

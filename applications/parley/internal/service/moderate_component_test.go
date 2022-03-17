@@ -101,6 +101,7 @@ type PostAuditLogs struct {
 	Entities []struct {
 		Post struct {
 			ID        string
+			Rule      *types.Rule
 			AuditLogs *struct {
 				Edges []struct {
 					Node PostAuditLogModified
@@ -176,6 +177,9 @@ func TestModeratePost_remove(t *testing.T) {
 
 	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action, "should be denied")
 	require.Equal(t, ruleIdRelay, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Rule.ID, "correct rule was set")
+
+	require.NotNil(t, posts.Entities[0].Post.Rule, "rule exists on post")
+	require.Equal(t, ruleIdRelay, posts.Entities[0].Post.Rule.ID, "rule exists on post")
 }
 
 type RejectPost struct {
@@ -246,6 +250,9 @@ func TestModeratePost_reject(t *testing.T) {
 
 	postModeratorQueue = accountPostModeratorQueue(t, client, accountId)
 	require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 0, "should no longer be in queue")
+
+	require.NotNil(t, posts.Entities[0].Post.Rule, "rule exists on post")
+	require.Equal(t, ruleIdRelay, posts.Entities[0].Post.Rule.ID, "rule exists on post")
 }
 
 func TestModeratePost_reject_with_infraction(t *testing.T) {

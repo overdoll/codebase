@@ -2,7 +2,7 @@ package service_test
 
 import (
 	"context"
-	uuid2 "github.com/google/uuid"
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/mocks"
@@ -11,39 +11,21 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	hades "overdoll/applications/hades/proto"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
-	"time"
 )
 
-type AccountTransactionHistoryNew struct {
-	Entities []struct {
-		Account struct {
-			Id                 relay.ID
-			TransactionHistory *struct {
-				Edges []*struct {
-					Node struct {
-						Item struct {
-							Id                            relay.ID
-							Transaction                   types.AccountTransactionType
-							Amount                        int
-							Currency                      types.Currency
-							BilledAtDate                  time.Time
-							NextBillingDate               time.Time
-							PaymentMethod                 types.PaymentMethod
-							CCBillSubscriptionTransaction types.CCBillSubscriptionTransaction `graphql:"ccbillSubscriptionTransaction"`
-						} `graphql:"... on AccountNewTransactionHistory"`
-					}
-				}
-			} `graphql:"transactionHistory(startDate: $startDate)"`
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
+type GenerateClubSupporterPaymentReceiptFromAccountTransaction struct {
+	GenerateClubSupporterPaymentReceiptFromAccountTransaction *types.GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload `graphql:"generateClubSupporterPaymentReceiptFromAccountTransaction(input: $input)"`
 }
 
-type GenerateClubSupporterReceiptFromAccountTransactionHistory struct {
-	GenerateClubSupporterReceiptFromAccountTransactionHistory *types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload `graphql:"generateClubSupporterReceiptFromAccountTransactionHistory(input: $input)"`
+type AccountClubSupporterSubscription struct {
+	AccountClubSupporterSubscription *struct {
+		Item struct {
+			NextBillingDate string
+		} `graphql:"... on AccountActiveClubSupporterSubscription"`
+	} `graphql:"accountClubSupporterSubscription(reference: $reference)"`
 }
 
 // test a bunch of webhooks at the same time
@@ -51,7 +33,8 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
 	// generate a new unique payment token
@@ -117,7 +100,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		"subscriptionRecurringPrice":     "6.99",
 		"subscriptionTypeId":             "0000001458",
 		"timestamp":                      "2022-02-26 08:21:49",
-		"transactionId":                  "0222057601000107735",
+		"transactionId":                  ccbillTransactionId,
 		"threeDSecure":                   "NOT_APPLICABLE",
 		"X-formDigest":                   "5e118a92ac1ff6cec8bbe64e13acb7c5",
 		"X-currencyCode":                 "840",
@@ -126,6 +109,8 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.SetDetachedChildWait(false)
+	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -134,19 +119,26 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// get club supporter subscriptions
-	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "should have 1 subscription")
 
-	subscription := subscriptions.Edges[0]
+	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Node.Status, "subscription is active")
-	require.Equal(t, types.CurrencyUsd, subscription.Node.BillingCurrency, "USD currency is used")
-	require.Equal(t, 699, subscription.Node.BillingAmount, "correct billing amount")
-	require.Nil(t, subscription.Node.CancelledAt, "not cancelled")
-	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", subscription.Node.NextBillingDate.String(), "correct next billing date")
+	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
+
+	var accountClubSupporterSub AccountClubSupporterSubscription
+
+	err = gqlClient.Query(context.Background(), &accountClubSupporterSub, map[string]interface{}{
+		"reference": graphql.String(subscription.Reference),
+	})
+
+	require.NoError(t, err, "no error looking up supporter subscription")
+	require.NotNil(t, accountClubSupporterSub.AccountClubSupporterSubscription, "subscription exists")
 
 	// check for the correct payment method
-	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscription.Node.PaymentMethod)
+	assertNewSaleSuccessCorrectPaymentMethodDetails(t, subscription.PaymentMethod)
 
 	accountSavedPayments := getAccountSavedPaymentMethods(t, gqlClient, accountId)
 
@@ -173,34 +165,26 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, 699, ccbillSubscriptionDetails.AccountingRecurringPrice, "a: correct recurring price")
 	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.AccountingCurrency, "a: correct usd currency")
 
-	var accountTransactions AccountTransactionHistoryNew
+	accountTransactions := getAccountTransactions(t, gqlClient, accountId)
 
-	err = gqlClient.Query(context.Background(), &accountTransactions, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(accountId),
-			},
-		},
-		"startDate": time.Now(),
-	})
+	require.Len(t, accountTransactions.Entities[0].Account.Transactions.Edges, 1, "1 transaction item")
 
-	require.NoError(t, err, "no error grabbing account transaction history")
-
-	require.Len(t, accountTransactions.Entities[0].Account.TransactionHistory.Edges, 1, "1 transaction item")
-
-	transaction := accountTransactions.Entities[0].Account.TransactionHistory.Edges[0].Node.Item
+	transaction := accountTransactions.Entities[0].Account.Transactions.Edges[0].Node
 
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)
 
-	require.Equal(t, types.AccountTransactionTypeClubSupporterSubscription, transaction.Transaction, "correct transaction type")
+	require.Equal(t, 1, accountTransactions.Entities[0].Account.TransactionsTotalCount, "correct total count")
+
+	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
-	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate.String(), "correct next billing date")
-	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate.String(), "correct billing date")
+	require.Equal(t, "2022-03-28", transaction.NextBillingDate, "correct next billing date")
+	require.Equal(t, "2022-02-26", transaction.BilledAtDate, "correct billing date")
+	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
+	require.Equal(t, ccbillTransactionId, *transaction.CcbillTransaction.CcbillTransactionID, "correct ccbill transaction id")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -209,7 +193,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		Return(nil)
 
 	temporalClientMock.
-		On("GetWorkflow", mock.Anything, mock.Anything, mock.Anything).
+		On("GetWorkflow", mock.Anything, "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(
@@ -222,17 +206,17 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		).
 		Return(flowRun)
 
-	var generateReceipt GenerateClubSupporterReceiptFromAccountTransactionHistory
+	var generateReceipt GenerateClubSupporterPaymentReceiptFromAccountTransaction
 
 	err = gqlClient.Mutate(context.Background(), &generateReceipt, map[string]interface{}{
-		"input": types.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput{
-			TransactionHistoryID: transaction.Id,
+		"input": types.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput{
+			TransactionID: transaction.Id,
 		},
 	})
 
-	require.NoError(t, err, "no error generating a receipt from transaction history")
+	require.NoError(t, err, "no error generating a payment receipt from transaction")
 
-	fileUrl := generateReceipt.GenerateClubSupporterReceiptFromAccountTransactionHistory.Link.String()
+	fileUrl := generateReceipt.GenerateClubSupporterPaymentReceiptFromAccountTransaction.Link.String()
 	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
 }
 

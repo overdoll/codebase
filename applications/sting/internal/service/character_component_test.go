@@ -70,7 +70,7 @@ func getCharacterBySlug(t *testing.T, client *graphql.Client, slug string) *Char
 
 	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
 		"slug":       graphql.String(slug),
-		"seriesSlug": graphql.String("foreigner_on_mars"),
+		"seriesSlug": graphql.String("ForeignerOnMars"),
 	})
 
 	require.NoError(t, err)

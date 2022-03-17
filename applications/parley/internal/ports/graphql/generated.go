@@ -150,6 +150,7 @@ type ComplexityRoot struct {
 		AuditLogs    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID           func(childComplexity int) int
 		Reports      func(childComplexity int, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) int
+		Rule         func(childComplexity int) int
 		ViewerReport func(childComplexity int) int
 	}
 
@@ -319,6 +320,7 @@ type MutationResolver interface {
 }
 type PostResolver interface {
 	AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
+	Rule(ctx context.Context, obj *types.Post) (*types.Rule, error)
 	ViewerReport(ctx context.Context, obj *types.Post) (*types.PostReport, error)
 	Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error)
 }
@@ -837,6 +839,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Post.Reports(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["from"].(time.Time), args["to"].(*time.Time)), true
+
+	case "Post.rule":
+		if e.complexity.Post.Rule == nil {
+			break
+		}
+
+		return e.complexity.Post.Rule(childComplexity), true
 
 	case "Post.viewerReport":
 		if e.complexity.Post.ViewerReport == nil {
@@ -1381,6 +1390,11 @@ extend type Post {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostAuditLogConnection! @goField(forceResolver: true)
+
+  """
+  If this post was removed or rejected from the moderator queue, you can view the rule that was cited.
+  """
+  rule: Rule @goField(forceResolver: true)
 }
 
 extend type Account {
@@ -1828,6 +1842,7 @@ type RuleConnection {
   edges: [RuleEdge!]!
   pageInfo: PageInfo!
 }
+
 type Query {
   """
   Get a single rule by reference.
@@ -4705,6 +4720,38 @@ func (ec *executionContext) _Post_auditLogs(ctx context.Context, field graphql.C
 	res := resTmp.(*types.PostAuditLogConnection)
 	fc.Result = res
 	return ec.marshalNPostAuditLogConnection2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Post_rule(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Post().Rule(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Rule)
+	fc.Result = res
+	return ec.marshalORule2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐRule(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_viewerReport(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -9396,6 +9443,23 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "rule":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_rule(ctx, field, obj)
 				return res
 			}
 

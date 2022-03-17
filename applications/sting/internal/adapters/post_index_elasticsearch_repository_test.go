@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"sort"
 	"testing"
@@ -93,7 +93,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 
 	require.NoError(t, err, "no error creating empty filters")
 
-	principalItem := principal.NewPrincipal(testAccountId, nil, false, false)
+	principalItem := testing_tools.NewDefaultPrincipal(testAccountId)
 
 	// get first 5 posts
 	results, err := postIndexRepo.SearchPosts(ctx, principalItem, emptyCursor, filters)

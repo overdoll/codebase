@@ -4,42 +4,49 @@ import (
 	"context"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"testing"
 	"time"
 )
 
-type ClubSupporterSubscriptionsEdges struct {
-	Edges []*struct {
-		Node struct {
-			Id                 relay.ID
-			Status             types.AccountClubSupporterSubscriptionStatus
-			LastBillingDate    time.Time
-			NextBillingDate    time.Time
-			CancelledAt        *time.Time
-			BillingAmount      int
-			BillingCurrency    types.Currency
-			PaymentMethod      types.PaymentMethod
-			CcbillSubscription types.CCBillSubscription
-		}
-	}
-}
-
-type AccountClubSupporterSubscriptions struct {
+type AccountActiveClubSupporterSubscriptions struct {
 	Entities []struct {
 		Account struct {
 			Id                         relay.ID
-			ClubSupporterSubscriptions ClubSupporterSubscriptionsEdges
+			ClubSupporterSubscriptions struct {
+				Edges []*struct {
+					Node struct {
+						Item struct {
+							Id                 relay.ID
+							Reference          string
+							LastBillingDate    string
+							NextBillingDate    string
+							BillingAmount      int
+							BillingCurrency    types.Currency
+							PaymentMethod      types.PaymentMethod
+							CcbillSubscription types.CCBillSubscription
+							BillingError       *struct {
+								FailedAt        time.Time `json:"failedAt"`
+								CcbillErrorText *string   `json:"ccbillErrorText"`
+								CcbillErrorCode *string   `json:"ccbillErrorCode"`
+								NextRetryDate   string    `json:"nextRetryDate"`
+							}
+						} `graphql:"... on AccountActiveClubSupporterSubscription"`
+					}
+				}
+			} `graphql:"clubSupporterSubscriptions(status: [ACTIVE])"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
 type _Any map[string]interface{}
 
-func getAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, accountId string) ClubSupporterSubscriptionsEdges {
+func getActiveAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, accountId string) AccountActiveClubSupporterSubscriptions {
 
-	var accountClubSupporterSubscriptions AccountClubSupporterSubscriptions
+	var accountClubSupporterSubscriptions AccountActiveClubSupporterSubscriptions
 
 	err := client.Query(context.Background(), &accountClubSupporterSubscriptions, map[string]interface{}{
 		"representations": []_Any{
@@ -52,7 +59,63 @@ func getAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, 
 
 	require.NoError(t, err, "no error grabbing subscriptions")
 
-	return accountClubSupporterSubscriptions.Entities[0].Account.ClubSupporterSubscriptions
+	return accountClubSupporterSubscriptions
+}
+
+type AccountTransactions struct {
+	Entities []struct {
+		Account struct {
+			Id                          relay.ID
+			TransactionsTotalCount      int
+			TransactionsPaymentCount    int
+			TransactionsRefundCount     int
+			TransactionsChargebackCount int
+			Transactions                struct {
+				Edges []*struct {
+					Node struct {
+						Id                relay.ID
+						Reference         string
+						Type              types.AccountTransactionType
+						Events            []*types.AccountTransactionEvent
+						Timestamp         time.Time
+						Amount            int
+						Currency          types.Currency
+						BilledAtDate      string
+						NextBillingDate   string
+						PaymentMethod     types.PaymentMethod
+						CcbillTransaction *types.CCBillTransaction
+					}
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func refreshAccountTransactionIndex(t *testing.T) {
+
+	// refresh transactions index so we get the most up-to-date values
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.AccountTransactionsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func getAccountTransactions(t *testing.T, client *graphql.Client, accountId string) AccountTransactions {
+	refreshAccountTransactionIndex(t)
+
+	var accountTransactions AccountTransactions
+
+	err := client.Query(context.Background(), &accountTransactions, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing account transactions")
+
+	return accountTransactions
 }
 
 type AccountSavedPaymentMethods struct {
@@ -140,7 +203,9 @@ type CCBillTransactionDetails struct {
 		DeclineCode                            *string
 		DeclineText                            *string
 		LinkedAccountClubSupporterSubscription *struct {
-			Id relay.ID
+			Item struct {
+				Id relay.ID
+			} `graphql:"... on IAccountClubSupporterSubscription"`
 		}
 	} `graphql:"ccbillTransactionDetails(token: $token)"`
 }

@@ -8,41 +8,56 @@ import (
 )
 
 type Repository interface {
-	GetAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*AccountClubSupporterSubscription, error)
-	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, accountId, clubId, id string) (*AccountClubSupporterSubscription, error)
+	SearchAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountClubSupporterSubscriptionFilters) ([]*AccountClubSupporterSubscription, error)
+	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
-	SearchAccountTransactionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransactionHistory, error)
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	GetAccountSavedPaymentMethodById(ctx context.Context, requester *principal.Principal, accountId, id string) (*SavedPaymentMethod, error)
 
-	GetAccountClubSupporterSubscriptionByIdOperator(ctx context.Context, accountId, clubId, id string) (*AccountClubSupporterSubscription, error)
-	DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId, id string) error
+	GetExpiredAccountClubSupporterSubscriptionsByAccount(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*ExpiredAccountClubSupporterSubscription, error)
+	GetExpiredAccountClubSupporterSubscriptionByAccountAndClubIdOperator(ctx context.Context, accountId, clubId string) (*ExpiredAccountClubSupporterSubscription, error)
+	DeleteExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) error
+	CreateExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, expired *ExpiredAccountClubSupporterSubscription) error
+
+	GetAccountClubSupporterSubscriptionsByAccountIdOperator(ctx context.Context, id string) ([]*AccountClubSupporterSubscription, error)
+	GetAccountClubSupporterSubscriptionByIdOperator(ctx context.Context, id string) (*AccountClubSupporterSubscription, error)
+	DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, subscription *AccountClubSupporterSubscription) error
 	CreateAccountClubSupporterSubscriptionOperator(ctx context.Context, accountClubSupp *AccountClubSupporterSubscription) error
-	UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
-	UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
-	UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
+	UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
+	UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
+	UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
 	HasExistingAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, accountId, clubId string) (*AccountClubSupporterSubscription, error)
 	HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*AccountClubSupporterSubscription, error)
-	UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, accountId, clubId, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
+	UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
 
 	CreateAccountSavedPaymentMethodOperator(ctx context.Context, savedPaymentMethod *SavedPaymentMethod) error
 	GetAccountSavedPaymentMethodByIdOperator(ctx context.Context, accountId, id string) (*SavedPaymentMethod, error)
 	UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *SavedPaymentMethod) error) (*SavedPaymentMethod, error)
 
-	GetAccountTransactionHistoryById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransactionHistory, error)
-	CreateAccountTransactionHistoryOperator(ctx context.Context, accountHistory *AccountTransactionHistory) error
-	GetAccountTransactionHistoryByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransactionHistory, error)
+	GetAccountTransactionById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransaction, error)
+	CreateAccountTransactionOperator(ctx context.Context, accountHistory *AccountTransaction) error
+	GetAccountTransactionByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransaction, error)
+	UpdateAccountTransactionOperator(ctx context.Context, id string, updateFn func(transaction *AccountTransaction) error) (*AccountTransaction, error)
 
 	GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	CreateCCBillSubscriptionDetailsOperator(ctx context.Context, subscription *CCBillSubscriptionDetails) error
 	UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *CCBillSubscriptionDetails) error) (*CCBillSubscriptionDetails, error)
 }
 
+type IndexRepository interface {
+	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
+	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
+	IndexAllAccountTransactions(ctx context.Context) error
+	DeleteAccountTransactionsIndex(ctx context.Context) error
+	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
+}
+
 type FileRepository interface {
-	GetClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
-	CreateClubSupporterReceiptFromTransactionHistory(ctx context.Context, requester *principal.Principal, history *AccountTransactionHistory) (*ClubSupporterReceipt, error)
-	UpdateClubSupporterReceiptWithNewFile(ctx context.Context, builder *ClubSupporterReceiptBuilder) error
+	GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *AccountTransaction, eventId string) (*ClubSupporterReceipt, error)
+	GetOrCreateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *AccountTransaction) (*ClubSupporterReceipt, error)
+	UpdateClubSupporterRefundReceiptWithNewFile(ctx context.Context, builder *ClubSupporterRefundReceiptBuilder) error
+	UpdateClubSupporterPaymentReceiptWithNewFile(ctx context.Context, builder *ClubSupporterPaymentReceiptBuilder) error
 }
 
 type PricingRepository interface {
