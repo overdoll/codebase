@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3152f10c0d9fcd15d770d22f04e6bd>>
+ * @generated SignedSource<<364fc84c37b64fcb8b3908943fd1e2c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,26 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsFragment$data = {
-  readonly clubSupporterSubscriptions: {
+export type ExpiredClubSupporterSubscriptionsSettingsFragment$data = {
+  readonly expiredClubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ExpiredAccountClubSupporterSubscriptionPreviewFragment">;
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionsFragment";
+  readonly " $fragmentType": "ExpiredClubSupporterSubscriptionsSettingsFragment";
 };
-export type AdminClubSupporterSubscriptionsFragment = AdminClubSupporterSubscriptionsFragment$data;
-export type AdminClubSupporterSubscriptionsFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+export type ExpiredClubSupporterSubscriptionsSettingsFragment = ExpiredClubSupporterSubscriptionsSettingsFragment$data;
+export type ExpiredClubSupporterSubscriptionsSettingsFragment$key = {
+  readonly " $data"?: ExpiredClubSupporterSubscriptionsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExpiredClubSupporterSubscriptionsSettingsFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "clubSupporterSubscriptions"
+  "expiredClubSupporterSubscriptions"
 ];
 return {
   "argumentDefinitions": [
@@ -66,24 +66,24 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminClubSupporterSubscriptionsPaginationQuery.graphql'),
+      "operation": require('./ExpiredClubSupporterSubscriptionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminClubSupporterSubscriptionsFragment",
+  "name": "ExpiredClubSupporterSubscriptionsSettingsFragment",
   "selections": [
     {
-      "alias": "clubSupporterSubscriptions",
+      "alias": "expiredClubSupporterSubscriptions",
       "args": null,
-      "concreteType": "AccountClubSupporterSubscriptionConnection",
+      "concreteType": "ExpiredAccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
-      "name": "__AdminClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
+      "name": "__ExpiredClubSupporterSubscriptions_expiredClubSupporterSubscriptions_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "AccountClubSupporterSubscriptionEdge",
+          "concreteType": "ExpiredAccountClubSupporterSubscriptionEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -91,11 +91,16 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": null,
+              "concreteType": "ExpiredAccountClubSupporterSubscription",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ExpiredAccountClubSupporterSubscriptionPreviewFragment"
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -157,6 +162,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "b5096784abae2f2140133b714ca8a72f";
 
 export default node;

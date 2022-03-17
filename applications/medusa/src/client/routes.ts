@@ -1690,7 +1690,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./domain/Settings/Billing/RootSubscriptionSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./domain/Settings/Billing/RootSubscriptionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -1698,7 +1698,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    './domain/Settings/Billing/RootSubscriptionSettings/RootSubscriptionSettings'
+                    './domain/Settings/Billing/RootSubscriptionsSettings/RootSubscriptionsSettings'
                   )
                 ),
                 prepare: () => {

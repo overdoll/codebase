@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6525d441881b166a855a0a68e6d38e90>>
+ * @generated SignedSource<<8566995d08b18e12edf5ffba2c1fbff1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -61,10 +61,10 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "AccountClubSupporterSubscription",
+  "type": "AccountActiveClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "cbb6df0b73c6f89fa3331ad844e1e82f";
+(node as any).hash = "bc33e825e670c117fa32c64a17f8b036";
 
 export default node;

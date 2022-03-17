@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<350eca688080565c945ad580e75e1ed0>>
+ * @generated SignedSource<<a647f2d08ff23f69bcb3dc284f42fa8f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UpdatePaymentMethodButtonFragment$data = {
-  readonly id: string;
   readonly paymentMethod: {
     readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodFragment">;
   };
@@ -30,13 +29,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "UpdatePaymentMethodButtonFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -59,10 +51,10 @@ const node: ReaderFragment = {
       "name": "CCBillUpdatePaymentMethodInstructionsFragment"
     }
   ],
-  "type": "AccountClubSupporterSubscription",
+  "type": "AccountActiveClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "3e3451e6c7521d16a4a3b78528006f76";
+(node as any).hash = "c5792aa758314c8c421b5595b2b29c58";
 
 export default node;

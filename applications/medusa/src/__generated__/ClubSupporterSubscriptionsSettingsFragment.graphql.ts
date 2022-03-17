@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3152f10c0d9fcd15d770d22f04e6bd>>
+ * @generated SignedSource<<9a1ece2590d55c6885144f2b650533e2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,21 +10,29 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsFragment$data = {
+export type ClubSupporterSubscriptionsSettingsFragment$data = {
   readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly __typename: "AccountActiveClubSupporterSubscription";
+        readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionPreviewFragment">;
+      } | {
+        readonly __typename: "AccountCancelledClubSupporterSubscription";
+        readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionPreviewFragment">;
+      } | {
+        // This will never be '%other', but we need some
+        // value in case none of the concrete values match.
+        readonly __typename: "%other";
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionsFragment";
+  readonly " $fragmentType": "ClubSupporterSubscriptionsSettingsFragment";
 };
-export type AdminClubSupporterSubscriptionsFragment = AdminClubSupporterSubscriptionsFragment$data;
-export type AdminClubSupporterSubscriptionsFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+export type ClubSupporterSubscriptionsSettingsFragment = ClubSupporterSubscriptionsSettingsFragment$data;
+export type ClubSupporterSubscriptionsSettingsFragment$key = {
+  readonly " $data"?: ClubSupporterSubscriptionsSettingsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubSupporterSubscriptionsSettingsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -66,18 +74,18 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminClubSupporterSubscriptionsPaginationQuery.graphql'),
+      "operation": require('./ClubSupporterSubscriptionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminClubSupporterSubscriptionsFragment",
+  "name": "ClubSupporterSubscriptionsSettingsFragment",
   "selections": [
     {
       "alias": "clubSupporterSubscriptions",
       "args": null,
       "concreteType": "AccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
-      "name": "__AdminClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
+      "name": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
       "plural": false,
       "selections": [
         {
@@ -102,6 +110,30 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "kind": "InlineFragment",
+                  "selections": [
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "AccountActiveClubSupporterSubscriptionPreviewFragment"
+                    }
+                  ],
+                  "type": "AccountActiveClubSupporterSubscription",
+                  "abstractKey": null
+                },
+                {
+                  "kind": "InlineFragment",
+                  "selections": [
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "AccountCancelledClubSupporterSubscriptionPreviewFragment"
+                    }
+                  ],
+                  "type": "AccountCancelledClubSupporterSubscription",
+                  "abstractKey": null
                 }
               ],
               "storageKey": null
@@ -157,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "14972dc1383f29d580bb76a9f0fc2603";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<313c04e91f85433003d0edb951c4a335>>
+ * @generated SignedSource<<56ff2b38f75fadb7fb97dcdd5d0f66a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type CCBillUpdatePaymentMethodInstructionsFragment$data = {
     readonly ccbillSubscriptionId: string;
     readonly email: string;
     readonly paymentMethod: string;
+    readonly link: string;
   };
   readonly " $fragmentType": "CCBillUpdatePaymentMethodInstructionsFragment";
 };
@@ -60,6 +61,13 @@ const node: ReaderFragment = {
             "kind": "ScalarField",
             "name": "paymentMethod",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "link",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -68,10 +76,10 @@ const node: ReaderFragment = {
       "path": "ccbillSubscription"
     }
   ],
-  "type": "AccountClubSupporterSubscription",
+  "type": "AccountActiveClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "bcd71813a868cd58ef3a3fbe78d5dc7c";
+(node as any).hash = "bbf8244b54d1b984fe4e42613f4f07c4";
 
 export default node;

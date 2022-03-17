@@ -8,7 +8,7 @@ import AdminAssignModerator from './AdminAssignModerator/AdminAssignModerator'
 import AdminAssignStaff from './AdminAssignStaff/AdminAssignStaff'
 import { Trans } from '@lingui/macro'
 import AdminClubSupporterSubscriptions from './AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions'
-import RootAdminTransactionHistory from './AdminTransactionHistory/RootAdminTransactionHistory'
+import AdminTransactions from './AdminTransactions/AdminTransactions'
 
 interface Props {
   query: PreloadedQuery<AdminAccountQuery>
@@ -26,6 +26,7 @@ const Query = graphql`
       ...AdminAssignModeratorFragment
       ...AdminAssignStaffFragment
       ...AdminClubSupporterSubscriptionsFragment
+      ...AdminTransactionsFragment
     }
   }
 `
@@ -86,7 +87,7 @@ export default function AdminAccount ({ query }: Props): JSX.Element {
             <AdminClubSupporterSubscriptions query={queryData.account} />
           </TabPanel>
           <TabPanel>
-            <RootAdminTransactionHistory />
+            <AdminTransactions query={queryData.account} />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -23,19 +23,20 @@ const Query = graphql`
       declineError
       declineText
       linkedAccountClubSupporterSubscription {
-        id
-        status
-        supporterSince
-        paymentMethod {
-          card {
-            last4
-            expiration
-            type
+        ... on AccountActiveClubSupporterSubscription {
+          id
+          supporterSince
+          paymentMethod {
+            card {
+              last4
+              expiration
+              type
+            }
           }
-        }
-        club {
-          viewerMember {
-            isSupporter
+          club {
+            viewerMember {
+              isSupporter
+            }
           }
         }
       }

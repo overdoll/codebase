@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3b98157bd9b8bbb3e818e81c656b2405>>
- * @relayHash 132a7082c8b70a47a00f456d3d142044
+ * @generated SignedSource<<fb612538110d8d11652f69dde92c313f>>
+ * @relayHash 4d1feb819d29a53723b2aa4e13e81d7e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 132a7082c8b70a47a00f456d3d142044
+// @relayRequestID 4d1feb819d29a53723b2aa4e13e81d7e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AccountClubSupporterSubscriptionStatus = "ACTIVE" | "CANCELLED" | "%future added value";
 export type CCBillDeclineError = "CARD_EXPIRED" | "GENERAL_SYSTEM_ERROR" | "INSUFFICIENT_FUNDS" | "RATE_LIMIT_ERROR" | "TRANSACTION_APPROVAL_REQUIRED" | "TRANSACTION_DECLINED" | "TRANSACTION_DENIED_OR_REFUSED_BY_BANK" | "%future added value";
 export type CardType = "AMEX" | "DISCOVER" | "JCB" | "MASTERCARD" | "OTHER" | "VISA" | "%future added value";
 export type CCBillDisplayTransactionQuery$variables = {
@@ -26,17 +25,16 @@ export type CCBillDisplayTransactionQuery$data = {
     readonly declineError: CCBillDeclineError | null;
     readonly declineText: string | null;
     readonly linkedAccountClubSupporterSubscription: {
-      readonly id: string;
-      readonly status: AccountClubSupporterSubscriptionStatus;
-      readonly supporterSince: any;
-      readonly paymentMethod: {
+      readonly id?: string;
+      readonly supporterSince?: any;
+      readonly paymentMethod?: {
         readonly card: {
           readonly last4: string;
           readonly expiration: string;
           readonly type: CardType;
         };
       };
-      readonly club: {
+      readonly club?: {
         readonly viewerMember: {
           readonly isSupporter: boolean;
         } | null;
@@ -97,17 +95,10 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "supporterSince",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethod",
@@ -150,13 +141,16 @@ v8 = {
   ],
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isSupporter",
   "storageKey": null
-};
+},
+v9 = [
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -179,37 +173,43 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountClubSupporterSubscription",
+            "concreteType": null,
             "kind": "LinkedField",
             "name": "linkedAccountClubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
               {
-                "alias": null,
-                "args": null,
-                "concreteType": "Club",
-                "kind": "LinkedField",
-                "name": "club",
-                "plural": false,
+                "kind": "InlineFragment",
                 "selections": [
+                  (v2/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ClubMember",
+                    "concreteType": "Club",
                     "kind": "LinkedField",
-                    "name": "viewerMember",
+                    "name": "club",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ClubMember",
+                        "kind": "LinkedField",
+                        "name": "viewerMember",
+                        "plural": false,
+                        "selections": [
+                          (v8/*: any*/)
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
                 ],
-                "storageKey": null
+                "type": "AccountActiveClubSupporterSubscription",
+                "abstractKey": null
               }
             ],
             "storageKey": null
@@ -242,39 +242,64 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountClubSupporterSubscription",
+            "concreteType": null,
             "kind": "LinkedField",
             "name": "linkedAccountClubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Club",
-                "kind": "LinkedField",
-                "name": "club",
-                "plural": false,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              {
+                "kind": "InlineFragment",
                 "selections": [
+                  (v2/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ClubMember",
+                    "concreteType": "Club",
                     "kind": "LinkedField",
-                    "name": "viewerMember",
+                    "name": "club",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ClubMember",
+                        "kind": "LinkedField",
+                        "name": "viewerMember",
+                        "plural": false,
+                        "selections": [
+                          (v8/*: any*/),
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
-                  },
-                  (v2/*: any*/)
+                  }
                 ],
-                "storageKey": null
+                "type": "AccountActiveClubSupporterSubscription",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": (v9/*: any*/),
+                "type": "AccountCancelledClubSupporterSubscription",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": (v9/*: any*/),
+                "type": "AccountExpiredClubSupporterSubscription",
+                "abstractKey": null
               }
             ],
             "storageKey": null
@@ -285,7 +310,7 @@ return {
     ]
   },
   "params": {
-    "id": "132a7082c8b70a47a00f456d3d142044",
+    "id": "4d1feb819d29a53723b2aa4e13e81d7e",
     "metadata": {},
     "name": "CCBillDisplayTransactionQuery",
     "operationKind": "query",
@@ -294,6 +319,6 @@ return {
 };
 })();
 
-(node as any).hash = "e221b44ad081f5d6033bd1cda2b6b2c9";
+(node as any).hash = "d3c8f0ad4becac1b610c92648b97b337";
 
 export default node;

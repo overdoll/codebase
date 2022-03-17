@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e8b5a816b9fe318435ff2170add01f27>>
- * @relayHash 439c7e72af6e57a441139141ea7de8e3
+ * @generated SignedSource<<e10a2156d71b7e8467cefec5273ab6f7>>
+ * @relayHash 50ab2acdce9b294fc45e036fe0a00a49
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 439c7e72af6e57a441139141ea7de8e3
+// @relayRequestID 50ab2acdce9b294fc45e036fe0a00a49
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type AccountClubSupporterSubscriptionStatus = "ACTIVE" | "CANCELLED" | "%future added value";
 export type CancelAccountClubSupporterSubscriptionInput = {
   cancellationReasonId: string;
   clubSupporterSubscriptionId: string;
@@ -24,17 +23,16 @@ export type CancelSubscriptionButtonMutationVariables = CancelSubscriptionButton
 export type CancelSubscriptionButtonMutation$data = {
   readonly cancelAccountClubSupporterSubscription: {
     readonly clubSupporterSubscription: {
-      readonly account: {
+      readonly account?: {
         readonly id: string;
       };
-      readonly status: AccountClubSupporterSubscriptionStatus;
-      readonly cancelledAt: any | null;
-      readonly cancellationReason: {
+      readonly endDate?: any;
+      readonly cancelledAt?: any;
+      readonly cancellationReason?: {
         readonly id: string;
         readonly title: string;
       } | null;
-      readonly updatedAt: any;
-      readonly lastBillingDate: any;
+      readonly updatedAt?: any;
     } | null;
   } | null;
 };
@@ -66,33 +64,34 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v3 = [
+  (v2/*: any*/)
+],
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "Account",
   "kind": "LinkedField",
   "name": "account",
   "plural": false,
-  "selections": [
-    (v2/*: any*/)
-  ],
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "status",
+  "selections": (v3/*: any*/),
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cancelledAt",
+  "name": "endDate",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cancelledAt",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "CancellationReason",
@@ -111,18 +110,11 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "updatedAt",
-  "storageKey": null
-},
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "lastBillingDate",
+  "name": "updatedAt",
   "storageKey": null
 };
 return {
@@ -143,17 +135,31 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountClubSupporterSubscription",
+            "concreteType": null,
             "kind": "LinkedField",
             "name": "clubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/)
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/)
+                ],
+                "type": "AccountCancelledClubSupporterSubscription",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  (v4/*: any*/)
+                ],
+                "type": "AccountActiveClubSupporterSubscription",
+                "abstractKey": null
+              }
             ],
             "storageKey": null
           }
@@ -181,18 +187,46 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountClubSupporterSubscription",
+            "concreteType": null,
             "kind": "LinkedField",
             "name": "clubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
-              (v2/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "type": "AccountCancelledClubSupporterSubscription",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  (v4/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "type": "AccountActiveClubSupporterSubscription",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": (v3/*: any*/),
+                "type": "AccountExpiredClubSupporterSubscription",
+                "abstractKey": null
+              }
             ],
             "storageKey": null
           }
@@ -202,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "id": "439c7e72af6e57a441139141ea7de8e3",
+    "id": "50ab2acdce9b294fc45e036fe0a00a49",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",
@@ -211,6 +245,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b69a5a1a2ae6ed59b124c2d459524ad";
+(node as any).hash = "cdc2d7e646d8abd463d344f2da3e0974";
 
 export default node;

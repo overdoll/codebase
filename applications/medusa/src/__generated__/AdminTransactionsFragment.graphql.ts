@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3152f10c0d9fcd15d770d22f04e6bd>>
+ * @generated SignedSource<<d7813f3a247521992d6e3fa67a5a28ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,26 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsFragment$data = {
-  readonly clubSupporterSubscriptions: {
+export type AdminTransactionsFragment$data = {
+  readonly transactions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AccountTransactionCardFragment">;
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionsFragment";
+  readonly " $fragmentType": "AdminTransactionsFragment";
 };
-export type AdminClubSupporterSubscriptionsFragment = AdminClubSupporterSubscriptionsFragment$data;
-export type AdminClubSupporterSubscriptionsFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+export type AdminTransactionsFragment = AdminTransactionsFragment$data;
+export type AdminTransactionsFragment$key = {
+  readonly " $data"?: AdminTransactionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "clubSupporterSubscriptions"
+  "transactions"
 ];
 return {
   "argumentDefinitions": [
@@ -66,24 +66,24 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminClubSupporterSubscriptionsPaginationQuery.graphql'),
+      "operation": require('./AdminTransactionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminClubSupporterSubscriptionsFragment",
+  "name": "AdminTransactionsFragment",
   "selections": [
     {
-      "alias": "clubSupporterSubscriptions",
+      "alias": "transactions",
       "args": null,
-      "concreteType": "AccountClubSupporterSubscriptionConnection",
+      "concreteType": "AccountTransactionConnection",
       "kind": "LinkedField",
-      "name": "__AdminClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
+      "name": "__AdminTransactions_transactions_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "AccountClubSupporterSubscriptionEdge",
+          "concreteType": "AccountTransactionEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -91,11 +91,16 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": null,
+              "concreteType": "AccountTransaction",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "AccountTransactionCardFragment"
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -157,6 +162,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "ed2baffbe6b9c5dcd9e80c4c989132a9";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6d8e8bdf83ebb7b7a08d27eb7a4e868f>>
- * @relayHash 7b74747f5f247d6251d091a2be855d12
+ * @generated SignedSource<<6405a274d3a24246fdaa9a4d3ad5ff3c>>
+ * @relayHash 72a13182868a61f3749ad19c2a818e77
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,25 +9,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7b74747f5f247d6251d091a2be855d12
+// @relayRequestID 72a13182868a61f3749ad19c2a818e77
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsPaginationQuery$variables = {
+export type AdminTransactionsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminClubSupporterSubscriptionsPaginationQueryVariables = AdminClubSupporterSubscriptionsPaginationQuery$variables;
-export type AdminClubSupporterSubscriptionsPaginationQuery$data = {
+export type AdminTransactionsPaginationQueryVariables = AdminTransactionsPaginationQuery$variables;
+export type AdminTransactionsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsFragment">;
   } | null;
 };
-export type AdminClubSupporterSubscriptionsPaginationQueryResponse = AdminClubSupporterSubscriptionsPaginationQuery$data;
-export type AdminClubSupporterSubscriptionsPaginationQuery = {
-  variables: AdminClubSupporterSubscriptionsPaginationQueryVariables;
-  response: AdminClubSupporterSubscriptionsPaginationQuery$data;
+export type AdminTransactionsPaginationQueryResponse = AdminTransactionsPaginationQuery$data;
+export type AdminTransactionsPaginationQuery = {
+  variables: AdminTransactionsPaginationQueryVariables;
+  response: AdminTransactionsPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -82,6 +82,25 @@ v4 = {
   "storageKey": null
 },
 v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Club",
+    "kind": "LinkedField",
+    "name": "club",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "name",
+        "storageKey": null
+      },
+      (v4/*: any*/)
+    ],
+    "storageKey": null
+  },
   (v4/*: any*/)
 ];
 return {
@@ -89,7 +108,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "AdminTransactionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -102,7 +121,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminClubSupporterSubscriptionsFragment"
+            "name": "AdminTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -115,7 +134,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "AdminTransactionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -133,15 +152,15 @@ return {
               {
                 "alias": null,
                 "args": (v2/*: any*/),
-                "concreteType": "AccountClubSupporterSubscriptionConnection",
+                "concreteType": "AccountTransactionConnection",
                 "kind": "LinkedField",
-                "name": "clubSupporterSubscriptions",
+                "name": "transactions",
                 "plural": false,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "AccountClubSupporterSubscriptionEdge",
+                    "concreteType": "AccountTransactionEdge",
                     "kind": "LinkedField",
                     "name": "edges",
                     "plural": true,
@@ -149,30 +168,71 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": null,
+                        "concreteType": "AccountTransaction",
                         "kind": "LinkedField",
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
                           {
-                            "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
-                            "type": "AccountActiveClubSupporterSubscription",
-                            "abstractKey": null
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "type",
+                            "storageKey": null
                           },
                           {
-                            "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
-                            "type": "AccountCancelledClubSupporterSubscription",
-                            "abstractKey": null
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "timestamp",
+                            "storageKey": null
                           },
                           {
-                            "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
-                            "type": "AccountExpiredClubSupporterSubscription",
-                            "abstractKey": null
-                          }
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "amount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "currency",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": null,
+                            "kind": "LinkedField",
+                            "name": "clubSupporterSubscription",
+                            "plural": false,
+                            "selections": [
+                              (v3/*: any*/),
+                              {
+                                "kind": "InlineFragment",
+                                "selections": (v5/*: any*/),
+                                "type": "AccountActiveClubSupporterSubscription",
+                                "abstractKey": null
+                              },
+                              {
+                                "kind": "InlineFragment",
+                                "selections": (v5/*: any*/),
+                                "type": "AccountCancelledClubSupporterSubscription",
+                                "abstractKey": null
+                              },
+                              {
+                                "kind": "InlineFragment",
+                                "selections": (v5/*: any*/),
+                                "type": "AccountExpiredClubSupporterSubscription",
+                                "abstractKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          (v4/*: any*/),
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -219,9 +279,9 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminClubSupporterSubscriptions_clubSupporterSubscriptions",
+                "key": "AdminTransactions_transactions",
                 "kind": "LinkedHandle",
-                "name": "clubSupporterSubscriptions"
+                "name": "transactions"
               }
             ],
             "type": "Account",
@@ -233,15 +293,15 @@ return {
     ]
   },
   "params": {
-    "id": "7b74747f5f247d6251d091a2be855d12",
+    "id": "72a13182868a61f3749ad19c2a818e77",
     "metadata": {},
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "AdminTransactionsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "ed2baffbe6b9c5dcd9e80c4c989132a9";
 
 export default node;
