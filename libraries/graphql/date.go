@@ -39,7 +39,8 @@ func MarshalDate(t time.Time) Marshaler {
 
 func UnmarshalDate(v interface{}) (time.Time, error) {
 	if tmpStr, ok := v.(string); ok {
-		return time.Parse("2006-01-02", tmpStr)
+		tm, _ := time.Parse("2006-01-02", tmpStr)
+		return tm, nil
 	}
 	return time.Time{}, errors.New("time should be a formatted string (i.e. 2006-01-02)")
 }

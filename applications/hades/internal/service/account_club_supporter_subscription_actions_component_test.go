@@ -8,7 +8,6 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
-	"time"
 )
 
 type BecomeClubSupporterWithAccountSavedPaymentMethod struct {
@@ -22,7 +21,9 @@ type DeleteAccountSavedPaymentMethod struct {
 type ExtendAccountClubSupporterSubscription struct {
 	ExtendAccountClubSupporterSubscription *struct {
 		ClubSupporterSubscription *struct {
-			NextBillingDate time.Time
+			Item struct {
+				NextBillingDate string
+			} `graphql:"... on AccountActiveClubSupporterSubscription"`
 		}
 	} `graphql:"extendAccountClubSupporterSubscription(input: $input)"`
 }
@@ -30,7 +31,9 @@ type ExtendAccountClubSupporterSubscription struct {
 type CancelAccountClubSupporterSubscription struct {
 	CancelAccountClubSupporterSubscription *struct {
 		ClubSupporterSubscription *struct {
-			CancellationReason *types.CancellationReason
+			Item struct {
+				NextBillingDate string
+			} `graphql:"... on AccountActiveClubSupporterSubscription"`
 		}
 	} `graphql:"cancelAccountClubSupporterSubscription(input: $input)"`
 }
@@ -92,7 +95,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error extending club supporter subscription")
-	require.Equal(t, "2022-03-31 00:00:00 +0000 UTC", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.NextBillingDate.String(), "should be extended")
+	require.Equal(t, "2022-03-31", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.Item.NextBillingDate, "should be extended")
 
 	// cancel account club supporter subscription
 	var cancel CancelAccountClubSupporterSubscription
@@ -105,5 +108,4 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error cancelling")
-	require.NotNil(t, cancel.CancelAccountClubSupporterSubscription.ClubSupporterSubscription.CancellationReason, "cancellation reason is set")
 }

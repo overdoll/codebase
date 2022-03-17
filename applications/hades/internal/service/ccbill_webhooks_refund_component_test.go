@@ -72,7 +72,9 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.Len(t, accountTransactionsRefund.Entities[0].Account.Transactions.Edges, 1, "1 transaction items")
 	transaction := accountTransactionsRefund.Entities[0].Account.Transactions.Edges[0].Node
 
-	require.Equal(t, types.AccountTransactionTypeRefund, transaction.Transaction, "correct transaction type")
+	require.Equal(t, types.AccountTransactionTypeRefund, transaction.Type, "correct transaction type")
+	require.Equal(t, 1, accountTransactionsRefund.Entities[0].Account.TransactionsRefundCount, "correct refund count")
+	require.Equal(t, 0, accountTransactionsRefund.Entities[0].Account.TransactionsPaymentCount, "correct payment count")
 
 	require.Len(t, transaction.Events, 1, "should have 1 event")
 
@@ -105,7 +107,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		Return(nil)
 
 	temporalClientMock.
-		On("GetWorkflow", "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything, mock.Anything).
+		On("GetWorkflow", mock.Anything, "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(

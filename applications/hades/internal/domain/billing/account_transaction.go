@@ -41,7 +41,7 @@ type AccountTransaction struct {
 	events []*AccountTransactionEvent
 }
 
-func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string) (*AccountTransaction, error) {
+func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	cr, err := CurrencyFromString(currency)
 
 	if err != nil {
@@ -60,6 +60,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
 		ccbillTransactionId:         &id,
+		paymentMethod:               paymentMethod,
 	}, nil
 }
 
@@ -243,7 +244,7 @@ func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.P
 	return refund, nil
 }
 
-func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string) *AccountTransaction {
+func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, ccbillTransactionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string, events []*AccountTransactionEvent) *AccountTransaction {
 	tr, _ := TransactionFromString(transaction)
 	cr, _ := CurrencyFromString(currency)
 
@@ -258,9 +259,11 @@ func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp tim
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
 		ccbillSubscriptionId:        ccbillSubscriptionId,
+		ccbillTransactionId:         ccbillTransactionId,
 		clubSupporterSubscriptionId: clubSupporterSubscriptionId,
 		voidReason:                  voidReason,
 		voidedAt:                    voidedAt,
+		events:                      events,
 	}
 }
 

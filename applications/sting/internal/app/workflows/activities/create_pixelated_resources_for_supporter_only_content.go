@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/domain/post"
 )
 

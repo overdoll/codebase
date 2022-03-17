@@ -63,8 +63,8 @@ func (r *Resolver) AccountCancelledClubSupporterSubscription() AccountCancelledC
 	}
 }
 
-func (r *Resolver) AccountInactiveClubSupporterSubscription() AccountInactiveClubSupporterSubscriptionResolver {
-	return &resolvers.AccountInactiveClubSupporterSubscriptionResolver{
+func (r *Resolver) AccountExpiredClubSupporterSubscription() AccountExpiredClubSupporterSubscriptionResolver {
+	return &resolvers.AccountExpiredClubSupporterSubscriptionResolver{
 		App: r.app,
 	}
 }

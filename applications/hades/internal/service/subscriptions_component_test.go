@@ -21,19 +21,23 @@ type AccountActiveClubSupporterSubscriptions struct {
 					Node struct {
 						Item struct {
 							Id                 relay.ID
-							Status             types.AccountClubSupporterSubscriptionStatus
 							Reference          string
-							LastBillingDate    time.Time
-							NextBillingDate    time.Time
+							LastBillingDate    string
+							NextBillingDate    string
 							BillingAmount      int
 							BillingCurrency    types.Currency
 							PaymentMethod      types.PaymentMethod
 							CcbillSubscription types.CCBillSubscription
-							BillingError       *types.AccountClubSupporterSubscriptionBillingError
+							BillingError       *struct {
+								FailedAt        time.Time `json:"failedAt"`
+								CcbillErrorText *string   `json:"ccbillErrorText"`
+								CcbillErrorCode *string   `json:"ccbillErrorCode"`
+								NextRetryDate   string    `json:"nextRetryDate"`
+							}
 						} `graphql:"... on AccountActiveClubSupporterSubscription"`
 					}
 				}
-			} `graphql:"clubSupporterSubscriptions(status: [\"ACTIVE\"])"`
+			} `graphql:"clubSupporterSubscriptions(status: [ACTIVE])"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -61,21 +65,25 @@ func getActiveAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Cl
 type AccountTransactions struct {
 	Entities []struct {
 		Account struct {
-			Id           relay.ID
-			Transactions struct {
+			Id                          relay.ID
+			TransactionsTotalCount      int
+			TransactionsPaymentCount    int
+			TransactionsRefundCount     int
+			TransactionsChargebackCount int
+			Transactions                struct {
 				Edges []*struct {
 					Node struct {
 						Id                relay.ID
 						Reference         string
-						Transaction       types.AccountTransactionType
+						Type              types.AccountTransactionType
 						Events            []*types.AccountTransactionEvent
 						Timestamp         time.Time
 						Amount            int
 						Currency          types.Currency
-						BilledAtDate      time.Time
-						NextBillingDate   time.Time
+						BilledAtDate      string
+						NextBillingDate   string
 						PaymentMethod     types.PaymentMethod
-						CCBillTransaction *types.CCBillTransaction
+						CcbillTransaction *types.CCBillTransaction
 					}
 				}
 			}
@@ -191,7 +199,9 @@ type CCBillTransactionDetails struct {
 		DeclineCode                            *string
 		DeclineText                            *string
 		LinkedAccountClubSupporterSubscription *struct {
-			Id relay.ID
+			Item struct {
+				Id relay.ID
+			} `graphql:"... on IAccountClubSupporterSubscription"`
 		}
 	} `graphql:"ccbillTransactionDetails(token: $token)"`
 }

@@ -13,10 +13,11 @@ func TestClubSupporterSubscriptionRefunded(t *testing.T) {
 
 	client := getGrpcClient()
 
-	email := generateEmail("carrier-club_supporter_subscription_refunded")
+	accountId := uuid.New().String()
+	email := generateEmail("carrier-" + accountId)
 
 	_, err := client.ClubSupporterSubscriptionRefunded(context.Background(), &carrier.ClubSupporterSubscriptionRefundedRequest{
-		Account:      &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"},
+		Account:      &carrier.Account{Id: accountId},
 		Club:         &carrier.Club{Id: "25WqY2AZfmlykwqKhQagxmI9gtd"},
 		Subscription: &carrier.Subscription{Id: uuid.New().String()},
 		Refund: &carrier.Payment{

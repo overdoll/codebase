@@ -137,6 +137,18 @@ func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.Accou
 		return nil, err
 	}
 
+	var events []*billing.AccountTransactionEvent
+
+	for _, e := range doc.Events {
+		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
+			e.Id,
+			e.Timestamp,
+			e.Amount,
+			e.Currency,
+			e.Reason,
+		))
+	}
+
 	createdTransaction := billing.UnmarshalAccountTransactionFromDatabase(
 		doc.AccountId,
 		doc.Id,
@@ -149,8 +161,10 @@ func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.Accou
 		doc.NextBillingDate,
 		doc.CCBillSubscriptionId,
 		doc.CCBillTransactionId,
+		doc.ClubSupporterSubscriptionId,
 		doc.VoidedAt,
 		doc.VoidReason,
+		events,
 	)
 
 	createdTransaction.Node = paging.NewNode(hit.Sort)
@@ -205,7 +219,7 @@ func (r BillingIndexElasticSearchRepository) GetAccountTransactionsCount(ctx con
 
 	var filterQueries []elastic.Query
 
-	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQuery("account_id", accountId)))
+	filterQueries = append(filterQueries, elastic.NewTermQuery("account_id", accountId))
 
 	var statuses []string
 	for _, status := range states {
@@ -235,7 +249,7 @@ func (r BillingIndexElasticSearchRepository) SearchAccountTransactions(ctx conte
 		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -244,7 +258,7 @@ func (r BillingIndexElasticSearchRepository) SearchAccountTransactions(ctx conte
 	var filterQueries []elastic.Query
 
 	if filters.AccountId() != nil {
-		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQuery("account_id", *filters.AccountId())))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("account_id", *filters.AccountId()))
 	}
 
 	if filters.AccountClubSupporterSubscriptionId() != nil {
@@ -302,12 +316,19 @@ func (r BillingIndexElasticSearchRepository) IndexAllAccountTransactions(ctx con
 			var events []accountTransactionEventDocument
 
 			for _, e := range transaction.Events {
+
+				var unmarshal accountTransactionEvent
+
+				if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
+					return err
+				}
+
 				events = append(events, accountTransactionEventDocument{
-					Id:        e.Id,
-					Timestamp: e.Timestamp,
-					Amount:    e.Amount,
-					Currency:  e.Currency,
-					Reason:    e.Reason,
+					Id:        unmarshal.Id,
+					Timestamp: unmarshal.Timestamp,
+					Amount:    unmarshal.Amount,
+					Currency:  unmarshal.Currency,
+					Reason:    unmarshal.Reason,
 				})
 			}
 

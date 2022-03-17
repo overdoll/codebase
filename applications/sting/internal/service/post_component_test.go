@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -354,8 +355,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
 	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
 
-	originalId := post.Post.Content[1].ID
-
 	post = getPost(t, client, postId)
 
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
@@ -363,6 +362,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+
+	originalId := post.Post.Content[1].Resource.ID
 
 	// make a random client so we can test post permissions
 	client = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
@@ -374,7 +375,12 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-	require.NotEqual(t, originalId, post.Post.Content[1].ID, "should be showing a different resource id")
+
+	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Resource.ID.GetID())
+	resourceId := relay.ID(sDec).GetID()
+
+	require.NotEmpty(t, resourceId, "should not be empty")
+	require.NotEqual(t, originalId.GetID(), post.Post.Content[1].Resource.ID.GetID(), "should show a different id")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -393,7 +399,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
-		"categorySlugs":  []graphql.String{"alter"},
+		"categorySlugs":  []graphql.String{"Alter"},
 		"characterSlugs": []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
@@ -404,7 +410,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
-		"characterSlugs": []graphql.String{"aarush_hills"},
+		"characterSlugs": []graphql.String{"AarushHills"},
 		"categorySlugs":  []graphql.String{},
 		"audienceSlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},
@@ -415,7 +421,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"state":          types.PostStatePublished,
-		"audienceSlugs":  []graphql.String{"standard_audience"},
+		"audienceSlugs":  []graphql.String{"StandardAudience"},
 		"characterSlugs": []graphql.String{},
 		"categorySlugs":  []graphql.String{},
 		"seriesSlugs":    []graphql.String{},

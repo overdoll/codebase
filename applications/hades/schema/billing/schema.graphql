@@ -841,7 +841,7 @@ extend type Account {
     last: Int
 
     """Filter by the status of account club supporter subscription status."""
-    status: [AccountClubSupporterSubscriptionStatus!]!
+    status: [AccountClubSupporterSubscriptionStatus!]
   ): AccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
 
   """Expired club supporter subscriptions linked to this account."""

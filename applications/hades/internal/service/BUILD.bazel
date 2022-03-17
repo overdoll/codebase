@@ -32,6 +32,7 @@ go_test(
     srcs = [
         "account_club_supporter_subscription_actions_component_test.go",
         "account_club_supporter_subscription_pricing_component_test.go",
+        "account_transaction_actions_component_test.go",
         "cancellation_reason_component_test.go",
         "ccbill_club_supporter_payment_flow_test.go",
         "ccbill_webhooks_billing_date_changed_component_test.go",
@@ -54,6 +55,7 @@ go_test(
     ],
     deps = [
         ":service",
+        "//applications/hades/internal/adapters",
         "//applications/hades/internal/app/workflows",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/ports",
@@ -66,7 +68,6 @@ go_test(
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
-        "@com_github_google_uuid//:uuid",
         "@com_github_puerkitobio_goquery//:goquery",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",

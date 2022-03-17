@@ -6,7 +6,7 @@ go_library(
         "account.go",
         "account_active_club_supporter_subscription.go",
         "account_cancelled_club_supporter_subscription.go",
-        "account_inactive_club_supporter_subscription.go",
+        "account_expired_club_supporter_subscription.go",
         "account_transaction.go",
         "ccbill_transaction_details.go",
         "club.go",

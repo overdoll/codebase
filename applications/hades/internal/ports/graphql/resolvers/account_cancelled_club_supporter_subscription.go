@@ -35,18 +35,18 @@ func (r AccountCancelledClubSupporterSubscriptionResolver) Transactions(ctx cont
 		tp = &v
 	}
 
-	accountId := obj.ID.GetID()
+	subscriptionId := obj.ID.GetID()
 
 	results, err := r.App.Queries.SearchAccountTransactions.
 		Handle(
 			ctx,
 			query.SearchAccountTransactions{
-				Principal: principal.FromContext(ctx),
-				Cursor:    cursor,
-				AccountId: &accountId,
-				From:      from,
-				To:        to,
-				Type:      tp,
+				Principal:                          principal.FromContext(ctx),
+				Cursor:                             cursor,
+				AccountClubSupporterSubscriptionId: &subscriptionId,
+				From:                               from,
+				To:                                 to,
+				Type:                               tp,
 			},
 		)
 

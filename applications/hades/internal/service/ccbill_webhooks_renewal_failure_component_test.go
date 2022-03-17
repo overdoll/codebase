@@ -47,7 +47,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
 	require.NotNil(t, subscription.BillingError, "should have a billing error")
-	require.Equal(t, "2012-08-20 00:00:00 +0000 UTC", subscription.BillingError.NextRetryDate.String(), "correct timestamp")
-	require.Equal(t, "Invalid Input.", subscription.BillingError.CcbillErrorText, "correct reason")
-	require.Equal(t, "BE-140", subscription.BillingError.CcbillErrorCode, "correct code")
+	require.Equal(t, "2012-08-20", subscription.BillingError.NextRetryDate, "correct timestamp")
+	require.Equal(t, "Invalid Input.", *subscription.BillingError.CcbillErrorText, "correct reason")
+	require.Equal(t, "BE-140", *subscription.BillingError.CcbillErrorCode, "correct code")
 }

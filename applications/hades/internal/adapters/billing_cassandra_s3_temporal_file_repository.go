@@ -23,8 +23,8 @@ var receiptFilesTable = table.New(table.Metadata{
 	Name: "receipt_files",
 	Columns: []string{
 		"id",
-		"account_transaction_history_id",
-		"account_transaction_history_event_id",
+		"account_transaction_id",
+		"account_transaction_event_id",
 
 		"file_path",
 		"temporal_workflow_id",
@@ -36,8 +36,8 @@ var receiptFilesTable = table.New(table.Metadata{
 type receiptFiles struct {
 	Id string `db:"id"`
 
-	AccountTransactionHistoryId      string `db:"account_transaction_history_id"`
-	AccountTransactionHistoryEventId string `db:"account_transaction_history_event_id"`
+	AccountTransactionId      string `db:"account_transaction_id"`
+	AccountTransactionEventId string `db:"account_transaction_event_id"`
 
 	FilePath           string `db:"file_path"`
 	TemporalWorkflowId string `db:"temporal_workflow_id"`
@@ -165,7 +165,7 @@ func (r BillingCassandraS3TemporalFileRepository) UpdateClubSupporterRefundRecei
 
 func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, requester *principal.Principal, history *billing.AccountTransaction, eventId string) (*billing.ClubSupporterReceipt, error) {
 
-	id := history.Id() + "_" + eventId
+	id := history.Id() + "-" + eventId
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
 
@@ -186,10 +186,10 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 			Query(receiptFilesTable.Insert()).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(&receiptFiles{
-				Id:                               id,
-				AccountTransactionHistoryId:      history.Id(),
-				AccountTransactionHistoryEventId: eventId,
-				TemporalWorkflowId:               workflowId,
+				Id:                        id,
+				AccountTransactionId:      history.Id(),
+				AccountTransactionEventId: eventId,
+				TemporalWorkflowId:        workflowId,
 			}).
 			ExecRelease(); err != nil {
 			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
@@ -240,9 +240,9 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 			Query(receiptFilesTable.Insert()).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(&receiptFiles{
-				Id:                          history.Id(),
-				AccountTransactionHistoryId: history.Id(),
-				TemporalWorkflowId:          workflowId,
+				Id:                   history.Id(),
+				AccountTransactionId: history.Id(),
+				TemporalWorkflowId:   workflowId,
 			}).
 			ExecRelease(); err != nil {
 			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)

@@ -15,10 +15,11 @@ func TestNewClubSupporterSubscription(t *testing.T) {
 
 	client := getGrpcClient()
 
-	email := generateEmail("carrier-new_club_supporter_subscription")
+	accountId := uuid.New().String()
+	email := generateEmail("carrier-" + accountId)
 
 	_, err := client.NewClubSupporterSubscription(context.Background(), &carrier.NewClubSupporterSubscriptionRequest{
-		Account:      &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"},
+		Account:      &carrier.Account{Id: accountId},
 		Club:         &carrier.Club{Id: "25WqY2AZfmlykwqKhQagxmI9gtd"},
 		Subscription: &carrier.Subscription{Id: uuid.New().String()},
 		Payment: &carrier.Payment{

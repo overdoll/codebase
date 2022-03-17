@@ -35,7 +35,7 @@ type Post struct {
 	seriesIds    []string
 	categoryIds  []string
 
-	content []Content
+	content []*Content
 
 	createdAt time.Time
 	postedAt  *time.Time
@@ -74,10 +74,10 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		}
 	}
 
-	var content []Content
+	var content []*Content
 
 	for _, resourceId := range contentResourceIds {
-		content = append(content, Content{
+		content = append(content, &Content{
 			resourceId:           resourceId,
 			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
 			isSupporterOnly:      contentSupporterOnly[resourceId],
@@ -131,7 +131,7 @@ func (p *Post) SupporterOnlyStatus() SupporterOnlyStatus {
 	return p.supporterOnlyStatus
 }
 
-func (p *Post) Content() []Content {
+func (p *Post) Content() []*Content {
 	return p.content
 }
 
@@ -190,7 +190,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.content = []Content{}
+	p.content = []*Content{}
 
 	return nil
 }
@@ -206,7 +206,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.content = []Content{}
+	p.content = []*Content{}
 
 	return nil
 }
@@ -307,10 +307,10 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 		return err
 	}
 
-	var newContent []Content
+	var newContent []*Content
 
 	for _, contentId := range contentIds {
-		newContent = append(newContent, Content{
+		newContent = append(newContent, &Content{
 			resourceId:       contentId,
 			resourceIdHidden: "",
 			isSupporterOnly:  false,
@@ -332,7 +332,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		return errors.New("missing resources")
 	}
 
-	var reorderedContent []Content
+	var reorderedContent []*Content
 
 	for _, newContent := range contentIds {
 
@@ -362,7 +362,7 @@ func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, conten
 		return err
 	}
 
-	var actualContent []Content
+	var actualContent []*Content
 
 	for _, content := range p.content {
 
@@ -394,7 +394,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		return err
 	}
 
-	var actualContent []Content
+	var actualContent []*Content
 
 	for _, content := range p.content {
 

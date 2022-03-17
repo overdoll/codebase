@@ -65,7 +65,7 @@ func createRule(t *testing.T, infraction bool) *rule.Rule {
 	fake := TestRule{}
 	err := faker.FakeData(&fake)
 
-	pst, err := rule.NewRule(testing_tools.NewDefaultPrincipal("1q7MJ5IyRTV0X4J27F3m5wGD5mj"), fake.Title, fake.Description, infraction)
+	pst, err := rule.NewRule(testing_tools.NewStaffPrincipal("1q7MJ5IyRTV0X4J27F3m5wGD5mj"), fake.Title, fake.Description, infraction)
 	require.NoError(t, err)
 
 	return pst

@@ -12,7 +12,9 @@ import (
 
 type RefundAccountTransaction struct {
 	RefundAccountTransaction *struct {
-		Id string
+		AccountTransaction struct {
+			Id string
+		}
 	} `graphql:"refundAccountTransaction(input: $input)"`
 }
 
@@ -60,5 +62,5 @@ func TestAccountTransactionRefund(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error refunding transaction")
-	require.NotNil(t, voidOrRefund.RefundAccountTransaction.Id, "id exists")
+	require.NotNil(t, voidOrRefund.RefundAccountTransaction.AccountTransaction, "id exists")
 }

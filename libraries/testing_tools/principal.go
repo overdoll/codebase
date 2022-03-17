@@ -6,6 +6,10 @@ func NewStaffPrincipal(accountID string) *principal.Principal {
 	return principal.NewPrincipal(accountID, "", []string{"staff"}, false, false, false)
 }
 
+func NewStaffSecurePrincipal(accountID string) *principal.Principal {
+	return principal.NewPrincipal(accountID, "", []string{"staff"}, false, false, true)
+}
+
 func NewModeratorPrincipal(accountID string) *principal.Principal {
 	return principal.NewPrincipal(accountID, "", []string{"moderator"}, false, false, false)
 }

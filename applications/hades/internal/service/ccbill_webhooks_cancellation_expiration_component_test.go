@@ -40,9 +40,8 @@ type AccountCancelledClubSupporterSubscriptions struct {
 					Node struct {
 						Item struct {
 							Id                 relay.ID
-							Status             types.AccountClubSupporterSubscriptionStatus
 							Reference          string
-							EndDate            time.Time
+							EndDate            string
 							CancelledAt        time.Time
 							BillingAmount      int
 							BillingCurrency    types.Currency
@@ -73,7 +72,6 @@ type AccountExpiredClubSupporterSubscriptions struct {
 					Node struct {
 						Item struct {
 							Id           relay.ID
-							Status       types.AccountClubSupporterSubscriptionStatus
 							Reference    string
 							ExpiredAt    time.Time
 							Transactions struct {
@@ -139,9 +137,8 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	subscription := cancelledSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusCancelled, subscription.Status, "subscription is cancelled now")
-	require.Equal(t, "2022-02-26 20:18:00", subscription.CancelledAt, "subscription correct cancellation date")
-	require.Equal(t, "2022-02-26 20:18:00", subscription.EndDate, "subscription correct end date")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", subscription.CancelledAt.String(), "subscription correct cancellation date")
+	require.Equal(t, "2022-03-28", subscription.EndDate, "subscription correct end date")
 	require.NotNil(t, subscription.CancellationReason, "subscription correct cancellation reason")
 	require.Len(t, subscription.Transactions.Edges, 1, "should have 1 transaction")
 
@@ -162,7 +159,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
 
-	err = gqlClient.Query(context.Background(), &cancelledSubscriptions, map[string]interface{}{
+	err = gqlClient.Query(context.Background(), &expiredSubscriptions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
@@ -177,8 +174,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	expiredSubscription := expiredSubscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusExpired, expiredSubscription.Status, "subscription is expired now")
-	require.Equal(t, "2022-02-26 20:18:00", expiredSubscription.ExpiredAt, "subscription correct end date")
+	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredSubscription.ExpiredAt.String(), "subscription correct end date")
 	require.Len(t, expiredSubscription.Transactions.Edges, 1, "should have 1 transaction")
 
 	var expiredAccountClubSupporterSubscriptions ExpiredAccountClubSupporterSubscriptions
@@ -196,7 +192,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	expiredSubscriptionNew := expiredAccountClubSupporterSubscriptions.Entities[0].Account.ExpiredClubSupporterSubscriptions.Edges[0].Node
 
-	require.Equal(t, "2022-02-28 20:18:00", expiredSubscriptionNew.ExpiredAt.String(), "correct expiration date")
-	require.Equal(t, "2022-02-26 20:18:00", expiredSubscriptionNew.CancelledAt.String(), "correct cancellation date")
-	require.Equal(t, "2022-02-26 08:21:49", expiredSubscriptionNew.SupporterSince.String(), "correct supporter date")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", expiredSubscriptionNew.ExpiredAt.String(), "correct expiration date")
+	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredSubscriptionNew.CancelledAt.String(), "correct cancellation date")
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", expiredSubscriptionNew.SupporterSince.String(), "correct supporter date")
 }

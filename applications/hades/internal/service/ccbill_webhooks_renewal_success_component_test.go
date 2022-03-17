@@ -23,6 +23,8 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalSuccess, mock.Anything)
 
+	newTransactionId := uuid.New().String()
+
 	// run webhook - cancellation
 	runWebhookAction(t, "RenewalSuccess", map[string]string{
 		"accountingCurrency":     "USD",
@@ -42,7 +44,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 		"paymentType":            "CREDIT",
 		"timestamp":              "2022-02-28 08:21:49",
 		"subscriptionId":         ccbillSubscriptionId,
-		"transactionId":          ccbillTransactionId,
+		"transactionId":          newTransactionId,
 	})
 
 	env := getWorkflowEnvironment(t)
@@ -58,17 +60,19 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "1 subscription exists")
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Status, "subscription is active")
 	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
-	require.Equal(t, "2024-03-28 00:00:00 +0000 UTC", subscription.NextBillingDate.String(), "correct next billing date")
+	require.Equal(t, "2024-03-28", subscription.NextBillingDate, "correct next billing date")
 
 	accountTransactionsInvoice := getAccountTransactions(t, gqlClient, accountId)
 
 	require.Len(t, accountTransactionsInvoice.Entities[0].Account.Transactions.Edges, 2, "2 transaction items")
+	require.Equal(t, 2, accountTransactionsInvoice.Entities[0].Account.TransactionsTotalCount, "correct total count")
+	require.Equal(t, 2, accountTransactionsInvoice.Entities[0].Account.TransactionsPaymentCount, "correct payment count")
+
 	transaction := accountTransactionsInvoice.Entities[0].Account.Transactions.Edges[0].Node
 
-	require.Equal(t, types.AccountTransactionTypePayment, transaction.Transaction, "correct transaction type")
+	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
 	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")

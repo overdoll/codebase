@@ -1,5 +1,6 @@
 package formatters
 
 func Currency(amount int64, currency string) (*string, error) {
-	return nil, nil
+	t := "custom amount"
+	return &t, nil
 }

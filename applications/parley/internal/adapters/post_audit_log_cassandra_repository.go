@@ -227,7 +227,7 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 	var postR postRule
 
 	if err := r.session.
-		Query(postAuditLogTable.Get()).
+		Query(postRuleTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postRule{
 			PostId: postId,

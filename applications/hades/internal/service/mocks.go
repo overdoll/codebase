@@ -31,7 +31,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return testing_tools.NewStaffPrincipal(s), nil
+				return testing_tools.NewStaffSecurePrincipal(s), nil
 			}
 		}
 
@@ -84,7 +84,9 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>\n    <approved>1</approved>\n    <subscriptionId>0222057601000146926</subscriptionId>\n</results>"
 	case "extendSubscription":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
-	case "voidOrRefundTransaction":
+	case "refundTransaction":
+		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
+	case "voidTransaction":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
 	case "cancelSubscription":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"

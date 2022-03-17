@@ -58,7 +58,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(testing_tools.NewDefaultPrincipal(accountId), post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "standard_audience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0,
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0,
 	))
 
 	require.NoError(t, err)

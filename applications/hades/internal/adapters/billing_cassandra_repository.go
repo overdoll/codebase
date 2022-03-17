@@ -153,7 +153,7 @@ type accountClubSupporterSubscription struct {
 }
 
 var expiredAccountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
-	Name: "expired_account_club_supporter_subscriptions_by_account",
+	Name: "exp_account_club_supporter_subscriptions_by_acc",
 	Columns: []string{
 		"account_id",
 		"club_id",
@@ -238,7 +238,7 @@ type accountTransactions struct {
 	CCBillSubscriptionId *string `db:"ccbill_subscription_id"`
 	CCBillTransactionId  *string `db:"ccbill_transaction_id"`
 
-	Events []accountTransactionEvent `db:"events"`
+	Events []string `db:"events"`
 }
 
 var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
@@ -368,20 +368,25 @@ func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountCl
 	}
 
 	return &accountClubSupporterSubscription{
-		AccountId:              accountClubSupp.AccountId(),
-		ClubId:                 accountClubSupp.ClubId(),
-		Status:                 accountClubSupp.Status().String(),
-		SupporterSince:         accountClubSupp.SupporterSince(),
-		LastBillingDate:        accountClubSupp.LastBillingDate(),
-		NextBillingDate:        accountClubSupp.NextBillingDate(),
-		CancelledAt:            accountClubSupp.CancelledAt(),
-		BillingAmount:          accountClubSupp.BillingAmount(),
-		BillingCurrency:        accountClubSupp.BillingCurrency().String(),
-		EncryptedPaymentMethod: encrypted,
-		Id:                     accountClubSupp.Id(),
-		CCBillSubscriptionId:   accountClubSupp.CCBillSubscriptionId(),
-		UpdatedAt:              accountClubSupp.UpdatedAt(),
-		CancellationReasonId:   accountClubSupp.CancellationReasonId(),
+		AccountId:                   accountClubSupp.AccountId(),
+		ClubId:                      accountClubSupp.ClubId(),
+		Status:                      accountClubSupp.Status().String(),
+		SupporterSince:              accountClubSupp.SupporterSince(),
+		LastBillingDate:             accountClubSupp.LastBillingDate(),
+		NextBillingDate:             accountClubSupp.NextBillingDate(),
+		CancelledAt:                 accountClubSupp.CancelledAt(),
+		BillingAmount:               accountClubSupp.BillingAmount(),
+		BillingCurrency:             accountClubSupp.BillingCurrency().String(),
+		EncryptedPaymentMethod:      encrypted,
+		Id:                          accountClubSupp.Id(),
+		CCBillSubscriptionId:        accountClubSupp.CCBillSubscriptionId(),
+		UpdatedAt:                   accountClubSupp.UpdatedAt(),
+		CancellationReasonId:        accountClubSupp.CancellationReasonId(),
+		ExpiredAt:                   accountClubSupp.ExpiredAt(),
+		FailedAt:                    accountClubSupp.FailedAt(),
+		CCBillErrorText:             accountClubSupp.CCBillErrorText(),
+		CCBillErrorCode:             accountClubSupp.CCBillErrorCode(),
+		BillingFailureNextRetryDate: accountClubSupp.BillingFailureNextRetryDate(),
 	}, nil
 }
 
@@ -440,16 +445,23 @@ func marshalAccountTransactionToDatabase(transaction *billing.AccountTransaction
 		return nil, fmt.Errorf("failed to encrypt payment method: %s", err)
 	}
 
-	var events []accountTransactionEvent
+	var events []string
 
 	for _, e := range transaction.Events() {
-		events = append(events, accountTransactionEvent{
+
+		res, err := json.Marshal(accountTransactionEvent{
 			Id:        e.Id(),
 			Timestamp: e.Timestamp(),
 			Amount:    e.Amount(),
 			Currency:  e.Currency().String(),
 			Reason:    e.Reason(),
 		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		events = append(events, string(res))
 	}
 
 	return &accountTransactions{
@@ -639,15 +651,20 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 	batch.Query(stmt,
 		target.AccountId,
 		target.ClubId,
-		target.Id,
 		target.Status,
-		target.SupporterSince,
 		target.SupporterSince,
 		target.LastBillingDate,
 		target.NextBillingDate,
 		target.BillingAmount,
 		target.BillingCurrency,
+		target.CancelledAt,
+		target.ExpiredAt,
+		target.FailedAt,
+		target.CCBillErrorText,
+		target.CCBillErrorCode,
+		target.BillingFailureNextRetryDate,
 		target.EncryptedPaymentMethod,
+		target.Id,
 		target.CCBillSubscriptionId,
 		target.UpdatedAt,
 		target.CancellationReasonId,
@@ -661,11 +678,16 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 		target.ClubId,
 		target.Status,
 		target.SupporterSince,
-		target.SupporterSince,
 		target.LastBillingDate,
 		target.NextBillingDate,
 		target.BillingAmount,
 		target.BillingCurrency,
+		target.CancelledAt,
+		target.ExpiredAt,
+		target.FailedAt,
+		target.CCBillErrorText,
+		target.CCBillErrorCode,
+		target.BillingFailureNextRetryDate,
 		target.EncryptedPaymentMethod,
 		target.CCBillSubscriptionId,
 		target.UpdatedAt,
@@ -773,6 +795,11 @@ func (r BillingCassandraRepository) GetAccountClubSupporterSubscriptionByIdOpera
 		accountClubSupported.CancelledAt,
 		accountClubSupported.UpdatedAt,
 		accountClubSupported.CancellationReasonId,
+		accountClubSupported.ExpiredAt,
+		accountClubSupported.FailedAt,
+		accountClubSupported.CCBillErrorText,
+		accountClubSupported.CCBillErrorCode,
+		accountClubSupported.BillingFailureNextRetryDate,
 	), nil
 }
 
@@ -819,31 +846,8 @@ func (r BillingCassandraRepository) updateAccountClubSupporterSubscription(ctx c
 		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
 	}
 
-	return subscription, nil
-}
-
-func (r BillingCassandraRepository) UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
-
-	subscription, err := r.GetAccountClubSupporterSubscriptionById(ctx, requester, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = updateFn(subscription)
-
-	if err != nil {
-		return nil, err
-	}
-
-	marshalled, err := marshalAccountClubSubscriptionToDatabase(subscription)
-
-	if err != nil {
-		return nil, err
-	}
-
 	if err := r.session.
-		Query(accountClubSupporterSubscriptionsByAccountTable.Update("cancellation_reason_id")).
+		Query(accountClubSupporterSubscriptionsTable.Update(columns...)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
@@ -853,12 +857,16 @@ func (r BillingCassandraRepository) UpdateAccountClubSupporterCancel(ctx context
 	return subscription, nil
 }
 
+func (r BillingCassandraRepository) UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancellation_reason_id"})
+}
+
 func (r BillingCassandraRepository) UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"next_billing_date"})
 }
 
 func (r BillingCassandraRepository) UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
-	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancelled_at", "status", "next_billing_date"})
+	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancelled_at", "status", "next_billing_date", "expired_at", "failed_at", "ccbill_error_text", "ccbill_error_code", "billing_failure_next_retry_date"})
 }
 
 func (r BillingCassandraRepository) UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
@@ -924,6 +932,11 @@ func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionO
 		accountClubSupported.CancelledAt,
 		accountClubSupported.UpdatedAt,
 		accountClubSupported.CancellationReasonId,
+		accountClubSupported.ExpiredAt,
+		accountClubSupported.FailedAt,
+		accountClubSupported.CCBillErrorText,
+		accountClubSupported.CCBillErrorCode,
+		accountClubSupported.BillingFailureNextRetryDate,
 	), nil
 }
 
@@ -983,6 +996,11 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 			support.CancelledAt,
 			support.UpdatedAt,
 			support.CancellationReasonId,
+			support.ExpiredAt,
+			support.FailedAt,
+			support.CCBillErrorText,
+			support.CCBillErrorCode,
+			support.BillingFailureNextRetryDate,
 		)
 
 		supportItem.Node = paging.NewNode(support.ClubId)
@@ -1211,6 +1229,25 @@ func (r BillingCassandraRepository) GetAccountTransactionByIdOperator(ctx contex
 		return nil, err
 	}
 
+	var events []*billing.AccountTransactionEvent
+
+	for _, e := range transaction.Events {
+
+		var unmarshal accountTransactionEvent
+
+		if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
+			return nil, err
+		}
+
+		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
+			unmarshal.Id,
+			unmarshal.Timestamp,
+			unmarshal.Amount,
+			unmarshal.Currency,
+			unmarshal.Reason,
+		))
+	}
+
 	return billing.UnmarshalAccountTransactionFromDatabase(
 		transaction.AccountId,
 		transaction.Id,
@@ -1223,8 +1260,10 @@ func (r BillingCassandraRepository) GetAccountTransactionByIdOperator(ctx contex
 		transaction.NextBillingDate,
 		transaction.CCBillSubscriptionId,
 		transaction.CCBillTransactionId,
+		transaction.ClubSupporterSubscriptionId,
 		transaction.VoidedAt,
 		transaction.VoidReason,
+		events,
 	), nil
 }
 

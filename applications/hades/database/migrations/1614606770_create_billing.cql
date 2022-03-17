@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
 
 CREATE INDEX account_club_supporter_subscriptions_by_account_status ON account_club_supporter_subscriptions_by_account (status);
 
-CREATE TABLE IF NOT EXISTS expired_account_club_supporter_subscriptions_by_account
+CREATE TABLE IF NOT EXISTS exp_account_club_supporter_subscriptions_by_acc
 (
     account_id             text,
     club_id                text,
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS account_transactions
     ccbill_subscription_id         text,
     ccbill_transaction_id          text,
 
-    events                         list<map<text, text>>,
+    events                         list<text>,
 
     primary key ( id )
 );

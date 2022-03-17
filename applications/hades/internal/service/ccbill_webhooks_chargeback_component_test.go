@@ -38,6 +38,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 		"reason":                 "IDK LOL",
 		"timestamp":              "2022-02-26 20:18:00",
 		"subscriptionId":         ccbillSubscriptionId,
+		"transactionId":          ccbillTransactionId,
 	})
 
 	env := getWorkflowEnvironment(t)
@@ -53,7 +54,10 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	require.Len(t, transactions.Entities[0].Account.Transactions.Edges, 1, "1 transaction item")
 	transaction := transactions.Entities[0].Account.Transactions.Edges[0].Node
 
-	require.Equal(t, types.AccountTransactionTypeChargeback, transaction.Transaction, "correct transaction type")
+	require.Equal(t, types.AccountTransactionTypeChargeback, transaction.Type, "correct transaction type")
+	require.Equal(t, 1, transactions.Entities[0].Account.TransactionsChargebackCount, 1, "correct chargeback count")
+	require.Equal(t, 0, transactions.Entities[0].Account.TransactionsPaymentCount, "correct payment count")
+
 	require.Len(t, transaction.Events, 1, "should have 1 event")
 
 	event := transaction.Events[0]

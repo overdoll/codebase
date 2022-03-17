@@ -12,11 +12,11 @@ import (
 	"time"
 )
 
-type AccountInactiveClubSupporterSubscriptionResolver struct {
+type AccountExpiredClubSupporterSubscriptionResolver struct {
 	App *app.Application
 }
 
-func (r AccountInactiveClubSupporterSubscriptionResolver) Transactions(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error) {
+func (r AccountExpiredClubSupporterSubscriptionResolver) Transactions(ctx context.Context, obj *types.AccountExpiredClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -35,18 +35,18 @@ func (r AccountInactiveClubSupporterSubscriptionResolver) Transactions(ctx conte
 		tp = &v
 	}
 
-	accountId := obj.ID.GetID()
+	subscriptionId := obj.ID.GetID()
 
 	results, err := r.App.Queries.SearchAccountTransactions.
 		Handle(
 			ctx,
 			query.SearchAccountTransactions{
-				Principal: principal.FromContext(ctx),
-				Cursor:    cursor,
-				AccountId: &accountId,
-				From:      from,
-				To:        to,
-				Type:      tp,
+				Principal:                          principal.FromContext(ctx),
+				Cursor:                             cursor,
+				AccountClubSupporterSubscriptionId: &subscriptionId,
+				From:                               from,
+				To:                                 to,
+				Type:                               tp,
 			},
 		)
 
@@ -57,7 +57,7 @@ func (r AccountInactiveClubSupporterSubscriptionResolver) Transactions(ctx conte
 	return types.MarshalAccountTransactionToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r AccountInactiveClubSupporterSubscriptionResolver) CancellationReason(ctx context.Context, obj *types.AccountInactiveClubSupporterSubscription) (*types.CancellationReason, error) {
+func (r AccountExpiredClubSupporterSubscriptionResolver) CancellationReason(ctx context.Context, obj *types.AccountExpiredClubSupporterSubscription) (*types.CancellationReason, error) {
 
 	if obj.CancellationReason == nil {
 		return nil, nil

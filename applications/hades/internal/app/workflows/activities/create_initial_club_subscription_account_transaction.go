@@ -23,6 +23,15 @@ type CreateInitialClubSubscriptionAccountTransactionInput struct {
 
 func (h *Activities) CreateInitialClubSubscriptionAccountTransaction(ctx context.Context, input CreateInitialClubSubscriptionAccountTransactionInput) error {
 
+	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.AccountClubSupporterSubscriptionId)
+
+	if err != nil {
+		return err
+	}
+
+	paymentMethod := ccbillSubscription.PaymentMethod()
+
 	transaction, err := billing.NewInitialPaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.TransactionId,
@@ -32,6 +41,7 @@ func (h *Activities) CreateInitialClubSubscriptionAccountTransaction(ctx context
 		input.NextBillingDate,
 		input.Amount,
 		input.Currency,
+		paymentMethod,
 	)
 
 	if err != nil {

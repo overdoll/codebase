@@ -42,5 +42,5 @@ func TestBillingFlow_BillingDateChanged(t *testing.T) {
 	// get club supporter subscriptions
 	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
-	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", subscription.NextBillingDate.String(), "correct next billing date")
+	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
 }

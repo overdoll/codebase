@@ -47,6 +47,6 @@ func TestBillingFlow_Void(t *testing.T) {
 	require.Len(t, accountTransactionsVoid.Entities[0].Account.Transactions.Edges, 1, "1 transaction item")
 	transaction := accountTransactionsVoid.Entities[0].Account.Transactions.Edges[0].Node
 
-	require.Equal(t, types.AccountTransactionTypeVoid, transaction.Transaction, "correct transaction type")
-	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, types.AccountTransactionTypeVoid, transaction.Type, "correct transaction type")
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 }

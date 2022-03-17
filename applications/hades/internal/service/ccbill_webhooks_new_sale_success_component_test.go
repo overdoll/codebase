@@ -22,7 +22,9 @@ type GenerateClubSupporterPaymentReceiptFromAccountTransaction struct {
 
 type AccountClubSupporterSubscription struct {
 	AccountClubSupporterSubscription *struct {
-		Id string
+		Item struct {
+			NextBillingDate string
+		} `graphql:"... on AccountActiveClubSupporterSubscription"`
 	} `graphql:"accountClubSupporterSubscription(reference: $reference)"`
 }
 
@@ -107,6 +109,8 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.SetDetachedChildWait(false)
+	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -120,10 +124,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.AccountClubSupporterSubscriptionStatusActive, subscription.Status, "subscription is active")
 	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
-	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", subscription.NextBillingDate.String(), "correct next billing date")
+	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
 
 	var accountClubSupporterSub AccountClubSupporterSubscription
 
@@ -171,13 +174,15 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	// assert correct details about the payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)
 
-	require.Equal(t, types.AccountTransactionTypePayment, transaction.Transaction, "correct transaction type")
+	require.Equal(t, 1, accountTransactions.Entities[0].Account.TransactionsTotalCount, "correct total count")
+
+	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
-	require.Equal(t, "2022-03-28 00:00:00 +0000 UTC", transaction.NextBillingDate.String(), "correct next billing date")
-	require.Equal(t, "2022-02-26 00:00:00 +0000 UTC", transaction.BilledAtDate.String(), "correct billing date")
-	require.Equal(t, ccbillSubscriptionId, transaction.CCBillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
-	require.Equal(t, ccbillTransactionId, transaction.CCBillTransaction.CcbillTransactionID, "correct ccbill transaction id")
+	require.Equal(t, "2022-03-28", transaction.NextBillingDate, "correct next billing date")
+	require.Equal(t, "2022-02-26", transaction.BilledAtDate, "correct billing date")
+	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
+	require.Equal(t, ccbillTransactionId, *transaction.CcbillTransaction.CcbillTransactionID, "correct ccbill transaction id")
 
 	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, mock.Anything)
 
@@ -188,7 +193,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		Return(nil)
 
 	temporalClientMock.
-		On("GetWorkflow", "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything, mock.Anything).
+		On("GetWorkflow", mock.Anything, "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(

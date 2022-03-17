@@ -182,8 +182,8 @@ func (c *AccountClubSupporterSubscription) MarkCancelled(cancelledAt time.Time) 
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) MarkInactive(expiredAt time.Time) error {
-	c.cancelledAt = &expiredAt
+func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) error {
+	c.expiredAt = &expiredAt
 	c.status = Expired
 	return nil
 }
@@ -228,24 +228,33 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
 }
 
-func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string, supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod, ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string) *AccountClubSupporterSubscription {
+func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
+	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod,
+	ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
+	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
+) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
 	cr, _ := CurrencyFromString(billingCurrency)
 	return &AccountClubSupporterSubscription{
-		id:                   id,
-		accountId:            accountId,
-		clubId:               clubId,
-		status:               st,
-		cancelledAt:          cancelledAt,
-		supporterSince:       supporterSince,
-		lastBillingDate:      lastBillingDate,
-		nextBillingDate:      nextBillingDate,
-		billingAmount:        billingAmount,
-		billingCurrency:      cr,
-		paymentMethod:        paymentMethod,
-		ccbillSubscriptionId: ccbillSubscriptionId,
-		updatedAt:            updatedAt,
-		cancellationReasonId: cancellationReasonId,
+		id:                          id,
+		accountId:                   accountId,
+		clubId:                      clubId,
+		status:                      st,
+		cancelledAt:                 cancelledAt,
+		supporterSince:              supporterSince,
+		lastBillingDate:             lastBillingDate,
+		nextBillingDate:             nextBillingDate,
+		billingAmount:               billingAmount,
+		billingCurrency:             cr,
+		paymentMethod:               paymentMethod,
+		ccbillSubscriptionId:        ccbillSubscriptionId,
+		updatedAt:                   updatedAt,
+		expiredAt:                   expiredAt,
+		cancellationReasonId:        cancellationReasonId,
+		failedAt:                    failedAt,
+		ccbillErrorText:             ccbillErrorText,
+		ccbillErrorCode:             ccbillErrorCode,
+		billingFailureNextRetryDate: billingFailureNextRetryDate,
 	}
 }
 
