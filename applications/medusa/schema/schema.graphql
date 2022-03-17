@@ -67,7 +67,7 @@ type Account implements Node {
     last: Int
 
     """Filter by the status of account club supporter subscription status."""
-    status: [AccountClubSupporterSubscriptionStatus!]!
+    status: [AccountClubSupporterSubscriptionStatus!]
   ): AccountClubSupporterSubscriptionConnection!
 
   """Represents the clubs that the account has created."""
