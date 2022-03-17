@@ -95,6 +95,8 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
+
+	refreshAccountTransactionIndex(t)
 }
 
 func runWebhookAction(t *testing.T, event string, payload interface{}) {
@@ -111,4 +113,6 @@ func runWebhookAction(t *testing.T, event string, payload interface{}) {
 	b, err := io.ReadAll(response.Body)
 
 	require.Equal(t, 200, response.StatusCode, fmt.Sprintf("error calling webhook: %s", string(b)))
+
+	refreshAccountTransactionIndex(t)
 }

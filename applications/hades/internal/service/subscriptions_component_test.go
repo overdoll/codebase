@@ -91,16 +91,20 @@ type AccountTransactions struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-func getAccountTransactions(t *testing.T, client *graphql.Client, accountId string) AccountTransactions {
+func refreshAccountTransactionIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
 	_, err := es.Refresh(adapters.AccountTransactionsIndexName).Do(context.Background())
 	require.NoError(t, err)
+}
+
+func getAccountTransactions(t *testing.T, client *graphql.Client, accountId string) AccountTransactions {
+	refreshAccountTransactionIndex(t)
 
 	var accountTransactions AccountTransactions
 
-	err = client.Query(context.Background(), &accountTransactions, map[string]interface{}{
+	err := client.Query(context.Background(), &accountTransactions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",

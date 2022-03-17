@@ -140,6 +140,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", subscription.CancelledAt.String(), "subscription correct cancellation date")
 	require.Equal(t, "2022-03-28", subscription.EndDate, "subscription correct end date")
 	require.NotNil(t, subscription.CancellationReason, "subscription correct cancellation reason")
+
 	require.Len(t, subscription.Transactions.Edges, 1, "should have 1 transaction")
 
 	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillExpiration, mock.Anything)
