@@ -20,7 +20,8 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
 	w.RegisterWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess)
-	w.RegisterWorkflow(workflows.GenerateClubSupporterReceiptFromAccountTransactionHistory)
+	w.RegisterWorkflow(workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory)
+	w.RegisterWorkflow(workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory)
 	w.RegisterWorkflow(workflows.CCBillRenewalFailure)
 	w.RegisterWorkflow(workflows.CCBillRenewalSuccess)
 	w.RegisterWorkflow(workflows.CCBillCustomerDataUpdate)

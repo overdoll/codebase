@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 	"overdoll/applications/parley/internal/adapters"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 )
 
 type EvaServiceMock struct {
@@ -23,7 +24,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return principal.NewPrincipal(s, []string{"staff"}, false, false), nil
+				return testing_tools.NewStaffPrincipal(s), nil
 			}
 		}
 

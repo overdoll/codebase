@@ -62,19 +62,19 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	// create record for failed transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransactionRecord,
-		activities.CreateInvoiceClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            timestamp,
-			CardLast4:            input.Last4,
-			CardType:             input.CardType,
-			CardExpirationDate:   input.ExpDate,
-			Amount:               amount,
-			Currency:             input.BilledCurrency,
-			BillingDate:          billedAtDate,
-			NextBillingDate:      nextBillingDate,
+	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransaction,
+		activities.CreateInvoiceClubSubscriptionAccountTransactionInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountId:                          subscriptionDetails.AccountId,
+			TransactionId:                      input.TransactionId,
+			Timestamp:                          timestamp,
+			CardLast4:                          input.Last4,
+			CardType:                           input.CardType,
+			CardExpirationDate:                 input.ExpDate,
+			Amount:                             amount,
+			Currency:                           input.BilledCurrency,
+			BillingDate:                        billedAtDate,
+			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -83,10 +83,8 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			NextBillingDate:      nextBillingDate,
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

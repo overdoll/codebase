@@ -3,11 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "graphql",
     srcs = [
-        "Long.go",
-        "URI.go",
         "dataloader.go",
+        "date.go",
         "new.go",
         "preloads.go",
+        "uri.go",
     ],
     importpath = "overdoll/libraries/graphql",
     visibility = ["//visibility:public"],

@@ -46,14 +46,31 @@ func (r *Resolver) Club() ClubResolver {
 	}
 }
 
-func (r *Resolver) AccountClubSupporterSubscription() AccountClubSupporterSubscriptionResolver {
-	return &resolvers.AccountClubSupporterSubscriptionResolver{
+func (r *Resolver) CCBillTransactionDetails() CCBillTransactionDetailsResolver {
+	return &resolvers.CCBillTransactionDetailsResolver{
+		App: r.app,
+	}
+}
+func (r *Resolver) AccountActiveClubSupporterSubscription() AccountActiveClubSupporterSubscriptionResolver {
+	return &resolvers.AccountActiveClubSupporterSubscriptionResolver{
 		App: r.app,
 	}
 }
 
-func (r *Resolver) CCBillTransactionDetails() CCBillTransactionDetailsResolver {
-	return &resolvers.CCBillTransactionDetailsResolver{
+func (r *Resolver) AccountCancelledClubSupporterSubscription() AccountCancelledClubSupporterSubscriptionResolver {
+	return &resolvers.AccountCancelledClubSupporterSubscriptionResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountExpiredClubSupporterSubscription() AccountExpiredClubSupporterSubscriptionResolver {
+	return &resolvers.AccountExpiredClubSupporterSubscriptionResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountTransaction() AccountTransactionResolver {
+	return &resolvers.AccountTransactionResolver{
 		App: r.app,
 	}
 }

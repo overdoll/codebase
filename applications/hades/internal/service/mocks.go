@@ -9,8 +9,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"overdoll/applications/hades/internal/adapters"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"time"
 )
 
@@ -29,7 +31,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return principal.NewPrincipal(s, []string{"staff"}, false, false), nil
+				return testing_tools.NewStaffSecurePrincipal(s), nil
 			}
 		}
 
@@ -82,7 +84,9 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>\n    <approved>1</approved>\n    <subscriptionId>0222057601000146926</subscriptionId>\n</results>"
 	case "extendSubscription":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
-	case "voidOrRefundTransaction":
+	case "refundTransaction":
+		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
+	case "voidTransaction":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
 	case "cancelSubscription":
 		body = "<?xml version='1.0' standalone='yes'?>\n<results>1</results>"
@@ -99,4 +103,26 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 		Body:          ioutil.NopCloser(buff),
 		ContentLength: int64(buff.Len()),
 	}, nil
+}
+
+type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
+}
+
+func (c CarrierServiceMock) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+	return nil
 }

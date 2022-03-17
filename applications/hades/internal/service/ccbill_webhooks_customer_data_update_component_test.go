@@ -1,7 +1,6 @@
 package service_test
 
 import (
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -16,10 +15,11 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, clubId, nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCustomerDataUpdate, mock.Anything)
 
@@ -56,11 +56,13 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// get club supporter subscriptions
-	subscriptions := getAccountClubSupporterSubscriptions(t, gqlClient, accountId)
-	require.Len(t, subscriptions.Edges, 1, "should have 1 subscription")
+	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "should have 1 subscription")
 
 	// check for the correct payment method
-	assertCustomerDataUpdateCorrectPaymentMethodDetails(t, subscriptions.Edges[0].Node.PaymentMethod)
+	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
+
+	assertCustomerDataUpdateCorrectPaymentMethodDetails(t, subscription.PaymentMethod)
 
 	accountSavedPayments := getAccountSavedPaymentMethods(t, gqlClient, accountId)
 

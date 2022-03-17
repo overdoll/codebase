@@ -8,16 +8,20 @@ import (
 
 type Activities struct {
 	billing billing.Repository
+	bi      billing.IndexRepository
 	fr      billing.FileRepository
 	ccbill  ccbill.Repository
 	stella  command.StellaService
+	carrier command.CarrierService
 }
 
-func NewActivitiesHandler(billing billing.Repository, fr billing.FileRepository, ccbill ccbill.Repository, stella command.StellaService) *Activities {
+func NewActivitiesHandler(billing billing.Repository, bi billing.IndexRepository, fr billing.FileRepository, ccbill ccbill.Repository, stella command.StellaService, carrier command.CarrierService) *Activities {
 	return &Activities{
 		billing: billing,
 		stella:  stella,
 		fr:      fr,
+		bi:      bi,
 		ccbill:  ccbill,
+		carrier: carrier,
 	}
 }

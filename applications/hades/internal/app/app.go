@@ -17,14 +17,17 @@ type Commands struct {
 	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
-	ProcessCCBillWebhook                                      command.ProcessCCBillWebhookHandler
-	GenerateProratedRefundAmountForAccountClubSubscription    command.GenerateProratedRefundAmountForAccountClubSubscriptionHandler
-	BecomeClubSupporterWithAccountSavedPaymentMethod          command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
-	CancelAccountClubSupporterSubscription                    command.CancelAccountClubSupporterSubscriptionHandler
-	DeleteAccountSavedPaymentMethod                           command.DeleteAccountSavedPaymentMethodHandler
-	VoidOrRefundAccountClubSupporterSubscription              command.VoidOrRefundAccountClubSupporterSubscriptionHandler
-	ExtendAccountClubSupporterSubscription                    command.ExtendAccountClubSupporterSubscriptionHandler
-	GenerateClubSupporterReceiptFromAccountTransactionHistory command.GenerateClubSupporterReceiptFromAccountTransactionHistoryHandler
+	IndexAllAccountTransactions command.IndexAllAccountTransactionsHandler
+
+	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
+	GenerateProratedRefundAmountForAccountTransaction                command.GenerateProratedRefundAmountForAccountTransactionHandler
+	BecomeClubSupporterWithAccountSavedPaymentMethod                 command.BecomeClubSupporterWithAccountSavedPaymentMethodHandler
+	CancelAccountClubSupporterSubscription                           command.CancelAccountClubSupporterSubscriptionHandler
+	DeleteAccountSavedPaymentMethod                                  command.DeleteAccountSavedPaymentMethodHandler
+	RefundAccountTransaction                                         command.RefundAccountTransactionHandler
+	ExtendAccountClubSupporterSubscription                           command.ExtendAccountClubSupporterSubscriptionHandler
+	GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory command.GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler
+	GenerateClubSupporterRefundReceiptFromAccountTransactionHistory  command.GenerateClubSupporterRefundReceiptFromAccountTransactionHandler
 
 	CreateCancellationReason           command.CreateCancellationReasonHandler
 	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
@@ -37,12 +40,20 @@ type Queries struct {
 	CCBillSubscriptionDetails query.CCBillSubscriptionDetailsHandler
 	CCBillTransactionDetails  query.CCBillTransactionDetailsHandler
 
-	AccountClubSupporterSubscriptions  query.AccountClubSupporterSubscriptionsHandler
-	AccountSavedPaymentMethods         query.AccountSavedPaymentMethodsHandler
-	AccountTransactionHistory          query.AccountTransactionHistoryHandler
-	ClubSupporterPricing               query.ClubSupporterPricingHandler
-	ClubSupporterSubscriptionFinalized query.ClubSupporterSubscriptionFinalizedHandler
+	ExpiredAccountClubSupporterSubscriptionsByAccount query.ExpiredAccountClubSupporterSubscriptionsByAccountHandler
+	AccountClubSupporterSubscriptionById              query.AccountClubSupporterSubscriptionByIdHandler
+	SearchAccountClubSupporterSubscriptions           query.SearchAccountClubSupporterSubscriptionsHandler
+	AccountSavedPaymentMethods                        query.AccountSavedPaymentMethodsHandler
+	ClubSupporterPricing                              query.ClubSupporterPricingHandler
+	ClubSupporterSubscriptionFinalized                query.ClubSupporterSubscriptionFinalizedHandler
 
 	CancellationReasons    query.CancellationReasonsHandler
 	CancellationReasonById query.CancellationReasonByIdHandler
+
+	AccountTransactionById             query.AccountTransactionByIdHandler
+	SearchAccountTransactions          query.SearchAccountTransactionsHandler
+	AccountTransactionsTotalCount      query.AccountTransactionsTotalCountHandler
+	AccountTransactionsChargebackCount query.AccountTransactionsChargebackCountHandler
+	AccountTransactionsPaymentCount    query.AccountTransactionsPaymentCountHandler
+	AccountTransactionsRefundCount     query.AccountTransactionsRefundCountHandler
 }

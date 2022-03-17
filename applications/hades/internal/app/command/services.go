@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/location"
 	"time"
 )
@@ -14,4 +15,12 @@ type StellaService interface {
 
 type EvaService interface {
 	LocationFromIp(ctx context.Context, ip string) (*location.Location, error)
+}
+
+type CarrierService interface {
+	UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error
+	ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
+	ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error
+	ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
+	NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
 }

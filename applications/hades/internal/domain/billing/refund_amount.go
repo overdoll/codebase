@@ -10,7 +10,7 @@ type RefundAmount struct {
 	currency       Currency
 }
 
-func NewRefundAmountWithProrated(originalAmount int64, currency Currency, lastBillingDate time.Time, nextBillingDate time.Time) (*RefundAmount, error) {
+func newRefundAmountWithProrated(originalAmount int64, currency Currency, lastBillingDate time.Time, nextBillingDate time.Time) (*RefundAmount, error) {
 
 	// 30 days
 	daysDifferenceBilling := nextBillingDate.Sub(lastBillingDate).Hours() / 24

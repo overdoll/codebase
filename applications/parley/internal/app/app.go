@@ -39,8 +39,9 @@ type Queries struct {
 
 	ClubInfractionHistoryById query.ClubInfractionHistoryByIdHandler
 
-	RuleById query.RuleByIdHandler
-	Rules    query.RulesHandler
+	RuleById     query.RuleByIdHandler
+	Rules        query.RulesHandler
+	RuleByPostId query.RuleByPostIdIdHandler
 
 	SearchPostReports          query.SearchPostReportsHandler
 	PostReportById             query.PostReportByIdHandler

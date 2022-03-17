@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/rule"
 	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -96,4 +97,27 @@ func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *str
 	}
 
 	return types.MarshalPostAuditLogToGraphQLConnection(ctx, logs, cursor), nil
+}
+
+func (r PostResolver) Rule(ctx context.Context, obj *types.Post) (*types.Rule, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	rl, err := r.App.Queries.RuleByPostId.Handle(ctx, query.RuleByPostId{
+		PostId:    obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+
+		if err == rule.ErrRuleNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalRuleToGraphQL(ctx, rl), nil
 }

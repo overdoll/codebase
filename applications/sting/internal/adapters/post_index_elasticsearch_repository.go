@@ -713,9 +713,12 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			doc := postDocument{
 				Id:                              p.Id,
 				State:                           p.State,
+				SupporterOnlyStatus:             p.SupporterOnlyStatus,
+				ContentResourceIds:              p.ContentResourceIds,
+				ContentSupporterOnly:            p.ContentSupporterOnly,
+				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
 				Likes:                           likes,
 				ContributorId:                   p.ContributorId,
-				ContentResourceIds:              p.ContentResourceIds,
 				ClubId:                          p.ClubId,
 				AudienceId:                      audienceId,
 				CategoryIds:                     p.CategoryIds,
@@ -723,8 +726,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				SeriesIds:                       p.SeriesIds,
 				CreatedAt:                       strconv.FormatInt(p.CreatedAt.Unix(), 10),
 				PostedAt:                        strconv.FormatInt(p.PostedAt.Unix(), 10),
-				ContentSupporterOnly:            p.ContentSupporterOnly,
-				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
 			}
 
 			_, err = r.client.

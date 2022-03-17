@@ -1,6 +1,8 @@
 package post
 
-import "overdoll/libraries/principal"
+import (
+	"overdoll/libraries/principal"
+)
 
 type Content struct {
 	id string

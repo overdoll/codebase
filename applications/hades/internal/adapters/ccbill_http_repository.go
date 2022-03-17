@@ -206,7 +206,7 @@ func (r CCBillHttpRepository) CancelSubscription(ctx context.Context, ccbillSubs
 	return nil
 }
 
-func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refund *ccbill.VoidOrRefund) error {
+func (r CCBillHttpRepository) RefundTransaction(ctx context.Context, refund *ccbill.Refund) error {
 
 	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
 
@@ -217,8 +217,8 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	// add credentials
 	q := addDatalinkCredentialsToRequest(req.URL.Query())
 
-	q.Add("subscriptionId", refund.SubscriptionId())
-	q.Add("action", "voidOrRefundTransaction")
+	q.Add("subscriptionId", refund.TransactionId())
+	q.Add("action", "refundTransaction")
 
 	amt, err := refund.Amount()
 
@@ -250,7 +250,46 @@ func (r CCBillHttpRepository) VoidOrRefundSubscription(ctx context.Context, refu
 	}
 
 	if result < 1 {
-		return fmt.Errorf("failed to void or refund subscription: ccbill error: %s", strconv.Itoa(int(result)))
+		return fmt.Errorf("failed to refund transaction: ccbill error: %s", strconv.Itoa(int(result)))
+	}
+
+	return nil
+}
+
+func (r CCBillHttpRepository) VoidTransaction(ctx context.Context, ccbillTransactionId string) error {
+	req, err := http.NewRequest("GET", "https://datalink.ccbill.com/utils/subscriptionManagement.cgi", nil)
+
+	if err != nil {
+		return err
+	}
+
+	// add credentials
+	q := addDatalinkCredentialsToRequest(req.URL.Query())
+
+	q.Add("subscriptionId", ccbillTransactionId)
+	q.Add("action", "voidTransaction")
+
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := r.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var result response
+
+	if err := xml.Unmarshal(body, &result); err != nil {
+		return err
+	}
+
+	if result < 1 {
+		return fmt.Errorf("failed to void transaction: ccbill error: %s", strconv.Itoa(int(result)))
 	}
 
 	return nil

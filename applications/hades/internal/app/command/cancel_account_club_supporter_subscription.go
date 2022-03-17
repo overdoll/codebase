@@ -10,8 +10,6 @@ import (
 
 type CancelAccountClubSupporterSubscription struct {
 	Principal                          *principal.Principal
-	AccountId                          string
-	ClubId                             string
 	CancellationReasonId               string
 	AccountClubSupporterSubscriptionId string
 }
@@ -34,7 +32,7 @@ func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Contex
 		return nil, err
 	}
 
-	clubSupporterSubscription, err := h.br.UpdateAccountClubSupporterCancel(ctx, cmd.Principal, cmd.AccountId, cmd.ClubId, cmd.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	clubSupporterSubscription, err := h.br.UpdateAccountClubSupporterCancel(ctx, cmd.Principal, cmd.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 
 		if err := h.cr.CancelSubscription(ctx, *subscription.CCBillSubscriptionId()); err != nil {
 			return err

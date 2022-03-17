@@ -40,28 +40,12 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
-	var amount int64
-
-	if input.Amount != "" {
-		amt, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
-
-		if err != nil {
-			return err
-		}
-
-		amount = amt
-	}
-
-	// create void record
-	if err := workflow.ExecuteActivity(ctx, a.CreateVoidClubSubscriptionAccountTransactionRecord,
-		activities.CreateVoidClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            timestamp,
-			Reason:               input.Reason,
-			Amount:               amount,
-			Currency:             input.Currency,
+	// update void - mark subscription as voided
+	if err := workflow.ExecuteActivity(ctx, a.UpdateVoidClubSubscriptionAccountTransaction,
+		activities.UpdateVoidClubSubscriptionAccountTransactionInput{
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Reason:        input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

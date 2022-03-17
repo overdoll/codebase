@@ -2,10 +2,7 @@ package command
 
 import (
 	"context"
-	"net/url"
-	"os"
-	"path"
-
+	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -25,19 +22,18 @@ func NewNewLoginTokenHandler(mr mailing.Repository) NewLoginTokenHandler {
 
 func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) error {
 
-	u, err := url.Parse(os.Getenv("APP_URL"))
+	link, err := links.CreateVerifyTokenUrl(cmd.Token, cmd.Secret)
 
 	if err != nil {
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "verify-token")
-
-	u.RawQuery = "token=" + cmd.Token + "&secret=" + cmd.Secret
-
-	link := u.String()
-
-	template, err := mailing.NewTemplate("verify token", "\n  <html>\n    <head>\n      <title></title>\n    </head>\n    <body>\n     <a \n        href=\""+link+"\"\n        target=\"_blank\" \n     >\n            authenticate\n          </a>\n    </body>\n  </html>\n", link)
+	template, err := mailing.NewTemplate(
+		"new_login_token",
+		map[string]interface{}{
+			"Link": link.String(),
+		},
+	)
 
 	if err != nil {
 		return err

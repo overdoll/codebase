@@ -39,6 +39,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Reference:               result.ID(),
 		Avatar:                  accountAvatar,
 		Username:                result.Username(),
+		IsSecure:                result.IsSecure(),
 		Language:                MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:                 result.IsStaff(),
 		IsModerator:             result.IsModerator(),

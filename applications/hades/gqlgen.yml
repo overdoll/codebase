@@ -28,3 +28,5 @@ models:
     model: overdoll/libraries/graphql/relay.PageInfo
   URI:
     model: overdoll/libraries/graphql.URI
+  Date:
+    model: overdoll/libraries/graphql.Date

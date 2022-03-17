@@ -3,14 +3,22 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "club_supporter_subscription_cancelled.go",
+        "club_supporter_subscription_payment_failure.go",
+        "club_supporter_subscription_refunded.go",
         "confirm_account_email.go",
+        "new_club_supporter_subscription.go",
         "new_login_token.go",
         "services.go",
+        "upcoming_club_supporter_subscription_renewals.go",
     ],
     importpath = "overdoll/applications/carrier/internal/app/command",
     visibility = ["//applications/carrier:__subpackages__"],
     deps = [
+        "//applications/carrier/internal/domain/club",
+        "//applications/carrier/internal/domain/formatters",
         "//applications/carrier/internal/domain/identifier",
+        "//applications/carrier/internal/domain/links",
         "//applications/carrier/internal/domain/mailing",
         "@com_github_pkg_errors//:errors",
     ],

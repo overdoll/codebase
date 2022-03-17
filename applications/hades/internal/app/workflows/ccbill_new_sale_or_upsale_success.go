@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"fmt"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -139,8 +140,8 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		// otherwise, the subscription ID that was passed in is the same as the current subscription ID, so we don't want to accidentally cancel
 		// an existing CCBill subscription
 		if existingClubSupport.DuplicateSupportDifferentSubscription {
-			if err := workflow.ExecuteActivity(ctx, a.VoidOrRefundCCBillSubscription,
-				activities.VoidOrRefundCCBillSubscriptionInput{
+			if err := workflow.ExecuteActivity(ctx, a.VoidCCBillSubscription,
+				activities.VoidCCBillSubscriptionInput{
 					CCBillSubscriptionId: input.SubscriptionId,
 				},
 			).Get(ctx, nil); err != nil {
@@ -176,16 +177,16 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	}
 
 	// create record for new transaction
-	if err := workflow.ExecuteActivity(ctx, a.CreateNewClubSubscriptionAccountTransactionRecord,
-		activities.CreateNewClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            details.AccountInitiator.AccountId,
-			ClubId:               details.CcbillClubSupporter.ClubId,
-			Timestamp:            timestamp,
-			Amount:               amount,
-			Currency:             input.BilledCurrency,
-			NextBillingDate:      nextBillingDate,
-			BillingDate:          billedAtDate,
+	if err := workflow.ExecuteActivity(ctx, a.CreateInitialClubSubscriptionAccountTransaction,
+		activities.CreateInitialClubSubscriptionAccountTransactionInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			TransactionId:                      input.TransactionId,
+			AccountId:                          details.AccountInitiator.AccountId,
+			Timestamp:                          timestamp,
+			Amount:                             amount,
+			Currency:                           input.BilledCurrency,
+			NextBillingDate:                    nextBillingDate,
+			BillingDate:                        billedAtDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -206,8 +207,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
 		activities.CreateAccountClubSupportSubscriptionInput{
 			// save payment details
-			SavePaymentDetails: details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
-
+			SavePaymentDetails:   details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
 			CCBillSubscriptionId: &input.SubscriptionId,
 			AccountId:            details.AccountInitiator.AccountId,
 			ClubId:               details.CcbillClubSupporter.ClubId,
@@ -218,6 +218,37 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			Currency:             input.BilledCurrency,
 		},
 	).Get(ctx, &details); err != nil {
+		return err
+	}
+
+	// send success notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionSuccessNotification,
+		activities.SendAccountClubSupporterSubscriptionSuccessNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// spawn an async child workflow
+	// that will run this notification reminder at the beginning of each month to tell you how many subscriptions
+	// you have re-billing this month
+	childWorkflowOptions := workflow.ChildWorkflowOptions{
+		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + details.AccountInitiator.AccountId,
+		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		CronSchedule:          "0 0 1 * *",
+	}
+
+	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+	if err := workflow.ExecuteChildWorkflow(ctx, UpcomingSubscriptionReminderNotification,
+		UpcomingSubscriptionReminderNotificationInput{
+			AccountId: details.AccountInitiator.AccountId,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(ctx, nil); err != nil {
 		return err
 	}
 

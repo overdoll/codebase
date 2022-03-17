@@ -11,7 +11,20 @@ func ParseCCBillDateWithTime(timestamp string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return time.ParseInLocation("2006-01-02 15:04:05", timestamp, loc)
+
+	tm, err := time.ParseInLocation("2006-01-02 15:04:05", timestamp, loc)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	utcLoc, err := time.LoadLocation("UTC")
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return tm.In(utcLoc), nil
+
 }
 
 func ParseCCBillDate(timestamp string) (time.Time, error) {

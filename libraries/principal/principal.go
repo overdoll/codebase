@@ -23,14 +23,17 @@ type Principal struct {
 	email     string
 	verified  bool
 	locked    bool
+	secure    bool
 }
 
-func NewPrincipal(accountId string, roles []string, verified, locked bool) *Principal {
+func NewPrincipal(accountId, email string, roles []string, verified, locked, secure bool) *Principal {
 	return &Principal{
 		accountId: accountId,
+		email:     email,
 		roles:     roles,
 		verified:  verified,
 		locked:    locked,
+		secure:    secure,
 	}
 }
 
@@ -42,6 +45,7 @@ func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 		verified:  proto.Verified,
 		locked:    proto.Locked,
 		email:     proto.Email,
+		secure:    proto.Secure,
 	}
 }
 
@@ -69,6 +73,10 @@ func (p *Principal) IsVerified() bool {
 
 func (p *Principal) IsLocked() bool {
 	return p.locked
+}
+
+func (p *Principal) IsSecure() bool {
+	return p.secure
 }
 
 func (p *Principal) IsStaff() bool {

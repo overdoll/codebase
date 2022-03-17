@@ -2,7 +2,7 @@ package post
 
 import (
 	"github.com/stretchr/testify/require"
-	"overdoll/libraries/principal"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -88,7 +88,7 @@ func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 		resourceIdHidden:     resourceIdHidden,
 		isSupporterOnly:      true,
 		canViewSupporterOnly: false,
-		requester:            principal.NewPrincipal("", []string{"staff"}, false, false),
+		requester:            testing_tools.NewStaffPrincipal(""),
 	}
 
 	post := &Post{
@@ -111,7 +111,7 @@ func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 		resourceIdHidden:     resourceIdHidden,
 		isSupporterOnly:      true,
 		canViewSupporterOnly: false,
-		requester:            principal.NewPrincipal("", []string{}, false, false),
+		requester:            testing_tools.NewDefaultPrincipal(""),
 	}
 
 	post := &Post{

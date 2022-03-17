@@ -14,7 +14,6 @@ import (
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/principal"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -66,7 +65,7 @@ func createRule(t *testing.T, infraction bool) *rule.Rule {
 	fake := TestRule{}
 	err := faker.FakeData(&fake)
 
-	pst, err := rule.NewRule(principal.NewPrincipal("1q7MJ5IyRTV0X4J27F3m5wGD5mj", []string{"staff"}, false, false), fake.Title, fake.Description, infraction)
+	pst, err := rule.NewRule(testing_tools.NewStaffPrincipal("1q7MJ5IyRTV0X4J27F3m5wGD5mj"), fake.Title, fake.Description, infraction)
 	require.NoError(t, err)
 
 	return pst
@@ -89,7 +88,7 @@ func clearModeratorsTableAndSeedModerator(t *testing.T, accountId string) {
 	err := session.Query("TRUNCATE moderators", nil).ExecRelease()
 	require.NoError(t, err)
 
-	m, err := moderator.NewModerator(principal.NewPrincipal(accountId, []string{"moderator"}, false, false), accountId)
+	m, err := moderator.NewModerator(testing_tools.NewModeratorPrincipal(accountId), accountId)
 	require.NoError(t, err)
 	adapter := adapters.NewModeratorCassandraRepository(session)
 	err = adapter.CreateModerator(context.Background(), m)

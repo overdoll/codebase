@@ -33,26 +33,20 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return err
 	}
 
-	// create cancelled record
-	if err := workflow.ExecuteActivity(ctx, a.CreateCancelledAccountTransactionRecord,
-		activities.CreateCancelledClubSubscriptionAccountTransactionRecordInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			Timestamp:            timestamp,
-			Reason:               input.Reason,
+	// mark as cancelled to tell the user the new state
+	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionCancelled,
+		activities.MarkAccountClubSupporterSubscriptionCancelledInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			CancelledAt:                        timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	// mark as cancelled to tell the user the new state
-	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupportCancelled,
-		activities.MarkAccountClubSupportCancelledInput{
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CancelledAt:          timestamp,
+	// send cancellation notification
+	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionCancellationNotification,
+		activities.SendAccountClubSupporterSubscriptionCancellationNotificationInput{
+			AccountClubSupporterSubscriptionId: input.SubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

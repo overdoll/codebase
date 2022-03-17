@@ -3,13 +3,11 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	uuid2 "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
-	"time"
 )
 
 type BecomeClubSupporterWithAccountSavedPaymentMethod struct {
@@ -23,23 +21,19 @@ type DeleteAccountSavedPaymentMethod struct {
 type ExtendAccountClubSupporterSubscription struct {
 	ExtendAccountClubSupporterSubscription *struct {
 		ClubSupporterSubscription *struct {
-			NextBillingDate time.Time
+			Item struct {
+				NextBillingDate string
+			} `graphql:"... on AccountActiveClubSupporterSubscription"`
 		}
 	} `graphql:"extendAccountClubSupporterSubscription(input: $input)"`
-}
-
-type VoidOrRefundAccountClubSupporterSubscription struct {
-	VoidOrRefundAccountClubSupporterSubscription *types.VoidOrRefundAccountClubSupporterSubscriptionPayload `graphql:"voidOrRefundAccountClubSupporterSubscription(input: $input)"`
-}
-
-type GenerateRefundAmountForAccountClubSupporterSubscription struct {
-	GenerateRefundAmountForAccountClubSupporterSubscription *types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload `graphql:"generateRefundAmountForAccountClubSupporterSubscription(input: $input)"`
 }
 
 type CancelAccountClubSupporterSubscription struct {
 	CancelAccountClubSupporterSubscription *struct {
 		ClubSupporterSubscription *struct {
-			CancellationReason *types.CancellationReason
+			Item struct {
+				NextBillingDate string
+			} `graphql:"... on AccountActiveClubSupporterSubscription"`
 		}
 	} `graphql:"cancelAccountClubSupporterSubscription(input: $input)"`
 }
@@ -48,16 +42,17 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	ccbillSubscriptionId := uuid2.New().String()
+	ccbillSubscriptionId := uuid.New().String()
+	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
 	// once again, do another new sale success webhook, since this sets up everything we need for the following test
 	// club ID will be a different ID because that's what the subscription is for
-	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, uuid.New().String(), nil)
+	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, uuid.New().String(), nil)
 
 	// since we know internally how these IDs are created, we create the ID here without having to grab it through an API call
 	savedPaymentMethodId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId))))
-	accountClubSupporterSubscriptionId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountClubSupporterSubscription{}, accountId, clubId, ccbillSubscriptionId))))
+	accountClubSupporterSubscriptionId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountActiveClubSupporterSubscription{}, accountId, clubId, ccbillSubscriptionId))))
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -100,34 +95,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error extending club supporter subscription")
-	require.Equal(t, "2022-03-31 00:00:00 +0000 UTC", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.NextBillingDate.String(), "should be extended")
-
-	// extend our subscription
-	var generateProratedRefund GenerateRefundAmountForAccountClubSupporterSubscription
-
-	err = gqlClient.Mutate(context.Background(), &generateProratedRefund, map[string]interface{}{
-		"input": types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput{
-			ClubSupporterSubscriptionID: accountClubSupporterSubscriptionId,
-		},
-	})
-
-	require.NoError(t, err, "no error generating prorated refund")
-	require.Less(t, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.ProratedAmount, 699, "correct amount")
-	require.Equal(t, 699, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.MaximumAmount, "correct max amount")
-	require.Equal(t, types.CurrencyUsd, generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.Currency, "correct max amount")
-
-	// void or refund subscription
-	var voidOrRefund VoidOrRefundAccountClubSupporterSubscription
-
-	err = gqlClient.Mutate(context.Background(), &voidOrRefund, map[string]interface{}{
-		"input": types.VoidOrRefundAccountClubSupporterSubscriptionInput{
-			ClubSupporterSubscriptionID: accountClubSupporterSubscriptionId,
-			Amount:                      generateProratedRefund.GenerateRefundAmountForAccountClubSupporterSubscription.RefundAmount.ProratedAmount,
-		},
-	})
-
-	require.NoError(t, err, "no error refunding or voiding subscription")
-	require.NotNil(t, voidOrRefund.VoidOrRefundAccountClubSupporterSubscription.DeletedClubSupporterSubscriptionID, "id exists")
+	require.Equal(t, "2022-03-31", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.Item.NextBillingDate, "should be extended")
 
 	// cancel account club supporter subscription
 	var cancel CancelAccountClubSupporterSubscription
@@ -140,5 +108,4 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error cancelling")
-	require.NotNil(t, cancel.CancelAccountClubSupporterSubscription.ClubSupporterSubscription.CancellationReason, "cancellation reason is set")
 }

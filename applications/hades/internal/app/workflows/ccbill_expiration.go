@@ -32,24 +32,11 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 		return err
 	}
 
-	// create expired record
-	if err := workflow.ExecuteActivity(ctx, a.CreateExpiredClubSubscriptionAccountTransactionRecord,
-		activities.CreateExpiredClubSubscriptionAccountTransactionRecordInput{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: &input.SubscriptionId,
-			Timestamp:            timestamp,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	// remove account club support
-	if err := workflow.ExecuteActivity(ctx, a.RemoveAccountClubSupportSubscription,
-		activities.RemoveAccountClubSupportSubscriptionInput{
-			AccountId:            subscriptionDetails.AccountId,
-			ClubId:               subscriptionDetails.ClubId,
-			CCBillSubscriptionId: &input.SubscriptionId,
+	// expire the club supporter subscription
+	if err := workflow.ExecuteActivity(ctx, a.ExpireAccountClubSupportSubscription,
+		activities.ExpireAccountClubSupportSubscriptionInput{
+			SubscriptionId: input.SubscriptionId,
+			ExpiredAt:      timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

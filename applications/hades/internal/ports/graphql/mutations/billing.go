@@ -82,9 +82,7 @@ func (r *MutationResolver) CancelAccountClubSupporterSubscription(ctx context.Co
 			command.CancelAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
 				CancellationReasonId:               input.CancellationReasonID.GetID(),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetID(),
 			},
 		)
 
@@ -97,28 +95,109 @@ func (r *MutationResolver) CancelAccountClubSupporterSubscription(ctx context.Co
 	}, nil
 }
 
-func (r *MutationResolver) VoidOrRefundAccountClubSupporterSubscription(ctx context.Context, input types.VoidOrRefundAccountClubSupporterSubscriptionInput) (*types.VoidOrRefundAccountClubSupporterSubscriptionPayload, error) {
+func (r *MutationResolver) RefundAccountTransaction(ctx context.Context, input types.RefundAccountTransactionInput) (*types.RefundAccountTransactionPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
 	}
 
-	if err := r.App.Commands.VoidOrRefundAccountClubSupporterSubscription.
+	transaction, err := r.App.Commands.RefundAccountTransaction.
 		Handle(
 			ctx,
-			command.VoidOrRefundAccountClubSupporterSubscription{
-				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-				Amount:                             int64(input.Amount),
+			command.RefundAccountTransaction{
+				Principal:     principal.FromContext(ctx),
+				TransactionId: input.AccountTransactionID.GetID(),
+				Amount:        int64(input.Amount),
 			},
-		); err != nil {
+		)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return &types.VoidOrRefundAccountClubSupporterSubscriptionPayload{
-		DeletedClubSupporterSubscriptionID: input.ClubSupporterSubscriptionID,
+	return &types.RefundAccountTransactionPayload{
+		AccountTransaction: types.MarshalAccountTransactionToGraphQL(ctx, transaction),
+	}, nil
+}
+
+func (r *MutationResolver) GenerateRefundAmountForAccountTransaction(ctx context.Context, input types.GenerateRefundAmountForAccountTransactionInput) (*types.GenerateRefundAmountForAccountTransactionPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.GenerateProratedRefundAmountForAccountTransaction.
+		Handle(
+			ctx,
+			command.GenerateProratedRefundAmountForAccountTransaction{
+				Principal:     principal.FromContext(ctx),
+				TransactionId: input.AccountTransactionID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.GenerateRefundAmountForAccountTransactionPayload{
+		RefundAmount: &types.RefundAmount{
+			ProratedAmount: int(result.ProratedAmount()),
+			MaximumAmount:  int(result.MaxAmount()),
+			Currency:       types.MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		},
+	}, nil
+}
+
+func (r *MutationResolver) GenerateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, input types.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput) (*types.GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory.
+		Handle(
+			ctx,
+			command.GenerateClubSupporterPaymentReceiptFromAccountTransaction{
+				Principal:                   principal.FromContext(ctx),
+				AccountTransactionHistoryId: input.TransactionID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	link := graphql.URI(result.Link())
+
+	return &types.GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload{
+		Link: &link,
+	}, nil
+}
+
+func (r *MutationResolver) GenerateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, input types.GenerateClubSupporterRefundReceiptFromAccountTransactionInput) (*types.GenerateClubSupporterRefundReceiptFromAccountTransactionPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory.
+		Handle(
+			ctx,
+			command.GenerateClubSupporterRefundReceiptFromAccountTransaction{
+				Principal:                        principal.FromContext(ctx),
+				AccountTransactionHistoryId:      input.TransactionID.GetID(),
+				AccountTransactionHistoryEventId: input.TransactionEventID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	link := graphql.URI(result.Link())
+
+	return &types.GenerateClubSupporterRefundReceiptFromAccountTransactionPayload{
+		Link: &link,
 	}, nil
 }
 
@@ -133,9 +212,7 @@ func (r *MutationResolver) ExtendAccountClubSupporterSubscription(ctx context.Co
 			ctx,
 			command.ExtendAccountClubSupporterSubscription{
 				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
+				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetID(),
 				Days:                               input.Days,
 			},
 		)
@@ -146,36 +223,6 @@ func (r *MutationResolver) ExtendAccountClubSupporterSubscription(ctx context.Co
 
 	return &types.ExtendAccountClubSupporterSubscriptionPayload{
 		ClubSupporterSubscription: types.MarshalAccountClubSupporterSubscriptionToGraphQL(ctx, result),
-	}, nil
-}
-
-func (r *MutationResolver) GenerateRefundAmountForAccountClubSupporterSubscription(ctx context.Context, input types.GenerateRefundAmountForAccountClubSupporterSubscriptionInput) (*types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	result, err := r.App.Commands.GenerateProratedRefundAmountForAccountClubSubscription.
-		Handle(
-			ctx,
-			command.GenerateProratedRefundAmountForAccountClubSubscription{
-				Principal:                          principal.FromContext(ctx),
-				ClubId:                             input.ClubSupporterSubscriptionID.GetCompositePartID(1),
-				AccountId:                          input.ClubSupporterSubscriptionID.GetCompositePartID(2),
-				AccountClubSupporterSubscriptionId: input.ClubSupporterSubscriptionID.GetCompositePartID(0),
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.GenerateRefundAmountForAccountClubSupporterSubscriptionPayload{
-		RefundAmount: &types.RefundAmount{
-			ProratedAmount: int(result.ProratedAmount()),
-			MaximumAmount:  int(result.MaxAmount()),
-			Currency:       types.MarshalCurrencyToGraphQL(ctx, result.Currency()),
-		},
 	}, nil
 }
 
@@ -199,31 +246,5 @@ func (r *MutationResolver) DeleteAccountSavedPaymentMethod(ctx context.Context, 
 
 	return &types.DeleteAccountSavedPaymentMethodPayload{
 		DeletedAccountSavedPaymentMethodID: input.SavedPaymentMethodID,
-	}, nil
-}
-
-func (r *MutationResolver) GenerateClubSupporterReceiptFromAccountTransactionHistory(ctx context.Context, input types.GenerateClubSupporterReceiptFromAccountTransactionHistoryInput) (*types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	result, err := r.App.Commands.GenerateClubSupporterReceiptFromAccountTransactionHistory.
-		Handle(
-			ctx,
-			command.GenerateClubSupporterReceiptFromAccountTransactionHistory{
-				Principal:                   principal.FromContext(ctx),
-				AccountTransactionHistoryId: input.TransactionHistoryID.GetID(),
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	link := graphql.URI(result.Link())
-
-	return &types.GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload{
-		Link: &link,
 	}, nil
 }

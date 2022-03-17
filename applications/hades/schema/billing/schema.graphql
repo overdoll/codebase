@@ -1,242 +1,62 @@
-union AccountTransactionHistory = AccountNewTransactionHistory
-  | AccountInvoiceTransactionHistory
-  | AccountReactivatedTransactionHistory
-  | AccountFailedTransactionHistory
-  | AccountExpiredTransactionHistory
-  | AccountRefundTransactionHistory
-  | AccountVoidTransactionHistory
-  | AccountChargebackTransactionHistory
-  | AccountCancelledTransactionHistory
-
 """Represents a CCBill transaction, which may or may not contain these fields."""
-type CCBillSubscriptionTransaction {
+type CCBillTransaction {
   ccbillSubscriptionId: String!
+  ccbillTransactionId: String
 }
 
 enum AccountTransactionType {
-  CLUB_SUPPORTER_SUBSCRIPTION
+  PAYMENT
+  VOID
+  REFUND
+  CHARGEBACK
 }
 
-interface IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
+type AccountTransactionEvent {
+  """An ID to uniquely identify account transaction."""
   id: ID!
 
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """The club that was supported as part of this transaction history, if a club was supported."""
-  supportedClub: Club
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a new transaction history is created (usually a new subscription)."""
-type AccountNewTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """
-  The amount charged.
-
-  A positive integer representing the currency in the smallest currency unit.
-  """
+  """The amount."""
   amount: Int!
 
-  """The currency charged in."""
+  """The currency."""
   currency: Currency!
 
-  """When the billing occurred."""
-  billedAtDate: Time!
+  """The reason for this event."""
+  reason: String!
 
-  """The next billing date for this subscription."""
-  nextBillingDate: Time!
-
-  """The payment method linked to this new transaction history."""
-  paymentMethod: PaymentMethod!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
+  """When this event occurred."""
   timestamp: Time!
 }
 
-"""Occurs when a subscription is rebilled."""
-type AccountInvoiceTransactionHistory implements IAccountTransactionHistory {
+"""
+A transaction item.
+
+All transactions start off in the "PAYMENT" type.
+
+Once a transaction is refunded once, it turns into a REFUND transaction + an event is added.
+
+If a transaction is charged back, it turns into a CHARGEBACK transaction + an event is added.
+
+If a transaction is voided, it turns into a VOID transaction.
+"""
+type AccountTransaction {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
+  """A reference, used to look up this transaction."""
+  reference: String!
 
-  """The account linked to this transaction history."""
-  account: Account!
+  """The type of account transaction history, or what it belongs to."""
+  type: AccountTransactionType!
 
   """
-  The amount charged.
+  The events for this transaction.
 
-  A positive integer representing the currency in the smallest currency unit.
+  If the transaction was refunded, an event will show up with the refund amount.
+
+  If the transaction was charged back, an event will show up with the chargeback amount.
   """
-  amount: Int!
-
-  """The currency charged in."""
-  currency: Currency!
-
-  """When the billing occurred."""
-  billedAtDate: Time!
-
-  """The next billing date for this subscription."""
-  nextBillingDate: Time!
-
-  """The payment method linked to this new transaction history."""
-  paymentMethod: PaymentMethod!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction subscription is reactivated (after being cancelled)."""
-type AccountReactivatedTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """The next billing date for this subscription."""
-  nextBillingDate: Time!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction subscription is failed to be billed."""
-type AccountFailedTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """The next retry date for this transaction."""
-  nextRetryDate: Time!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """If this is a CCBill transaction, the error code and error text."""
-  ccbillErrorCode: String
-  ccbillErrorText: String
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction subscription is expired (cancelled and the subscription end was reached)."""
-type AccountExpiredTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction is refunded."""
-type AccountRefundTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """
-  The amount refunded.
-
-  A positive integer representing the currency in the smallest currency unit.
-  """
-  amount: Int!
-
-  """The currency refunded in."""
-  currency: Currency!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """The payment method linked to this refund (only card will be available)."""
-  paymentMethod: PaymentMethod!
-
-  """If this is a ccbill transaction, the reason for the refund."""
-  ccbillReason: String
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction is voided."""
-type AccountVoidTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
+  events: [AccountTransactionEvent!]!
 
   """
   The amount voided.
@@ -248,78 +68,23 @@ type AccountVoidTransactionHistory implements IAccountTransactionHistory {
   """The currency voided in."""
   currency: Currency!
 
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
+  """When the billing occurred."""
+  billedAtDate: Date!
 
-  """If this is a ccbill transaction, the reason for the void."""
-  ccbillReason: String
+  """The next billing date for this transaction, if its a subscription."""
+  nextBillingDate: Date
 
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
-}
-
-"""Occurs when a transaction is charged back."""
-type AccountChargebackTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
-
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """
-  The amount charged back.
-
-  A positive integer representing the currency in the smallest currency unit.
-  """
-  amount: Int!
-
-  """The currency charged back in."""
-  currency: Currency!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """If this is a ccbill transaction, the reason for the chargeback."""
-  ccbillReason: String
-
-  """The payment method linked to this chargeback (only card will be available)."""
+  """The payment method linked to this transaction."""
   paymentMethod: PaymentMethod!
 
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
   """When this transaction occurred."""
   timestamp: Time!
-}
 
-"""Occurs when a club supporter subscription is cancelled."""
-type AccountCancelledTransactionHistory implements IAccountTransactionHistory {
-  """An ID to uniquely identify this transaction history."""
-  id: ID!
+  """A ccbill transaction, if this transaction originated from ccbill."""
+  ccbillTransaction: CCBillTransaction
 
-  """The type of account transaction history, or what it belongs to."""
-  transaction: AccountTransactionType!
-
-  """The account linked to this transaction history."""
-  account: Account!
-
-  """The club that was supported as part of this transaction history."""
-  supportedClub: Club
-
-  """If this is a ccbill transaction, the reason for the cancellation."""
-  ccbillReason: String
-
-  """A ccbill subscription transaction, if this transaction originated from ccbill."""
-  ccbillSubscriptionTransaction: CCBillSubscriptionTransaction
-
-  """When this transaction occurred."""
-  timestamp: Time!
+  """The subscription linked to this transaction, if it's a club supporter subscription."""
+  clubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
 }
 
 """
@@ -433,7 +198,7 @@ type CCBillSubscription {
   link: URI!
 }
 
-type AccountSavedPaymentMethod  {
+type AccountSavedPaymentMethod {
   """An ID to uniquely identify this payment method."""
   id: ID!
 
@@ -450,10 +215,14 @@ type AccountSavedPaymentMethod  {
   updatedAt: Time!
 }
 
-"""An account club supporter subscription."""
-type AccountClubSupporterSubscription {
+union AccountClubSupporterSubscription = AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountExpiredClubSupporterSubscription
+
+interface IAccountClubSupporterSubscription {
   """An ID to uniquely identify this subscription."""
   id: ID!
+
+  """A reference, used to look up this subscription."""
+  reference: String!
 
   """The account linked to this subscription."""
   account: Account!
@@ -461,26 +230,121 @@ type AccountClubSupporterSubscription {
   """The club linked to this subscription."""
   club: Club!
 
-  """The status of this subscription."""
-  status: AccountClubSupporterSubscriptionStatus!
+  """Transactions for this account."""
+  transactions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
 
-  """When the account first became a supporter."""
-  supporterSince: Time!
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
 
-  """The last billing date for this subscription."""
-  lastBillingDate: Time!
+    """Returns the first _n_ elements from the list."""
+    first: Int
 
-  """The next billing date for this subscription."""
-  nextBillingDate: Time!
+    """Returns the last _n_ elements from the list."""
+    last: Int
 
-  """When this subscription was cancelled."""
-  cancelledAt: Time
+    """Filter by the type."""
+    type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
+  ): AccountTransactionConnection! @goField(forceResolver: true)
 
   """The billing amount."""
   billingAmount: Int!
 
   """The currency."""
   billingCurrency: Currency!
+
+  """When the account first became a supporter."""
+  supporterSince: Time!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this subscription was last updated."""
+  updatedAt: Time!
+
+  """If a subscription is failed to be billed, it will be updated with this error object."""
+  billingError: AccountClubSupporterSubscriptionBillingError
+}
+
+type AccountClubSupporterSubscriptionBillingError {
+  """When this subscription failed to bill."""
+  failedAt: Time!
+
+  """The error text from CCBill."""
+  ccbillErrorText: String
+
+  """The error code from CCBill."""
+  ccbillErrorCode: String
+
+  """The decline error, parsed in a friendlier way."""
+  ccbillDeclineError: CCBillDeclineError
+
+  """The next date the billing will be retried."""
+  nextRetryDate: Date!
+}
+
+type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
+  """An ID to uniquely identify this subscription."""
+  id: ID!
+
+  """A reference, used to look up this subscription."""
+  reference: String!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """Transactions for this account."""
+  transactions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the type."""
+    type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
+  ): AccountTransactionConnection! @goField(forceResolver: true)
+
+  """The billing amount."""
+  billingAmount: Int!
+
+  """The currency."""
+  billingCurrency: Currency!
+
+  """When the account first became a supporter."""
+  supporterSince: Time!
+
+  """The last billing date for this subscription."""
+  lastBillingDate: Date!
+
+  """The next billing date for this subscription."""
+  nextBillingDate: Date!
 
   """The payment method linked to this subscription."""
   paymentMethod: PaymentMethod!
@@ -491,13 +355,169 @@ type AccountClubSupporterSubscription {
   """When this subscription was last updated."""
   updatedAt: Time!
 
+  """If a subscription is failed to be billed, it will be updated with this error object."""
+  billingError: AccountClubSupporterSubscriptionBillingError
+}
+
+type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterSubscription{
+  """An ID to uniquely identify this subscription."""
+  id: ID!
+
+  """A reference, used to look up this subscription."""
+  reference: String!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """Transactions for this account."""
+  transactions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the type."""
+    type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
+  ): AccountTransactionConnection! @goField(forceResolver: true)
+
+  """The billing amount."""
+  billingAmount: Int!
+
+  """The currency."""
+  billingCurrency: Currency!
+
+  """When the account first became a supporter."""
+  supporterSince: Time!
+
+  """When this subscription was cancelled."""
+  cancelledAt: Time!
+
+  """When this subscription will end."""
+  endDate: Date!
+
+  """The payment method linked to this subscription."""
+  paymentMethod: PaymentMethod!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this subscription was last updated."""
+  updatedAt: Time!
+
+  """If a subscription is failed to be billed, it will be updated with this error object."""
+  billingError: AccountClubSupporterSubscriptionBillingError
+
   """The reason this subscription was cancelled, if there is one."""
   cancellationReason: CancellationReason @goField(forceResolver: true)
+}
+
+type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription {
+  """An ID to uniquely identify this subscription."""
+  id: ID!
+
+  """A reference, used to look up this subscription."""
+  reference: String!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """Transactions for this account."""
+  transactions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the type."""
+    type: AccountTransactionType
+
+    """The start date for the transaction history."""
+    from: Time
+
+    """The end date, optional (will search until end of time)."""
+    to: Time
+  ): AccountTransactionConnection! @goField(forceResolver: true)
+
+  """The billing amount."""
+  billingAmount: Int!
+
+  """The currency."""
+  billingCurrency: Currency!
+
+  """When the account first became a supporter."""
+  supporterSince: Time!
+
+  """The ccbill subscription."""
+  ccbillSubscription: CCBillSubscription
+
+  """When this subscription was last updated."""
+  updatedAt: Time!
+
+  """When this subscription expired."""
+  expiredAt: Time!
+
+  """If a subscription is failed to be billed, it will be updated with this error object."""
+  billingError: AccountClubSupporterSubscriptionBillingError
+
+  """The reason this subscription was cancelled, if there is one."""
+  cancellationReason: CancellationReason @goField(forceResolver: true)
+}
+
+"""An expired account club supporter subscription."""
+type ExpiredAccountClubSupporterSubscription {
+  """An ID to uniquely identify this expired subscription."""
+  id: ID!
+
+  """The account linked to this subscription."""
+  account: Account!
+
+  """The club linked to this subscription."""
+  club: Club!
+
+  """When the account first became a supporter. Note that when subscribing next time, this date will be kept, but subtracted by the amount of days they were not a supporter, and normalized to the current date."""
+  supporterSince: Time!
+
+  """Wen this subscription expired."""
+  expiredAt: Time!
+
+  """When this subscription was originally cancelled."""
+  cancelledAt: Time!
 }
 
 enum AccountClubSupporterSubscriptionStatus {
   ACTIVE
   CANCELLED
+  EXPIRED
 }
 
 enum CardType {
@@ -605,6 +625,18 @@ type AccountClubSupporterSubscriptionConnection {
   pageInfo: PageInfo!
 }
 
+"""Edge of the expired account club supporter subscriptions"""
+type ExpiredAccountClubSupporterSubscriptionEdge {
+  node: ExpiredAccountClubSupporterSubscription!
+  cursor: String!
+}
+
+"""Connection of the expired account club supporter subscription"""
+type ExpiredAccountClubSupporterSubscriptionConnection {
+  edges: [ExpiredAccountClubSupporterSubscriptionEdge!]!
+  pageInfo: PageInfo!
+}
+
 """Edge of the account saved payment method"""
 type AccountSavedPaymentMethodEdge {
   node: AccountSavedPaymentMethod!
@@ -617,15 +649,15 @@ type AccountSavedPaymentMethodConnection {
   pageInfo: PageInfo!
 }
 
-"""Edge of the the account transaction history."""
-type AccountTransactionHistoryEdge {
-  node: AccountTransactionHistory!
+"""Edge of the the account transaction."""
+type AccountTransactionEdge {
+  node: AccountTransaction!
   cursor: String!
 }
 
-"""Connection of the account transaction history."""
-type AccountTransactionHistoryConnection {
-  edges: [AccountTransactionHistoryEdge!]!
+"""Connection of the account transaction."""
+type AccountTransactionConnection {
+  edges: [AccountTransactionEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -716,15 +748,15 @@ input ExtendAccountClubSupporterSubscriptionInput {
 }
 
 """Generate a refund amount."""
-input GenerateRefundAmountForAccountClubSupporterSubscriptionInput {
-  """The id of the subscription."""
-  clubSupporterSubscriptionId: ID!
+input GenerateRefundAmountForAccountTransactionInput {
+  """The id of the transaction."""
+  accountTransactionId: ID!
 }
 
-"""Void or refund account club supporter subscription."""
-input VoidOrRefundAccountClubSupporterSubscriptionInput {
+"""Refund an account transaction."""
+input RefundAccountTransactionInput {
   """The id of the subscription."""
-  clubSupporterSubscriptionId: ID!
+  accountTransactionId: ID!
 
   """
   The amount to refund.
@@ -735,27 +767,42 @@ input VoidOrRefundAccountClubSupporterSubscriptionInput {
 }
 
 """Generate club supporter receipt input."""
-input GenerateClubSupporterReceiptFromAccountTransactionHistoryInput {
-  """The id of the transaction history."""
-  transactionHistoryId: ID!
+input GenerateClubSupporterPaymentReceiptFromAccountTransactionInput {
+  """The id of the transaction."""
+  transactionId: ID!
+}
+
+"""Generate club supporter receipt input."""
+input GenerateClubSupporterRefundReceiptFromAccountTransactionInput {
+  """The id of the transaction."""
+  transactionId: ID!
+
+  """The id of the transaction event, since we can have multiple refunds."""
+  transactionEventId: ID!
 }
 
 """Payload for generating the receipt."""
-type GenerateRefundAmountForAccountClubSupporterSubscriptionPayload {
+type GenerateRefundAmountForAccountTransactionPayload {
   """The refund amount."""
   refundAmount: RefundAmount
 }
 
 """Payload for generating the receipt."""
-type GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload {
+type GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload {
   """The link to the receipt."""
   link: URI
 }
 
-"""Payload for voiding or refunding account club supporter subscription."""
-type VoidOrRefundAccountClubSupporterSubscriptionPayload {
-  """The id of the subscription, deleted."""
-  deletedClubSupporterSubscriptionId: ID!
+"""Payload for generating the receipt."""
+type GenerateClubSupporterRefundReceiptFromAccountTransactionPayload {
+  """The link to the receipt."""
+  link: URI
+}
+
+"""Payload for refunding an account transaction."""
+type RefundAccountTransactionPayload {
+  """The updated account transaction."""
+  accountTransaction: AccountTransaction
 }
 
 """Payload for cancelling the account club supporter."""
@@ -792,7 +839,27 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Filter by the status of account club supporter subscription status."""
+    status: [AccountClubSupporterSubscriptionStatus!]
   ): AccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
+
+  """Expired club supporter subscriptions linked to this account."""
+  expiredClubSupporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ExpiredAccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
 
   """Saved payment methods linked to this account."""
   savedPaymentMethods(
@@ -811,8 +878,20 @@ extend type Account {
     last: Int
   ): AccountSavedPaymentMethodConnection! @goField(forceResolver: true)
 
-  """Transaction history for this account."""
-  transactionHistory(
+  """Total amount of transactions, excluding voids."""
+  transactionsTotalCount: Int! @goField(forceResolver: true)
+
+  """Total amount of payment transactions."""
+  transactionsPaymentCount: Int! @goField(forceResolver: true)
+
+  """Total amount of refund transactions."""
+  transactionsRefundCount: Int! @goField(forceResolver: true)
+
+  """Total amount of chargeback transactions."""
+  transactionsChargebackCount: Int! @goField(forceResolver: true)
+
+  """Transactions for this account."""
+  transactions(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -827,12 +906,15 @@ extend type Account {
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """Filter by the type."""
+    type: AccountTransactionType
+
     """The start date for the transaction history."""
-    startDate: Time!
+    from: Time
 
     """The end date, optional (will search until end of time)."""
-    endDate: Time
-  ): AccountTransactionHistoryConnection! @goField(forceResolver: true)
+    to: Time
+  ): AccountTransactionConnection! @goField(forceResolver: true)
 }
 
 extend type Club {
@@ -857,13 +939,11 @@ extend type Mutation {
   cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload
 
   """
-  Void or refund an account club supporter subscription.
-
-  Will void if the subscription is still processing, or issue a refund for the specified amount.
+  Issue a refund on a transaction.
 
   Staff+ only.
   """
-  voidOrRefundAccountClubSupporterSubscription(input: VoidOrRefundAccountClubSupporterSubscriptionInput!): VoidOrRefundAccountClubSupporterSubscriptionPayload
+  refundAccountTransaction(input: RefundAccountTransactionInput!): RefundAccountTransactionPayload
 
   """
   Extend an account club supporter subscription for an X amount of days, so basically delay their billing date for x days.
@@ -873,11 +953,11 @@ extend type Mutation {
   extendAccountClubSupporterSubscription(input: ExtendAccountClubSupporterSubscriptionInput!): ExtendAccountClubSupporterSubscriptionPayload
 
   """
-  Generate a prorated refund amount for a given account club supporter subscription.
+  Generate a refund amount for a transaction.
 
   Staff+ only.
   """
-  generateRefundAmountForAccountClubSupporterSubscription(input: GenerateRefundAmountForAccountClubSupporterSubscriptionInput!): GenerateRefundAmountForAccountClubSupporterSubscriptionPayload!
+  generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload!
 
   """
   Delete an account saved payment method
@@ -885,11 +965,14 @@ extend type Mutation {
   deleteAccountSavedPaymentMethod(input: DeleteAccountSavedPaymentMethodInput!): DeleteAccountSavedPaymentMethodPayload
 
   """
-  Generate the receipt from the account transaction history
-
-  Note: can only be generated on "NEW" and "INVOICE" transactions.
+  Generate a payment receipt from the account transaction.
   """
-  generateClubSupporterReceiptFromAccountTransactionHistory(input: GenerateClubSupporterReceiptFromAccountTransactionHistoryInput!): GenerateClubSupporterReceiptFromAccountTransactionHistoryPayload
+  generateClubSupporterPaymentReceiptFromAccountTransaction(input: GenerateClubSupporterPaymentReceiptFromAccountTransactionInput!): GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload
+
+  """
+  Generate a refund receipt from the account transaction.
+  """
+  generateClubSupporterRefundReceiptFromAccountTransaction(input: GenerateClubSupporterRefundReceiptFromAccountTransactionInput!): GenerateClubSupporterRefundReceiptFromAccountTransactionPayload
 }
 
 extend type Query {
@@ -899,6 +982,16 @@ extend type Query {
   Staff+ only.
   """
   ccbillSubscriptionDetails(ccbillSubscriptionId: String!): CCBillSubscriptionDetails
+
+  """
+  Grab a single account subscription by the reference.
+  """
+  accountClubSupporterSubscription(reference: String!): AccountClubSupporterSubscription
+
+  """
+  Grab a single account transaction by the reference.
+  """
+  accountTransaction(reference: String!): AccountTransaction
 
   """
   After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),
