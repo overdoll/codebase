@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0d24bc2e10d4a607c159016c668491c8>>
- * @relayHash 3014e09f58160e0ff747df3bee1e31f3
+ * @generated SignedSource<<cec27a227fd8acfd2770d7c75fde0d62>>
+ * @relayHash c91ef26e37891df2defe6ce58e57c7c1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3014e09f58160e0ff747df3bee1e31f3
+// @relayRequestID c91ef26e37891df2defe6ce58e57c7c1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,10 +31,10 @@ export type ClubPublicPageQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubButtonClubFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment" | "SupportClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment">;
   } | null;
 };
 export type ClubPublicPageQueryResponse = ClubPublicPageQuery$data;
@@ -373,7 +373,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "JoinClubButtonClubFragment"
+            "name": "JoinClubFromPageFragment"
           },
           {
             "args": null,
@@ -409,7 +409,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "JoinClubButtonViewerFragment"
+            "name": "JoinClubFromPageViewerFragment"
           },
           {
             "args": null,
@@ -734,7 +734,7 @@ return {
     ]
   },
   "params": {
-    "id": "3014e09f58160e0ff747df3bee1e31f3",
+    "id": "c91ef26e37891df2defe6ce58e57c7c1",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -743,6 +743,6 @@ return {
 };
 })();
 
-(node as any).hash = "aff2d5debd751344b0c6739957754bda";
+(node as any).hash = "fd2c396718e78b1a20943990487cbef8";
 
 export default node;

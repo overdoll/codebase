@@ -2278,38 +2278,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/ccbill-transaction-details/:token',
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/ClubPublicPage/ClubPublicPage/pages/CCBillTransactionDetails/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        component: loadable(async () =>
-          await import(
-            './domain/ClubPublicPage/ClubPublicPage/pages/CCBillTransactionDetails/CCBillTransactionDetails'
-          )
-        ),
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('interact', 'Club')) {
-              return true
-            }
-            history.push('/')
-            return false
-          }
-        ]
-      },
-      {
         path: '/:slug',
         exact: true,
         component: loadable(async () =>

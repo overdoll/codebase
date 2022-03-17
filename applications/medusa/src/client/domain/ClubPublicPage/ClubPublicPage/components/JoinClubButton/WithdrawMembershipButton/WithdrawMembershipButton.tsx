@@ -4,7 +4,6 @@ import type {
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
-import { Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { AbilityContext } from '@//:modules/authorization/AbilityContext'
 import { ButtonProps } from '@chakra-ui/react'
@@ -66,10 +65,6 @@ export default function WithdrawMembershipButton ({
       isLoading={isWithdrawingMembership}
       colorScheme='gray'
       {...rest}
-    >
-      <Trans>
-        Leave
-      </Trans>
-    </Button>
+    />
   )
 }

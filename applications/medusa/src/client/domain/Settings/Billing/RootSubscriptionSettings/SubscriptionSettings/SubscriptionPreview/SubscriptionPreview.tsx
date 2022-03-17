@@ -4,7 +4,7 @@ import { LargeBackgroundBox, ResourceIcon } from '@//:modules/content/PageLayout
 import { Badge, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import format from 'date-fns/format'
-import { dateFormatWithTime, dateFormat } from '@//:modules/constants/format'
+import { dateFormat } from '@//:modules/constants/format'
 
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -41,7 +41,7 @@ export default function SubscriptionPreview ({ query }: Props): JSX.Element {
 
   const supporterSince = format(new Date(data.supporterSince as Date), dateFormat, { locale })
   const cancelledAt = format(new Date(data.cancelledAt != null && data.cancelledAt), dateFormat, { locale })
-  const nextBillingDate = format(new Date(data.nextBillingDate as Date), dateFormatWithTime, { locale })
+  const nextBillingDate = format(new Date(data.nextBillingDate as Date), dateFormat, { locale })
 
   const headerProps = {
     color: 'gray.100',

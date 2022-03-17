@@ -30,6 +30,7 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { DeleteCircle } from '@//:assets/icons'
+import { dateFormat } from '@//:modules/constants/format'
 
 interface Props {
   query: CancelSubscriptionButtonFragment$key
@@ -73,7 +74,7 @@ export default function CancelSubscriptionButton ({ query }: Props): JSX.Element
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
 
-  const nextBillingDate = format(new Date(data.nextBillingDate as Date), 'LLLL Lo, y p', { locale })
+  const nextBillingDate = format(new Date(data.nextBillingDate as Date), dateFormat, { locale })
 
   const {
     isOpen,

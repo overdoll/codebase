@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<62d2c13ef9d299e582662ba3543cf9ea>>
- * @relayHash ee85dfae10f96b90c57cecc5444da6be
+ * @generated SignedSource<<0e08bd5b49d7f05c1ea333f6eb48dc7d>>
+ * @relayHash 728d77685c1a9295b51960d6daa1ec70
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ee85dfae10f96b90c57cecc5444da6be
+// @relayRequestID 728d77685c1a9295b51960d6daa1ec70
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type SuggestedClubsQuery$variables = {
 export type SuggestedClubsQueryVariables = SuggestedClubsQuery$variables;
 export type SuggestedClubsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
@@ -124,7 +124,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "JoinClubButtonViewerFragment"
+            "name": "JoinClubFromTileViewerFragment"
           }
         ],
         "storageKey": null
@@ -374,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "ee85dfae10f96b90c57cecc5444da6be",
+    "id": "728d77685c1a9295b51960d6daa1ec70",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",
@@ -383,6 +383,6 @@ return {
 };
 })();
 
-(node as any).hash = "f7d8777cb922b410ebeb873abfddf108";
+(node as any).hash = "239a2a8f98743b6904e22ce32f895ad2";
 
 export default node;

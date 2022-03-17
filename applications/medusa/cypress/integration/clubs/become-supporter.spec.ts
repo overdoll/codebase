@@ -20,6 +20,8 @@ const testCardDetails = {
   cvv2: '301'
 }
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 describe('Club - Become Supporter', () => {
   const [artistUsername, artistEmail] = generateUsernameAndEmail()
   const [username, email] = generateUsernameAndEmail()
@@ -52,6 +54,7 @@ describe('Club - Become Supporter', () => {
     // change currency
     cy.findByText(/Preferred Billing Currency/iu).should('exist').parent().get('select').select('CAD')
     cy.findByText(/CA[$]/u).should('be.visible')
+    cy.findByText(/Preferred Billing Currency/iu).should('exist').parent().get('select').select('USD')
 
     // check if agreement blocking works
     clickOnButton(/Subscribe with CCBill/iu)
@@ -86,11 +89,10 @@ describe('Club - Become Supporter', () => {
     cy.url().should('include', Cypress.config().baseUrl as string)
     cy.document().then((doc) => {
       // @ts-expect-error
-      cy.visit(`/ccbill-transaction-details/${doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]')?.content as string}`)
+      cy.visit(`/${newPaymentMethodClub}?token=${doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]')?.content as string}`)
     })
-    cy.findByText(/Verifying Transaction/iu, { timeout: 10000 }).should('be.visible')
-    cy.findByText(/Transaction Approved/iu, { timeout: 40000 }).should('be.visible')
-    cy.visit(`/${newPaymentMethodClub}`)
+    cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
+    clickOnButton('Close')
     cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
   })
 
@@ -114,6 +116,23 @@ describe('Club - Become Supporter', () => {
     })
   })
 
+  it('cancel subscription and update payment method', () => {
+    cy.visit('/settings/billing/subscriptions')
+    clickOnButton(/Manage Subscription/iu)
+
+    // update payment method modal
+    cy.findByText('Update Payment Method').should('be.visible').click()
+    cy.findByText(/Your payment method cannot be directly updated through our platform/iu).should('be.visible').click()
+    cy.get('button[aria-label="Close"]').click({ force: true })
+
+    // cancel subscription
+    clickOnButton(/Manage Subscription/iu)
+    cy.findByText('Cancel Subscription').should('be.visible').click()
+    cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
+    clickOnButton('Cancel Subscription')
+    cy.findByText(/Benefits expire in/iu).should('be.visible')
+  })
+
   it('become supporter with saved payment method', () => {
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
@@ -130,18 +149,22 @@ describe('Club - Become Supporter', () => {
 
     // use saved payment method to subscribe
     clickOnButton('Subscribe')
-    cy.findByText(/You must agree to the guidelines/iu).should('be.visible')
-    cy.findByText(/Please select a payment method/iu).should('be.visible')
+    cy.findByText(/You must agree to the guidelines/iu).should('exist')
+    cy.findByText(/Please select a payment method/iu).should('exist')
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click()
     cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().findByRole('checkbox').click({ force: true })
     clickOnButton('Subscribe')
-    cy.findByText(/Verifying Transaction/iu, { timeout: 10000 }).should('be.visible')
-    cy.findByText(/Transaction Approved/iu, { timeout: 40000 }).should('be.visible')
-    cy.visit(`/${savedPaymentMethodClub}`)
+    cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
+    clickOnButton('Close')
     cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
   })
 
-  // cancel subscription
-  // update payment method
-  // remove saved payment method
+  it('remove saved payment method', () => {
+    cy.visit('/settings/billing/payment-methods')
+    cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('be.visible')
+    cy.get('button[aria-label="Open Menu"]').click()
+    cy.findByText(/Delete Payment Method/iu).should('be.visible').click()
+    clickOnButton('Delete Saved Payment Method')
+    cy.findByText(/You haven't saved any payment methods/iu).should('be.visible')
+  })
 })

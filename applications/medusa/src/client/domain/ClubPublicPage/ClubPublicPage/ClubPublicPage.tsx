@@ -8,7 +8,6 @@ import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import { abbreviateNumber } from '@//:modules/support'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import JoinClubButton from './components/JoinClubButton/JoinClubButton'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClubMembers } from '@//:assets/icons/interface'
@@ -17,6 +16,7 @@ import ClubMenu from './components/ClubMenu/ClubMenu'
 import ClubTopPosts from './components/ClubTopPosts/ClubTopPosts'
 import ClubExclusivePosts from './components/ClubExclusivePosts/ClubExclusivePosts'
 import SupportClubButton from './components/SupportClubButton/SupportClubButton'
+import JoinClubFromPage from './components/JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -39,14 +39,14 @@ const Query = graphql`
         }
       }
       ...LargeClubHeaderFragment
-      ...JoinClubButtonClubFragment
+      ...JoinClubFromPageFragment
       ...ClubMenuFragment
       ...ClubTopPostsFragment
       ...ClubExclusivePostsFragment
       ...SupportClubButtonClubFragment
     }
     viewer {
-      ...JoinClubButtonViewerFragment
+      ...JoinClubFromPageViewerFragment
       ...SupportClubButtonViewerFragment
     }
   }
@@ -90,10 +90,9 @@ export default function ClubPublicPage (props: Props): JSX.Element {
           text={i18n._(t`Members`)}
           icon={ClubMembers}
         />
-        <JoinClubButton
+        <JoinClubFromPage
           w='100%'
           size='lg'
-          colorScheme='gray'
           clubQuery={queryData?.club}
           viewerQuery={queryData?.viewer}
         />

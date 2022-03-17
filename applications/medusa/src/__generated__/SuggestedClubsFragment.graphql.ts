@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b2bfda8098b47fc50a4f20cedac8d3a>>
+ * @generated SignedSource<<4b2f3efa0e1376ea8488175e1931ea15>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type SuggestedClubsFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly slug: string;
-        readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment" | "ClubTileOverlayFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileFragment" | "ClubTileOverlayFragment">;
       };
     }>;
   };
@@ -113,7 +113,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "JoinClubButtonClubFragment"
+                  "name": "JoinClubFromTileFragment"
                 },
                 {
                   "args": null,
@@ -174,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c6583f282c688e812ae46a9f251be2e";
+(node as any).hash = "493eea8479af22f175a0e4a2393572f6";
 
 export default node;

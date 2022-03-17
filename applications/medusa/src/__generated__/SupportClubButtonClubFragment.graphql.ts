@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a31b5d7f88734d59fb82ac7fbbab94c>>
+ * @generated SignedSource<<74345a2efe02e00151f3b561b11716f7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type SupportClubButtonClubFragment$data = {
       readonly currency: Currency;
     };
   };
-  readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"SupportClubTransactionProcessFragment">;
   readonly " $fragmentType": "SupportClubButtonClubFragment";
 };
 export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
@@ -93,13 +93,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "SupportSelectMethodFragment"
+      "name": "SupportClubTransactionProcessFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "d72e68188f050ad7dac769a2db750312";
+(node as any).hash = "4f9df7dd6c4f6923079a4ca335fb8401";
 
 export default node;

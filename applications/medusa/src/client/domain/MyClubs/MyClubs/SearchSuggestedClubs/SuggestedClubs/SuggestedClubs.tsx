@@ -1,5 +1,4 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import JoinClubButton from '../../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Trans } from '@lingui/macro'
@@ -8,6 +7,8 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
+import JoinClubFromTile
+  from '../../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -16,7 +17,7 @@ const Query = graphql`
   query SuggestedClubsQuery($search: String) {
     ...SuggestedClubsFragment
     viewer {
-      ...JoinClubButtonViewerFragment
+      ...JoinClubFromTileViewerFragment
     }
   }
 `
@@ -33,7 +34,7 @@ const Fragment = graphql`
       edges {
         node {
           slug
-          ...JoinClubButtonClubFragment
+          ...JoinClubFromTileFragment
           ...ClubTileOverlayFragment
         }
       }
@@ -66,7 +67,7 @@ export default function SuggestedClubs ({
         <SmallBackgroundBox>
           <Trans>No clubs found</Trans>
         </SmallBackgroundBox>
-    }
+      }
       condition={data.clubs.edges.length < 1}
     >
       <GridWrap>
@@ -78,12 +79,7 @@ export default function SuggestedClubs ({
               </LinkTile>
             </GridTile>
             <Box mt={2}>
-              <JoinClubButton
-                w='100%'
-                size='md'
-                clubQuery={item.node}
-                viewerQuery={queryData?.viewer}
-              />
+              <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={queryData?.viewer} />
             </Box>
           </Box>)}
         <LoadMoreGridTile

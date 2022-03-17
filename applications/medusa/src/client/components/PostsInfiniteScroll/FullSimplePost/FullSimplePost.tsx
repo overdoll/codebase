@@ -13,7 +13,6 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostCopyLinkButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
 import PostModerateButton
@@ -21,6 +20,8 @@ import PostModerateButton
 import PostReportButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostViewButton from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton'
+import JoinClubFromPost
+  from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -39,15 +40,15 @@ const PostFragment = graphql`
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
     ...PostIndexerFragment
-    club {
-      ...JoinClubButtonClubFragment
+    club @required(action: THROW) {
+      ...JoinClubFromPostFragment
     }
   }
 `
 
 const ViewerFragment = graphql`
   fragment FullSimplePostViewerFragment on Account {
-    ...JoinClubButtonViewerFragment
+    ...JoinClubFromPostViewerFragment
   }
 `
 
@@ -67,11 +68,7 @@ export default function FullSimplePost ({
     <Stack h='100%' justify='space-between' spacing={1}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
-        <JoinClubButton
-          size='sm'
-          clubQuery={data?.club ?? null}
-          viewerQuery={viewerData}
-        />
+        <JoinClubFromPost size='sm' clubQuery={data?.club} viewerQuery={viewerData} />
       </HStack>
       <PostGalleryPublicSimple query={data} />
       <Stack spacing={1}>

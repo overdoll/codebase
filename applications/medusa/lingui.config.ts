@@ -129,10 +129,6 @@ export default {
       include: ['src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts']
     },
     {
-      path: 'src/client/domain/ClubPublicPage/ClubPublicPage/pages/CCBillTransactionDetails/__locale__/{locale}/index',
-      include: ['src/client/domain/ClubPublicPage/ClubPublicPage/pages/CCBillTransactionDetails']
-    },
-    {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/ClubSettings']
     },

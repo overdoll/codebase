@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<966f509cd7546c7a96a60d88042b4b3f>>
+ * @generated SignedSource<<4b19331b7f345e48b6a3c6711d6fe351>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type FullSimplePostFragment$data = {
   readonly club: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
   readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostIndexerFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
@@ -80,26 +80,31 @@ const node: ReaderFragment = {
       "name": "PostIndexerFragment"
     },
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "Club",
-      "kind": "LinkedField",
-      "name": "club",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "JoinClubButtonClubFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinClubFromPostFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "club"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "6667912c86a4d665d8ee82bfa5376e27";
+(node as any).hash = "feaf7b5fb60d5ab4fcb88df716eb9d46";
 
 export default node;

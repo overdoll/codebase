@@ -22,7 +22,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment SubscriptionSettingsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 7}
     after: {type: String}
   )
   @refetchable(queryName: "ClubSupporterSubscriptionsPaginationQuery" ) {

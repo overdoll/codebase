@@ -15,13 +15,15 @@ export default function LoadMore ({
   text
 }: LoadMoreProps): JSX.Element {
   return (
-    <Flex w='100%' align='center' justify='center'>
+    <Flex borderRadius='inherit' h='inherit' w='inherit' align='center' justify='center'>
       {isLoadingNext
         ? <Spinner color='gray.100' />
         : (
           <ClickableTile
             onClick={onLoadNext}
-            h='100%'
+            borderRadius='inherit'
+            h='inherit'
+            w='inherit'
           >
             <Flex
               whiteSpace='normal'

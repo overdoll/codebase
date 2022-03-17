@@ -4,10 +4,8 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { ButtonProps, HStack } from '@chakra-ui/react'
 import { PostHeaderClub } from '../../../index'
-import JoinClubButton
-  from '../../../../../../client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
-import { PremiumStar } from '@//:assets/icons'
-import { Icon } from '../../../../PageLayout'
+import JoinClubFromPost
+  from '../../../../../../client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props extends ButtonProps {
   postQuery: PostHeaderFragment$key
@@ -17,10 +15,7 @@ interface Props extends ButtonProps {
 const PostFragment = graphql`
   fragment PostHeaderFragment on Post {
     club {
-      viewerMember {
-        isSupporter
-      }
-      ...JoinClubButtonClubFragment
+      ...JoinClubFromPostFragment
     }
     ...PostHeaderClubFragment
   }
@@ -28,7 +23,7 @@ const PostFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment PostHeaderViewerFragment on Account {
-    ...JoinClubButtonViewerFragment
+    ...JoinClubFromPostViewerFragment
   }
 `
 
@@ -43,19 +38,7 @@ export default function PostHeader ({
   return (
     <HStack spacing={3} justify='space-between' align='center'>
       <PostHeaderClub query={postData} />
-      {postData?.club?.viewerMember?.isSupporter === true
-        ? (<Icon
-            p={1}
-            icon={PremiumStar}
-            fill='orange.400'
-            h={4}
-            w={4}
-           />)
-        : (<JoinClubButton
-            size='sm'
-            clubQuery={postData.club}
-            viewerQuery={viewerData}
-           />)}
+      <JoinClubFromPost size='sm' clubQuery={postData.club} viewerQuery={viewerData} />
     </HStack>
   )
 }

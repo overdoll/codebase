@@ -12,12 +12,12 @@ import displayPrice from '../../../../../../modules/support/displayPrice'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
-import SupportSelectMethod from './SupportSelectMethod/SupportSelectMethod'
 import Can from '@//:modules/authorization/Can'
 import { useQueryParam } from 'use-query-params'
 import { Icon } from '@//:modules/content/PageLayout'
 import { PremiumStar } from '@//:assets/icons'
 import { useUpdateEffect } from 'usehooks-ts'
+import SupportClubTransactionProcess from './SupportClubTransactionProcess/SupportClubTransactionProcess'
 
 interface Props extends ButtonProps {
   clubQuery: SupportClubButtonClubFragment$key
@@ -28,7 +28,6 @@ const ClubFragment = graphql`
   fragment SupportClubButtonClubFragment on Club {
     viewerMember {
       isSupporter
-
     }
     supporterSubscriptionPrice {
       localizedPrice {
@@ -36,14 +35,14 @@ const ClubFragment = graphql`
         currency
       }
     }
-    ...SupportSelectMethodFragment
+    ...SupportClubTransactionProcessFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment SupportClubButtonViewerFragment on Account {
     __typename
-    ...SupportSelectMethodViewerFragment
+    ...SupportClubTransactionProcessViewerFragment
   }
 `
 
@@ -55,6 +54,7 @@ export default function SupportClubButton ({
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
   const [supportParam, setSupportParam] = useQueryParam<boolean | null | undefined>('support')
+  const [tokenParam] = useQueryParam<string | null | undefined>('token')
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
@@ -99,7 +99,7 @@ export default function SupportClubButton ({
   }
 
   const methods = useHistoryDisclosure({
-    defaultIsOpen: supportParam != null
+    defaultIsOpen: (supportParam != null || tokenParam != null) && clubData.viewerMember?.isSupporter !== true
   })
 
   const {
@@ -168,7 +168,7 @@ export default function SupportClubButton ({
         <ModalOverlay />
         <ModalContent>
           <ModalBody my={3}>
-            <SupportSelectMethod clubQuery={clubData} viewerQuery={viewerData} />
+            <SupportClubTransactionProcess clubQuery={clubData} viewerQuery={viewerData} />
           </ModalBody>
         </ModalContent>
       </Modal>
