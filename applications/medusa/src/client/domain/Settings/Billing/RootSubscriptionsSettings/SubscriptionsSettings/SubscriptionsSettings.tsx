@@ -1,7 +1,7 @@
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { SubscriptionsSettingsQuery } from '@//:artifacts/SubscriptionsSettingsQuery.graphql'
-import { Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import ClubSupporterSubscriptionsSettings from './ClubSupporterSubscriptionsSettings/ClubSupporterSubscriptionsSettings'
 import ExpiredClubSupporterSubscriptionsSettings
@@ -27,20 +27,18 @@ export default function SubscriptionsSettings (props: Props): JSX.Element {
   )
 
   return (
-    <Tabs colorScheme='gray' variant='soft-rounded'>
+    <Tabs colorScheme='gray' isFitted variant='soft-rounded'>
       <TabList>
-        <Wrap>
-          <Tab>
-            <Trans>
-              Current
-            </Trans>
-          </Tab>
-          <Tab>
-            <Trans>
-              Expired
-            </Trans>
-          </Tab>
-        </Wrap>
+        <Tab>
+          <Trans>
+            Current
+          </Trans>
+        </Tab>
+        <Tab>
+          <Trans>
+            Expired
+          </Trans>
+        </Tab>
       </TabList>
       <TabPanels>
         <TabPanel>

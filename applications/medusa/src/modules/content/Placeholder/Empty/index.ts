@@ -7,3 +7,4 @@ export { default as EmptyGeneralSearch } from './EmptyGeneralSearch/EmptyGeneral
 export { default as EmptyClubs } from './EmptyClubs/EmptyClubs'
 export { default as EmptySubscriptions } from './EmptySubscriptions/EmptySubscriptions'
 export { default as EmptyTransactions } from './EmptyTransactions/EmptyTransactions'
+export { default as EmptyPaymentMethods } from './EmptyPaymentMethods/EmptyPaymentMethods'

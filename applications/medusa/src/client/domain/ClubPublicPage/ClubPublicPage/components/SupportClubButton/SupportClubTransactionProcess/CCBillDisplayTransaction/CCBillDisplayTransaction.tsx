@@ -67,15 +67,18 @@ export default function CCBillDisplayTransaction ({
     onClose?.()
   }
 
+  const isVerifying = queryData?.ccbillTransactionDetails?.approved === true &&
+    queryData?.ccbillTransactionDetails.linkedAccountClubSupporterSubscription?.club?.viewerMember?.isSupporter !== true
+
   useEffect(() => {
-    if (queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription != null) return
+    if (!isVerifying) return
     const refreshLoop = (): void => {
-      if (queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription != null) return
+      if (!isVerifying) return
       loadQuery()
       setTimeout(refreshLoop, 2500)
     }
     setTimeout(refreshLoop, 2500)
-  }, [queryData?.ccbillTransactionDetails?.linkedAccountClubSupporterSubscription])
+  }, [isVerifying])
 
   if (queryData?.ccbillTransactionDetails == null) {
     return (
@@ -183,8 +186,7 @@ export default function CCBillDisplayTransaction ({
     )
   }
 
-  if (queryData.ccbillTransactionDetails.approved &&
-    queryData.ccbillTransactionDetails.linkedAccountClubSupporterSubscription?.club?.viewerMember?.isSupporter !== true) {
+  if (isVerifying) {
     return (
       <Stack align='center' spacing={4}>
         <Spinner thickness='4px' w={20} h={20} color='green.400' />

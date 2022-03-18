@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c409ba0533f05798584b8f9f965e7e6>>
+ * @generated SignedSource<<09ef8313ab27a3cea44e0b6698c9fc8d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type SelectMethodChoiceViewerFragment$data = {
       };
     }>;
   };
+  readonly isSecure: boolean;
   readonly __typename: "Account";
   readonly " $fragmentType": "SelectMethodChoiceViewerFragment";
 };
@@ -75,6 +76,13 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isSecure",
+      "storageKey": null
     }
   ],
   "type": "Account",
@@ -82,6 +90,6 @@ return {
 };
 })();
 
-(node as any).hash = "fc248299a2ef31e50f9696c89bfbfcea";
+(node as any).hash = "46eed205da5ed3cec71e4611e4024c96";
 
 export default node;

@@ -1702,7 +1702,7 @@ const routes: Route[] = [
                   )
                 ),
                 prepare: () => {
-                  const Query = require('@//:artifacts/SubscriptionSettingsQuery.graphql')
+                  const Query = require('@//:artifacts/SubscriptionsSettingsQuery.graphql')
                   return {
                     subscriptionsQuery: {
                       query: Query,

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<072156f117a18ec66821d597ffb98b4e>>
- * @relayHash c80ce2583b039b77e48661ff4f3b2d7e
+ * @generated SignedSource<<f5d7689dfed7938963f46e89a06e0131>>
+ * @relayHash 5fca730cdd1e3ad4f9727198a6343cdc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c80ce2583b039b77e48661ff4f3b2d7e
+// @relayRequestID 5fca730cdd1e3ad4f9727198a6343cdc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,6 +17,7 @@ export type SavedPaymentMethodsSettingsQuery$variables = {};
 export type SavedPaymentMethodsSettingsQueryVariables = SavedPaymentMethodsSettingsQuery$variables;
 export type SavedPaymentMethodsSettingsQuery$data = {
   readonly viewer: {
+    readonly isSecure: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
   };
 };
@@ -27,14 +28,21 @@ export type SavedPaymentMethodsSettingsQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isSecure",
+  "storageKey": null
+},
+v1 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 5
   }
 ],
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -62,7 +70,8 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "SavedPaymentMethodsSettingsFragment"
-            }
+            },
+            (v0/*: any*/)
           ],
           "storageKey": null
         },
@@ -89,7 +98,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "concreteType": "AccountSavedPaymentMethodConnection",
             "kind": "LinkedField",
             "name": "savedPaymentMethods",
@@ -154,7 +163,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v1/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -217,21 +226,22 @@ return {
           },
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v1/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "PaymentMethodSettings_savedPaymentMethods",
             "kind": "LinkedHandle",
             "name": "savedPaymentMethods"
           },
-          (v1/*: any*/)
+          (v2/*: any*/),
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "c80ce2583b039b77e48661ff4f3b2d7e",
+    "id": "5fca730cdd1e3ad4f9727198a6343cdc",
     "metadata": {},
     "name": "SavedPaymentMethodsSettingsQuery",
     "operationKind": "query",
@@ -240,6 +250,6 @@ return {
 };
 })();
 
-(node as any).hash = "19584f7ba5d19a249d15a0a928abfcf4";
+(node as any).hash = "43ff7d077f413dfc86c9ff8504645ed4";
 
 export default node;

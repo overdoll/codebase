@@ -13,6 +13,8 @@ import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 import NumberBadge from '../../../../../../../../components/NumberBadge/NumberBadge'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   viewerQuery: SelectMethodChoiceViewerFragment$key
@@ -28,6 +30,7 @@ const ViewerFragment = graphql`
         }
       }
     }
+    isSecure
   }
 `
 
@@ -67,7 +70,7 @@ export default function SelectMethodChoice ({
       </HStack>
       <Stack spacing={4}>
         <Box>
-          <Choice {...register('existing_payment', {})}>
+          <Choice isDisabled={!viewerData.isSecure} {...register('existing_payment', {})}>
             <LargeBackgroundBox bg='gray.900'>
               <Center>
                 <HStack spacing={2}>
@@ -81,11 +84,36 @@ export default function SelectMethodChoice ({
               </Center>
             </LargeBackgroundBox>
           </Choice>
-          <Text fontSize='sm' color='gray.300'>
-            <Trans>
-              You will be asked to subscribe using an existing payment method
-            </Trans>
-          </Text>
+          {!viewerData.isSecure
+            ? (
+              <Alert mt={1} status='warning'>
+                <HStack spacing={4} justify='space-between'>
+                  <HStack>
+                    <AlertIcon />
+                    <AlertDescription>
+                      <Trans>
+                        You must enable two-factor authentication before you can use a saved payment method
+                      </Trans>
+                    </AlertDescription>
+                  </HStack>
+                  <LinkButton
+                    size='sm'
+                    colorScheme='orange'
+                    variant='solid'
+                    to='/settings/security'
+                  >
+                    <Trans>
+                      Set Up
+                    </Trans>
+                  </LinkButton>
+                </HStack>
+              </Alert>)
+            : (
+              <Text fontSize='sm' color='gray.300'>
+                <Trans>
+                  You will be asked to subscribe using an existing payment method
+                </Trans>
+              </Text>)}
         </Box>
         <Box>
           <Choice {...register('new_payment', {})}>
