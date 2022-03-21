@@ -39,7 +39,7 @@ If a transaction is charged back, it turns into a CHARGEBACK transaction + an ev
 
 If a transaction is voided, it turns into a VOID transaction.
 """
-type AccountTransaction {
+type AccountTransaction implements Node @key(fields: "id") {
   """An ID to uniquely identify this transaction history."""
   id: ID!
 
@@ -292,7 +292,7 @@ type AccountClubSupporterSubscriptionBillingError {
   nextRetryDate: Date!
 }
 
-type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription & Node @key(fields: "id") {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
@@ -359,7 +359,7 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
   billingError: AccountClubSupporterSubscriptionBillingError
 }
 
-type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterSubscription{
+type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterSubscription & Node @key(fields: "id") {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
@@ -429,7 +429,7 @@ type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterS
   cancellationReason: CancellationReason @goField(forceResolver: true)
 }
 
-type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription & Node @key(fields: "id") {
   """An ID to uniquely identify this subscription."""
   id: ID!
 
