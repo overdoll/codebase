@@ -157,7 +157,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:38
+#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:40
 msgid "Load More"
 msgstr ""
 
@@ -232,6 +232,10 @@ msgstr ""
 #: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:132
 #~ msgid "No more content available"
 #~ msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:8
+msgid "No payment methods found"
+msgstr ""
 
 #: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
 msgid "No posts found"

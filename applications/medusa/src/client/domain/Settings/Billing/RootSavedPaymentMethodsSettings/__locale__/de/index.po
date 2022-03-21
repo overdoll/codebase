@@ -42,6 +42,10 @@ msgstr ""
 msgid "Payment method successfully deleted"
 msgstr ""
 
+#: src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:88
+msgid "Set Up"
+msgstr ""
+
 #: src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:83
 msgid "There was an error deleting your payment method"
 msgstr ""
@@ -55,5 +59,9 @@ msgid "When you become a club supporter, you'll have the option to remember the 
 msgstr ""
 
 #: src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:65
-msgid "You haven't saved any payment methods yet"
+#~ msgid "You haven't saved any payment methods yet"
+#~ msgstr ""
+
+#: src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:77
+msgid "You must enable two-factor authentication before you can use a saved payment method"
 msgstr ""

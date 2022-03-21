@@ -1484,6 +1484,102 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/admin/subscription/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccountClubSupporterSubscription/RootAdminAccountClubSupporterSubscription'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountClubSupporterSubscriptionQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/transaction/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccountTransaction/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccountTransaction/RootAdminAccountTransaction'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountTransactionQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

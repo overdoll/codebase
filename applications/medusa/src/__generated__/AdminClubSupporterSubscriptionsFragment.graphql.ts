@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3152f10c0d9fcd15d770d22f04e6bd>>
+ * @generated SignedSource<<2f11aa7028063cc66ba8ad00da39d97f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,8 @@ export type AdminClubSupporterSubscriptionsFragment$data = {
   readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly reference?: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionPreviewFragment">;
       };
     }>;
   };
@@ -97,6 +98,25 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "kind": "InlineFragment",
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "reference",
+                      "storageKey": null
+                    }
+                  ],
+                  "type": "IAccountClubSupporterSubscription",
+                  "abstractKey": "__isIAccountClubSupporterSubscription"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "AdminClubSupporterSubscriptionPreviewFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -157,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "5f874c438215608f05ccc6b6e5996244";
 
 export default node;

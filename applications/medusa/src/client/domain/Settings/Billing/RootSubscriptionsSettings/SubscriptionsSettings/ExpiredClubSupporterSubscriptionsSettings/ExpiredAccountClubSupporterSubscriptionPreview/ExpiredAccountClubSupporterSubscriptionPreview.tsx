@@ -69,7 +69,7 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
               </Heading>
             </HStack>
           </LinkTile>
-          <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
+          <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
             <Trans>
               EXPIRED
             </Trans>

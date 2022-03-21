@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6d8e8bdf83ebb7b7a08d27eb7a4e868f>>
- * @relayHash 7b74747f5f247d6251d091a2be855d12
+ * @generated SignedSource<<9d37539238f528a9f9e44a45292298f5>>
+ * @relayHash 90d15a6bc9dfb57ef8a4c37416ce3f99
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7b74747f5f247d6251d091a2be855d12
+// @relayRequestID 90d15a6bc9dfb57ef8a4c37416ce3f99
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -81,9 +81,32 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = [
-  (v4/*: any*/)
-];
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "supporterSince",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Club",
+  "kind": "LinkedField",
+  "name": "club",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    (v4/*: any*/)
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -157,19 +180,71 @@ return {
                           (v3/*: any*/),
                           {
                             "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "reference",
+                                "storageKey": null
+                              },
+                              (v4/*: any*/)
+                            ],
+                            "type": "IAccountClubSupporterSubscription",
+                            "abstractKey": "__isIAccountClubSupporterSubscription"
+                          },
+                          {
+                            "kind": "TypeDiscriminator",
+                            "abstractKey": "__isAccountClubSupporterSubscription"
+                          },
+                          {
+                            "kind": "InlineFragment",
+                            "selections": [
+                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "nextBillingDate",
+                                "storageKey": null
+                              },
+                              (v6/*: any*/),
+                              (v4/*: any*/)
+                            ],
                             "type": "AccountActiveClubSupporterSubscription",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
+                            "selections": [
+                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "endDate",
+                                "storageKey": null
+                              },
+                              (v6/*: any*/),
+                              (v4/*: any*/)
+                            ],
                             "type": "AccountCancelledClubSupporterSubscription",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v5/*: any*/),
+                            "selections": [
+                              (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "expiredAt",
+                                "storageKey": null
+                              },
+                              (v6/*: any*/),
+                              (v4/*: any*/)
+                            ],
                             "type": "AccountExpiredClubSupporterSubscription",
                             "abstractKey": null
                           }
@@ -233,7 +308,7 @@ return {
     ]
   },
   "params": {
-    "id": "7b74747f5f247d6251d091a2be855d12",
+    "id": "90d15a6bc9dfb57ef8a4c37416ce3f99",
     "metadata": {},
     "name": "AdminClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
@@ -242,6 +317,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ea6068a3f519a93054e081c683fada5";
+(node as any).hash = "5f874c438215608f05ccc6b6e5996244";
 
 export default node;

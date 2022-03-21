@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountActiveClubSupporterSubscriptionPreview/AdminAccountActiveClubSupporterSubscriptionPreview.tsx:40
+msgid "ACTIVE"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:45
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:70
 msgid "Assign Moderator"
@@ -27,20 +31,24 @@ msgstr ""
 #~ msgid "Billing"
 #~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountCancelledTransactionHistory/AccountCancelledTransactionHistoryCard.tsx:43
-msgid "Cancelled"
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountCancelledClubSupporterSubscriptionPreview/AdminAccountCancelledClubSupporterSubscriptionPreview.tsx:40
+msgid "CANCELLED"
 msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountCancelledTransactionHistory/AccountCancelledTransactionHistoryCard.tsx:43
+#~ msgid "Cancelled"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountChargebackTransactionHistory/AccountChargebackTransactionHistoryCard.tsx:50
-msgid "Chargeback"
-msgstr ""
+#~ msgid "Chargeback"
+#~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:79
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:78
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:72
 msgid "Club"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:83
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:77
 msgid "Date"
 msgstr ""
 
@@ -48,21 +56,25 @@ msgstr ""
 msgid "Duration of Lock"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountExpiredTransactionHistory/AccountExpiredTransactionHistoryCard.tsx:42
-msgid "Expired"
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountExpiredClubSupporterSubscriptionPreview/AdminAccountExpiredClubSupporterSubscriptionPreview.tsx:40
+msgid "EXPIRED"
 msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountExpiredTransactionHistory/AccountExpiredTransactionHistoryCard.tsx:42
+#~ msgid "Expired"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountFailedTransactionHistory/AccountFailedTransactionHistoryCard.tsx:43
-msgid "Failed"
-msgstr ""
+#~ msgid "Failed"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:88
-msgid "Info"
-msgstr ""
+#~ msgid "Info"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountInvoiceTransactionHistory/AccountInvoiceTransactionHistoryCard.tsx:49
-msgid "Invoice"
-msgstr ""
+#~ msgid "Invoice"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:59
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:108
@@ -78,20 +90,28 @@ msgid "Moderator"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountNewTransactionHistory/AccountNewTransactionHistoryCard.tsx:50
-msgid "New"
+#~ msgid "New"
+#~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:81
+msgid "Next/End/Expired Date"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:55
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:56
 msgid "Permissions"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountReactivatedTransactionHistory/AccountReactivatedTransactionHistoryCard.tsx:43
-msgid "Reactivated"
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:67
+msgid "Price"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountReactivatedTransactionHistory/AccountReactivatedTransactionHistoryCard.tsx:43
+#~ msgid "Reactivated"
+#~ msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountRefundTransactionHistory/AccountRefundTransactionHistoryCard.tsx:50
-msgid "Refund"
-msgstr ""
+#~ msgid "Refund"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:70
@@ -107,11 +127,11 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:89
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:66
 msgid "Status"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:60
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:61
 msgid "Subscriptions"
 msgstr ""
 
@@ -139,7 +159,7 @@ msgstr ""
 msgid "Successfully unlocked account"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:84
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:76
 msgid "Supporting Since"
 msgstr ""
 
@@ -167,11 +187,11 @@ msgstr ""
 msgid "There was an error unlocking the account"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:65
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:66
 msgid "Transactions"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:73
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:62
 msgid "Type"
 msgstr ""
 
@@ -181,9 +201,9 @@ msgid "Unlock Account"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountTransactionHistoryCard.tsx:104
-msgid "Unsupported transaction {0}"
-msgstr ""
+#~ msgid "Unsupported transaction {0}"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountVoidTransactionHistory/AccountVoidTransactionHistoryCard.tsx:50
-msgid "Void"
-msgstr ""
+#~ msgid "Void"
+#~ msgstr ""

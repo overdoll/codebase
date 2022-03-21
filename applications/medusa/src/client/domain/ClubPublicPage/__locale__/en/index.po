@@ -17,6 +17,11 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:115
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:181
+msgid "Back"
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubButton.tsx:45
 #~ msgid "Become a Supporter"
 #~ msgstr ""
@@ -37,13 +42,11 @@ msgstr ""
 #~ msgid "Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your Subscriptions page, which is located in your Account Settings."
 #~ msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:98
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:99
 msgid "Cancel"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:96
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:162
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:214
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:232
 msgid "Close"
 msgstr ""
 
@@ -55,23 +58,23 @@ msgstr ""
 msgid "Create an account and become a supporter to get access to this club's exclusive content!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:148
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:167
 msgid "Description"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:95
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:123
 msgid "Enter a new payment method"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:85
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:86
 msgid "Enter your payment details in the new window"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:132
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:151
 msgid "Error"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:62
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:65
 msgid "How will you pay?"
 msgstr ""
 
@@ -86,11 +89,13 @@ msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:109
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:123
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton.tsx:50
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:55
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:54
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:54
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/WithdrawMembershipButton/WithdrawMembershipButton.tsx:70
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:99
 msgid "Leave"
 msgstr ""
 
@@ -102,7 +107,7 @@ msgstr ""
 msgid "My Subscriptions"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:116
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:144
 msgid "Next"
 msgstr ""
 
@@ -110,8 +115,8 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:94
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:95
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:95
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:96
 msgid "Please select a payment method"
 msgstr ""
 
@@ -119,7 +124,7 @@ msgstr ""
 msgid "Preferred Billing Currency"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:137
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:137
 msgid "Remember this payment method"
 msgstr ""
 
@@ -135,32 +140,45 @@ msgstr ""
 #~ msgid "Select a card"
 #~ msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:142
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:143
 msgid "Select a saved payment method"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:103
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:105
+msgid "Set Up"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:104
 msgid "Show Window"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:90
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:109
 msgid "Sorry, we couldn't find the transaction. Please try again later."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:122
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:141
 msgid "Sorry, we were unable to process your payment. Please try another payment method."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:165
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:166
 msgid "Subscribe"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:148
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:148
 msgid "Subscribe with CCBill"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:97
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:96
+msgid "Support"
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubButton.tsx:142
 msgid "Support this club and get access to all of its exclusive content!"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:75
+msgid "Supporter"
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:131
@@ -168,36 +186,40 @@ msgstr ""
 #~ msgid "Supporter Guidelines"
 #~ msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:75
+msgid "Supporter!"
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubButton.tsx:123
 msgid "Thanks for supporting this club! You can now access all of its exclusive content."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:111
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:128
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:111
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:129
 msgid "There was an error subscribing. Please try again later."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:90
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:91
 msgid "This page will update after you have successfully submitted your payment details"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:203
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:221
 msgid "Transaction Approved!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:117
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:136
 msgid "Transaction Declined"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:81
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:100
 msgid "Transaction not found"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:75
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:78
 msgid "Use a saved payment method"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:177
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:195
 msgid "Verifying Transaction"
 msgstr ""
 
@@ -209,16 +231,24 @@ msgstr ""
 msgid "We cannot offer refunds after you have subscribed to a club."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:182
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:200
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:84
+msgid "You are a supporter"
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:88
 msgid "You are now a member of {0}!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:208
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:226
 msgid "You can start using your club benefits right away!"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:66
+msgid "You cannot leave a club that you are a supporter of"
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:65
@@ -226,16 +256,20 @@ msgstr ""
 #~ msgid "You must agree to follow the guidelines"
 #~ msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:66
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:88
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:66
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:89
 msgid "You must agree to the guidelines"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:103
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:94
+msgid "You must enable two-factor authentication before you can use a saved payment method"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:131
 msgid "You will be asked to enter your payment information and subscribe through our billing provider"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:85
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:113
 msgid "You will be asked to subscribe using an existing payment method"
 msgstr ""
 

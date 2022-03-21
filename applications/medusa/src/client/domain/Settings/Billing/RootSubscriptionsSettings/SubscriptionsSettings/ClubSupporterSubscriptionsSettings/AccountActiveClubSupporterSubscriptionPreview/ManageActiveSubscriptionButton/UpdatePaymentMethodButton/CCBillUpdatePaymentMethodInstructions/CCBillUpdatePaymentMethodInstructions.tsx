@@ -30,7 +30,7 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
 
   return (
     <Stack spacing={2}>
-      <Tabs defaultIndex={1} colorScheme='gray' variant='soft-rounded'>
+      <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Tab fontSize='sm'>
             <Trans>

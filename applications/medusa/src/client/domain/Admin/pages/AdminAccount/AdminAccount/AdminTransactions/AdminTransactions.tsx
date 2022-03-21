@@ -1,21 +1,12 @@
 import { graphql } from 'react-relay/hooks'
-import { Trans } from '@lingui/macro'
 import { usePaginationFragment } from 'react-relay'
-import {
-  Table,
-  TableBody,
-  TableBodyRowBackground,
-  TableBodyRowLoadMore,
-  TableHeader,
-  TableHeaderColumnText,
-  TableHeaderRow
-} from '@//:modules/content/ThemeComponents/Table/Table'
-import { EmptyBoundary, EmptyTransactions } from '@//:modules/content/Placeholder'
-import AccountTransactionCard from './AccountTransactionCard/AccountTransactionCard'
 import { AdminAccountQuery } from '@//:artifacts/AdminAccountQuery.graphql'
+import { AdminTransactionsFragment$key } from '@//:artifacts/AdminTransactionsFragment.graphql'
+
+import AdminTransactionsList from '../../../../components/AdminTransactionsList/AdminTransactionsList'
 
 interface Props {
-  query: any
+  query: AdminTransactionsFragment$key
 }
 
 const Fragment = graphql`
@@ -27,10 +18,9 @@ const Fragment = graphql`
   @refetchable(queryName: "AdminTransactionsPaginationQuery" ) {
     transactions (first: $first, after: $after)
     @connection(key: "AdminTransactions_transactions") {
+      ...AdminTransactionsListFragment
       edges {
-        node {
-          ...AccountTransactionCardFragment
-        }
+        __typename
       }
     }
   }
@@ -50,48 +40,11 @@ export default function AdminTransactions ({
   )
 
   return (
-    <EmptyBoundary
-      fallback={<EmptyTransactions />}
-      condition={data.transactions.edges.length < 1}
-    >
-      <Table>
-        <TableHeader>
-          <TableHeaderRow columns={9}>
-            <TableHeaderColumnText column={2}>
-              <Trans>
-                Type
-              </Trans>
-            </TableHeaderColumnText>
-            <TableHeaderColumnText column={2}>
-              <Trans>
-                Club
-              </Trans>
-            </TableHeaderColumnText>
-            <TableHeaderColumnText column={2}>
-              <Trans>
-                Date
-              </Trans>
-            </TableHeaderColumnText>
-            <TableHeaderColumnText column={3}>
-              <Trans>
-                Info
-              </Trans>
-            </TableHeaderColumnText>
-          </TableHeaderRow>
-        </TableHeader>
-        <TableBody>
-          {data.transactions.edges.map((item, index) => (
-            <TableBodyRowBackground key={index}>
-              <AccountTransactionCard query={item.node} />
-            </TableBodyRowBackground>
-          ))}
-          <TableBodyRowLoadMore
-            hasNext={hasNext}
-            onLoadNext={() => loadNext(5)}
-            isLoadingNext={isLoadingNext}
-          />
-        </TableBody>
-      </Table>
-    </EmptyBoundary>
+    <AdminTransactionsList
+      query={data.transactions}
+      hasNext={hasNext}
+      loadNext={() => loadNext(5)}
+      isLoadingNext={isLoadingNext}
+    />
   )
 }

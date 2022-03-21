@@ -233,8 +233,12 @@ export default {
       include: ['src/client/domain/Admin/pages/AdminClub']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCCBillSubscriptionDetails/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCCBillSubscriptionDetails']
+      path: 'src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAccountTransaction/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccountTransaction']
     }
   ],
   format: 'po',

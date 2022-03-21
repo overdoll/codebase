@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7813f3a247521992d6e3fa67a5a28ab>>
+ * @generated SignedSource<<9087fb95351d591023d5bf7201dc35a9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type AdminTransactionsFragment$data = {
   readonly transactions: {
     readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"AccountTransactionCardFragment">;
-      };
+      readonly __typename: string;
     }>;
+    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsListFragment">;
   };
   readonly id: string;
   readonly " $fragmentType": "AdminTransactionsFragment";
@@ -30,7 +29,14 @@ export type AdminTransactionsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "transactions"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -81,6 +87,11 @@ return {
       "plural": false,
       "selections": [
         {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "AdminTransactionsListFragment"
+        },
+        {
           "alias": null,
           "args": null,
           "concreteType": "AccountTransactionEdge",
@@ -88,6 +99,14 @@ return {
           "name": "edges",
           "plural": true,
           "selections": [
+            (v1/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -96,26 +115,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "AccountTransactionCardFragment"
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
+                (v1/*: any*/)
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
               "storageKey": null
             }
           ],
@@ -162,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "ed2baffbe6b9c5dcd9e80c4c989132a9";
+(node as any).hash = "22a03e879a3cafc76179c3549274df00";
 
 export default node;

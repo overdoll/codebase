@@ -8,20 +8,15 @@ import { AdminAccountQuery } from '@//:artifacts/AdminAccountQuery.graphql'
 import {
   Table,
   TableBody,
-  TableBodyColumnText,
-  TableBodyRow,
-  TableBodyRowBackground,
+  TableBodyRowLink,
   TableBodyRowLoadMore,
   TableHeader,
   TableHeaderColumnText,
   TableHeaderRow
 } from '@//:modules/content/ThemeComponents/Table/Table'
 import { EmptyBoundary, EmptySubscriptions } from '@//:modules/content/Placeholder'
-import { useLingui } from '@lingui/react'
-import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import format from 'date-fns/format'
-import { dateFormat } from '@//:modules/constants/format'
-import { Badge } from '@chakra-ui/react'
+import AdminClubSupporterSubscriptionPreview
+  from './AdminClubSupporterSubscription/AdminClubSupporterSubscriptionPreview'
 
 interface Props {
   query: AdminClubSupporterSubscriptionsFragment$key
@@ -38,7 +33,10 @@ const Fragment = graphql`
     @connection(key: "AdminClubSupporterSubscriptions_clubSupporterSubscriptions") {
       edges {
         node {
-          __typename
+          ... on IAccountClubSupporterSubscription {
+            reference
+          }
+          ...AdminClubSupporterSubscriptionPreviewFragment
         }
       }
     }
@@ -56,9 +54,6 @@ export default function AdminClubSupporterSubscriptions ({ query }: Props): JSX.
     query
   )
 
-  const { i18n } = useLingui()
-  const locale = dateFnsLocaleFromI18n(i18n)
-
   return (
     <EmptyBoundary
       fallback={<EmptySubscriptions />}
@@ -66,7 +61,12 @@ export default function AdminClubSupporterSubscriptions ({ query }: Props): JSX.
     >
       <Table>
         <TableHeader>
-          <TableHeaderRow columns={6}>
+          <TableHeaderRow columns={8}>
+            <TableHeaderColumnText column={2}>
+              <Trans>
+                Status
+              </Trans>
+            </TableHeaderColumnText>
             <TableHeaderColumnText column={2}>
               <Trans>
                 Club
@@ -79,30 +79,16 @@ export default function AdminClubSupporterSubscriptions ({ query }: Props): JSX.
             </TableHeaderColumnText>
             <TableHeaderColumnText column={2}>
               <Trans>
-                Status
+                Next/End/Expired Date
               </Trans>
             </TableHeaderColumnText>
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
           {data.clubSupporterSubscriptions.edges.map((item, index) => (
-            <TableBodyRowBackground
-              key={index}
-            >
-              <TableBodyRow columns={6}>
-                <TableBodyColumnText column={2}>
-                  {item.node.club.name}
-                </TableBodyColumnText>
-                <TableBodyColumnText column={2}>
-                  {format(new Date(item.node.supporterSince as Date), dateFormat, { locale })}
-                </TableBodyColumnText>
-                <TableBodyColumnText column={2}>
-                  <Badge colorScheme={item.node.status === 'ACTIVE' ? 'green' : 'orange'}>
-                    {item.node.status}
-                  </Badge>
-                </TableBodyColumnText>
-              </TableBodyRow>
-            </TableBodyRowBackground>
+            <TableBodyRowLink key={index} to={`/admin/subscription/${item.node.reference as string}`}>
+              <AdminClubSupporterSubscriptionPreview query={item.node} />
+            </TableBodyRowLink>
           ))}
           <TableBodyRowLoadMore
             hasNext={hasNext}

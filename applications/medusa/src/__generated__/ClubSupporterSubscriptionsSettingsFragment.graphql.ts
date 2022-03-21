@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a1ece2590d55c6885144f2b650533e2>>
+ * @generated SignedSource<<13dfb7955d10ef719d0f0c8335a0c29f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,7 +82,16 @@ return {
   "selections": [
     {
       "alias": "clubSupporterSubscriptions",
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "status",
+          "value": [
+            "ACTIVE",
+            "CANCELLED"
+          ]
+        }
+      ],
       "concreteType": "AccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
       "name": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
@@ -174,7 +183,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\",\"CANCELLED\"])"
     },
     {
       "alias": null,
@@ -189,6 +198,6 @@ return {
 };
 })();
 
-(node as any).hash = "14972dc1383f29d580bb76a9f0fc2603";
+(node as any).hash = "c21a81ee9b47de4b40854b94bc5512b9";
 
 export default node;
