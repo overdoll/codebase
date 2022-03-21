@@ -9,6 +9,13 @@ import AdminClubSupporterSubscriptionPreview
 import { TableBodyRowBackground } from '@//:modules/content/ThemeComponents/Table/Table'
 import { Trans } from '@lingui/macro'
 import AdminSubscriptionTransactions from './AdminSubscriptionTransactions/AdminSubscriptionTransactions'
+import AdminClubSupporterSubscriptionInformation
+  from './AdminClubSupporterSubscriptionInformation/AdminClubSupporterSubscriptionInformation'
+import AdminClubSupporterSubscriptionBillingError
+  from './AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError'
+import AdminClubSupporterSubscriptionAccount
+  from './AdminClubSupporterSubscriptionAccount/AdminClubSupporterSubscriptionAccount'
+import AdminClubSupporterSubscriptionClub from './AdminClubSupporterSubscriptionClub/AdminClubSupporterSubscriptionClub'
 
 interface Props {
   query: PreloadedQuery<AdminAccountClubSupporterSubscriptionQuery>
@@ -17,8 +24,15 @@ interface Props {
 const Query = graphql`
   query AdminAccountClubSupporterSubscriptionQuery($reference: String!) {
     accountClubSupporterSubscription(reference: $reference) {
-      ...AdminClubSupporterSubscriptionPreviewFragment
+      ... on IAccountClubSupporterSubscription {
+        ...AdminClubSupporterSubscriptionInformationFragment
+        ...AdminClubSupporterSubscriptionBillingErrorFragment
+        ...AdminClubSupporterSubscriptionAccountFragment
+        ...AdminSubscriptionTransactionsFragment
+        ...AdminClubSupporterSubscriptionClubFragment
+      }
       __typename
+      ...AdminClubSupporterSubscriptionPreviewFragment
     }
   }
 `
@@ -48,25 +62,41 @@ export default function AdminAccountClubSupporterSubscription ({ query }: Props)
             </Tab>
             <Tab>
               <Trans>
-                Options
+                Transactions
               </Trans>
             </Tab>
             <Tab>
               <Trans>
-                Transactions
+                Club
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
+                Supporter
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
+                Error
               </Trans>
             </Tab>
           </Wrap>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <></>
+            <AdminClubSupporterSubscriptionInformation query={queryData.accountClubSupporterSubscription} />
           </TabPanel>
           <TabPanel>
-            <></>
+            <AdminSubscriptionTransactions query={queryData.accountClubSupporterSubscription} />
           </TabPanel>
           <TabPanel>
-            <AdminSubscriptionTransactions query={queryData?.accountClubSupporterSubscription} />
+            <AdminClubSupporterSubscriptionClub query={queryData.accountClubSupporterSubscription} />
+          </TabPanel>
+          <TabPanel>
+            <AdminClubSupporterSubscriptionAccount query={queryData.accountClubSupporterSubscription} />
+          </TabPanel>
+          <TabPanel>
+            <AdminClubSupporterSubscriptionBillingError query={queryData.accountClubSupporterSubscription} />
           </TabPanel>
         </TabPanels>
       </Tabs>

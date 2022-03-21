@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b6d81d5560eeb6732cc58295a17bb1d0>>
- * @relayHash f7f35afe61fd5b82b615c0573d799186
+ * @generated SignedSource<<ca53e3aa0001e0df480aad81e54aff48>>
+ * @relayHash e0637e19cca63f6253ab8164ca162207
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7f35afe61fd5b82b615c0573d799186
+// @relayRequestID e0637e19cca63f6253ab8164ca162207
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,7 @@ export type AdminAccountQuery$data = {
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminLockAccountFragment" | "AdminAssignModeratorFragment" | "AdminAssignStaffFragment" | "AdminClubSupporterSubscriptionsFragment" | "AdminTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AdminLockAccountFragment" | "AdminAssignModeratorFragment" | "AdminAssignStaffFragment" | "AdminClubSupporterSubscriptionsFragment" | "AdminTransactionsFragment" | "LargeAccountHeaderFragment">;
   } | null;
 };
 export type AdminAccountQueryResponse = AdminAccountQuery$data;
@@ -215,6 +215,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "AdminTransactionsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LargeAccountHeaderFragment"
           }
         ],
         "storageKey": null
@@ -539,7 +544,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7f35afe61fd5b82b615c0573d799186",
+    "id": "e0637e19cca63f6253ab8164ca162207",
     "metadata": {},
     "name": "AdminAccountQuery",
     "operationKind": "query",
@@ -548,6 +553,6 @@ return {
 };
 })();
 
-(node as any).hash = "61f3c87698521efde5e61dc4541dcba6";
+(node as any).hash = "af3fa0276f0feebfbb7da0b71d557a2c";
 
 export default node;

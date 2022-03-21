@@ -36,7 +36,8 @@ export default function AdminTransactionCard ({
   const locale = dateFnsLocaleFromI18n(i18n)
   const timestamp = formatDistanceToNow(new Date(data.timestamp as Date), {
     locale: locale,
-    includeSeconds: true
+    includeSeconds: true,
+    addSuffix: true
   })
   const price = displayPrice({
     amount: data.amount,

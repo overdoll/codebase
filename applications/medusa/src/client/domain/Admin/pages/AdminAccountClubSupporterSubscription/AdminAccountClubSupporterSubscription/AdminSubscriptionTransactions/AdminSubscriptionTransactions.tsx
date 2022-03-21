@@ -1,8 +1,4 @@
-import { graphql } from 'react-relay/hooks'
-import { usePaginationFragment } from 'react-relay'
-import {
-  AdminAccountClubSupporterSubscriptionQuery
-} from '@//:artifacts/AdminAccountClubSupporterSubscriptionQuery.graphql'
+import { graphql, useFragment } from 'react-relay/hooks'
 import { AdminSubscriptionTransactionsFragment$key } from '@//:artifacts/AdminSubscriptionTransactionsFragment.graphql'
 import AdminTransactionsList from '../../../../components/AdminTransactionsList/AdminTransactionsList'
 
@@ -15,8 +11,7 @@ const Fragment = graphql`
   @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
-  )
-  @refetchable(queryName: "AdminSubscriptionTransactionsFragmentPaginationQuery" ) {
+  ) {
     transactions (first: $first, after: $after)
     @connection(key: "AdminSubscriptionTransactionsFragment_transactions") {
       ...AdminTransactionsListFragment
@@ -30,15 +25,16 @@ const Fragment = graphql`
 export default function AdminSubscriptionTransactions ({
   query
 }: Props): JSX.Element {
-  const {
-    data,
-    loadNext,
-    hasNext,
-    isLoadingNext
-  } = usePaginationFragment<AdminAccountClubSupporterSubscriptionQuery, any>(
+  const data = useFragment(
     Fragment,
     query
   )
+
+  const hasNext = false
+  const loadNext = (num): {} => {
+    return {}
+  }
+  const isLoadingNext = false
 
   return (
     <AdminTransactionsList

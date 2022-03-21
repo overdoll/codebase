@@ -1,14 +1,14 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { AdminAccountQuery } from '@//:artifacts/AdminAccountQuery.graphql'
-import { Box, Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import AdminLockAccount from './AdminLockAccount/AdminLockAccount'
 import AdminAssignModerator from './AdminAssignModerator/AdminAssignModerator'
 import AdminAssignStaff from './AdminAssignStaff/AdminAssignStaff'
 import { Trans } from '@lingui/macro'
 import AdminClubSupporterSubscriptions from './AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions'
 import AdminTransactions from './AdminTransactions/AdminTransactions'
+import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
 
 interface Props {
   query: PreloadedQuery<AdminAccountQuery>
@@ -27,6 +27,7 @@ const Query = graphql`
       ...AdminAssignStaffFragment
       ...AdminClubSupporterSubscriptionsFragment
       ...AdminTransactionsFragment
+      ...LargeAccountHeaderFragment
     }
   }
 `
@@ -43,12 +44,7 @@ export default function AdminAccount ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <HStack spacing={2}>
-        <ResourceIcon w={14} h={14} query={queryData?.account?.avatar} />
-        <Heading color='gray.00' fontSize='2xl'>
-          {queryData?.account?.username}
-        </Heading>
-      </HStack>
+      <LargeAccountHeader query={queryData.account} />
       <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Wrap>
