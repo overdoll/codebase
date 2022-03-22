@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cd28e406d7674adc6627055c3f7b922>>
+ * @generated SignedSource<<0848c5dfc11380defbc64c7f35f6e07e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,9 @@ export type AdminAccountActiveClubSupporterSubscriptionOptionsFragment$data = {
   readonly nextBillingDate: any;
   readonly billingAmount: number;
   readonly billingCurrency: Currency;
+  readonly ccbillSubscription: {
+    readonly ccbillSubscriptionId: string;
+  } | null;
   readonly " $fragmentSpreads": FragmentRefs<"AdminSyncSubscriptionButtonFragment">;
   readonly " $fragmentType": "AdminAccountActiveClubSupporterSubscriptionOptionsFragment";
 };
@@ -60,6 +63,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "CCBillSubscription",
+      "kind": "LinkedField",
+      "name": "ccbillSubscription",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "ccbillSubscriptionId",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "AdminSyncSubscriptionButtonFragment"
@@ -69,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9ad392ed1a19cdeabb92b7e83184e380";
+(node as any).hash = "21ae548d394142b068e33988108d4e42";
 
 export default node;

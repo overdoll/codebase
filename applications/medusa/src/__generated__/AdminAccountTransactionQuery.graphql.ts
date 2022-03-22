@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d5f4af8b0dff2f8cfa24c8f0bcc52195>>
- * @relayHash 7be2ac0b6e057a03d08f1e37f8528e4a
+ * @generated SignedSource<<9e0fdf0beea0429a305d81081c31dff1>>
+ * @relayHash d5a2cccc458d97eb89baee6d62bdfd99
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7be2ac0b6e057a03d08f1e37f8528e4a
+// @relayRequestID d5a2cccc458d97eb89baee6d62bdfd99
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -268,6 +268,25 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "CCBillTransaction",
+            "kind": "LinkedField",
+            "name": "ccbillTransaction",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "ccbillTransactionId",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "AccountTransactionEvent",
             "kind": "LinkedField",
             "name": "events",
@@ -287,15 +306,14 @@ return {
               (v6/*: any*/)
             ],
             "storageKey": null
-          },
-          (v6/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "7be2ac0b6e057a03d08f1e37f8528e4a",
+    "id": "d5a2cccc458d97eb89baee6d62bdfd99",
     "metadata": {},
     "name": "AdminAccountTransactionQuery",
     "operationKind": "query",

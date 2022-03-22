@@ -12,6 +12,7 @@ import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
 import AdminSyncSubscriptionButton from '../../../../../components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
+import CopyCodeToClipboard from '../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {
   query: AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$key
@@ -26,6 +27,9 @@ const Fragment = graphql`
     }
     billingAmount
     billingCurrency
+    ccbillSubscription {
+      ccbillSubscriptionId
+    }
     ...AdminSyncSubscriptionButtonFragment
   }
 `
@@ -102,6 +106,20 @@ export default function AdminAccountCancelledClubSupporterSubscriptionOptions ({
         </PageSectionWrap>
         <SmallBackgroundBox>
           {endDate}
+        </SmallBackgroundBox>
+      </Box>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              CCBill Subscription ID
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <SmallBackgroundBox>
+          <CopyCodeToClipboard>
+            {data?.ccbillSubscription?.ccbillSubscriptionId as string}
+          </CopyCodeToClipboard>
         </SmallBackgroundBox>
       </Box>
       <Box>

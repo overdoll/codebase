@@ -1,14 +1,12 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { AdminAccountQuery } from '@//:artifacts/AdminAccountQuery.graphql'
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
-import AdminLockAccount from './AdminLockAccount/AdminLockAccount'
-import AdminAssignModerator from './AdminAssignModerator/AdminAssignModerator'
-import AdminAssignStaff from './AdminAssignStaff/AdminAssignStaff'
 import { Trans } from '@lingui/macro'
 import AdminClubSupporterSubscriptions from './AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions'
 import AdminTransactions from './AdminTransactions/AdminTransactions'
 import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
+import AdminPermissions from './AdminPermissions/AdminPermissions'
 
 interface Props {
   query: PreloadedQuery<AdminAccountQuery>
@@ -17,14 +15,7 @@ interface Props {
 const Query = graphql`
   query AdminAccountQuery($username: String!) {
     account(username: $username) {
-      __typename
-      username
-      avatar {
-        ...ResourceIconFragment
-      }
-      ...AdminLockAccountFragment
-      ...AdminAssignModeratorFragment
-      ...AdminAssignStaffFragment
+      ...AdminPermissionsFragment
       ...AdminClubSupporterSubscriptionsFragment
       ...AdminTransactionsFragment
       ...LargeAccountHeaderFragment
@@ -67,17 +58,7 @@ export default function AdminAccount ({ query }: Props): JSX.Element {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Stack spacing={8}>
-              <Box>
-                <AdminLockAccount query={queryData.account} />
-              </Box>
-              <Box>
-                <AdminAssignModerator query={queryData.account} />
-              </Box>
-              <Box>
-                <AdminAssignStaff query={queryData.account} />
-              </Box>
-            </Stack>
+            <AdminPermissions query={queryData.account} />
           </TabPanel>
           <TabPanel>
             <AdminClubSupporterSubscriptions query={queryData.account} />

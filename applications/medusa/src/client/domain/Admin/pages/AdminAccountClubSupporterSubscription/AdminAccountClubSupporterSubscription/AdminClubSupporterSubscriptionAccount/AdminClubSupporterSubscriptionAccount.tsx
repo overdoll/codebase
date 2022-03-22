@@ -43,7 +43,7 @@ export default function AdminClubSupporterSubscriptionAccount ({ query }: Props)
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
-        <LinkTile to={`/m/${data.account.username}`}>
+        <LinkTile to={`/admin/account/${data.account.username}`}>
           <LargeAccountHeader query={data.account} />
         </LinkTile>
       </Box>

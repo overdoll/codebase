@@ -14,6 +14,9 @@ import Button from '@//:modules/form/Button/Button'
 import {
   getTransactionColorScheme
 } from '../../../../components/AdminTransactionsList/AdminTransactionCard/AdminTransactionCard'
+import AdminRefundAccountTransactionButton
+  from './AdminRefundAccountTransactionButton/AdminRefundAccountTransactionButton'
+import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {
   query: AdminAccountTransactionOptionsFragment$key
@@ -25,6 +28,10 @@ const Fragment = graphql`
     billedAtDate
     amount
     currency
+    ccbillTransaction {
+      ccbillTransactionId
+    }
+    ...AdminRefundAccountTransactionButtonFragment
   }
 `
 
@@ -83,6 +90,20 @@ export default function AdminAccountTransactionOptions ({ query }: Props): JSX.E
         </SmallBackgroundBox>
       </Box>
       <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              CCBill Transaction ID
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <SmallBackgroundBox>
+          <CopyCodeToClipboard>
+            {data?.ccbillTransaction?.ccbillTransactionId as string}
+          </CopyCodeToClipboard>
+        </SmallBackgroundBox>
+      </Box>
+      <Box>
         <Menu placement='bottom-end' autoSelect={false}>
           <MenuButton
             w='100%'
@@ -95,7 +116,7 @@ export default function AdminAccountTransactionOptions ({ query }: Props): JSX.E
             </Trans>
           </MenuButton>
           <MenuList minW='230px' boxShadow='outline'>
-            <></>
+            <AdminRefundAccountTransactionButton query={data} />
           </MenuList>
         </Menu>
       </Box>

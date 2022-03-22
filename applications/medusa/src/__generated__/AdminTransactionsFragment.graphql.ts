@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9087fb95351d591023d5bf7201dc35a9>>
+ * @generated SignedSource<<3e733a36edd902c600c4a31203a3696f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,10 @@ export type AdminTransactionsFragment$data = {
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsListFragment">;
   };
+  readonly transactionsTotalCount: number;
+  readonly transactionsPaymentCount: number;
+  readonly transactionsChargebackCount: number;
+  readonly transactionsRefundCount: number;
   readonly id: string;
   readonly " $fragmentType": "AdminTransactionsFragment";
 };
@@ -154,6 +158,34 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "transactionsTotalCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "transactionsPaymentCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "transactionsChargebackCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "transactionsRefundCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "id",
       "storageKey": null
     }
@@ -163,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "22a03e879a3cafc76179c3549274df00";
+(node as any).hash = "b558fe42ab432f850ab4698bcd42cccd";
 
 export default node;

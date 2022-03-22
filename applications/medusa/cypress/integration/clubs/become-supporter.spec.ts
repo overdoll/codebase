@@ -97,6 +97,13 @@ describe('Club - Become Supporter', () => {
   })
 
   it('enable two factor', () => {
+    // check that they are restricted by two factor
+    cy.visit(`/${savedPaymentMethodClub}`)
+    clickOnButton(/Become a Supporter/iu)
+    cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
+    cy.visit('/settings/billing/payment-methods')
+    cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
+
     // generate recovery codes
     cy.visit('/configure/multi-factor/recovery-codes')
     cy.findByRole('button', { name: /Generate Recovery Codes/ }).click()
@@ -142,6 +149,15 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Enter a new payment method/iu).should('not.be.disabled').click()
     clickOnButton('Next')
     cy.findByRole('button', { name: /Subscribe with CCBill/iu }).should('not.be.disabled')
+    // stub the window so it doesn't appear
+    cy.window().then((win) => {
+      cy.stub(win, 'open').as('windowOpen')
+    })
+    clickOnButton(/Subscribe with CCBill/iu)
+    cy.findByText(/Enter your payment details in the new window/iu).should('be.visible')
+    clickOnButton(/Cancel/iu)
+    cy.findByText(/Your contribution directly supports/iu).should('be.visible')
+
     cy.get('button[aria-label="Close"]').click()
     cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click()
     clickOnButton('Next')

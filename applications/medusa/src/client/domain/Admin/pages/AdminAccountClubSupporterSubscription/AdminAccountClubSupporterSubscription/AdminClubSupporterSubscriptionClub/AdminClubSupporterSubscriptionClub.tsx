@@ -34,7 +34,7 @@ export default function AdminClubSupporterSubscriptionClub ({ query }: Props): J
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
-        <LinkTile to={`/${data.club.slug}`}>
+        <LinkTile to={`/admin/club${data.club.slug}`}>
           <LargeClubHeader query={data.club} />
         </LinkTile>
       </Box>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<212869d8b45b074ba2a80abc404b30dd>>
- * @relayHash 99a77f23f743acb943e31581b2a509f2
+ * @generated SignedSource<<496b56ff666ad670c3af554cb8d8eaef>>
+ * @relayHash dda021903f09698bef2ea8f820b86125
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 99a77f23f743acb943e31581b2a509f2
+// @relayRequestID dda021903f09698bef2ea8f820b86125
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -284,6 +284,34 @@ return {
                 "key": "AdminTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "transactionsTotalCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "transactionsPaymentCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "transactionsChargebackCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "transactionsRefundCount",
+                "storageKey": null
               }
             ],
             "type": "Account",
@@ -295,7 +323,7 @@ return {
     ]
   },
   "params": {
-    "id": "99a77f23f743acb943e31581b2a509f2",
+    "id": "dda021903f09698bef2ea8f820b86125",
     "metadata": {},
     "name": "AdminTransactionsPaginationQuery",
     "operationKind": "query",
@@ -304,6 +332,6 @@ return {
 };
 })();
 
-(node as any).hash = "22a03e879a3cafc76179c3549274df00";
+(node as any).hash = "b558fe42ab432f850ab4698bcd42cccd";
 
 export default node;

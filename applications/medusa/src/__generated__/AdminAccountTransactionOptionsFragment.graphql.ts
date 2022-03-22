@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8bc07226b5adc78eb267fee669829bec>>
+ * @generated SignedSource<<af72f35b2057cc852409c0b47d3ac59c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,10 @@ export type AdminAccountTransactionOptionsFragment$data = {
   readonly billedAtDate: any;
   readonly amount: number;
   readonly currency: Currency;
+  readonly ccbillTransaction: {
+    readonly ccbillTransactionId: string | null;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"AdminRefundAccountTransactionButtonFragment">;
   readonly " $fragmentType": "AdminAccountTransactionOptionsFragment";
 };
 export type AdminAccountTransactionOptionsFragment = AdminAccountTransactionOptionsFragment$data;
@@ -58,12 +62,35 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "currency",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CCBillTransaction",
+      "kind": "LinkedField",
+      "name": "ccbillTransaction",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "ccbillTransactionId",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AdminRefundAccountTransactionButtonFragment"
     }
   ],
   "type": "AccountTransaction",
   "abstractKey": null
 };
 
-(node as any).hash = "34c2981e390145d2a7112d10d98e5c83";
+(node as any).hash = "11837bd6c6609de288749e0da791c86e";
 
 export default node;
