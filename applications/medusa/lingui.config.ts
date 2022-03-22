@@ -73,8 +73,8 @@ export default {
       include: ['src/client/domain/Settings/Billing']
     },
     {
-      path: 'src/client/domain/Settings/Billing/RootSubscriptionSettings/__locale__/{locale}/index',
-      include: ['src/client/domain/Settings/Billing/RootSubscriptionSettings']
+      path: 'src/client/domain/Settings/Billing/RootSubscriptionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootSubscriptionsSettings']
     },
     {
       path: 'src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
