@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type {
-  AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$key
-} from '@//:artifacts/AdminAccountExpiredClubSupporterSubscriptionOptionsFragment.graphql'
+  AdminAccountActiveClubSupporterSubscriptionOptionsFragment$key
+} from '@//:artifacts/AdminAccountActiveClubSupporterSubscriptionOptionsFragment.graphql'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Badge, Box, Menu, MenuButton, MenuList, Stack } from '@chakra-ui/react'
@@ -11,30 +11,29 @@ import displayPrice from '@//:modules/support/displayPrice'
 import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
-import AdminSyncSubscriptionButton from '../../../../components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
+import AdminSyncSubscriptionButton from '../../../../../components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
 
 interface Props {
-  query: AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$key
+  query: AdminAccountActiveClubSupporterSubscriptionOptionsFragment$key
 }
 
 const Fragment = graphql`
-  fragment AdminAccountExpiredClubSupporterSubscriptionOptionsFragment on AccountExpiredClubSupporterSubscription {
-    expiredAt
-    cancellationReason {
-      title
-    }
+  fragment AdminAccountActiveClubSupporterSubscriptionOptionsFragment on AccountActiveClubSupporterSubscription {
+    lastBillingDate
+    nextBillingDate
     billingAmount
     billingCurrency
     ...AdminSyncSubscriptionButtonFragment
   }
 `
 
-export default function AdminAccountExpiredClubSupporterSubscriptionOptions ({ query }: Props): JSX.Element {
+export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
-  const expiredAt = format(new Date(data.expiredAt as Date), dateFormat, { locale })
+  const lastBillingDate = format(new Date(data.lastBillingDate as Date), dateFormat, { locale })
+  const nextBillingDate = format(new Date(data.nextBillingDate as Date), dateFormat, { locale })
   const price = displayPrice({
     amount: data.billingAmount,
     currency: data.billingCurrency,
@@ -52,9 +51,9 @@ export default function AdminAccountExpiredClubSupporterSubscriptionOptions ({ q
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
+          <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
             <Trans>
-              EXPIRED
+              ACTIVE
             </Trans>
           </Badge>
         </SmallBackgroundBox>
@@ -77,18 +76,25 @@ export default function AdminAccountExpiredClubSupporterSubscriptionOptions ({ q
         <PageSectionWrap>
           <PageSectionTitle>
             <Trans>
-              Expired At
+              Last Billing Date
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
-        <Stack spacing={1}>
-          <SmallBackgroundBox>
-            {expiredAt}
-          </SmallBackgroundBox>
-          <SmallBackgroundBox>
-            {data?.cancellationReason?.title}
-          </SmallBackgroundBox>
-        </Stack>
+        <SmallBackgroundBox>
+          {lastBillingDate}
+        </SmallBackgroundBox>
+      </Box>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              Next Billing Date
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <SmallBackgroundBox>
+          {nextBillingDate}
+        </SmallBackgroundBox>
       </Box>
       <Box>
         <Menu placement='bottom-end' autoSelect={false}>

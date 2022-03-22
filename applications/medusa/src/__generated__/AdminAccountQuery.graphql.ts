@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ca53e3aa0001e0df480aad81e54aff48>>
- * @relayHash e0637e19cca63f6253ab8164ca162207
+ * @generated SignedSource<<92c5e550bdf02ec5b62eb6ea9ee9e4df>>
+ * @relayHash dc4d7f32724250cdd51685d7c8677b0c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e0637e19cca63f6253ab8164ca162207
+// @relayRequestID dc4d7f32724250cdd51685d7c8677b0c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -124,13 +124,21 @@ v10 = {
   "storageKey": null
 },
 v11 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "type": "Node",
+  "abstractKey": "__isNode"
+},
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -154,10 +162,7 @@ v12 = {
     }
   ],
   "storageKey": null
-},
-v13 = [
-  (v6/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -370,8 +375,7 @@ return {
                             "name": "nextBillingDate",
                             "storageKey": null
                           },
-                          (v10/*: any*/),
-                          (v6/*: any*/)
+                          (v10/*: any*/)
                         ],
                         "type": "AccountActiveClubSupporterSubscription",
                         "abstractKey": null
@@ -387,8 +391,7 @@ return {
                             "name": "endDate",
                             "storageKey": null
                           },
-                          (v10/*: any*/),
-                          (v6/*: any*/)
+                          (v10/*: any*/)
                         ],
                         "type": "AccountCancelledClubSupporterSubscription",
                         "abstractKey": null
@@ -404,20 +407,20 @@ return {
                             "name": "expiredAt",
                             "storageKey": null
                           },
-                          (v10/*: any*/),
-                          (v6/*: any*/)
+                          (v10/*: any*/)
                         ],
                         "type": "AccountExpiredClubSupporterSubscription",
                         "abstractKey": null
-                      }
+                      },
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v13/*: any*/)
             ],
             "storageKey": "clubSupporterSubscriptions(first:5)"
           },
@@ -494,24 +497,7 @@ return {
                             "type": "IAccountClubSupporterSubscription",
                             "abstractKey": "__isIAccountClubSupporterSubscription"
                           },
-                          {
-                            "kind": "InlineFragment",
-                            "selections": (v13/*: any*/),
-                            "type": "AccountActiveClubSupporterSubscription",
-                            "abstractKey": null
-                          },
-                          {
-                            "kind": "InlineFragment",
-                            "selections": (v13/*: any*/),
-                            "type": "AccountCancelledClubSupporterSubscription",
-                            "abstractKey": null
-                          },
-                          {
-                            "kind": "InlineFragment",
-                            "selections": (v13/*: any*/),
-                            "type": "AccountExpiredClubSupporterSubscription",
-                            "abstractKey": null
-                          }
+                          (v11/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -521,11 +507,11 @@ return {
                     "storageKey": null
                   },
                   (v2/*: any*/),
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v13/*: any*/)
             ],
             "storageKey": "transactions(first:5)"
           },
@@ -544,7 +530,7 @@ return {
     ]
   },
   "params": {
-    "id": "e0637e19cca63f6253ab8164ca162207",
+    "id": "dc4d7f32724250cdd51685d7c8677b0c",
     "metadata": {},
     "name": "AdminAccountQuery",
     "operationKind": "query",

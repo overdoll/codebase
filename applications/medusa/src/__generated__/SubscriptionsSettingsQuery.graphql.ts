@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<86ca6dcf7ec54d4182308af5e911a16a>>
- * @relayHash da2ff299f90e349d222109f405a066ec
+ * @generated SignedSource<<cf12aa7ebadea396e57aaa85c3f3a50b>>
+ * @relayHash 71d4760f440916289f4b0e1e97fda1b9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID da2ff299f90e349d222109f405a066ec
+// @relayRequestID 71d4760f440916289f4b0e1e97fda1b9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -370,8 +370,7 @@ return {
                             "kind": "ScalarField",
                             "name": "endDate",
                             "storageKey": null
-                          },
-                          (v6/*: any*/)
+                          }
                         ],
                         "type": "AccountCancelledClubSupporterSubscription",
                         "abstractKey": null
@@ -381,8 +380,8 @@ return {
                         "selections": [
                           (v6/*: any*/)
                         ],
-                        "type": "AccountExpiredClubSupporterSubscription",
-                        "abstractKey": null
+                        "type": "Node",
+                        "abstractKey": "__isNode"
                       }
                     ],
                     "storageKey": null
@@ -468,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "da2ff299f90e349d222109f405a066ec",
+    "id": "71d4760f440916289f4b0e1e97fda1b9",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

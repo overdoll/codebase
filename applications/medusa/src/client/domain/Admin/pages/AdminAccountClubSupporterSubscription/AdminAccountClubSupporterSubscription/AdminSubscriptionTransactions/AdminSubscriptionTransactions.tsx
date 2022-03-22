@@ -1,47 +1,56 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { AdminSubscriptionTransactionsFragment$key } from '@//:artifacts/AdminSubscriptionTransactionsFragment.graphql'
-import AdminTransactionsList from '../../../../components/AdminTransactionsList/AdminTransactionsList'
+import type {
+  AdminSubscriptionTransactionsFragment$key
+} from '@//:artifacts/AdminSubscriptionTransactionsFragment.graphql'
+import AdminActiveSubscriptionTransactions
+  from './AdminActiveSubscriptionTransactions/AdminActiveSubscriptionTransactions'
+import AdminCancelledSubscriptionTransactions
+  from './AdminCancelledSubscriptionTransactions/AdminCancelledSubscriptionTransactions'
+import AdminExpiredSubscriptionTransactions
+  from './AdminExpiredSubscriptionTransactions/AdminExpiredSubscriptionTransactions'
 
 interface Props {
   query: AdminSubscriptionTransactionsFragment$key
 }
 
 const Fragment = graphql`
-  fragment AdminSubscriptionTransactionsFragment on IAccountClubSupporterSubscription
-  @argumentDefinitions(
-    first: {type: Int, defaultValue: 5}
-    after: {type: String}
-  ) {
-    transactions (first: $first, after: $after)
-    @connection(key: "AdminSubscriptionTransactionsFragment_transactions") {
-      ...AdminTransactionsListFragment
-      edges {
-        __typename
-      }
+  fragment AdminSubscriptionTransactionsFragment on AccountClubSupporterSubscription {
+    __typename
+    ... on AccountActiveClubSupporterSubscription {
+      ...AdminActiveSubscriptionTransactionsFragment
+    }
+    ... on AccountCancelledClubSupporterSubscription{
+      ...AdminCancelledSubscriptionTransactionsFragment
+    }
+    ... on AccountExpiredClubSupporterSubscription {
+      ...AdminExpiredSubscriptionTransactionsFragment
     }
   }
 `
 
-export default function AdminSubscriptionTransactions ({
-  query
-}: Props): JSX.Element {
-  const data = useFragment(
-    Fragment,
-    query
-  )
+export default function AdminSubscriptionTransactions ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
 
-  const hasNext = false
-  const loadNext = (num): {} => {
-    return {}
+  switch (data.__typename) {
+    case 'AccountActiveClubSupporterSubscription':
+      return (
+        <AdminActiveSubscriptionTransactions
+          query={data}
+        />
+      )
+    case 'AccountCancelledClubSupporterSubscription':
+      return (
+        <AdminCancelledSubscriptionTransactions
+          query={data}
+        />
+      )
+    case 'AccountExpiredClubSupporterSubscription':
+      return (
+        <AdminExpiredSubscriptionTransactions
+          query={data}
+        />
+      )
+    default:
+      return <></>
   }
-  const isLoadingNext = false
-
-  return (
-    <AdminTransactionsList
-      query={data.transactions}
-      hasNext={hasNext}
-      loadNext={() => loadNext(5)}
-      isLoadingNext={isLoadingNext}
-    />
-  )
 }

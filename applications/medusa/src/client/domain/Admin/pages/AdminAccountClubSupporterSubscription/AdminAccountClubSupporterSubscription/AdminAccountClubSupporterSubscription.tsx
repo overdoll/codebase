@@ -8,18 +8,13 @@ import AdminClubSupporterSubscriptionPreview
   from '../../AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminClubSupporterSubscriptionPreview'
 import { TableBodyRowBackground } from '@//:modules/content/ThemeComponents/Table/Table'
 import { Trans } from '@lingui/macro'
-import AdminSubscriptionTransactions from './AdminSubscriptionTransactions/AdminSubscriptionTransactions'
 import AdminClubSupporterSubscriptionBillingError
   from './AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError'
 import AdminClubSupporterSubscriptionAccount
   from './AdminClubSupporterSubscriptionAccount/AdminClubSupporterSubscriptionAccount'
 import AdminClubSupporterSubscriptionClub from './AdminClubSupporterSubscriptionClub/AdminClubSupporterSubscriptionClub'
-import AdminAccountActiveClubSupporterSubscriptionOptions
-  from './AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions'
-import AdminAccountExpiredClubSupporterSubscriptionOptions
-  from './AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions'
-import AdminAccountCancelledClubSupporterSubscriptionOptions
-  from './AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions'
+import AdminSubscriptionOptions from './AdminSubscriptionOptions/AdminSubscriptionOptions'
+import AdminSubscriptionTransactions from './AdminSubscriptionTransactions/AdminSubscriptionTransactions'
 
 interface Props {
   query: PreloadedQuery<AdminAccountClubSupporterSubscriptionQuery>
@@ -33,18 +28,10 @@ const Query = graphql`
       ... on IAccountClubSupporterSubscription {
         ...AdminClubSupporterSubscriptionBillingErrorFragment
         ...AdminClubSupporterSubscriptionAccountFragment
-        ...AdminSubscriptionTransactionsFragment
         ...AdminClubSupporterSubscriptionClubFragment
       }
-      ... on AccountActiveClubSupporterSubscription {
-        ...AdminAccountActiveClubSupporterSubscriptionOptionsFragment
-      }
-      ... on AccountCancelledClubSupporterSubscription{
-        ...AdminAccountCancelledClubSupporterSubscriptionOptionsFragment
-      }
-      ... on AccountExpiredClubSupporterSubscription {
-        ...AdminAccountExpiredClubSupporterSubscriptionOptionsFragment
-      }
+      ...AdminSubscriptionOptionsFragment
+      ...AdminSubscriptionTransactionsFragment
     }
   }
 `
@@ -57,27 +44,6 @@ export default function AdminAccountClubSupporterSubscription ({ query }: Props)
 
   if (queryData?.accountClubSupporterSubscription == null) {
     return <NotFoundGeneric />
-  }
-
-  const SubscriptionInformation = (): JSX.Element => {
-    switch (queryData.accountClubSupporterSubscription?.__typename) {
-      case 'AccountActiveClubSupporterSubscription':
-        return <AdminAccountActiveClubSupporterSubscriptionOptions query={queryData.accountClubSupporterSubscription} />
-      case 'AccountCancelledClubSupporterSubscription':
-        return (
-          <AdminAccountCancelledClubSupporterSubscriptionOptions
-            query={queryData.accountClubSupporterSubscription}
-          />
-        )
-      case 'AccountExpiredClubSupporterSubscription':
-        return (
-          <AdminAccountExpiredClubSupporterSubscriptionOptions
-            query={queryData.accountClubSupporterSubscription}
-          />
-        )
-      default:
-        return <></>
-    }
   }
 
   return (
@@ -117,7 +83,7 @@ export default function AdminAccountClubSupporterSubscription ({ query }: Props)
         </TabList>
         <TabPanels>
           <TabPanel>
-            <SubscriptionInformation />
+            <AdminSubscriptionOptions query={queryData.accountClubSupporterSubscription} />
           </TabPanel>
           <TabPanel>
             <AdminSubscriptionTransactions query={queryData.accountClubSupporterSubscription} />

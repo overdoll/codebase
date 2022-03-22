@@ -368,7 +368,7 @@ type Account implements Node {
   usernameEditAvailableAt: Time!
 }
 
-type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubscription & Node {
   """The account linked to this subscription."""
   account: Account!
 
@@ -437,7 +437,7 @@ type AccountActiveClubSupporterSubscription implements IAccountClubSupporterSubs
   updatedAt: Time!
 }
 
-type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountCancelledClubSupporterSubscription implements IAccountClubSupporterSubscription & Node {
   """The account linked to this subscription."""
   account: Account!
 
@@ -583,7 +583,7 @@ enum AccountEmailStatus {
   UNCONFIRMED
 }
 
-type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription {
+type AccountExpiredClubSupporterSubscription implements IAccountClubSupporterSubscription & Node {
   """The account linked to this subscription."""
   account: Account!
 
@@ -743,7 +743,7 @@ If a transaction is charged back, it turns into a CHARGEBACK transaction + an ev
 
 If a transaction is voided, it turns into a VOID transaction.
 """
-type AccountTransaction {
+type AccountTransaction implements Node {
   """
   The amount voided.
   

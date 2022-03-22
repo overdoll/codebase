@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type {
-  AdminAccountActiveClubSupporterSubscriptionOptionsFragment$key
-} from '@//:artifacts/AdminAccountActiveClubSupporterSubscriptionOptionsFragment.graphql'
+  AdminAccountTransactionOptionsFragment$key
+} from '@//:artifacts/AdminAccountTransactionOptionsFragment.graphql'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Badge, Box, Menu, MenuButton, MenuList, Stack } from '@chakra-ui/react'
@@ -11,32 +11,32 @@ import displayPrice from '@//:modules/support/displayPrice'
 import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
-import AdminSyncSubscriptionButton from '../../../../components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
+import {
+  getTransactionColorScheme
+} from '../../../../components/AdminTransactionsList/AdminTransactionCard/AdminTransactionCard'
 
 interface Props {
-  query: AdminAccountActiveClubSupporterSubscriptionOptionsFragment$key
+  query: AdminAccountTransactionOptionsFragment$key
 }
 
 const Fragment = graphql`
-  fragment AdminAccountActiveClubSupporterSubscriptionOptionsFragment on AccountActiveClubSupporterSubscription {
-    lastBillingDate
-    nextBillingDate
-    billingAmount
-    billingCurrency
-    ...AdminSyncSubscriptionButtonFragment
+  fragment AdminAccountTransactionOptionsFragment on AccountTransaction {
+    type
+    billedAtDate
+    amount
+    currency
   }
 `
 
-export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ query }: Props): JSX.Element {
+export default function AdminAccountTransactionOptions ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
-  const lastBillingDate = format(new Date(data.lastBillingDate as Date), dateFormat, { locale })
-  const nextBillingDate = format(new Date(data.nextBillingDate as Date), dateFormat, { locale })
+  const billedAtDate = format(new Date(data.billedAtDate as Date), dateFormat, { locale })
   const price = displayPrice({
-    amount: data.billingAmount,
-    currency: data.billingCurrency,
+    amount: data.amount,
+    currency: data.currency,
     locale: locale
   })
 
@@ -46,15 +46,13 @@ export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ qu
         <PageSectionWrap>
           <PageSectionTitle>
             <Trans>
-              Status
+              Type
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
-            <Trans>
-              ACTIVE
-            </Trans>
+          <Badge borderRadius='base' fontSize='sm' colorScheme={getTransactionColorScheme(data.type)}>
+            {data.type}
           </Badge>
         </SmallBackgroundBox>
       </Box>
@@ -62,13 +60,13 @@ export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ qu
         <PageSectionWrap>
           <PageSectionTitle>
             <Trans>
-              Pricing
+              Amount
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
           <Trans>
-            {price}/mo
+            {price}
           </Trans>
         </SmallBackgroundBox>
       </Box>
@@ -76,24 +74,12 @@ export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ qu
         <PageSectionWrap>
           <PageSectionTitle>
             <Trans>
-              Last Billing Date
+              Billed At Date
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          {lastBillingDate}
-        </SmallBackgroundBox>
-      </Box>
-      <Box>
-        <PageSectionWrap>
-          <PageSectionTitle>
-            <Trans>
-              Next Billing Date
-            </Trans>
-          </PageSectionTitle>
-        </PageSectionWrap>
-        <SmallBackgroundBox>
-          {nextBillingDate}
+          {billedAtDate}
         </SmallBackgroundBox>
       </Box>
       <Box>
@@ -105,11 +91,11 @@ export default function AdminAccountActiveClubSupporterSubscriptionOptions ({ qu
             as={Button}
           >
             <Trans>
-              Manage Subscription
+              Manage Transaction
             </Trans>
           </MenuButton>
           <MenuList minW='230px' boxShadow='outline'>
-            <AdminSyncSubscriptionButton query={data} />
+            <></>
           </MenuList>
         </Menu>
       </Box>

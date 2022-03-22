@@ -27,6 +27,25 @@ const Fragment = graphql`
   }
 `
 
+export const getTransactionColorScheme = (type): string => {
+  switch (type) {
+    case 'PAYMENT':
+      return 'green'
+
+    case 'CHARGEBACK':
+      return 'orange'
+
+    case 'REFUND':
+      return 'purple'
+
+    case 'VOID':
+      return 'gray'
+
+    default:
+      return 'gray'
+  }
+}
+
 export default function AdminTransactionCard ({
   query
 }: Props): JSX.Element {
@@ -45,29 +64,10 @@ export default function AdminTransactionCard ({
     locale: locale
   })
 
-  const getColorScheme = (): string => {
-    switch (data.type) {
-      case 'PAYMENT':
-        return 'green'
-
-      case 'CHARGEBACK':
-        return 'orange'
-
-      case 'REFUND':
-        return 'purple'
-
-      case 'VOID':
-        return 'gray'
-
-      default:
-        return 'gray'
-    }
-  }
-
   return (
     <TableBodyRow columns={8}>
       <TableBodyColumn column={2}>
-        <Badge colorScheme={getColorScheme()}>
+        <Badge colorScheme={getTransactionColorScheme(data.type)}>
           {data.type}
         </Badge>
       </TableBodyColumn>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e10a2156d71b7e8467cefec5273ab6f7>>
- * @relayHash 50ab2acdce9b294fc45e036fe0a00a49
+ * @generated SignedSource<<556a5129fab55fbbf5da7e4e7a9949e1>>
+ * @relayHash 5ef6d233040bc6fc254bcde98d436e59
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 50ab2acdce9b294fc45e036fe0a00a49
+// @relayRequestID 5ef6d233040bc6fc254bcde98d436e59
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CancelAccountClubSupporterSubscriptionInput = {
@@ -78,44 +78,60 @@ v4 = {
   "storageKey": null
 },
 v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "endDate",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "cancelledAt",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "CancellationReason",
-  "kind": "LinkedField",
-  "name": "cancellationReason",
-  "plural": false,
+  "kind": "InlineFragment",
   "selections": [
-    (v2/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "title",
+      "name": "endDate",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "cancelledAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CancellationReason",
+      "kind": "LinkedField",
+      "name": "cancellationReason",
+      "plural": false,
+      "selections": [
+        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "title",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "updatedAt",
       "storageKey": null
     }
   ],
-  "storageKey": null
+  "type": "AccountCancelledClubSupporterSubscription",
+  "abstractKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "updatedAt",
-  "storageKey": null
+v6 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v4/*: any*/)
+  ],
+  "type": "AccountActiveClubSupporterSubscription",
+  "abstractKey": null
 };
 return {
   "fragment": {
@@ -140,26 +156,8 @@ return {
             "name": "clubSupporterSubscription",
             "plural": false,
             "selections": [
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/)
-                ],
-                "type": "AccountCancelledClubSupporterSubscription",
-                "abstractKey": null
-              },
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  (v4/*: any*/)
-                ],
-                "type": "AccountActiveClubSupporterSubscription",
-                "abstractKey": null
-              }
+              (v5/*: any*/),
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -199,33 +197,13 @@ return {
                 "name": "__typename",
                 "storageKey": null
               },
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "type": "AccountCancelledClubSupporterSubscription",
-                "abstractKey": null
-              },
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  (v4/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "type": "AccountActiveClubSupporterSubscription",
-                "abstractKey": null
-              },
+              (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "kind": "InlineFragment",
                 "selections": (v3/*: any*/),
-                "type": "AccountExpiredClubSupporterSubscription",
-                "abstractKey": null
+                "type": "Node",
+                "abstractKey": "__isNode"
               }
             ],
             "storageKey": null
@@ -236,7 +214,7 @@ return {
     ]
   },
   "params": {
-    "id": "50ab2acdce9b294fc45e036fe0a00a49",
+    "id": "5ef6d233040bc6fc254bcde98d436e59",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",

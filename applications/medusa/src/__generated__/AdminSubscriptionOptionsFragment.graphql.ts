@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d3b130ebe975fccc79b11e5ba12f1c1>>
+ * @generated SignedSource<<def716e6f553284aaff898013c61dd98>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,35 +10,35 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSubscriptionTransactionsFragment$data = {
+export type AdminSubscriptionOptionsFragment$data = {
   readonly __typename: "AccountActiveClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminActiveSubscriptionTransactionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionTransactionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountActiveClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
 } | {
   readonly __typename: "AccountCancelledClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminCancelledSubscriptionTransactionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionTransactionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountCancelledClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
 } | {
   readonly __typename: "AccountExpiredClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminExpiredSubscriptionTransactionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionTransactionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountExpiredClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
 } | {
   // This will never be '%other', but we need some
   // value in case none of the concrete values match.
   readonly __typename: "%other";
-  readonly " $fragmentType": "AdminSubscriptionTransactionsFragment";
+  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
 };
-export type AdminSubscriptionTransactionsFragment = AdminSubscriptionTransactionsFragment$data;
-export type AdminSubscriptionTransactionsFragment$key = {
-  readonly " $data"?: AdminSubscriptionTransactionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSubscriptionTransactionsFragment">;
+export type AdminSubscriptionOptionsFragment = AdminSubscriptionOptionsFragment$data;
+export type AdminSubscriptionOptionsFragment$key = {
+  readonly " $data"?: AdminSubscriptionOptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"AdminSubscriptionOptionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminSubscriptionTransactionsFragment",
+  "name": "AdminSubscriptionOptionsFragment",
   "selections": [
     {
       "alias": null,
@@ -53,7 +53,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminActiveSubscriptionTransactionsFragment"
+          "name": "AdminAccountActiveClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountActiveClubSupporterSubscription",
@@ -65,7 +65,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminCancelledSubscriptionTransactionsFragment"
+          "name": "AdminAccountCancelledClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountCancelledClubSupporterSubscription",
@@ -77,7 +77,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminExpiredSubscriptionTransactionsFragment"
+          "name": "AdminAccountExpiredClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountExpiredClubSupporterSubscription",
@@ -88,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isAccountClubSupporterSubscription"
 };
 
-(node as any).hash = "324e4380b6bcc5682907e9f8c2f3cdd2";
+(node as any).hash = "b760a01e3e103bf36c1934b8503781a7";
 
 export default node;

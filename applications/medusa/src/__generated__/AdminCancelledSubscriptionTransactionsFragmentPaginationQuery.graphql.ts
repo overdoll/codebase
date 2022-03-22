@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<212869d8b45b074ba2a80abc404b30dd>>
- * @relayHash 99a77f23f743acb943e31581b2a509f2
+ * @generated SignedSource<<1ca82d7d6581cc49dc94f9e51d5c1bdc>>
+ * @relayHash 09bd201b6af056adfe86eecadbe94c2c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,25 +9,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 99a77f23f743acb943e31581b2a509f2
+// @relayRequestID 09bd201b6af056adfe86eecadbe94c2c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminTransactionsPaginationQuery$variables = {
+export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminTransactionsPaginationQueryVariables = AdminTransactionsPaginationQuery$variables;
-export type AdminTransactionsPaginationQuery$data = {
+export type AdminCancelledSubscriptionTransactionsFragmentPaginationQueryVariables = AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$variables;
+export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AdminCancelledSubscriptionTransactionsFragment">;
   } | null;
 };
-export type AdminTransactionsPaginationQueryResponse = AdminTransactionsPaginationQuery$data;
-export type AdminTransactionsPaginationQuery = {
-  variables: AdminTransactionsPaginationQueryVariables;
-  response: AdminTransactionsPaginationQuery$data;
+export type AdminCancelledSubscriptionTransactionsFragmentPaginationQueryResponse = AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
+export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery = {
+  variables: AdminCancelledSubscriptionTransactionsFragmentPaginationQueryVariables;
+  response: AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -86,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -99,7 +99,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminTransactionsFragment"
+            "name": "AdminCancelledSubscriptionTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +112,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -281,12 +281,12 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminTransactions_transactions",
+                "key": "AdminCancelledSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               }
             ],
-            "type": "Account",
+            "type": "AccountCancelledClubSupporterSubscription",
             "abstractKey": null
           }
         ],
@@ -295,15 +295,15 @@ return {
     ]
   },
   "params": {
-    "id": "99a77f23f743acb943e31581b2a509f2",
+    "id": "09bd201b6af056adfe86eecadbe94c2c",
     "metadata": {},
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "22a03e879a3cafc76179c3549274df00";
+(node as any).hash = "07f7311b483c93d04a071052cf1af513";
 
 export default node;

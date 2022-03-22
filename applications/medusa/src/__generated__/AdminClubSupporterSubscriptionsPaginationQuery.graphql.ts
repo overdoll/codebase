@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9d37539238f528a9f9e44a45292298f5>>
- * @relayHash 90d15a6bc9dfb57ef8a4c37416ce3f99
+ * @generated SignedSource<<792c94b57ebf3b488fc22c596f3c1ecd>>
+ * @relayHash 313009ad1ad0b0555418aff685250977
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 90d15a6bc9dfb57ef8a4c37416ce3f99
+// @relayRequestID 313009ad1ad0b0555418aff685250977
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -208,8 +208,7 @@ return {
                                 "name": "nextBillingDate",
                                 "storageKey": null
                               },
-                              (v6/*: any*/),
-                              (v4/*: any*/)
+                              (v6/*: any*/)
                             ],
                             "type": "AccountActiveClubSupporterSubscription",
                             "abstractKey": null
@@ -225,8 +224,7 @@ return {
                                 "name": "endDate",
                                 "storageKey": null
                               },
-                              (v6/*: any*/),
-                              (v4/*: any*/)
+                              (v6/*: any*/)
                             ],
                             "type": "AccountCancelledClubSupporterSubscription",
                             "abstractKey": null
@@ -242,11 +240,18 @@ return {
                                 "name": "expiredAt",
                                 "storageKey": null
                               },
-                              (v6/*: any*/),
-                              (v4/*: any*/)
+                              (v6/*: any*/)
                             ],
                             "type": "AccountExpiredClubSupporterSubscription",
                             "abstractKey": null
+                          },
+                          {
+                            "kind": "InlineFragment",
+                            "selections": [
+                              (v4/*: any*/)
+                            ],
+                            "type": "Node",
+                            "abstractKey": "__isNode"
                           }
                         ],
                         "storageKey": null
@@ -308,7 +313,7 @@ return {
     ]
   },
   "params": {
-    "id": "90d15a6bc9dfb57ef8a4c37416ce3f99",
+    "id": "313009ad1ad0b0555418aff685250977",
     "metadata": {},
     "name": "AdminClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

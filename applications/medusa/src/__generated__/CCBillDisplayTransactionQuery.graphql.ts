@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fb612538110d8d11652f69dde92c313f>>
- * @relayHash 4d1feb819d29a53723b2aa4e13e81d7e
+ * @generated SignedSource<<2f7d24091b7ab7da9fa59ee99d17d1c6>>
+ * @relayHash 50bc1094ac91793f5e07b118f215ed70
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4d1feb819d29a53723b2aa4e13e81d7e
+// @relayRequestID 50bc1094ac91793f5e07b118f215ed70
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CCBillDeclineError = "CARD_EXPIRED" | "GENERAL_SYSTEM_ERROR" | "INSUFFICIENT_FUNDS" | "RATE_LIMIT_ERROR" | "TRANSACTION_APPROVAL_REQUIRED" | "TRANSACTION_DECLINED" | "TRANSACTION_DENIED_OR_REFUSED_BY_BANK" | "%future added value";
@@ -147,10 +147,7 @@ v8 = {
   "kind": "ScalarField",
   "name": "isSupporter",
   "storageKey": null
-},
-v9 = [
-  (v2/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -291,15 +288,11 @@ return {
               },
               {
                 "kind": "InlineFragment",
-                "selections": (v9/*: any*/),
-                "type": "AccountCancelledClubSupporterSubscription",
-                "abstractKey": null
-              },
-              {
-                "kind": "InlineFragment",
-                "selections": (v9/*: any*/),
-                "type": "AccountExpiredClubSupporterSubscription",
-                "abstractKey": null
+                "selections": [
+                  (v2/*: any*/)
+                ],
+                "type": "Node",
+                "abstractKey": "__isNode"
               }
             ],
             "storageKey": null
@@ -310,7 +303,7 @@ return {
     ]
   },
   "params": {
-    "id": "4d1feb819d29a53723b2aa4e13e81d7e",
+    "id": "50bc1094ac91793f5e07b118f215ed70",
     "metadata": {},
     "name": "CCBillDisplayTransactionQuery",
     "operationKind": "query",
