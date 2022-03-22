@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "entities",
     srcs = [
+        "billing.go",
         "cancellation.go",
         "resolvers.go",
     ],
@@ -13,5 +14,7 @@ go_library(
         "//applications/hades/internal/app/query",
         "//applications/hades/internal/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
     ],
 )

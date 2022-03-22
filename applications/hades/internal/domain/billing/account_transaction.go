@@ -222,6 +222,11 @@ func (c *AccountTransaction) RequestVoid(requester *principal.Principal) error {
 }
 
 func (c *AccountTransaction) CanView(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
 	return requester.BelongsToAccount(c.accountId)
 }
 

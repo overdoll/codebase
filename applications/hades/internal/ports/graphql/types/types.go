@@ -74,6 +74,8 @@ type AccountActiveClubSupporterSubscription struct {
 
 func (AccountActiveClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
 func (AccountActiveClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+func (AccountActiveClubSupporterSubscription) IsNode()                              {}
+func (AccountActiveClubSupporterSubscription) IsEntity()                            {}
 
 type AccountCancelledClubSupporterSubscription struct {
 	// An ID to uniquely identify this subscription.
@@ -110,6 +112,8 @@ type AccountCancelledClubSupporterSubscription struct {
 
 func (AccountCancelledClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
 func (AccountCancelledClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+func (AccountCancelledClubSupporterSubscription) IsNode()                              {}
+func (AccountCancelledClubSupporterSubscription) IsEntity()                            {}
 
 type AccountClubSupporterSubscriptionBillingError struct {
 	// When this subscription failed to bill.
@@ -167,6 +171,8 @@ type AccountExpiredClubSupporterSubscription struct {
 
 func (AccountExpiredClubSupporterSubscription) IsAccountClubSupporterSubscription()  {}
 func (AccountExpiredClubSupporterSubscription) IsIAccountClubSupporterSubscription() {}
+func (AccountExpiredClubSupporterSubscription) IsNode()                              {}
+func (AccountExpiredClubSupporterSubscription) IsEntity()                            {}
 
 type AccountSavedPaymentMethod struct {
 	// An ID to uniquely identify this payment method.
@@ -234,6 +240,9 @@ type AccountTransaction struct {
 	// The subscription linked to this transaction, if it's a club supporter subscription.
 	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
 }
+
+func (AccountTransaction) IsNode()   {}
+func (AccountTransaction) IsEntity() {}
 
 // Connection of the account transaction.
 type AccountTransactionConnection struct {
