@@ -129,7 +129,7 @@ _RUNTIME_DEPS = [
     "@npm//usehooks-ts",
     "@npm//react-swipeable",
     "@npm//dinero.js",
-    "@npm//@dinero.js"
+    "@npm//@dinero.js/currencies"
 ]
 
 TEST_DEPS = [
