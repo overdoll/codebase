@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5e27612bc0bc0599850f26c139f4e65>>
+ * @generated SignedSource<<6672eb681cbc0dc8b2a75df0036208b1>>
  * @relayHash 774297799265af0f0bf67288da74cd55
  * @lightSyntaxTransform
  * @nogrep
@@ -387,6 +387,18 @@ return {
                             ],
                             "type": "AccountCancelledClubSupporterSubscription",
                             "abstractKey": null
+                          },
+                          {
+                            "kind": "ClientExtension",
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "__id",
+                                "storageKey": null
+                              }
+                            ]
                           }
                         ],
                         "storageKey": null
@@ -459,6 +471,6 @@ return {
 };
 })();
 
-(node as any).hash = "85fc92ae1b2043629a5aec41c0b95b2c";
+(node as any).hash = "c5209d04aaf5e8af39ee2c0fda8dd9f5";
 
 export default node;

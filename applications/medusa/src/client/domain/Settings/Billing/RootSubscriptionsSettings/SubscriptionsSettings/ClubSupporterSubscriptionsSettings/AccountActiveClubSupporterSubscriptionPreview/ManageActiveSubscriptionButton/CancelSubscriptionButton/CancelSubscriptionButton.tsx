@@ -50,10 +50,8 @@ const Mutation = graphql`
   mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!) {
     cancelAccountClubSupporterSubscription(input: $input) {
       clubSupporterSubscription {
+        __id
         __typename
-        ... on Node {
-          id
-        }
         ... on IAccountClubSupporterSubscription {
           id
         }

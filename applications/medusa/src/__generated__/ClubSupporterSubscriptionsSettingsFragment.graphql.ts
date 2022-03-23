@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<959b6f11963c7e2b9ab0a11270b03792>>
+ * @generated SignedSource<<8020f23abfa6ebad7db211243b12c51c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type ClubSupporterSubscriptionsSettingsFragment$data = {
   readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly __id: string;
         readonly __typename: string;
         readonly id?: string;
         readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionPreviewFragment" | "AccountCancelledClubSupporterSubscriptionPreviewFragment">;
@@ -161,6 +162,18 @@ return {
                   ],
                   "type": "AccountCancelledClubSupporterSubscription",
                   "abstractKey": null
+                },
+                {
+                  "kind": "ClientExtension",
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__id",
+                      "storageKey": null
+                    }
+                  ]
                 }
               ],
               "storageKey": null
@@ -210,6 +223,6 @@ return {
 };
 })();
 
-(node as any).hash = "85fc92ae1b2043629a5aec41c0b95b2c";
+(node as any).hash = "c5209d04aaf5e8af39ee2c0fda8dd9f5";
 
 export default node;

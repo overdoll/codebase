@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<348ca4073cda96b4f0aeeaaca33b5145>>
+ * @generated SignedSource<<99c3a83f9770ccdefdd8fe01c8b5f10f>>
  * @relayHash 543712ce0183fd7db75b4f171941497e
  * @lightSyntaxTransform
  * @nogrep
@@ -390,6 +390,18 @@ return {
                         ],
                         "type": "AccountCancelledClubSupporterSubscription",
                         "abstractKey": null
+                      },
+                      {
+                        "kind": "ClientExtension",
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "__id",
+                            "storageKey": null
+                          }
+                        ]
                       }
                     ],
                     "storageKey": null

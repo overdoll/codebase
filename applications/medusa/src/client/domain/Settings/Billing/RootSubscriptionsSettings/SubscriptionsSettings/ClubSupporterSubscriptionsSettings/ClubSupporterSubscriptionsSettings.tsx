@@ -27,6 +27,7 @@ const Fragment = graphql`
     @connection (key: "ClubSupporterSubscriptions_clubSupporterSubscriptions") {
       edges {
         node {
+          __id
           __typename
           ... on Node {
             id
