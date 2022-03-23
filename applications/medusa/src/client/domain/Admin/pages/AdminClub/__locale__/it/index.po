@@ -21,7 +21,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:77
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
 msgid "Duration"
 msgstr ""
 
@@ -34,11 +34,11 @@ msgstr ""
 msgid "Issue Infraction"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:67
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:71
 msgid "Issued"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:60
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:63
 msgid "No infractions found"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Remove Suspension"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:72
+#: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:76
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
 msgid "Rule"
 msgstr ""

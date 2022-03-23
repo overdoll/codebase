@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0f3bf62272186ccc37a905ddbdd2aab>>
+ * @generated SignedSource<<90e06c2231e994b29e1829a3f3445ef4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type FullDetailedPostFragment$data = {
   readonly reference: string;
   readonly club: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostModerateButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostModerateButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostIndexerFragment">;
   readonly " $fragmentType": "FullDetailedPostFragment";
 };
 export type FullDetailedPostFragment = FullDetailedPostFragment$data;
@@ -78,26 +78,36 @@ const node: ReaderFragment = {
       "name": "PostClickableCategoriesFragment"
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Club",
-      "kind": "LinkedField",
-      "name": "club",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "JoinClubButtonClubFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "PostIndexerFragment"
+    },
+    {
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "Club",
+        "kind": "LinkedField",
+        "name": "club",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinClubFromPostFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "club"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "b923fe7c385e53449e41d019aae33323";
+(node as any).hash = "255328f1aca6d556c2a253b693a1414b";
 
 export default node;

@@ -17,7 +17,7 @@ msgstr ""
 msgid "Account Locked"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:116
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:125
 msgid "Account Settings"
 msgstr ""
 
@@ -31,6 +31,10 @@ msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:70
 msgid "Banned for {remaining}"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:92
+msgid "Become a Supporter"
 msgstr ""
 
 #: src/client/components/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:23
@@ -53,7 +57,7 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:98
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:107
 msgid "Content Moderation"
 msgstr ""
 
@@ -89,7 +93,7 @@ msgstr ""
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:62
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:71
 msgid "Dropdown Menu"
 msgstr ""
 
@@ -105,6 +109,10 @@ msgstr ""
 msgid "Error {0}"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:52
+msgid "Exclusive Supporter Content"
+msgstr ""
+
 #: src/client/components/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:31
 msgid "Fresh"
 msgstr ""
@@ -113,7 +121,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:21
+#: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:28
 msgid "Go back to settings"
 msgstr ""
 
@@ -122,7 +130,8 @@ msgstr ""
 msgid "Go to my profile"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:127
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:64
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:136
 msgid "Help"
 msgstr ""
 
@@ -140,15 +149,15 @@ msgid "I promise to be better and to follow the community guidelines more closel
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:71
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:80
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:117
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:127
 msgid "Like"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:35
+#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:40
 msgid "Load More"
 msgstr ""
 
@@ -168,7 +177,7 @@ msgstr ""
 msgid "Locale does not match BCP47 pattern"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:138
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:147
 msgid "Log Out"
 msgstr ""
 
@@ -224,7 +233,11 @@ msgstr ""
 #~ msgid "No more content available"
 #~ msgstr ""
 
-#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:73
+#: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:8
+msgid "No payment methods found"
+msgstr ""
+
+#: src/client/components/PostsInfiniteScroll/PostsInfiniteScroll.tsx:75
 msgid "No posts found"
 msgstr ""
 
@@ -238,6 +251,14 @@ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:15
 msgid "No series were found{0}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:8
+msgid "No subscriptions were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTransactions/EmptyTransactions.tsx:8
+msgid "No transactions were found"
 msgstr ""
 
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/GeneralSearch.tsx:111
@@ -261,7 +282,7 @@ msgstr ""
 msgid "Open Search"
 msgstr ""
 
-#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:86
+#: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:95
 msgid "Platform Admin"
 msgstr ""
 
@@ -294,10 +315,14 @@ msgid "Please enter an email"
 msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
-msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgid "Please review the community guidelines to make sure this doesn't happen again."
+#~ msgstr ""
+
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
+msgid "Please review the<0>Community Guidelines</0>to make sure this doesn't happen again."
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:104
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:113
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -305,11 +330,12 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:133
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:140
 msgid "Report Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:131
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:154
 msgid "Report post"
 msgstr ""
 
@@ -355,8 +381,12 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:159
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:182
 msgid "Submit Report"
+msgstr ""
+
+#: src/client/components/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton.tsx:26
+msgid "Supporter Only"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:38
@@ -392,7 +422,11 @@ msgid "The name must be at least 3 characters"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:112
-msgid "There was an erro submitting the report"
+#~ msgid "There was an erro submitting the report"
+#~ msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:121
+msgid "There was an error submitting the report"
 msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
@@ -410,6 +444,10 @@ msgstr ""
 #: src/modules/validation/translateValidation.ts:9
 #: src/modules/validation/translateValidation.ts:10
 msgid "This code is either invalid or has expired"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:74
+msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
 #: src/modules/content/Placeholder/NotFound/NotFoundGeneric/NotFoundGeneric.tsx:12
@@ -448,12 +486,12 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostContent/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:66
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:28
 msgid "View Post"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:89
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
 
@@ -461,7 +499,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:94
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:107
 msgid "Your account has been locked and you'll have the ability to unlock it after"
 msgstr ""
 
@@ -490,7 +528,7 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:104
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
 msgid "{countdown}"
 msgstr ""
 

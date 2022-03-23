@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c06795721c67b7c3e6c52b82ae61ed02>>
- * @relayHash 70c149b6a5bd0f9943e1002b579f58fc
+ * @generated SignedSource<<3265aba96943067e98470a39452c0802>>
+ * @relayHash b1676b4042248dbc2744c6e74d04bc7b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 70c149b6a5bd0f9943e1002b579f58fc
+// @relayRequestID b1676b4042248dbc2744c6e74d04bc7b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -289,7 +289,21 @@ return {
                 ],
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "viewerCanViewSupporterOnlyContent",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isSupporterOnly",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -359,10 +373,10 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
-              (v13/*: any*/),
               (v11/*: any*/),
-              (v12/*: any*/),
-              (v5/*: any*/)
+              (v5/*: any*/),
+              (v13/*: any*/),
+              (v12/*: any*/)
             ],
             "storageKey": null
           }
@@ -386,7 +400,7 @@ return {
     ]
   },
   "params": {
-    "id": "70c149b6a5bd0f9943e1002b579f58fc",
+    "id": "b1676b4042248dbc2744c6e74d04bc7b",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

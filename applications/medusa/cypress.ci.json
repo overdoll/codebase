@@ -8,5 +8,6 @@
   "projectId": "svdd6z",
   "experimentalSessionSupport": true,
   "video": true,
-  "videoUploadOnPasses": false
+  "videoUploadOnPasses": false,
+  "chromeWebSecurity": false
 }

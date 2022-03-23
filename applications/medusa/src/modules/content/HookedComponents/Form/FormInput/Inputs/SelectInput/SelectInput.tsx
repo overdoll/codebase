@@ -21,7 +21,8 @@ export default function SelectInput (props: SelectInputProps): JSX.Element {
       name={id}
       render={({
         field: {
-          onChange
+          onChange,
+          value
         },
         fieldState: {
           invalid
@@ -29,6 +30,7 @@ export default function SelectInput (props: SelectInputProps): JSX.Element {
       }) => (
         <Select
           size={size}
+          value={value}
           onChange={(e) => {
             onChange(e.target.value)
           }}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2e45318f6357e4ecd87fbc78ff8793a0>>
- * @relayHash 777cf4c4ba872aeaa7787633c8f8cfc4
+ * @generated SignedSource<<0e08bd5b49d7f05c1ea333f6eb48dc7d>>
+ * @relayHash 728d77685c1a9295b51960d6daa1ec70
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 777cf4c4ba872aeaa7787633c8f8cfc4
+// @relayRequestID 728d77685c1a9295b51960d6daa1ec70
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type SuggestedClubsQuery$variables = {
 export type SuggestedClubsQueryVariables = SuggestedClubsQuery$variables;
 export type SuggestedClubsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
@@ -60,17 +60,10 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -78,7 +71,7 @@ v5 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
+    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -89,7 +82,7 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -97,11 +90,11 @@ v6 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v3/*: any*/)
   ],
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -131,7 +124,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "JoinClubButtonViewerFragment"
+            "name": "JoinClubFromTileViewerFragment"
           }
         ],
         "storageKey": null
@@ -193,7 +186,13 @@ return {
                     "name": "viewerMember",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isSupporter",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -206,9 +205,9 @@ return {
                     "name": "thumbnail",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
-                      (v7/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -259,9 +258,9 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v7/*: any*/),
-                                      (v5/*: any*/),
                                       (v6/*: any*/),
+                                      (v4/*: any*/),
+                                      (v5/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -287,7 +286,13 @@ return {
                     ],
                     "storageKey": "posts(first:1)"
                   },
-                  (v3/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -369,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "777cf4c4ba872aeaa7787633c8f8cfc4",
+    "id": "728d77685c1a9295b51960d6daa1ec70",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",
@@ -378,6 +383,6 @@ return {
 };
 })();
 
-(node as any).hash = "f7d8777cb922b410ebeb873abfddf108";
+(node as any).hash = "239a2a8f98743b6904e22ce32f895ad2";
 
 export default node;

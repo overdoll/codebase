@@ -31,7 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
-          id
+          reference
           ...RuleTileOverlayFragment
         }
       }
@@ -65,7 +65,7 @@ export default function AdminSearchRules ({ searchArguments }: Props): JSX.Eleme
       <ListSpacer>
         {rules.map((item, index) => (
           <StackTile key={index}>
-            <LinkTile to={`/admin/rule/search/${item.id as string}`}>
+            <LinkTile to={`/admin/rule/search/${item.reference as string}`}>
               <RuleTileOverlay query={item} />
             </LinkTile>
           </StackTile>

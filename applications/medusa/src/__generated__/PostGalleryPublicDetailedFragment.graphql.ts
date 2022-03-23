@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f9d634730f656a754ae397a2ca25ed4>>
+ * @generated SignedSource<<a01f8d7e4a69d2c5b41ca3a2a0294b27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,14 @@ import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicDetailedFragment$data = {
   readonly id: string;
   readonly reference: string;
+  readonly club: {
+    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
+  };
   readonly content: ReadonlyArray<{
     readonly resource: {
       readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
   readonly " $fragmentType": "PostGalleryPublicDetailedFragment";
 };
@@ -49,6 +53,22 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSupporterContentClubFragment"
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
@@ -69,6 +89,11 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSupporterContentFragment"
         }
       ],
       "storageKey": null
@@ -78,6 +103,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d763192d275aa2c130dbdb550daf2a35";
+(node as any).hash = "a208ed5c5e275f5cc09c39961044d200";
 
 export default node;

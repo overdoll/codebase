@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<53e17eea914db8c33143ccf7d1b8e17d>>
- * @relayHash 91f9911174a76074968db8b7e35b763c
+ * @generated SignedSource<<ce4b280921563959167f06f55d6de013>>
+ * @relayHash 52bc0e46a7390a949006c38ecd93dbc4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 91f9911174a76074968db8b7e35b763c
+// @relayRequestID 52bc0e46a7390a949006c38ecd93dbc4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -315,6 +315,20 @@ return {
                                 ],
                                 "storageKey": null
                               },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerCanViewSupporterOnlyContent",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "isSupporterOnly",
+                                "storageKey": null
+                              },
                               (v3/*: any*/)
                             ],
                             "storageKey": null
@@ -404,7 +418,7 @@ return {
     ]
   },
   "params": {
-    "id": "91f9911174a76074968db8b7e35b763c",
+    "id": "52bc0e46a7390a949006c38ecd93dbc4",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

@@ -12,9 +12,8 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '@//:modules/content/Posts'
-import JoinClubButton from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubButton'
 import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/PostContent/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+  from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
@@ -25,10 +24,12 @@ import PostReportButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import JoinClubFromPost
+  from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props {
   query: FullDetailedPostFragment$key
-  viewerQuery: FullDetailedPostViewerFragment$key
+  viewerQuery: FullDetailedPostViewerFragment$key | null
 }
 
 const PostFragment = graphql`
@@ -42,15 +43,18 @@ const PostFragment = graphql`
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    club {
-      ...JoinClubButtonClubFragment
+    ...PostIndexerFragment
+    club @required(action: THROW) {
+      ...JoinClubFromPostFragment
     }
   }
 `
 
 const ViewerFragment = graphql`
   fragment FullDetailedPostViewerFragment on Account {
-    ...JoinClubButtonViewerFragment
+    ...PostReportButtonViewerFragment
+    ...PostLikeButtonViewerFragment
+    ...JoinClubFromPostViewerFragment
   }
 `
 
@@ -71,19 +75,20 @@ export default function FullDetailedPost ({
       <Stack h='100%' justify='space-between' spacing={2}>
         <HStack spacing={3} justify='space-between' align='center'>
           <PostHeaderClub query={data} />
-          <JoinClubButton size='sm' clubQuery={data?.club ?? null} viewerQuery={viewerData} />
+          <JoinClubFromPost size='sm' clubQuery={data?.club} viewerQuery={viewerData} />
         </HStack>
         <PostGalleryPublicDetailed query={data} />
         <PostFooter
-          leftItem={<PostLikeButton size='sm' query={data} />}
+          leftItem={<PostLikeButton size='sm' query={data} viewerQuery={viewerData} />}
           centerItem={<PostIndexer
+            query={data}
             length={slidesCount}
             currentIndex={currentSlide}
                       />}
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
               <PostCopyLinkButton query={data} />
-              <PostReportButton query={data} />
+              <PostReportButton query={data} viewerQuery={viewerData} />
               <PostModerateButton query={data} />
             </PostMenu>)}
         />

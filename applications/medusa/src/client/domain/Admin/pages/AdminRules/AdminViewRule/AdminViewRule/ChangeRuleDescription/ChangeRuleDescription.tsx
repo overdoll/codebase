@@ -1,11 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeRuleDescriptionFragment$key } from '@//:artifacts/ChangeRuleDescriptionFragment.graphql'
-import { Collapse, Stack, Text } from '@chakra-ui/react'
+import { Stack, Text } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import ChangeRuleDescriptionForm from './ChangeRuleDescriptionForm/ChangeRuleDescriptionForm'
 import TranslationSnippet from '../../../../../components/TranslationSnippet/TranslationSnippet'
-import { CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: ChangeRuleDescriptionFragment$key

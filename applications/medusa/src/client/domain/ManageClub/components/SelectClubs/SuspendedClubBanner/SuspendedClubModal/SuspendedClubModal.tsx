@@ -2,6 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import {
   Box,
   Heading,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,7 +16,6 @@ import { Trans } from '@lingui/macro'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCountdown } from '@//:modules/hooks'
-import CommunityGuidelines from '../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import UnSuspendClubForm from './UnSuspendClubForm/UnSuspendClubForm'
 
 interface Props {
@@ -76,12 +76,19 @@ export default function SuspendedClubModal ({
               </Trans>
             </Text>
             <Box>
-              <Text>
+              <Text fontSize='md'>
                 <Trans>
-                  Please review the community guidelines to make sure this doesn't happen again.
+                  Please review the
+                  {' '}
+                  <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/club-guidelines/'>
+                    <Trans>
+                      Club Guidelines
+                    </Trans>
+                  </Link>
+                  {' '}
+                  to make sure this doesn't happen again.
                 </Trans>
               </Text>
-              <CommunityGuidelines />
             </Box>
             <Text>
               {hasPassed

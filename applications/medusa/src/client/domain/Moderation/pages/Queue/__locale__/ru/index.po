@@ -21,23 +21,23 @@ msgstr ""
 msgid "All Clear"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:132
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:126
 msgid "Approve"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:52
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:54
 msgid "Audience"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:38
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:37
 msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:68
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:70
 msgid "Categories"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:60
+#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:62
 msgid "Characters"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Moderation Paused"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:33
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:32
 msgid "Moderation Queue"
 msgstr ""
 
@@ -65,15 +65,15 @@ msgstr ""
 msgid "Please select a rejection reason"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:84
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:78
 msgid "Post created by {0} was approved successfully"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:108
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:102
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/Posts.tsx:158
+#: src/client/domain/Moderation/pages/Queue/Posts/Posts.tsx:160
 msgid "Posted on {formattedDate}"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:127
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:121
 msgid "Reject"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Reject Post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:158
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:152
 msgid "Select a reason for rejecting this post"
 msgstr ""
 
@@ -113,11 +113,11 @@ msgstr ""
 msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:90
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:84
 msgid "There was an error approving a post created by {0}"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:116
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/ModeratePost.tsx:110
 msgid "There was an error rejecting the post created by {0}"
 msgstr ""
 
@@ -126,5 +126,5 @@ msgid "This rejection reason is an infraction. The poster's account will be temp
 msgstr ""
 
 #: src/client/domain/Moderation/pages/Queue/Posts/PostHeader/PostHeader.tsx:51
-msgid "Time you have left to take action on the post before it is reassigned to another moderator"
-msgstr ""
+#~ msgid "Time you have left to take action on the post before it is reassigned to another moderator"
+#~ msgstr ""

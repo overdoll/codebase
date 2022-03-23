@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/olivere/elastic/v7"
-	"github.com/scylladb/gocqlx/v2"
+	elastic "github.com/olivere/elastic/v7"
+	gocqlx "github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"

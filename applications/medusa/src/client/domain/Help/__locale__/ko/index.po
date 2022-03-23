@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Help/Help.tsx:144
+#: src/client/domain/Help/Help.tsx:133
 msgid "18 U.S.C. § 2257"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:147
+#: src/client/domain/Help/Help.tsx:136
 msgid "18 U.S.C. § 2257 statement"
 msgstr ""
 
@@ -26,14 +26,18 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:80
-msgid "Billing and account"
+#~ msgid "Billing and account"
+#~ msgstr ""
+
+#: src/client/domain/Help/Help.tsx:80
+msgid "Billing help and subscriptions"
 msgstr ""
 
 #: src/client/domain/Help/Help.tsx:66
 msgid "Club Guidelines"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:158
+#: src/client/domain/Help/Help.tsx:147
 msgid "Come say hello!"
 msgstr ""
 
@@ -41,15 +45,15 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:155
+#: src/client/domain/Help/Help.tsx:144
 msgid "Contact Us"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:133
+#: src/client/domain/Help/Help.tsx:122
 msgid "DMCA and Copyright"
 msgstr ""
 
-#: src/client/domain/Help/Help.tsx:136
+#: src/client/domain/Help/Help.tsx:125
 msgid "DMCA claims information"
 msgstr ""
 
@@ -62,7 +66,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:58
-msgid "General platform rules"
+#~ msgid "General platform rules"
+#~ msgstr ""
+
+#: src/client/domain/Help/Help.tsx:58
+msgid "General platform rules for everyone"
 msgstr ""
 
 #: src/client/domain/Help/Help.tsx:33
@@ -74,7 +82,7 @@ msgstr ""
 #~ msgid "Help and information"
 #~ msgstr ""
 
-#: src/client/domain/Help/Help.tsx:125
+#: src/client/domain/Help/Help.tsx:114
 msgid "How we protect you"
 msgstr ""
 
@@ -87,7 +95,11 @@ msgid "Legal"
 msgstr ""
 
 #: src/client/domain/Help/Help.tsx:35
-msgid "Members"
+#~ msgid "Members"
+#~ msgstr ""
+
+#: src/client/domain/Help/Help.tsx:35
+msgid "Platform"
 msgstr ""
 
 #: src/client/domain/Help/Help.tsx:54
@@ -95,12 +107,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:111
-msgid "Subscription Agreement"
-msgstr ""
+#~ msgid "Subscription Agreement"
+#~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:114
-msgid "Subscription agreement"
-msgstr ""
+#~ msgid "Subscription agreement"
+#~ msgstr ""
 
 #: src/client/domain/Help/Help.tsx:77
 msgid "Supporter Guidelines"
@@ -134,6 +146,6 @@ msgstr ""
 #~ msgid "What you should know"
 #~ msgstr ""
 
-#: src/client/domain/Help/Help.tsx:122
+#: src/client/domain/Help/Help.tsx:111
 msgid "Your Privacy"
 msgstr ""

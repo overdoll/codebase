@@ -2,13 +2,12 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 import { graphql } from 'react-relay'
 import LargeClubHeader from '../../ManageClub/components/LargeClubHeader/LargeClubHeader'
-import { Box, Flex, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Stack } from '@chakra-ui/react'
 import StatisticNumber from '../../ManageClub/components/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { abbreviateNumber } from '@//:modules/support'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import JoinClubButton from './components/JoinClubButton/JoinClubButton'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClubMembers } from '@//:assets/icons/interface'
@@ -17,6 +16,7 @@ import ClubMenu from './components/ClubMenu/ClubMenu'
 import ClubTopPosts from './components/ClubTopPosts/ClubTopPosts'
 import ClubExclusivePosts from './components/ClubExclusivePosts/ClubExclusivePosts'
 import SupportClubButton from './components/SupportClubButton/SupportClubButton'
+import JoinClubFromPage from './components/JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -33,20 +33,20 @@ const Query = graphql`
               resource {
                 ...ResourceItemFragment
               }
-              
+
             }
           }
         }
       }
       ...LargeClubHeaderFragment
-      ...JoinClubButtonClubFragment
+      ...JoinClubFromPageFragment
       ...ClubMenuFragment
       ...ClubTopPostsFragment
       ...ClubExclusivePostsFragment
       ...SupportClubButtonClubFragment
     }
     viewer {
-      ...JoinClubButtonViewerFragment
+      ...JoinClubFromPageViewerFragment
       ...SupportClubButtonViewerFragment
     }
   }
@@ -90,10 +90,9 @@ export default function ClubPublicPage (props: Props): JSX.Element {
           text={i18n._(t`Members`)}
           icon={ClubMembers}
         />
-        <JoinClubButton
+        <JoinClubFromPage
           w='100%'
           size='lg'
-          colorScheme='gray'
           clubQuery={queryData?.club}
           viewerQuery={queryData?.viewer}
         />
@@ -106,13 +105,8 @@ export default function ClubPublicPage (props: Props): JSX.Element {
                 Exclusive Posts
               </PageSectionTitle>
             </PageSectionWrap>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Become a supporter and get access to the club's exclusive content!
-              </Trans>
-            </Text>
+            <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
           </Box>
-          <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
         </Stack>
         <ClubExclusivePosts query={queryData?.club} />
       </Stack>

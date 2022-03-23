@@ -13,8 +13,10 @@ import PostSearchButton from '../../../../../components/PostsSearch/components/P
 import PageFixedHeader from '../../../../../components/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
-import { Flex } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import FixedHeaderWrapper from '../../../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import PostSupporterStatusButton
+  from '../../../../../components/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
 
 interface Props {
   prepared: {
@@ -41,7 +43,10 @@ export default function RootClubPublicPosts (props: Props): JSX.Element {
       <PageFixedHeader>
         <FixedHeaderWrapper>
           <Flex justify='space-between'>
-            <PostOrderButton />
+            <HStack spacing={2}>
+              <PostOrderButton />
+              <PostSupporterStatusButton />
+            </HStack>
             <PostSearchButton routeTo={`/${match.slug as string}/posts`} />
           </Flex>
         </FixedHeaderWrapper>

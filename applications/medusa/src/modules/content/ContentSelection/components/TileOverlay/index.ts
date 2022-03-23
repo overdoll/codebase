@@ -5,3 +5,4 @@ export { default as CharacterTileOverlay } from './CharacterTileOverlay/Characte
 export { default as ClubTileOverlay } from './ClubTileOverlay/ClubTileOverlay'
 export { default as SeriesTileOverlay } from './SeriesTileOverlay/SeriesTileOverlay'
 export { default as RuleTileOverlay } from './RuleTileOverlay/RuleTileOverlay'
+export { default as CancellationReasonOverlay } from './CancellationReasonOverlay/CancellationReasonOverlay'

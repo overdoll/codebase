@@ -3,7 +3,7 @@ import type { ReviewPostFragment$key } from '@//:artifacts/ReviewPostFragment.gr
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostModerateButton

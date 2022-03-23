@@ -3,15 +3,13 @@ import type { PublishedPostFragment$key } from '@//:artifacts/PublishedPostFragm
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostCopyLinkButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import PostReportButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 
 interface Props {
   query: PublishedPostFragment$key
@@ -23,7 +21,6 @@ const Fragment = graphql`
     ...PostPreviewContentFragment
     ...PostCopyLinkButtonFragment
     ...PostModerateButtonFragment
-    ...PostReportButtonFragment
   }
 `
 
@@ -42,7 +39,6 @@ export default function PublishedPost ({
         </Badge>
         <PostMenu size='xs'>
           <PostCopyLinkButton query={data} />
-          <PostReportButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

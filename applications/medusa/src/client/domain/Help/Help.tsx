@@ -9,7 +9,6 @@ import {
   PageWrapper
 } from '@//:modules/content/PageLayout'
 import {
-  Barcode,
   ClubMembers,
   ClubPeopleGroup,
   FlagReport,
@@ -22,6 +21,7 @@ import {
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Stack } from '@chakra-ui/react'
+import { SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
 
 export default function Help (): JSX.Element {
   return (
@@ -33,11 +33,11 @@ export default function Help (): JSX.Element {
             <PageSectionWrap>
               <PageSectionTitle>
                 <Trans>
-                  Members
+                  Platform
                 </Trans>
               </PageSectionTitle>
               <ListSpacer>
-                <PagePanelWrap isExternal path='www.corpodoll.com/about/'>
+                <PagePanelWrap isExternal path='https://www.corpodoll.com/about/'>
                   <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
                   <PagePanelText
                     title={
@@ -48,18 +48,18 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='www.corpodoll.com/community-guidelines/'>
+                <PagePanelWrap isExternal path='https://www.corpodoll.com/community-guidelines/'>
                   <PagePanelIcon icon={FlagReport} colorScheme='green' />
                   <PagePanelText
                     title={
                       <Trans>Community Guidelines</Trans>
                     }
                     description={(
-                      <Trans>General platform rules</Trans>
+                      <Trans>General platform rules for everyone</Trans>
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='www.corpodoll.com/club-guidelines/'>
+                <PagePanelWrap isExternal path='https://www.corpodoll.com/club-guidelines/'>
                   <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
                   <PagePanelText
                     title={
@@ -70,14 +70,14 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='www.corpodoll.com/supporter-guidelines/'>
+                <PagePanelWrap isExternal path={SUPPORTER_GUIDELINES}>
                   <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
                   <PagePanelText
                     title={
                       <Trans>Supporter Guidelines</Trans>
                     }
                     description={(
-                      <Trans>Billing and account</Trans>
+                      <Trans>Billing help and subscriptions</Trans>
                     )}
                   />
                 </PagePanelWrap>
@@ -93,7 +93,7 @@ export default function Help (): JSX.Element {
               </PageSectionTitle>
             </PageSectionWrap>
             <ListSpacer>
-              <PagePanelWrap isExternal path='www.corpodoll.com/tos/'>
+              <PagePanelWrap isExternal path='https://www.corpodoll.com/tos/'>
                 <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
                 <PagePanelText
                   title={
@@ -104,18 +104,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/subscriptions/'>
-                <PagePanelIcon icon={Barcode} colorScheme='green' />
-                <PagePanelText
-                  title={
-                    <Trans>Subscription Agreement</Trans>
-                  }
-                  description={(
-                    <Trans>Subscription agreement</Trans>
-                  )}
-                />
-              </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/your-privacy'>
+              <PagePanelWrap isExternal path='https://www.corpodoll.com/your-privacy'>
                 <PagePanelIcon icon={SearchBar} colorScheme='purple' />
                 <PagePanelText
                   title={
@@ -126,7 +115,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/dmca/'>
+              <PagePanelWrap isExternal path='https://www.corpodoll.com/dmca/'>
                 <PagePanelIcon icon={WarningTriangle} colorScheme='orange' />
                 <PagePanelText
                   title={
@@ -137,7 +126,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/2257/'>
+              <PagePanelWrap isExternal path='https://www.corpodoll.com/2257/'>
                 <PagePanelIcon icon={ClubMembers} colorScheme='orange' />
                 <PagePanelText
                   title={
@@ -148,7 +137,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='www.corpodoll.com/contact/'>
+              <PagePanelWrap isExternal path='https://www.corpodoll.com/contact/'>
                 <PagePanelIcon icon={MailEnvelope} colorScheme='primary' />
                 <PagePanelText
                   title={

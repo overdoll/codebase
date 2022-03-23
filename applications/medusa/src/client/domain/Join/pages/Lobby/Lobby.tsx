@@ -67,7 +67,7 @@ export default function Lobby ({
           color='gray.00'
         >
           <Trans>
-            Click on the link you received in your email inbox to continue
+            Tap on the link you received in your email inbox to continue
           </Trans>
         </Heading>
         <Flex

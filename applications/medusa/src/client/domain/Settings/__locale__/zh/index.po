@@ -17,7 +17,11 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:61
+#: src/client/domain/Settings/Settings.tsx:60
+msgid "Billing"
+msgstr ""
+
+#: src/client/domain/Settings/Settings.tsx:71
 msgid "Moderation"
 msgstr ""
 

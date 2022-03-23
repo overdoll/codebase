@@ -4,13 +4,8 @@ const baseStyle = {
   transitionTimingFunction: 'ease-out',
   borderRadius: 5,
   cursor: 'pointer',
-  textDecoration: 'none',
-  outline: 'none',
-  color: 'primary.500',
+  color: 'inherit',
   fontSize: 'sm',
-  _hover: {
-    textDecoration: 'underline'
-  },
   _focus: {
     boxShadow: 'outline'
   }

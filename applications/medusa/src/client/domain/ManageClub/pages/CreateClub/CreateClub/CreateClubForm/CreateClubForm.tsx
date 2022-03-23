@@ -174,6 +174,7 @@ export default function CreateClubForm ({
           w='100%'
           size='lg'
           isLoading={isCreatingClub}
+          isDisabled={isDisabled}
           colorScheme='teal'
         >
           <Trans>

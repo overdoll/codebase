@@ -4,7 +4,8 @@ export const configMap = {
   categories: ArrayParam,
   characters: JsonParam,
   series: ArrayParam,
-  sort: StringParam
+  sort: StringParam,
+  supporter: ArrayParam
 }
 
 export interface GeneralSearchProps {
@@ -20,5 +21,6 @@ export interface PostSearchProps {
   seriesSlugs?: string[] | null
   categorySlugs?: string[] | null
   characterSlugs?: string[] | null
+  supporterOnlyStatus?: string[] | null
   sortBy: string
 }

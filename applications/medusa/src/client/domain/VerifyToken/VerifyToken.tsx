@@ -185,8 +185,8 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
         <Heading
           mb={8}
           align='center'
-          size='md'
-          color='gray.100'
+          fontSize='xl'
+          color='gray.00'
         >
           <Trans>
             You have been successfully logged in to the requested device

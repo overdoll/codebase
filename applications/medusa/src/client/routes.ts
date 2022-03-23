@@ -168,27 +168,6 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/test-payment-flow',
-        exact: true,
-        component: loadable(async () =>
-          await import(
-            './domain/TestPaymentFlow/TestPaymentFlow'
-          )
-        ),
-        prepare: () => {
-          const TestPaymentFlowTransaction = require('@//:artifacts/TestPaymentFlowTransactionQuery.graphql')
-          return {
-            testPaymentFlowTransactionQuery: {
-              query: TestPaymentFlowTransaction,
-              variables: { token: '' },
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        }
-      },
-      {
         path: '/join',
         exact: true,
         dependencies: [
@@ -1267,7 +1246,148 @@ const routes: Route[] = [
               await import(
                 './domain/Admin/pages/AdminRules/AdminViewRule/RootAdminViewRule'
               )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewRuleQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/cancellation-reason/create',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/RootAdminCreateCancellationReason'
+              )
+            ),
+            prepare: () => {
+              const Query = require('@//:artifacts/AdminCreateCancellationReasonQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/cancellation-reason/search',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/RootAdminSearchCancellationReasons'
+              )
             )
+          },
+          {
+            path: '/admin/cancellation-reason/search/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Tags')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminViewCancellationReasonQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/admin/account/:username',
@@ -1357,6 +1477,102 @@ const routes: Route[] = [
                   query: Query,
                   variables: {
                     slug: params.slug
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/subscription/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccountClubSupporterSubscription/RootAdminAccountClubSupporterSubscription'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountClubSupporterSubscriptionQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
+                  },
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
+          },
+          {
+            path: '/admin/transaction/:reference',
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Admin/pages/AdminAccountTransaction/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            middleware: [
+              ({
+                environment,
+                history
+              }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('admin', 'Account')) {
+                  return true
+                }
+                history.push('/join')
+                return false
+              }
+            ],
+            exact: true,
+            component: loadable(async () =>
+              await import(
+                './domain/Admin/pages/AdminAccountTransaction/RootAdminAccountTransaction'
+              )
+            ),
+            prepare: ({ params }) => {
+              const Query = require('@//:artifacts/AdminAccountTransactionQuery.graphql')
+
+              return {
+                query: {
+                  query: Query,
+                  variables: {
+                    reference: params.reference
                   },
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -1533,13 +1749,6 @@ const routes: Route[] = [
                 then: loadMessages
               }
             ],
-            middleware: [
-              ({ environment }) => {
-                const ability = getAbilityFromUser(environment)
-
-                return ability.can('moderate', 'Post')
-              }
-            ],
             prepare: () => {
               const Query = require('@//:artifacts/CurationSettingsQuery.graphql')
               return {
@@ -1552,6 +1761,86 @@ const routes: Route[] = [
                 }
               }
             }
+          },
+          {
+            path: '/settings/billing',
+            component: loadable(async () =>
+              await import(
+                './domain/Settings/Billing/Billing'
+              )
+            ),
+            dependencies: [
+              {
+                resource: loadable(async (environment) =>
+                  await import(
+                    `./domain/Settings/Billing/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                  )
+                ),
+                then: loadMessages
+              }
+            ],
+            routes: [
+              {
+                path: '/settings/billing/subscriptions',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/RootSubscriptionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/RootSubscriptionsSettings/RootSubscriptionsSettings'
+                  )
+                ),
+                prepare: () => {
+                  const Query = require('@//:artifacts/SubscriptionsSettingsQuery.graphql')
+                  return {
+                    subscriptionsQuery: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/billing/payment-methods',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings'
+                  )
+                ),
+                prepare: () => {
+                  const Query = require('@//:artifacts/SavedPaymentMethodsSettingsQuery.graphql')
+                  return {
+                    paymentMethodsQuery: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         ]
       },
@@ -2158,10 +2447,7 @@ const routes: Route[] = [
               query: Query,
               variables: {
                 slug: params.slug,
-                sortBy: query.get('sort') ?? 'TOP',
-                categorySlugs: query.get('categories'),
-                seriesSlugs: query.get('series'),
-                characterSlugs: query.get('characters')
+                ...decodeRouterArguments(query)
               },
               options: {
                 fetchPolicy: 'store-or-network'

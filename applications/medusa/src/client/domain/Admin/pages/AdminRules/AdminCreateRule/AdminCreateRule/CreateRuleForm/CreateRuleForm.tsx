@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Joi from 'joi'
@@ -130,7 +130,14 @@ export default function CreateRuleForm ({
               Rule Infraction
             </Trans>
           </InputHeader>
-          <SwitchInput placeholder={i18n._(t`Causes an infraction`)} />
+          <HStack spacing={2}>
+            <SwitchInput />
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                Causes an infraction
+              </Trans>
+            </Text>
+          </HStack>
           <InputFooter />
         </FormInput>
         <FormSubmitButton

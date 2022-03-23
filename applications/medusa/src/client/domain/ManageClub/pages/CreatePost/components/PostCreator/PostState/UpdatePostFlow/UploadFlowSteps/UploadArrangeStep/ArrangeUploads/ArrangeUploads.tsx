@@ -18,13 +18,14 @@ const ArrangeUploadsFragmentGQL = graphql`
     id
     content {
       id
+      isSupporterOnly
       resource {
         id
         urls {
           url
         }
-        ...DraggableContentFragment
       }
+      ...DraggableContentFragment
     }
   }
 `
@@ -51,6 +52,24 @@ const ArrangeUploadsMutationGQL = graphql`
   }
 `
 
+const SupporterUploadsMutationGQL = graphql`
+  mutation ArrangeUploadsSupporterMutation($input: UpdatePostContentIsSupporterOnlyInput!) {
+    updatePostContentIsSupporterOnly(input: $input) {
+      post {
+        id
+        reference
+        content {
+          viewerCanViewSupporterOnlyContent
+          isSupporterOnly
+          resource {
+            id
+          }
+        }
+      }
+    }
+  }
+`
+
 const reorder = (
   list: ArrangeUploadsFragment['content'],
   startIndex: number,
@@ -69,6 +88,7 @@ export default function ArrangeUploads ({
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
 
   const [removeContent, isRemovingContent] = useMutation(ArrangeUploadsMutationGQL)
+  const [supporterContent, isSupportingContent] = useMutation(SupporterUploadsMutationGQL)
 
   const uppy = useContext(UppyContext)
   const {
@@ -80,7 +100,7 @@ export default function ArrangeUploads ({
 
   const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
-  const onRemoveFile = (id: string): void => {
+  const onRemoveContent = (id: string): void => {
     removeContent({
       variables: {
         input: {
@@ -90,6 +110,21 @@ export default function ArrangeUploads ({
       },
       onCompleted () {
         uppy.removeFile(id)
+      },
+      onError (data) {
+        console.log(data)
+      }
+    })
+  }
+
+  const onSupporterContent = (id: string, isSupporterOnly: boolean): void => {
+    supporterContent({
+      variables: {
+        input: {
+          id: data.id,
+          contentIds: [id],
+          isSupporterOnly: isSupporterOnly
+        }
       },
       onError (data) {
         console.log(data)
@@ -161,12 +196,14 @@ export default function ArrangeUploads ({
           >
             {displayData.map((item, index) => (
               <DraggableContent
-                dragDisabled={dragDisabled || displayData.length < 2 || isRemovingContent}
+                dragDisabled={dragDisabled || displayData.length < 2 || isRemovingContent || isSupportingContent}
+                isSupportingContent={isSupportingContent}
                 removeDisabled={displayData.length < 2}
                 key={index}
                 index={index}
-                query={item.resource}
-                onRemove={onRemoveFile}
+                query={item}
+                onRemove={onRemoveContent}
+                onSupport={onSupporterContent}
                 h={getHeight()}
               />
             ))}

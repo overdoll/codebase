@@ -7,7 +7,7 @@ export const clickOnTile = (text: string): void => {
   cy.findByText(text).should('not.be.disabled').click()
 }
 
-export const clickOnButton = (text: string): void => {
+export const clickOnButton = (text: string | RegExp): void => {
   cy.waitUntil(() => cy.findByRole('button', { name: text }).should('not.be.disabled'))
   cy.findByRole('button', { name: text }).should('exist').click({ force: true })
 }

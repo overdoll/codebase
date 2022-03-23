@@ -14,7 +14,9 @@ const Query = graphql`
     $sortBy: PostsSort!,
     $categorySlugs: [String!],
     $seriesSlugs: [String!],
-    $characterSlugs: [String!]) {
+    $characterSlugs: [String!],
+    $supporterOnlyStatus: [SupporterOnlyStatus!]
+  ) {
     club(slug: $slug) {
       slug
       ...ClubPublicPostsFragment
@@ -37,7 +39,9 @@ const Fragment = graphql`
       sortBy: $sortBy,
       categorySlugs: $categorySlugs,
       seriesSlugs: $seriesSlugs,
-      characterSlugs: $characterSlugs)
+      characterSlugs: $characterSlugs,
+      supporterOnlyStatus: $supporterOnlyStatus
+    )
     @connection (key: "ClubPublicPosts_posts") {
       edges {
         __typename

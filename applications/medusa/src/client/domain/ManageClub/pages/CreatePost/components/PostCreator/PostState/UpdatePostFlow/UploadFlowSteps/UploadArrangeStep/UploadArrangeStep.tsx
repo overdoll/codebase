@@ -66,7 +66,9 @@ export default function UploadArrangeStep ({
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Add, arrange, or remove the files you're uploading.
+            Add, arrange, or remove the files you're uploading. You can encourage your fans to become paid supporters by
+            marking
+            some content as supporter-only.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

@@ -2,15 +2,18 @@ import { graphql } from 'react-relay/hooks'
 import { ClubInfractionHistoryFragment$key } from '@//:artifacts/ClubInfractionHistoryFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import {
-  TableHeaderBackground,
-  TableHeaderText,
-  TableRow,
-  TableRowBackground,
-  TableRowColumnText
-} from '@//:modules/content/ThemeComponents/TableRow/TableRow'
+  Table,
+  TableBody,
+  TableBodyColumn,
+  TableBodyRow,
+  TableBodyRowBackground,
+  TableBodyRowLoadMore,
+  TableHeader,
+  TableHeaderColumnText,
+  TableHeaderRow
+} from '@//:modules/content/ThemeComponents/Table/Table'
 import { usePaginationFragment } from 'react-relay'
 import { SessionsPaginationQuery } from '@//:artifacts/SessionsPaginationQuery.graphql'
-import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
 import useFormattedDate from '../../../../../helpers/useFormattedDate'
 import { Trans } from '@lingui/macro'
 import useDateDistance from '../../../../../helpers/useDateDistance'
@@ -61,46 +64,48 @@ export default function ClubInfractionHistory ({ query }: Props): JSX.Element {
       condition={data.infractionHistory.edges.length < 1}
     >
       <Stack spacing={1}>
-        <TableHeaderBackground>
-          <TableRow columns={8}>
-            <TableHeaderText column={2}>
-              <Trans>
-                Issued
-              </Trans>
-            </TableHeaderText>
-            <TableHeaderText column={4}>
-              <Trans>
-                Rule
-              </Trans>
-            </TableHeaderText>
-            <TableHeaderText column={2}>
-              <Trans>
-                Duration
-              </Trans>
-            </TableHeaderText>
-          </TableRow>
-        </TableHeaderBackground>
-        <Stack spacing={2}>
-          {data.infractionHistory.edges.map((item, index) => (
-            <TableRowBackground key={index}>
-              <TableRow columns={8}>
-                <TableRowColumnText column={2}>
-                  {useFormattedDate(item.node.issuedAt)}
-                </TableRowColumnText>
-                <TableRowColumnText column={4}>
-                  {item.node.rule.title}
-                </TableRowColumnText>
-                <TableRowColumnText column={2}>
-                  {useDateDistance(item.node.issuedAt, item.node.expiresAt)}
-                </TableRowColumnText>
-              </TableRow>
-            </TableRowBackground>))}
-          <LoadMoreStackTile
-            hasNext={hasNext}
-            onLoadNext={() => loadNext(5)}
-            isLoadingNext={isLoadingNext}
-          />
-        </Stack>
+        <Table>
+          <TableHeader>
+            <TableHeaderRow columns={8}>
+              <TableHeaderColumnText column={2}>
+                <Trans>
+                  Issued
+                </Trans>
+              </TableHeaderColumnText>
+              <TableHeaderColumnText column={4}>
+                <Trans>
+                  Rule
+                </Trans>
+              </TableHeaderColumnText>
+              <TableHeaderColumnText column={2}>
+                <Trans>
+                  Duration
+                </Trans>
+              </TableHeaderColumnText>
+            </TableHeaderRow>
+          </TableHeader>
+          <TableBody>
+            {data.infractionHistory.edges.map((item, index) => (
+              <TableBodyRowBackground key={index}>
+                <TableBodyRow columns={8}>
+                  <TableBodyColumn column={2}>
+                    {useFormattedDate(item.node.issuedAt)}
+                  </TableBodyColumn>
+                  <TableBodyColumn column={4}>
+                    {item.node.rule.title}
+                  </TableBodyColumn>
+                  <TableBodyColumn column={2}>
+                    {useDateDistance(item.node.issuedAt, item.node.expiresAt)}
+                  </TableBodyColumn>
+                </TableBodyRow>
+              </TableBodyRowBackground>))}
+            <TableBodyRowLoadMore
+              hasNext={hasNext}
+              onLoadNext={() => loadNext(5)}
+              isLoadingNext={isLoadingNext}
+            />
+          </TableBody>
+        </Table>
       </Stack>
     </EmptyBoundary>
   )

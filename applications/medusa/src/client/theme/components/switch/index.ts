@@ -11,7 +11,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
   const { colorScheme: c } = props
 
   return {
-    borderRadius: 'full',
+    borderRadius: 'base',
     p: '2px',
     width: 'var(--slider-track-width)',
     height: 'var(--slider-track-height)',
@@ -26,7 +26,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
       cursor: 'not-allowed'
     },
     _checked: {
-      bg: mode(`${c}.500`, `${c}.200`)(props)
+      bg: mode(`${c}.500`, `${c}.400`)(props)
     }
   }
 }

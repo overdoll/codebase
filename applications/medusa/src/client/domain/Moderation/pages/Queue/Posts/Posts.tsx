@@ -191,7 +191,7 @@ export default function Posts (props: Props): JSX.Element {
               <ModeratePost
                 connectionID={postsConnection}
                 infractions={queryData}
-                postID={item.node}
+                postID={item.node.post}
               />
             </Flex>
           </LargeBackgroundBox>

@@ -71,6 +71,7 @@ describe('Club - Create a Post', () => {
     isOnStep('arrange')
     cy.findByText(/You'll need to upload at least/iu).should('not.exist')
     waitForProcessing()
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
     gotoNextStep()
 
     // adding and removing audiences
@@ -112,12 +113,15 @@ describe('Club - Create a Post', () => {
     clickOnTile(postCharacter)
     saveCurrentStep()
     isOnStep('review')
+    cy.findByText('Exclusive Supporter Content').should('be.visible')
 
     // test refresh to save progress as well as URL working for resuming progress and post page for drafts
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    clickOnTile('2')
+    cy.get('button[aria-label="Open Menu"]').click()
+    cy.findByText('Edit Draft').should('be.visible').click()
     isOnStep('arrange')
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
     gotoNextStep()
     isOnStep('audience')
     cy.findAllByText(postAudience).should('exist')
@@ -131,6 +135,7 @@ describe('Club - Create a Post', () => {
     cy.findAllByText(postCharacter).should('exist')
     gotoNextStep()
     isOnStep('review')
+    cy.findByText('Exclusive Supporter Content').should('not.exist')
     cy.findByText(postCategories[0]).should('exist')
     cy.findByText(postCategories[1]).should('exist')
     cy.findByText(postCategories[2]).should('exist')

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<251d43aaa21216cdb3a8dd7953520da6>>
+ * @generated SignedSource<<74345a2efe02e00151f3b561b11716f7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,19 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SupportClubButtonClubFragment$data = {
-  readonly id: string;
-  readonly name: string;
+  readonly viewerMember: {
+    readonly isSupporter: boolean;
+  } | null;
+  readonly supporterSubscriptionPrice: {
+    readonly localizedPrice: {
+      readonly amount: number;
+      readonly currency: Currency;
+    };
+  };
+  readonly " $fragmentSpreads": FragmentRefs<"SupportClubTransactionProcessFragment">;
   readonly " $fragmentType": "SupportClubButtonClubFragment";
 };
 export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
@@ -30,22 +39,67 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
+      "concreteType": "ClubMember",
+      "kind": "LinkedField",
+      "name": "viewerMember",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporter",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "name",
+      "concreteType": "LocalizedPricingPoint",
+      "kind": "LinkedField",
+      "name": "supporterSubscriptionPrice",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Price",
+          "kind": "LinkedField",
+          "name": "localizedPrice",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "amount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "currency",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "SupportClubTransactionProcessFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "5e78a44042b4a1b69e33bc6c700ebe65";
+(node as any).hash = "4f9df7dd6c4f6923079a4ca335fb8401";
 
 export default node;

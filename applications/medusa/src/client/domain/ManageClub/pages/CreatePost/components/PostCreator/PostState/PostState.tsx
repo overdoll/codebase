@@ -1,7 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
-import CommunityGuidelines from '../../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import Button from '@//:modules/form/Button/Button'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
@@ -74,9 +73,18 @@ export default function PostState ({
         </Box>
         <Box>
           <Text fontSize='md' color='gray.100'>
-            <Trans>Upstanding netizens will read all the rules before posting</Trans>
+            <Trans>Upstanding netizens will read the{' '}
+              <Link
+                color='teal.400'
+                fontSize='md'
+                isExternal
+                href='https://www.corpodoll.com/club-guidelines/'
+              >
+                Club Guidelines
+              </Link>
+              {' '}carefully before posting
+            </Trans>
           </Text>
-          <CommunityGuidelines size='md' />
         </Box>
       </Stack>
     )

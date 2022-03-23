@@ -5,12 +5,14 @@ import { ClickableTile } from '../../../../ContentSelection'
 
 interface ChoiceProps extends RegisterFunctionReturn {
   children: ReactNode
+  isDisabled?: boolean | undefined
 }
 
 export default function Choice ({
   id,
   isActive,
   onChange,
+  isDisabled,
   children
 }: ChoiceProps): JSX.Element {
   // @ts-expect-error
@@ -27,13 +29,15 @@ export default function Choice ({
   return (
     <Box
       id={id}
-      h='100%'
+      h='inherit'
+      w='inherit'
       borderRadius='md'
       borderColor={isActive ? 'green.500' : 'transparent'}
       borderWidth={2}
       overflow='hidden'
     >
       <ClickableTile
+        isDisabled={isDisabled}
         isPending={isPending}
         onClick={onClick}
       >

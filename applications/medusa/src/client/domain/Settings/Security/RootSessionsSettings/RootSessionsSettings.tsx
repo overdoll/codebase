@@ -29,7 +29,7 @@ export default function RootSessionsSettings (props: Props): JSX.Element | null 
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Here is a list of devices that have logged into your account. You can click on one to view the details.
+            Here is a list of devices that have logged into your account. You can tap on one to view the details.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

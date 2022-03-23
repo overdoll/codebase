@@ -3,13 +3,15 @@ import type { DraftPostFragment$key } from '@//:artifacts/DraftPostFragment.grap
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
-  from '../../../../../../../modules/content/Posts/components/PostContent/PostPreviewContent/PostPreviewContent'
+  from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import generatePath from '../../../../../../../modules/routing/generatePath'
 import { useParams } from '@//:modules/routing'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import { MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import { ContentBrushPen } from '@//:assets/icons'
 
 interface Props {
   query: DraftPostFragment$key
@@ -48,6 +50,14 @@ export default function DraftPost ({
           </Trans>
         </Badge>
         <PostMenu size='xs'>
+          <MenuLinkItem
+            to={`${draftPostPath()}?post=${data.reference}`}
+            text={(
+              <Trans>
+                Edit Draft
+              </Trans>)}
+            icon={ContentBrushPen}
+          />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

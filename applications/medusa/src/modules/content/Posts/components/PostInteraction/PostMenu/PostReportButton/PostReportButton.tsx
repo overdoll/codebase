@@ -1,10 +1,10 @@
 import { t, Trans } from '@lingui/macro'
 import { graphql } from 'react-relay'
 import { PostReportButtonFragment$key } from '@//:artifacts/PostReportButtonFragment.graphql'
+import { PostReportButtonViewerFragment$key } from '@//:artifacts/PostReportButtonViewerFragment.graphql'
 import { PostReportButtonMutation } from '@//:artifacts/PostReportButtonMutation.graphql'
-
 import { useFragment, useMutation } from 'react-relay/hooks'
-import { MenuItem } from '../../../../../ThemeComponents/Menu/Menu'
+import { MenuItem, MenuLinkItem } from '../../../../../ThemeComponents/Menu/Menu'
 import { FlagReport } from '@//:assets/icons'
 import {
   Modal,
@@ -30,6 +30,7 @@ import { useToast } from '../../../../../ThemeComponents'
 
 interface Props {
   query: PostReportButtonFragment$key
+  viewerQuery: PostReportButtonViewerFragment$key | null
 }
 
 interface ChoiceProps {
@@ -38,6 +39,12 @@ interface ChoiceProps {
 
 const Fragment = graphql`
   fragment PostReportButtonFragment on Post {
+    id
+  }
+`
+
+const ViewerFragment = graphql`
+  fragment PostReportButtonViewerFragment on Account {
     id
   }
 `
@@ -59,9 +66,11 @@ const Mutation = graphql`
 `
 
 export default function PostReportButton ({
-  query
+  query,
+  viewerQuery
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [commit, isInFlight] = useMutation<PostReportButtonMutation>(Mutation)
 
@@ -109,7 +118,7 @@ export default function PostReportButton ({
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an erro submitting the report`
+          title: t`There was an error submitting the report`
         })
       }
     })
@@ -117,7 +126,21 @@ export default function PostReportButton ({
 
   return (
     <>
-      <MenuItem onClick={onOpen} text={<Trans>Report Post</Trans>} icon={FlagReport} />
+      {viewerData == null
+        ? (
+          <MenuLinkItem
+            to='/join'
+            text={<Trans>Report Post</Trans>}
+            icon={FlagReport}
+          />
+          )
+        : (
+          <MenuItem
+            onClick={onOpen}
+            text={<Trans>Report Post</Trans>}
+            icon={FlagReport}
+          />
+          )}
       <Modal
         isOpen={isOpen}
         onClose={onClose}

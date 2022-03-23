@@ -86,14 +86,14 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
   }
 
   return (
-    <MultipleClubsModal>
-      <Stack spacing={2}>
+    <Stack spacing={2}>
+      <MultipleClubsModal>
         <Flex {...flexProps}>
           <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
           <Icon ml={3} icon={SwapCircle} h={5} w={5} fill='gray.300' />
         </Flex>
-        <SuspendedClubBanner query={queryData.club} />
-      </Stack>
-    </MultipleClubsModal>
+      </MultipleClubsModal>
+      <SuspendedClubBanner query={queryData.club} />
+    </Stack>
   )
 }

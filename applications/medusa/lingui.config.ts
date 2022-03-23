@@ -69,8 +69,20 @@ export default {
       include: ['src/client/domain/Settings/Preferences']
     },
     {
+      path: 'src/client/domain/Settings/Billing/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/RootSubscriptionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootSubscriptionsSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings']
+    },
+    {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',
-      include: ['src/client/domain/Moderation/Moderation.tsx']
+      include: ['src/client/domain/Moderation/Moderation']
     },
     {
       path: 'src/client/domain/Moderation/pages/History/__locale__/{locale}/index',
@@ -201,12 +213,32 @@ export default {
       include: ['src/client/domain/Admin/pages/AdminSeries/AdminViewSeries']
     },
     {
+      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason']
+    },
+    {
       path: 'src/client/domain/Admin/pages/AdminAccount/__locale__/{locale}/index',
       include: ['src/client/domain/Admin/pages/AdminAccount']
     },
     {
       path: 'src/client/domain/Admin/pages/AdminClub/__locale__/{locale}/index',
       include: ['src/client/domain/Admin/pages/AdminClub']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription']
+    },
+    {
+      path: 'src/client/domain/Admin/pages/AdminAccountTransaction/__locale__/{locale}/index',
+      include: ['src/client/domain/Admin/pages/AdminAccountTransaction']
     }
   ],
   format: 'po',

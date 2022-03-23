@@ -7,6 +7,7 @@ import type { PublicPostQuery as PublicPostQueryType } from '@//:artifacts/Publi
 import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
 import { useParams } from '@//:modules/routing/useParams'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   prepared: {
@@ -26,7 +27,11 @@ export default function RootPublicPost (props: Props): JSX.Element {
     <>
       <Helmet title='view post' />
       <QueryErrorBoundary loadQuery={() => loadQuery({ reference: params?.reference ?? '' })}>
-        <Suspense fallback={<SkeletonPost />}>
+        <Suspense fallback={(
+          <PageWrapper>
+            <SkeletonPost />
+          </PageWrapper>)}
+        >
           <PublicPost query={queryRef as PreloadedQuery<PublicPostQueryType>} />
         </Suspense>
       </QueryErrorBoundary>

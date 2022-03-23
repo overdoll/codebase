@@ -57,6 +57,15 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         <Can I='configure' a='Account'>
           <QuickAccessButtonProfile queryRef={data} />
         </Can>
+        <HorizontalNavigation.Button
+          to='/help'
+          icon={SafetyFloat}
+          label={
+            <Trans>
+              Help
+            </Trans>
+          }
+        />
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
         label={i18n._(t`Dropdown Menu`)}
