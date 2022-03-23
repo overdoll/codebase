@@ -5,7 +5,7 @@ import type {
 import AccountActiveClubSupporterSubscriptionPreview
   from './AccountActiveClubSupporterSubscriptionPreview/AccountActiveClubSupporterSubscriptionPreview'
 import { usePaginationFragment } from 'react-relay'
-import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
+import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
 import { Stack } from '@chakra-ui/react'
 import { EmptyBoundary, EmptySubscriptions } from '@//:modules/content/Placeholder'
 import type { SubscriptionsSettingsQuery } from '@//:artifacts/SubscriptionsSettingsQuery.graphql'
@@ -23,15 +23,13 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "ClubSupporterSubscriptionsPaginationQuery" ) {
-    clubSupporterSubscriptions (first: $first, after: $after, status: [ACTIVE, CANCELLED])
+    clubSupporterSubscriptions (first: $first, after: $after, status: [ACTIVE])
     @connection (key: "ClubSupporterSubscriptions_clubSupporterSubscriptions") {
+      __id
       edges {
         node {
           __id
           __typename
-          ... on Node {
-            id
-          }
           ...on IAccountClubSupporterSubscription {
             id
           }
@@ -60,11 +58,21 @@ export default function ClubSupporterSubscriptionsSettings ({ query }: Props): J
   )
 
   const AccountSupporterSubscriptionPreview = ({ node }: { node: any }): JSX.Element => {
+    if (node?.__typename == null) return <></>
     switch (node.__typename) {
       case 'AccountActiveClubSupporterSubscription':
-        return <AccountActiveClubSupporterSubscriptionPreview query={node} />
+        return (
+          <AccountActiveClubSupporterSubscriptionPreview
+            connectionId={data.clubSupporterSubscriptions.__id}
+            query={node}
+          />
+        )
       case 'AccountCancelledClubSupporterSubscription':
-        return <AccountCancelledClubSupporterSubscriptionPreview query={node} />
+        return (
+          <AccountCancelledClubSupporterSubscriptionPreview
+            query={node}
+          />
+        )
       default:
         return <></>
     }
@@ -77,9 +85,8 @@ export default function ClubSupporterSubscriptionsSettings ({ query }: Props): J
     >
       <Stack spacing={2}>
         {data.clubSupporterSubscriptions.edges.map((item, index) => (
-          <StackTile key={index}>
-            <AccountSupporterSubscriptionPreview node={item.node} />
-          </StackTile>
+          <AccountSupporterSubscriptionPreview key={index} node={item.node} />
+
         ))}
         <LoadMoreStackTile
           hasNext={hasNext}

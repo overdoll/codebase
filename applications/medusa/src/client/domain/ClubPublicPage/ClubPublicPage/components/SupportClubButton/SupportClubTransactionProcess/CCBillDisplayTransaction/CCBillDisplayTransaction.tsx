@@ -71,13 +71,14 @@ export default function CCBillDisplayTransaction ({
     queryData?.ccbillTransactionDetails.linkedAccountClubSupporterSubscription?.club?.viewerMember?.isSupporter !== true
 
   useEffect(() => {
-    if (!isVerifying) return
-    const refreshLoop = (): void => {
-      if (!isVerifying) return
-      loadQuery()
-      setTimeout(refreshLoop, 2500)
+    const interval = setInterval(() => {
+      isVerifying && loadQuery()
+    }, 2500)
+
+    if (!isVerifying) {
+      clearInterval(interval)
     }
-    setTimeout(refreshLoop, 2500)
+    return () => clearInterval(interval)
   }, [isVerifying])
 
   if (queryData?.ccbillTransactionDetails == null) {

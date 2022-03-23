@@ -52,8 +52,8 @@ msgstr ""
 #~ msgid "Character Thumbnail"
 #~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:112
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:112
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
 msgid "Deprecated"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgid "Locale"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:28
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:105
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:102
 msgid "Rule Deprecated"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgid "Rule Description"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:28
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:105
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:102
 msgid "Rule Infraction"
 msgstr ""
 
@@ -110,9 +110,9 @@ msgstr ""
 msgid "Rule Title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:124
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:121
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:124
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:121
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
 msgid "Submit"
 msgstr ""
@@ -121,19 +121,19 @@ msgstr ""
 #~ msgid "Successfully updated character thumbnail"
 #~ msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:81
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:78
 msgid "Successfully updated rule deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:81
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:78
 msgid "Successfully updated rule infraction"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:87
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:84
 msgid "There was an error updating rule deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:87
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:84
 msgid "There was an error updating rule infraction"
 msgstr ""
 

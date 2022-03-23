@@ -135,7 +135,7 @@ msgstr ""
 msgid "Creating your post..."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:46
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:48
 msgid "DRAFT"
 msgstr ""
 
@@ -153,6 +153,10 @@ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:111
 msgid "Drop your files to upload them"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:56
+msgid "Edit Draft"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:117
@@ -181,7 +185,7 @@ msgstr ""
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:115
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:117
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
@@ -304,7 +308,7 @@ msgstr ""
 msgid "Processing Post Content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:39
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:36
 #: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
 msgid "Published"
 msgstr ""
@@ -512,7 +516,7 @@ msgstr ""
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:104
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:106
 msgid "This post was already submitted"
 msgstr ""
 
@@ -534,7 +538,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
-msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
+#~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
+#~ msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
+msgid "Upstanding netizens will read the <0>Club Guidelines</0>carefully before posting"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
@@ -586,7 +594,7 @@ msgstr ""
 msgid "You own the rights to the content you upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:178
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:179
 msgid "You'll need to upload at least one file to continue"
 msgstr ""
 

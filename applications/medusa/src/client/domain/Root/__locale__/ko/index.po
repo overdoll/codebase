@@ -153,7 +153,7 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:117
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:127
 msgid "Like"
 msgstr ""
 
@@ -322,7 +322,7 @@ msgstr ""
 msgid "Please review the<0>Community Guidelines</0>to make sure this doesn't happen again."
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:104
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:113
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -330,11 +330,12 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:133
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:140
 msgid "Report Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:131
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:154
 msgid "Report post"
 msgstr ""
 
@@ -380,7 +381,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:159
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:182
 msgid "Submit Report"
 msgstr ""
 
@@ -424,7 +425,7 @@ msgstr ""
 #~ msgid "There was an erro submitting the report"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:112
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:121
 msgid "There was an error submitting the report"
 msgstr ""
 

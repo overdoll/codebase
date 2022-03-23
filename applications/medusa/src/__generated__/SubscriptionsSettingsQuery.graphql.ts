@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<99c3a83f9770ccdefdd8fe01c8b5f10f>>
- * @relayHash 543712ce0183fd7db75b4f171941497e
+ * @generated SignedSource<<00e5476965eb50afa3609044de4fce16>>
+ * @relayHash 97f7f94bd9647e84193b6ca97563a399
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 543712ce0183fd7db75b4f171941497e
+// @relayRequestID 97f7f94bd9647e84193b6ca97563a399
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -38,8 +38,7 @@ v1 = [
     "kind": "Literal",
     "name": "status",
     "value": [
-      "ACTIVE",
-      "CANCELLED"
+      "ACTIVE"
     ]
   }
 ],
@@ -152,13 +151,25 @@ v8 = {
   "storageKey": null
 },
 v9 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -183,7 +194,7 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = [
+v12 = [
   (v0/*: any*/)
 ];
 return {
@@ -262,12 +273,6 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      {
-                        "kind": "InlineFragment",
-                        "selections": (v4/*: any*/),
-                        "type": "Node",
-                        "abstractKey": "__isNode"
-                      },
                       {
                         "kind": "InlineFragment",
                         "selections": (v4/*: any*/),
@@ -392,27 +397,23 @@ return {
                         "abstractKey": null
                       },
                       {
-                        "kind": "ClientExtension",
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "__id",
-                            "storageKey": null
-                          }
-                        ]
-                      }
+                        "kind": "InlineFragment",
+                        "selections": (v4/*: any*/),
+                        "type": "Node",
+                        "abstractKey": "__isNode"
+                      },
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v9/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v10/*: any*/)
+              (v11/*: any*/),
+              (v9/*: any*/)
             ],
-            "storageKey": "clubSupporterSubscriptions(first:5,status:[\"ACTIVE\",\"CANCELLED\"])"
+            "storageKey": "clubSupporterSubscriptions(first:5,status:[\"ACTIVE\"])"
           },
           {
             "alias": null,
@@ -428,7 +429,7 @@ return {
           (v3/*: any*/),
           {
             "alias": null,
-            "args": (v11/*: any*/),
+            "args": (v12/*: any*/),
             "concreteType": "ExpiredAccountClubSupporterSubscriptionConnection",
             "kind": "LinkedField",
             "name": "expiredClubSupporterSubscriptions",
@@ -464,17 +465,17 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v9/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v10/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": "expiredClubSupporterSubscriptions(first:5)"
           },
           {
             "alias": null,
-            "args": (v11/*: any*/),
+            "args": (v12/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ExpiredClubSupporterSubscriptions_expiredClubSupporterSubscriptions",
@@ -487,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "543712ce0183fd7db75b4f171941497e",
+    "id": "97f7f94bd9647e84193b6ca97563a399",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

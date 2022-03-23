@@ -59,16 +59,26 @@ msgstr ""
 msgid "A file upload is required"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:66
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:67
+msgid "A refund amount is required"
+msgstr ""
+
 #: src/client/domain/Admin/validation/GenericTagId.ts:12
 msgid "A selection is required"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountActiveClubSupporterSubscriptionPreview/AdminAccountActiveClubSupporterSubscriptionPreview.tsx:40
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:60
 msgid "ACTIVE"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:46
 msgid "Active"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:69
+msgid "Amount"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:45
@@ -87,7 +97,7 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:147
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandard.tsx:28
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:106
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:103
 msgid "Audience Standard"
 msgstr ""
 
@@ -124,12 +134,39 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:83
+msgid "Billed At Date"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:58
 #~ msgid "Billing"
 #~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountCancelledClubSupporterSubscriptionPreview/AdminAccountCancelledClubSupporterSubscriptionPreview.tsx:40
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:62
 msgid "CANCELLED"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:57
+msgid "CCBill Decline Error"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:69
+msgid "CCBill Error Code"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:81
+msgid "CCBill Error Text"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:107
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:114
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:101
+msgid "CCBill Subscription ID"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:95
+msgid "CCBill Transaction ID"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
@@ -157,6 +194,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountCancelledTransactionHistory/AccountCancelledTransactionHistoryCard.tsx:43
 #~ msgid "Cancelled"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:85
+msgid "Cancelled At"
+msgstr ""
 
 #: src/client/domain/Admin/Admin.tsx:64
 msgid "Categories"
@@ -265,8 +306,19 @@ msgstr ""
 #~ msgid "Chargeback"
 #~ msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:71
+msgid "Chargeback Transactions"
+msgstr ""
+
+#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:96
+msgid "Close"
+msgstr ""
+
+#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:61
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:72
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:68
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionClub/AdminClubSupporterSubscriptionClub.tsx:32
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:57
 msgid "Club"
 msgstr ""
 
@@ -306,13 +358,14 @@ msgstr ""
 msgid "Create Series"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:77
+#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:66
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:62
 msgid "Date"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:113
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:112
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:112
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
 msgid "Deprecated"
 msgstr ""
 
@@ -325,7 +378,12 @@ msgid "Duration of Lock"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountExpiredClubSupporterSubscriptionPreview/AdminAccountExpiredClubSupporterSubscriptionPreview.tsx:40
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:61
 msgid "EXPIRED"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:102
+msgid "End Date"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/AdminCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:96
@@ -388,6 +446,10 @@ msgstr ""
 msgid "Enter an audience title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:78
+msgid "Error"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:98
 msgid "Error creating audience {0}"
 msgstr ""
@@ -440,13 +502,25 @@ msgstr ""
 msgid "Error updating series title"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransaction.tsx:57
+msgid "Events"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountExpiredTransactionHistory/AccountExpiredTransactionHistoryCard.tsx:42
 #~ msgid "Expired"
 #~ msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:84
+msgid "Expired At"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountFailedTransactionHistory/AccountFailedTransactionHistoryCard.tsx:43
 #~ msgid "Failed"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:93
+msgid "Failed At"
+msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AdminTransactionHistory.tsx:88
 #~ msgid "Info"
@@ -477,6 +551,14 @@ msgstr ""
 msgid "Issued"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransactionButton.tsx:68
+msgid "Issuing a refund will cancel the original subscription"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:83
+msgid "Last Billing Date"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:132
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitleForm/ChangeCancellationReasonTitleForm.tsx:136
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
@@ -496,6 +578,16 @@ msgstr ""
 msgid "Locked"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:126
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:133
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:120
+msgid "Manage Subscription"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:114
+msgid "Manage Transaction"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:30
 msgid "Moderator"
 msgstr ""
@@ -503,6 +595,14 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountNewTransactionHistory/AccountNewTransactionHistoryCard.tsx:50
 #~ msgid "New"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:95
+msgid "Next Billing Date"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:105
+msgid "Next Retry"
+msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:81
 msgid "Next/End/Expired Date"
@@ -512,11 +612,19 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionBillingErrors/AdminClubSupporterSubscriptionBillingError.tsx:39
+msgid "No billing error found"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:63
 msgid "No infractions found"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:56
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:55
+msgid "Payment Transactions"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:43
 msgid "Permissions"
 msgstr ""
 
@@ -540,8 +648,15 @@ msgstr ""
 msgid "Please enter a title"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:67
+#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:56
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:52
 msgid "Price"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:69
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:71
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:70
+msgid "Pricing"
 msgstr ""
 
 #: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:50
@@ -555,6 +670,20 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountRefundTransactionHistory/AccountRefundTransactionHistoryCard.tsx:50
 #~ msgid "Refund"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:114
+msgid "Refund Amount"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:128
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransactionButton.tsx:39
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransactionButton.tsx:53
+msgid "Refund Transaction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:63
+msgid "Refund Transactions"
+msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubStatus/AdminClubStatus.tsx:64
 msgid "Remove Suspension"
@@ -576,7 +705,7 @@ msgid "Rule"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:28
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:105
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:102
 msgid "Rule Deprecated"
 msgstr ""
 
@@ -588,7 +717,7 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminRules/AdminCreateRule/AdminCreateRule/CreateRuleForm/CreateRuleForm.tsx:129
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:28
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:105
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:102
 msgid "Rule Infraction"
 msgstr ""
 
@@ -673,6 +802,10 @@ msgstr ""
 msgid "Select duration"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminGenerateRefundAmountForAccountTransactionInput/AdminGenerateRefundAmountForAccountTransactionInput.tsx:100
+msgid "Select refund amount"
+msgstr ""
+
 #: src/client/domain/Admin/validation/GenericTagId.ts:11
 msgid "Selection cannot be empty"
 msgstr ""
@@ -704,15 +837,18 @@ msgid "Staff"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/AdminCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:154
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:113
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:110
 msgid "Standard"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:66
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:53
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:55
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:54
 msgid "Status"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:125
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:122
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:125
@@ -721,16 +857,21 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/AdminViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:124
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:121
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:124
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:121
 #: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
 msgid "Submit"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:61
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:58
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransaction.tsx:52
+msgid "Subscription"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:48
 msgid "Subscriptions"
 msgstr ""
 
@@ -748,6 +889,10 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:71
 msgid "Successfully locked account until {0}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:90
+msgid "Successfully refunded {0}"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:49
@@ -770,7 +915,7 @@ msgstr ""
 msgid "Successfully unlocked account"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:82
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:79
 msgid "Successfully updated audience standard"
 msgstr ""
 
@@ -790,16 +935,25 @@ msgstr ""
 msgid "Successfully updated character thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:81
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:78
 msgid "Successfully updated rule deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:81
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:78
 msgid "Successfully updated rule infraction"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
 msgid "Successfully updated series thumbnail"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:73
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionAccount/AdminClubSupporterSubscriptionAccount.tsx:41
+msgid "Supporter"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionAccount/AdminClubSupporterSubscriptionAccount.tsx:53
+msgid "Supporter Since"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:76
@@ -817,6 +971,11 @@ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/SuspendClubForm/SuspendClubForm.tsx:95
 msgid "Suspension Duration"
+msgstr ""
+
+#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:60
+#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:74
+msgid "Sync Subscription"
 msgstr ""
 
 #: src/client/domain/Admin/validation/GenericDate.ts:14
@@ -859,12 +1018,20 @@ msgstr ""
 msgid "The title must be at least 3 characters"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:37
+msgid "There are no events"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModeratorButton/AdminAssignModeratorButton.tsx:55
 msgid "There was an error assigning the moderator role"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaffButton/AdminAssignStaffButton.tsx:55
 msgid "There was an error assigning the staff role"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminRefundAccountTransactionForm.tsx:96
+msgid "There was an error issuing a refund for {0}"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminClub/AdminClub/AdminClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:94
@@ -895,7 +1062,7 @@ msgstr ""
 msgid "There was an error unlocking the account"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:88
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:85
 msgid "There was an error updating audience standard"
 msgstr ""
 
@@ -903,11 +1070,11 @@ msgstr ""
 msgid "There was an error updating cancellation reason deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:87
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:84
 msgid "There was an error updating rule deprecated"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:87
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/AdminViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:84
 msgid "There was an error updating rule infraction"
 msgstr ""
 
@@ -927,11 +1094,18 @@ msgstr ""
 msgid "There was an error updating the series thumbnail"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:66
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransaction.tsx:47
+msgid "Transaction"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:53
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:63
 msgid "Transactions"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:62
+#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:51
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:47
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:55
 msgid "Type"
 msgstr ""
 
@@ -996,4 +1170,22 @@ msgstr ""
 
 #: src/client/domain/Admin/components/BooleanHeader/BooleanHeader.tsx:16
 msgid "Yes"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminGenerateRefundAmountForAccountTransactionInput/AdminGenerateRefundAmountForAccountTransactionInput.tsx:72
+msgid "{maximumAmountPrice} - Maximum Amount"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:75
+msgid "{price}"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:75
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:77
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:76
+msgid "{price}/mo"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminRefundAccountTransactionButton/AdminRefundAccountTransaction/AdminGenerateRefundAmountForAccountTransactionInput/AdminGenerateRefundAmountForAccountTransactionInput.tsx:92
+msgid "{proratedAmountPrice} - Prorated Amount"
 msgstr ""

@@ -43,14 +43,17 @@ msgstr ""
 #~ msgid "Chargeback"
 #~ msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:71
+msgid "Chargeback Transactions"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:72
 msgid "Club"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:77
-msgid "Date"
-msgstr ""
+#~ msgid "Date"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/AdminLockAccountForm.tsx:95
 msgid "Duration of Lock"
@@ -97,13 +100,17 @@ msgstr ""
 msgid "Next/End/Expired Date"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:56
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:55
+msgid "Payment Transactions"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:43
 msgid "Permissions"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:67
-msgid "Price"
-msgstr ""
+#~ msgid "Price"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountReactivatedTransactionHistory/AccountReactivatedTransactionHistoryCard.tsx:43
 #~ msgid "Reactivated"
@@ -112,6 +119,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountRefundTransactionHistory/AccountRefundTransactionHistoryCard.tsx:50
 #~ msgid "Refund"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:63
+msgid "Refund Transactions"
+msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminAssignModerator.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignModerator/AdminRevokeModeratorButton/AdminRevokeModeratorButton.tsx:70
@@ -131,7 +142,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:61
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:48
 msgid "Subscriptions"
 msgstr ""
 
@@ -187,13 +198,13 @@ msgstr ""
 msgid "There was an error unlocking the account"
 msgstr ""
 
-#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:66
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAccount.tsx:53
 msgid "Transactions"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactions/AdminTransactions.tsx:62
-msgid "Type"
-msgstr ""
+#~ msgid "Type"
+#~ msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccount.tsx:55
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminUnlockAccountForm/AdminUnlockAccountForm.tsx:71

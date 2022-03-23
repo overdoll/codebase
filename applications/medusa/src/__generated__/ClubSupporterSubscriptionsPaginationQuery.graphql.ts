@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6672eb681cbc0dc8b2a75df0036208b1>>
- * @relayHash 774297799265af0f0bf67288da74cd55
+ * @generated SignedSource<<0cd95c106a8eaed21cddf2c6acb9c202>>
+ * @relayHash 1329cd5c70e302f134ca638ed2dd6007
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 774297799265af0f0bf67288da74cd55
+// @relayRequestID 1329cd5c70e302f134ca638ed2dd6007
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -86,8 +86,7 @@ v6 = [
     "kind": "Literal",
     "name": "status",
     "value": [
-      "ACTIVE",
-      "CANCELLED"
+      "ACTIVE"
     ]
   }
 ],
@@ -184,6 +183,18 @@ v11 = {
     (v5/*: any*/)
   ],
   "storageKey": null
+},
+v12 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
 };
 return {
   "fragment": {
@@ -259,12 +270,6 @@ return {
                         "plural": false,
                         "selections": [
                           (v4/*: any*/),
-                          {
-                            "kind": "InlineFragment",
-                            "selections": (v7/*: any*/),
-                            "type": "Node",
-                            "abstractKey": "__isNode"
-                          },
                           {
                             "kind": "InlineFragment",
                             "selections": (v7/*: any*/),
@@ -389,17 +394,12 @@ return {
                             "abstractKey": null
                           },
                           {
-                            "kind": "ClientExtension",
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "__id",
-                                "storageKey": null
-                              }
-                            ]
-                          }
+                            "kind": "InlineFragment",
+                            "selections": (v7/*: any*/),
+                            "type": "Node",
+                            "abstractKey": "__isNode"
+                          },
+                          (v12/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -437,7 +437,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -462,7 +463,7 @@ return {
     ]
   },
   "params": {
-    "id": "774297799265af0f0bf67288da74cd55",
+    "id": "1329cd5c70e302f134ca638ed2dd6007",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
@@ -471,6 +472,6 @@ return {
 };
 })();
 
-(node as any).hash = "c5209d04aaf5e8af39ee2c0fda8dd9f5";
+(node as any).hash = "f2301d0e4a9f73856c570eae46682ae5";
 
 export default node;

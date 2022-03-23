@@ -19,8 +19,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import QueryErrorBoundary
-  from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import SelectCancellationReasonList from './SelectCancellationReasonList/SelectCancellationReasonList'
@@ -31,8 +30,9 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { DeleteCircle } from '@//:assets/icons'
 import { dateFormat } from '@//:modules/constants/format'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: CancelSubscriptionButtonFragment$key
 }
 
@@ -47,33 +47,36 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!) {
+  mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!, $connections: [ID!]!) {
     cancelAccountClubSupporterSubscription(input: $input) {
-      clubSupporterSubscription {
-        __id
+      clubSupporterSubscription @appendNode(connections: $connections, edgeTypeName: "createCategoryEdge") {
         __typename
         ... on IAccountClubSupporterSubscription {
           id
         }
         ... on AccountCancelledClubSupporterSubscription {
           id
-          endDate
+          supporterSince
           cancelledAt
-          cancellationReason {
-            id
-            title
+          endDate
+          club {
+            name
+            slug
+            thumbnail {
+              ...ResourceIconFragment
+            }
           }
-          updatedAt
-        }
-        ... on AccountActiveClubSupporterSubscription {
-          id
+          ...ManageCancelledSubscriptionButtonFragment
         }
       }
     }
   }
 `
 
-export default function CancelSubscriptionButton ({ query }: Props): JSX.Element {
+export default function CancelSubscriptionButton ({
+  query,
+  connectionId
+}: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const [commit, isInFlight] = useMutation<CancelSubscriptionButtonMutation>(Mutation)
@@ -114,7 +117,8 @@ export default function CancelSubscriptionButton ({ query }: Props): JSX.Element
         input: {
           clubSupporterSubscriptionId: data.id,
           cancellationReasonId: cancellationReasonId
-        }
+        },
+        connections: [connectionId]
       },
       onCompleted (data) {
         notify({
@@ -124,7 +128,10 @@ export default function CancelSubscriptionButton ({ query }: Props): JSX.Element
         onClose()
         clearValues()
       },
-      onError (data) {
+      updater: (store) => {
+        store.delete(data.id)
+      },
+      onError () {
         notify({
           status: 'error',
           title: t`There was an error cancelling your subscription.`

@@ -78,8 +78,8 @@ describe('Club - Become Supporter', () => {
     cy.get('input[name="address"]').type(testCardDetails.address)
     cy.get('input[name="city"]').type(testCardDetails.city)
     cy.get('select[name="country"]').select(testCardDetails.country)
-    cy.get('select[name="state"]').select(testCardDetails.state)
     cy.get('input[name="postalCode"]').type(testCardDetails.postalCode)
+    cy.get('select[name="state"]').select(testCardDetails.state)
     cy.get('input[name="creditCardNum"]').type(testCardDetails.creditCardNum)
     cy.get('select[name="cardExpirationMonth"]').select(testCardDetails.cardExpirationMonth)
     cy.get('select[name="cardExpirationYear"]').select(testCardDetails.cardExpirationYear)
@@ -149,6 +149,7 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Enter a new payment method/iu).should('not.be.disabled').click()
     clickOnButton('Next')
     cy.findByRole('button', { name: /Subscribe with CCBill/iu }).should('not.be.disabled')
+    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
     // stub the window so it doesn't appear
     cy.window().then((win) => {
       cy.stub(win, 'open').as('windowOpen')
@@ -162,6 +163,7 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click()
     clickOnButton('Next')
     cy.findByText(/Select a saved payment method/iu).should('be.visible')
+    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
 
     // use saved payment method to subscribe
     clickOnButton('Subscribe')
@@ -181,6 +183,6 @@ describe('Club - Become Supporter', () => {
     cy.get('button[aria-label="Open Menu"]').click()
     cy.findByText(/Delete Payment Method/iu).should('be.visible').click()
     clickOnButton('Delete Saved Payment Method')
-    cy.findByText(/You haven't saved any payment methods/iu).should('be.visible')
+    cy.findByText(/No payment methods found/iu).should('be.visible')
   })
 })

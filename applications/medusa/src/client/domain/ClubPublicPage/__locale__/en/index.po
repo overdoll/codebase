@@ -17,8 +17,8 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:115
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:181
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:116
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:182
 msgid "Back"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:232
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:233
 msgid "Close"
 msgstr ""
 
@@ -58,7 +58,7 @@ msgstr ""
 msgid "Create an account and become a supporter to get access to this club's exclusive content!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:167
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:168
 msgid "Description"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Enter your payment details in the new window"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:151
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:152
 msgid "Error"
 msgstr ""
 
@@ -152,11 +152,11 @@ msgstr ""
 msgid "Show Window"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:109
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:110
 msgid "Sorry, we couldn't find the transaction. Please try again later."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:141
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:142
 msgid "Sorry, we were unable to process your payment. Please try another payment method."
 msgstr ""
 
@@ -203,15 +203,15 @@ msgstr ""
 msgid "This page will update after you have successfully submitted your payment details"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:221
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:222
 msgid "Transaction Approved!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:136
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:137
 msgid "Transaction Declined"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:100
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:101
 msgid "Transaction not found"
 msgstr ""
 
@@ -219,7 +219,7 @@ msgstr ""
 msgid "Use a saved payment method"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:195
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:196
 msgid "Verifying Transaction"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgstr ""
 msgid "We cannot offer refunds after you have subscribed to a club."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:200
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:201
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
 msgstr ""
 
@@ -243,7 +243,7 @@ msgstr ""
 msgid "You are now a member of {0}!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:226
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:227
 msgid "You can start using your club benefits right away!"
 msgstr ""
 

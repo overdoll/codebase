@@ -56,8 +56,6 @@ export default function AdminGenerateRefundAmountForAccountTransactionInput ({ q
     })
   }, [])
 
-  console.log('re-render')
-
   const MaximumRefundOption = (): JSX.Element => {
     if (refundAmount == null) {
       return <></>

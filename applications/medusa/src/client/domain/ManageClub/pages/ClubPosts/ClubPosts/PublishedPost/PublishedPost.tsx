@@ -10,8 +10,6 @@ import PostCopyLinkButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import PostReportButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 
 interface Props {
   query: PublishedPostFragment$key

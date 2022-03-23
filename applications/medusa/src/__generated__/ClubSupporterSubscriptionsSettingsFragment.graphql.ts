@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8020f23abfa6ebad7db211243b12c51c>>
+ * @generated SignedSource<<2664751836b06daadd2e01c5c9bd9f9a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubSupporterSubscriptionsSettingsFragment$data = {
   readonly clubSupporterSubscriptions: {
+    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly __id: string;
@@ -41,9 +42,18 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  (v1/*: any*/)
-];
+v2 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
+};
 return {
   "argumentDefinitions": [
     {
@@ -92,8 +102,7 @@ return {
           "kind": "Literal",
           "name": "status",
           "value": [
-            "ACTIVE",
-            "CANCELLED"
+            "ACTIVE"
           ]
         }
       ],
@@ -127,13 +136,9 @@ return {
                 },
                 {
                   "kind": "InlineFragment",
-                  "selections": (v2/*: any*/),
-                  "type": "Node",
-                  "abstractKey": "__isNode"
-                },
-                {
-                  "kind": "InlineFragment",
-                  "selections": (v2/*: any*/),
+                  "selections": [
+                    (v1/*: any*/)
+                  ],
                   "type": "IAccountClubSupporterSubscription",
                   "abstractKey": "__isIAccountClubSupporterSubscription"
                 },
@@ -163,18 +168,7 @@ return {
                   "type": "AccountCancelledClubSupporterSubscription",
                   "abstractKey": null
                 },
-                {
-                  "kind": "ClientExtension",
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "__id",
-                      "storageKey": null
-                    }
-                  ]
-                }
+                (v2/*: any*/)
               ],
               "storageKey": null
             },
@@ -212,9 +206,10 @@ return {
             }
           ],
           "storageKey": null
-        }
+        },
+        (v2/*: any*/)
       ],
-      "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\",\"CANCELLED\"])"
+      "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\"])"
     },
     (v1/*: any*/)
   ],
@@ -223,6 +218,6 @@ return {
 };
 })();
 
-(node as any).hash = "c5209d04aaf5e8af39ee2c0fda8dd9f5";
+(node as any).hash = "f2301d0e4a9f73856c570eae46682ae5";
 
 export default node;

@@ -50,7 +50,7 @@ export default function Confirm ({
       <Helmet title='verify' />
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction='column'>
-          <Heading mb={8} align='center' size='md' color='gray.100'>
+          <Heading mb={8} align='center' fontSize='xl' color='gray.00'>
             <Trans>
               Please confirm that you are attempting to login from the following device & location
             </Trans>

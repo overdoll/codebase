@@ -9,8 +9,9 @@ import { Box, Menu, MenuButton, MenuList } from '@chakra-ui/react'
 import { ArrowButtonDown } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
 import UpdatePaymentMethodButton from './UpdatePaymentMethodButton/UpdatePaymentMethodButton'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: ManageActiveSubscriptionButtonFragment$key
 }
 
@@ -21,7 +22,10 @@ const Fragment = graphql`
   }
 `
 
-export default function ManageActiveSubscriptionButton ({ query }: Props): JSX.Element {
+export default function ManageActiveSubscriptionButton ({
+  query,
+  connectionId
+}: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
@@ -40,7 +44,7 @@ export default function ManageActiveSubscriptionButton ({ query }: Props): JSX.E
         </MenuButton>
         <MenuList minW='230px' boxShadow='outline'>
           <UpdatePaymentMethodButton query={data} />
-          <CancelSubscriptionButton query={data} />
+          <CancelSubscriptionButton connectionId={connectionId} query={data} />
         </MenuList>
       </Menu>
     </Box>
