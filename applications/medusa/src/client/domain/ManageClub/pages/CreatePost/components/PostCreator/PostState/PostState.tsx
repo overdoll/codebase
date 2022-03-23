@@ -73,14 +73,16 @@ export default function PostState ({
         </Box>
         <Box>
           <Text fontSize='md' color='gray.100'>
-            <Trans>Upstanding netizens will read the <Link
-              color='teal.400'
-              fontSize='md'
-              isExternal
-              href='https://www.corpodoll.com/club-guidelines/'
-                                                     >
-              Club Guidelines
-            </Link> carefully before posting
+            <Trans>Upstanding netizens will read the{' '}
+              <Link
+                color='teal.400'
+                fontSize='md'
+                isExternal
+                href='https://www.corpodoll.com/club-guidelines/'
+              >
+                Club Guidelines
+              </Link>
+              {' '}carefully before posting
             </Trans>
           </Text>
         </Box>

@@ -1,4 +1,4 @@
-import { Currency, dinero, Dinero, toFormat } from 'dinero.js'
+import { Currency, dinero, toFormat } from 'dinero.js'
 import { AUD, CAD, EUR, GBP, JPY, USD } from '@dinero.js/currencies'
 
 const currencies = {
@@ -8,24 +8,6 @@ const currencies = {
   EUR,
   GBP,
   JPY
-}
-
-interface ConvertToIntProps {
-  amount: number
-  currency: Currency<number>
-}
-
-const convertToInt = ({
-  amount: float,
-  currency
-}: ConvertToIntProps): Dinero<number> => {
-  const factor = currency.base ** currency.exponent
-  const amount = Math.round(float * factor)
-
-  return dinero({
-    amount,
-    currency
-  })
 }
 
 interface TransformerProps {

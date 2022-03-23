@@ -77,7 +77,7 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
       <Table>
         <TableHeader>
           <TableHeaderRow columns={6}>
-            <TableHeaderColumnText column={2}>
+            <TableHeaderColumnText column={1}>
               <Trans>
                 Username
               </Trans>
@@ -87,7 +87,7 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                 Rule
               </Trans>
             </TableHeaderColumnText>
-            <TableHeaderColumnText column={2}>
+            <TableHeaderColumnText column={1}>
               <Trans>
                 Post
               </Trans>
@@ -98,14 +98,14 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
           {data.postReports.edges.map((item, index) => (
             <TableBodyRowBackground key={index}>
               <TableBodyRow columns={6}>
-                <TableBodyColumn column={2}>
+                <TableBodyColumn column={1}>
                   {item.node.account.username}
                 </TableBodyColumn>
                 <TableBodyColumn column={4}>
                   {item.node.rule.title}
                 </TableBodyColumn>
-                <TableBodyColumn column={2}>
-                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference}`}>
+                <TableBodyColumn column={1}>
+                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference as string}`}>
                     <Trans>
                       View Post
                     </Trans>

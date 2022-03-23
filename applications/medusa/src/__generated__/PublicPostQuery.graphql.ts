@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<783d63182044d3a7d919628fab9bf81c>>
- * @relayHash 06ea79a78b819a22406e1423a37e3ab8
+ * @generated SignedSource<<5291fb4d3f2b14fccc73910a34cbfc26>>
+ * @relayHash 4782c017332559dee951d819af25eab4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 06ea79a78b819a22406e1423a37e3ab8
+// @relayRequestID 4782c017332559dee951d819af25eab4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,7 @@ export type PublicPostQuery$data = {
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostViewerFragment" | "SuggestedPostsViewerFragment">;
-  };
+  } | null;
 };
 export type PublicPostQueryResponse = PublicPostQuery$data;
 export type PublicPostQuery = {
@@ -323,30 +323,25 @@ return {
         "storageKey": null
       },
       {
-        "kind": "RequiredField",
-        "field": {
-          "alias": null,
-          "args": null,
-          "concreteType": "Account",
-          "kind": "LinkedField",
-          "name": "viewer",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "FullDetailedPostViewerFragment"
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "SuggestedPostsViewerFragment"
-            }
-          ],
-          "storageKey": null
-        },
-        "action": "THROW",
-        "path": "viewer"
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "FullDetailedPostViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SuggestedPostsViewerFragment"
+          }
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -469,6 +464,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -482,15 +478,14 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
-          },
-          (v3/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "06ea79a78b819a22406e1423a37e3ab8",
+    "id": "4782c017332559dee951d819af25eab4",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -499,6 +494,6 @@ return {
 };
 })();
 
-(node as any).hash = "83475c2caed8583e8ffec3c328d267d9";
+(node as any).hash = "ae50dacf41931f861c110c58cbb1da13";
 
 export default node;

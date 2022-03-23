@@ -50,10 +50,15 @@ const Mutation = graphql`
   mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!) {
     cancelAccountClubSupporterSubscription(input: $input) {
       clubSupporterSubscription {
+        __typename
+        ... on Node {
+          id
+        }
+        ... on IAccountClubSupporterSubscription {
+          id
+        }
         ... on AccountCancelledClubSupporterSubscription {
-          account {
-            id
-          }
+          id
           endDate
           cancelledAt
           cancellationReason {
@@ -63,9 +68,7 @@ const Mutation = graphql`
           updatedAt
         }
         ... on AccountActiveClubSupporterSubscription {
-          account {
-            id
-          }
+          id
         }
       }
     }

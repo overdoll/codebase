@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cf12aa7ebadea396e57aaa85c3f3a50b>>
- * @relayHash 71d4760f440916289f4b0e1e97fda1b9
+ * @generated SignedSource<<348ca4073cda96b4f0aeeaaca33b5145>>
+ * @relayHash 543712ce0183fd7db75b4f171941497e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 71d4760f440916289f4b0e1e97fda1b9
+// @relayRequestID 543712ce0183fd7db75b4f171941497e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -54,31 +54,34 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "supporterSince",
+  "name": "id",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v4 = [
+  (v3/*: any*/)
+],
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "supporterSince",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "Club",
@@ -116,7 +119,7 @@ v7 = {
           "name": "urls",
           "plural": true,
           "selections": [
-            (v4/*: any*/),
+            (v6/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -135,27 +138,27 @@ v7 = {
           "name": "videoThumbnail",
           "plural": false,
           "selections": [
-            (v4/*: any*/)
+            (v6/*: any*/)
           ],
           "storageKey": null
         },
-        (v5/*: any*/),
-        (v6/*: any*/)
+        (v7/*: any*/),
+        (v3/*: any*/)
       ],
       "storageKey": null
     },
-    (v6/*: any*/)
+    (v3/*: any*/)
   ],
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -180,7 +183,7 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = [
+v11 = [
   (v0/*: any*/)
 ];
 return {
@@ -261,8 +264,21 @@ return {
                       (v2/*: any*/),
                       {
                         "kind": "InlineFragment",
+                        "selections": (v4/*: any*/),
+                        "type": "Node",
+                        "abstractKey": "__isNode"
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v4/*: any*/),
+                        "type": "IAccountClubSupporterSubscription",
+                        "abstractKey": "__isIAccountClubSupporterSubscription"
+                      },
+                      {
+                        "kind": "InlineFragment",
                         "selections": [
                           (v3/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -270,8 +286,7 @@ return {
                             "name": "nextBillingDate",
                             "storageKey": null
                           },
-                          (v7/*: any*/),
-                          (v6/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -302,7 +317,7 @@ return {
                                     "name": "expiration",
                                     "storageKey": null
                                   },
-                                  (v5/*: any*/)
+                                  (v7/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -356,6 +371,7 @@ return {
                         "kind": "InlineFragment",
                         "selections": [
                           (v3/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -363,7 +379,7 @@ return {
                             "name": "cancelledAt",
                             "storageKey": null
                           },
-                          (v7/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -374,23 +390,15 @@ return {
                         ],
                         "type": "AccountCancelledClubSupporterSubscription",
                         "abstractKey": null
-                      },
-                      {
-                        "kind": "InlineFragment",
-                        "selections": [
-                          (v6/*: any*/)
-                        ],
-                        "type": "Node",
-                        "abstractKey": "__isNode"
                       }
                     ],
                     "storageKey": null
                   },
-                  (v8/*: any*/)
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/)
+              (v10/*: any*/)
             ],
             "storageKey": "clubSupporterSubscriptions(first:5,status:[\"ACTIVE\",\"CANCELLED\"])"
           },
@@ -405,10 +413,10 @@ return {
             "kind": "LinkedHandle",
             "name": "clubSupporterSubscriptions"
           },
-          (v6/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
-            "args": (v10/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "ExpiredAccountClubSupporterSubscriptionConnection",
             "kind": "LinkedField",
             "name": "expiredClubSupporterSubscriptions",
@@ -430,7 +438,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -438,23 +446,23 @@ return {
                         "name": "expiredAt",
                         "storageKey": null
                       },
-                      (v7/*: any*/),
-                      (v6/*: any*/),
+                      (v8/*: any*/),
+                      (v3/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v8/*: any*/)
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v9/*: any*/)
+              (v10/*: any*/)
             ],
             "storageKey": "expiredClubSupporterSubscriptions(first:5)"
           },
           {
             "alias": null,
-            "args": (v10/*: any*/),
+            "args": (v11/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ExpiredClubSupporterSubscriptions_expiredClubSupporterSubscriptions",
@@ -467,7 +475,7 @@ return {
     ]
   },
   "params": {
-    "id": "71d4760f440916289f4b0e1e97fda1b9",
+    "id": "543712ce0183fd7db75b4f171941497e",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

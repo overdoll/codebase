@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<13dfb7955d10ef719d0f0c8335a0c29f>>
+ * @generated SignedSource<<959b6f11963c7e2b9ab0a11270b03792>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,15 +14,9 @@ export type ClubSupporterSubscriptionsSettingsFragment$data = {
   readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: "AccountActiveClubSupporterSubscription";
-        readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionPreviewFragment">;
-      } | {
-        readonly __typename: "AccountCancelledClubSupporterSubscription";
-        readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionPreviewFragment">;
-      } | {
-        // This will never be '%other', but we need some
-        // value in case none of the concrete values match.
-        readonly __typename: "%other";
+        readonly __typename: string;
+        readonly id?: string;
+        readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionPreviewFragment" | "AccountCancelledClubSupporterSubscriptionPreviewFragment">;
       };
     }>;
   };
@@ -38,6 +32,16 @@ export type ClubSupporterSubscriptionsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "clubSupporterSubscriptions"
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -122,7 +126,20 @@ return {
                 },
                 {
                   "kind": "InlineFragment",
+                  "selections": (v2/*: any*/),
+                  "type": "Node",
+                  "abstractKey": "__isNode"
+                },
+                {
+                  "kind": "InlineFragment",
+                  "selections": (v2/*: any*/),
+                  "type": "IAccountClubSupporterSubscription",
+                  "abstractKey": "__isIAccountClubSupporterSubscription"
+                },
+                {
+                  "kind": "InlineFragment",
                   "selections": [
+                    (v1/*: any*/),
                     {
                       "args": null,
                       "kind": "FragmentSpread",
@@ -135,6 +152,7 @@ return {
                 {
                   "kind": "InlineFragment",
                   "selections": [
+                    (v1/*: any*/),
                     {
                       "args": null,
                       "kind": "FragmentSpread",
@@ -185,19 +203,13 @@ return {
       ],
       "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\",\"CANCELLED\"])"
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "c21a81ee9b47de4b40854b94bc5512b9";
+(node as any).hash = "85fc92ae1b2043629a5aec41c0b95b2c";
 
 export default node;

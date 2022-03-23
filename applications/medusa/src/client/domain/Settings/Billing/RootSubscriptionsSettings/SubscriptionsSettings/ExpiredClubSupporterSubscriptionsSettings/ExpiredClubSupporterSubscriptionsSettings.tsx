@@ -7,8 +7,6 @@ import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelecti
 import { Stack } from '@chakra-ui/react'
 import { EmptyBoundary, EmptySubscriptions } from '@//:modules/content/Placeholder'
 import type { SubscriptionsSettingsQuery } from '@//:artifacts/SubscriptionsSettingsQuery.graphql'
-import ManageExpiredSubscriptionButton
-  from './ExpiredAccountClubSupporterSubscriptionPreview/ManageExpiredSubscriptionButton/ManageExpiredSubscriptionButton'
 import ExpiredAccountClubSupporterSubscriptionPreview
   from './ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview'
 

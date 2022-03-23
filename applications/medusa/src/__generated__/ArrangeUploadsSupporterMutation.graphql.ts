@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<554e8ece39d9c3a819b3c0ad57edac56>>
- * @relayHash 5df467ada323ea883038a68c859c51d9
+ * @generated SignedSource<<a7a814f201c91103e0b9ac9d911b3b57>>
+ * @relayHash daa57749417b1c67a04523cb1f6d23ba
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5df467ada323ea883038a68c859c51d9
+// @relayRequestID daa57749417b1c67a04523cb1f6d23ba
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdatePostContentIsSupporterOnlyInput = {
@@ -27,6 +27,7 @@ export type ArrangeUploadsSupporterMutation$data = {
       readonly id: string;
       readonly reference: string;
       readonly content: ReadonlyArray<{
+        readonly viewerCanViewSupporterOnlyContent: boolean;
         readonly isSupporterOnly: boolean;
         readonly resource: {
           readonly id: string;
@@ -74,10 +75,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isSupporterOnly",
+  "name": "viewerCanViewSupporterOnlyContent",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isSupporterOnly",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -123,7 +131,8 @@ return {
                 "plural": true,
                 "selections": [
                   (v4/*: any*/),
-                  (v5/*: any*/)
+                  (v5/*: any*/),
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -171,6 +180,7 @@ return {
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
+                  (v6/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -184,7 +194,7 @@ return {
     ]
   },
   "params": {
-    "id": "5df467ada323ea883038a68c859c51d9",
+    "id": "daa57749417b1c67a04523cb1f6d23ba",
     "metadata": {},
     "name": "ArrangeUploadsSupporterMutation",
     "operationKind": "mutation",
@@ -193,6 +203,6 @@ return {
 };
 })();
 
-(node as any).hash = "399255e66f5923e1fcdeb17171c08bff";
+(node as any).hash = "b7556e116ea0c3f8a7c7af5ad1dbbb4a";
 
 export default node;

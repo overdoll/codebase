@@ -28,7 +28,7 @@ const Query = graphql`
       ...FullDetailedPostFragment
       ...SuggestedPostsFragment
     }
-    viewer @required(action: THROW) {
+    viewer {
       ...FullDetailedPostViewerFragment
       ...SuggestedPostsViewerFragment
     }

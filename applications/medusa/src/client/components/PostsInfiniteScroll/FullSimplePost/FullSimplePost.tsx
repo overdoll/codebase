@@ -48,7 +48,9 @@ const PostFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment FullSimplePostViewerFragment on Account {
+    ...PostLikeButtonViewerFragment
     ...JoinClubFromPostViewerFragment
+    ...PostReportButtonViewerFragment
   }
 `
 
@@ -74,7 +76,7 @@ export default function FullSimplePost ({
       <Stack spacing={1}>
         <PostFooter
           leftItem={(
-            <PostLikeButton size='sm' query={data} />
+            <PostLikeButton size='sm' query={data} viewerQuery={viewerData} />
           )}
           centerItem={(
             <PostIndexer
@@ -86,7 +88,7 @@ export default function FullSimplePost ({
             <PostMenu variant='ghost' size='sm'>
               <PostViewButton query={data} />
               <PostCopyLinkButton query={data} />
-              <PostReportButton query={data} />
+              <PostReportButton query={data} viewerQuery={viewerData} />
               <PostModerateButton query={data} />
             </PostMenu>)}
         />

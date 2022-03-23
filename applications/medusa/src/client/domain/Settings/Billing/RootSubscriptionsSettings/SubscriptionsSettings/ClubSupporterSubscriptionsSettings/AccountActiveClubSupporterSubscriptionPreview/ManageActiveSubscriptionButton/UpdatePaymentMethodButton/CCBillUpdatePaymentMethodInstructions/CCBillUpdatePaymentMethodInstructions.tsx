@@ -63,10 +63,12 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
               <Stack spacing={1}>
                 <Text fontSize='sm' color='gray.00'>
                   <Trans>
-                    In the section where it asks <Highlight colorScheme='teal'>Enter 2 of the following pieces of
+                    In the section where it asks{' '}
+                    <Highlight colorScheme='teal'>Enter 2 of the following pieces of
                       information to
                       run a search
-                                                 </Highlight>, enter this information and click <Highlight colorScheme='teal'>Search</Highlight>
+                    </Highlight>
+                    {' '}, enter this information and click <Highlight colorScheme='teal'>Search</Highlight>
                   </Trans>
                 </Text>
                 <Box>
@@ -99,10 +101,11 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
               </Box>
               <Stack spacing={1}>
                 <Text fontSize='sm' color='gray.00'>
-                  <Trans> In the section where it asks <Highlight colorScheme='teal'>Tell us how you purchased your
-                    subscription
-                  </Highlight>, enter
-                    this information
+                  <Trans> In the section where it asks{' '}
+                    <Highlight colorScheme='teal'>Tell us how you purchased your
+                      subscription
+                    </Highlight>
+                    {' '}, enter this information
                   </Trans>
                 </Text>
                 <CopyCodeToClipboard>
@@ -112,11 +115,16 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
               <Stack spacing={1}>
                 <Text fontSize='sm' color='gray.00'>
                   <Trans>
-                    In the section where it asks <Highlight colorScheme='teal'>Enter 2 of the following pieces of
+                    In the section where it asks{' '}
+                    <Highlight colorScheme='teal'>Enter 2 of the following pieces of
                       information to
                       run a search
-                                                 </Highlight>, enter these
-                    two pieces of information and click <Highlight colorScheme='teal'>Search</Highlight>
+                    </Highlight>
+                    {' '}, enter these two pieces of information and click{' '}
+                    <Highlight
+                      colorScheme='teal'
+                    >Search
+                    </Highlight>
                   </Trans>
                 </Text>
                 <Box>
@@ -146,12 +154,14 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
       </Tabs>
       <Text fontSize='sm' color='gray.00'>
         <Trans>
-          A list with one or more subscriptions should appear. <Highlight colorScheme='teal'>Find the Subscription ID
+          A list with one or more subscriptions should appear.{' '}
+          <Highlight colorScheme='teal'>Find the Subscription ID
             that correlates to the one
             listed here
-                                                               </Highlight> and click on <Highlight colorScheme='teal'>Click here to update your payment
+          </Highlight>{' '}and click on{' '}
+          <Highlight colorScheme='teal'>Click here to update your payment
             information
-        </Highlight> to update your payment information.
+          </Highlight>{' '}to update your payment information.
         </Trans>
       </Text>
     </Stack>

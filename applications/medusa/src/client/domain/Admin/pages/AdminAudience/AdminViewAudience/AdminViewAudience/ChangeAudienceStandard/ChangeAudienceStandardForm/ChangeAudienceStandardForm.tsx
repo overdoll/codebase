@@ -1,6 +1,5 @@
 import { HStack, Stack, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -50,8 +49,6 @@ export default function ChangeAudienceStandardForm ({
   const data = useFragment(Fragment, query)
 
   const [commit, isInFlight] = useMutation<ChangeAudienceStandardFormMutation>(Mutation)
-
-  const { i18n } = useLingui()
 
   const schema = Joi.object({
     standard: GenericBoolean()

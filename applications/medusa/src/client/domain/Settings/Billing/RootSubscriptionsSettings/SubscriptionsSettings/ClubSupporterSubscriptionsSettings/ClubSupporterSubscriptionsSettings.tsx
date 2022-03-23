@@ -28,10 +28,18 @@ const Fragment = graphql`
       edges {
         node {
           __typename
+          ... on Node {
+            id
+          }
+          ...on IAccountClubSupporterSubscription {
+            id
+          }
           ...on AccountActiveClubSupporterSubscription {
+            id
             ...AccountActiveClubSupporterSubscriptionPreviewFragment
           }
           ...on AccountCancelledClubSupporterSubscription {
+            id
             ...AccountCancelledClubSupporterSubscriptionPreviewFragment
           }
         }

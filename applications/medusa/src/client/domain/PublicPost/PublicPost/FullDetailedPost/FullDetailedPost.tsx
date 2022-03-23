@@ -29,7 +29,7 @@ import JoinClubFromPost
 
 interface Props {
   query: FullDetailedPostFragment$key
-  viewerQuery: FullDetailedPostViewerFragment$key
+  viewerQuery: FullDetailedPostViewerFragment$key | null
 }
 
 const PostFragment = graphql`
@@ -52,6 +52,8 @@ const PostFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment FullDetailedPostViewerFragment on Account {
+    ...PostReportButtonViewerFragment
+    ...PostLikeButtonViewerFragment
     ...JoinClubFromPostViewerFragment
   }
 `
@@ -77,7 +79,7 @@ export default function FullDetailedPost ({
         </HStack>
         <PostGalleryPublicDetailed query={data} />
         <PostFooter
-          leftItem={<PostLikeButton size='sm' query={data} />}
+          leftItem={<PostLikeButton size='sm' query={data} viewerQuery={viewerData} />}
           centerItem={<PostIndexer
             query={data}
             length={slidesCount}
@@ -86,7 +88,7 @@ export default function FullDetailedPost ({
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
               <PostCopyLinkButton query={data} />
-              <PostReportButton query={data} />
+              <PostReportButton query={data} viewerQuery={viewerData} />
               <PostModerateButton query={data} />
             </PostMenu>)}
         />

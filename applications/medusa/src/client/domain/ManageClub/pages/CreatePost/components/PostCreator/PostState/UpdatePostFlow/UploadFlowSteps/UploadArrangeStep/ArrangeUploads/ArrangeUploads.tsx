@@ -59,6 +59,7 @@ const SupporterUploadsMutationGQL = graphql`
         id
         reference
         content {
+          viewerCanViewSupporterOnlyContent
           isSupporterOnly
           resource {
             id

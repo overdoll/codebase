@@ -2,7 +2,7 @@ import type { CCBillSubscribeFormFragment$key } from '@//:artifacts/CCBillSubscr
 import type { CCBillSubscribeFormMutation, Currency } from '@//:artifacts/CCBillSubscribeFormMutation.graphql'
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
-import { HStack, Link, Stack, Text } from '@chakra-ui/react'
+import { HStack, Stack, Text } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { Form, FormInput, FormSubmitButton, InputFooter, SwitchInput } from '@//:modules/content/HookedComponents/Form'

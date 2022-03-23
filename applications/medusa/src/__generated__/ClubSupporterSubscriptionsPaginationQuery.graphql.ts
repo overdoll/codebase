@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8759878c95123c4a80d6d2276e58ef72>>
- * @relayHash fe795ebc99448c93c597c6439a537295
+ * @generated SignedSource<<c5e27612bc0bc0599850f26c139f4e65>>
+ * @relayHash 774297799265af0f0bf67288da74cd55
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fe795ebc99448c93c597c6439a537295
+// @relayRequestID 774297799265af0f0bf67288da74cd55
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -91,28 +91,31 @@ v6 = [
     ]
   }
 ],
-v7 = {
+v7 = [
+  (v5/*: any*/)
+],
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "supporterSince",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "Club",
@@ -150,7 +153,7 @@ v10 = {
           "name": "urls",
           "plural": true,
           "selections": [
-            (v8/*: any*/),
+            (v9/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -169,11 +172,11 @@ v10 = {
           "name": "videoThumbnail",
           "plural": false,
           "selections": [
-            (v8/*: any*/)
+            (v9/*: any*/)
           ],
           "storageKey": null
         },
-        (v9/*: any*/),
+        (v10/*: any*/),
         (v5/*: any*/)
       ],
       "storageKey": null
@@ -258,8 +261,21 @@ return {
                           (v4/*: any*/),
                           {
                             "kind": "InlineFragment",
+                            "selections": (v7/*: any*/),
+                            "type": "Node",
+                            "abstractKey": "__isNode"
+                          },
+                          {
+                            "kind": "InlineFragment",
+                            "selections": (v7/*: any*/),
+                            "type": "IAccountClubSupporterSubscription",
+                            "abstractKey": "__isIAccountClubSupporterSubscription"
+                          },
+                          {
+                            "kind": "InlineFragment",
                             "selections": [
-                              (v7/*: any*/),
+                              (v5/*: any*/),
+                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -267,8 +283,7 @@ return {
                                 "name": "nextBillingDate",
                                 "storageKey": null
                               },
-                              (v10/*: any*/),
-                              (v5/*: any*/),
+                              (v11/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -299,7 +314,7 @@ return {
                                         "name": "expiration",
                                         "storageKey": null
                                       },
-                                      (v9/*: any*/)
+                                      (v10/*: any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -352,7 +367,8 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v7/*: any*/),
+                              (v5/*: any*/),
+                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -360,7 +376,7 @@ return {
                                 "name": "cancelledAt",
                                 "storageKey": null
                               },
-                              (v10/*: any*/),
+                              (v11/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -371,14 +387,6 @@ return {
                             ],
                             "type": "AccountCancelledClubSupporterSubscription",
                             "abstractKey": null
-                          },
-                          {
-                            "kind": "InlineFragment",
-                            "selections": [
-                              (v5/*: any*/)
-                            ],
-                            "type": "Node",
-                            "abstractKey": "__isNode"
                           }
                         ],
                         "storageKey": null
@@ -442,7 +450,7 @@ return {
     ]
   },
   "params": {
-    "id": "fe795ebc99448c93c597c6439a537295",
+    "id": "774297799265af0f0bf67288da74cd55",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
@@ -451,6 +459,6 @@ return {
 };
 })();
 
-(node as any).hash = "c21a81ee9b47de4b40854b94bc5512b9";
+(node as any).hash = "85fc92ae1b2043629a5aec41c0b95b2c";
 
 export default node;

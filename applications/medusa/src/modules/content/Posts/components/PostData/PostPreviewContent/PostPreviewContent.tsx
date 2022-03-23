@@ -25,7 +25,7 @@ export default function PostPreviewContent ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const firstContent = data.content[0].resource
+  const firstContent = data.content[0]?.resource
 
   const hasMoreThanOne = data.content.length > 1
 

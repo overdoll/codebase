@@ -23,7 +23,6 @@ const Fragment = graphql`
     ...PostPreviewContentFragment
     ...PostCopyLinkButtonFragment
     ...PostModerateButtonFragment
-    ...PostReportButtonFragment
   }
 `
 
@@ -42,7 +41,6 @@ export default function PublishedPost ({
         </Badge>
         <PostMenu size='xs'>
           <PostCopyLinkButton query={data} />
-          <PostReportButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

@@ -10,6 +10,8 @@ import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import { MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import { ContentBrushPen } from '@//:assets/icons'
 
 interface Props {
   query: DraftPostFragment$key
@@ -48,6 +50,14 @@ export default function DraftPost ({
           </Trans>
         </Badge>
         <PostMenu size='xs'>
+          <MenuLinkItem
+            to={`${draftPostPath()}?post=${data.reference}`}
+            text={(
+              <Trans>
+                Edit Draft
+              </Trans>)}
+            icon={ContentBrushPen}
+          />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>
