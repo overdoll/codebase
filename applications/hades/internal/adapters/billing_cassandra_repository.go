@@ -956,8 +956,10 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 
 	builder := accountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
 
-	if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-		return nil, err
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
 	}
 
 	var status []string
@@ -975,14 +977,16 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 		"status":     status,
 	}
 
-	createdCursor, err := cursor.GetCursor()
+	if cursor != nil {
+		createdCursor, err := cursor.GetCursor()
 
-	if err != nil {
-		return nil, err
-	}
+		if err != nil {
+			return nil, err
+		}
 
-	if createdCursor != nil {
-		bound["id"] = createdCursor[0].(string)
+		if createdCursor != nil {
+			bound["id"] = createdCursor[0].(string)
+		}
 	}
 
 	if err := builder.Query(r.session).
