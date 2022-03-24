@@ -35,6 +35,7 @@ module.exports = {
   }) {
     const config = options.webpackOptions
     config.stats = 'verbose'
+    config.parallelism = 10
 
     if (!env.dev && env.target === 'web') {
       config.fileLoaderOutputName = '[name].[contenthash].[ext]'
@@ -66,7 +67,7 @@ module.exports = {
     // Exclude from file-loader
     config.module.rules[
       config.module.rules.findIndex(Helpers.makeLoaderFinder('file-loader'))
-      ].exclude.push(/\.(svg)$/)
+    ].exclude.push(/\.(svg)$/)
 
     config.module.unsafeCache = true
 
