@@ -60,6 +60,7 @@ func (h ClubSupporterSubscriptionCancelledHandler) Handle(ctx context.Context, c
 			"ClubLink":         clubUrl.String(),
 			"SubscriptionLink": subscriptionUrl.String(),
 			"ExpirationDate":   cmd.ExpirationDate.Format("January 02"),
+			"SubscriptionId":   cmd.SubscriptionId,
 		},
 	)
 

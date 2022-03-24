@@ -1,16 +1,15 @@
 {{template "layout.gohtml" .}}
 
-{{define "title"}}Subscription Cancelled{{end}}
-
 {{define "content"}}
-    {{.Username}}
-    {{.ClubName}}
-    {{.ClubLink}}
+    Hello {{.Username}}!
 
-    <br/>
+    We have cancelled your subscription to {{.ClubName}} ({{.ClubLink}}).
 
-    {{.SubscriptionLink}}
-    {{.ExpirationDate}}
+    Your club supporter benefits will expire on {{.ExpirationDate}}.
+
+    To manage your subscription, visit {{.SubscriptionLink}}
+
+    For support, contact hello@overdoll.com
 {{end}}
 
 

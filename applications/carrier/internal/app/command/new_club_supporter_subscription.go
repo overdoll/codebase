@@ -72,6 +72,7 @@ func (h NewClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd New
 			"BillingDateStart": cmd.BillingDate.Format("Jan 02"),
 			"BillingDateEnd":   cmd.NextBillingDate.Format("Jan 02"),
 			"FormattedAmount":  *formattedCurrency,
+			"SubscriptionId":   cmd.SubscriptionId,
 		},
 	)
 
