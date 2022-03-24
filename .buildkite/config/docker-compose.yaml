@@ -19,7 +19,7 @@ services:
       - CASSANDRA_SEEDS=scylla
       - CASSANDRA_HOST=scylla
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
-    image: temporalio/auto-setup:1.9.2
+    image: temporalio/auto-setup:1.14.1
     ports:
       - 7233:7233
     volumes:
