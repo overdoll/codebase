@@ -21,8 +21,8 @@ steps:
         APP_KEY: AES256Key-32Characters1234567890
         SESSION_SECRET: AES256Key-32Characters1234567890
         REDIS_HOST: redis
-        STATIC_URL: https://traefik
-        APP_URL: https://traefik
+        STATIC_URL: https://ci.overdoll.dev
+        APP_URL: https://ci.overdoll.dev
         LIBWEBP_VERSION: 1.1.0
         COOKIE_KEY: AES256Key-32Characters1234567890
         COOKIE_BLOCK_KEY: AES256Key-32Characters1234567890
