@@ -152,7 +152,6 @@ module.exports = {
     }
 
     if (!opts.env.dev) {
-      config.parallelism = 10
       config.cache = false
     }
 
