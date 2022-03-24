@@ -6,7 +6,7 @@ import (
 	"path"
 )
 
-func CreateManageSubscriptionUrl(subscriptionId string) (*url.URL, error) {
+func CreateManageSubscriptionUrl() (*url.URL, error) {
 
 	u, err := url.Parse(os.Getenv("APP_URL"))
 
@@ -14,7 +14,7 @@ func CreateManageSubscriptionUrl(subscriptionId string) (*url.URL, error) {
 		return nil, err
 	}
 
-	u.Path = path.Join(u.Path, subscriptionId)
+	u.Path = path.Join(u.Path, "/settings/billing/subscriptions")
 
 	return u, nil
 }

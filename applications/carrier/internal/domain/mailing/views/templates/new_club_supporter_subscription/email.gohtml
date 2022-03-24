@@ -1,5 +1,7 @@
 {{template "layout.gohtml" .}}
 
+{{define "title"}}New Subscription{{end}}
+
 {{define "content"}}
     Hello {{.Username}}!
 
@@ -7,7 +9,7 @@
     <br/>
     Billing Details: Purchase of {{.FormattedAmount}} to {{.ClubName}} ({{.ClubLink}})
     <br/>
-    To manage your subscription, sign in and visit {{.SubscriptionLink}}.
+    To manage your subscription, click here: <a href="{{.SubscriptionLink}}">Manage Subscriptions</a>.
     <br/>
     Your subscription will be from {{.BillingDateStart}} to {{.BillingDateEnd}}
     <br/>

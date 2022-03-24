@@ -54,7 +54,7 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 			return err
 		}
 
-		subscriptionUrl, err := links.CreateManageSubscriptionUrl(renewal.SubscriptionId)
+		subscriptionUrl, err := links.CreateManageSubscriptionUrl()
 
 		if err != nil {
 			return err

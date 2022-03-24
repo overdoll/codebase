@@ -3,15 +3,16 @@
 {{define "title"}}Subscription Refunded{{end}}
 
 {{define "content"}}
-    {{.Username}}
-    {{.ClubName}}
-    {{.ClubLink}}
-
+    Hello {{.Username}}!
     <br/>
-
-    {{.SubscriptionLink}}
-    {{.FormattedAmount}}
-    {{.TransactionLink}}
+    We've refunded the amount {{.FormattedAmount}} back to your card.
+    <br/>
+    For reference, the refund was for {{.ClubName}} ({{.ClubLink}})
+    <br/>
+    Your subscription was not cancelled. To manage your subscription, visit <a href="{{.SubscriptionLink}}">Manage
+        Subscriptions</a>.
+    <br/>
+    For support, contact hello@overdoll.com
 {{end}}
 
 

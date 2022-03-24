@@ -50,7 +50,7 @@ func (h NewClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd New
 		return err
 	}
 
-	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl()
 
 	if err != nil {
 		return err
