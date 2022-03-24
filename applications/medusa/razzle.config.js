@@ -35,7 +35,6 @@ module.exports = {
   }) {
     const config = options.webpackOptions
     config.stats = 'verbose'
-    config.parallelism = 10
 
     if (!env.dev && env.target === 'web') {
       config.fileLoaderOutputName = '[name].[contenthash].[ext]'
@@ -150,6 +149,11 @@ module.exports = {
       if (!opts.env.dev) {
         //  config.externals = {}
       }
+    }
+
+    if (!opts.env.dev) {
+      config.parallelism = 10
+      config.cache = false
     }
 
     if (opts.env.target === 'web') {
