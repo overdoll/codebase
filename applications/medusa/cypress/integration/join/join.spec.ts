@@ -42,8 +42,8 @@ describe('Join', () => {
 
     cy.waitUntil(() => cy.findByRole('button', { name: /Cancel/iu }).should('not.be.disabled')).click()
 
-    cy.findByRole('button', { name: /Yes, cancel/iu }).should('not.be.disabled').click()
+    cy.waitUntil(() => cy.findByRole('button', { name: /Yes, cancel/iu }).should('not.be.disabled')).click()
 
-    cy.findByRole('button', { name: /Continue/iu }).should('exist')
+    cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('exist'))
   })
 })
