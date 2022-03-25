@@ -47,7 +47,7 @@ func (h ClubSupporterSubscriptionRefundedHandler) Handle(ctx context.Context, cm
 		return err
 	}
 
-	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl()
 
 	if err != nil {
 		return err
@@ -74,6 +74,7 @@ func (h ClubSupporterSubscriptionRefundedHandler) Handle(ctx context.Context, cm
 			"SubscriptionLink": subscriptionUrl.String(),
 			"TransactionLink":  transactionUrl.String(),
 			"FormattedAmount":  *formattedCurrency,
+			"SubscriptionId":   cmd.SubscriptionId,
 		},
 	)
 

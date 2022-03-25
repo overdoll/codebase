@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -64,7 +65,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	require.NoError(t, err, "no error generating payment callback url")
 	q := callbackFailedAddressUrl.Query()
 	q.Add("ccbillDenialId", "0222056501000243638")
-	q.Add("ccbillResponseDigest", "1962d623384d4cc4c04817c62def2e25")
+	q.Add("ccbillResponseDigest", ccbill.CreateCCBillDeniedHash("0222056501000243638"))
 	q.Add("ccbillDeclineCode", "BE-111")
 	q.Add("ccbillSubscriptionId", "")
 	q.Add("ccbillDeclineReason", "Timeout")
@@ -100,7 +101,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	require.NoError(t, err, "no error generating payment callback url")
 	q = callbackSuccessAddressUrl.Query()
 	q.Add("ccbillDenialId", "")
-	q.Add("ccbillResponseDigest", "6eb57d362c97e55c051211fc9d7a1668")
+	q.Add("ccbillResponseDigest", ccbill.CreateCCBillAuthorizedHash("222059101000249429"))
 	q.Add("ccbillDeclineCode", "")
 	q.Add("ccbillSubscriptionId", "222059101000249429")
 	q.Add("ccbillDeclineReason", "")

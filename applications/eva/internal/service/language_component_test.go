@@ -47,7 +47,7 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 	require.NoError(t, err)
 
 	// pick 3rd language
-	pickedLanguage := languages.Languages[2]
+	pickedLanguage := languages.Languages[0]
 
 	var updateLanguage UpdateLanguage
 

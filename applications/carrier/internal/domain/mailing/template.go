@@ -5,6 +5,7 @@ import (
 	"embed"
 	"fmt"
 	htmlTemplate "html/template"
+	textTemplate "text/template"
 )
 
 //go:embed views/support/*.gohtml views/templates/**/*.gohtml
@@ -37,12 +38,12 @@ func NewTemplate(template string, args interface{}) (*Template, error) {
 		return nil, fmt.Errorf("failed to parse html templates: %s", err)
 	}
 
-	textTemplatedResult, err := htmlTemplate.New("plaintext.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/plaintext.gotmpl")
+	textTemplatedResult, err := textTemplate.New("plaintext.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/plaintext.gotmpl")
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse plaintext templates: %s", err)
 	}
 
-	textTemplatedSubjectResult, err := htmlTemplate.New("subject.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/subject.gotmpl")
+	textTemplatedSubjectResult, err := textTemplate.New("subject.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/subject.gotmpl")
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse subject templates: %s", err)
 	}

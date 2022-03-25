@@ -12,8 +12,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.puppy.rule=PathPrefix(`/api/graphql`)"
-      - "traefik.http.routers.puppy.entrypoints=websecure"
-      - "traefik.http.routers.puppy.tls=true"
+      - "traefik.http.routers.puppy.entrypoints=web"
       - "traefik.port=8000"
     deploy:
       restart_policy:

@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://traefik",
+  "baseUrl": "https://ci.overdoll.dev",
   "env": {
     "codeCoverage": {
       "url": "/__coverage__"

@@ -6,16 +6,26 @@ import (
 	"os"
 )
 
-func validateCCBillTransaction(hash, id string, val string) bool {
+func CreateCCBillAuthorizedHash(ccbillSubscriptionId string) string {
+	return doHash(ccbillSubscriptionId, "1")
+}
+
+func CreateCCBillDeniedHash(ccbillDenialId string) string {
+	return doHash(ccbillDenialId, "0")
+}
+
+func doHash(id string, key string) string {
 	ccbillSubscriptionDigestBuilder := md5.New()
 	ccbillSubscriptionDigestBuilder.Write([]byte(id))
-	ccbillSubscriptionDigestBuilder.Write([]byte(val))
+	ccbillSubscriptionDigestBuilder.Write([]byte(key))
 
 	ccbillSubscriptionDigestBuilder.Write([]byte(os.Getenv("CCBILL_SALT_KEY")))
 
-	digestToCompareAgainst := hex.EncodeToString(ccbillSubscriptionDigestBuilder.Sum(nil)[:])
+	return hex.EncodeToString(ccbillSubscriptionDigestBuilder.Sum(nil)[:])
+}
 
-	return digestToCompareAgainst == hash
+func validateCCBillTransaction(hash, id string, val string) bool {
+	return doHash(id, val) == hash
 }
 
 func validateCCBillTransactionAuthorized(responseDigest string, ccbillSubscriptionId string) bool {

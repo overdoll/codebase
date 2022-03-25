@@ -30,8 +30,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.medusa.entrypoints=websecure"
-      - "traefik.http.routers.medusa.tls=true"
+      - "traefik.http.routers.medusa.entrypoints=web"
       - "traefik.port=8000"
 
   run:
