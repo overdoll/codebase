@@ -2,7 +2,7 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubPublicPostsQuery } from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll from '../../../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {

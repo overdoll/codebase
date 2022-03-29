@@ -4,7 +4,7 @@ import type { ClubExclusivePostsFragment$key } from '@//:artifacts/ClubExclusive
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
-import { configMap } from '../../../../../components/PostsSearch/constants'
+import { configMap } from '../../../../components/PostsSearch/constants'
 import { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
 
 interface Props {

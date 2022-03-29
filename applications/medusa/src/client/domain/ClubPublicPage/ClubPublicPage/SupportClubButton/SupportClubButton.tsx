@@ -8,7 +8,7 @@ import { ButtonProps, Modal, ModalBody, ModalContent, ModalOverlay, Stack, Text 
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import displayPrice from '../../../../../../modules/support/displayPrice'
+import displayPrice from '@//:modules/support/displayPrice'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'

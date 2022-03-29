@@ -125,8 +125,8 @@ export default {
       include: ['src/client/domain/ClubPublicPage']
     },
     {
-      path: 'src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/__locale__/{locale}/index',
-      include: ['src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts']
+      path: 'src/client/domain/ClubPublicPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/ClubPublicPosts']
     },
     {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',

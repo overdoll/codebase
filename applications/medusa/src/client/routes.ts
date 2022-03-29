@@ -2414,14 +2414,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/RootClubPublicPosts'
+            './domain/ClubPublicPosts/RootClubPublicPosts'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages

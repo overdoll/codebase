@@ -10,7 +10,7 @@ import { useQueryParam } from 'use-query-params'
 import SupportSelectMethod from './SupportSelectMethod/SupportSelectMethod'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import QueryErrorBoundary
-  from '../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+  from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import CCBillDisplayTransaction from './CCBillDisplayTransaction/CCBillDisplayTransaction'

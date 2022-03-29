@@ -7,16 +7,16 @@ import ClubPublicPostsQuery from '@//:artifacts/ClubPublicPostsQuery.graphql'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 import { useParams } from '@//:modules/routing'
-import useGeneralSearchArguments from '../../../../../components/PostsSearch/helpers/useGeneralSearchArguments'
-import { PostOrderButton } from '../../../../../components/PostsSearch'
-import PostSearchButton from '../../../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
-import PageFixedHeader from '../../../../../components/PageFixedHeader/PageFixedHeader'
+import useGeneralSearchArguments from '../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import { PostOrderButton } from '../../components/PostsSearch'
+import PostSearchButton from '../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import { Flex, HStack } from '@chakra-ui/react'
-import FixedHeaderWrapper from '../../../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import FixedHeaderWrapper from '../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import PostSupporterStatusButton
-  from '../../../../../components/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
+  from '../../components/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
 
 interface Props {
   prepared: {

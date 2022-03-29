@@ -12,11 +12,11 @@ import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClubMembers } from '@//:assets/icons/interface'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
-import ClubMenu from './components/ClubMenu/ClubMenu'
-import ClubTopPosts from './components/ClubTopPosts/ClubTopPosts'
-import ClubExclusivePosts from './components/ClubExclusivePosts/ClubExclusivePosts'
-import SupportClubButton from './components/SupportClubButton/SupportClubButton'
-import JoinClubFromPage from './components/JoinClubButton/JoinClubFromPage/JoinClubFromPage'
+import ClubMenu from './ClubMenu/ClubMenu'
+import ClubTopPosts from './ClubTopPosts/ClubTopPosts'
+import ClubExclusivePosts from './ClubExclusivePosts/ClubExclusivePosts'
+import SupportClubButton from './SupportClubButton/SupportClubButton'
+import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>

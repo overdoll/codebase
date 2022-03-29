@@ -4,7 +4,7 @@ import { useFragment } from 'react-relay/hooks'
 import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { Stack } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import PaymentMethod from '../../../../../../../../../../../components/PaymentMethod/PaymentMethod'
+import PaymentMethod from '../../../../../../../../../../components/PaymentMethod/PaymentMethod'
 
 interface Props {
   onChange: (id: string) => void

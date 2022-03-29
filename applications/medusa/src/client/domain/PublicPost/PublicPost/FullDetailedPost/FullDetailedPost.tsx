@@ -25,7 +25,7 @@ import PostReportButton
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import JoinClubFromPost
-  from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props {
   query: FullDetailedPostFragment$key
