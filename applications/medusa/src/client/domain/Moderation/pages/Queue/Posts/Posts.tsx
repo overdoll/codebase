@@ -17,7 +17,7 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 
 interface Props {
   query: PreloadedQuery<PostsQuery>

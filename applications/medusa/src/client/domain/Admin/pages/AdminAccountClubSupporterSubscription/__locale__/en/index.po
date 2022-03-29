@@ -43,9 +43,18 @@ msgstr ""
 msgid "Cancelled At"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:96
+msgid "Close"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:68
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionClub/AdminClubSupporterSubscriptionClub.tsx:32
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:61
 msgid "Club"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:66
+msgid "Date"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:61
@@ -90,6 +99,10 @@ msgstr ""
 msgid "No billing error found"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:56
+msgid "Price"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:69
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions/AdminAccountCancelledClubSupporterSubscriptionOptions.tsx:71
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions/AdminAccountExpiredClubSupporterSubscriptionOptions.tsx:70
@@ -115,8 +128,17 @@ msgstr ""
 msgid "Supporter Since"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:60
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:74
+msgid "Sync Subscription"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:63
 msgid "Transactions"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:51
+msgid "Type"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions/AdminAccountActiveClubSupporterSubscriptionOptions.tsx:75

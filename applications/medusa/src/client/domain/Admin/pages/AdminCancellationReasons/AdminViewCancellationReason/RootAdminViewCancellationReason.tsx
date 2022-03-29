@@ -12,7 +12,8 @@ import { useParams } from '@//:modules/routing/useParams'
 import { Stack } from '@chakra-ui/react'
 import AdminViewCancellationReason from './AdminViewCancellationReason/AdminViewCancellationReason'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
-import AdminBackButton from '../../../components/AdminBackButton/AdminBackButton'
+import { Trans } from '@lingui/macro'
+import BackButton from '../../../../../../modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   prepared: {
@@ -33,7 +34,11 @@ export default function RootAdminViewCancellationReason (props: Props): JSX.Elem
       <Helmet title='view cancellation reason' />
       <PageWrapper>
         <Stack spacing={2}>
-          <AdminBackButton to='/admin/cancellation-reason/search' />
+          <BackButton to='/admin/cancellation-reason/search'>
+            <Trans>
+              Back to search
+            </Trans>
+          </BackButton>
           <QueryErrorBoundary loadQuery={() => loadQuery({
             reference: match.reference as string
           })}

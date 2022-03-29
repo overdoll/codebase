@@ -23,7 +23,7 @@ const SessionsSettingsQueryGQL = graphql`
 const SessionsGQL = graphql`
   fragment SessionsSettingsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "SessionsPaginationQuery" ) {

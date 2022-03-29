@@ -11,7 +11,7 @@ import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
-import NumberBadge from '../../../../../../../components/NumberBadge/NumberBadge'
+import NumberBadge from '../../../../../../../components/ContentHints/NumberBadge/NumberBadge'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'

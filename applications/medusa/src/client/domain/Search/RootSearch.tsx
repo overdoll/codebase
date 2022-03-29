@@ -6,7 +6,7 @@ import type { SearchQuery as SearchQueryType } from '@//:artifacts/SearchQuery.g
 import SearchQuery from '@//:artifacts/SearchQuery.graphql'
 import Search from './Search/Search'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import useGeneralSearchArguments from '../../components/PostsSearch/helpers/useGeneralSearchArguments'
+import useGeneralSearchArguments from '../../components/PostsSearch/support/useGeneralSearchArguments'
 import { PostOrderButton, PostSearchButton } from '../../components/PostsSearch'
 import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper

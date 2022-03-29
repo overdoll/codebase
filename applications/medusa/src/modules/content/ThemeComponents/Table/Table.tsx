@@ -1,6 +1,6 @@
 import { Flex, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { LoadMoreProps } from '../../ContentSelection/components/LoadMore/LoadMore'
+import { LoadMoreProps } from '../../ContentSelection/LoadMore/LoadMore'
 import { LinkTile, LoadMore } from '../../ContentSelection'
 
 interface TableRowBackgroundProps {

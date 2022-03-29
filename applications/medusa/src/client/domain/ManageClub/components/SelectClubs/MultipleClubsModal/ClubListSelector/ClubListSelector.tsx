@@ -2,7 +2,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { ClubListSelectorQuery } from '@//:artifacts/ClubListSelectorQuery.graphql'
 import ClubTileOverlay
-  from '@//:modules/content/ContentSelection/components/TileOverlay/ClubTileOverlay/ClubTileOverlay'
+  from '@//:modules/content/ContentSelection/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 import generatePath from '@//:modules/routing/generatePath'
 import { useHistory, useParams } from '@//:modules/routing'
 import { useLazyLoadQuery } from 'react-relay/hooks'

@@ -21,7 +21,7 @@ import {
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { DeleteBin } from '@//:assets/icons'
-import PaymentMethod from '../../../../../../../components/PaymentMethod/PaymentMethod'
+import PaymentMethod from '../../PaymentMethod/PaymentMethod'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { ConnectionProp } from '@//:types/components'
 

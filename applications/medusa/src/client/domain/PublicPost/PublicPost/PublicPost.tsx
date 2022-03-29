@@ -3,7 +3,7 @@ import type { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
 import { graphql } from 'react-relay'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
 import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'

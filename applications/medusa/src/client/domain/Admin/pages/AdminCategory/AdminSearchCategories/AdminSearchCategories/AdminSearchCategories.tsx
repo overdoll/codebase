@@ -4,7 +4,7 @@ import { AdminSearchCategoriesQuery } from '@//:artifacts/AdminSearchCategoriesQ
 import { removeNode } from '@//:modules/support'
 import { GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import CategoryTileOverlay
-  from '@//:modules/content/ContentSelection/components/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
+  from '@//:modules/content/ContentSelection/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
 import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 

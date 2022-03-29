@@ -17,6 +17,10 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/RootAdminViewSeries.tsx:37
+msgid "Back to search"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/AdminViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:113
 msgid "Category Title"
 msgstr ""

@@ -17,6 +17,10 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/RootAdminViewCharacter.tsx:39
+msgid "Back to search"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/AdminViewCharacter/ChangeCharacterName/ChangeCharacterName.tsx:57
 msgid "Change Character Name"
 msgstr ""

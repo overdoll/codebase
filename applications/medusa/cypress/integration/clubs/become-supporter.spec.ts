@@ -105,12 +105,12 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
 
     // generate recovery codes
-    cy.visit('/configure/multi-factor/recovery-codes')
+    cy.visit('/settings/security/multi-factor/recovery-codes')
     cy.findByRole('button', { name: /Generate Recovery Codes/ }).click()
     cy.findByText(/Make sure you save these codes/iu).should('be.visible')
 
     // enable totp
-    cy.visit('/configure/multi-factor/totp')
+    cy.visit('/settings/security/multi-factor/totp')
     gotoNextStep()
     cy.get('[aria-label="Copy"]').find('code').invoke('text').then(secret => {
       // use a plugin to generate a one time password using the secret

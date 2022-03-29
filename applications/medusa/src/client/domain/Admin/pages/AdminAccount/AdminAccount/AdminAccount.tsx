@@ -5,7 +5,7 @@ import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
 import AdminClubSupporterSubscriptions from './AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions'
 import AdminTransactions from './AdminTransactions/AdminTransactions'
-import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
+import LargeAccountHeader from './LargeAccountHeader/LargeAccountHeader'
 import AdminPermissions from './AdminPermissions/AdminPermissions'
 
 interface Props {

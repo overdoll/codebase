@@ -54,24 +54,22 @@ msgid "Close"
 msgstr ""
 
 #: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:14
-msgid "Community Guidelines"
-msgstr ""
+#~ msgid "Community Guidelines"
+#~ msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:107
 msgid "Content Moderation"
 msgstr ""
 
-#: src/modules/hooks/useCopyToClipboardWrapper/index.ts:23
+#: src/modules/hooks/useCopyToClipboardWrapper.ts:23
 msgid "Copied to clipboard!"
 msgstr ""
 
 #: src/client/components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard.tsx:22
-msgid "Copied!"
-msgstr ""
+#~ msgid "Copied!"
+#~ msgstr ""
 
 #: src/client/components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard.tsx:23
-#: src/client/components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard.tsx:22
-#: src/client/components/ContentHints/CopyToClipboardButton/CopyToClipboardButton.tsx:33
 msgid "Copy"
 msgstr ""
 
@@ -122,8 +120,8 @@ msgid "Go Back"
 msgstr ""
 
 #: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:28
-msgid "Go back to settings"
-msgstr ""
+#~ msgid "Go back to settings"
+#~ msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:28
@@ -157,7 +155,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:40
+#: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:40
 msgid "Load More"
 msgstr ""
 
@@ -345,8 +343,8 @@ msgid "Retry"
 msgstr ""
 
 #: src/client/components/ContentHints/SpoilerText/SpoilerText.tsx:38
-msgid "Reveal Spoiler"
-msgstr ""
+#~ msgid "Reveal Spoiler"
+#~ msgstr ""
 
 #: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:85
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
@@ -357,8 +355,28 @@ msgstr ""
 #~ msgid "Save ({0})"
 #~ msgstr ""
 
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:113
+msgid "Search for a series"
+msgstr ""
+
 #: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:64
 msgid "Search for characters, categories, or series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:76
+msgid "Select Rule"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:85
+msgid "Select Series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:91
+msgid "Select a rule"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:100
+msgid "Select a series"
 msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton.tsx:13

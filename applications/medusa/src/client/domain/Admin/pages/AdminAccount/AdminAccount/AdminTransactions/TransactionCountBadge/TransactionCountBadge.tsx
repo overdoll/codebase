@@ -1,6 +1,6 @@
 import { HStack, Text } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import NumberBadge from '../../../../../../../components/NumberBadge/NumberBadge'
+import NumberBadge from '../../../../../../../components/ContentHints/NumberBadge/NumberBadge'
 import { ReactNode } from 'react'
 
 interface Props {

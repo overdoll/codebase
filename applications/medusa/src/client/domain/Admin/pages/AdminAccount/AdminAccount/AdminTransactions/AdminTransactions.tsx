@@ -3,7 +3,7 @@ import { usePaginationFragment } from 'react-relay'
 import { AdminAccountQuery } from '@//:artifacts/AdminAccountQuery.graphql'
 import { AdminTransactionsFragment$key } from '@//:artifacts/AdminTransactionsFragment.graphql'
 
-import AdminTransactionsList from '../../../../components/AdminTransactionsList/AdminTransactionsList'
+import AdminTransactionsList from '../../../AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList'
 import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import TransactionCountBadge from './TransactionCountBadge/TransactionCountBadge'

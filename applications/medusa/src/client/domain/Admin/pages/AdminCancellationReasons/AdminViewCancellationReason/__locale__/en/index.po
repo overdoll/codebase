@@ -17,6 +17,10 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason.tsx:38
+msgid "Back to search"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
 #: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/AdminViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:106
 msgid "Cancellation Reason Deprecated"

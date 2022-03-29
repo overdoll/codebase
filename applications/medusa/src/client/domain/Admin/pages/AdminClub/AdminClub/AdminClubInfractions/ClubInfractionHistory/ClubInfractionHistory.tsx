@@ -14,9 +14,9 @@ import {
 } from '@//:modules/content/ThemeComponents/Table/Table'
 import { usePaginationFragment } from 'react-relay'
 import { SessionsPaginationQuery } from '@//:artifacts/SessionsPaginationQuery.graphql'
-import useFormattedDate from '../../../../../helpers/useFormattedDate'
+import useFormattedDate from '../../../../../support/useFormattedDate'
 import { Trans } from '@lingui/macro'
-import useDateDistance from '../../../../../helpers/useDateDistance'
+import useDateDistance from '../../../../../support/useDateDistance'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 

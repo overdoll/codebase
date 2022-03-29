@@ -13,6 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:38
+msgid "1 month"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:46
+msgid "1 year"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:18
+msgid "12 hours"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:34
+msgid "2 weeks"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:22
+msgid "24 hours"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:26
+msgid "3 days"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:42
+msgid "3 months"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:30
+msgid "7 days"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscription/AdminAccountActiveClubSupporterSubscriptionPreview/AdminAccountActiveClubSupporterSubscriptionPreview.tsx:40
 msgid "ACTIVE"
 msgstr ""
@@ -112,6 +144,10 @@ msgstr ""
 #~ msgid "Price"
 #~ msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:50
+msgid "Purge"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountReactivatedTransactionHistory/AccountReactivatedTransactionHistoryCard.tsx:43
 #~ msgid "Reactivated"
 #~ msgstr ""
@@ -132,6 +168,10 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:41
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminRevokeStaffButton/AdminRevokeStaffButton.tsx:70
 msgid "Revoke Staff"
+msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:56
+msgid "Select duration"
 msgstr ""
 
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminAssignStaff/AdminAssignStaff.tsx:30
@@ -218,3 +258,7 @@ msgstr ""
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminTransactionHistory/AdminTransactionHistory/AccountTransactionHistory/AccountVoidTransactionHistory/AccountVoidTransactionHistoryCard.tsx:50
 #~ msgid "Void"
 #~ msgstr ""
+
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:14
+msgid "Warning (none)"
+msgstr ""

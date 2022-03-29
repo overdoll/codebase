@@ -9,7 +9,7 @@ import { AdminLockAccountFormMutation } from '@//:artifacts/AdminLockAccountForm
 import { AdminLockAccountFormFragment$key } from '@//:artifacts/AdminLockAccountFormFragment.graphql'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
 import GenericDate from '../../../../../validation/GenericDate'
-import LockDurationSelect from '../../../../../components/LockDurationSelect/LockDurationSelect'
+import LockDurationSelect from './LockDurationSelect/LockDurationSelect'
 
 interface Props {
   query: AdminLockAccountFormFragment$key

@@ -11,7 +11,7 @@ import displayPrice from '@//:modules/support/displayPrice'
 import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
-import AdminSyncSubscriptionButton from '../../../../../components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
+import AdminSyncSubscriptionButton from '../AdminSyncSubscriptionButton/AdminSyncSubscriptionButton'
 import CopyCodeToClipboard from '../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {

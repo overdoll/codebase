@@ -5,7 +5,7 @@ import { Text } from '@chakra-ui/react'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import AccountTileOverlay
-  from '../../../../../../modules/content/ContentSelection/components/TileOverlay/AccountTileOverlay/AccountTileOverlay'
+  from '../../../../../../modules/content/ContentSelection/TileOverlay/AccountTileOverlay/AccountTileOverlay'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 

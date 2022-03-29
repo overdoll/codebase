@@ -15,7 +15,7 @@ import {
   InputHeader,
   RuleInput
 } from '@//:modules/content/HookedComponents/Form'
-import LockDurationSelect from '../../../../../components/LockDurationSelect/LockDurationSelect'
+import LockDurationSelect from '../../../../AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect'
 import GenericTagId from '../../../../../validation/GenericTagId'
 
 interface Props {

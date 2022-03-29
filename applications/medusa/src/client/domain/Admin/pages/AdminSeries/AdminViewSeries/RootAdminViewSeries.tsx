@@ -11,6 +11,8 @@ import { Stack } from '@chakra-ui/react'
 import AdminViewSeries from './AdminViewSeries/AdminViewSeries'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import AdminBackButton from '../../../components/AdminBackButton/AdminBackButton'
+import { Trans } from '@lingui/macro'
+import BackButton from '../../../../../../modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   prepared: {
@@ -31,7 +33,11 @@ export default function RootAdminViewSeries (props: Props): JSX.Element {
       <Helmet title='view series' />
       <PageWrapper>
         <Stack spacing={2}>
-          <AdminBackButton to='/admin/series/search' />
+          <BackButton to='/admin/series/search'>
+            <Trans>
+              Back to search
+            </Trans>
+          </BackButton>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
             <Suspense fallback={<SkeletonStack />}>
               <AdminViewSeries query={queryRef as PreloadedQuery<AdminViewSeriesQueryType>} />

@@ -21,7 +21,7 @@ import QueryErrorBoundary from '../../../../../Placeholder/Fallback/QueryErrorBo
 import { Suspense } from 'react'
 import SkeletonStack from '../../../../../Placeholder/Loading/SkeletonStack/SkeletonStack'
 import SelectRuleList
-  from '../../../../../../../client/domain/Admin/components/SelectRuleButton/SelectRuleList/SelectRuleList'
+  from '../../../../../HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleList/SelectRuleList'
 import { useHistoryDisclosure } from '../../../../../../hooks'
 import useSearch from '../../../../../HookedComponents/Search/hooks/useSearch'
 import { useChoice } from '../../../../../HookedComponents/Choice'

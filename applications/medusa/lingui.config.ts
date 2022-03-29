@@ -57,16 +57,40 @@ export default {
       include: ['src/client/domain/Settings/Profile']
     },
     {
+      path: 'src/client/domain/Settings/Profile/RootEmails/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Profile/RootEmails']
+    },
+    {
+      path: 'src/client/domain/Settings/Profile/RootUsername/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Profile/RootUsername']
+    },
+    {
+      path: 'src/client/domain/ConfirmEmail/__locale__/{locale}/index',
+      include: ['src/client/domain/ConfirmEmail']
+    },
+    {
       path: 'src/client/domain/Settings/Security/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Security']
     },
     {
-      path: 'src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/{locale}/index',
-      include: ['src/client/domain/Settings/Profile/RootEmails/ConfirmEmail']
+      path: 'src/client/domain/Settings/Security/RootSessionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootSessionsSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Security/RootMultiFactorTotpSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootMultiFactorTotpSetup']
+    },
+    {
+      path: 'src/client/domain/Settings/Security/RootRecoveryCodesSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootRecoveryCodesSetup']
     },
     {
       path: 'src/client/domain/Settings/Preferences/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Preferences']
+    },
+    {
+      path: 'src/client/domain/Settings/Preferences/RootCurationProfileSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Preferences/RootCurationProfileSetup']
     },
     {
       path: 'src/client/domain/Settings/Billing/__locale__/{locale}/index',

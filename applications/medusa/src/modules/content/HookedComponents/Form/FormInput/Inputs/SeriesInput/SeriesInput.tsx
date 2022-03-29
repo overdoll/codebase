@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
 import SelectSeriesButton
-  from '../../../../../../../client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton'
+  from './SelectSeriesButton/SelectSeriesButton'
 
 export default function SeriesInput (): JSX.Element {
   const {

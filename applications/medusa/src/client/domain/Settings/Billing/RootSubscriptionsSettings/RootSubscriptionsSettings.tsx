@@ -10,9 +10,8 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
-import ConfigureBackButton
-  from '../../../../../modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton'
 import SubscriptionsSettings from './SubscriptionsSettings/SubscriptionsSettings'
+import BackButton from '../../../../../modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   prepared: {
@@ -30,11 +29,11 @@ export default function RootSubscriptionsSettings (props: Props): JSX.Element | 
     <>
       <Helmet title='my subscriptions' />
       <PageWrapper>
-        <ConfigureBackButton to='/settings/billing'>
+        <BackButton to='/settings/billing'>
           <Trans>
             Go back to billing
           </Trans>
-        </ConfigureBackButton>
+        </BackButton>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='green'>
             <Trans>

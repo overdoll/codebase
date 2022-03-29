@@ -10,7 +10,8 @@ import { useParams } from '@//:modules/routing/useParams'
 import { Stack } from '@chakra-ui/react'
 import AdminViewAudience from './AdminViewAudience/AdminViewAudience'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
-import AdminBackButton from '../../../components/AdminBackButton/AdminBackButton'
+import { Trans } from '@lingui/macro'
+import BackButton from '../../../../../../modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   prepared: {
@@ -31,7 +32,11 @@ export default function RootAdminViewAudience (props: Props): JSX.Element {
       <Helmet title='view category' />
       <PageWrapper>
         <Stack spacing={2}>
-          <AdminBackButton to='/admin/audience/search' />
+          <BackButton to='/admin/audience/search'>
+            <Trans>
+              Back to search
+            </Trans>
+          </BackButton>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
             <Suspense fallback={<SkeletonStack />}>
               <AdminViewAudience query={queryRef as PreloadedQuery<AdminViewAudienceQueryType>} />

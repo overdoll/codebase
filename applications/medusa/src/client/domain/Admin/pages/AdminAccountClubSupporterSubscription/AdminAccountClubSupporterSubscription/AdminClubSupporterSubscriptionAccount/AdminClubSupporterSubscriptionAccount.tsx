@@ -9,7 +9,7 @@ import { dateFormat } from '@//:modules/constants/format'
 import { Box, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import LargeAccountHeader from '../../../../components/LargeAccountHeader/LargeAccountHeader'
+import LargeAccountHeader from '../../../AdminAccount/AdminAccount/LargeAccountHeader/LargeAccountHeader'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {

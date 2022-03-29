@@ -9,7 +9,7 @@ import { CreateSeriesFormMutation } from '@//:artifacts/CreateSeriesFormMutation
 import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import useSlugSubscribe from '../../../../../helpers/useSlugSubscribe'
+import useSlugSubscribe from '../../../../../support/useSlugSubscribe'
 import GenericTagTitle from '../../../../../validation/GenericTagTitle'
 import GenericTagSlug from '../../../../../validation/GenericTagSlug'
 import { TagSlug, TagTitle } from '@//:types/form'

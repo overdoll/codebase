@@ -13,7 +13,7 @@ import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
 import {
   getTransactionColorScheme
-} from '../../../../components/AdminTransactionsList/AdminTransactionCard/AdminTransactionCard'
+} from '../../../AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionCard/AdminTransactionCard'
 import AdminRefundAccountTransactionButton
   from './AdminRefundAccountTransactionButton/AdminRefundAccountTransactionButton'
 import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'

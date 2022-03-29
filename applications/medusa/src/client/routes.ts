@@ -4,6 +4,7 @@ import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
 import { decodeRouterArguments } from './components/PostsSearch'
+import Query from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -285,14 +286,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/Settings/Profile/RootEmails/ConfirmEmail/ConfirmEmail'
+            './domain/ConfirmEmail/ConfirmEmail'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -1634,26 +1635,82 @@ const routes: Route[] = [
               }
             ],
             prepare: () => {
-              const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
-              const EmailsQuery = require('@//:artifacts/EmailsQuery.graphql')
+              const Query = require('@//:artifacts/AccountSettingsQuery.graphql')
 
               return {
-                usernamesQuery: {
-                  query: UsernamesQuery,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                },
-                emailsQuery: {
-                  query: EmailsQuery,
+                query: {
+                  query: Query,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
                 }
               }
-            }
+            },
+            routes: [
+              {
+                path: '/settings/profile/username',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Profile/RootUsername/RootUsername'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Profile/RootUsername/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/UsernameQuery.graphql')
+
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/profile/emails',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Profile/RootEmails/RootEmails'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Profile/RootEmails/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/EmailsQuery.graphql')
+
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             path: '/settings/security',
@@ -1673,27 +1730,113 @@ const routes: Route[] = [
               }
             ],
             prepare: () => {
-              const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
-
-              const SessionsQuery = require('@//:artifacts/SessionsSettingsQuery.graphql')
+              const Query = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
               return {
-                multiFactorQuery: {
-                  query: MultiFactorQuery,
-                  variables: {},
-                  options: {
-                    fetchPolicy: 'store-or-network'
-                  }
-                },
-                sessionsQuery: {
-                  query: SessionsQuery,
+                query: {
+                  query: Query,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
                 }
               }
-            }
+            },
+            routes: [
+              {
+                path: '/settings/security/multi-factor/totp',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Security/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Security/RootMultiFactorTotpSetup/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
+
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/security/multi-factor/recovery-codes',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Security/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Security/RootRecoveryCodesSetup/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
+
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/security/sessions',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Security/RootSessionsSettings/RootSessionsSettings'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Security/RootSessionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/SessionsSettingsQuery.graphql')
+
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             path: '/settings/moderation',
@@ -1760,7 +1903,40 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            routes: [
+              {
+                path: '/settings/preferences/curation-profile',
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Preferences/RootCurationProfileSetup/RootCurationProfileSetup'
+                  )
+                ),
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Preferences/RootCurationProfileSetup/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                prepare: () => {
+                  const Query = require('@//:artifacts/CurationProfileSetupQuery.graphql')
+
+                  return {
+                    curationQuery: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             path: '/settings/billing',
@@ -1841,141 +2017,6 @@ const routes: Route[] = [
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        path: '/configure/multi-factor/totp',
-        component: loadable(async () =>
-          await import(
-            './domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        prepare: () => {
-          const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
-
-          return {
-            totpQuery: {
-              query: TotpQuery,
-              variables: {},
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('configure', 'Account')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ]
-      },
-      {
-        path: '/configure/multi-factor/recovery-codes',
-        component: loadable(async () =>
-          await import(
-            './domain/Settings/Security/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Settings/Security/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        prepare: () => {
-          const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
-
-          return {
-            recoveryCodesQuery: {
-              query: RecoveryCodesQuery,
-              variables: {},
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('configure', 'Account')) {
-              return true
-            }
-            history.push('/join')
-            return false
-          }
-        ]
-      },
-      {
-        path: '/configure/curation-profile',
-        component: loadable(async () =>
-          await import(
-            './domain/Settings/Preferences/RootCurationSettings/CurationSettings/RootCurationProfileSetup/RootCurationProfileSetup'
-          )
-        ),
-        dependencies: [
-          {
-            resource: loadable(async (environment) =>
-              await import(
-                `./domain/Settings/Preferences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
-              )
-            ),
-            then: loadMessages
-          }
-        ],
-        prepare: () => {
-          const Query = require('@//:artifacts/CurationProfileSetupQuery.graphql')
-
-          return {
-            curationQuery: {
-              query: Query,
-              variables: {},
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
-        middleware: [
-          ({
-            environment,
-            history
-          }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('configure', 'Account')) {
-              return true
-            }
-            history.push('/join')
-            return false
           }
         ]
       },

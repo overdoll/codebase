@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import { Box, Link, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import CopyCodeToClipboard
   from '../../../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import Highlight from '../../../../../../../../../../components/HighlightText/Highlight'
+import Highlight from '../../../../../../../../../../components/ContentHints/HighlightText/Highlight'
 import { ExternalLink } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
 

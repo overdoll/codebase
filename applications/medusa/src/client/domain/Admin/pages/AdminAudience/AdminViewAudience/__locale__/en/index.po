@@ -32,6 +32,10 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/RootAdminViewAudience.tsx:36
+msgid "Back to search"
+msgstr ""
+
 #: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/AdminViewAudience/ChangeAudienceTitle/ChangeAudienceTitle.tsx:57
 msgid "Change Audience Title"
 msgstr ""

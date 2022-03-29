@@ -17,35 +17,35 @@ msgstr ""
 msgid "(Optional) Custom Duration"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:38
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:38
 msgid "1 month"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:46
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:46
 msgid "1 year"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:18
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:18
 msgid "12 hours"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:34
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:34
 msgid "2 weeks"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:22
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:22
 msgid "24 hours"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:26
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:26
 msgid "3 days"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:42
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:42
 msgid "3 months"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:30
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:30
 msgid "7 days"
 msgstr ""
 
@@ -130,7 +130,12 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminBackButton/AdminBackButton.tsx:23
+#: src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/RootAdminViewAudience.tsx:36
+#: src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason.tsx:38
+#: src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/RootAdminViewCategory.tsx:37
+#: src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/RootAdminViewCharacter.tsx:39
+#: src/client/domain/Admin/pages/AdminRules/AdminViewRule/RootAdminViewRule.tsx:37
+#: src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/RootAdminViewSeries.tsx:37
 msgid "Back to search"
 msgstr ""
 
@@ -310,14 +315,14 @@ msgstr ""
 msgid "Chargeback Transactions"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:96
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:96
 msgid "Close"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:61
 #: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminClubSupporterSubscriptions/AdminClubSupporterSubscriptions.tsx:71
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription.tsx:68
 #: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminClubSupporterSubscriptionClub/AdminClubSupporterSubscriptionClub.tsx:32
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:61
 #: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:57
 msgid "Club"
 msgstr ""
@@ -358,7 +363,7 @@ msgstr ""
 msgid "Create Series"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:66
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:66
 #: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:62
 msgid "Date"
 msgstr ""
@@ -648,7 +653,7 @@ msgstr ""
 msgid "Please enter a title"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:56
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:56
 #: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:52
 msgid "Price"
 msgstr ""
@@ -659,7 +664,7 @@ msgstr ""
 msgid "Pricing"
 msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:50
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:50
 msgid "Purge"
 msgstr ""
 
@@ -773,7 +778,6 @@ msgstr ""
 msgid "Search for a character"
 msgstr ""
 
-#: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:113
 #: src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries.tsx:38
 msgid "Search for a series"
 msgstr ""
@@ -783,22 +787,22 @@ msgid "Search for an audience"
 msgstr ""
 
 #: src/client/domain/Admin/components/SelectRuleButton/SelectRuleButton.tsx:76
-msgid "Select Rule"
-msgstr ""
+#~ msgid "Select Rule"
+#~ msgstr ""
 
 #: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:85
-msgid "Select Series"
-msgstr ""
+#~ msgid "Select Series"
+#~ msgstr ""
 
 #: src/client/domain/Admin/components/SelectRuleButton/SelectRuleButton.tsx:91
-msgid "Select a rule"
-msgstr ""
+#~ msgid "Select a rule"
+#~ msgstr ""
 
 #: src/client/domain/Admin/components/SelectSeriesButton/SelectSeriesButton.tsx:100
-msgid "Select a series"
-msgstr ""
+#~ msgid "Select a series"
+#~ msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:56
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:56
 msgid "Select duration"
 msgstr ""
 
@@ -973,8 +977,8 @@ msgstr ""
 msgid "Suspension Duration"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:60
-#: src/client/domain/Admin/components/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:74
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:60
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionOptions/AdminSyncSubscriptionButton/AdminSyncSubscriptionButton.tsx:74
 msgid "Sync Subscription"
 msgstr ""
 
@@ -1103,7 +1107,7 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: src/client/domain/Admin/components/AdminTransactionsList/AdminTransactionsList.tsx:51
+#: src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionsList.tsx:51
 #: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionEvents/AdminAccountTransactionEvents.tsx:47
 #: src/client/domain/Admin/pages/AdminAccountTransaction/AdminAccountTransaction/AdminAccountTransactionOptions/AdminAccountTransactionOptions.tsx:55
 msgid "Type"
@@ -1164,7 +1168,7 @@ msgstr ""
 #~ msgid "Void"
 #~ msgstr ""
 
-#: src/client/domain/Admin/components/LockDurationSelect/LockDurationSelect.tsx:14
+#: src/client/domain/Admin/pages/AdminAccount/AdminAccount/AdminLockAccount/AdminLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:14
 msgid "Warning (none)"
 msgstr ""
 

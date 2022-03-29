@@ -6,7 +6,7 @@ import {
 import {
   AdminExpiredSubscriptionTransactionsFragment$key
 } from '@//:artifacts/AdminExpiredSubscriptionTransactionsFragment.graphql'
-import AdminTransactionsList from '../../../../../components/AdminTransactionsList/AdminTransactionsList'
+import AdminTransactionsList from '../AdminTransactionsList/AdminTransactionsList'
 
 interface Props {
   query: AdminExpiredSubscriptionTransactionsFragment$key

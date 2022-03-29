@@ -4,7 +4,7 @@ import type { SavedPaymentMethodsSettingsQuery } from '@//:artifacts/SavedPaymen
 import { usePaginationFragment } from 'react-relay'
 import { LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
 import { HStack, Stack } from '@chakra-ui/react'
-import PaymentMethod from '../../../../../components/PaymentMethod/PaymentMethod'
+import PaymentMethod from './PaymentMethod/PaymentMethod'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import ManageSavedPaymentMethodButton from './ManageSavedPaymentMethodButton/ManageSavedPaymentMethodButton'
 import { EmptyBoundary, EmptyPaymentMethods } from '@//:modules/content/Placeholder'
