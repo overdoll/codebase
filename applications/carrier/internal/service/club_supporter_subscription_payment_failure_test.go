@@ -27,5 +27,5 @@ func TestClubSupporterSubscriptionPaymentFailure(t *testing.T) {
 	doc := waitForEmailAndGetDocument(t, email)
 
 	title := doc.Find("head").Find("title").First()
-	require.Equal(t, "Subscription Payment Failure", title.Text(), "has the correct email title")
+	require.Equal(t, "Subscription Failed", title.Text(), "has the correct email title")
 }

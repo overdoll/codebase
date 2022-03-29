@@ -129,7 +129,7 @@ _RUNTIME_DEPS = [
     "@npm//usehooks-ts",
     "@npm//react-swipeable",
     "@npm//dinero.js",
-    "@npm//@dinero.js/currencies"
+    "@npm//@dinero.js/currencies",
 ]
 
 TEST_DEPS = [
@@ -191,7 +191,8 @@ razzle(
         "build/server.js",
     ],
     args = [
-        "--node_options=--require=./$(location chdir.js) --max_old_space_size=8096",
+        "--node_options=--max-old-space-size=16000",
+        "--node_options=--require=./$(location chdir.js)",
         "build",
         "--noninteractive",
     ],

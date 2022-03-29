@@ -122,6 +122,33 @@ func (c *Cursor) IsEmpty() bool {
 	return c.First() != nil && *c.First() == 0 || c.Last() != nil && *c.Last() == 0
 }
 
+func (c *Cursor) GetCursor() ([]interface{}, error) {
+
+	if c.After() != nil {
+
+		var afterValue []interface{}
+
+		if err := c.After().Decode(&afterValue); err != nil {
+			return nil, err
+		}
+
+		return afterValue, nil
+	}
+
+	if c.Before() != nil {
+
+		var beforeValue []interface{}
+
+		if err := c.Before().Decode(&beforeValue); err != nil {
+			return nil, err
+		}
+
+		return beforeValue, nil
+	}
+
+	return nil, nil
+}
+
 func (c *Cursor) GetLimit() int {
 	var limit int
 

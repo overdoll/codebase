@@ -1,15 +1,17 @@
 {{template "layout.gohtml" .}}
 
-{{define "title"}}Subscription Payment Failure{{end}}
+{{define "title"}}Subscription Failed{{end}}
 
 {{define "content"}}
-    {{.Username}}
-    {{.ClubName}}
-    {{.ClubLink}}
-
+    Hello {{.Username}}!
     <br/>
-
-    {{.SubscriptionLink}}
+    Unfortunately, we were not able to renew your subscription.
+    <br/>
+    Please update your payment details for the club {{.ClubName}}.
+    <br/>
+    You can update it here: <a href="{{.SubscriptionLink}}">Manage Subscriptions</a>
+    <br/>
+    For support, contact hello@overdoll.com
 {{end}}
 
 

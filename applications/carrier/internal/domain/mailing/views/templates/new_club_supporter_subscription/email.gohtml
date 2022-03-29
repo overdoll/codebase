@@ -3,16 +3,21 @@
 {{define "title"}}New Subscription{{end}}
 
 {{define "content"}}
-    {{.Username}}
-    {{.ClubName}}
-    {{.ClubLink}}
+    Hello {{.Username}}!
 
+    Thank you for your purchase - Order # {{.SubscriptionId}}
     <br/>
-
-    {{.SubscriptionLink}}
-    {{.FormattedAmount}}
-    {{.BillingDateStart}}
-    {{.BillingDateEnd}}
+    Billing Details: Purchase of {{.FormattedAmount}} to {{.ClubName}} ({{.ClubLink}})
+    <br/>
+    To manage your subscription, click here: <a href="{{.SubscriptionLink}}">Manage Subscriptions</a>.
+    <br/>
+    Your subscription will be from {{.BillingDateStart}} to {{.BillingDateEnd}}
+    <br/>
+    We will renew your subscription automatically on {{.BillingDateEnd}}.
+    <br/>
+    For future renewals, we send monthly emails with upcoming renewals.
+    <br/>
+    For support, contact hello@overdoll.com
 {{end}}
 
 

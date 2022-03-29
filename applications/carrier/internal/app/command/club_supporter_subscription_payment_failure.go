@@ -43,7 +43,7 @@ func (h ClubSupporterSubscriptionPaymentFailureHandler) Handle(ctx context.Conte
 		return err
 	}
 
-	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl()
 
 	if err != nil {
 		return err

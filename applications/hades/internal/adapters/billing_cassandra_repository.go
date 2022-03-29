@@ -65,6 +65,7 @@ var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 	Name: "account_club_supporter_subscriptions_by_account",
 	Columns: []string{
 		"account_id",
+		"id",
 		"club_id",
 		"status",
 		"supporter_since",
@@ -83,7 +84,6 @@ var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 
 		"encrypted_payment_method",
 
-		"id",
 		"ccbill_subscription_id",
 
 		"updated_at",
@@ -91,7 +91,7 @@ var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 		"cancellation_reason_id",
 	},
 	PartKey: []string{"account_id"},
-	SortKey: []string{"club_id", "id"},
+	SortKey: []string{"id"},
 })
 
 var accountClubSupporterSubscriptionsTable = table.New(table.Metadata{
@@ -650,6 +650,7 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 
 	batch.Query(stmt,
 		target.AccountId,
+		target.Id,
 		target.ClubId,
 		target.Status,
 		target.SupporterSince,
@@ -664,7 +665,6 @@ func (r BillingCassandraRepository) CreateAccountClubSupporterSubscriptionOperat
 		target.CCBillErrorCode,
 		target.BillingFailureNextRetryDate,
 		target.EncryptedPaymentMethod,
-		target.Id,
 		target.CCBillSubscriptionId,
 		target.UpdatedAt,
 		target.CancellationReasonId,
@@ -894,7 +894,7 @@ func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionO
 
 	if err := accountClubSupporterSubscriptionsByAccountTable.
 		SelectBuilder().
-		Where(qb.Eq("account_id"), qb.Eq("club_id")).
+		Where(qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountClubSupporterSubscription{
@@ -909,7 +909,18 @@ func (r BillingCassandraRepository) HasExistingAccountClubSupporterSubscriptionO
 		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
 	}
 
-	accountClubSupported := accountClubSupporting[0]
+	var accountClubSupported *accountClubSupporterSubscription
+
+	for _, sub := range accountClubSupporting {
+		if sub.ClubId == clubId {
+			accountClubSupported = sub
+			break
+		}
+	}
+
+	if accountClubSupported == nil {
+		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+	}
 
 	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
 
@@ -946,7 +957,7 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 	builder := accountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
 
 	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "club_id", true); err != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
 			return nil, err
 		}
 	}
@@ -959,6 +970,23 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 
 	for _, s := range filters.Status() {
 		status = append(status, s.String())
+	}
+
+	bound := map[string]interface{}{
+		"account_id": filters.AccountId(),
+		"status":     status,
+	}
+
+	if cursor != nil {
+		createdCursor, err := cursor.GetCursor()
+
+		if err != nil {
+			return nil, err
+		}
+
+		if createdCursor != nil {
+			bound["id"] = createdCursor[0].(string)
+		}
 	}
 
 	if err := builder.Query(r.session).
@@ -1003,7 +1031,7 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 			support.BillingFailureNextRetryDate,
 		)
 
-		supportItem.Node = paging.NewNode(support.ClubId)
+		supportItem.Node = paging.NewNode(support.Id)
 		accountSupport = append(accountSupport, supportItem)
 	}
 

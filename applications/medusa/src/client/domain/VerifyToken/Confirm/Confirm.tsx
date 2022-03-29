@@ -49,6 +49,7 @@ export default function Confirm ({
     <>
       <Helmet title='verify' />
       <Center mt={8}>
+        asd
         <Flex w={['fill', 'sm']} direction='column'>
           <Heading mb={8} align='center' fontSize='xl' color='gray.00'>
             <Trans>

@@ -46,7 +46,7 @@ func (h ClubSupporterSubscriptionCancelledHandler) Handle(ctx context.Context, c
 		return err
 	}
 
-	subscriptionUrl, err := links.CreateManageSubscriptionUrl(cmd.SubscriptionId)
+	subscriptionUrl, err := links.CreateManageSubscriptionUrl()
 
 	if err != nil {
 		return err
@@ -60,6 +60,7 @@ func (h ClubSupporterSubscriptionCancelledHandler) Handle(ctx context.Context, c
 			"ClubLink":         clubUrl.String(),
 			"SubscriptionLink": subscriptionUrl.String(),
 			"ExpirationDate":   cmd.ExpirationDate.Format("January 02"),
+			"SubscriptionId":   cmd.SubscriptionId,
 		},
 	)
 

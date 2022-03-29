@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
 
     cancellation_reason_id          text,
 
-    primary key ( account_id, club_id, id )
+    primary key ( account_id, id )
 );
 
 CREATE INDEX account_club_supporter_subscriptions_by_account_status ON account_club_supporter_subscriptions_by_account (status);
