@@ -20,15 +20,13 @@ const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
       __typename
-    }
-    viewer {
       ...ClubPostsFragment
     }
   }
 `
 
 const Fragment = graphql`
-  fragment ClubPostsFragment on Account
+  fragment ClubPostsFragment on Club
   @argumentDefinitions(
     first: {type: Int, defaultValue: 11}
     after: {type: String}
@@ -63,7 +61,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     isLoadingNext
   } = usePaginationFragment<ClubPostsQuery, any>(
     Fragment,
-    queryData.viewer
+    queryData.club
   )
 
   if (queryData?.club == null) {

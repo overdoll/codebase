@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4843287c807c216db201107dd8692abd>>
+ * @generated SignedSource<<24cfa4af25c06c69aa6b0b59383de8b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -196,11 +196,11 @@ return {
       "storageKey": null
     }
   ],
-  "type": "Account",
+  "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "c3b4fcf0e06f3c773e4591ea3b428baf";
+(node as any).hash = "535442db8f49de58bb350559bfc4cc4a";
 
 export default node;
