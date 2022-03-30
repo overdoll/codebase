@@ -1,0 +1,343 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
+])
+
+# Generated Targets
+
+# Unsupported target "engine" with type "bench" omitted
+
+# Unsupported target "eval_array" with type "bench" omitted
+
+# Unsupported target "eval_expression" with type "bench" omitted
+
+# Unsupported target "eval_map" with type "bench" omitted
+
+# Unsupported target "eval_module" with type "bench" omitted
+
+# Unsupported target "eval_scope" with type "bench" omitted
+
+# Unsupported target "eval_type" with type "bench" omitted
+
+# Unsupported target "iterations" with type "bench" omitted
+
+# Unsupported target "parsing" with type "bench" omitted
+
+# Unsupported target "primes" with type "bench" omitted
+
+rust_binary(
+    # Prefix bin name to disambiguate from (probable) collision with lib name
+    # N.B.: The exact form of this is subject to change.
+    name = "cargo_bin_rhai_dbg",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "internals",
+        "serde",
+        "sync",
+    ],
+    crate_root = "src/bin/rhai-dbg.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__rhai_codegen__1_4_0//:rhai_codegen",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=rhai-dbg",
+        "manual",
+    ],
+    version = "1.6.0",
+    # buildifier: leave-alone
+    deps = [
+        ":rhai",
+        "@raze__ahash__0_7_6//:ahash",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__num_traits__0_2_14//:num_traits",
+        "@raze__serde__1_0_136//:serde",
+        "@raze__smallvec__1_8_0//:smallvec",
+        "@raze__smartstring__1_0_1//:smartstring",
+    ],
+)
+
+rust_binary(
+    # Prefix bin name to disambiguate from (probable) collision with lib name
+    # N.B.: The exact form of this is subject to change.
+    name = "cargo_bin_rhai_repl",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "internals",
+        "serde",
+        "sync",
+    ],
+    crate_root = "src/bin/rhai-repl.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__rhai_codegen__1_4_0//:rhai_codegen",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=rhai-repl",
+        "manual",
+    ],
+    version = "1.6.0",
+    # buildifier: leave-alone
+    deps = [
+        ":rhai",
+        "@raze__ahash__0_7_6//:ahash",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__num_traits__0_2_14//:num_traits",
+        "@raze__serde__1_0_136//:serde",
+        "@raze__smallvec__1_8_0//:smallvec",
+        "@raze__smartstring__1_0_1//:smartstring",
+    ],
+)
+
+rust_binary(
+    # Prefix bin name to disambiguate from (probable) collision with lib name
+    # N.B.: The exact form of this is subject to change.
+    name = "cargo_bin_rhai_run",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "internals",
+        "serde",
+        "sync",
+    ],
+    crate_root = "src/bin/rhai-run.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__rhai_codegen__1_4_0//:rhai_codegen",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=rhai-run",
+        "manual",
+    ],
+    version = "1.6.0",
+    # buildifier: leave-alone
+    deps = [
+        ":rhai",
+        "@raze__ahash__0_7_6//:ahash",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__num_traits__0_2_14//:num_traits",
+        "@raze__serde__1_0_136//:serde",
+        "@raze__smallvec__1_8_0//:smallvec",
+        "@raze__smartstring__1_0_1//:smartstring",
+    ],
+)
+
+# Unsupported target "arrays_and_structs" with type "example" omitted
+
+# Unsupported target "callback" with type "example" omitted
+
+# Unsupported target "custom_types_and_methods" with type "example" omitted
+
+# Unsupported target "event_handler_js" with type "example" omitted
+
+# Unsupported target "event_handler_main" with type "example" omitted
+
+# Unsupported target "event_handler_map" with type "example" omitted
+
+# Unsupported target "hello" with type "example" omitted
+
+# Unsupported target "reuse_scope" with type "example" omitted
+
+# Unsupported target "serde" with type "example" omitted
+
+# Unsupported target "simple_fn" with type "example" omitted
+
+# Unsupported target "strings" with type "example" omitted
+
+# Unsupported target "threading" with type "example" omitted
+
+rust_library(
+    name = "rhai",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "internals",
+        "serde",
+        "sync",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__rhai_codegen__1_4_0//:rhai_codegen",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=rhai",
+        "manual",
+    ],
+    version = "1.6.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__ahash__0_7_6//:ahash",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__num_traits__0_2_14//:num_traits",
+        "@raze__serde__1_0_136//:serde",
+        "@raze__smallvec__1_8_0//:smallvec",
+        "@raze__smartstring__1_0_1//:smartstring",
+    ],
+)
+
+# Unsupported target "arrays" with type "test" omitted
+
+# Unsupported target "assignments" with type "test" omitted
+
+# Unsupported target "binary_ops" with type "test" omitted
+
+# Unsupported target "bit_fields" with type "test" omitted
+
+# Unsupported target "blobs" with type "test" omitted
+
+# Unsupported target "bool_op" with type "test" omitted
+
+# Unsupported target "call_fn" with type "test" omitted
+
+# Unsupported target "chars" with type "test" omitted
+
+# Unsupported target "closures" with type "test" omitted
+
+# Unsupported target "comments" with type "test" omitted
+
+# Unsupported target "compound_equality" with type "test" omitted
+
+# Unsupported target "constants" with type "test" omitted
+
+# Unsupported target "custom_syntax" with type "test" omitted
+
+# Unsupported target "data_size" with type "test" omitted
+
+# Unsupported target "debugging" with type "test" omitted
+
+# Unsupported target "decrement" with type "test" omitted
+
+# Unsupported target "eval" with type "test" omitted
+
+# Unsupported target "expressions" with type "test" omitted
+
+# Unsupported target "float" with type "test" omitted
+
+# Unsupported target "fn_ptr" with type "test" omitted
+
+# Unsupported target "for" with type "test" omitted
+
+# Unsupported target "functions" with type "test" omitted
+
+# Unsupported target "get_set" with type "test" omitted
+
+# Unsupported target "if_block" with type "test" omitted
+
+# Unsupported target "increment" with type "test" omitted
+
+# Unsupported target "internal_fn" with type "test" omitted
+
+# Unsupported target "looping" with type "test" omitted
+
+# Unsupported target "maps" with type "test" omitted
+
+# Unsupported target "math" with type "test" omitted
+
+# Unsupported target "method_call" with type "test" omitted
+
+# Unsupported target "mismatched_op" with type "test" omitted
+
+# Unsupported target "modules" with type "test" omitted
+
+# Unsupported target "native" with type "test" omitted
+
+# Unsupported target "not" with type "test" omitted
+
+# Unsupported target "number_literals" with type "test" omitted
+
+# Unsupported target "operations" with type "test" omitted
+
+# Unsupported target "ops" with type "test" omitted
+
+# Unsupported target "optimizer" with type "test" omitted
+
+# Unsupported target "options" with type "test" omitted
+
+# Unsupported target "packages" with type "test" omitted
+
+# Unsupported target "plugins" with type "test" omitted
+
+# Unsupported target "plugins_register" with type "test" omitted
+
+# Unsupported target "plugins_unroll" with type "test" omitted
+
+# Unsupported target "power_of" with type "test" omitted
+
+# Unsupported target "print" with type "test" omitted
+
+# Unsupported target "serde" with type "test" omitted
+
+# Unsupported target "side_effects" with type "test" omitted
+
+# Unsupported target "stack" with type "test" omitted
+
+# Unsupported target "string" with type "test" omitted
+
+# Unsupported target "switch" with type "test" omitted
+
+# Unsupported target "throw" with type "test" omitted
+
+# Unsupported target "time" with type "test" omitted
+
+# Unsupported target "tokens" with type "test" omitted
+
+# Unsupported target "types" with type "test" omitted
+
+# Unsupported target "unary_after_binary" with type "test" omitted
+
+# Unsupported target "unary_minus" with type "test" omitted
+
+# Unsupported target "unit" with type "test" omitted
+
+# Unsupported target "var_scope" with type "test" omitted
+
+# Unsupported target "while_loop" with type "test" omitted

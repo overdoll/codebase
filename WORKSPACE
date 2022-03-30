@@ -8,6 +8,41 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
+    name = "rules_rust",
+    sha256 = "7453856d239a004c9e29cde2e45903a068446e4a69501ee7393faf08e1a30403",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.1.0/rules_rust-v0.1.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.1.0/rules_rust-v0.1.0.tar.gz",
+    ],
+)
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains()
+
+http_archive(
+    name = "cargo_raze",
+    sha256 = "58ecdbae2680b71edc19a0f563cdb73e66c8914689b6edab258c8b90a93b13c7",
+    strip_prefix = "cargo-raze-0.15.0",
+    url = "https://github.com/google/cargo-raze/archive/v0.15.0.tar.gz",
+)
+
+load("@cargo_raze//:repositories.bzl", "cargo_raze_repositories")
+
+cargo_raze_repositories()
+
+load("@cargo_raze//:transitive_deps.bzl", "cargo_raze_transitive_deps")
+
+cargo_raze_transitive_deps()
+
+# load cargo dependencies
+load("//cargo:crates.bzl", "raze_fetch_remote_crates")
+
+raze_fetch_remote_crates()
+
+http_archive(
     name = "io_bazel_rules_go",
     sha256 = "d6b2513456fe2229811da7eb67a444be7785f5323c6708b38d851d2b51e54d83",
     urls = [
@@ -40,24 +75,20 @@ gazelle_dependencies()
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "4521794f0fba2e20f3bf15846ab5e01d5332e587e9ce81629c7f96c793bb7036",
-    strip_prefix = "rules_docker-0.14.4",
-    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.14.4/rules_docker-v0.14.4.tar.gz"],
+    sha256 = "85ffff62a4c22a74dbd98d05da6cf40f497344b3dbf1e1ab0a37ab2a1a6ca014",
+    strip_prefix = "rules_docker-0.23.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.23.0/rules_docker-v0.23.0.tar.gz"],
 )
 
-load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
-
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
 container_repositories()
 
 load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
 
 container_deps()
-
-load("@io_bazel_rules_docker//repositories:pip_repositories.bzl", "pip_deps")
-
-pip_deps()
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "com_google_protobuf",
@@ -93,9 +124,17 @@ load("@io_bazel_rules_docker//go:image.bzl", go_image_repos = "repositories")
 go_image_repos()
 
 load(
+    "@io_bazel_rules_docker//rust:image.bzl",
+    rust_image_repos = "repositories",
+)
+
+rust_image_repos()
+
+load(
     "@io_bazel_rules_docker//nodejs:image.bzl",
     nodejs_image_repos = "repositories",
 )
+
 load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 
 nodejs_image_repos()

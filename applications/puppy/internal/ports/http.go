@@ -29,13 +29,5 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		proxy.ServeHTTP(w, r)
 	}))
 
-	// another proxy, but without a custom transport since we dont care about passport here
-	proxy2 := httputil.NewSingleHostReverseProxy(u)
-
-	// GET requests proxy directly back to the actual thing
-	rtr.GET("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		proxy2.ServeHTTP(w, r)
-	}))
-
 	return rtr
 }

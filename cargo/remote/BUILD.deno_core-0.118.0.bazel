@@ -1,0 +1,79 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "disable_ops" with type "example" omitted
+
+# Unsupported target "eval_js_value" with type "example" omitted
+
+# Unsupported target "fs_module_loader" with type "example" omitted
+
+# Unsupported target "hello_world" with type "example" omitted
+
+# Unsupported target "http_bench_json_ops" with type "example" omitted
+
+# Unsupported target "ts_module_loader" with type "example" omitted
+
+rust_library(
+    name = "deno_core",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
+    crate_root = "lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=deno_core",
+        "manual",
+    ],
+    version = "0.118.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__anyhow__1_0_56//:anyhow",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__indexmap__1_8_1//:indexmap",
+        "@raze__libc__0_2_121//:libc",
+        "@raze__log__0_4_16//:log",
+        "@raze__once_cell__1_9_0//:once_cell",
+        "@raze__parking_lot__0_11_2//:parking_lot",
+        "@raze__pin_project__1_0_10//:pin_project",
+        "@raze__serde__1_0_136//:serde",
+        "@raze__serde_json__1_0_79//:serde_json",
+        "@raze__serde_v8__0_29_0//:serde_v8",
+        "@raze__url__2_2_2//:url",
+        "@raze__v8__0_38_1//:v8",
+    ],
+)

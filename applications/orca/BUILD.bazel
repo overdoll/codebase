@@ -1,0 +1,32 @@
+load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("//cargo:crates.bzl", "crate_deps")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_image(
+    name = "image",
+    srcs = ["src/main.rs"],
+    deps = crate_deps([
+       "apollo-router",
+    ]),
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "sting/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "sting",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
+)

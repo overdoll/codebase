@@ -1,0 +1,65 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "trace" with type "bench" omitted
+
+rust_library(
+    name = "tracing_opentelemetry",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "tracing-log",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=tracing-opentelemetry",
+        "manual",
+    ],
+    version = "0.17.2",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__opentelemetry__0_17_0//:opentelemetry",
+        "@raze__tracing__0_1_32//:tracing",
+        "@raze__tracing_core__0_1_23//:tracing_core",
+        "@raze__tracing_log__0_1_2//:tracing_log",
+        "@raze__tracing_subscriber__0_3_9//:tracing_subscriber",
+    ],
+)
+
+# Unsupported target "trace_state_propagation" with type "test" omitted
