@@ -13,8 +13,6 @@ interface Props {
   children: ReactNode
 }
 
-//
-
 export default function Profile (props: Props): JSX.Element {
   return (
     <ChildrenBoundary fallback={props.children}>

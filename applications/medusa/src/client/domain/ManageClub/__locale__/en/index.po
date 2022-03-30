@@ -17,7 +17,7 @@ msgstr ""
 msgid "A unique link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:78
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ClubAliases.tsx:69
 msgid "Add Club Link Alias"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 #~ msgid "Admin"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
 msgid "Alias"
 msgstr ""
 
@@ -69,19 +69,29 @@ msgstr ""
 #~ msgid "Back"
 #~ msgstr ""
 
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName.tsx:34
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:34
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/RootClubAliases.tsx:32
+msgid "Back to club settings"
+msgstr ""
+
 #: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:70
 msgid "Banned for {remaining}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:38
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:41
 msgid "Change Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:49
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnail.tsx:42
 msgid "Change Club Thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:48
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:69
+msgid "Club Guidelines"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/RootClubAliases.tsx:38
 msgid "Club Link"
 msgstr ""
 
@@ -89,7 +99,7 @@ msgstr ""
 msgid "Club Locked"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubName.tsx:27
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName.tsx:40
 msgid "Club Name"
 msgstr ""
 
@@ -106,8 +116,8 @@ msgstr ""
 msgid "Club Suspended"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnail.tsx:35
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
 msgid "Club Thumbnail"
 msgstr ""
 
@@ -117,6 +127,10 @@ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:101
 msgid "Club {0} was created successfully"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:72
+msgid "Content and club guidelines"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:180
@@ -139,7 +153,7 @@ msgstr ""
 msgid "DRAFT"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:69
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ClubAliases.tsx:60
 msgid "Default"
 msgstr ""
 
@@ -159,13 +173,13 @@ msgstr ""
 msgid "Edit Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:117
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:128
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:117
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:128
 msgid "Enter a new club link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:101
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:107
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:101
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:107
 msgid "Enter a new club name"
 msgstr ""
 
@@ -193,6 +207,10 @@ msgstr ""
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/UpdatePostFlow/FlowSteps/Submit/Submit.tsx:67
 #~ msgid "Go to my posts"
 #~ msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:60
+msgid "Help"
+msgstr ""
 
 #: src/client/domain/ManageClub/RootManageClub.tsx:85
 msgid "Home"
@@ -318,7 +336,7 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:153
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:153
 msgid "Remove Alias"
 msgstr ""
 
@@ -381,11 +399,12 @@ msgstr ""
 msgid "Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We only show a person content they are interested in seeing."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:146
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:146
 msgid "Set Default"
 msgstr ""
 
 #: src/client/domain/ManageClub/RootManageClub.tsx:113
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:46
 msgid "Settings"
 msgstr ""
 
@@ -409,9 +428,9 @@ msgstr ""
 #~ msgid "Step 5"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:116
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:111
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:132
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:116
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:111
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:132
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
 msgid "Submit"
 msgstr ""
@@ -420,23 +439,23 @@ msgstr ""
 msgid "Submitted For Review"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:95
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:95
 msgid "Successfully added the link alias {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:102
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:102
 msgid "Successfully promoted the link alias {slug} to default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:78
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:78
 msgid "Successfully removed the link alias {slug}. You can no longer use this link."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:80
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:80
 msgid "Successfully updated your club name to {0}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:75
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:75
 msgid "Successfully updated your club thumbnail"
 msgstr ""
 
@@ -456,7 +475,7 @@ msgstr ""
 msgid "The best name you can come up with"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:102
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:102
 msgid "There was an error adding a link alias"
 msgstr ""
 
@@ -468,11 +487,11 @@ msgstr ""
 msgid "There was an error processing your files"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:117
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:117
 msgid "There was an error promoting the link alias to default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:84
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:84
 msgid "There was an error removing the link alias"
 msgstr ""
 
@@ -500,11 +519,11 @@ msgstr ""
 msgid "There was an error updating the post content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:86
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:86
 msgid "There was an error updating your club name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:81
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:81
 msgid "There was an error updating your club thumbnail"
 msgstr ""
 
@@ -578,7 +597,7 @@ msgstr ""
 msgid "You cannot post until your club is no longer suspended"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ClubAliases.tsx:87
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ClubAliases.tsx:78
 msgid "You have added the maximum amount of aliases. You'll have to remove at least one alias to be able to add another."
 msgstr ""
 
@@ -626,7 +645,7 @@ msgstr ""
 msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:124
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/AddClubSlugAlias/AddClubSlugAlias.tsx:124
 #: src/client/domain/ManageClub/pages/CreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:158
 msgid "overdoll.com/"
 msgstr ""

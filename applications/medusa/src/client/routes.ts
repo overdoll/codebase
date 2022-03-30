@@ -4,7 +4,6 @@ import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
 import { decodeRouterArguments } from './components/PostsSearch'
-import Query from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -2276,8 +2275,7 @@ const routes: Route[] = [
               )
             ),
             prepare: ({
-              params,
-              query
+              params
             }) => {
               const Query = require('@//:artifacts/ClubSettingsQuery.graphql')
               return {
@@ -2291,7 +2289,111 @@ const routes: Route[] = [
                   }
                 }
               }
-            }
+            },
+            routes: [
+              {
+                path: '/club/:slug/:entity(settings)/name',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/ManageClub/pages/ClubSettings/RootChangeClubName/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName'
+                  )
+                ),
+                prepare: ({
+                  params
+                }) => {
+                  const Query = require('@//:artifacts/ChangeClubNameQuery.graphql')
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {
+                        slug: params.slug
+                      },
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/club/:slug/:entity(settings)/thumbnail',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail'
+                  )
+                ),
+                prepare: ({
+                  params
+                }) => {
+                  const Query = require('@//:artifacts/ChangeClubThumbnailQuery.graphql')
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {
+                        slug: params.slug
+                      },
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/club/:slug/:entity(settings)/aliases',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/ManageClub/pages/ClubSettings/RootClubAliases/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/ManageClub/pages/ClubSettings/RootClubAliases/RootClubAliases'
+                  )
+                ),
+                prepare: ({
+                  params
+                }) => {
+                  const Query = require('@//:artifacts/ClubAliasesQuery.graphql')
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {
+                        slug: params.slug
+                      },
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             path: '/club/:slug/:entity(posts)',

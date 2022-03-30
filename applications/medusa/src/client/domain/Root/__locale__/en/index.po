@@ -95,6 +95,10 @@ msgstr ""
 msgid "Dropdown Menu"
 msgstr ""
 
+#: src/client/domain/Root/NoScript/NoScript.tsx:22
+msgid "Enable JavaScript"
+msgstr ""
+
 #: src/client/components/SearchInput/SearchInput.tsx:53
 #~ msgid "Enter a search term"
 #~ msgstr ""
@@ -144,6 +148,10 @@ msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:100
 msgid "I promise to be better and to follow the community guidelines more closely"
+msgstr ""
+
+#: src/client/domain/Root/NoScript/NoScript.tsx:27
+msgid "In order for the platform to function correctly, JavaScript must be enabled in your browser. Please enable it and refresh the page."
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
@@ -263,7 +271,7 @@ msgstr ""
 #~ msgid "Nothing was found"
 #~ msgstr ""
 
-#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:51
+#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:53
 msgid "Open"
 msgstr ""
 

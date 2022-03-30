@@ -110,7 +110,7 @@ export default function AddClubSlugAlias ({ query, isDisabled }: Props): JSX.Ele
     <Form {...methods} onSubmit={onSubmit}>
 
       <FormInput
-        size='sm'
+        size='md'
         id='slug'
       >
         <InputHeader>
@@ -128,7 +128,7 @@ export default function AddClubSlugAlias ({ query, isDisabled }: Props): JSX.Ele
             <TextInput placeholder={i18n._(t`Enter a new club link`)} />
             <InputFeedback />
           </InputBody>
-          <FormSubmitButton isDisabled={isDisabled} size='sm' isLoading={isInFlight}>
+          <FormSubmitButton isDisabled={isDisabled} size='md' isLoading={isInFlight}>
             <Trans>
               Submit
             </Trans>

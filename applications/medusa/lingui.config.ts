@@ -157,6 +157,18 @@ export default {
       include: ['src/client/domain/ManageClub/pages/ClubSettings']
     },
     {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases']
+    },
+    {
       path: 'src/client/domain/ManageClub/pages/CreateClub/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/CreateClub']
     },

@@ -29,7 +29,7 @@ const EmailsQueryGQL = graphql`
 const EmailsFragmentGQL = graphql`
   fragment EmailsSettingsFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "EmailsSettingsPaginationQuery" ) {
@@ -99,7 +99,7 @@ export default function Emails (props: Props): JSX.Element {
   }, [confirmationError, confirmationSuccess])
 
   return (
-    <ListSpacer>
+    <Stack spacing={4}>
       <ListSpacer>
         {data?.emails.edges.map((item, index) => {
           return (
@@ -125,7 +125,7 @@ export default function Emails (props: Props): JSX.Element {
           </Button>
         </Flex>}
       <Collapse>
-        <CollapseButton>
+        <CollapseButton size='md'>
           <Trans>
             Add Email
           </Trans>
@@ -147,6 +147,6 @@ export default function Emails (props: Props): JSX.Element {
           </Stack>
         </CollapseBody>
       </Collapse>
-    </ListSpacer>
+    </Stack>
   )
 }

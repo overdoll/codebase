@@ -94,7 +94,7 @@ export default function ChangeClubNameForm ({
     <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={2}>
         <FormInput
-          size='sm'
+          size='md'
           id='name'
         >
           <InputHeader>
@@ -108,7 +108,7 @@ export default function ChangeClubNameForm ({
               <InputFeedback />
             </InputBody>
             <FormSubmitButton
-              size='sm'
+              size='md'
               variant='solid'
               colorScheme='gray'
               isLoading={isInFlight}

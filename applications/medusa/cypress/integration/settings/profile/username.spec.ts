@@ -11,7 +11,7 @@ describe('Settings - Change Username', () => {
   })
 
   it('should be able to change username', () => {
-    cy.visit('/settings/profile')
+    cy.visit('/settings/profile/username')
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'))
 
     cy.findByRole('button', { name: /Change Username/iu }).click()

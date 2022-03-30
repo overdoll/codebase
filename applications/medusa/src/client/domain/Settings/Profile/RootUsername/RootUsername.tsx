@@ -5,10 +5,11 @@ import UsernameQuery from '@//:artifacts/UsernameQuery.graphql'
 import Username from './Username/Username'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
-import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
+import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   prepared: {
@@ -27,12 +28,22 @@ export default function RootUsername (props: Props): JSX.Element | null {
     <>
       <Helmet title='username settings' />
       <PageWrapper>
+        <BackButton to='/settings/profile'>
+          <Trans>
+            Back to profile settings
+          </Trans>
+        </BackButton>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='green'>
             <Trans>
               Username
             </Trans>
           </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans>
+              Modify your username
+            </Trans>
+          </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>

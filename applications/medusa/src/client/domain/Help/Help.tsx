@@ -21,7 +21,7 @@ import {
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Stack } from '@chakra-ui/react'
-import { SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
+import { CLUB_GUIDELINES, SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
 
 export default function Help (): JSX.Element {
   return (
@@ -59,7 +59,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='https://www.corpodoll.com/club-guidelines/'>
+                <PagePanelWrap isExternal path={CLUB_GUIDELINES}>
                   <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
                   <PagePanelText
                     title={

@@ -34,6 +34,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import Highlight from '../../../../../../components/ContentHints/HighlightText/Highlight'
 
 interface UsernameValues {
   username: string
@@ -127,7 +128,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
   return (
     <>
       <Form {...methods} onSubmit={onDataConfirmed}>
-        <FormInput size='sm' id='username'>
+        <FormInput size='md' id='username'>
           <InputHeader>
             <Trans>
               Enter a new username
@@ -138,7 +139,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
               <TextInput placeholder={i18n._(t`Enter a new username`)} />
             </InputBody>
             <FormSubmitButton
-              size='sm'
+              size='md'
               isDisabled={isDisabled}
               isLoading={isChangingUsername}
             >
@@ -184,10 +185,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
                 <Text>
                   <Trans>
                     Are you sure you'd like to change your username to
-                  </Trans>
-                </Text>
-                <Text color='green.300'>
-                  {selectedUsername}
+                  </Trans> <Highlight colorScheme='green'>{selectedUsername as string}</Highlight>
                 </Text>
               </Box>
             </Stack>

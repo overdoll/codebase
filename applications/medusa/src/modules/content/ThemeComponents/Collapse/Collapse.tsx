@@ -1,4 +1,4 @@
-import { ButtonProps, Collapse as ChakraCollapse, useDisclosure, UseDisclosureProps } from '@chakra-ui/react'
+import { Box, ButtonProps, Collapse as ChakraCollapse, useDisclosure, UseDisclosureProps } from '@chakra-ui/react'
 import { createContext, ReactNode, useContext } from 'react'
 import Button from '../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
@@ -38,7 +38,9 @@ export const Collapse = ({
 
   return (
     <CollapseContext.Provider value={context}>
-      {children}
+      <Box>
+        {children}
+      </Box>
     </CollapseContext.Provider>
   )
 }
@@ -47,7 +49,7 @@ export const CollapseButton = (props: ButtonProps): JSX.Element => {
   const { onToggle } = useContext(CollapseContext)
 
   return (
-    <Button size='sm' onClick={onToggle} {...props}>
+    <Button w='100%' size='sm' onClick={onToggle} {...props}>
       {props.children == null ? <Trans>Open</Trans> : props.children}
     </Button>
   )
@@ -58,7 +60,9 @@ export const CollapseBody = (props: CollapseProps): JSX.Element => {
 
   return (
     <ChakraCollapse animateOpacity in={isOpen} {...props}>
-      {props.children}
+      <Box pt={2}>
+        {props.children}
+      </Box>
     </ChakraCollapse>
   )
 }

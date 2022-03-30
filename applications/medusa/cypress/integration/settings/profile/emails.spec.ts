@@ -11,7 +11,7 @@ describe('Settings - Add Email', () => {
   })
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {
-    cy.visit('/settings/profile')
+    cy.visit('/settings/profile/emails')
     cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'))
 
     cy.findByRole('button', { name: /Add Email/iu }).click()
@@ -31,7 +31,7 @@ describe('Settings - Add Email', () => {
     })
 
     cy.url().should('include', '/confirm-email')
-    cy.waitUntil(() => cy.url().should('include', '/settings/profile'))
+    cy.waitUntil(() => cy.url().should('include', '/settings/profile/emails'))
     cy.findByText('CONFIRMED').should('exist')
 
     // make it primary

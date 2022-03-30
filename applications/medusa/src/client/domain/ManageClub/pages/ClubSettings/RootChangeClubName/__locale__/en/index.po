@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-03-29 21:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName.tsx:34
+msgid "Back to club settings"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:41
+msgid "Change Club Name"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName.tsx:40
+msgid "Club Name"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:101
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:107
+msgid "Enter a new club name"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:116
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:80
+msgid "Successfully updated your club name to {0}"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubNameForm/ChangeClubNameForm.tsx:86
+msgid "There was an error updating your club name"
+msgstr ""

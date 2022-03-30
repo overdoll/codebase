@@ -106,7 +106,7 @@ export default function ChangeClubThumbnailForm ({
         <FormSubmitButton
           isLoading={IsInFlight}
           w='100%'
-          size='sm'
+          size='md'
         >
           <Trans>
             Submit

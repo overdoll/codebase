@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<deafe98efc2a68237f885665c11b0084>>
- * @relayHash 9e4612f3a1682903dae75b8e601f5e32
+ * @generated SignedSource<<55abb8bb4b182621fad63960b21b12e5>>
+ * @relayHash 6af5d0f3229616b946be8b92dd34c6fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,27 +9,26 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9e4612f3a1682903dae75b8e601f5e32
+// @relayRequestID 6af5d0f3229616b946be8b92dd34c6fa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubSettingsQuery$variables = {
+export type ChangeClubThumbnailQuery$variables = {
   slug: string;
 };
-export type ClubSettingsQueryVariables = ClubSettingsQuery$variables;
-export type ClubSettingsQuery$data = {
+export type ChangeClubThumbnailQueryVariables = ChangeClubThumbnailQuery$variables;
+export type ChangeClubThumbnailQuery$data = {
   readonly club: {
-    readonly slug: string;
-    readonly name: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailFormFragment">;
   } | null;
 };
-export type ClubSettingsQueryResponse = ClubSettingsQuery$data;
-export type ClubSettingsQuery = {
-  variables: ClubSettingsQueryVariables;
-  response: ClubSettingsQuery$data;
+export type ChangeClubThumbnailQueryResponse = ChangeClubThumbnailQuery$data;
+export type ChangeClubThumbnailQuery = {
+  variables: ChangeClubThumbnailQueryVariables;
+  response: ChangeClubThumbnailQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,24 +50,10 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v5 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -80,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ClubSettingsQuery",
+    "name": "ChangeClubThumbnailQuery",
     "selections": [
       {
         "alias": null,
@@ -90,8 +75,6 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -107,6 +90,11 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ChangeClubThumbnailFormFragment"
           }
         ],
         "storageKey": null
@@ -119,7 +107,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ClubSettingsQuery",
+    "name": "ChangeClubThumbnailQuery",
     "selections": [
       {
         "alias": null,
@@ -129,8 +117,6 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -147,7 +133,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -166,7 +152,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -177,26 +163,26 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "9e4612f3a1682903dae75b8e601f5e32",
+    "id": "6af5d0f3229616b946be8b92dd34c6fa",
     "metadata": {},
-    "name": "ClubSettingsQuery",
+    "name": "ChangeClubThumbnailQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "10739b142cd3c197c82e778b1be54ef2";
+(node as any).hash = "78c79d500e4ed818da319d70ae60cb3a";
 
 export default node;

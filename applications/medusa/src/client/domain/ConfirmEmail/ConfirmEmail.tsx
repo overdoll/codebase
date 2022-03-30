@@ -45,16 +45,16 @@ export default function ConfirmEmail (): JSX.Element {
         if (data != null) {
           if (data.accountEmail == null) {
             flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
-            history.push('/settings/profile')
+            history.push('/settings/profile/emails')
           } else {
             flash('confirmation.success', t`${data.accountEmail.email} was confirmed successfully`)
-            history.push('/settings/profile')
+            history.push('/settings/profile/emails')
           }
         }
       },
       onError () {
         flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
-        history.push('/settings/profile')
+        history.push('/settings/profile/emails')
       }
     })
   }
