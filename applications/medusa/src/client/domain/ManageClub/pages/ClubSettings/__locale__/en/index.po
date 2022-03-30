@@ -27,7 +27,7 @@ msgstr ""
 msgid "Back to club settings"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:41
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:40
 msgid "Change Club Name"
 msgstr ""
 
@@ -47,6 +47,7 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:64
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
 msgid "Club Thumbnail"
@@ -72,6 +73,10 @@ msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:60
 msgid "Help"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:50
+msgid "Manage Aliases"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:153
@@ -130,6 +135,14 @@ msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:81
 msgid "There was an error updating your club thumbnail"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:41
+msgid "Update Name"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:66
+msgid "Update your club thumbnail"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ClubAliases.tsx:78

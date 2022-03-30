@@ -8,7 +8,7 @@ import {
   PageWrapper
 } from '@//:modules/content/PageLayout'
 import { Box, Stack } from '@chakra-ui/react'
-import { PaymentMethodIdentifier, PremiumStar, SubscriptionIdentifier } from '@//:assets/icons'
+import { PaymentMethodIdentifier, PremiumStar, SubscriptionIdentifier, TimeHourGlass } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import ChildrenBoundary from '../../../components/ChildrenBoundary/ChildrenBoundary'
@@ -54,6 +54,19 @@ export default function Billing ({ children }: Props): JSX.Element {
                   description={(
                     <Trans>
                       Your saved payment methods
+                    </Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap path='/settings/billing/transactions'>
+                <PagePanelIcon icon={TimeHourGlass} colorScheme='purple' />
+                <PagePanelText
+                  title={
+                    <Trans>Transaction History</Trans>
+                  }
+                  description={(
+                    <Trans>
+                      Show when and the amount you were billed
                     </Trans>
                   )}
                 />

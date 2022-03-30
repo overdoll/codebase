@@ -97,12 +97,20 @@ export default {
       include: ['src/client/domain/Settings/Billing']
     },
     {
-      path: 'src/client/domain/Settings/Billing/RootSubscriptionsSettings/__locale__/{locale}/index',
+      path: 'src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Billing/RootSubscriptionsSettings']
     },
     {
-      path: 'src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
+      path: 'src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootAccountClubSupporterSubscriptionSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/pages/RootTransactionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootTransactionsSettings']
     },
     {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',

@@ -5,7 +5,8 @@ export default function NoScript (): JSX.Element {
   return (
     <noscript>
       <Center
-        bg='gray.900'
+        bg='dimmers.700'
+        backdropFilter='blur(5px)'
         left={0}
         right={0}
         top={0}

@@ -1961,7 +1961,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./domain/Settings/Billing/RootSubscriptionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./domain/Settings/Billing/pages/RootSubscriptionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -1969,7 +1969,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    './domain/Settings/Billing/RootSubscriptionsSettings/RootSubscriptionsSettings'
+                    './domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings'
                   )
                 ),
                 prepare: () => {
@@ -1991,7 +1991,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -1999,7 +1999,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    './domain/Settings/Billing/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings'
+                    './domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings'
                   )
                 ),
                 prepare: () => {
@@ -2008,6 +2008,70 @@ const routes: Route[] = [
                     paymentMethodsQuery: {
                       query: Query,
                       variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/billing/transactions',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/pages/RootTransactionsSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings'
+                  )
+                ),
+                prepare: () => {
+                  const Query = require('@//:artifacts/TransactionsSettingsQuery.graphql')
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {},
+                      options: {
+                        fetchPolicy: 'store-or-network'
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                path: '/settings/billing/subscription/:reference',
+                dependencies: [
+                  {
+                    resource: loadable(async (environment) =>
+                      await import(
+                        `./domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                      )
+                    ),
+                    then: loadMessages
+                  }
+                ],
+                component: loadable(async () =>
+                  await import(
+                    './domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/RootAccountClubSupporterSubscriptionSettings'
+                  )
+                ),
+                prepare: ({
+                  params
+                }) => {
+                  const Query = require('@//:artifacts/AccountClubSupporterSubscriptionSettingsQuery.graphql')
+                  return {
+                    query: {
+                      query: Query,
+                      variables: {
+                        reference: params.reference
+                      },
                       options: {
                         fetchPolicy: 'store-or-network'
                       }

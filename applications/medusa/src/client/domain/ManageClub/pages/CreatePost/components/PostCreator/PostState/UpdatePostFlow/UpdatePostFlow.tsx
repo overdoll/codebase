@@ -27,6 +27,8 @@ const Fragment = graphql`
     ...UploadArrangeStepFragment
     content {
       id
+      isSupporterOnly
+      viewerCanViewSupporterOnlyContent
       resource {
         processed
       }

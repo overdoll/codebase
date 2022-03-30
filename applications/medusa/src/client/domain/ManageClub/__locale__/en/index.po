@@ -49,7 +49,7 @@ msgstr ""
 msgid "Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:69
 msgid "All characters must be of legal age"
 msgstr ""
 
@@ -79,7 +79,7 @@ msgstr ""
 msgid "Banned for {remaining}"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:41
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/ChangeClubName/ChangeClubName.tsx:40
 msgid "Change Club Name"
 msgstr ""
 
@@ -116,6 +116,7 @@ msgstr ""
 msgid "Club Suspended"
 msgstr ""
 
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:64
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
 msgid "Club Thumbnail"
@@ -199,7 +200,7 @@ msgstr ""
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:117
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:116
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
@@ -242,6 +243,10 @@ msgstr ""
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
 
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:50
+msgid "Manage Aliases"
+msgstr ""
+
 #: src/client/domain/ManageClub/RootManageClub.tsx:54
 msgid "Manage Club"
 msgstr ""
@@ -278,12 +283,16 @@ msgstr ""
 msgid "No members found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:74
 msgid "No posts found"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:69
-msgid "Nothing extremely offensive or shocking"
+#~ msgid "Nothing extremely offensive or shocking"
+#~ msgstr ""
+
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:71
+msgid "Nothing extremely offensive, shocking, or illegal"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:80
@@ -298,7 +307,7 @@ msgstr ""
 #~ msgid "Please wait for your post content to finish processing before continuing."
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:83
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:85
 msgid "Post Content Processed"
 msgstr ""
 
@@ -322,7 +331,7 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:71
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:73
 msgid "Processing Post Content"
 msgstr ""
 
@@ -535,12 +544,20 @@ msgstr ""
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:106
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:105
 msgid "This post was already submitted"
 msgstr ""
 
 #: src/client/domain/ManageClub/components/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:108
 msgid "Un-Suspend Club"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:41
+msgid "Update Name"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:66
+msgid "Update your club thumbnail"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:94
@@ -557,12 +574,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
-#~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
-#~ msgstr ""
+msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
+msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
-msgid "Upstanding netizens will read the <0>Club Guidelines</0>carefully before posting"
-msgstr ""
+#~ msgid "Upstanding netizens will read the <0>Club Guidelines</0>carefully before posting"
+#~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
 #~ msgid "Upstanding netizens will read the<0>Club Guidelines</0>carefully before posting"
@@ -609,7 +626,7 @@ msgstr ""
 msgid "You must agree to follow the community guidelines"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:71
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
 msgid "You own the rights to the content you upload"
 msgstr ""
 

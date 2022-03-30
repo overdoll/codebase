@@ -1,22 +1,24 @@
-import { Text } from '@chakra-ui/react'
+import { Text, TextProps } from '@chakra-ui/react'
 import { ColorScheme } from '@//:types/components'
 
-interface Props {
+interface Props extends TextProps {
   children: string
-  colorScheme: ColorScheme
+  colorScheme?: ColorScheme | undefined
 }
 
 export default function Highlight ({
   children,
-  colorScheme = 'gray'
+  colorScheme = 'gray',
+  ...rest
 }: Props): JSX.Element {
-  const color = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
+  const color = colorScheme == null ? undefined : (colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`)
 
   return (
     <Text
       as='b'
       fontWeight='inherit'
       color={color}
+      {...rest}
     >
       {children}
     </Text>

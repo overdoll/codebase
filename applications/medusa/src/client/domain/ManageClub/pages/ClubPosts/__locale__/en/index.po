@@ -33,7 +33,7 @@ msgstr ""
 #~ msgid "Load More"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:74
 msgid "No posts found"
 msgstr ""
 
