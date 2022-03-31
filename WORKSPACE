@@ -7,12 +7,45 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# Foreigncc is used to build OpenSSL
+http_archive(
+    name = "rules_foreign_cc",
+    sha256 = "1df78c7d7eed2dc21b8b325a2853c31933a81e7b780f9a59a5d078be9008b13a",
+    strip_prefix = "rules_foreign_cc-0.7.0",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.7.0.tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+rules_foreign_cc_dependencies()
+
+# Load OpenSSL and other 3rd party dependencies
+load("//third_party/openssl:openssl_repositories.bzl", "openssl_repositories")
+
+openssl_repositories()
+
+# perl is used to build openssl
+http_archive(
+    name = "rules_perl",
+    sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
+    strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
+    urls = [
+        "https://github.com/bazelbuild/rules_perl/archive/2f4f36f454375e678e81e5ca465d4d497c5c02da.tar.gz",
+    ],
+)
+
+load("@rules_perl//perl:deps.bzl", "perl_register_toolchains", "perl_rules_dependencies")
+
+perl_rules_dependencies()
+
+perl_register_toolchains()
+
 http_archive(
     name = "rules_rust",
-    sha256 = "7453856d239a004c9e29cde2e45903a068446e4a69501ee7393faf08e1a30403",
+    sha256 = "39655ab175e3c6b979f362f55f58085528f1647957b0e9b3a07f81d8a9c3ea0a",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.1.0/rules_rust-v0.1.0.tar.gz",
-        "https://github.com/bazelbuild/rules_rust/releases/download/0.1.0/rules_rust-v0.1.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
     ],
 )
 
@@ -22,25 +55,39 @@ rules_rust_dependencies()
 
 rust_register_toolchains()
 
-http_archive(
-    name = "cargo_raze",
-    sha256 = "58ecdbae2680b71edc19a0f563cdb73e66c8914689b6edab258c8b90a93b13c7",
-    strip_prefix = "cargo-raze-0.15.0",
-    url = "https://github.com/google/cargo-raze/archive/v0.15.0.tar.gz",
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository", "crate")
+
+crates_repository(
+    name = "crate_index",
+    lockfile = "//:Cargo.Bazel.lock",
+    manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
+    annotations = {
+            "openssl-sys": [crate.annotation(
+                build_script_data = [
+                    "@openssl//:gen_dir",
+                    "@openssl//:openssl",
+                ],
+                build_script_data_glob = ["build/**/*.c"],
+                build_script_env = {
+                    "OPENSSL_DIR": "$(execpath @openssl//:gen_dir)",
+                    "OPENSSL_STATIC": "1",
+                },
+                data = ["@openssl"],
+                deps = ["@openssl"],
+            )],
+            "v8": [crate.annotation(
+               build_script_data = [],
+            )],
+        },
 )
 
-load("@cargo_raze//:repositories.bzl", "cargo_raze_repositories")
+load("@crate_index//:defs.bzl", "crate_repositories")
 
-cargo_raze_repositories()
-
-load("@cargo_raze//:transitive_deps.bzl", "cargo_raze_transitive_deps")
-
-cargo_raze_transitive_deps()
-
-# load cargo dependencies
-load("//cargo:crates.bzl", "raze_fetch_remote_crates")
-
-raze_fetch_remote_crates()
+crate_repositories()
 
 http_archive(
     name = "io_bazel_rules_go",

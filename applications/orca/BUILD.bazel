@@ -1,15 +1,14 @@
 load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("//cargo:crates.bzl", "crate_deps")
 
 package(default_visibility = ["//visibility:public"])
 
 rust_image(
     name = "image",
     srcs = ["src/main.rs"],
-    deps = crate_deps([
-       "apollo-router",
-    ]),
+    deps = [
+        "@crate_index//:apollo-router"
+    ]
 )
 
 container_push(

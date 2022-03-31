@@ -30,6 +30,7 @@ artifacts
 .next
 out
 cypress.json
+target
 
 # IDEA
 .ijwb
