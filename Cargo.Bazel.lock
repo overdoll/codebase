@@ -1,5 +1,5 @@
 {
-  "checksum": "a711bdc109bb2485df1832a21e3fd1c74135da4c0dc00395401c1a31b1108427",
+  "checksum": "844013cbd511fa066da1a33bd09be95df45eb164ee7edf4d9f1e9d2b4402f0ee",
   "crates": {
     "addr2line 0.17.0": {
       "name": "addr2line",
@@ -1062,7 +1062,7 @@
               "target": "bytes"
             },
             {
-              "id": "clap 3.1.6",
+              "id": "clap 3.1.7",
               "target": "clap"
             },
             {
@@ -1129,6 +1129,13 @@
         "version": "0.1.0-preview.1"
       },
       "build_script_attrs": {
+        "data": {
+          "common": [
+            "@com_google_protobuf//:protoc",
+            "@crate_index__prost-build-0.9.0//:third-party"
+          ],
+          "selects": {}
+        },
         "data_glob": [
           "**"
         ],
@@ -1139,6 +1146,14 @@
               "target": "tonic_build"
             }
           ],
+          "selects": {}
+        },
+        "build_script_env": {
+          "common": {
+            "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+            "PROTOC_INCLUDE": "${pwd}/external/crate_index__prost-build-0.9.0/third-party/protobuf/include",
+            "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt"
+          },
           "selects": {}
         }
       },
@@ -1388,7 +1403,7 @@
         "deps": {
           "common": [
             {
-              "id": "brotli 3.3.3",
+              "id": "brotli 3.3.4",
               "target": "brotli"
             },
             {
@@ -2128,13 +2143,13 @@
       },
       "license": "MIT OR Apache-2.0"
     },
-    "brotli 3.3.3": {
+    "brotli 3.3.4": {
       "name": "brotli",
-      "version": "3.3.3",
+      "version": "3.3.4",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/brotli/3.3.3/download",
-          "sha256": "f838e47a451d5a8fa552371f80024dd6ace9b7acdf25c4c3d0f9bc6816fb1c39"
+          "url": "https://crates.io/api/v1/crates/brotli/3.3.4/download",
+          "sha256": "a1a0b1dbcc8ae29329621f8d4f0d835787c1c38bb1401979b49d13b0b305ff68"
         }
       },
       "targets": [
@@ -2202,7 +2217,7 @@
           "selects": {}
         },
         "edition": "2015",
-        "version": "3.3.3"
+        "version": "3.3.4"
       },
       "license": "BSD-3-Clause/MIT"
     },
@@ -2955,13 +2970,13 @@
       },
       "license": "MIT"
     },
-    "clap 3.1.6": {
+    "clap 3.1.7": {
       "name": "clap",
-      "version": "3.1.6",
+      "version": "3.1.7",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/clap/3.1.6/download",
-          "sha256": "d8c93436c21e4698bacadf42917db28b23017027a4deccb35dbe47a7e7840123"
+          "url": "https://crates.io/api/v1/crates/clap/3.1.7/download",
+          "sha256": "c67e7973e74896f4bba06ca2dcfd28d54f9cb8c035e940a32b88ed48f5f5ecf2"
         }
       },
       "targets": [
@@ -3036,23 +3051,23 @@
         "proc_macro_deps": {
           "common": [
             {
-              "id": "clap_derive 3.1.4",
+              "id": "clap_derive 3.1.7",
               "target": "clap_derive"
             }
           ],
           "selects": {}
         },
-        "version": "3.1.6"
+        "version": "3.1.7"
       },
       "license": "MIT OR Apache-2.0"
     },
-    "clap_derive 3.1.4": {
+    "clap_derive 3.1.7": {
       "name": "clap_derive",
-      "version": "3.1.4",
+      "version": "3.1.7",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/clap_derive/3.1.4/download",
-          "sha256": "da95d038ede1a964ce99f49cbe27a7fb538d1da595e4b4f70b8c8f338d17bf16"
+          "url": "https://crates.io/api/v1/crates/clap_derive/3.1.7/download",
+          "sha256": "a3aab4734e083b809aaf5794e14e756d1c798d2c69c7f7de7a09a2f5214993c1"
         }
       },
       "targets": [
@@ -3103,7 +3118,7 @@
           "selects": {}
         },
         "edition": "2018",
-        "version": "3.1.4"
+        "version": "3.1.7"
       },
       "license": "MIT OR Apache-2.0"
     },
@@ -4507,6 +4522,15 @@
         "compile_data_glob": [
           "**"
         ],
+        "deps": {
+          "common": [
+            {
+              "id": "router-bridge 0.1.0",
+              "target": "router_bridge"
+            }
+          ],
+          "selects": {}
+        },
         "edition": "2018",
         "version": "0.0.1"
       },
@@ -9436,7 +9460,7 @@
               "target": "cc"
             },
             {
-              "id": "pkg-config 0.3.24",
+              "id": "pkg-config 0.3.25",
               "target": "pkg_config"
             }
           ],
@@ -9516,7 +9540,7 @@
               "target": "cc"
             },
             {
-              "id": "pkg-config 0.3.24",
+              "id": "pkg-config 0.3.25",
               "target": "pkg_config"
             }
           ],
@@ -12129,7 +12153,7 @@
               "target": "openssl_src"
             },
             {
-              "id": "pkg-config 0.3.24",
+              "id": "pkg-config 0.3.25",
               "target": "pkg_config"
             }
           ],
@@ -12535,6 +12559,13 @@
         "version": "0.10.0"
       },
       "build_script_attrs": {
+        "data": {
+          "common": [
+            "@com_google_protobuf//:protoc",
+            "@rules_rust//tools/rustfmt"
+          ],
+          "selects": {}
+        },
         "data_glob": [
           "**"
         ],
@@ -12545,6 +12576,14 @@
               "target": "tonic_build"
             }
           ],
+          "selects": {}
+        },
+        "build_script_env": {
+          "common": {
+            "BUILD_WORKSPACE_DIRECTORY": ".",
+            "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+            "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt"
+          },
           "selects": {}
         }
       },
@@ -13370,13 +13409,13 @@
       },
       "license": "MIT OR Apache-2.0"
     },
-    "pkg-config 0.3.24": {
+    "pkg-config 0.3.25": {
       "name": "pkg-config",
-      "version": "0.3.24",
+      "version": "0.3.25",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/pkg-config/0.3.24/download",
-          "sha256": "58893f751c9b0412871a09abd62ecd2a00298c6c83befa223ef98c52aef40cbe"
+          "url": "https://crates.io/api/v1/crates/pkg-config/0.3.25/download",
+          "sha256": "1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae"
         }
       },
       "targets": [
@@ -13399,9 +13438,9 @@
           "**"
         ],
         "edition": "2015",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
-      "license": "MIT/Apache-2.0"
+      "license": "MIT OR Apache-2.0"
     },
     "polling 2.2.0": {
       "name": "polling",
@@ -14125,6 +14164,13 @@
         "version": "0.9.0"
       },
       "build_script_attrs": {
+        "data": {
+          "common": [
+            ":third-party",
+            "@com_google_protobuf//:protoc"
+          ],
+          "selects": {}
+        },
         "data_glob": [
           "**"
         ],
@@ -14136,9 +14182,16 @@
             }
           ],
           "selects": {}
+        },
+        "build_script_env": {
+          "common": {
+            "PROTOC": "$(execpath @com_google_protobuf//:protoc)"
+          },
+          "selects": {}
         }
       },
-      "license": "Apache-2.0"
+      "license": "Apache-2.0",
+      "additive_build_file_content": "filegroup(name=\"third-party\", srcs = glob([\"third-party/**\"]))"
     },
     "prost-derive 0.9.0": {
       "name": "prost-derive",
@@ -15719,7 +15772,7 @@
       "version": "0.1.0",
       "repository": {
         "Git": {
-          "remote": "https://github.com/apollographql/federation-rs.git",
+          "remote": "https://github.com/apollographql/federation-rs",
           "commitish": {
             "Rev": "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
           },
@@ -22145,6 +22198,12 @@
           "selects": {}
         },
         "edition": "2021",
+        "rustc_flags": {
+          "common": [
+            "-Lall=/home/nikita/.cache/bazel/_bazel_nikita/4dd63f532225aedfcd3160bfca187a49/sandbox/linux-sandbox/1161/execroot/overdoll/bazel-out/k8-fastbuild-ST-6390b2712f3f/bin/gn_out/obj"
+          ],
+          "selects": {}
+        },
         "version": "0.38.1"
       },
       "build_script_attrs": {
@@ -24281,7 +24340,7 @@
     "alloc-stdlib 0.2.1",
     "apollo-router 0.1.0-preview.1",
     "apollo-spaceport 0.1.0-preview.1",
-    "brotli 3.3.3",
+    "brotli 3.3.4",
     "brotli-decompressor 2.3.2",
     "cc 1.0.73",
     "prettytable-rs 0.8.0",

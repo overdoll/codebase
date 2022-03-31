@@ -65,6 +65,13 @@ crates_repository(
     name = "crate_index",
     lockfile = "//:Cargo.Bazel.lock",
     manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
+    packages = {
+        "router-bridge": crate.spec(
+            package = "router-bridge",
+            git = "https://github.com/apollographql/federation-rs",
+            rev = "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
+        )
+    },
     annotations = {
             "openssl-sys": [crate.annotation(
                 build_script_data = [
@@ -81,6 +88,43 @@ crates_repository(
             )],
             "v8": [crate.annotation(
                build_script_data = [],
+               build_script_env = {},
+               rustc_flags = [
+                "-Lall=/home/nikita/.cache/bazel/_bazel_nikita/4dd63f532225aedfcd3160bfca187a49/sandbox/linux-sandbox/1161/execroot/overdoll/bazel-out/k8-fastbuild-ST-6390b2712f3f/bin/gn_out/obj"
+               ]
+            )],
+            "opentelemetry-otlp": [crate.annotation(
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    "@rules_rust//tools/rustfmt"
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+                    "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt",
+                    "BUILD_WORKSPACE_DIRECTORY": "."
+               },
+            )],
+            "apollo-spaceport": [crate.annotation(
+               version = "0.1.0-preview.1",
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    "@crate_index__prost-build-0.9.0//:third-party",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+                    "PROTOC_INCLUDE": "${pwd}/external/crate_index__prost-build-0.9.0/third-party/protobuf/include",
+                    "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt",
+               },
+            )],
+            "prost-build": [crate.annotation(
+               additive_build_file_content = "filegroup(name=\"third-party\", srcs = glob([\"third-party/**\"]))",
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    ":third-party",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)"
+               },
             )],
         },
 )
