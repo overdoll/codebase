@@ -1,5 +1,5 @@
 {
-  "checksum": "844013cbd511fa066da1a33bd09be95df45eb164ee7edf4d9f1e9d2b4402f0ee",
+  "checksum": "e39530b94eefba9ca25bf6a233da16e260a9c776295d521a9ea2685226066e69",
   "crates": {
     "addr2line 0.17.0": {
       "name": "addr2line",
@@ -7368,13 +7368,13 @@
       },
       "license": "Apache-2.0 OR MIT"
     },
-    "h2 0.3.12": {
+    "h2 0.3.13": {
       "name": "h2",
-      "version": "0.3.12",
+      "version": "0.3.13",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/h2/0.3.12/download",
-          "sha256": "62eeb471aa3e3c9197aa4bfeabfe02982f6dc96f750486c0bb0009ac58b26d2b"
+          "url": "https://crates.io/api/v1/crates/h2/0.3.13/download",
+          "sha256": "37a82c6d637fc9515a4694bbf1cb2457b79d81ce52b3108bdeea58b07dd34a57"
         }
       },
       "targets": [
@@ -7435,7 +7435,7 @@
               "target": "tokio"
             },
             {
-              "id": "tokio-util 0.6.9",
+              "id": "tokio-util 0.7.1",
               "target": "tokio_util"
             },
             {
@@ -7446,7 +7446,7 @@
           "selects": {}
         },
         "edition": "2018",
-        "version": "0.3.12"
+        "version": "0.3.13"
       },
       "license": "MIT"
     },
@@ -8275,7 +8275,7 @@
               "target": "futures_util"
             },
             {
-              "id": "h2 0.3.12",
+              "id": "h2 0.3.13",
               "target": "h2"
             },
             {
@@ -15230,7 +15230,7 @@
                 "target": "futures_util"
               },
               {
-                "id": "h2 0.3.12",
+                "id": "h2 0.3.13",
                 "target": "h2"
               },
               {
@@ -15776,7 +15776,13 @@
           "commitish": {
             "Rev": "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
           },
-          "strip_prefix": "router-bridge"
+          "strip_prefix": "router-bridge",
+          "patch_args": [
+            "-p1"
+          ],
+          "patches": [
+            "@overdoll//.patches:router_bridge.patch"
+          ]
         }
       },
       "targets": [
@@ -15791,18 +15797,6 @@
               "exclude": []
             }
           }
-        },
-        {
-          "BuildScript": {
-            "crate_name": "build_script_build",
-            "crate_root": "build.rs",
-            "srcs": {
-              "include": [
-                "**/*.rs"
-              ],
-              "exclude": []
-            }
-          }
         }
       ],
       "library_target_name": "router_bridge",
@@ -15810,6 +15804,12 @@
         "compile_data_glob": [
           "**"
         ],
+        "data": {
+          "common": [
+            "@overdoll//third_party/router_bridge:files"
+          ],
+          "selects": {}
+        },
         "deps": {
           "common": [
             {
@@ -15819,10 +15819,6 @@
             {
               "id": "deno_core 0.118.0",
               "target": "deno_core"
-            },
-            {
-              "id": "router-bridge 0.1.0",
-              "target": "build_script_build"
             },
             {
               "id": "serde 1.0.136",
@@ -15840,25 +15836,13 @@
           "selects": {}
         },
         "edition": "2018",
-        "version": "0.1.0"
-      },
-      "build_script_attrs": {
-        "data_glob": [
-          "**"
-        ],
-        "deps": {
-          "common": [
-            {
-              "id": "deno_core 0.118.0",
-              "target": "deno_core"
-            },
-            {
-              "id": "which 4.2.5",
-              "target": "which"
-            }
-          ],
+        "rustc_env": {
+          "common": {
+            "STATIC_DIR": "${pwd}/third_party/router_bridge"
+          },
           "selects": {}
-        }
+        },
+        "version": "0.1.0"
       },
       "license": null
     },
@@ -15886,18 +15870,6 @@
               "exclude": []
             }
           }
-        },
-        {
-          "BuildScript": {
-            "crate_name": "build_script_build",
-            "crate_root": "build.rs",
-            "srcs": {
-              "include": [
-                "**/*.rs"
-              ],
-              "exclude": []
-            }
-          }
         }
       ],
       "library_target_name": "rover_client",
@@ -15905,6 +15877,12 @@
         "compile_data_glob": [
           "**"
         ],
+        "data": {
+          "common": [
+            "@overdoll//third_party/rover_client:files"
+          ],
+          "selects": {}
+        },
         "deps": {
           "common": [
             {
@@ -15964,10 +15942,6 @@
               "target": "reqwest"
             },
             {
-              "id": "rover-client 0.0.0",
-              "target": "build_script_build"
-            },
-            {
               "id": "semver 1.0.7",
               "target": "semver"
             },
@@ -15991,33 +15965,13 @@
           "selects": {}
         },
         "edition": "2021",
-        "version": "0.0.0"
-      },
-      "build_script_attrs": {
-        "data_glob": [
-          "**"
-        ],
-        "deps": {
-          "common": [
-            {
-              "id": "camino 1.0.7",
-              "target": "camino"
-            },
-            {
-              "id": "online 3.0.1",
-              "target": "online"
-            },
-            {
-              "id": "reqwest 0.11.10",
-              "target": "reqwest"
-            },
-            {
-              "id": "uuid 0.8.2",
-              "target": "uuid"
-            }
-          ],
+        "rustc_env": {
+          "common": {
+            "STATIC_DIR": "${pwd}/third_party/rover_client"
+          },
           "selects": {}
-        }
+        },
+        "version": "0.0.0"
       },
       "license": null
     },
@@ -20260,7 +20214,7 @@
               "target": "futures_util"
             },
             {
-              "id": "h2 0.3.12",
+              "id": "h2 0.3.13",
               "target": "h2"
             },
             {
@@ -22157,18 +22111,6 @@
               "exclude": []
             }
           }
-        },
-        {
-          "BuildScript": {
-            "crate_name": "build_script_build",
-            "crate_root": "build.rs",
-            "srcs": {
-              "include": [
-                "**/*.rs"
-              ],
-              "exclude": []
-            }
-          }
         }
       ],
       "library_target_name": "v8",
@@ -22176,6 +22118,12 @@
         "compile_data_glob": [
           "**"
         ],
+        "data": {
+          "common": [
+            "@overdoll//third_party/v8:librusty_v8.a"
+          ],
+          "selects": {}
+        },
         "deps": {
           "common": [
             {
@@ -22189,10 +22137,6 @@
             {
               "id": "libc 0.2.121",
               "target": "libc"
-            },
-            {
-              "id": "v8 0.38.1",
-              "target": "build_script_build"
             }
           ],
           "selects": {}
@@ -22200,29 +22144,11 @@
         "edition": "2021",
         "rustc_flags": {
           "common": [
-            "-Lall=/home/nikita/.cache/bazel/_bazel_nikita/4dd63f532225aedfcd3160bfca187a49/sandbox/linux-sandbox/1161/execroot/overdoll/bazel-out/k8-fastbuild-ST-6390b2712f3f/bin/gn_out/obj"
+            "-Lall=third_party/v8"
           ],
           "selects": {}
         },
         "version": "0.38.1"
-      },
-      "build_script_attrs": {
-        "data_glob": [
-          "**"
-        ],
-        "deps": {
-          "common": [
-            {
-              "id": "fslock 0.1.8",
-              "target": "fslock"
-            },
-            {
-              "id": "which 4.2.5",
-              "target": "which"
-            }
-          ],
-          "selects": {}
-        }
       },
       "license": "MIT"
     },

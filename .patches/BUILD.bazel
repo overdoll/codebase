@@ -1,5 +1,7 @@
 exports_files([
     "coverage.patch",
+    "router_bridge.patch",
+    "rover_client.patch",
 ])
 
 package(default_visibility = ["//visibility:public"])

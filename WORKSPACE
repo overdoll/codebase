@@ -87,11 +87,35 @@ crates_repository(
                 deps = ["@openssl"],
             )],
             "v8": [crate.annotation(
-               build_script_data = [],
-               build_script_env = {},
+               gen_build_script = False,
+               data = [
+                   "@overdoll//third_party/v8:librusty_v8.a"
+               ],
                rustc_flags = [
-                "-Lall=/home/nikita/.cache/bazel/_bazel_nikita/4dd63f532225aedfcd3160bfca187a49/sandbox/linux-sandbox/1161/execroot/overdoll/bazel-out/k8-fastbuild-ST-6390b2712f3f/bin/gn_out/obj"
+                   "-Lall=third_party/v8"
                ]
+            )],
+            "router-bridge": [crate.annotation(
+               gen_build_script = False,
+               data = [
+                   "@overdoll//third_party/router_bridge:files"
+               ],
+               rustc_env = {
+                   "STATIC_DIR": "${pwd}/third_party/router_bridge",
+               },
+               patch_args = ["-p1"],
+               patches = ["@overdoll//.patches:router_bridge.patch"],
+            )],
+            "rover-client": [crate.annotation(
+               gen_build_script = False,
+               data = [
+                   "@overdoll//third_party/rover_client:files"
+               ],
+               rustc_env = {
+                   "STATIC_DIR": "${pwd}/third_party/rover_client",
+               },
+               patch_args = ["-p1"],
+               patches = ["@overdoll//.patches:rover_client.patch"],
             )],
             "opentelemetry-otlp": [crate.annotation(
                build_script_data = [
