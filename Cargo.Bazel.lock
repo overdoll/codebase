@@ -1,5 +1,5 @@
 {
-  "checksum": "e39530b94eefba9ca25bf6a233da16e260a9c776295d521a9ea2685226066e69",
+  "checksum": "97149fd12135b8b0e8c2b5113529aa9cd0a33b384758bdaf697ddcf82bb2d119",
   "crates": {
     "addr2line 0.17.0": {
       "name": "addr2line",
@@ -4524,6 +4524,10 @@
         ],
         "deps": {
           "common": [
+            {
+              "id": "apollo-parser 0.2.4",
+              "target": "apollo_parser"
+            },
             {
               "id": "router-bridge 0.1.0",
               "target": "router_bridge"
@@ -15855,7 +15859,13 @@
           "commitish": {
             "Rev": "c650649682ab891a3b718b5277c3b2e9a5fc5224"
           },
-          "strip_prefix": "crates/rover-client"
+          "strip_prefix": "crates/rover-client",
+          "patch_args": [
+            "-p1"
+          ],
+          "patches": [
+            "@overdoll//.patches:rover_client.patch"
+          ]
         }
       },
       "targets": [

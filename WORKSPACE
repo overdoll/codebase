@@ -53,7 +53,7 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 
 rules_rust_dependencies()
 
-rust_register_toolchains()
+rust_register_toolchains(version = "1.59.0", edition="2018")
 
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
 
@@ -70,6 +70,10 @@ crates_repository(
             package = "router-bridge",
             git = "https://github.com/apollographql/federation-rs",
             rev = "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
+        ),
+        "apollo-parser": crate.spec(
+            git = "https://github.com/apollographql/apollo-rs",
+            rev = "e707e0f78f41ace1c3ecfe69bc10f4144ffbf7ac"
         )
     },
     annotations = {
