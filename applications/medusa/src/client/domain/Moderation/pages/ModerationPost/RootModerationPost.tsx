@@ -18,7 +18,7 @@ interface Props {
   }
 }
 
-export default function RootStaffClub (props: Props): JSX.Element {
+export default function RootModerationPost (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader<ModerationPostQueryType>(
     ModerationPostQuery,
     props.prepared.query

@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubMenu/ClubStaffButton/ClubStaffButton.tsx:26
-msgid "Staff"
-msgstr ""
-
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:116
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:182
 msgid "Back"
@@ -54,7 +50,7 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:88
+#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:89
 msgid "Create an account and become a supporter to get access to this club's exclusive content!"
 msgstr ""
 
@@ -89,13 +85,13 @@ msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:109
 #: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:123
-#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:55
+#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:57
 #: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:54
 #: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:54
 msgid "Join"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:99
+#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:105
 msgid "Leave"
 msgstr ""
 
@@ -103,7 +99,7 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:134
+#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:135
 msgid "My Subscriptions"
 msgstr ""
 
@@ -160,6 +156,10 @@ msgstr ""
 msgid "Sorry, we were unable to process your payment. Please try another payment method."
 msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubMenu/ClubStaffButton/ClubStaffButton.tsx:26
+msgid "Staff"
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:166
 msgid "Subscribe"
 msgstr ""
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:142
+#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:143
 msgid "Support this club and get access to all of its exclusive content!"
 msgstr ""
 
@@ -190,7 +190,7 @@ msgstr ""
 msgid "Supporter!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:123
+#: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubButton.tsx:124
 msgid "Thanks for supporting this club! You can now access all of its exclusive content."
 msgstr ""
 
@@ -235,7 +235,7 @@ msgstr ""
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:84
+#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:89
 msgid "You are a supporter"
 msgstr ""
 
@@ -247,7 +247,7 @@ msgstr ""
 msgid "You can start using your club benefits right away!"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:66
+#: src/client/domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:70
 msgid "You cannot leave a club that you are a supporter of"
 msgstr ""
 

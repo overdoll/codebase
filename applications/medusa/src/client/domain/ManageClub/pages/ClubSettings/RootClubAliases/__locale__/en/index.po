@@ -17,7 +17,7 @@ msgstr ""
 msgid "Add Club Link Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:138
 msgid "Alias"
 msgstr ""
 
@@ -38,11 +38,11 @@ msgstr ""
 msgid "Enter a new club link"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:153
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:152
 msgid "Remove Alias"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:146
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:145
 msgid "Set Default"
 msgstr ""
 

@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
-msgid "Staff"
-msgstr ""
-
 #: src/client/domain/Profile/Profile/ProfileMenu/ProfileCopyLinkButton/ProfileCopyLinkButton.tsx:29
 msgid "Copy Link"
 msgstr ""
@@ -27,4 +23,8 @@ msgstr ""
 
 #: src/client/domain/Profile/Profile/ProfileSupportedClubs/ProfileSupportedClubs.tsx:34
 msgid "Not supporting any clubs"
+msgstr ""
+
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
+msgid "Staff"
 msgstr ""
