@@ -8,7 +8,10 @@ describe('Settings - Add Email', () => {
   })
 
   it('can see current session', () => {
-    cy.visit('/settings/security/sessions')
+    cy.visit('/settings/security')
+    cy.findByText('Account Sessions').should('be.visible').click()
+    cy.url().should('include', '/settings/security/sessions')
+
     cy.findByText(/Sessions/).should('exist')
     cy.findByText(/Current Session/).should('exist')
   })

@@ -11,7 +11,10 @@ describe('Settings - Add Email', () => {
   })
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {
-    cy.visit('/settings/profile/emails')
+    cy.visit('/settings/profile')
+    cy.findByText('Manage Emails').should('be.visible').click()
+    cy.url().should('include', '/settings/profile/emails')
+
     cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'))
 
     cy.findByRole('button', { name: /Add Email/iu }).click()
@@ -41,7 +44,7 @@ describe('Settings - Add Email', () => {
 
     // remove old
     cy.findByText(currentEmail).parent().parent().parent().get('[aria-label="Open Menu"]').click()
-    cy.findByText(/Remove/iu).click()
+    cy.findByText('Remove').should('be.visible').click()
     cy.findByText(currentEmail).should('not.exist')
     cy.findByText(newEmail).should('exist')
   })

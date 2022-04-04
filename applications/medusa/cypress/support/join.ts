@@ -203,3 +203,9 @@ Cypress.Commands.add('joinWithNewAccount', (username: string) => {
     cy.getCookie('od.session').should('exist')
   })
 })
+
+Cypress.Commands.add('createClubFromAccount', (username: string, email: string, name: string) => {
+  cy.joinWithNewAccount(username, email).then(() => {
+
+  })
+})

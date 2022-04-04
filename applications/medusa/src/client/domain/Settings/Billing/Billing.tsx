@@ -12,6 +12,7 @@ import { PaymentMethodIdentifier, PremiumStar, SubscriptionIdentifier, TimeHourG
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import ChildrenBoundary from '../../../components/ChildrenBoundary/ChildrenBoundary'
+import { SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
 
 interface Props {
   children: ReactNode
@@ -81,19 +82,17 @@ export default function Billing ({ children }: Props): JSX.Element {
                 </Trans>
               </PageSectionTitle>
             </PageSectionWrap>
-            <Stack spacing={2}>
-              <PagePanelWrap isExternal path='www.corpodoll.com/supporter-guidelines/'>
-                <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
-                <PagePanelText
-                  title={
-                    <Trans>Supporter Guidelines</Trans>
-                  }
-                  description={(
-                    <Trans>Billing agreement and help</Trans>
-                  )}
-                />
-              </PagePanelWrap>
-            </Stack>
+            <PagePanelWrap isExternal path={SUPPORTER_GUIDELINES}>
+              <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
+              <PagePanelText
+                title={
+                  <Trans>Supporter Guidelines</Trans>
+                }
+                description={(
+                  <Trans>Billing agreement and help</Trans>
+                )}
+              />
+            </PagePanelWrap>
           </Box>
         </Stack>
       </PageWrapper>

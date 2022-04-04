@@ -102,7 +102,7 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
           title: t`Successfully promoted the link alias ${slug} to default`,
           isClosable: true
         })
-        history.replace(`/club/${slug as string}/settings`)
+        history.replace(`/club/${slug as string}/settings/aliases`)
       },
       updater: (store, payload) => {
         const node = store.get(data.id)
@@ -120,7 +120,6 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
     }
     )
   }
-  //
 
   return (
     <ListSpacer>

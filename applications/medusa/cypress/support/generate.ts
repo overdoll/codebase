@@ -9,6 +9,13 @@ export const generateUsername = (): string => {
   })
 }
 
+export const generateClubName = (): string => {
+  return chance.string({
+    length: 12,
+    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+  })
+}
+
 export const generateEmailFromExistingUsername = (username: string): string => {
   return getEmail(username)
 }
