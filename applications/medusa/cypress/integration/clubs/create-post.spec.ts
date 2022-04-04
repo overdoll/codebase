@@ -1,21 +1,14 @@
-import { generateUsernameAndEmail } from '../../support/generate'
+import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
 import { clickOnTile, searchForTerm } from '../../support/user_actions'
-import { createClubWithName } from '../../support/artist_actions'
-import ChanceJS from 'chance'
 import { arrowDown, space } from '../../support/key_codes'
-
-const chance = new ChanceJS()
 
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Club - Create a Post', () => {
   const [username, email] = generateUsernameAndEmail()
 
-  const clubName = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const clubName = generateClubName()
 
   const postAudience = 'Standard Audience'
   const postCategories = ['Alter', 'Assure', 'Transmit']
@@ -58,7 +51,7 @@ describe('Club - Create a Post', () => {
 
   before(() => {
     cy.joinWithNewAccount(username, email)
-    createClubWithName(clubName)
+    cy.createClub(clubName)
   })
 
   beforeEach(() => {

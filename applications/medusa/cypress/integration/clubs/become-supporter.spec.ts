@@ -1,10 +1,6 @@
-import { generateUsernameAndEmail } from '../../support/generate'
-import ChanceJS from 'chance'
-import { createClubWithName } from '../../support/artist_actions'
+import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { clickOnButton, clickOnToggle } from '../../support/user_actions'
 import { gotoNextStep } from '../../support/flow_builder'
-
-const chance = new ChanceJS()
 
 const testCardDetails = {
   firstName: 'Test',
@@ -26,20 +22,14 @@ describe('Club - Become Supporter', () => {
   const [artistUsername, artistEmail] = generateUsernameAndEmail()
   const [username, email] = generateUsernameAndEmail()
 
-  const newPaymentMethodClub = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const newPaymentMethodClub = generateClubName()
 
-  const savedPaymentMethodClub = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const savedPaymentMethodClub = generateClubName()
 
   before(() => {
     cy.joinWithNewAccount(artistUsername, artistEmail)
-    createClubWithName(newPaymentMethodClub)
-    createClubWithName(savedPaymentMethodClub)
+    cy.createClub(newPaymentMethodClub)
+    cy.createClub(savedPaymentMethodClub)
   })
 
   beforeEach(() => {

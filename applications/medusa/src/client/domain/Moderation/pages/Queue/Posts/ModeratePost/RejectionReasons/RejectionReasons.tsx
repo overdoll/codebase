@@ -17,6 +17,7 @@ import {
   InputHeader,
   SelectInput
 } from '@//:modules/content/HookedComponents/Form'
+import ModerationNote from '../../../../../validation/ModerationNote'
 
 interface NoteValues {
   note: string
@@ -65,16 +66,7 @@ export default function RejectionReasons ({
       .messages({
         'any.required': i18n._(t`Please select a rejection reason`)
       }),
-    note: Joi
-      .string()
-      .min(5)
-      .max(255)
-      .required()
-      .messages({
-        'string.empty': i18n._(t`Please add a note`),
-        'string.min': i18n._(t`The note needs at least 5 characters`),
-        'string.max': i18n._(t`The note cannot exceed 255 characters`)
-      })
+    note: ModerationNote()
   })
 
   const methods = useForm<NoteValues>({

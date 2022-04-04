@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<819a8371395baff37d3c4233fd461d94>>
+ * @generated SignedSource<<b6e25c67d2751f84fd52f92910547080>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type PostsFragment$data = {
         readonly post: {
           readonly id: string;
           readonly postedAt: any | null;
-          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment">;
+          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment" | "PostTagsPreviewFragment">;
         };
       };
     }>;
@@ -134,6 +134,11 @@ return {
                       "name": "ModeratePostFragment"
                     },
                     {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "PostTagsPreviewFragment"
+                    },
+                    {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
@@ -210,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "2f6f2e987ae8c8bd6614d014f1e4d7ee";
+(node as any).hash = "b5a68f194ae75e39849fdbba5d82fec8";
 
 export default node;

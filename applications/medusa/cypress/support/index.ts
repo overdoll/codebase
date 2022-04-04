@@ -51,11 +51,13 @@ declare global {
       displayLastEmail: (startTimestamp: number, name: string, email: string) => Chainable<Element>
 
       /**
-       * Create a club using an existing or new account
+       * Create a club
        *
-       * @example cy.createClubFromAccount('username', 'username@email.com', 'MyClubName')
+       * You must be logged into an account that is able to create clubs
+       *
+       * @example cy.createClub('MyClubName')
        */
-      createClubFromAccount: (username: string, email: string, name: string) => Chainable<Element>
+      createClub: (name: string) => Chainable<Element>
     }
   }
 }

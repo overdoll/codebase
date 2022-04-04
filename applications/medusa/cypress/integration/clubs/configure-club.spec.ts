@@ -1,27 +1,17 @@
-import { generateUsernameAndEmail } from '../../support/generate'
-import ChanceJS from 'chance'
-import { createClubWithName } from '../../support/artist_actions'
-
-const chance = new ChanceJS()
+import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 
 Cypress.config('defaultCommandTimeout', 10000)
-//
+
 describe('Club - Configure', () => {
   const [username, email] = generateUsernameAndEmail()
 
-  const clubName = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const clubName = generateClubName()
 
-  const newClubName = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const newClubName = generateClubName()
 
   before(() => {
     cy.joinWithNewAccount(username, email)
-    createClubWithName(clubName)
+    cy.createClub(clubName)
   })
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9e2365ade794af5c4b4b893f84e6c206>>
- * @relayHash 50f89c922d9a4720e754927cb0f041af
+ * @generated SignedSource<<f794eeada1798778b6a262a6d18729c7>>
+ * @relayHash f3e9dc765a2ba001d13161bb60a96c97
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 50f89c922d9a4720e754927cb0f041af
+// @relayRequestID f3e9dc765a2ba001d13161bb60a96c97
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 export type ModerationPostQuery$variables = {
   reference: string;
 };
@@ -21,7 +22,8 @@ export type ModerationPostQuery$data = {
   readonly post: {
     readonly __typename: string;
     readonly reference: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment" | "PostHeaderContributorFragment">;
+    readonly state: PostState;
+    readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment" | "PostHeaderContributorFragment" | "PostPreviewFragment" | "PostTagsPreviewFragment" | "ModerationPostActionsFragment">;
   };
 };
 export type ModerationPostQueryResponse = ModerationPostQuery$data;
@@ -63,36 +65,58 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "state",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v6/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": [
-      (v4/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
+v10 = [
+  (v7/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -101,18 +125,22 @@ v6 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v4/*: any*/)
+      (v6/*: any*/)
     ],
     "storageKey": null
   },
+  (v8/*: any*/),
+  (v9/*: any*/)
+],
+v11 = [
   {
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "type",
+    "name": "title",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v9/*: any*/)
 ];
 return {
   "fragment": {
@@ -133,6 +161,7 @@ return {
           "selections": [
             (v2/*: any*/),
             (v3/*: any*/),
+            (v4/*: any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
@@ -142,6 +171,21 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "PostHeaderContributorFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "PostPreviewFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "PostTagsPreviewFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ModerationPostActionsFragment"
             }
           ],
           "storageKey": null
@@ -169,6 +213,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -177,13 +222,7 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              },
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -198,10 +237,10 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v10/*: any*/),
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -227,21 +266,104 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v10/*: any*/),
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v9/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostContent",
+            "kind": "LinkedField",
+            "name": "content",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "resource",
+                "plural": false,
+                "selections": [
+                  (v8/*: any*/),
+                  (v7/*: any*/),
+                  (v9/*: any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "viewerCanViewSupporterOnlyContent",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isSupporterOnly",
+                "storageKey": null
+              },
+              (v9/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Audience",
+            "kind": "LinkedField",
+            "name": "audience",
+            "plural": false,
+            "selections": (v11/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Character",
+            "kind": "LinkedField",
+            "name": "characters",
+            "plural": true,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Series",
+                "kind": "LinkedField",
+                "name": "series",
+                "plural": false,
+                "selections": (v11/*: any*/),
+                "storageKey": null
+              },
+              (v9/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "categories",
+            "plural": true,
+            "selections": (v11/*: any*/),
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "50f89c922d9a4720e754927cb0f041af",
+    "id": "f3e9dc765a2ba001d13161bb60a96c97",
     "metadata": {},
     "name": "ModerationPostQuery",
     "operationKind": "query",
@@ -250,6 +372,6 @@ return {
 };
 })();
 
-(node as any).hash = "fa1af3b0e89d8a3a24603fb9af05bcb2";
+(node as any).hash = "f8774c352bfefbc8376df096cbebffa6";
 
 export default node;
