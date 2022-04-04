@@ -1,11 +1,12 @@
 [package]
 name = "orca"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 
 [[bin]]
 name = "orca_library"
 path = "src/main.rs"
 
 [dependencies]
-apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.1" }
+apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.2" }
+anyhow = "1.0.55"

@@ -19,11 +19,6 @@ load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_depende
 
 rules_foreign_cc_dependencies()
 
-# Load OpenSSL and other 3rd party dependencies
-load("//third_party/openssl:openssl_repositories.bzl", "openssl_repositories")
-
-openssl_repositories()
-
 # perl is used to build openssl
 http_archive(
     name = "rules_perl",
@@ -53,7 +48,7 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 
 rules_rust_dependencies()
 
-rust_register_toolchains(version = "1.59.0", edition="2018")
+rust_register_toolchains(version = "1.59.0", edition="2021")
 
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
 
@@ -78,21 +73,16 @@ crates_repository(
     },
     annotations = {
             "openssl-sys": [crate.annotation(
-                build_script_data = [
-                    "@openssl//:gen_dir",
-                    "@openssl//:openssl",
-                ],
-                build_script_data_glob = ["build/**/*.c"],
                 build_script_env = {
-                    "OPENSSL_DIR": "$(execpath @openssl//:gen_dir)",
-                    "OPENSSL_STATIC": "1",
-                },
-                data = ["@openssl"],
-                deps = ["@openssl"],
+                    "OPENSSL_NO_VENDOR": "1",
+                }
             )],
             "v8": [crate.annotation(
                gen_build_script = False,
                data = [
+                   "@overdoll//third_party/v8:librusty_v8.a"
+               ],
+               compile_data = [
                    "@overdoll//third_party/v8:librusty_v8.a"
                ],
                rustc_flags = [
@@ -137,11 +127,13 @@ crates_repository(
                build_script_data = [
                     "@com_google_protobuf//:protoc",
                     "@crate_index__prost-build-0.9.0//:third-party",
+                    "@rules_rust//tools/rustfmt"
                ],
                build_script_env = {
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
                     "PROTOC_INCLUDE": "${pwd}/external/crate_index__prost-build-0.9.0/third-party/protobuf/include",
                     "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt",
+                    "BUILD_WORKSPACE_DIRECTORY": "."
                },
             )],
             "prost-build": [crate.annotation(

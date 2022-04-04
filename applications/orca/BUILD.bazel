@@ -1,13 +1,36 @@
 load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_binary")
 
 package(default_visibility = ["//visibility:public"])
+
+rust_binary(
+    name = "internal",
+    srcs = ["src/main.rs"],
+    deps = [
+        "@crate_index//:anyhow",
+        "@crate_index//:apollo-router",
+    ],
+    compile_data = [
+        "@overdoll//third_party/v8:librusty_v8.a",
+    ],
+    data = [
+        "@overdoll//third_party/v8:librusty_v8.a",
+    ],
+    rustc_flags = [
+        "-Lall=third_party/v8"
+    ]
+)
 
 rust_image(
     name = "image",
     srcs = ["src/main.rs"],
     deps = [
-        "@crate_index//:apollo-router"
+        "@crate_index//:anyhow",
+        "@crate_index//:apollo-router",
+    ],
+    rustc_flags = [
+        "-Lall=third_party/v8"
     ]
 )
 
