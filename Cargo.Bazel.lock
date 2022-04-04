@@ -1,5 +1,5 @@
 {
-  "checksum": "cd88ca31455fddaa3a109a8907bf62302afc5360ba6314e8339aefe74048aae3",
+  "checksum": "88edd245cc346e369bce8982997ca73b2984c8dba3c597ab9e4144bab14fde19",
   "crates": {
     "addr2line 0.17.0": {
       "name": "addr2line",
@@ -489,7 +489,7 @@
       "version": "0.2.4",
       "repository": {
         "Git": {
-          "remote": "https://github.com/apollographql/apollo-rs",
+          "remote": "https://github.com/apollographql/apollo-rs.git",
           "commitish": {
             "Rev": "e707e0f78f41ace1c3ecfe69bc10f4144ffbf7ac"
           },
@@ -779,7 +779,7 @@
               "target": "tracing"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             },
             {
@@ -905,7 +905,7 @@
               "target": "lazy_static"
             },
             {
-              "id": "lru 0.7.3",
+              "id": "lru 0.7.5",
               "target": "lru"
             },
             {
@@ -1181,8 +1181,8 @@
         "data": {
           "common": [
             "@com_google_protobuf//:protoc",
-            "@crate_index__prost-build-0.9.0//:third-party",
-            "@rules_rust//tools/rustfmt"
+            "@crates__prost-build-0.9.0//:third-party",
+            "@rules_rust//rust/toolchain:current_exec_rustfmt_files"
           ],
           "selects": {}
         },
@@ -1202,8 +1202,8 @@
           "common": {
             "BUILD_WORKSPACE_DIRECTORY": ".",
             "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-            "PROTOC_INCLUDE": "${pwd}/external/crate_index__prost-build-0.9.0/third-party/protobuf/include",
-            "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt"
+            "PROTOC_INCLUDE": "${pwd}/external/crates__prost-build-0.9.0/third-party/protobuf/include",
+            "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)"
           },
           "selects": {}
         }
@@ -1544,7 +1544,7 @@
               "target": "polling"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             },
             {
@@ -3146,7 +3146,7 @@
               "target": "color_spantrace"
             },
             {
-              "id": "eyre 0.6.7",
+              "id": "eyre 0.6.8",
               "target": "eyre"
             },
             {
@@ -3212,7 +3212,7 @@
               "target": "owo_colors"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             },
             {
@@ -4500,19 +4500,6 @@
         "compile_data_glob": [
           "**"
         ],
-        "deps": {
-          "common": [
-            {
-              "id": "apollo-parser 0.2.4",
-              "target": "apollo_parser"
-            },
-            {
-              "id": "router-bridge 0.1.0",
-              "target": "router_bridge"
-            }
-          ],
-          "selects": {}
-        },
         "edition": "2018",
         "version": "0.0.1"
       },
@@ -5140,13 +5127,13 @@
       },
       "license": "Apache-2.0 OR MIT"
     },
-    "eyre 0.6.7": {
+    "eyre 0.6.8": {
       "name": "eyre",
-      "version": "0.6.7",
+      "version": "0.6.8",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/eyre/0.6.7/download",
-          "sha256": "9289ed2c0440a6536e65119725cf91fc2c6b5e513bfd2e36e1134d7cca6ca12f"
+          "url": "https://crates.io/api/v1/crates/eyre/0.6.8/download",
+          "sha256": "4c2b6b5a29c02cdc822728b7d7b8ae1bab3e3b05d44522770ddd49722eeac7eb"
         }
       },
       "targets": [
@@ -5181,13 +5168,14 @@
           "**"
         ],
         "crate_features": [
+          "auto-install",
           "default",
           "track-caller"
         ],
         "deps": {
           "common": [
             {
-              "id": "eyre 0.6.7",
+              "id": "eyre 0.6.8",
               "target": "build_script_build"
             },
             {
@@ -5202,7 +5190,7 @@
           "selects": {}
         },
         "edition": "2018",
-        "version": "0.6.7"
+        "version": "0.6.8"
       },
       "build_script_attrs": {
         "data_glob": [
@@ -6639,7 +6627,7 @@
               "target": "pin_utils"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             }
           ],
@@ -7409,7 +7397,7 @@
               "target": "indexmap"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             },
             {
@@ -9710,13 +9698,13 @@
       },
       "license": "MIT OR Apache-2.0"
     },
-    "lru 0.7.3": {
+    "lru 0.7.5": {
       "name": "lru",
-      "version": "0.7.3",
+      "version": "0.7.5",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/lru/0.7.3/download",
-          "sha256": "fcb87f3080f6d1d69e8c564c0fcfde1d7aa8cc451ce40cae89479111f03bc0eb"
+          "url": "https://crates.io/api/v1/crates/lru/0.7.5/download",
+          "sha256": "32613e41de4c47ab04970c348ca7ae7382cf116625755af070b008a15516a889"
         }
       },
       "targets": [
@@ -9752,7 +9740,7 @@
           "selects": {}
         },
         "edition": "2015",
-        "version": "0.7.3"
+        "version": "0.7.5"
       },
       "license": "MIT"
     },
@@ -10569,7 +10557,7 @@
               "target": "net2"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             }
           ],
@@ -10733,7 +10721,7 @@
               "target": "mio"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             }
           ],
@@ -12526,7 +12514,7 @@
         "data": {
           "common": [
             "@com_google_protobuf//:protoc",
-            "@rules_rust//tools/rustfmt"
+            "@rules_rust//rust/toolchain:current_exec_rustfmt_files"
           ],
           "selects": {}
         },
@@ -12546,7 +12534,7 @@
           "common": {
             "BUILD_WORKSPACE_DIRECTORY": ".",
             "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-            "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt"
+            "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)"
           },
           "selects": {}
         }
@@ -15740,7 +15728,7 @@
       "version": "0.1.0",
       "repository": {
         "Git": {
-          "remote": "https://github.com/apollographql/federation-rs",
+          "remote": "https://github.com/apollographql/federation-rs.git",
           "commitish": {
             "Rev": "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
           },
@@ -17651,13 +17639,13 @@
       },
       "license": "MIT/Apache-2.0"
     },
-    "slab 0.4.5": {
+    "slab 0.4.6": {
       "name": "slab",
-      "version": "0.4.5",
+      "version": "0.4.6",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/slab/0.4.5/download",
-          "sha256": "9def91fd1e018fe007022791f865d0ccc9b3a0d5001e01aabb8b40e46000afb5"
+          "url": "https://crates.io/api/v1/crates/slab/0.4.6/download",
+          "sha256": "eb703cfe953bccee95685111adeedb76fabe4e97549a58d16f03ea7b9367bb32"
         }
       },
       "targets": [
@@ -17684,7 +17672,7 @@
           "std"
         ],
         "edition": "2018",
-        "version": "0.4.5"
+        "version": "0.4.6"
       },
       "license": "MIT"
     },
@@ -20239,7 +20227,7 @@
               "target": "rand"
             },
             {
-              "id": "slab 0.4.5",
+              "id": "slab 0.4.6",
               "target": "slab"
             },
             {
@@ -20535,7 +20523,7 @@
               "target": "pin_project_lite"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             }
           ],
@@ -20605,13 +20593,13 @@
       },
       "license": "MIT"
     },
-    "tracing-core 0.1.23": {
+    "tracing-core 0.1.24": {
       "name": "tracing-core",
-      "version": "0.1.23",
+      "version": "0.1.24",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/tracing-core/0.1.23/download",
-          "sha256": "aa31669fa42c09c34d94d8165dd2012e8ff3c66aca50f3bb226b68f216f2706c"
+          "url": "https://crates.io/api/v1/crates/tracing-core/0.1.24/download",
+          "sha256": "90442985ee2f57c9e1b548ee72ae842f4a9a20e3f417cc38dbc5dc684d9bb4ee"
         }
       },
       "targets": [
@@ -20656,7 +20644,7 @@
           }
         },
         "edition": "2018",
-        "version": "0.1.23"
+        "version": "0.1.24"
       },
       "license": "MIT"
     },
@@ -20805,7 +20793,7 @@
               "target": "log"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             }
           ],
@@ -20859,7 +20847,7 @@
               "target": "tracing"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             },
             {
@@ -20913,7 +20901,7 @@
               "target": "serde"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             }
           ],
@@ -20969,7 +20957,7 @@
               "target": "thread_local"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             }
           ],
@@ -21073,7 +21061,7 @@
               "target": "tracing"
             },
             {
-              "id": "tracing-core 0.1.23",
+              "id": "tracing-core 0.1.24",
               "target": "tracing_core"
             },
             {
@@ -21894,13 +21882,25 @@
               "exclude": []
             }
           }
+        },
+        {
+          "BuildScript": {
+            "crate_name": "build_script_build",
+            "crate_root": "build.rs",
+            "srcs": {
+              "include": [
+                "**/*.rs"
+              ],
+              "exclude": []
+            }
+          }
         }
       ],
       "library_target_name": "v8",
       "common_attrs": {
         "compile_data": {
           "common": [
-            "@overdoll//third_party/v8:librusty_v8.a"
+            "@rusty_v8//file"
           ],
           "selects": {}
         },
@@ -21909,7 +21909,7 @@
         ],
         "data": {
           "common": [
-            "@overdoll//third_party/v8:librusty_v8.a"
+            "@rusty_v8//file"
           ],
           "selects": {}
         },
@@ -21926,6 +21926,10 @@
             {
               "id": "libc 0.2.121",
               "target": "libc"
+            },
+            {
+              "id": "v8 0.38.1",
+              "target": "build_script_build"
             }
           ],
           "selects": {}
@@ -21933,11 +21937,35 @@
         "edition": "2021",
         "rustc_flags": {
           "common": [
-            "-Lall=third_party/v8"
+            "-Lall=external/rusty_v8/file"
           ],
           "selects": {}
         },
         "version": "0.38.1"
+      },
+      "build_script_attrs": {
+        "data": {
+          "common": [
+            "@rusty_v8//file"
+          ],
+          "selects": {}
+        },
+        "data_glob": [
+          "**"
+        ],
+        "deps": {
+          "common": [
+            {
+              "id": "fslock 0.1.8",
+              "target": "fslock"
+            },
+            {
+              "id": "which 4.2.5",
+              "target": "which"
+            }
+          ],
+          "selects": {}
+        }
       },
       "license": "MIT"
     },

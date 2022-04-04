@@ -1,6 +1,0 @@
-exports_files(
-    [
-        "librusty_v8.a",
-    ],
-    visibility = ["//visibility:public"],
-)

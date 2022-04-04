@@ -1,1 +1,1 @@
-CARGO_BAZEL_REPIN=true bazel build @crate_index//:all
+CARGO_BAZEL_REPIN=true bazel build @crates//:all

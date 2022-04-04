@@ -7,34 +7,6 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# Foreigncc is used to build OpenSSL
-http_archive(
-    name = "rules_foreign_cc",
-    sha256 = "1df78c7d7eed2dc21b8b325a2853c31933a81e7b780f9a59a5d078be9008b13a",
-    strip_prefix = "rules_foreign_cc-0.7.0",
-    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.7.0.tar.gz",
-)
-
-load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-
-rules_foreign_cc_dependencies()
-
-# perl is used to build openssl
-http_archive(
-    name = "rules_perl",
-    sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
-    strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
-    urls = [
-        "https://github.com/bazelbuild/rules_perl/archive/2f4f36f454375e678e81e5ca465d4d497c5c02da.tar.gz",
-    ],
-)
-
-load("@rules_perl//perl:deps.bzl", "perl_register_toolchains", "perl_rules_dependencies")
-
-perl_rules_dependencies()
-
-perl_register_toolchains()
-
 http_archive(
     name = "rules_rust",
     sha256 = "39655ab175e3c6b979f362f55f58085528f1647957b0e9b3a07f81d8a9c3ea0a",
@@ -48,29 +20,23 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 
 rules_rust_dependencies()
 
-rust_register_toolchains(version = "1.59.0", edition="2021")
+rust_register_toolchains(version = "1.59.0", edition="2021", rustfmt_version = "1.59.0")
 
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
 
 crate_universe_dependencies()
 
-load("@rules_rust//crate_universe:defs.bzl", "crates_repository", "crate")
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository", "crate", "render_config")
+
+# download rusty_v8 dependency
+load("//third_party/rusty_v8:rusty_v8_repositories.bzl", "rusty_v8_repositories")
+
+rusty_v8_repositories()
 
 crates_repository(
-    name = "crate_index",
+    name = "crates",
     lockfile = "//:Cargo.Bazel.lock",
     manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
-    packages = {
-        "router-bridge": crate.spec(
-            package = "router-bridge",
-            git = "https://github.com/apollographql/federation-rs",
-            rev = "645ef8b66b14ee6d13e8e24ddd4aba29389031a1"
-        ),
-        "apollo-parser": crate.spec(
-            git = "https://github.com/apollographql/apollo-rs",
-            rev = "e707e0f78f41ace1c3ecfe69bc10f4144ffbf7ac"
-        )
-    },
     annotations = {
             "openssl-sys": [crate.annotation(
                 build_script_env = {
@@ -78,16 +44,18 @@ crates_repository(
                 }
             )],
             "v8": [crate.annotation(
-               gen_build_script = False,
                data = [
-                   "@overdoll//third_party/v8:librusty_v8.a"
+                   "@rusty_v8//file"
                ],
                compile_data = [
-                   "@overdoll//third_party/v8:librusty_v8.a"
+                   "@rusty_v8//file"
+               ],
+               build_script_data = [
+                   "@rusty_v8//file"
                ],
                rustc_flags = [
-                   "-Lall=third_party/v8"
-               ]
+                   "-Lall=external/rusty_v8/file"
+               ],
             )],
             "router-bridge": [crate.annotation(
                gen_build_script = False,
@@ -114,11 +82,11 @@ crates_repository(
             "opentelemetry-otlp": [crate.annotation(
                build_script_data = [
                     "@com_google_protobuf//:protoc",
-                    "@rules_rust//tools/rustfmt"
+                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
                ],
                build_script_env = {
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-                    "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
                     "BUILD_WORKSPACE_DIRECTORY": "."
                },
             )],
@@ -126,13 +94,13 @@ crates_repository(
                version = "0.1.0-preview.1",
                build_script_data = [
                     "@com_google_protobuf//:protoc",
-                    "@crate_index__prost-build-0.9.0//:third-party",
-                    "@rules_rust//tools/rustfmt"
+                    "@crates__prost-build-0.9.0//:third-party",
+                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
                ],
                build_script_env = {
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-                    "PROTOC_INCLUDE": "${pwd}/external/crate_index__prost-build-0.9.0/third-party/protobuf/include",
-                    "RUSTFMT": "/home/nikita/.cargo/bin/rustfmt",
+                    "PROTOC_INCLUDE": "${pwd}/external/crates__prost-build-0.9.0/third-party/protobuf/include",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
                     "BUILD_WORKSPACE_DIRECTORY": "."
                },
             )],
@@ -149,7 +117,7 @@ crates_repository(
         },
 )
 
-load("@crate_index//:defs.bzl", "crate_repositories")
+load("@crates//:defs.bzl", "crate_repositories")
 
 crate_repositories()
 

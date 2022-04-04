@@ -2,6 +2,7 @@ exports_files([
     "coverage.patch",
     "router_bridge.patch",
     "rover_client.patch",
+    "tonic_build.patch",
 ])
 
 package(default_visibility = ["//visibility:public"])
