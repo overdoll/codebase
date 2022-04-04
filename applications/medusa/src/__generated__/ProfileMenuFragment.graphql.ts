@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProfileMenuFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ProfileAdminButtonFragment" | "ProfileCopyLinkButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ProfileStaffButtonFragment" | "ProfileCopyLinkButtonFragment">;
   readonly " $fragmentType": "ProfileMenuFragment";
 };
 export type ProfileMenuFragment = ProfileMenuFragment$data;
@@ -29,7 +29,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ProfileAdminButtonFragment"
+      "name": "ProfileStaffButtonFragment"
     },
     {
       "args": null,

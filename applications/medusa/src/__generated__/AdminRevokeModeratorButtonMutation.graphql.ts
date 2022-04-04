@@ -15,11 +15,11 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RevokeAccountModeratorRole = {
   accountId: string;
 };
-export type AdminRevokeModeratorButtonMutation$variables = {
+export type StaffRevokeModeratorButtonMutation$variables = {
   input: RevokeAccountModeratorRole;
 };
-export type AdminRevokeModeratorButtonMutationVariables = AdminRevokeModeratorButtonMutation$variables;
-export type AdminRevokeModeratorButtonMutation$data = {
+export type StaffRevokeModeratorButtonMutationVariables = StaffRevokeModeratorButtonMutation$variables;
+export type StaffRevokeModeratorButtonMutation$data = {
   readonly revokeAccountModeratorRole: {
     readonly account: {
       readonly id: string;
@@ -27,10 +27,10 @@ export type AdminRevokeModeratorButtonMutation$data = {
     } | null;
   } | null;
 };
-export type AdminRevokeModeratorButtonMutationResponse = AdminRevokeModeratorButtonMutation$data;
-export type AdminRevokeModeratorButtonMutation = {
-  variables: AdminRevokeModeratorButtonMutationVariables;
-  response: AdminRevokeModeratorButtonMutation$data;
+export type StaffRevokeModeratorButtonMutationResponse = StaffRevokeModeratorButtonMutation$data;
+export type StaffRevokeModeratorButtonMutation = {
+  variables: StaffRevokeModeratorButtonMutationVariables;
+  response: StaffRevokeModeratorButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -90,7 +90,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminRevokeModeratorButtonMutation",
+    "name": "StaffRevokeModeratorButtonMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -99,13 +99,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminRevokeModeratorButtonMutation",
+    "name": "StaffRevokeModeratorButtonMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "ba609ba69eb2ccfcde1394c38a8d5a09",
     "metadata": {},
-    "name": "AdminRevokeModeratorButtonMutation",
+    "name": "StaffRevokeModeratorButtonMutation",
     "operationKind": "mutation",
     "text": null
   }

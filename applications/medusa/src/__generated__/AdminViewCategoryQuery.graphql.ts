@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminViewCategoryQuery$variables = {
+export type StaffViewCategoryQuery$variables = {
   slug: string;
 };
-export type AdminViewCategoryQueryVariables = AdminViewCategoryQuery$variables;
-export type AdminViewCategoryQuery$data = {
+export type StaffViewCategoryQueryVariables = StaffViewCategoryQuery$variables;
+export type StaffViewCategoryQuery$data = {
   readonly category: {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryTitleFragment" | "ChangeCategoryThumbnailFragment">;
   } | null;
 };
-export type AdminViewCategoryQueryResponse = AdminViewCategoryQuery$data;
-export type AdminViewCategoryQuery = {
-  variables: AdminViewCategoryQueryVariables;
-  response: AdminViewCategoryQuery$data;
+export type StaffViewCategoryQueryResponse = StaffViewCategoryQuery$data;
+export type StaffViewCategoryQuery = {
+  variables: StaffViewCategoryQueryVariables;
+  response: StaffViewCategoryQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -62,7 +62,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminViewCategoryQuery",
+    "name": "StaffViewCategoryQuery",
     "selections": [
       {
         "alias": null,
@@ -93,7 +93,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminViewCategoryQuery",
+    "name": "StaffViewCategoryQuery",
     "selections": [
       {
         "alias": null,
@@ -212,7 +212,7 @@ return {
   "params": {
     "id": "9cfae13d50787248026c4be3b82cb1e9",
     "metadata": {},
-    "name": "AdminViewCategoryQuery",
+    "name": "StaffViewCategoryQuery",
     "operationKind": "query",
     "text": null
   }

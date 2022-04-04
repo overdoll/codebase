@@ -10,21 +10,21 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubAdminButtonFragment$data = {
+export type ClubStaffButtonFragment$data = {
   readonly slug: string;
-  readonly " $fragmentType": "ClubAdminButtonFragment";
+  readonly " $fragmentType": "ClubStaffButtonFragment";
 };
-export type ClubAdminButtonFragment = ClubAdminButtonFragment$data;
-export type ClubAdminButtonFragment$key = {
-  readonly " $data"?: ClubAdminButtonFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubAdminButtonFragment">;
+export type ClubStaffButtonFragment = ClubStaffButtonFragment$data;
+export type ClubStaffButtonFragment$key = {
+  readonly " $data"?: ClubStaffButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubStaffButtonFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ClubAdminButtonFragment",
+  "name": "ClubStaffButtonFragment",
   "selections": [
     {
       "alias": null,

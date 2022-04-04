@@ -12,12 +12,12 @@
 // @relayRequestID cf5f446ebb52b40b0559fbed17616b0a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateSeriesQuery$variables = {
+export type StaffCreateSeriesQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateSeriesQueryVariables = AdminCreateSeriesQuery$variables;
-export type AdminCreateSeriesQuery$data = {
+export type StaffCreateSeriesQueryVariables = StaffCreateSeriesQuery$variables;
+export type StaffCreateSeriesQuery$data = {
   readonly series: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateSeriesQuery$data = {
     }>;
   };
 };
-export type AdminCreateSeriesQueryResponse = AdminCreateSeriesQuery$data;
-export type AdminCreateSeriesQuery = {
-  variables: AdminCreateSeriesQueryVariables;
-  response: AdminCreateSeriesQuery$data;
+export type StaffCreateSeriesQueryResponse = StaffCreateSeriesQuery$data;
+export type StaffCreateSeriesQuery = {
+  variables: StaffCreateSeriesQueryVariables;
+  response: StaffCreateSeriesQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateSeriesQuery",
+    "name": "StaffCreateSeriesQuery",
     "selections": [
       {
         "alias": "series",
         "args": null,
         "concreteType": "SeriesConnection",
         "kind": "LinkedField",
-        "name": "__AdminSeriesConnection_series_connection",
+        "name": "__StaffSeriesConnection_series_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateSeriesQuery",
+    "name": "StaffCreateSeriesQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminSeriesConnection_series",
+        "key": "StaffSeriesConnection_series",
         "kind": "LinkedHandle",
         "name": "series"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateSeriesQuery",
+    "name": "StaffCreateSeriesQuery",
     "operationKind": "query",
     "text": null
   }

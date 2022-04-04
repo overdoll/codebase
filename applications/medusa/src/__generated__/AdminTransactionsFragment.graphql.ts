@@ -10,24 +10,24 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminTransactionsFragment$data = {
+export type StaffTransactionsFragment$data = {
   readonly transactions: {
     readonly edges: ReadonlyArray<{
       readonly __typename: string;
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsListFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionsListFragment">;
   };
   readonly transactionsTotalCount: number;
   readonly transactionsPaymentCount: number;
   readonly transactionsChargebackCount: number;
   readonly transactionsRefundCount: number;
   readonly id: string;
-  readonly " $fragmentType": "AdminTransactionsFragment";
+  readonly " $fragmentType": "StaffTransactionsFragment";
 };
-export type AdminTransactionsFragment = AdminTransactionsFragment$data;
-export type AdminTransactionsFragment$key = {
-  readonly " $data"?: AdminTransactionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsFragment">;
+export type StaffTransactionsFragment = StaffTransactionsFragment$data;
+export type StaffTransactionsFragment$key = {
+  readonly " $data"?: StaffTransactionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -76,24 +76,24 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminTransactionsPaginationQuery.graphql'),
+      "operation": require('./StaffTransactionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminTransactionsFragment",
+  "name": "StaffTransactionsFragment",
   "selections": [
     {
       "alias": "transactions",
       "args": null,
       "concreteType": "AccountTransactionConnection",
       "kind": "LinkedField",
-      "name": "__AdminTransactions_transactions_connection",
+      "name": "__StaffTransactions_transactions_connection",
       "plural": false,
       "selections": [
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminTransactionsListFragment"
+          "name": "StaffTransactionsListFragment"
         },
         {
           "alias": null,

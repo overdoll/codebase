@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountTransactionQuery$variables = {
+export type StaffAccountTransactionQuery$variables = {
   reference: string;
 };
-export type AdminAccountTransactionQueryVariables = AdminAccountTransactionQuery$variables;
-export type AdminAccountTransactionQuery$data = {
+export type StaffAccountTransactionQueryVariables = StaffAccountTransactionQuery$variables;
+export type StaffAccountTransactionQuery$data = {
   readonly accountTransaction: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionCardFragment" | "AdminAccountTransactionOptionsFragment" | "AdminAccountTransactionSubscriptionFragment" | "AdminAccountTransactionEventsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionCardFragment" | "StaffAccountTransactionOptionsFragment" | "StaffAccountTransactionSubscriptionFragment" | "StaffAccountTransactionEventsFragment">;
   } | null;
 };
-export type AdminAccountTransactionQueryResponse = AdminAccountTransactionQuery$data;
-export type AdminAccountTransactionQuery = {
-  variables: AdminAccountTransactionQueryVariables;
-  response: AdminAccountTransactionQuery$data;
+export type StaffAccountTransactionQueryResponse = StaffAccountTransactionQuery$data;
+export type StaffAccountTransactionQuery = {
+  variables: StaffAccountTransactionQueryVariables;
+  response: StaffAccountTransactionQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -109,7 +109,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminAccountTransactionQuery",
+    "name": "StaffAccountTransactionQuery",
     "selections": [
       {
         "alias": null,
@@ -122,22 +122,22 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminTransactionCardFragment"
+            "name": "StaffTransactionCardFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminAccountTransactionOptionsFragment"
+            "name": "StaffAccountTransactionOptionsFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminAccountTransactionSubscriptionFragment"
+            "name": "StaffAccountTransactionSubscriptionFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminAccountTransactionEventsFragment"
+            "name": "StaffAccountTransactionEventsFragment"
           }
         ],
         "storageKey": null
@@ -150,7 +150,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminAccountTransactionQuery",
+    "name": "StaffAccountTransactionQuery",
     "selections": [
       {
         "alias": null,
@@ -315,7 +315,7 @@ return {
   "params": {
     "id": "d5a2cccc458d97eb89baee6d62bdfd99",
     "metadata": {},
-    "name": "AdminAccountTransactionQuery",
+    "name": "StaffAccountTransactionQuery",
     "operationKind": "query",
     "text": null
   }

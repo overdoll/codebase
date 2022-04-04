@@ -19,6 +19,7 @@ import {
   FormInput,
   FormSubmitButton,
   InputBody,
+  InputFooter,
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -148,6 +149,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
             <InputBody>
               <TextInput placeholder='123456' />
             </InputBody>
+            <InputFooter />
           </FormInput>
           <FormSubmitButton
             size='xl'

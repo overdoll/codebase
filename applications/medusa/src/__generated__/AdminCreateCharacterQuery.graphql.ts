@@ -12,12 +12,12 @@
 // @relayRequestID 09c4bb92696026dca6daa137790c3282
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateCharacterQuery$variables = {
+export type StaffCreateCharacterQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateCharacterQueryVariables = AdminCreateCharacterQuery$variables;
-export type AdminCreateCharacterQuery$data = {
+export type StaffCreateCharacterQueryVariables = StaffCreateCharacterQuery$variables;
+export type StaffCreateCharacterQuery$data = {
   readonly characters: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateCharacterQuery$data = {
     }>;
   };
 };
-export type AdminCreateCharacterQueryResponse = AdminCreateCharacterQuery$data;
-export type AdminCreateCharacterQuery = {
-  variables: AdminCreateCharacterQueryVariables;
-  response: AdminCreateCharacterQuery$data;
+export type StaffCreateCharacterQueryResponse = StaffCreateCharacterQuery$data;
+export type StaffCreateCharacterQuery = {
+  variables: StaffCreateCharacterQueryVariables;
+  response: StaffCreateCharacterQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateCharacterQuery",
+    "name": "StaffCreateCharacterQuery",
     "selections": [
       {
         "alias": "characters",
         "args": null,
         "concreteType": "CharacterConnection",
         "kind": "LinkedField",
-        "name": "__AdminCharactersConnection_characters_connection",
+        "name": "__StaffCharactersConnection_characters_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateCharacterQuery",
+    "name": "StaffCreateCharacterQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminCharactersConnection_characters",
+        "key": "StaffCharactersConnection_characters",
         "kind": "LinkedHandle",
         "name": "characters"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateCharacterQuery",
+    "name": "StaffCreateCharacterQuery",
     "operationKind": "query",
     "text": null
   }

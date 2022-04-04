@@ -13,21 +13,21 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminExpiredSubscriptionTransactionsFragmentPaginationQuery$variables = {
+export type StaffExpiredSubscriptionTransactionsFragmentPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminExpiredSubscriptionTransactionsFragmentPaginationQueryVariables = AdminExpiredSubscriptionTransactionsFragmentPaginationQuery$variables;
-export type AdminExpiredSubscriptionTransactionsFragmentPaginationQuery$data = {
+export type StaffExpiredSubscriptionTransactionsFragmentPaginationQueryVariables = StaffExpiredSubscriptionTransactionsFragmentPaginationQuery$variables;
+export type StaffExpiredSubscriptionTransactionsFragmentPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminExpiredSubscriptionTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffExpiredSubscriptionTransactionsFragment">;
   } | null;
 };
-export type AdminExpiredSubscriptionTransactionsFragmentPaginationQueryResponse = AdminExpiredSubscriptionTransactionsFragmentPaginationQuery$data;
-export type AdminExpiredSubscriptionTransactionsFragmentPaginationQuery = {
-  variables: AdminExpiredSubscriptionTransactionsFragmentPaginationQueryVariables;
-  response: AdminExpiredSubscriptionTransactionsFragmentPaginationQuery$data;
+export type StaffExpiredSubscriptionTransactionsFragmentPaginationQueryResponse = StaffExpiredSubscriptionTransactionsFragmentPaginationQuery$data;
+export type StaffExpiredSubscriptionTransactionsFragmentPaginationQuery = {
+  variables: StaffExpiredSubscriptionTransactionsFragmentPaginationQueryVariables;
+  response: StaffExpiredSubscriptionTransactionsFragmentPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -86,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminExpiredSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffExpiredSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -99,7 +99,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminExpiredSubscriptionTransactionsFragment"
+            "name": "StaffExpiredSubscriptionTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +112,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminExpiredSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffExpiredSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -281,7 +281,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminExpiredSubscriptionTransactions_transactions",
+                "key": "StaffExpiredSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               }
@@ -297,7 +297,7 @@ return {
   "params": {
     "id": "a67bb80794747b20a2b1e551cb387f02",
     "metadata": {},
-    "name": "AdminExpiredSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffExpiredSubscriptionTransactionsFragmentPaginationQuery",
     "operationKind": "query",
     "text": null
   }

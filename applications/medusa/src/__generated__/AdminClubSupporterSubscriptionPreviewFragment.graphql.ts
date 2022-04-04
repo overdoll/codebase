@@ -10,23 +10,23 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionPreviewFragment$data = {
+export type StaffClubSupporterSubscriptionPreviewFragment$data = {
   readonly __typename: string;
   readonly id?: string;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountActiveClubSupporterSubscriptionPreviewFragment" | "AdminAccountCancelledClubSupporterSubscriptionPreviewFragment" | "AdminAccountExpiredClubSupporterSubscriptionPreviewFragment">;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionPreviewFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountActiveClubSupporterSubscriptionPreviewFragment" | "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment" | "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment">;
+  readonly " $fragmentType": "StaffClubSupporterSubscriptionPreviewFragment";
 };
-export type AdminClubSupporterSubscriptionPreviewFragment = AdminClubSupporterSubscriptionPreviewFragment$data;
-export type AdminClubSupporterSubscriptionPreviewFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionPreviewFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionPreviewFragment">;
+export type StaffClubSupporterSubscriptionPreviewFragment = StaffClubSupporterSubscriptionPreviewFragment$data;
+export type StaffClubSupporterSubscriptionPreviewFragment$key = {
+  readonly " $data"?: StaffClubSupporterSubscriptionPreviewFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminClubSupporterSubscriptionPreviewFragment",
+  "name": "StaffClubSupporterSubscriptionPreviewFragment",
   "selections": [
     {
       "alias": null,
@@ -55,7 +55,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountActiveClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountActiveClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountActiveClubSupporterSubscription",
@@ -67,7 +67,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountCancelledClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountCancelledClubSupporterSubscription",
@@ -79,7 +79,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountExpiredClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountExpiredClubSupporterSubscription",

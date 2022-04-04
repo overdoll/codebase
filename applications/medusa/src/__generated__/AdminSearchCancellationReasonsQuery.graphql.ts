@@ -13,15 +13,15 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCancellationReasonsQuery$variables = {};
-export type AdminSearchCancellationReasonsQueryVariables = AdminSearchCancellationReasonsQuery$variables;
-export type AdminSearchCancellationReasonsQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCancellationReasonsFragment">;
+export type StaffSearchCancellationReasonsQuery$variables = {};
+export type StaffSearchCancellationReasonsQueryVariables = StaffSearchCancellationReasonsQuery$variables;
+export type StaffSearchCancellationReasonsQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCancellationReasonsFragment">;
 };
-export type AdminSearchCancellationReasonsQueryResponse = AdminSearchCancellationReasonsQuery$data;
-export type AdminSearchCancellationReasonsQuery = {
-  variables: AdminSearchCancellationReasonsQueryVariables;
-  response: AdminSearchCancellationReasonsQuery$data;
+export type StaffSearchCancellationReasonsQueryResponse = StaffSearchCancellationReasonsQuery$data;
+export type StaffSearchCancellationReasonsQuery = {
+  variables: StaffSearchCancellationReasonsQueryVariables;
+  response: StaffSearchCancellationReasonsQuery$data;
 };
 
 const node: ConcreteRequest = {
@@ -29,12 +29,12 @@ const node: ConcreteRequest = {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchCancellationReasonsQuery",
+    "name": "StaffSearchCancellationReasonsQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchCancellationReasonsFragment"
+        "name": "StaffSearchCancellationReasonsFragment"
       }
     ],
     "type": "Query",
@@ -44,7 +44,7 @@ const node: ConcreteRequest = {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "AdminSearchCancellationReasonsQuery",
+    "name": "StaffSearchCancellationReasonsQuery",
     "selections": [
       {
         "alias": null,
@@ -144,7 +144,7 @@ const node: ConcreteRequest = {
         "args": null,
         "filters": null,
         "handle": "connection",
-        "key": "AdminCancellationReasonsConnection_cancellationReasons",
+        "key": "StaffCancellationReasonsConnection_cancellationReasons",
         "kind": "LinkedHandle",
         "name": "cancellationReasons"
       }
@@ -153,7 +153,7 @@ const node: ConcreteRequest = {
   "params": {
     "id": "76e14e76a32a49d86b8b0f6e320a9790",
     "metadata": {},
-    "name": "AdminSearchCancellationReasonsQuery",
+    "name": "StaffSearchCancellationReasonsQuery",
     "operationKind": "query",
     "text": null
   }

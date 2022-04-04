@@ -12,12 +12,12 @@
 // @relayRequestID 406ef938b4f1bf2a4b1428201dae3ffe
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateCategoryQuery$variables = {
+export type StaffCreateCategoryQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateCategoryQueryVariables = AdminCreateCategoryQuery$variables;
-export type AdminCreateCategoryQuery$data = {
+export type StaffCreateCategoryQueryVariables = StaffCreateCategoryQuery$variables;
+export type StaffCreateCategoryQuery$data = {
   readonly categories: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateCategoryQuery$data = {
     }>;
   };
 };
-export type AdminCreateCategoryQueryResponse = AdminCreateCategoryQuery$data;
-export type AdminCreateCategoryQuery = {
-  variables: AdminCreateCategoryQueryVariables;
-  response: AdminCreateCategoryQuery$data;
+export type StaffCreateCategoryQueryResponse = StaffCreateCategoryQuery$data;
+export type StaffCreateCategoryQuery = {
+  variables: StaffCreateCategoryQueryVariables;
+  response: StaffCreateCategoryQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateCategoryQuery",
+    "name": "StaffCreateCategoryQuery",
     "selections": [
       {
         "alias": "categories",
         "args": null,
         "concreteType": "CategoryConnection",
         "kind": "LinkedField",
-        "name": "__AdminCategoriesConnection_categories_connection",
+        "name": "__StaffCategoriesConnection_categories_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateCategoryQuery",
+    "name": "StaffCreateCategoryQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminCategoriesConnection_categories",
+        "key": "StaffCategoriesConnection_categories",
         "kind": "LinkedHandle",
         "name": "categories"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateCategoryQuery",
+    "name": "StaffCreateCategoryQuery",
     "operationKind": "query",
     "text": null
   }

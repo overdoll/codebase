@@ -12,12 +12,12 @@
 // @relayRequestID 04f56ed4db7d8ad4506cc3a805af35d5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateAudienceQuery$variables = {
+export type StaffCreateAudienceQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateAudienceQueryVariables = AdminCreateAudienceQuery$variables;
-export type AdminCreateAudienceQuery$data = {
+export type StaffCreateAudienceQueryVariables = StaffCreateAudienceQuery$variables;
+export type StaffCreateAudienceQuery$data = {
   readonly audiences: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateAudienceQuery$data = {
     }>;
   };
 };
-export type AdminCreateAudienceQueryResponse = AdminCreateAudienceQuery$data;
-export type AdminCreateAudienceQuery = {
-  variables: AdminCreateAudienceQueryVariables;
-  response: AdminCreateAudienceQuery$data;
+export type StaffCreateAudienceQueryResponse = StaffCreateAudienceQuery$data;
+export type StaffCreateAudienceQuery = {
+  variables: StaffCreateAudienceQueryVariables;
+  response: StaffCreateAudienceQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateAudienceQuery",
+    "name": "StaffCreateAudienceQuery",
     "selections": [
       {
         "alias": "audiences",
         "args": null,
         "concreteType": "AudienceConnection",
         "kind": "LinkedField",
-        "name": "__AdminAudiencesConnection_audiences_connection",
+        "name": "__StaffAudiencesConnection_audiences_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateAudienceQuery",
+    "name": "StaffCreateAudienceQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminAudiencesConnection_audiences",
+        "key": "StaffAudiencesConnection_audiences",
         "kind": "LinkedHandle",
         "name": "audiences"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateAudienceQuery",
+    "name": "StaffCreateAudienceQuery",
     "operationKind": "query",
     "text": null
   }

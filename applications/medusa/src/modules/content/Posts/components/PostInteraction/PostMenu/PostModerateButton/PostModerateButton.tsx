@@ -23,7 +23,7 @@ export default function PostModerateButton ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Can I='admin' a='Post'>
+    <Can I='staff' a='Post'>
       <MenuLinkItem
         to={`/moderation/post/${data.reference}`}
         text={(

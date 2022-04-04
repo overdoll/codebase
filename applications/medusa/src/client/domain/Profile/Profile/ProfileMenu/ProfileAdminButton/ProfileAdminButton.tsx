@@ -2,29 +2,29 @@ import { MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { Trans } from '@lingui/macro'
 import { LoginKeys } from '@//:assets/icons'
 import { graphql, useFragment } from 'react-relay/hooks'
-import type { ProfileAdminButtonFragment$key } from '@//:artifacts/ProfileAdminButtonFragment.graphql'
+import type { ProfileStaffButtonFragment$key } from '@//:artifacts/ProfileStaffButtonFragment.graphql'
 import Can from '@//:modules/authorization/Can'
 
 interface Props {
-  query: ProfileAdminButtonFragment$key
+  query: ProfileStaffButtonFragment$key
 }
 
 const Fragment = graphql`
-  fragment ProfileAdminButtonFragment on Account {
+  fragment ProfileStaffButtonFragment on Account {
     username
   }
 `
 
-export default function ProfileAdminButton ({ query }: Props): JSX.Element {
+export default function ProfileStaffButton ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Can I='admin' a='Account'>
+    <Can I='staff' a='Account'>
       <MenuLinkItem
-        to={`/admin/account/${data.username}`}
+        to={`/staff/account/${data.username}`}
         text={(
           <Trans>
-            Admin
+            Staff
           </Trans>)}
         colorScheme='purple'
         icon={LoginKeys}

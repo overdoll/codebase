@@ -13,18 +13,18 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCancellationReasonsPaginationFragment$variables = {
+export type StaffSearchCancellationReasonsPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
 };
-export type AdminSearchCancellationReasonsPaginationFragmentVariables = AdminSearchCancellationReasonsPaginationFragment$variables;
-export type AdminSearchCancellationReasonsPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCancellationReasonsFragment">;
+export type StaffSearchCancellationReasonsPaginationFragmentVariables = StaffSearchCancellationReasonsPaginationFragment$variables;
+export type StaffSearchCancellationReasonsPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCancellationReasonsFragment">;
 };
-export type AdminSearchCancellationReasonsPaginationFragmentResponse = AdminSearchCancellationReasonsPaginationFragment$data;
-export type AdminSearchCancellationReasonsPaginationFragment = {
-  variables: AdminSearchCancellationReasonsPaginationFragmentVariables;
-  response: AdminSearchCancellationReasonsPaginationFragment$data;
+export type StaffSearchCancellationReasonsPaginationFragmentResponse = StaffSearchCancellationReasonsPaginationFragment$data;
+export type StaffSearchCancellationReasonsPaginationFragment = {
+  variables: StaffSearchCancellationReasonsPaginationFragmentVariables;
+  response: StaffSearchCancellationReasonsPaginationFragment$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -57,12 +57,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchCancellationReasonsPaginationFragment",
+    "name": "StaffSearchCancellationReasonsPaginationFragment",
     "selections": [
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "AdminSearchCancellationReasonsFragment"
+        "name": "StaffSearchCancellationReasonsFragment"
       }
     ],
     "type": "Query",
@@ -72,7 +72,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchCancellationReasonsPaginationFragment",
+    "name": "StaffSearchCancellationReasonsPaginationFragment",
     "selections": [
       {
         "alias": null,
@@ -172,7 +172,7 @@ return {
         "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminCancellationReasonsConnection_cancellationReasons",
+        "key": "StaffCancellationReasonsConnection_cancellationReasons",
         "kind": "LinkedHandle",
         "name": "cancellationReasons"
       }
@@ -181,7 +181,7 @@ return {
   "params": {
     "id": "1a186335f6d89aea7b822582bc45c8ff",
     "metadata": {},
-    "name": "AdminSearchCancellationReasonsPaginationFragment",
+    "name": "StaffSearchCancellationReasonsPaginationFragment",
     "operationKind": "query",
     "text": null
   }

@@ -8,6 +8,8 @@ import { Trans } from '@lingui/macro'
 import type { RejectedPostFragment$key } from '@//:artifacts/RejectedPostFragment.graphql'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostDeleteButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
 
 interface Props {
   query: RejectedPostFragment$key
@@ -17,6 +19,7 @@ const Fragment = graphql`
   fragment RejectedPostFragment on Post {
     ...PostPreviewContentFragment
     ...PostModerateButtonFragment
+    ...PostDeleteButtonFragment
   }
 `
 
@@ -34,6 +37,7 @@ export default function RejectedPost ({
           </Trans>
         </Badge>
         <PostMenu size='xs'>
+          <PostDeleteButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

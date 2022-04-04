@@ -16,11 +16,11 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 export type GenerateRefundAmountForAccountTransactionInput = {
   accountTransactionId: string;
 };
-export type AdminGenerateRefundAmountForAccountTransactionInputMutation$variables = {
+export type StaffGenerateRefundAmountForAccountTransactionInputMutation$variables = {
   input: GenerateRefundAmountForAccountTransactionInput;
 };
-export type AdminGenerateRefundAmountForAccountTransactionInputMutationVariables = AdminGenerateRefundAmountForAccountTransactionInputMutation$variables;
-export type AdminGenerateRefundAmountForAccountTransactionInputMutation$data = {
+export type StaffGenerateRefundAmountForAccountTransactionInputMutationVariables = StaffGenerateRefundAmountForAccountTransactionInputMutation$variables;
+export type StaffGenerateRefundAmountForAccountTransactionInputMutation$data = {
   readonly generateRefundAmountForAccountTransaction: {
     readonly refundAmount: {
       readonly currency: Currency;
@@ -29,10 +29,10 @@ export type AdminGenerateRefundAmountForAccountTransactionInputMutation$data = {
     } | null;
   };
 };
-export type AdminGenerateRefundAmountForAccountTransactionInputMutationResponse = AdminGenerateRefundAmountForAccountTransactionInputMutation$data;
-export type AdminGenerateRefundAmountForAccountTransactionInputMutation = {
-  variables: AdminGenerateRefundAmountForAccountTransactionInputMutationVariables;
-  response: AdminGenerateRefundAmountForAccountTransactionInputMutation$data;
+export type StaffGenerateRefundAmountForAccountTransactionInputMutationResponse = StaffGenerateRefundAmountForAccountTransactionInputMutation$data;
+export type StaffGenerateRefundAmountForAccountTransactionInputMutation = {
+  variables: StaffGenerateRefundAmountForAccountTransactionInputMutationVariables;
+  response: StaffGenerateRefundAmountForAccountTransactionInputMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminGenerateRefundAmountForAccountTransactionInputMutation",
+    "name": "StaffGenerateRefundAmountForAccountTransactionInputMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,13 +108,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminGenerateRefundAmountForAccountTransactionInputMutation",
+    "name": "StaffGenerateRefundAmountForAccountTransactionInputMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "c1c03fafa6e7f86460ab3aa65ee94dd6",
     "metadata": {},
-    "name": "AdminGenerateRefundAmountForAccountTransactionInputMutation",
+    "name": "StaffGenerateRefundAmountForAccountTransactionInputMutation",
     "operationKind": "mutation",
     "text": null
   }

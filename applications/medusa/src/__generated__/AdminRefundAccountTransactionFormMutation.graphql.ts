@@ -18,11 +18,11 @@ export type RefundAccountTransactionInput = {
   accountTransactionId: string;
   amount: number;
 };
-export type AdminRefundAccountTransactionFormMutation$variables = {
+export type StaffRefundAccountTransactionFormMutation$variables = {
   input: RefundAccountTransactionInput;
 };
-export type AdminRefundAccountTransactionFormMutationVariables = AdminRefundAccountTransactionFormMutation$variables;
-export type AdminRefundAccountTransactionFormMutation$data = {
+export type StaffRefundAccountTransactionFormMutationVariables = StaffRefundAccountTransactionFormMutation$variables;
+export type StaffRefundAccountTransactionFormMutation$data = {
   readonly refundAccountTransaction: {
     readonly accountTransaction: {
       readonly id: string;
@@ -36,10 +36,10 @@ export type AdminRefundAccountTransactionFormMutation$data = {
     } | null;
   } | null;
 };
-export type AdminRefundAccountTransactionFormMutationResponse = AdminRefundAccountTransactionFormMutation$data;
-export type AdminRefundAccountTransactionFormMutation = {
-  variables: AdminRefundAccountTransactionFormMutationVariables;
-  response: AdminRefundAccountTransactionFormMutation$data;
+export type StaffRefundAccountTransactionFormMutationResponse = StaffRefundAccountTransactionFormMutation$data;
+export type StaffRefundAccountTransactionFormMutation = {
+  variables: StaffRefundAccountTransactionFormMutationVariables;
+  response: StaffRefundAccountTransactionFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminRefundAccountTransactionFormMutation",
+    "name": "StaffRefundAccountTransactionFormMutation",
     "selections": [
       {
         "alias": null,
@@ -153,7 +153,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminRefundAccountTransactionFormMutation",
+    "name": "StaffRefundAccountTransactionFormMutation",
     "selections": [
       {
         "alias": null,
@@ -200,7 +200,7 @@ return {
   "params": {
     "id": "2c5ce5b9e542f819c5d97556b8e448de",
     "metadata": {},
-    "name": "AdminRefundAccountTransactionFormMutation",
+    "name": "StaffRefundAccountTransactionFormMutation",
     "operationKind": "mutation",
     "text": null
   }

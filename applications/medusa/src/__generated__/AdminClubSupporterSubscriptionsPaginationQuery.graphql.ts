@@ -13,21 +13,21 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsPaginationQuery$variables = {
+export type StaffClubSupporterSubscriptionsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminClubSupporterSubscriptionsPaginationQueryVariables = AdminClubSupporterSubscriptionsPaginationQuery$variables;
-export type AdminClubSupporterSubscriptionsPaginationQuery$data = {
+export type StaffClubSupporterSubscriptionsPaginationQueryVariables = StaffClubSupporterSubscriptionsPaginationQuery$variables;
+export type StaffClubSupporterSubscriptionsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionsFragment">;
   } | null;
 };
-export type AdminClubSupporterSubscriptionsPaginationQueryResponse = AdminClubSupporterSubscriptionsPaginationQuery$data;
-export type AdminClubSupporterSubscriptionsPaginationQuery = {
-  variables: AdminClubSupporterSubscriptionsPaginationQueryVariables;
-  response: AdminClubSupporterSubscriptionsPaginationQuery$data;
+export type StaffClubSupporterSubscriptionsPaginationQueryResponse = StaffClubSupporterSubscriptionsPaginationQuery$data;
+export type StaffClubSupporterSubscriptionsPaginationQuery = {
+  variables: StaffClubSupporterSubscriptionsPaginationQueryVariables;
+  response: StaffClubSupporterSubscriptionsPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -112,7 +112,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -125,7 +125,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminClubSupporterSubscriptionsFragment"
+            "name": "StaffClubSupporterSubscriptionsFragment"
           }
         ],
         "storageKey": null
@@ -138,7 +138,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -299,7 +299,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminClubSupporterSubscriptions_clubSupporterSubscriptions",
+                "key": "StaffClubSupporterSubscriptions_clubSupporterSubscriptions",
                 "kind": "LinkedHandle",
                 "name": "clubSupporterSubscriptions"
               }
@@ -315,7 +315,7 @@ return {
   "params": {
     "id": "313009ad1ad0b0555418aff685250977",
     "metadata": {},
-    "name": "AdminClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
     "text": null
   }

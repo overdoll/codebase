@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubMenuFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ClubAdminButtonFragment" | "ClubCopyLinkButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubStaffButtonFragment" | "ClubCopyLinkButtonFragment">;
   readonly " $fragmentType": "ClubMenuFragment";
 };
 export type ClubMenuFragment = ClubMenuFragment$data;
@@ -29,7 +29,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ClubAdminButtonFragment"
+      "name": "ClubStaffButtonFragment"
     },
     {
       "args": null,

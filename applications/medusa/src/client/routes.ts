@@ -542,7 +542,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Post')) {
+                if (ability.can('staff', 'Post')) {
                   return true
                 }
                 history.push('/join')
@@ -574,7 +574,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Post')) {
+                if (ability.can('staff', 'Post')) {
                   return true
                 }
                 history.push('/join')
@@ -601,12 +601,12 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/admin',
+        path: '/staff',
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/Admin/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/Staff/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -614,7 +614,7 @@ const routes: Route[] = [
         ],
         component: loadable(async () =>
           await import(
-            './domain/Admin/Admin'
+            './domain/Staff/Staff'
           )
         ),
         middleware: [
@@ -624,7 +624,7 @@ const routes: Route[] = [
           }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('admin', 'Tags') || ability.can('admin', 'Account') || ability.can('admin', 'Club')) {
+            if (ability.can('staff', 'Tags') || ability.can('staff', 'Account') || ability.can('staff', 'Club')) {
               return true
             }
             history.push('/join')
@@ -633,12 +633,12 @@ const routes: Route[] = [
         ],
         routes: [
           {
-            path: '/admin/category/create',
+            path: '/staff/category/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCategory/AdminCreateCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCategory/StaffCreateCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -651,7 +651,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -660,11 +660,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCategory/AdminCreateCategory/RootAdminCreateCategory'
+                './domain/Staff/pages/StaffCategory/StaffCreateCategory/RootStaffCreateCategory'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateCategoryQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateCategoryQuery.graphql')
 
               return {
                 query: {
@@ -678,12 +678,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/category/search',
+            path: '/staff/category/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCategory/AdminSearchCategories/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCategory/StaffSearchCategories/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -696,7 +696,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -706,17 +706,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCategory/AdminSearchCategories/RootAdminSearchCategories'
+                './domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories'
               )
             )
           },
           {
-            path: '/admin/category/search/:slug',
+            path: '/staff/category/search/:slug',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCategory/AdminViewCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCategory/StaffViewCategory/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -729,7 +729,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -739,11 +739,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCategory/AdminViewCategory/RootAdminViewCategory'
+                './domain/Staff/pages/StaffCategory/StaffViewCategory/RootStaffViewCategory'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewCategoryQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewCategoryQuery.graphql')
 
               return {
                 query: {
@@ -759,12 +759,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/series/create',
+            path: '/staff/series/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffSeries/StaffCreateSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -777,7 +777,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -786,11 +786,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminSeries/AdminCreateSeries/RootAdminCreateSeries'
+                './domain/Staff/pages/StaffSeries/StaffCreateSeries/RootStaffCreateSeries'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateSeriesQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateSeriesQuery.graphql')
 
               return {
                 query: {
@@ -804,12 +804,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/series/search',
+            path: '/staff/series/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminSeries/AdminSearchSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffSeries/StaffSearchSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -822,7 +822,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -832,17 +832,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminSeries/AdminSearchSeries/RootAdminSearchSeries'
+                './domain/Staff/pages/StaffSeries/StaffSearchSeries/RootStaffSearchSeries'
               )
             )
           },
           {
-            path: '/admin/series/search/:slug',
+            path: '/staff/series/search/:slug',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffSeries/StaffViewSeries/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -855,7 +855,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -865,11 +865,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminSeries/AdminViewSeries/RootAdminViewSeries'
+                './domain/Staff/pages/StaffSeries/StaffViewSeries/RootStaffViewSeries'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewSeriesQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewSeriesQuery.graphql')
 
               return {
                 query: {
@@ -885,12 +885,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/character/create',
+            path: '/staff/character/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCharacter/AdminCreateCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCharacter/StaffCreateCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -903,7 +903,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -912,11 +912,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCharacter/AdminCreateCharacter/RootAdminCreateCharacter'
+                './domain/Staff/pages/StaffCharacter/StaffCreateCharacter/RootStaffCreateCharacter'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateCharacterQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateCharacterQuery.graphql')
 
               return {
                 query: {
@@ -930,12 +930,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/character/search',
+            path: '/staff/character/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCharacter/AdminSearchCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCharacter/StaffSearchCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -948,7 +948,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -958,17 +958,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCharacter/AdminSearchCharacter/RootAdminSearchCharacter'
+                './domain/Staff/pages/StaffCharacter/StaffSearchCharacter/RootStaffSearchCharacter'
               )
             )
           },
           {
-            path: '/admin/character/search/:slug/:seriesSlug',
+            path: '/staff/character/search/:slug/:seriesSlug',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCharacter/AdminViewCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCharacter/StaffViewCharacter/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -981,7 +981,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -991,11 +991,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCharacter/AdminViewCharacter/RootAdminViewCharacter'
+                './domain/Staff/pages/StaffCharacter/StaffViewCharacter/RootStaffViewCharacter'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewCharacterQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewCharacterQuery.graphql')
 
               return {
                 query: {
@@ -1012,12 +1012,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/audience/create',
+            path: '/staff/audience/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAudience/AdminCreateAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAudience/StaffCreateAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1030,7 +1030,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1039,11 +1039,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAudience/AdminCreateAudience/RootAdminCreateAudience'
+                './domain/Staff/pages/StaffAudience/StaffCreateAudience/RootStaffCreateAudience'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateAudienceQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateAudienceQuery.graphql')
 
               return {
                 query: {
@@ -1057,12 +1057,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/audience/search',
+            path: '/staff/audience/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAudience/AdminSearchAudiences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAudience/StaffSearchAudiences/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1075,7 +1075,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1085,17 +1085,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAudience/AdminSearchAudiences/RootAdminSearchAudiences'
+                './domain/Staff/pages/StaffAudience/StaffSearchAudiences/RootStaffSearchAudiences'
               )
             )
           },
           {
-            path: '/admin/audience/search/:slug',
+            path: '/staff/audience/search/:slug',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAudience/AdminViewAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAudience/StaffViewAudience/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1108,7 +1108,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1118,11 +1118,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAudience/AdminViewAudience/RootAdminViewAudience'
+                './domain/Staff/pages/StaffAudience/StaffViewAudience/RootStaffViewAudience'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewAudienceQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewAudienceQuery.graphql')
 
               return {
                 query: {
@@ -1138,12 +1138,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/rule/create',
+            path: '/staff/rule/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminRules/AdminCreateRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffRules/StaffCreateRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1156,7 +1156,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1165,11 +1165,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminRules/AdminCreateRule/RootAdminCreateRule'
+                './domain/Staff/pages/StaffRules/StaffCreateRule/RootStaffCreateRule'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateRuleQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateRuleQuery.graphql')
 
               return {
                 query: {
@@ -1183,12 +1183,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/rule/search',
+            path: '/staff/rule/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminRules/AdminSearchRules/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffRules/StaffSearchRules/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1201,7 +1201,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1211,17 +1211,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminRules/AdminSearchRules/RootAdminSearchRules'
+                './domain/Staff/pages/StaffRules/StaffSearchRules/RootStaffSearchRules'
               )
             )
           },
           {
-            path: '/admin/rule/search/:reference',
+            path: '/staff/rule/search/:reference',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminRules/AdminViewRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffRules/StaffViewRule/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1234,7 +1234,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1244,11 +1244,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminRules/AdminViewRule/RootAdminViewRule'
+                './domain/Staff/pages/StaffRules/StaffViewRule/RootStaffViewRule'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewRuleQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewRuleQuery.graphql')
 
               return {
                 query: {
@@ -1264,12 +1264,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/cancellation-reason/create',
+            path: '/staff/cancellation-reason/create',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1282,7 +1282,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1291,11 +1291,11 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/RootAdminCreateCancellationReason'
+                './domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/RootStaffCreateCancellationReason'
               )
             ),
             prepare: () => {
-              const Query = require('@//:artifacts/AdminCreateCancellationReasonQuery.graphql')
+              const Query = require('@//:artifacts/StaffCreateCancellationReasonQuery.graphql')
 
               return {
                 query: {
@@ -1309,12 +1309,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/cancellation-reason/search',
+            path: '/staff/cancellation-reason/search',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1327,7 +1327,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1337,17 +1337,17 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/RootAdminSearchCancellationReasons'
+                './domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/RootStaffSearchCancellationReasons'
               )
             )
           },
           {
-            path: '/admin/cancellation-reason/search/:reference',
+            path: '/staff/cancellation-reason/search/:reference',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1360,7 +1360,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Tags')) {
+                if (ability.can('staff', 'Tags')) {
                   return true
                 }
                 history.push('/join')
@@ -1370,11 +1370,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/RootAdminViewCancellationReason'
+                './domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/RootStaffViewCancellationReason'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminViewCancellationReasonQuery.graphql')
+              const Query = require('@//:artifacts/StaffViewCancellationReasonQuery.graphql')
 
               return {
                 query: {
@@ -1390,12 +1390,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/account/:username',
+            path: '/staff/account/:username',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1408,7 +1408,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Account')) {
+                if (ability.can('staff', 'Account')) {
                   return true
                 }
                 history.push('/join')
@@ -1418,11 +1418,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAccount/RootAdminAccount'
+                './domain/Staff/pages/StaffAccount/RootStaffAccount'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminAccountQuery.graphql')
+              const Query = require('@//:artifacts/StaffAccountQuery.graphql')
 
               return {
                 query: {
@@ -1438,12 +1438,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/club/:slug',
+            path: '/staff/club/:slug',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1456,7 +1456,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Club')) {
+                if (ability.can('staff', 'Club')) {
                   return true
                 }
                 history.push('/join')
@@ -1466,11 +1466,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminClub/RootAdminClub'
+                './domain/Staff/pages/StaffClub/RootStaffClub'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminClubQuery.graphql')
+              const Query = require('@//:artifacts/StaffClubQuery.graphql')
 
               return {
                 query: {
@@ -1486,12 +1486,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/subscription/:reference',
+            path: '/staff/subscription/:reference',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAccountClubSupporterSubscription/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1504,7 +1504,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Account')) {
+                if (ability.can('staff', 'Account')) {
                   return true
                 }
                 history.push('/join')
@@ -1514,11 +1514,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAccountClubSupporterSubscription/RootAdminAccountClubSupporterSubscription'
+                './domain/Staff/pages/StaffAccountClubSupporterSubscription/RootStaffAccountClubSupporterSubscription'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminAccountClubSupporterSubscriptionQuery.graphql')
+              const Query = require('@//:artifacts/StaffAccountClubSupporterSubscriptionQuery.graphql')
 
               return {
                 query: {
@@ -1534,12 +1534,12 @@ const routes: Route[] = [
             }
           },
           {
-            path: '/admin/transaction/:reference',
+            path: '/staff/transaction/:reference',
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./domain/Admin/pages/AdminAccountTransaction/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./domain/Staff/pages/StaffAccountTransaction/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1552,7 +1552,7 @@ const routes: Route[] = [
               }) => {
                 const ability = getAbilityFromUser(environment)
 
-                if (ability.can('admin', 'Account')) {
+                if (ability.can('staff', 'Account')) {
                   return true
                 }
                 history.push('/join')
@@ -1562,11 +1562,11 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                './domain/Admin/pages/AdminAccountTransaction/RootAdminAccountTransaction'
+                './domain/Staff/pages/StaffAccountTransaction/RootStaffAccountTransaction'
               )
             ),
             prepare: ({ params }) => {
-              const Query = require('@//:artifacts/AdminAccountTransactionQuery.graphql')
+              const Query = require('@//:artifacts/StaffAccountTransactionQuery.graphql')
 
               return {
                 query: {

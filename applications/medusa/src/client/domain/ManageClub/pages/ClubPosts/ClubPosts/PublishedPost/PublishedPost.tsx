@@ -10,6 +10,8 @@ import PostCopyLinkButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostArchiveButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 
 interface Props {
   query: PublishedPostFragment$key
@@ -21,6 +23,7 @@ const Fragment = graphql`
     ...PostPreviewContentFragment
     ...PostCopyLinkButtonFragment
     ...PostModerateButtonFragment
+    ...PostArchiveButtonFragment
   }
 `
 
@@ -39,6 +42,7 @@ export default function PublishedPost ({
         </Badge>
         <PostMenu size='xs'>
           <PostCopyLinkButton query={data} />
+          <PostArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

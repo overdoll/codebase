@@ -1,2 +1,5 @@
 export const SUPPORTER_GUIDELINES = 'https://www.corpodoll.com/supporter-guidelines/'
 export const CLUB_GUIDELINES = 'https://www.corpodoll.com/club-guidelines/'
+export const COMMUNITY_GUIDELINES = 'https://www.corpodoll.com/community-guidelines/'
+export const PRIVACY_POLICY = 'https://www.corpodoll.com/your-privacy'
+export const TERMS_OF_SERVICE = 'https://www.corpodoll.com/tos/'

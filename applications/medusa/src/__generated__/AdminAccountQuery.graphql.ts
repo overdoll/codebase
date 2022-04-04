@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountQuery$variables = {
+export type StaffAccountQuery$variables = {
   username: string;
 };
-export type AdminAccountQueryVariables = AdminAccountQuery$variables;
-export type AdminAccountQuery$data = {
+export type StaffAccountQueryVariables = StaffAccountQuery$variables;
+export type StaffAccountQuery$data = {
   readonly account: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminPermissionsFragment" | "AdminClubSupporterSubscriptionsFragment" | "AdminTransactionsFragment" | "LargeAccountHeaderFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment">;
   } | null;
 };
-export type AdminAccountQueryResponse = AdminAccountQuery$data;
-export type AdminAccountQuery = {
-  variables: AdminAccountQueryVariables;
-  response: AdminAccountQuery$data;
+export type StaffAccountQueryResponse = StaffAccountQuery$data;
+export type StaffAccountQuery = {
+  variables: StaffAccountQueryVariables;
+  response: StaffAccountQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -156,7 +156,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminAccountQuery",
+    "name": "StaffAccountQuery",
     "selections": [
       {
         "alias": null,
@@ -169,17 +169,17 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminPermissionsFragment"
+            "name": "StaffPermissionsFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminClubSupporterSubscriptionsFragment"
+            "name": "StaffClubSupporterSubscriptionsFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminTransactionsFragment"
+            "name": "StaffTransactionsFragment"
           },
           {
             "args": null,
@@ -197,7 +197,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminAccountQuery",
+    "name": "StaffAccountQuery",
     "selections": [
       {
         "alias": null,
@@ -343,7 +343,7 @@ return {
             "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "AdminClubSupporterSubscriptions_clubSupporterSubscriptions",
+            "key": "StaffClubSupporterSubscriptions_clubSupporterSubscriptions",
             "kind": "LinkedHandle",
             "name": "clubSupporterSubscriptions"
           },
@@ -434,7 +434,7 @@ return {
             "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "AdminTransactions_transactions",
+            "key": "StaffTransactions_transactions",
             "kind": "LinkedHandle",
             "name": "transactions"
           },
@@ -525,7 +525,7 @@ return {
   "params": {
     "id": "63877ab55c23fb320baf37c02b159836",
     "metadata": {},
-    "name": "AdminAccountQuery",
+    "name": "StaffAccountQuery",
     "operationKind": "query",
     "text": null
   }

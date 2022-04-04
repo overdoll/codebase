@@ -47,15 +47,19 @@ export default function JoinClubFromPage ({
 
   if (viewerData == null) {
     return (
-      <LinkButton
-        to='/join'
-        colorScheme='gray'
-        {...rest}
-      >
-        <Trans>
-          Join
-        </Trans>
-      </LinkButton>
+      <Box w='100%'>
+        <LinkButton
+          w='100%'
+          to='/join'
+          colorScheme='gray'
+          {...rest}
+        >
+          <Trans>
+            Join
+          </Trans>
+        </LinkButton>
+      </Box>
+
     )
   }
 
@@ -70,6 +74,7 @@ export default function JoinClubFromPage ({
       >
         <Box w='100%'>
           <Button
+            w='100%'
             colorScheme='gray'
             isDisabled
             leftIcon={(
@@ -93,6 +98,7 @@ export default function JoinClubFromPage ({
   if (isClubMember) {
     return (
       <WithdrawMembershipButton
+        w='100%'
         clubQuery={clubData}
         {...rest}
       >
@@ -105,6 +111,7 @@ export default function JoinClubFromPage ({
 
   return (
     <BecomeMemberButton
+      w='100%'
       clubQuery={clubData}
       viewerQuery={viewerData}
       colorScheme='gray'

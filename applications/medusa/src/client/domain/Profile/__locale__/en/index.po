@@ -13,8 +13,8 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Profile/Profile/ProfileMenu/ProfileAdminButton/ProfileAdminButton.tsx:26
-msgid "Admin"
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
+msgid "Staff"
 msgstr ""
 
 #: src/client/domain/Profile/Profile/ProfileMenu/ProfileCopyLinkButton/ProfileCopyLinkButton.tsx:29

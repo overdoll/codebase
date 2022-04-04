@@ -13,21 +13,21 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$variables = {
+export type StaffCancelledSubscriptionTransactionsFragmentPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminCancelledSubscriptionTransactionsFragmentPaginationQueryVariables = AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$variables;
-export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data = {
+export type StaffCancelledSubscriptionTransactionsFragmentPaginationQueryVariables = StaffCancelledSubscriptionTransactionsFragmentPaginationQuery$variables;
+export type StaffCancelledSubscriptionTransactionsFragmentPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminCancelledSubscriptionTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffCancelledSubscriptionTransactionsFragment">;
   } | null;
 };
-export type AdminCancelledSubscriptionTransactionsFragmentPaginationQueryResponse = AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
-export type AdminCancelledSubscriptionTransactionsFragmentPaginationQuery = {
-  variables: AdminCancelledSubscriptionTransactionsFragmentPaginationQueryVariables;
-  response: AdminCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
+export type StaffCancelledSubscriptionTransactionsFragmentPaginationQueryResponse = StaffCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
+export type StaffCancelledSubscriptionTransactionsFragmentPaginationQuery = {
+  variables: StaffCancelledSubscriptionTransactionsFragmentPaginationQueryVariables;
+  response: StaffCancelledSubscriptionTransactionsFragmentPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -86,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -99,7 +99,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminCancelledSubscriptionTransactionsFragment"
+            "name": "StaffCancelledSubscriptionTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +112,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -281,7 +281,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminCancelledSubscriptionTransactions_transactions",
+                "key": "StaffCancelledSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               }
@@ -297,7 +297,7 @@ return {
   "params": {
     "id": "09bd201b6af056adfe86eecadbe94c2c",
     "metadata": {},
-    "name": "AdminCancelledSubscriptionTransactionsFragmentPaginationQuery",
+    "name": "StaffCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "operationKind": "query",
     "text": null
   }

@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubStatusFragment$data = {
+export type StaffClubStatusFragment$data = {
   readonly suspension: {
     readonly expires: any;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment" | "AdminClubUnSuspendButtonFragment">;
-  readonly " $fragmentType": "AdminClubStatusFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment" | "StaffClubUnSuspendButtonFragment">;
+  readonly " $fragmentType": "StaffClubStatusFragment";
 };
-export type AdminClubStatusFragment = AdminClubStatusFragment$data;
-export type AdminClubStatusFragment$key = {
-  readonly " $data"?: AdminClubStatusFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubStatusFragment">;
+export type StaffClubStatusFragment = StaffClubStatusFragment$data;
+export type StaffClubStatusFragment$key = {
+  readonly " $data"?: StaffClubStatusFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubStatusFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminClubStatusFragment",
+  "name": "StaffClubStatusFragment",
   "selections": [
     {
       "alias": null,
@@ -55,7 +55,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminClubUnSuspendButtonFragment"
+      "name": "StaffClubUnSuspendButtonFragment"
     }
   ],
   "type": "Club",

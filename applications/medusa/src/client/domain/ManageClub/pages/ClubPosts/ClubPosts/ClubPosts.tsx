@@ -11,6 +11,8 @@ import PostPreviewContent
   from '../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import ReviewPost from './ReviewPost/ReviewPost'
 import RejectedPost from './RejectedPost/RejectedPost'
+import ArchivedPost from './ArchivedPost/ArchivedPost'
+import RemovedPost from './RemovedPost/RemovedPost'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -42,6 +44,8 @@ const Fragment = graphql`
           ...PublishedPostFragment
           ...ReviewPostFragment
           ...RejectedPostFragment
+          ...ArchivedPostFragment
+          ...RemovedPostFragment
         }
       }
     }
@@ -97,6 +101,14 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           case 'REJECTED':
             return (
               <RejectedPost key={index} query={item.node} />
+            )
+          case 'ARCHIVED':
+            return (
+              <ArchivedPost key={index} query={item.node} />
+            )
+          case 'REMOVED':
+            return (
+              <RemovedPost key={index} query={item.node} />
             )
           default:
             return (

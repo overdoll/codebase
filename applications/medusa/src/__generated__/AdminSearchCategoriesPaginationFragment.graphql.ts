@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCategoriesPaginationFragment$variables = {
+export type StaffSearchCategoriesPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
   title?: string | null;
 };
-export type AdminSearchCategoriesPaginationFragmentVariables = AdminSearchCategoriesPaginationFragment$variables;
-export type AdminSearchCategoriesPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCategoriesFragment">;
+export type StaffSearchCategoriesPaginationFragmentVariables = StaffSearchCategoriesPaginationFragment$variables;
+export type StaffSearchCategoriesPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCategoriesFragment">;
 };
-export type AdminSearchCategoriesPaginationFragmentResponse = AdminSearchCategoriesPaginationFragment$data;
-export type AdminSearchCategoriesPaginationFragment = {
-  variables: AdminSearchCategoriesPaginationFragmentVariables;
-  response: AdminSearchCategoriesPaginationFragment$data;
+export type StaffSearchCategoriesPaginationFragmentResponse = StaffSearchCategoriesPaginationFragment$data;
+export type StaffSearchCategoriesPaginationFragment = {
+  variables: StaffSearchCategoriesPaginationFragmentVariables;
+  response: StaffSearchCategoriesPaginationFragment$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -84,7 +84,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchCategoriesPaginationFragment",
+    "name": "StaffSearchCategoriesPaginationFragment",
     "selections": [
       {
         "args": [
@@ -92,7 +92,7 @@ return {
           (v2/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "AdminSearchCategoriesFragment"
+        "name": "StaffSearchCategoriesFragment"
       }
     ],
     "type": "Query",
@@ -102,7 +102,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchCategoriesPaginationFragment",
+    "name": "StaffSearchCategoriesPaginationFragment",
     "selections": [
       {
         "alias": null,
@@ -255,7 +255,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminCategoriesConnection_categories",
+        "key": "StaffCategoriesConnection_categories",
         "kind": "LinkedHandle",
         "name": "categories"
       }
@@ -264,7 +264,7 @@ return {
   "params": {
     "id": "70ca0dd52269cfb101540d99dc1c2b68",
     "metadata": {},
-    "name": "AdminSearchCategoriesPaginationFragment",
+    "name": "StaffSearchCategoriesPaginationFragment",
     "operationKind": "query",
     "text": null
   }

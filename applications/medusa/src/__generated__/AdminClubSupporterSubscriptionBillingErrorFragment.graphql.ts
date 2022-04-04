@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type CCBillDeclineError = "CARD_EXPIRED" | "GENERAL_SYSTEM_ERROR" | "INSUFFICIENT_FUNDS" | "RATE_LIMIT_ERROR" | "TRANSACTION_APPROVAL_REQUIRED" | "TRANSACTION_DECLINED" | "TRANSACTION_DENIED_OR_REFUSED_BY_BANK" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionBillingErrorFragment$data = {
+export type StaffClubSupporterSubscriptionBillingErrorFragment$data = {
   readonly billingError: {
     readonly ccbillDeclineError: CCBillDeclineError | null;
     readonly ccbillErrorCode: string | null;
@@ -19,19 +19,19 @@ export type AdminClubSupporterSubscriptionBillingErrorFragment$data = {
     readonly failedAt: any;
     readonly nextRetryDate: any;
   } | null;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionBillingErrorFragment";
+  readonly " $fragmentType": "StaffClubSupporterSubscriptionBillingErrorFragment";
 };
-export type AdminClubSupporterSubscriptionBillingErrorFragment = AdminClubSupporterSubscriptionBillingErrorFragment$data;
-export type AdminClubSupporterSubscriptionBillingErrorFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionBillingErrorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionBillingErrorFragment">;
+export type StaffClubSupporterSubscriptionBillingErrorFragment = StaffClubSupporterSubscriptionBillingErrorFragment$data;
+export type StaffClubSupporterSubscriptionBillingErrorFragment$key = {
+  readonly " $data"?: StaffClubSupporterSubscriptionBillingErrorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionBillingErrorFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminClubSupporterSubscriptionBillingErrorFragment",
+  "name": "StaffClubSupporterSubscriptionBillingErrorFragment",
   "selections": [
     {
       "alias": null,

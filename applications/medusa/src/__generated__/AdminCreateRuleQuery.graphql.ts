@@ -12,12 +12,12 @@
 // @relayRequestID 991ae2f24e51049ca82927a4e6386c85
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateRuleQuery$variables = {
+export type StaffCreateRuleQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateRuleQueryVariables = AdminCreateRuleQuery$variables;
-export type AdminCreateRuleQuery$data = {
+export type StaffCreateRuleQueryVariables = StaffCreateRuleQuery$variables;
+export type StaffCreateRuleQuery$data = {
   readonly rules: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateRuleQuery$data = {
     }>;
   };
 };
-export type AdminCreateRuleQueryResponse = AdminCreateRuleQuery$data;
-export type AdminCreateRuleQuery = {
-  variables: AdminCreateRuleQueryVariables;
-  response: AdminCreateRuleQuery$data;
+export type StaffCreateRuleQueryResponse = StaffCreateRuleQuery$data;
+export type StaffCreateRuleQuery = {
+  variables: StaffCreateRuleQueryVariables;
+  response: StaffCreateRuleQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateRuleQuery",
+    "name": "StaffCreateRuleQuery",
     "selections": [
       {
         "alias": "rules",
         "args": null,
         "concreteType": "RuleConnection",
         "kind": "LinkedField",
-        "name": "__AdminRulesConnection_rules_connection",
+        "name": "__StaffRulesConnection_rules_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateRuleQuery",
+    "name": "StaffCreateRuleQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminRulesConnection_rules",
+        "key": "StaffRulesConnection_rules",
         "kind": "LinkedHandle",
         "name": "rules"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateRuleQuery",
+    "name": "StaffCreateRuleQuery",
     "operationKind": "query",
     "text": null
   }

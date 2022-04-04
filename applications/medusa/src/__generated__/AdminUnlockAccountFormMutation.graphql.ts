@@ -15,11 +15,11 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UnlockAccountInput = {
   accountID: string;
 };
-export type AdminUnlockAccountFormMutation$variables = {
+export type StaffUnlockAccountFormMutation$variables = {
   input: UnlockAccountInput;
 };
-export type AdminUnlockAccountFormMutationVariables = AdminUnlockAccountFormMutation$variables;
-export type AdminUnlockAccountFormMutation$data = {
+export type StaffUnlockAccountFormMutationVariables = StaffUnlockAccountFormMutation$variables;
+export type StaffUnlockAccountFormMutation$data = {
   readonly unlockAccount: {
     readonly account: {
       readonly id: string;
@@ -29,10 +29,10 @@ export type AdminUnlockAccountFormMutation$data = {
     } | null;
   } | null;
 };
-export type AdminUnlockAccountFormMutationResponse = AdminUnlockAccountFormMutation$data;
-export type AdminUnlockAccountFormMutation = {
-  variables: AdminUnlockAccountFormMutationVariables;
-  response: AdminUnlockAccountFormMutation$data;
+export type StaffUnlockAccountFormMutationResponse = StaffUnlockAccountFormMutation$data;
+export type StaffUnlockAccountFormMutation = {
+  variables: StaffUnlockAccountFormMutationVariables;
+  response: StaffUnlockAccountFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -103,7 +103,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminUnlockAccountFormMutation",
+    "name": "StaffUnlockAccountFormMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -112,13 +112,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminUnlockAccountFormMutation",
+    "name": "StaffUnlockAccountFormMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "b3892024ef1c87d52f35d6df5ca3bca9",
     "metadata": {},
-    "name": "AdminUnlockAccountFormMutation",
+    "name": "StaffUnlockAccountFormMutation",
     "operationKind": "mutation",
     "text": null
   }

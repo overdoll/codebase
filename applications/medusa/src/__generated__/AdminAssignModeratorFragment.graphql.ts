@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAssignModeratorFragment$data = {
+export type StaffAssignModeratorFragment$data = {
   readonly isModerator: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAssignModeratorButtonFragment" | "AdminRevokeModeratorButtonFragment">;
-  readonly " $fragmentType": "AdminAssignModeratorFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAssignModeratorButtonFragment" | "StaffRevokeModeratorButtonFragment">;
+  readonly " $fragmentType": "StaffAssignModeratorFragment";
 };
-export type AdminAssignModeratorFragment = AdminAssignModeratorFragment$data;
-export type AdminAssignModeratorFragment$key = {
-  readonly " $data"?: AdminAssignModeratorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAssignModeratorFragment">;
+export type StaffAssignModeratorFragment = StaffAssignModeratorFragment$data;
+export type StaffAssignModeratorFragment$key = {
+  readonly " $data"?: StaffAssignModeratorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAssignModeratorFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAssignModeratorFragment",
+  "name": "StaffAssignModeratorFragment",
   "selections": [
     {
       "alias": null,
@@ -37,12 +37,12 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminAssignModeratorButtonFragment"
+      "name": "StaffAssignModeratorButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminRevokeModeratorButtonFragment"
+      "name": "StaffRevokeModeratorButtonFragment"
     }
   ],
   "type": "Account",

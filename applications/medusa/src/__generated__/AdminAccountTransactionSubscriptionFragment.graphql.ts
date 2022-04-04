@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountTransactionSubscriptionFragment$data = {
+export type StaffAccountTransactionSubscriptionFragment$data = {
   readonly clubSupporterSubscription: {
     readonly reference?: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionPreviewFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment">;
   };
-  readonly " $fragmentType": "AdminAccountTransactionSubscriptionFragment";
+  readonly " $fragmentType": "StaffAccountTransactionSubscriptionFragment";
 };
-export type AdminAccountTransactionSubscriptionFragment = AdminAccountTransactionSubscriptionFragment$data;
-export type AdminAccountTransactionSubscriptionFragment$key = {
-  readonly " $data"?: AdminAccountTransactionSubscriptionFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountTransactionSubscriptionFragment">;
+export type StaffAccountTransactionSubscriptionFragment = StaffAccountTransactionSubscriptionFragment$data;
+export type StaffAccountTransactionSubscriptionFragment$key = {
+  readonly " $data"?: StaffAccountTransactionSubscriptionFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionSubscriptionFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountTransactionSubscriptionFragment",
+  "name": "StaffAccountTransactionSubscriptionFragment",
   "selections": [
     {
       "kind": "RequiredField",
@@ -56,7 +56,7 @@ const node: ReaderFragment = {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminClubSupporterSubscriptionPreviewFragment"
+            "name": "StaffClubSupporterSubscriptionPreviewFragment"
           }
         ],
         "storageKey": null

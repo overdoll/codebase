@@ -13,17 +13,17 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCategoriesQuery$variables = {
+export type StaffSearchCategoriesQuery$variables = {
   title?: string | null;
 };
-export type AdminSearchCategoriesQueryVariables = AdminSearchCategoriesQuery$variables;
-export type AdminSearchCategoriesQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCategoriesFragment">;
+export type StaffSearchCategoriesQueryVariables = StaffSearchCategoriesQuery$variables;
+export type StaffSearchCategoriesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCategoriesFragment">;
 };
-export type AdminSearchCategoriesQueryResponse = AdminSearchCategoriesQuery$data;
-export type AdminSearchCategoriesQuery = {
-  variables: AdminSearchCategoriesQueryVariables;
-  response: AdminSearchCategoriesQuery$data;
+export type StaffSearchCategoriesQueryResponse = StaffSearchCategoriesQuery$data;
+export type StaffSearchCategoriesQuery = {
+  variables: StaffSearchCategoriesQueryVariables;
+  response: StaffSearchCategoriesQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,12 +65,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchCategoriesQuery",
+    "name": "StaffSearchCategoriesQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchCategoriesFragment"
+        "name": "StaffSearchCategoriesFragment"
       }
     ],
     "type": "Query",
@@ -80,7 +80,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchCategoriesQuery",
+    "name": "StaffSearchCategoriesQuery",
     "selections": [
       {
         "alias": null,
@@ -233,7 +233,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminCategoriesConnection_categories",
+        "key": "StaffCategoriesConnection_categories",
         "kind": "LinkedHandle",
         "name": "categories"
       }
@@ -242,7 +242,7 @@ return {
   "params": {
     "id": "e447e7e43730833fb291081970e97e40",
     "metadata": {},
-    "name": "AdminSearchCategoriesQuery",
+    "name": "StaffSearchCategoriesQuery",
     "operationKind": "query",
     "text": null
   }

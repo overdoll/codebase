@@ -4,7 +4,7 @@ import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
 import { useLingui } from '@lingui/react'
 import { MaybeRenderProp } from '@//:types/components'
-import { runIfFunction } from '../../../../support'
+import runIfFunction from '../../../../support/runIfFunction'
 
 interface ChildrenCallable {
   currentTitle: ReactNode

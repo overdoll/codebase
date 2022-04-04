@@ -10,22 +10,22 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubSupporterSubscriptionsFragment$data = {
+export type StaffClubSupporterSubscriptionsFragment$data = {
   readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly reference?: string;
-        readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionPreviewFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment">;
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "AdminClubSupporterSubscriptionsFragment";
+  readonly " $fragmentType": "StaffClubSupporterSubscriptionsFragment";
 };
-export type AdminClubSupporterSubscriptionsFragment = AdminClubSupporterSubscriptionsFragment$data;
-export type AdminClubSupporterSubscriptionsFragment$key = {
-  readonly " $data"?: AdminClubSupporterSubscriptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionsFragment">;
+export type StaffClubSupporterSubscriptionsFragment = StaffClubSupporterSubscriptionsFragment$data;
+export type StaffClubSupporterSubscriptionsFragment$key = {
+  readonly " $data"?: StaffClubSupporterSubscriptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -67,18 +67,18 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminClubSupporterSubscriptionsPaginationQuery.graphql'),
+      "operation": require('./StaffClubSupporterSubscriptionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminClubSupporterSubscriptionsFragment",
+  "name": "StaffClubSupporterSubscriptionsFragment",
   "selections": [
     {
       "alias": "clubSupporterSubscriptions",
       "args": null,
       "concreteType": "AccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
-      "name": "__AdminClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
+      "name": "__StaffClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
       "plural": false,
       "selections": [
         {
@@ -114,7 +114,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "AdminClubSupporterSubscriptionPreviewFragment"
+                  "name": "StaffClubSupporterSubscriptionPreviewFragment"
                 },
                 {
                   "alias": null,

@@ -47,7 +47,7 @@ export default function RootSubscriptionsSettings (props: Props): JSX.Element | 
               <Highlight color='purple.200'>CCBill.com
                 *overdoll Inc.
               </Highlight> will appear on your Cardholder
-              statement
+              statement.
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>

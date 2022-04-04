@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$data = {
+export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data = {
   readonly expiredAt: any;
   readonly cancellationReason: {
     readonly title: string;
@@ -21,20 +21,20 @@ export type AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$data = {
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSyncSubscriptionButtonFragment">;
-  readonly " $fragmentType": "AdminAccountExpiredClubSupporterSubscriptionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment">;
+  readonly " $fragmentType": "StaffAccountExpiredClubSupporterSubscriptionOptionsFragment";
 };
-export type AdminAccountExpiredClubSupporterSubscriptionOptionsFragment = AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
-export type AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$key = {
-  readonly " $data"?: AdminAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountExpiredClubSupporterSubscriptionOptionsFragment">;
+export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment = StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
+export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$key = {
+  readonly " $data"?: StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountExpiredClubSupporterSubscriptionOptionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountExpiredClubSupporterSubscriptionOptionsFragment",
+  "name": "StaffAccountExpiredClubSupporterSubscriptionOptionsFragment",
   "selections": [
     {
       "alias": null,
@@ -96,7 +96,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminSyncSubscriptionButtonFragment"
+      "name": "StaffSyncSubscriptionButtonFragment"
     }
   ],
   "type": "AccountExpiredClubSupporterSubscription",

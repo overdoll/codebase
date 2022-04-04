@@ -10,25 +10,25 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountExpiredClubSupporterSubscriptionPreviewFragment$data = {
+export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data = {
   readonly supporterSince: any;
   readonly expiredAt: any;
   readonly club: {
     readonly name: string;
   };
-  readonly " $fragmentType": "AdminAccountExpiredClubSupporterSubscriptionPreviewFragment";
+  readonly " $fragmentType": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment";
 };
-export type AdminAccountExpiredClubSupporterSubscriptionPreviewFragment = AdminAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
-export type AdminAccountExpiredClubSupporterSubscriptionPreviewFragment$key = {
-  readonly " $data"?: AdminAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountExpiredClubSupporterSubscriptionPreviewFragment">;
+export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment = StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
+export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$key = {
+  readonly " $data"?: StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountExpiredClubSupporterSubscriptionPreviewFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountExpiredClubSupporterSubscriptionPreviewFragment",
+  "name": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment",
   "selections": [
     {
       "alias": null,

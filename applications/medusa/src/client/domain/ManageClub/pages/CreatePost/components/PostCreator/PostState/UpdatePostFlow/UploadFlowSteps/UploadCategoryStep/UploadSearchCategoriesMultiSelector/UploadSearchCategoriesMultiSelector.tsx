@@ -1,7 +1,7 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import { removeNode } from '@//:modules/support'
+import removeNode from '@//:modules/support/removeNode'
 import type {
   UploadSearchCategoriesMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'

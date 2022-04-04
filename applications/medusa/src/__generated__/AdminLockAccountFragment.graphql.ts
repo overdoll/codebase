@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminLockAccountFragment$data = {
+export type StaffLockAccountFragment$data = {
   readonly lock: {
     readonly expires: any;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminLockAccountFormFragment" | "AdminUnlockAccountFormFragment">;
-  readonly " $fragmentType": "AdminLockAccountFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFormFragment" | "StaffUnlockAccountFormFragment">;
+  readonly " $fragmentType": "StaffLockAccountFragment";
 };
-export type AdminLockAccountFragment = AdminLockAccountFragment$data;
-export type AdminLockAccountFragment$key = {
-  readonly " $data"?: AdminLockAccountFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminLockAccountFragment">;
+export type StaffLockAccountFragment = StaffLockAccountFragment$data;
+export type StaffLockAccountFragment$key = {
+  readonly " $data"?: StaffLockAccountFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminLockAccountFragment",
+  "name": "StaffLockAccountFragment",
   "selections": [
     {
       "alias": null,
@@ -50,12 +50,12 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminLockAccountFormFragment"
+      "name": "StaffLockAccountFormFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminUnlockAccountFormFragment"
+      "name": "StaffUnlockAccountFormFragment"
     }
   ],
   "type": "Account",

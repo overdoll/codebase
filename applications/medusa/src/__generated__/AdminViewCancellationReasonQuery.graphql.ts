@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminViewCancellationReasonQuery$variables = {
+export type StaffViewCancellationReasonQuery$variables = {
   reference: string;
 };
-export type AdminViewCancellationReasonQueryVariables = AdminViewCancellationReasonQuery$variables;
-export type AdminViewCancellationReasonQuery$data = {
+export type StaffViewCancellationReasonQueryVariables = StaffViewCancellationReasonQuery$variables;
+export type StaffViewCancellationReasonQuery$data = {
   readonly cancellationReason: {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonTitleFragment" | "ChangeCancellationReasonDeprecatedFragment">;
   } | null;
 };
-export type AdminViewCancellationReasonQueryResponse = AdminViewCancellationReasonQuery$data;
-export type AdminViewCancellationReasonQuery = {
-  variables: AdminViewCancellationReasonQueryVariables;
-  response: AdminViewCancellationReasonQuery$data;
+export type StaffViewCancellationReasonQueryResponse = StaffViewCancellationReasonQuery$data;
+export type StaffViewCancellationReasonQuery = {
+  variables: StaffViewCancellationReasonQueryVariables;
+  response: StaffViewCancellationReasonQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -48,7 +48,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminViewCancellationReasonQuery",
+    "name": "StaffViewCancellationReasonQuery",
     "selections": [
       {
         "alias": null,
@@ -79,7 +79,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminViewCancellationReasonQuery",
+    "name": "StaffViewCancellationReasonQuery",
     "selections": [
       {
         "alias": null,
@@ -161,7 +161,7 @@ return {
   "params": {
     "id": "50a9c818b364aa905ff809f212d24ce7",
     "metadata": {},
-    "name": "AdminViewCancellationReasonQuery",
+    "name": "StaffViewCancellationReasonQuery",
     "operationKind": "query",
     "text": null
   }

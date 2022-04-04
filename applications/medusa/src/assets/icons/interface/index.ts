@@ -43,3 +43,4 @@ export { default as BillingIdentifier } from './normal-bold/billing-identifier.s
 export { default as SubscriptionIdentifier } from './normal-bold/subscription-identifier.svg'
 export { default as PaymentMethodIdentifier } from './normal-bold/payment-method-identifier.svg'
 export { default as PremiumStarHollow } from './normal-bold/premium-star-hollow.svg'
+export { default as ArchiveFile } from './mini-bold/actions/archive-file.svg'

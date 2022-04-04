@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchSeriesFragment$data = {
+export type StaffSearchSeriesFragment$data = {
   readonly series: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,12 +19,12 @@ export type AdminSearchSeriesFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "AdminSearchSeriesFragment";
+  readonly " $fragmentType": "StaffSearchSeriesFragment";
 };
-export type AdminSearchSeriesFragment = AdminSearchSeriesFragment$data;
-export type AdminSearchSeriesFragment$key = {
-  readonly " $data"?: AdminSearchSeriesFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchSeriesFragment">;
+export type StaffSearchSeriesFragment = StaffSearchSeriesFragment$data;
+export type StaffSearchSeriesFragment$key = {
+  readonly " $data"?: StaffSearchSeriesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchSeriesFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -68,10 +68,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./AdminSearchSeriesPaginationFragment.graphql')
+      "operation": require('./StaffSearchSeriesPaginationFragment.graphql')
     }
   },
-  "name": "AdminSearchSeriesFragment",
+  "name": "StaffSearchSeriesFragment",
   "selections": [
     {
       "alias": "series",
@@ -84,7 +84,7 @@ return {
       ],
       "concreteType": "SeriesConnection",
       "kind": "LinkedField",
-      "name": "__AdminSeriesConnection_series_connection",
+      "name": "__StaffSeriesConnection_series_connection",
       "plural": false,
       "selections": [
         {

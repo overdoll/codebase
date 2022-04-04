@@ -13,18 +13,18 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchRulesPaginationFragment$variables = {
+export type StaffSearchRulesPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
 };
-export type AdminSearchRulesPaginationFragmentVariables = AdminSearchRulesPaginationFragment$variables;
-export type AdminSearchRulesPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchRulesFragment">;
+export type StaffSearchRulesPaginationFragmentVariables = StaffSearchRulesPaginationFragment$variables;
+export type StaffSearchRulesPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchRulesFragment">;
 };
-export type AdminSearchRulesPaginationFragmentResponse = AdminSearchRulesPaginationFragment$data;
-export type AdminSearchRulesPaginationFragment = {
-  variables: AdminSearchRulesPaginationFragmentVariables;
-  response: AdminSearchRulesPaginationFragment$data;
+export type StaffSearchRulesPaginationFragmentResponse = StaffSearchRulesPaginationFragment$data;
+export type StaffSearchRulesPaginationFragment = {
+  variables: StaffSearchRulesPaginationFragmentVariables;
+  response: StaffSearchRulesPaginationFragment$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -57,12 +57,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchRulesPaginationFragment",
+    "name": "StaffSearchRulesPaginationFragment",
     "selections": [
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "AdminSearchRulesFragment"
+        "name": "StaffSearchRulesFragment"
       }
     ],
     "type": "Query",
@@ -72,7 +72,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchRulesPaginationFragment",
+    "name": "StaffSearchRulesPaginationFragment",
     "selections": [
       {
         "alias": null,
@@ -179,7 +179,7 @@ return {
         "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminRulesConnection_rules",
+        "key": "StaffRulesConnection_rules",
         "kind": "LinkedHandle",
         "name": "rules"
       }
@@ -188,7 +188,7 @@ return {
   "params": {
     "id": "45996aaf306a4e6fbc3fcba97742edce",
     "metadata": {},
-    "name": "AdminSearchRulesPaginationFragment",
+    "name": "StaffSearchRulesPaginationFragment",
     "operationKind": "query",
     "text": null
   }

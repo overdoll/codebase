@@ -13,17 +13,17 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchAudiencesQuery$variables = {
+export type StaffSearchAudiencesQuery$variables = {
   title?: string | null;
 };
-export type AdminSearchAudiencesQueryVariables = AdminSearchAudiencesQuery$variables;
-export type AdminSearchAudiencesQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchAudiencesFragment">;
+export type StaffSearchAudiencesQueryVariables = StaffSearchAudiencesQuery$variables;
+export type StaffSearchAudiencesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchAudiencesFragment">;
 };
-export type AdminSearchAudiencesQueryResponse = AdminSearchAudiencesQuery$data;
-export type AdminSearchAudiencesQuery = {
-  variables: AdminSearchAudiencesQueryVariables;
-  response: AdminSearchAudiencesQuery$data;
+export type StaffSearchAudiencesQueryResponse = StaffSearchAudiencesQuery$data;
+export type StaffSearchAudiencesQuery = {
+  variables: StaffSearchAudiencesQueryVariables;
+  response: StaffSearchAudiencesQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -60,12 +60,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchAudiencesQuery",
+    "name": "StaffSearchAudiencesQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchAudiencesFragment"
+        "name": "StaffSearchAudiencesFragment"
       }
     ],
     "type": "Query",
@@ -75,7 +75,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchAudiencesQuery",
+    "name": "StaffSearchAudiencesQuery",
     "selections": [
       {
         "alias": null,
@@ -228,7 +228,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminAudiencesConnection_audiences",
+        "key": "StaffAudiencesConnection_audiences",
         "kind": "LinkedHandle",
         "name": "audiences"
       }
@@ -237,7 +237,7 @@ return {
   "params": {
     "id": "c98b23052c4d40e848b6f45741008c65",
     "metadata": {},
-    "name": "AdminSearchAudiencesQuery",
+    "name": "StaffSearchAudiencesQuery",
     "operationKind": "query",
     "text": null
   }

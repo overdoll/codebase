@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCancellationReasonsFragment$data = {
+export type StaffSearchCancellationReasonsFragment$data = {
   readonly cancellationReasons: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,12 +19,12 @@ export type AdminSearchCancellationReasonsFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "AdminSearchCancellationReasonsFragment";
+  readonly " $fragmentType": "StaffSearchCancellationReasonsFragment";
 };
-export type AdminSearchCancellationReasonsFragment = AdminSearchCancellationReasonsFragment$data;
-export type AdminSearchCancellationReasonsFragment$key = {
-  readonly " $data"?: AdminSearchCancellationReasonsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCancellationReasonsFragment">;
+export type StaffSearchCancellationReasonsFragment = StaffSearchCancellationReasonsFragment$data;
+export type StaffSearchCancellationReasonsFragment$key = {
+  readonly " $data"?: StaffSearchCancellationReasonsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCancellationReasonsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -64,17 +64,17 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./AdminSearchCancellationReasonsPaginationFragment.graphql')
+      "operation": require('./StaffSearchCancellationReasonsPaginationFragment.graphql')
     }
   },
-  "name": "AdminSearchCancellationReasonsFragment",
+  "name": "StaffSearchCancellationReasonsFragment",
   "selections": [
     {
       "alias": "cancellationReasons",
       "args": null,
       "concreteType": "CancellationReasonConnection",
       "kind": "LinkedField",
-      "name": "__AdminCancellationReasonsConnection_cancellationReasons_connection",
+      "name": "__StaffCancellationReasonsConnection_cancellationReasons_connection",
       "plural": false,
       "selections": [
         {

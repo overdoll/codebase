@@ -1,6 +1,7 @@
 import { Choice, Choices, Id, RegisterFunctionReturn, UseChoiceProps, UseChoiceReturn } from '../../types'
 import { useState } from 'react'
-import { addKeyToObject, removeKeyFromObject } from '../../../../../support'
+import addKeyToObject from '../../../../../support/addKeyToObject'
+import removeKeyFromObject from '../../../../../support/removeKeyFromObject'
 import { useUpdateEffect } from 'usehooks-ts'
 
 function useChoice<T> (props: UseChoiceProps<T>): UseChoiceReturn<T> {

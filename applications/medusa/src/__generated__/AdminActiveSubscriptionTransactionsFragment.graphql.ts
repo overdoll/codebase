@@ -10,20 +10,20 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminActiveSubscriptionTransactionsFragment$data = {
+export type StaffActiveSubscriptionTransactionsFragment$data = {
   readonly transactions: {
     readonly edges: ReadonlyArray<{
       readonly __typename: string;
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsListFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionsListFragment">;
   };
   readonly id: string;
-  readonly " $fragmentType": "AdminActiveSubscriptionTransactionsFragment";
+  readonly " $fragmentType": "StaffActiveSubscriptionTransactionsFragment";
 };
-export type AdminActiveSubscriptionTransactionsFragment = AdminActiveSubscriptionTransactionsFragment$data;
-export type AdminActiveSubscriptionTransactionsFragment$key = {
-  readonly " $data"?: AdminActiveSubscriptionTransactionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminActiveSubscriptionTransactionsFragment">;
+export type StaffActiveSubscriptionTransactionsFragment = StaffActiveSubscriptionTransactionsFragment$data;
+export type StaffActiveSubscriptionTransactionsFragment$key = {
+  readonly " $data"?: StaffActiveSubscriptionTransactionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffActiveSubscriptionTransactionsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -72,24 +72,24 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./AdminActiveSubscriptionTransactionsFragmentPaginationQuery.graphql'),
+      "operation": require('./StaffActiveSubscriptionTransactionsFragmentPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "AdminActiveSubscriptionTransactionsFragment",
+  "name": "StaffActiveSubscriptionTransactionsFragment",
   "selections": [
     {
       "alias": "transactions",
       "args": null,
       "concreteType": "AccountTransactionConnection",
       "kind": "LinkedField",
-      "name": "__AdminActiveSubscriptionTransactions_transactions_connection",
+      "name": "__StaffActiveSubscriptionTransactions_transactions_connection",
       "plural": false,
       "selections": [
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminTransactionsListFragment"
+          "name": "StaffTransactionsListFragment"
         },
         {
           "alias": null,

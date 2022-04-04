@@ -4,7 +4,7 @@ import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chak
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { PostHeaderClub, PostHeaderContributor, PostVideoManagerProvider } from '@//:modules/content/Posts'
+import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SearchDateRange, {
   getDateRangeDefault
@@ -18,7 +18,10 @@ import PostPreview from '../../Queue/Posts/PostPreview/PostPreview'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import PostTagsPreview from '../../Queue/Posts/PostTagsPreview/PostTagsPreview'
 import ModerationPostActions from './ModerationPostActions/ModerationPostActions'
-import TagHeader from '../../../../Admin/components/TagHeader/TagHeader'
+import TagHeader from '../../../../Staff/components/TagHeader/TagHeader'
+import LargeAccountHeader from '../../../../Staff/components/LargeAccountHeader/LargeAccountHeader'
+import LargeClubHeader from '../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
+import { LinkTile } from '@//:modules/content/ContentSelection'
 
 interface Props {
   query: PreloadedQuery<ModerationPostQuery>
@@ -36,8 +39,14 @@ const Query = graphql`
       __typename
       reference
       state
-      ...PostHeaderClubFragment
-      ...PostHeaderContributorFragment
+      contributor {
+        ...LargeAccountHeaderFragment
+        username
+      }
+      club {
+        ...LargeClubHeaderFragment
+        slug
+      }
       ...PostPreviewFragment
       ...PostTagsPreviewFragment
       ...ModerationPostActionsFragment
@@ -115,7 +124,9 @@ export default function ModerationPost ({ query }: Props): JSX.Element {
                       Club
                     </Trans>
                   </PageSectionTitle>
-                  <PostHeaderClub query={queryData.post} />
+                  <LinkTile to={`/staff/club/${queryData.post.club.slug}`}>
+                    <LargeClubHeader query={queryData.post.club} />
+                  </LinkTile>
                 </PageSectionWrap>
               </Box>
               <Box>
@@ -125,7 +136,9 @@ export default function ModerationPost ({ query }: Props): JSX.Element {
                       Contributor
                     </Trans>
                   </PageSectionTitle>
-                  <PostHeaderContributor query={queryData.post} />
+                  <LinkTile to={`/staff/account/${queryData.post.contributor.username}`}>
+                    <LargeAccountHeader query={queryData.post.contributor} />
+                  </LinkTile>
                 </PageSectionWrap>
               </Box>
               <Box>

@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type AccountTransactionType = "CHARGEBACK" | "PAYMENT" | "REFUND" | "VOID" | "%future added value";
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountTransactionOptionsFragment$data = {
+export type StaffAccountTransactionOptionsFragment$data = {
   readonly type: AccountTransactionType;
   readonly billedAtDate: any;
   readonly amount: number;
@@ -20,20 +20,20 @@ export type AdminAccountTransactionOptionsFragment$data = {
   readonly ccbillTransaction: {
     readonly ccbillTransactionId: string | null;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminRefundAccountTransactionButtonFragment">;
-  readonly " $fragmentType": "AdminAccountTransactionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionButtonFragment">;
+  readonly " $fragmentType": "StaffAccountTransactionOptionsFragment";
 };
-export type AdminAccountTransactionOptionsFragment = AdminAccountTransactionOptionsFragment$data;
-export type AdminAccountTransactionOptionsFragment$key = {
-  readonly " $data"?: AdminAccountTransactionOptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountTransactionOptionsFragment">;
+export type StaffAccountTransactionOptionsFragment = StaffAccountTransactionOptionsFragment$data;
+export type StaffAccountTransactionOptionsFragment$key = {
+  readonly " $data"?: StaffAccountTransactionOptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionOptionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountTransactionOptionsFragment",
+  "name": "StaffAccountTransactionOptionsFragment",
   "selections": [
     {
       "alias": null,
@@ -84,7 +84,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminRefundAccountTransactionButtonFragment"
+      "name": "StaffRefundAccountTransactionButtonFragment"
     }
   ],
   "type": "AccountTransaction",

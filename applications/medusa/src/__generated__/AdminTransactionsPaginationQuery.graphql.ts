@@ -13,21 +13,21 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminTransactionsPaginationQuery$variables = {
+export type StaffTransactionsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type AdminTransactionsPaginationQueryVariables = AdminTransactionsPaginationQuery$variables;
-export type AdminTransactionsPaginationQuery$data = {
+export type StaffTransactionsPaginationQueryVariables = StaffTransactionsPaginationQuery$variables;
+export type StaffTransactionsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionsFragment">;
   } | null;
 };
-export type AdminTransactionsPaginationQueryResponse = AdminTransactionsPaginationQuery$data;
-export type AdminTransactionsPaginationQuery = {
-  variables: AdminTransactionsPaginationQueryVariables;
-  response: AdminTransactionsPaginationQuery$data;
+export type StaffTransactionsPaginationQueryResponse = StaffTransactionsPaginationQuery$data;
+export type StaffTransactionsPaginationQuery = {
+  variables: StaffTransactionsPaginationQueryVariables;
+  response: StaffTransactionsPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -86,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "StaffTransactionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -99,7 +99,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "AdminTransactionsFragment"
+            "name": "StaffTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +112,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "StaffTransactionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -281,7 +281,7 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminTransactions_transactions",
+                "key": "StaffTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               },
@@ -325,7 +325,7 @@ return {
   "params": {
     "id": "dda021903f09698bef2ea8f820b86125",
     "metadata": {},
-    "name": "AdminTransactionsPaginationQuery",
+    "name": "StaffTransactionsPaginationQuery",
     "operationKind": "query",
     "text": null
   }

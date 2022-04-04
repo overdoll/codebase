@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchRulesFragment$data = {
+export type StaffSearchRulesFragment$data = {
   readonly rules: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,12 +19,12 @@ export type AdminSearchRulesFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "AdminSearchRulesFragment";
+  readonly " $fragmentType": "StaffSearchRulesFragment";
 };
-export type AdminSearchRulesFragment = AdminSearchRulesFragment$data;
-export type AdminSearchRulesFragment$key = {
-  readonly " $data"?: AdminSearchRulesFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchRulesFragment">;
+export type StaffSearchRulesFragment = StaffSearchRulesFragment$data;
+export type StaffSearchRulesFragment$key = {
+  readonly " $data"?: StaffSearchRulesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchRulesFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -64,17 +64,17 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./AdminSearchRulesPaginationFragment.graphql')
+      "operation": require('./StaffSearchRulesPaginationFragment.graphql')
     }
   },
-  "name": "AdminSearchRulesFragment",
+  "name": "StaffSearchRulesFragment",
   "selections": [
     {
       "alias": "rules",
       "args": null,
       "concreteType": "RuleConnection",
       "kind": "LinkedField",
-      "name": "__AdminRulesConnection_rules_connection",
+      "name": "__StaffRulesConnection_rules_connection",
       "plural": false,
       "selections": [
         {

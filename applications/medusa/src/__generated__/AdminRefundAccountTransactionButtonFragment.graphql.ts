@@ -10,26 +10,26 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminRefundAccountTransactionButtonFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminRefundAccountTransactionFormFragment">;
-  readonly " $fragmentType": "AdminRefundAccountTransactionButtonFragment";
+export type StaffRefundAccountTransactionButtonFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionFormFragment">;
+  readonly " $fragmentType": "StaffRefundAccountTransactionButtonFragment";
 };
-export type AdminRefundAccountTransactionButtonFragment = AdminRefundAccountTransactionButtonFragment$data;
-export type AdminRefundAccountTransactionButtonFragment$key = {
-  readonly " $data"?: AdminRefundAccountTransactionButtonFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminRefundAccountTransactionButtonFragment">;
+export type StaffRefundAccountTransactionButtonFragment = StaffRefundAccountTransactionButtonFragment$data;
+export type StaffRefundAccountTransactionButtonFragment$key = {
+  readonly " $data"?: StaffRefundAccountTransactionButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionButtonFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminRefundAccountTransactionButtonFragment",
+  "name": "StaffRefundAccountTransactionButtonFragment",
   "selections": [
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminRefundAccountTransactionFormFragment"
+      "name": "StaffRefundAccountTransactionFormFragment"
     }
   ],
   "type": "AccountTransaction",

@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAssignStaffFragment$data = {
+export type StaffAssignStaffFragment$data = {
   readonly isStaff: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAssignStaffButtonFragment" | "AdminRevokeStaffButtonFragment">;
-  readonly " $fragmentType": "AdminAssignStaffFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAssignStaffButtonFragment" | "StaffRevokeStaffButtonFragment">;
+  readonly " $fragmentType": "StaffAssignStaffFragment";
 };
-export type AdminAssignStaffFragment = AdminAssignStaffFragment$data;
-export type AdminAssignStaffFragment$key = {
-  readonly " $data"?: AdminAssignStaffFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAssignStaffFragment">;
+export type StaffAssignStaffFragment = StaffAssignStaffFragment$data;
+export type StaffAssignStaffFragment$key = {
+  readonly " $data"?: StaffAssignStaffFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAssignStaffFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAssignStaffFragment",
+  "name": "StaffAssignStaffFragment",
   "selections": [
     {
       "alias": null,
@@ -37,12 +37,12 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminAssignStaffButtonFragment"
+      "name": "StaffAssignStaffButtonFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminRevokeStaffButtonFragment"
+      "name": "StaffRevokeStaffButtonFragment"
     }
   ],
   "type": "Account",

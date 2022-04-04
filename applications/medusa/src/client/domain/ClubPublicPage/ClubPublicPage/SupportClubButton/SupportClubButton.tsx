@@ -72,6 +72,7 @@ export default function SupportClubButton ({
       </Trans>),
     colorScheme: 'orange',
     size: 'lg',
+    w: '100%',
     leftIcon: (
       <Icon
         icon={PremiumStar}

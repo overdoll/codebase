@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchAudiencesFragment$data = {
+export type StaffSearchAudiencesFragment$data = {
   readonly audiences: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,12 +19,12 @@ export type AdminSearchAudiencesFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "AdminSearchAudiencesFragment";
+  readonly " $fragmentType": "StaffSearchAudiencesFragment";
 };
-export type AdminSearchAudiencesFragment = AdminSearchAudiencesFragment$data;
-export type AdminSearchAudiencesFragment$key = {
-  readonly " $data"?: AdminSearchAudiencesFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchAudiencesFragment">;
+export type StaffSearchAudiencesFragment = StaffSearchAudiencesFragment$data;
+export type StaffSearchAudiencesFragment$key = {
+  readonly " $data"?: StaffSearchAudiencesFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchAudiencesFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -68,10 +68,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./AdminSearchAudiencesPaginationFragment.graphql')
+      "operation": require('./StaffSearchAudiencesPaginationFragment.graphql')
     }
   },
-  "name": "AdminSearchAudiencesFragment",
+  "name": "StaffSearchAudiencesFragment",
   "selections": [
     {
       "alias": "audiences",
@@ -84,7 +84,7 @@ return {
       ],
       "concreteType": "AudienceConnection",
       "kind": "LinkedField",
-      "name": "__AdminAudiencesConnection_audiences_connection",
+      "name": "__StaffAudiencesConnection_audiences_connection",
       "plural": false,
       "selections": [
         {

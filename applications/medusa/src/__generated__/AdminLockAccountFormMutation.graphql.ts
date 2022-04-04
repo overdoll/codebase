@@ -16,11 +16,11 @@ export type LockAccountInput = {
   accountID: string;
   endTime: any;
 };
-export type AdminLockAccountFormMutation$variables = {
+export type StaffLockAccountFormMutation$variables = {
   input: LockAccountInput;
 };
-export type AdminLockAccountFormMutationVariables = AdminLockAccountFormMutation$variables;
-export type AdminLockAccountFormMutation$data = {
+export type StaffLockAccountFormMutationVariables = StaffLockAccountFormMutation$variables;
+export type StaffLockAccountFormMutation$data = {
   readonly lockAccount: {
     readonly account: {
       readonly id: string;
@@ -30,10 +30,10 @@ export type AdminLockAccountFormMutation$data = {
     } | null;
   } | null;
 };
-export type AdminLockAccountFormMutationResponse = AdminLockAccountFormMutation$data;
-export type AdminLockAccountFormMutation = {
-  variables: AdminLockAccountFormMutationVariables;
-  response: AdminLockAccountFormMutation$data;
+export type StaffLockAccountFormMutationResponse = StaffLockAccountFormMutation$data;
+export type StaffLockAccountFormMutation = {
+  variables: StaffLockAccountFormMutationVariables;
+  response: StaffLockAccountFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminLockAccountFormMutation",
+    "name": "StaffLockAccountFormMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -113,13 +113,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminLockAccountFormMutation",
+    "name": "StaffLockAccountFormMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "e150add009c6617d8625fb109686a309",
     "metadata": {},
-    "name": "AdminLockAccountFormMutation",
+    "name": "StaffLockAccountFormMutation",
     "operationKind": "mutation",
     "text": null
   }

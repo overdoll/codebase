@@ -14,11 +14,11 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CCBillSubscriptionStatus = "ACTIVE_AND_CANCELLED" | "ACTIVE_AND_NOT_CANCELLED" | "INACTIVE" | "%future added value";
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
-export type AdminCCBillSubscriptionDetailsQuery$variables = {
+export type StaffCCBillSubscriptionDetailsQuery$variables = {
   id: string;
 };
-export type AdminCCBillSubscriptionDetailsQueryVariables = AdminCCBillSubscriptionDetailsQuery$variables;
-export type AdminCCBillSubscriptionDetailsQuery$data = {
+export type StaffCCBillSubscriptionDetailsQueryVariables = StaffCCBillSubscriptionDetailsQuery$variables;
+export type StaffCCBillSubscriptionDetailsQuery$data = {
   readonly ccbillSubscriptionDetails: {
     readonly id: string;
     readonly account: {
@@ -46,10 +46,10 @@ export type AdminCCBillSubscriptionDetailsQuery$data = {
     readonly updatedAt: any;
   } | null;
 };
-export type AdminCCBillSubscriptionDetailsQueryResponse = AdminCCBillSubscriptionDetailsQuery$data;
-export type AdminCCBillSubscriptionDetailsQuery = {
-  variables: AdminCCBillSubscriptionDetailsQueryVariables;
-  response: AdminCCBillSubscriptionDetailsQuery$data;
+export type StaffCCBillSubscriptionDetailsQueryResponse = StaffCCBillSubscriptionDetailsQuery$data;
+export type StaffCCBillSubscriptionDetailsQuery = {
+  variables: StaffCCBillSubscriptionDetailsQueryVariables;
+  response: StaffCCBillSubscriptionDetailsQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -234,7 +234,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCCBillSubscriptionDetailsQuery",
+    "name": "StaffCCBillSubscriptionDetailsQuery",
     "selections": (v3/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -243,13 +243,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminCCBillSubscriptionDetailsQuery",
+    "name": "StaffCCBillSubscriptionDetailsQuery",
     "selections": (v3/*: any*/)
   },
   "params": {
     "id": "211b2cd3da79c634c9b35840f6b88c8b",
     "metadata": {},
-    "name": "AdminCCBillSubscriptionDetailsQuery",
+    "name": "StaffCCBillSubscriptionDetailsQuery",
     "operationKind": "query",
     "text": null
   }

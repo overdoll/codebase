@@ -248,7 +248,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminSeriesConnection_series",
+        "key": "StaffSeriesConnection_series",
         "kind": "LinkedHandle",
         "name": "series"
       }

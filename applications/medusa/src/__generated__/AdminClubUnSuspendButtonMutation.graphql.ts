@@ -15,11 +15,11 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UnSuspendClubInput = {
   clubId: string;
 };
-export type AdminClubUnSuspendButtonMutation$variables = {
+export type StaffClubUnSuspendButtonMutation$variables = {
   input: UnSuspendClubInput;
 };
-export type AdminClubUnSuspendButtonMutationVariables = AdminClubUnSuspendButtonMutation$variables;
-export type AdminClubUnSuspendButtonMutation$data = {
+export type StaffClubUnSuspendButtonMutationVariables = StaffClubUnSuspendButtonMutation$variables;
+export type StaffClubUnSuspendButtonMutation$data = {
   readonly unSuspendClub: {
     readonly club: {
       readonly id: string;
@@ -29,10 +29,10 @@ export type AdminClubUnSuspendButtonMutation$data = {
     } | null;
   } | null;
 };
-export type AdminClubUnSuspendButtonMutationResponse = AdminClubUnSuspendButtonMutation$data;
-export type AdminClubUnSuspendButtonMutation = {
-  variables: AdminClubUnSuspendButtonMutationVariables;
-  response: AdminClubUnSuspendButtonMutation$data;
+export type StaffClubUnSuspendButtonMutationResponse = StaffClubUnSuspendButtonMutation$data;
+export type StaffClubUnSuspendButtonMutation = {
+  variables: StaffClubUnSuspendButtonMutationVariables;
+  response: StaffClubUnSuspendButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -103,7 +103,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminClubUnSuspendButtonMutation",
+    "name": "StaffClubUnSuspendButtonMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -112,13 +112,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminClubUnSuspendButtonMutation",
+    "name": "StaffClubUnSuspendButtonMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "f9d5bc9e2e6de73960ea2fae5ca53b8f",
     "metadata": {},
-    "name": "AdminClubUnSuspendButtonMutation",
+    "name": "StaffClubUnSuspendButtonMutation",
     "operationKind": "mutation",
     "text": null
   }

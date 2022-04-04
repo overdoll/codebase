@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d5730cb204ab54f5fcf28a790c69f940>>
- * @relayHash e4dc7cb4190c76930dab919a278aee3f
+ * @generated SignedSource<<294dcc99fd7fe5c9cd68aa473d67e5b0>>
+ * @relayHash b565117fde1207f737c64ec81b3efe39
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,28 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e4dc7cb4190c76930dab919a278aee3f
+// @relayRequestID b565117fde1207f737c64ec81b3efe39
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubQuery$variables = {
+export type StaffClubQuery$variables = {
   slug: string;
 };
-export type AdminClubQueryVariables = AdminClubQuery$variables;
-export type AdminClubQuery$data = {
+export type StaffClubQueryVariables = StaffClubQuery$variables;
+export type StaffClubQuery$data = {
   readonly club: {
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "AdminClubStatusFragment" | "AdminClubInfractionsFragment">;
+    readonly owner: {
+      readonly username: string;
+      readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment">;
+    };
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "StaffClubStatusFragment" | "StaffClubInfractionsFragment">;
   } | null;
 };
-export type AdminClubQueryResponse = AdminClubQuery$data;
-export type AdminClubQuery = {
-  variables: AdminClubQueryVariables;
-  response: AdminClubQuery$data;
+export type StaffClubQueryResponse = StaffClubQuery$data;
+export type StaffClubQuery = {
+  variables: StaffClubQueryVariables;
+  response: StaffClubQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -55,17 +59,65 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "username",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "urls",
+    "plural": true,
+    "selections": [
+      (v4/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "videoThumbnail",
+    "plural": false,
+    "selections": [
+      (v4/*: any*/)
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v5/*: any*/)
+],
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -77,7 +129,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminClubQuery",
+    "name": "StaffClubQuery",
     "selections": [
       {
         "alias": null,
@@ -96,12 +148,29 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminClubStatusFragment"
+            "name": "StaffClubStatusFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminClubInfractionsFragment"
+            "name": "StaffClubInfractionsFragment"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "LargeAccountHeaderFragment"
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -114,7 +183,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminClubQuery",
+    "name": "StaffClubQuery",
     "selections": [
       {
         "alias": null,
@@ -139,47 +208,7 @@ return {
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "urls",
-                "plural": true,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "videoThumbnail",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v4/*: any*/)
-            ],
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -201,10 +230,10 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
-            "args": (v5/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "ClubInfractionHistoryConnection",
             "kind": "LinkedField",
             "name": "infractionHistory",
@@ -226,7 +255,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -256,7 +285,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -304,12 +333,35 @@ return {
           },
           {
             "alias": null,
-            "args": (v5/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubInfractionHistory_infractionHistory",
             "kind": "LinkedHandle",
             "name": "infractionHistory"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "avatar",
+                "plural": false,
+                "selections": (v6/*: any*/),
+                "storageKey": null
+              },
+              (v5/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -317,15 +369,15 @@ return {
     ]
   },
   "params": {
-    "id": "e4dc7cb4190c76930dab919a278aee3f",
+    "id": "b565117fde1207f737c64ec81b3efe39",
     "metadata": {},
-    "name": "AdminClubQuery",
+    "name": "StaffClubQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "45640ba7fef2e0e42d8d9c178fe5e0b3";
+(node as any).hash = "04052862f810aaecb612e8afda1b5e90";
 
 export default node;

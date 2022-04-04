@@ -9,7 +9,7 @@ import { useLingui } from '@lingui/react'
 import { ResourceIcon } from '@//:modules/content/PageLayout'
 import {
   getTransactionColorScheme
-} from '../../../../../../Admin/pages/AdminAccountClubSupporterSubscription/AdminAccountClubSupporterSubscription/AdminSubscriptionTransactions/AdminTransactionsList/AdminTransactionCard/AdminTransactionCard'
+} from '../../../../../../Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionCard/StaffTransactionCard'
 import format from 'date-fns/format'
 import { dateFormatWithTimeSimple } from '@//:modules/constants/format'
 

@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountTransactionEventsFragment$data = {
+export type StaffAccountTransactionEventsFragment$data = {
   readonly events: ReadonlyArray<{
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminAccountTransactionEventFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionEventFragment">;
   }>;
-  readonly " $fragmentType": "AdminAccountTransactionEventsFragment";
+  readonly " $fragmentType": "StaffAccountTransactionEventsFragment";
 };
-export type AdminAccountTransactionEventsFragment = AdminAccountTransactionEventsFragment$data;
-export type AdminAccountTransactionEventsFragment$key = {
-  readonly " $data"?: AdminAccountTransactionEventsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountTransactionEventsFragment">;
+export type StaffAccountTransactionEventsFragment = StaffAccountTransactionEventsFragment$data;
+export type StaffAccountTransactionEventsFragment$key = {
+  readonly " $data"?: StaffAccountTransactionEventsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionEventsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountTransactionEventsFragment",
+  "name": "StaffAccountTransactionEventsFragment",
   "selections": [
     {
       "alias": null,
@@ -47,7 +47,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountTransactionEventFragment"
+          "name": "StaffAccountTransactionEventFragment"
         }
       ],
       "storageKey": null

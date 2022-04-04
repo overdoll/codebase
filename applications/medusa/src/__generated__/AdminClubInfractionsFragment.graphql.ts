@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminClubInfractionsFragment$data = {
+export type StaffClubInfractionsFragment$data = {
   readonly suspension: {
     readonly __typename: string;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"ClubInfractionHistoryFragment" | "IssueClubInfractionFormFragment">;
-  readonly " $fragmentType": "AdminClubInfractionsFragment";
+  readonly " $fragmentType": "StaffClubInfractionsFragment";
 };
-export type AdminClubInfractionsFragment = AdminClubInfractionsFragment$data;
-export type AdminClubInfractionsFragment$key = {
-  readonly " $data"?: AdminClubInfractionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminClubInfractionsFragment">;
+export type StaffClubInfractionsFragment = StaffClubInfractionsFragment$data;
+export type StaffClubInfractionsFragment$key = {
+  readonly " $data"?: StaffClubInfractionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubInfractionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminClubInfractionsFragment",
+  "name": "StaffClubInfractionsFragment",
   "selections": [
     {
       "args": null,

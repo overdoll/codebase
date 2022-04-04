@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { AdminLockAccountFormMutation } from '@//:artifacts/AdminLockAccountFormMutation.graphql'
+import { StaffLockAccountFormMutation } from '@//:artifacts/StaffLockAccountFormMutation.graphql'
 import { ModerationRemovePostFormFragment$key } from '@//:artifacts/ModerationRemovePostFormFragment.graphql'
 import {
   Form,
@@ -16,7 +16,7 @@ import {
   RuleInput,
   TextareaInput
 } from '@//:modules/content/HookedComponents/Form'
-import GenericTagId from '../../../../../../Admin/validation/GenericTagId'
+import GenericTagId from '../../../../../../Staff/validation/GenericTagId'
 import ModerationNote from '../../../../../validation/ModerationNote'
 import { useLingui } from '@lingui/react'
 
@@ -52,7 +52,7 @@ export default function ModerationRemovePostForm ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [commit, isInFlight] = useMutation<AdminLockAccountFormMutation>(Mutation)
+  const [commit, isInFlight] = useMutation<StaffLockAccountFormMutation>(Mutation)
 
   const { i18n } = useLingui()
 

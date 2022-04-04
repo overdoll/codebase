@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type AccountTransactionType = "CHARGEBACK" | "PAYMENT" | "REFUND" | "VOID" | "%future added value";
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminTransactionCardFragment$data = {
+export type StaffTransactionCardFragment$data = {
   readonly type: AccountTransactionType;
   readonly timestamp: any;
   readonly amount: number;
@@ -22,19 +22,19 @@ export type AdminTransactionCardFragment$data = {
       readonly name: string;
     };
   } | null;
-  readonly " $fragmentType": "AdminTransactionCardFragment";
+  readonly " $fragmentType": "StaffTransactionCardFragment";
 };
-export type AdminTransactionCardFragment = AdminTransactionCardFragment$data;
-export type AdminTransactionCardFragment$key = {
-  readonly " $data"?: AdminTransactionCardFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminTransactionCardFragment">;
+export type StaffTransactionCardFragment = StaffTransactionCardFragment$data;
+export type StaffTransactionCardFragment$key = {
+  readonly " $data"?: StaffTransactionCardFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionCardFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminTransactionCardFragment",
+  "name": "StaffTransactionCardFragment",
   "selections": [
     {
       "alias": null,

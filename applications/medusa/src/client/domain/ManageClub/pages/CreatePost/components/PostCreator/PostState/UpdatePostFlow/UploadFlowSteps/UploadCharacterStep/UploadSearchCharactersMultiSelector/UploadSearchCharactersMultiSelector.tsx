@@ -3,7 +3,7 @@ import type {
   UploadSearchCharactersMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCharactersMultiSelectorQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
-import { removeNode } from '@//:modules/support'
+import removeNode from '@//:modules/support/removeNode'
 import { CharacterTileOverlay, GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'

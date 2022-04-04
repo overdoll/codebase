@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<24cfa4af25c06c69aa6b0b59383de8b3>>
+ * @generated SignedSource<<ce8f8c3b3243120bd1a9a7ce2e987183>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type ClubPostsFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly state: PostState;
-        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "DraftPostFragment" | "PublishedPostFragment" | "ReviewPostFragment" | "RejectedPostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "DraftPostFragment" | "PublishedPostFragment" | "ReviewPostFragment" | "RejectedPostFragment" | "ArchivedPostFragment" | "RemovedPostFragment">;
       };
     }>;
   };
@@ -141,6 +141,16 @@ return {
                   "name": "RejectedPostFragment"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ArchivedPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "RemovedPostFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -201,6 +211,6 @@ return {
 };
 })();
 
-(node as any).hash = "535442db8f49de58bb350559bfc4cc4a";
+(node as any).hash = "7aee6b0058c74428e51d383ba68f3a6a";
 
 export default node;

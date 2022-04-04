@@ -13,20 +13,20 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountClubSupporterSubscriptionQuery$variables = {
+export type StaffAccountClubSupporterSubscriptionQuery$variables = {
   reference: string;
 };
-export type AdminAccountClubSupporterSubscriptionQueryVariables = AdminAccountClubSupporterSubscriptionQuery$variables;
-export type AdminAccountClubSupporterSubscriptionQuery$data = {
+export type StaffAccountClubSupporterSubscriptionQueryVariables = StaffAccountClubSupporterSubscriptionQuery$variables;
+export type StaffAccountClubSupporterSubscriptionQuery$data = {
   readonly accountClubSupporterSubscription: {
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AdminClubSupporterSubscriptionPreviewFragment" | "AdminClubSupporterSubscriptionBillingErrorFragment" | "AdminClubSupporterSubscriptionAccountFragment" | "AdminClubSupporterSubscriptionClubFragment" | "AdminSubscriptionOptionsFragment" | "AdminSubscriptionTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment" | "StaffClubSupporterSubscriptionBillingErrorFragment" | "StaffClubSupporterSubscriptionAccountFragment" | "StaffClubSupporterSubscriptionClubFragment" | "StaffSubscriptionOptionsFragment" | "StaffSubscriptionTransactionsFragment">;
   } | null;
 };
-export type AdminAccountClubSupporterSubscriptionQueryResponse = AdminAccountClubSupporterSubscriptionQuery$data;
-export type AdminAccountClubSupporterSubscriptionQuery = {
-  variables: AdminAccountClubSupporterSubscriptionQueryVariables;
-  response: AdminAccountClubSupporterSubscriptionQuery$data;
+export type StaffAccountClubSupporterSubscriptionQueryResponse = StaffAccountClubSupporterSubscriptionQuery$data;
+export type StaffAccountClubSupporterSubscriptionQuery = {
+  variables: StaffAccountClubSupporterSubscriptionQueryVariables;
+  response: StaffAccountClubSupporterSubscriptionQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -331,7 +331,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminAccountClubSupporterSubscriptionQuery",
+    "name": "StaffAccountClubSupporterSubscriptionQuery",
     "selections": [
       {
         "alias": null,
@@ -345,7 +345,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminClubSupporterSubscriptionPreviewFragment"
+            "name": "StaffClubSupporterSubscriptionPreviewFragment"
           },
           {
             "kind": "InlineFragment",
@@ -353,17 +353,17 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "AdminClubSupporterSubscriptionBillingErrorFragment"
+                "name": "StaffClubSupporterSubscriptionBillingErrorFragment"
               },
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "AdminClubSupporterSubscriptionAccountFragment"
+                "name": "StaffClubSupporterSubscriptionAccountFragment"
               },
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "AdminClubSupporterSubscriptionClubFragment"
+                "name": "StaffClubSupporterSubscriptionClubFragment"
               }
             ],
             "type": "IAccountClubSupporterSubscription",
@@ -372,12 +372,12 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminSubscriptionOptionsFragment"
+            "name": "StaffSubscriptionOptionsFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AdminSubscriptionTransactionsFragment"
+            "name": "StaffSubscriptionTransactionsFragment"
           }
         ],
         "storageKey": null
@@ -390,7 +390,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminAccountClubSupporterSubscriptionQuery",
+    "name": "StaffAccountClubSupporterSubscriptionQuery",
     "selections": [
       {
         "alias": null,
@@ -547,7 +547,7 @@ return {
                 "args": (v13/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminActiveSubscriptionTransactions_transactions",
+                "key": "StaffActiveSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               },
@@ -586,7 +586,7 @@ return {
                 "args": (v13/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminCancelledSubscriptionTransactions_transactions",
+                "key": "StaffCancelledSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               },
@@ -618,7 +618,7 @@ return {
                 "args": (v13/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "AdminExpiredSubscriptionTransactions_transactions",
+                "key": "StaffExpiredSubscriptionTransactions_transactions",
                 "kind": "LinkedHandle",
                 "name": "transactions"
               },
@@ -637,7 +637,7 @@ return {
   "params": {
     "id": "3e92b4d8c697d4ef90e72f10ea048db0",
     "metadata": {},
-    "name": "AdminAccountClubSupporterSubscriptionQuery",
+    "name": "StaffAccountClubSupporterSubscriptionQuery",
     "operationKind": "query",
     "text": null
   }

@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminRefundAccountTransactionFormFragment$data = {
+export type StaffRefundAccountTransactionFormFragment$data = {
   readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminGenerateRefundAmountForAccountTransactionInputFragment">;
-  readonly " $fragmentType": "AdminRefundAccountTransactionFormFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffGenerateRefundAmountForAccountTransactionInputFragment">;
+  readonly " $fragmentType": "StaffRefundAccountTransactionFormFragment";
 };
-export type AdminRefundAccountTransactionFormFragment = AdminRefundAccountTransactionFormFragment$data;
-export type AdminRefundAccountTransactionFormFragment$key = {
-  readonly " $data"?: AdminRefundAccountTransactionFormFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminRefundAccountTransactionFormFragment">;
+export type StaffRefundAccountTransactionFormFragment = StaffRefundAccountTransactionFormFragment$data;
+export type StaffRefundAccountTransactionFormFragment$key = {
+  readonly " $data"?: StaffRefundAccountTransactionFormFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionFormFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminRefundAccountTransactionFormFragment",
+  "name": "StaffRefundAccountTransactionFormFragment",
   "selections": [
     {
       "alias": null,
@@ -37,7 +37,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminGenerateRefundAmountForAccountTransactionInputFragment"
+      "name": "StaffGenerateRefundAmountForAccountTransactionInputFragment"
     }
   ],
   "type": "AccountTransaction",

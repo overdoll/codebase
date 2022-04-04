@@ -10,35 +10,35 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSubscriptionOptionsFragment$data = {
+export type StaffSubscriptionOptionsFragment$data = {
   readonly __typename: "AccountActiveClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountActiveClubSupporterSubscriptionOptionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountActiveClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "StaffSubscriptionOptionsFragment";
 } | {
   readonly __typename: "AccountCancelledClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountCancelledClubSupporterSubscriptionOptionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountCancelledClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "StaffSubscriptionOptionsFragment";
 } | {
   readonly __typename: "AccountExpiredClubSupporterSubscription";
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountExpiredClubSupporterSubscriptionOptionsFragment">;
-  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountExpiredClubSupporterSubscriptionOptionsFragment">;
+  readonly " $fragmentType": "StaffSubscriptionOptionsFragment";
 } | {
   // This will never be '%other', but we need some
   // value in case none of the concrete values match.
   readonly __typename: "%other";
-  readonly " $fragmentType": "AdminSubscriptionOptionsFragment";
+  readonly " $fragmentType": "StaffSubscriptionOptionsFragment";
 };
-export type AdminSubscriptionOptionsFragment = AdminSubscriptionOptionsFragment$data;
-export type AdminSubscriptionOptionsFragment$key = {
-  readonly " $data"?: AdminSubscriptionOptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSubscriptionOptionsFragment">;
+export type StaffSubscriptionOptionsFragment = StaffSubscriptionOptionsFragment$data;
+export type StaffSubscriptionOptionsFragment$key = {
+  readonly " $data"?: StaffSubscriptionOptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSubscriptionOptionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminSubscriptionOptionsFragment",
+  "name": "StaffSubscriptionOptionsFragment",
   "selections": [
     {
       "alias": null,
@@ -53,7 +53,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountActiveClubSupporterSubscriptionOptionsFragment"
+          "name": "StaffAccountActiveClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountActiveClubSupporterSubscription",
@@ -65,7 +65,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountCancelledClubSupporterSubscriptionOptionsFragment"
+          "name": "StaffAccountCancelledClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountCancelledClubSupporterSubscription",
@@ -77,7 +77,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "AdminAccountExpiredClubSupporterSubscriptionOptionsFragment"
+          "name": "StaffAccountExpiredClubSupporterSubscriptionOptionsFragment"
         }
       ],
       "type": "AccountExpiredClubSupporterSubscription",

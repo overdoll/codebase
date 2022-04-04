@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCharacterFragment$data = {
+export type StaffSearchCharacterFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -22,12 +22,12 @@ export type AdminSearchCharacterFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "AdminSearchCharacterFragment";
+  readonly " $fragmentType": "StaffSearchCharacterFragment";
 };
-export type AdminSearchCharacterFragment = AdminSearchCharacterFragment$data;
-export type AdminSearchCharacterFragment$key = {
-  readonly " $data"?: AdminSearchCharacterFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCharacterFragment">;
+export type StaffSearchCharacterFragment = StaffSearchCharacterFragment$data;
+export type StaffSearchCharacterFragment$key = {
+  readonly " $data"?: StaffSearchCharacterFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCharacterFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -78,10 +78,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./AdminSearchCharacterPaginationFragment.graphql')
+      "operation": require('./StaffSearchCharacterPaginationFragment.graphql')
     }
   },
-  "name": "AdminSearchCharacterFragment",
+  "name": "StaffSearchCharacterFragment",
   "selections": [
     {
       "alias": "characters",
@@ -94,7 +94,7 @@ return {
       ],
       "concreteType": "CharacterConnection",
       "kind": "LinkedField",
-      "name": "__AdminCharacterConnection_characters_connection",
+      "name": "__StaffCharacterConnection_characters_connection",
       "plural": false,
       "selections": [
         {

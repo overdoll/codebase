@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminViewRuleQuery$variables = {
+export type StaffViewRuleQuery$variables = {
   reference: string;
 };
-export type AdminViewRuleQueryVariables = AdminViewRuleQuery$variables;
-export type AdminViewRuleQuery$data = {
+export type StaffViewRuleQueryVariables = StaffViewRuleQuery$variables;
+export type StaffViewRuleQuery$data = {
   readonly rule: {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleTitleFragment" | "ChangeRuleDescriptionFragment" | "ChangeRuleInfractionFragment" | "ChangeRuleDeprecatedFragment">;
   } | null;
 };
-export type AdminViewRuleQueryResponse = AdminViewRuleQuery$data;
-export type AdminViewRuleQuery = {
-  variables: AdminViewRuleQueryVariables;
-  response: AdminViewRuleQuery$data;
+export type StaffViewRuleQueryResponse = StaffViewRuleQuery$data;
+export type StaffViewRuleQuery = {
+  variables: StaffViewRuleQueryVariables;
+  response: StaffViewRuleQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -82,7 +82,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminViewRuleQuery",
+    "name": "StaffViewRuleQuery",
     "selections": [
       {
         "alias": null,
@@ -123,7 +123,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminViewRuleQuery",
+    "name": "StaffViewRuleQuery",
     "selections": [
       {
         "alias": null,
@@ -196,7 +196,7 @@ return {
   "params": {
     "id": "d0d27391b4688c5f5d7958a2a1b27d1c",
     "metadata": {},
-    "name": "AdminViewRuleQuery",
+    "name": "StaffViewRuleQuery",
     "operationKind": "query",
     "text": null
   }

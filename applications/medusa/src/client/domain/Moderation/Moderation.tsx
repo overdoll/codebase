@@ -41,7 +41,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
           }
           icon={TimeHourGlass}
         />
-        <Can I='admin' a='Post'>
+        <Can I='staff' a='Post'>
           <VerticalNavigation.Button
             to='/moderation/reports'
             colorScheme='purple'

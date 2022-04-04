@@ -10,23 +10,23 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSyncSubscriptionButtonFragment$data = {
+export type StaffSyncSubscriptionButtonFragment$data = {
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
   };
-  readonly " $fragmentType": "AdminSyncSubscriptionButtonFragment";
+  readonly " $fragmentType": "StaffSyncSubscriptionButtonFragment";
 };
-export type AdminSyncSubscriptionButtonFragment = AdminSyncSubscriptionButtonFragment$data;
-export type AdminSyncSubscriptionButtonFragment$key = {
-  readonly " $data"?: AdminSyncSubscriptionButtonFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSyncSubscriptionButtonFragment">;
+export type StaffSyncSubscriptionButtonFragment = StaffSyncSubscriptionButtonFragment$data;
+export type StaffSyncSubscriptionButtonFragment$key = {
+  readonly " $data"?: StaffSyncSubscriptionButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminSyncSubscriptionButtonFragment",
+  "name": "StaffSyncSubscriptionButtonFragment",
   "selections": [
     {
       "kind": "RequiredField",

@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$data = {
+export type StaffAccountCancelledClubSupporterSubscriptionOptionsFragment$data = {
   readonly endDate: any;
   readonly cancelledAt: any;
   readonly cancellationReason: {
@@ -22,20 +22,20 @@ export type AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$data =
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSyncSubscriptionButtonFragment">;
-  readonly " $fragmentType": "AdminAccountCancelledClubSupporterSubscriptionOptionsFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment">;
+  readonly " $fragmentType": "StaffAccountCancelledClubSupporterSubscriptionOptionsFragment";
 };
-export type AdminAccountCancelledClubSupporterSubscriptionOptionsFragment = AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$data;
-export type AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$key = {
-  readonly " $data"?: AdminAccountCancelledClubSupporterSubscriptionOptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountCancelledClubSupporterSubscriptionOptionsFragment">;
+export type StaffAccountCancelledClubSupporterSubscriptionOptionsFragment = StaffAccountCancelledClubSupporterSubscriptionOptionsFragment$data;
+export type StaffAccountCancelledClubSupporterSubscriptionOptionsFragment$key = {
+  readonly " $data"?: StaffAccountCancelledClubSupporterSubscriptionOptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountCancelledClubSupporterSubscriptionOptionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountCancelledClubSupporterSubscriptionOptionsFragment",
+  "name": "StaffAccountCancelledClubSupporterSubscriptionOptionsFragment",
   "selections": [
     {
       "alias": null,
@@ -104,7 +104,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminSyncSubscriptionButtonFragment"
+      "name": "StaffSyncSubscriptionButtonFragment"
     }
   ],
   "type": "AccountCancelledClubSupporterSubscription",

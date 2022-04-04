@@ -13,17 +13,17 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchSeriesQuery$variables = {
+export type StaffSearchSeriesQuery$variables = {
   title?: string | null;
 };
-export type AdminSearchSeriesQueryVariables = AdminSearchSeriesQuery$variables;
-export type AdminSearchSeriesQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchSeriesFragment">;
+export type StaffSearchSeriesQueryVariables = StaffSearchSeriesQuery$variables;
+export type StaffSearchSeriesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchSeriesFragment">;
 };
-export type AdminSearchSeriesQueryResponse = AdminSearchSeriesQuery$data;
-export type AdminSearchSeriesQuery = {
-  variables: AdminSearchSeriesQueryVariables;
-  response: AdminSearchSeriesQuery$data;
+export type StaffSearchSeriesQueryResponse = StaffSearchSeriesQuery$data;
+export type StaffSearchSeriesQuery = {
+  variables: StaffSearchSeriesQueryVariables;
+  response: StaffSearchSeriesQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,12 +65,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchSeriesQuery",
+    "name": "StaffSearchSeriesQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchSeriesFragment"
+        "name": "StaffSearchSeriesFragment"
       }
     ],
     "type": "Query",
@@ -80,7 +80,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchSeriesQuery",
+    "name": "StaffSearchSeriesQuery",
     "selections": [
       {
         "alias": null,
@@ -233,7 +233,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminSeriesConnection_series",
+        "key": "StaffSeriesConnection_series",
         "kind": "LinkedHandle",
         "name": "series"
       }
@@ -242,7 +242,7 @@ return {
   "params": {
     "id": "ecd0f6138a3f151f29d806ea95a82c16",
     "metadata": {},
-    "name": "AdminSearchSeriesQuery",
+    "name": "StaffSearchSeriesQuery",
     "operationKind": "query",
     "text": null
   }

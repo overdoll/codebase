@@ -15,11 +15,11 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AssignAccountStaffRole = {
   accountId: string;
 };
-export type AdminAssignStaffButtonMutation$variables = {
+export type StaffAssignStaffButtonMutation$variables = {
   input: AssignAccountStaffRole;
 };
-export type AdminAssignStaffButtonMutationVariables = AdminAssignStaffButtonMutation$variables;
-export type AdminAssignStaffButtonMutation$data = {
+export type StaffAssignStaffButtonMutationVariables = StaffAssignStaffButtonMutation$variables;
+export type StaffAssignStaffButtonMutation$data = {
   readonly assignAccountStaffRole: {
     readonly account: {
       readonly id: string;
@@ -27,10 +27,10 @@ export type AdminAssignStaffButtonMutation$data = {
     } | null;
   } | null;
 };
-export type AdminAssignStaffButtonMutationResponse = AdminAssignStaffButtonMutation$data;
-export type AdminAssignStaffButtonMutation = {
-  variables: AdminAssignStaffButtonMutationVariables;
-  response: AdminAssignStaffButtonMutation$data;
+export type StaffAssignStaffButtonMutationResponse = StaffAssignStaffButtonMutation$data;
+export type StaffAssignStaffButtonMutation = {
+  variables: StaffAssignStaffButtonMutationVariables;
+  response: StaffAssignStaffButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -90,7 +90,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminAssignStaffButtonMutation",
+    "name": "StaffAssignStaffButtonMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -99,13 +99,13 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminAssignStaffButtonMutation",
+    "name": "StaffAssignStaffButtonMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
     "id": "dd2475eb84ff662c1f332b12b742794b",
     "metadata": {},
-    "name": "AdminAssignStaffButtonMutation",
+    "name": "StaffAssignStaffButtonMutation",
     "operationKind": "mutation",
     "text": null
   }

@@ -67,6 +67,11 @@ export default function RootClubPosts (props: Props): JSX.Element {
                   Draft
                 </Trans>
               </option>
+              <option value='ARCHIVED'>
+                <Trans>
+                  Archived
+                </Trans>
+              </option>
               <option value='REVIEW'>
                 <Trans>
                   In Review
@@ -75,6 +80,11 @@ export default function RootClubPosts (props: Props): JSX.Element {
               <option value='REJECTED'>
                 <Trans>
                   Rejected
+                </Trans>
+              </option>
+              <option value='REMOVED'>
+                <Trans>
+                  Removed
                 </Trans>
               </option>
             </Select>

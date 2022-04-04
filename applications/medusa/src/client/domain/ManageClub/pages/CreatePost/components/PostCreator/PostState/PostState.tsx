@@ -9,7 +9,6 @@ import { PauseCircle } from '@//:assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import type { PostStateFragment$key } from '@//:artifacts/PostStateFragment.graphql'
 import type { PostStateClubFragment$key } from '@//:artifacts/PostStateClubFragment.graphql'
-
 import { Trans } from '@lingui/macro'
 import PostSubmitted from './PostSubmitted/PostSubmitted'
 import { NotFoundClub } from '@//:modules/content/Placeholder'

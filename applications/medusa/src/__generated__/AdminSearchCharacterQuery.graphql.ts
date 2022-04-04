@@ -13,17 +13,17 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchCharacterQuery$variables = {
+export type StaffSearchCharacterQuery$variables = {
   name?: string | null;
 };
-export type AdminSearchCharacterQueryVariables = AdminSearchCharacterQuery$variables;
-export type AdminSearchCharacterQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchCharacterFragment">;
+export type StaffSearchCharacterQueryVariables = StaffSearchCharacterQuery$variables;
+export type StaffSearchCharacterQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCharacterFragment">;
 };
-export type AdminSearchCharacterQueryResponse = AdminSearchCharacterQuery$data;
-export type AdminSearchCharacterQuery = {
-  variables: AdminSearchCharacterQueryVariables;
-  response: AdminSearchCharacterQuery$data;
+export type StaffSearchCharacterQueryResponse = StaffSearchCharacterQuery$data;
+export type StaffSearchCharacterQuery = {
+  variables: StaffSearchCharacterQueryVariables;
+  response: StaffSearchCharacterQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -72,12 +72,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchCharacterQuery",
+    "name": "StaffSearchCharacterQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchCharacterFragment"
+        "name": "StaffSearchCharacterFragment"
       }
     ],
     "type": "Query",
@@ -87,7 +87,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminSearchCharacterQuery",
+    "name": "StaffSearchCharacterQuery",
     "selections": [
       {
         "alias": null,
@@ -254,7 +254,7 @@ return {
           "name"
         ],
         "handle": "connection",
-        "key": "AdminCharacterConnection_characters",
+        "key": "StaffCharacterConnection_characters",
         "kind": "LinkedHandle",
         "name": "characters"
       }
@@ -263,7 +263,7 @@ return {
   "params": {
     "id": "db045fa50339ae8c69aaca5e523ff2cf",
     "metadata": {},
-    "name": "AdminSearchCharacterQuery",
+    "name": "StaffSearchCharacterQuery",
     "operationKind": "query",
     "text": null
   }

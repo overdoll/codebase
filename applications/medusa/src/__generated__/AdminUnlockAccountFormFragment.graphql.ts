@@ -10,21 +10,21 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminUnlockAccountFormFragment$data = {
+export type StaffUnlockAccountFormFragment$data = {
   readonly id: string;
-  readonly " $fragmentType": "AdminUnlockAccountFormFragment";
+  readonly " $fragmentType": "StaffUnlockAccountFormFragment";
 };
-export type AdminUnlockAccountFormFragment = AdminUnlockAccountFormFragment$data;
-export type AdminUnlockAccountFormFragment$key = {
-  readonly " $data"?: AdminUnlockAccountFormFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminUnlockAccountFormFragment">;
+export type StaffUnlockAccountFormFragment = StaffUnlockAccountFormFragment$data;
+export type StaffUnlockAccountFormFragment$key = {
+  readonly " $data"?: StaffUnlockAccountFormFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffUnlockAccountFormFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminUnlockAccountFormFragment",
+  "name": "StaffUnlockAccountFormFragment",
   "selections": [
     {
       "alias": null,

@@ -13,19 +13,19 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminViewSeriesQuery$variables = {
+export type StaffViewSeriesQuery$variables = {
   slug: string;
 };
-export type AdminViewSeriesQueryVariables = AdminViewSeriesQuery$variables;
-export type AdminViewSeriesQuery$data = {
+export type StaffViewSeriesQueryVariables = StaffViewSeriesQuery$variables;
+export type StaffViewSeriesQuery$data = {
   readonly serial: {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeSeriesTitleFragment" | "ChangeSeriesThumbnailFragment">;
   } | null;
 };
-export type AdminViewSeriesQueryResponse = AdminViewSeriesQuery$data;
-export type AdminViewSeriesQuery = {
-  variables: AdminViewSeriesQueryVariables;
-  response: AdminViewSeriesQuery$data;
+export type StaffViewSeriesQueryResponse = StaffViewSeriesQuery$data;
+export type StaffViewSeriesQuery = {
+  variables: StaffViewSeriesQueryVariables;
+  response: StaffViewSeriesQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -62,7 +62,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminViewSeriesQuery",
+    "name": "StaffViewSeriesQuery",
     "selections": [
       {
         "alias": null,
@@ -93,7 +93,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AdminViewSeriesQuery",
+    "name": "StaffViewSeriesQuery",
     "selections": [
       {
         "alias": null,
@@ -212,7 +212,7 @@ return {
   "params": {
     "id": "9171d052cd67540f469db545b15bc154",
     "metadata": {},
-    "name": "AdminViewSeriesQuery",
+    "name": "StaffViewSeriesQuery",
     "operationKind": "query",
     "text": null
   }

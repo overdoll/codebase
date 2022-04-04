@@ -12,12 +12,12 @@
 // @relayRequestID 659a2fe2f20345b602f759b612bb42a7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type AdminCreateCancellationReasonQuery$variables = {
+export type StaffCreateCancellationReasonQuery$variables = {
   first?: number | null;
   after?: string | null;
 };
-export type AdminCreateCancellationReasonQueryVariables = AdminCreateCancellationReasonQuery$variables;
-export type AdminCreateCancellationReasonQuery$data = {
+export type StaffCreateCancellationReasonQueryVariables = StaffCreateCancellationReasonQuery$variables;
+export type StaffCreateCancellationReasonQuery$data = {
   readonly cancellationReasons: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,10 +25,10 @@ export type AdminCreateCancellationReasonQuery$data = {
     }>;
   };
 };
-export type AdminCreateCancellationReasonQueryResponse = AdminCreateCancellationReasonQuery$data;
-export type AdminCreateCancellationReasonQuery = {
-  variables: AdminCreateCancellationReasonQueryVariables;
-  response: AdminCreateCancellationReasonQuery$data;
+export type StaffCreateCancellationReasonQueryResponse = StaffCreateCancellationReasonQuery$data;
+export type StaffCreateCancellationReasonQuery = {
+  variables: StaffCreateCancellationReasonQueryVariables;
+  response: StaffCreateCancellationReasonQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -113,14 +113,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminCreateCancellationReasonQuery",
+    "name": "StaffCreateCancellationReasonQuery",
     "selections": [
       {
         "alias": "cancellationReasons",
         "args": null,
         "concreteType": "CancellationReasonConnection",
         "kind": "LinkedField",
-        "name": "__AdminCancellationReasonsConnection_cancellationReasons_connection",
+        "name": "__StaffCancellationReasonsConnection_cancellationReasons_connection",
         "plural": false,
         "selections": [
           {
@@ -164,7 +164,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AdminCreateCancellationReasonQuery",
+    "name": "StaffCreateCancellationReasonQuery",
     "selections": [
       {
         "alias": null,
@@ -216,7 +216,7 @@ return {
         "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "AdminCancellationReasonsConnection_cancellationReasons",
+        "key": "StaffCancellationReasonsConnection_cancellationReasons",
         "kind": "LinkedHandle",
         "name": "cancellationReasons"
       }
@@ -236,7 +236,7 @@ return {
         }
       ]
     },
-    "name": "AdminCreateCancellationReasonQuery",
+    "name": "StaffCreateCancellationReasonQuery",
     "operationKind": "query",
     "text": null
   }

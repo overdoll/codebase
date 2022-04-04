@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eda16a6f5fc524657e7b4f31e94f44b2>>
+ * @generated SignedSource<<c403ebc050a8745fcc4a273f9768ab9b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DraftPostFragment$data = {
   readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "PostModerateButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "PostModerateButtonFragment" | "PostDeleteButtonFragment">;
   readonly " $fragmentType": "DraftPostFragment";
 };
 export type DraftPostFragment = DraftPostFragment$data;
@@ -43,12 +43,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostModerateButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostDeleteButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "a8f406e20bd887326813a54f1f75128c";
+(node as any).hash = "6d6ed3f7cd8bf3638247d958febc3dd8";
 
 export default node;

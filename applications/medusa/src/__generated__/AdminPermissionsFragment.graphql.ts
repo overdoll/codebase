@@ -10,36 +10,36 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminPermissionsFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminLockAccountFragment" | "AdminAssignModeratorFragment" | "AdminAssignStaffFragment">;
-  readonly " $fragmentType": "AdminPermissionsFragment";
+export type StaffPermissionsFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFragment" | "StaffAssignModeratorFragment" | "StaffAssignStaffFragment">;
+  readonly " $fragmentType": "StaffPermissionsFragment";
 };
-export type AdminPermissionsFragment = AdminPermissionsFragment$data;
-export type AdminPermissionsFragment$key = {
-  readonly " $data"?: AdminPermissionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminPermissionsFragment">;
+export type StaffPermissionsFragment = StaffPermissionsFragment$data;
+export type StaffPermissionsFragment$key = {
+  readonly " $data"?: StaffPermissionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminPermissionsFragment",
+  "name": "StaffPermissionsFragment",
   "selections": [
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminLockAccountFragment"
+      "name": "StaffLockAccountFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminAssignModeratorFragment"
+      "name": "StaffAssignModeratorFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AdminAssignStaffFragment"
+      "name": "StaffAssignStaffFragment"
     }
   ],
   "type": "Account",

@@ -11,24 +11,24 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type AdminAccountTransactionEventFragment$data = {
+export type StaffAccountTransactionEventFragment$data = {
   readonly amount: number;
   readonly currency: Currency;
   readonly reason: string;
   readonly timestamp: any;
-  readonly " $fragmentType": "AdminAccountTransactionEventFragment";
+  readonly " $fragmentType": "StaffAccountTransactionEventFragment";
 };
-export type AdminAccountTransactionEventFragment = AdminAccountTransactionEventFragment$data;
-export type AdminAccountTransactionEventFragment$key = {
-  readonly " $data"?: AdminAccountTransactionEventFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminAccountTransactionEventFragment">;
+export type StaffAccountTransactionEventFragment = StaffAccountTransactionEventFragment$data;
+export type StaffAccountTransactionEventFragment$key = {
+  readonly " $data"?: StaffAccountTransactionEventFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionEventFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminAccountTransactionEventFragment",
+  "name": "StaffAccountTransactionEventFragment",
   "selections": [
     {
       "alias": null,

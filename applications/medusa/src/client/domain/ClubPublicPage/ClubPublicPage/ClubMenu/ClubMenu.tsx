@@ -2,7 +2,7 @@ import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubMenuFragment$key } from '@//:artifacts/ClubMenuFragment.graphql'
 import Can from '@//:modules/authorization/Can'
-import ClubAdminButton from './ClubAdminButton/ClubAdminButton'
+import ClubStaffButton from './ClubStaffButton/ClubStaffButton'
 import ClubCopyLinkButton from './ClubCopyLinkButton/ClubCopyLinkButton'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubMenuFragment on Club {
-    ...ClubAdminButtonFragment
+    ...ClubStaffButtonFragment
     ...ClubCopyLinkButtonFragment
   }
 `
@@ -27,7 +27,7 @@ export default function ClubMenu ({ query }: Props): JSX.Element {
           isDisabled={allowed === false}
         >
           <ClubCopyLinkButton query={data} />
-          <ClubAdminButton query={data} />
+          <ClubStaffButton query={data} />
         </Menu>)}
     </Can>
   )

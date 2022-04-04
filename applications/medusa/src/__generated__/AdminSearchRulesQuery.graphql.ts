@@ -13,15 +13,15 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminSearchRulesQuery$variables = {};
-export type AdminSearchRulesQueryVariables = AdminSearchRulesQuery$variables;
-export type AdminSearchRulesQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"AdminSearchRulesFragment">;
+export type StaffSearchRulesQuery$variables = {};
+export type StaffSearchRulesQueryVariables = StaffSearchRulesQuery$variables;
+export type StaffSearchRulesQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchRulesFragment">;
 };
-export type AdminSearchRulesQueryResponse = AdminSearchRulesQuery$data;
-export type AdminSearchRulesQuery = {
-  variables: AdminSearchRulesQueryVariables;
-  response: AdminSearchRulesQuery$data;
+export type StaffSearchRulesQueryResponse = StaffSearchRulesQuery$data;
+export type StaffSearchRulesQuery = {
+  variables: StaffSearchRulesQueryVariables;
+  response: StaffSearchRulesQuery$data;
 };
 
 const node: ConcreteRequest = {
@@ -29,12 +29,12 @@ const node: ConcreteRequest = {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AdminSearchRulesQuery",
+    "name": "StaffSearchRulesQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "AdminSearchRulesFragment"
+        "name": "StaffSearchRulesFragment"
       }
     ],
     "type": "Query",
@@ -44,7 +44,7 @@ const node: ConcreteRequest = {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "AdminSearchRulesQuery",
+    "name": "StaffSearchRulesQuery",
     "selections": [
       {
         "alias": null,
@@ -151,7 +151,7 @@ const node: ConcreteRequest = {
         "args": null,
         "filters": null,
         "handle": "connection",
-        "key": "AdminRulesConnection_rules",
+        "key": "StaffRulesConnection_rules",
         "kind": "LinkedHandle",
         "name": "rules"
       }
@@ -160,7 +160,7 @@ const node: ConcreteRequest = {
   "params": {
     "id": "02e2f74e9c33600cf9bc185d9093c15d",
     "metadata": {},
-    "name": "AdminSearchRulesQuery",
+    "name": "StaffSearchRulesQuery",
     "operationKind": "query",
     "text": null
   }

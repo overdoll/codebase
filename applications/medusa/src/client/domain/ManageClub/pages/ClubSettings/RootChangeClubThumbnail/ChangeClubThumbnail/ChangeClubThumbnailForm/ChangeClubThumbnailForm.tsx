@@ -10,7 +10,7 @@ import { ChangeClubThumbnailFormFragment$key } from '@//:artifacts/ChangeClubThu
 import { ChangeClubThumbnailFormMutation } from '@//:artifacts/ChangeClubThumbnailFormMutation.graphql'
 import UploadInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/UploadInput/UploadInput'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
-import GenericFile from '../../../../../../Admin/validation/GenericFile'
+import GenericFile from '../../../../../../Staff/validation/GenericFile'
 
 interface Props {
   query: ChangeClubThumbnailFormFragment$key

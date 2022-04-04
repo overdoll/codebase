@@ -10,21 +10,21 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AdminGenerateRefundAmountForAccountTransactionInputFragment$data = {
+export type StaffGenerateRefundAmountForAccountTransactionInputFragment$data = {
   readonly id: string;
-  readonly " $fragmentType": "AdminGenerateRefundAmountForAccountTransactionInputFragment";
+  readonly " $fragmentType": "StaffGenerateRefundAmountForAccountTransactionInputFragment";
 };
-export type AdminGenerateRefundAmountForAccountTransactionInputFragment = AdminGenerateRefundAmountForAccountTransactionInputFragment$data;
-export type AdminGenerateRefundAmountForAccountTransactionInputFragment$key = {
-  readonly " $data"?: AdminGenerateRefundAmountForAccountTransactionInputFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AdminGenerateRefundAmountForAccountTransactionInputFragment">;
+export type StaffGenerateRefundAmountForAccountTransactionInputFragment = StaffGenerateRefundAmountForAccountTransactionInputFragment$data;
+export type StaffGenerateRefundAmountForAccountTransactionInputFragment$key = {
+  readonly " $data"?: StaffGenerateRefundAmountForAccountTransactionInputFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffGenerateRefundAmountForAccountTransactionInputFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AdminGenerateRefundAmountForAccountTransactionInputFragment",
+  "name": "StaffGenerateRefundAmountForAccountTransactionInputFragment",
   "selections": [
     {
       "alias": null,

@@ -4,9 +4,9 @@ import {
   SelectSeriesSearchQuery,
   SelectSeriesSearchQuery$variables
 } from '@//:artifacts/SelectSeriesSearchQuery.graphql'
-import { removeNode } from '../../../../../../../../support'
+import removeNode from '@//:modules/support/removeNode'
 import { GridTile, GridWrap, LoadMoreGridTile, SeriesTileOverlay } from '../../../../../../../ContentSelection'
-import { EmptySeries, EmptyBoundary } from '../../../../../../../Placeholder'
+import { EmptyBoundary, EmptySeries } from '../../../../../../../Placeholder'
 import { Choice } from '../../../../../../Choice'
 import { ComponentSearchArguments } from '../../../../../../Search/types'
 import { ComponentChoiceArguments } from '../../../../../../Choice/types'
@@ -31,7 +31,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       title: $title
-    ) @connection(key: "AdminSeriesConnection_series")
+    ) @connection(key: "StaffSeriesConnection_series")
     {
       edges {
         node {

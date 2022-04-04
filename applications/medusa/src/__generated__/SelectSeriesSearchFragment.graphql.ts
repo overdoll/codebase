@@ -85,7 +85,7 @@ return {
       ],
       "concreteType": "SeriesConnection",
       "kind": "LinkedField",
-      "name": "__AdminSeriesConnection_series_connection",
+      "name": "__StaffSeriesConnection_series_connection",
       "plural": false,
       "selections": [
         {
