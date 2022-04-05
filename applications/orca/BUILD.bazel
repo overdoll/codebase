@@ -7,18 +7,37 @@ package(default_visibility = ["//visibility:public"])
 _DEPS = [
     "@crates//:anyhow",
     "@crates//:apollo-router",
+    "@crates//:dotenv",
+]
+
+_DATA = [
+    "schema/schema.graphql",
+    "router.yaml",
+]
+
+_SRCS = [
+    "src/main.rs"
 ]
 
 rust_binary(
     name = "internal",
-    srcs = ["src/main.rs"],
+    srcs = _SRCS,
     deps = _DEPS,
+    data = _DATA,
+)
+
+rust_image(
+    name = "local-image",
+    srcs = _SRCS,
+    deps = _DEPS,
+    data = _DATA + [".env", "dev.router.yaml"],
 )
 
 rust_image(
     name = "image",
-    srcs = ["src/main.rs"],
+    srcs = _SRCS,
     deps = _DEPS,
+    data = _DATA,
 )
 
 container_push(

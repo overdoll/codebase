@@ -162,6 +162,27 @@ applications = {
             sync("applications/hades/database", "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/applications/hades/database"),
         ],
     },
+    "orca": {
+        "type": "go",
+        "directory": "orca",
+        "image_reference": "orca-image",
+        "image_target": "//applications/orca:local-image",
+        "binary_target": "//applications/orca:internal",
+        "binary_output": "applications/orca",
+        "container_workdir": "/app/applications/orca/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/orca/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/orca:local-image",
+        "dependencies": [
+            "applications/orca/schema/schema.graphql",
+            "applications/orca/router.yaml",
+            "applications/orca/.env",
+        ],
+        "live_update": [
+            sync("applications/orca/schema/schema.graphql", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/schema/schema.graphql"),
+            sync("applications/orca/router.yaml", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/router.yaml"),
+            sync("applications/orca/.env", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/.env"),
+        ],
+    },
 }
 
 # Build applications with our helper function
