@@ -8,4 +8,4 @@ server:
     methods: [ POST, OPTIONS ]
     expose_headers: [ ]
 
-  listen: 127.0.0.1:8000
+  listen: 0.0.0.0:8000

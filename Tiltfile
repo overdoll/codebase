@@ -175,11 +175,13 @@ applications = {
         "dependencies": [
             "applications/orca/schema/schema.graphql",
             "applications/orca/router.yaml",
+            "applications/orca/dev.router.yaml",
             "applications/orca/.env",
         ],
         "live_update": [
             sync("applications/orca/schema/schema.graphql", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/schema/schema.graphql"),
             sync("applications/orca/router.yaml", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/router.yaml"),
+            sync("applications/orca/dev.router.yaml", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/dev.router.yaml"),
             sync("applications/orca/.env", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/.env"),
         ],
     },

@@ -29,14 +29,17 @@ rust_binary(
 rust_image(
     name = "local-image",
     base = "@rust_base_image//image",
-    binary = ":internal",
-    data = [".env", "dev.router.yaml"],
+    srcs = _SRCS,
+    deps = _DEPS,
+    data = _DATA + [".env", "dev.router.yaml"],
 )
 
 rust_image(
     name = "image",
     base = "@rust_base_image//image",
-    binary = ":internal",
+    srcs = _SRCS,
+    deps = _DEPS,
+    data = _DATA,
 )
 
 container_push(

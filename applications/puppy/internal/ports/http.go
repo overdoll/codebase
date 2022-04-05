@@ -29,5 +29,12 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		proxy.ServeHTTP(w, r)
 	}))
 
+	proxy2 := httputil.NewSingleHostReverseProxy(u)
+
+	// proxy OPTIONS to the server
+	rtr.OPTIONS("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
+		proxy2.ServeHTTP(w, r)
+	}))
+
 	return rtr
 }
