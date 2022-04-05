@@ -236,6 +236,13 @@ container_pull(
 )
 
 container_pull(
+    name = "rust_base_image",
+    registry = "docker.io",
+    repository = "library/rust",
+    tag = "1.59.0",
+)
+
+container_pull(
     name = "go_ffmpeg_image",
     registry = "docker.io",
     repository = "jrottenberg/ffmpeg",

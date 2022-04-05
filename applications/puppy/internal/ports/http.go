@@ -16,7 +16,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	rtr := router.NewRawGinRouter()
 
-	u, err := url.Parse(os.Getenv("MEDUSA_SERVICE"))
+	u, err := url.Parse(os.Getenv("ORCA_SERVICE"))
 	if err != nil {
 		panic(err)
 	}

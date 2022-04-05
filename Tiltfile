@@ -168,9 +168,9 @@ applications = {
         "image_reference": "orca-image",
         "image_target": "//applications/orca:local-image",
         "binary_target": "//applications/orca:internal",
-        "binary_output": "applications/orca",
-        "container_workdir": "/app/applications/orca/local-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/orca/local-image.binary_/local-image.binary",
+        "binary_output": "applications/orca/internal",
+        "container_workdir": "/app/applications/orca/local-image_binary.runfiles/overdoll/",
+        "container_binary": "applications/orca/local-image_binary",
         "bazel_image": "bazel/applications/orca:local-image",
         "dependencies": [
             "applications/orca/schema/schema.graphql",

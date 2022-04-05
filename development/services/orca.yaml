@@ -1,0 +1,7 @@
+image:
+  repository: orca-image
+
+nameOverride: "orca"
+
+service: true
+http: true
