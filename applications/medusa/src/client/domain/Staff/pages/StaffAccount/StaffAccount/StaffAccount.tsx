@@ -1,12 +1,14 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { StaffAccountQuery } from '@//:artifacts/StaffAccountQuery.graphql'
-import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
 import StaffClubSupporterSubscriptions from './StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions'
 import StaffTransactions from './StaffTransactions/StaffTransactions'
 import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
 import StaffPermissions from './StaffPermissions/StaffPermissions'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import ProfilePageButton from '../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
 
 interface Props {
   query: PreloadedQuery<StaffAccountQuery>
@@ -19,6 +21,7 @@ const Query = graphql`
       ...StaffClubSupporterSubscriptionsFragment
       ...StaffTransactionsFragment
       ...LargeAccountHeaderFragment
+      ...ProfilePageButtonFragment
     }
   }
 `
@@ -35,7 +38,14 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <LargeAccountHeader query={queryData.account} />
+      <HStack spacing={2} justify='space-between'>
+        <LargeAccountHeader query={queryData.account} />
+        <Menu
+          p={1}
+        >
+          <ProfilePageButton query={queryData.account} />
+        </Menu>
+      </HStack>
       <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Wrap>

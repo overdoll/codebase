@@ -7,7 +7,7 @@ import { ObserverManagerProvider } from '@//:modules/content/Posts/support/Obser
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
-import { Box, Flex, Stack, useUpdateEffect } from '@chakra-ui/react'
+import { Box, Flex, HStack, Stack, useUpdateEffect } from '@chakra-ui/react'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFloatingFooter } from '@//:modules/content/PageLayout'
 import { ClubPeopleGroup } from '@//:assets/icons'
 import SuggestedPosts from './SuggestedPosts/SuggestedPosts'
@@ -18,6 +18,7 @@ import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader
 import { useQueryParam } from 'use-query-params'
 import ClubSuspendedStaffAlert
   from '../../ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
+import LockedAccountTrigger from '../../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -58,6 +59,14 @@ export default function PublicPost (props: Props): JSX.Element {
 
   const PostComponent = (
     <PageFilledWrapper>
+      <PageFixedHeader>
+        <FixedHeaderWrapper>
+          <HStack spacing={2} justify='flex-end'>
+            <LockedAccountTrigger />
+            <PostSearchButton routeTo='/search' />
+          </HStack>
+        </FixedHeaderWrapper>
+      </PageFixedHeader>
       <ClubSuspendedStaffAlert query={queryData.post.club} />
       <Stack spacing={4}>
         <ObserverManagerProvider>

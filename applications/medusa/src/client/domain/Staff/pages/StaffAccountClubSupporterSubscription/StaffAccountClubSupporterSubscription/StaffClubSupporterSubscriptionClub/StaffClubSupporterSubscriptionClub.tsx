@@ -2,11 +2,13 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   StaffClubSupporterSubscriptionClubFragment$key
 } from '@//:artifacts/StaffClubSupporterSubscriptionClubFragment.graphql'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, HStack, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import LargeClubHeader from '../../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
-import { LinkTile } from '@//:modules/content/ContentSelection'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import ClubPageButton from '../../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton'
+import ClubStaffButton from '../../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubStaffButton/ClubStaffButton'
 
 interface Props {
   query: StaffClubSupporterSubscriptionClubFragment$key
@@ -16,7 +18,8 @@ const Fragment = graphql`
   fragment StaffClubSupporterSubscriptionClubFragment on IAccountClubSupporterSubscription {
     club {
       ...LargeClubHeaderFragment
-      slug
+      ...ClubPageButtonFragment
+      ...ClubStaffButtonFragment
     }
   }
 `
@@ -34,9 +37,15 @@ export default function StaffClubSupporterSubscriptionClub ({ query }: Props): J
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
-        <LinkTile to={`/staff/club${data.club.slug}`}>
+        <HStack spacing={2} justify='space-between'>
           <LargeClubHeader query={data.club} />
-        </LinkTile>
+          <Menu
+            p={1}
+          >
+            <ClubPageButton query={data.club} />
+            <ClubStaffButton query={data.club} />
+          </Menu>
+        </HStack>
       </Box>
     </Stack>
   )

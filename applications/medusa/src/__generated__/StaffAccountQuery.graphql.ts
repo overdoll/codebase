@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d1063ae69aab95590fdc31224ccefe40>>
- * @relayHash 4fe585d47ca5f782cfb9040724049ccc
+ * @generated SignedSource<<15c6e5a8f7410fc820a113e3b280afe4>>
+ * @relayHash 52e7d7ce6381f7d82d9de54fb93cba3b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4fe585d47ca5f782cfb9040724049ccc
+// @relayRequestID 52e7d7ce6381f7d82d9de54fb93cba3b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type StaffAccountQuery$variables = {
 export type StaffAccountQueryVariables = StaffAccountQuery$variables;
 export type StaffAccountQuery$data = {
   readonly account: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment" | "ProfilePageButtonFragment">;
   } | null;
 };
 export type StaffAccountQueryResponse = StaffAccountQuery$data;
@@ -185,6 +185,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "LargeAccountHeaderFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ProfilePageButtonFragment"
           }
         ],
         "storageKey": null
@@ -523,7 +528,7 @@ return {
     ]
   },
   "params": {
-    "id": "4fe585d47ca5f782cfb9040724049ccc",
+    "id": "52e7d7ce6381f7d82d9de54fb93cba3b",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",
@@ -532,6 +537,6 @@ return {
 };
 })();
 
-(node as any).hash = "36a3bcf43bcfd9e861c7307e079fad47";
+(node as any).hash = "239036c0d17b3f51c318b8bdd8611690";
 
 export default node;

@@ -9,7 +9,7 @@ export default function PageFilledWrapper ({
   children
 }: Props): JSX.Element {
   return (
-    <Center mt={6}>
+    <Center mt={12}>
       <Box
         w={['full', 'lg']}
         pl={[1, 0]}

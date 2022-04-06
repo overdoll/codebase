@@ -1,6 +1,6 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ModerationPostQuery } from '@//:artifacts/ModerationPostQuery.graphql'
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { Box, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
@@ -21,7 +21,11 @@ import ModerationPostActions from './ModerationPostActions/ModerationPostActions
 import TagHeader from '../../../../Staff/components/TagHeader/TagHeader'
 import LargeAccountHeader from '../../../../Staff/components/LargeAccountHeader/LargeAccountHeader'
 import LargeClubHeader from '../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
-import { LinkTile } from '@//:modules/content/ContentSelection'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import ClubPageButton from '../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton'
+import ClubStaffButton from '../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubStaffButton/ClubStaffButton'
+import ProfilePageButton from '../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import ProfileStaffButton from '../../../../Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 
 interface Props {
   query: PreloadedQuery<ModerationPostQuery>
@@ -41,11 +45,13 @@ const Query = graphql`
       state
       contributor {
         ...LargeAccountHeaderFragment
-        username
+        ...ProfilePageButtonFragment
+        ...ProfileStaffButtonFragment
       }
       club {
         ...LargeClubHeaderFragment
-        slug
+        ...ClubStaffButtonFragment
+        ...ClubPageButtonFragment
       }
       ...PostPreviewFragment
       ...PostTagsPreviewFragment
@@ -124,9 +130,15 @@ export default function ModerationPost ({ query }: Props): JSX.Element {
                       Club
                     </Trans>
                   </PageSectionTitle>
-                  <LinkTile to={`/staff/club/${queryData.post.club.slug}`}>
+                  <HStack spacing={2} justify='space-between'>
                     <LargeClubHeader query={queryData.post.club} />
-                  </LinkTile>
+                    <Menu
+                      p={1}
+                    >
+                      <ClubPageButton query={queryData.post.club} />
+                      <ClubStaffButton query={queryData.post.club} />
+                    </Menu>
+                  </HStack>
                 </PageSectionWrap>
               </Box>
               <Box>
@@ -136,9 +148,15 @@ export default function ModerationPost ({ query }: Props): JSX.Element {
                       Contributor
                     </Trans>
                   </PageSectionTitle>
-                  <LinkTile to={`/staff/account/${queryData.post.contributor.username}`}>
+                  <HStack spacing={2} justify='space-between'>
                     <LargeAccountHeader query={queryData.post.contributor} />
-                  </LinkTile>
+                    <Menu
+                      p={1}
+                    >
+                      <ProfilePageButton query={queryData.post.contributor} />
+                      <ProfileStaffButton query={queryData.post.contributor} />
+                    </Menu>
+                  </HStack>
                 </PageSectionWrap>
               </Box>
               <Box>

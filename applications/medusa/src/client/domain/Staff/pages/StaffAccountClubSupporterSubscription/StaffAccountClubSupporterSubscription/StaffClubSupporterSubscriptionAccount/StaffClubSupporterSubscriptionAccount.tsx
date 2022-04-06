@@ -6,11 +6,14 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, HStack, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import LargeAccountHeader from '../../../../components/LargeAccountHeader/LargeAccountHeader'
 import { LinkTile } from '@//:modules/content/ContentSelection'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import ProfilePageButton from '../../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import ProfileStaffButton from '../../../../../Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 
 interface Props {
   query: StaffClubSupporterSubscriptionAccountFragment$key
@@ -21,7 +24,8 @@ const Fragment = graphql`
     supporterSince
     account {
       ...LargeAccountHeaderFragment
-      username
+      ...ProfilePageButtonFragment
+      ...ProfileStaffButtonFragment
     }
   }
 `
@@ -43,9 +47,15 @@ export default function StaffClubSupporterSubscriptionAccount ({ query }: Props)
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
-        <LinkTile to={`/staff/account/${data.account.username}`}>
+        <HStack spacing={2} justify='space-between'>
           <LargeAccountHeader query={data.account} />
-        </LinkTile>
+          <Menu
+            p={1}
+          >
+            <ProfilePageButton query={data.account} />
+            <ProfileStaffButton query={data.account} />
+          </Menu>
+        </HStack>
       </Box>
       <Box>
         <PageSectionWrap>

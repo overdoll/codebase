@@ -1,7 +1,7 @@
 import type { BillingSummaryFragment$key } from '@//:artifacts/BillingSummaryFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
-import { Box, Center, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Center, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import LargeClubHeader from '../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import displayPrice from '@//:modules/support/displayPrice'

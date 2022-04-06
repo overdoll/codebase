@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<118e38d79ded42342fa720c61e448fa3>>
- * @relayHash 64bae99ca9feb609966232a9f6bf5307
+ * @generated SignedSource<<63b5d0e28e42b41bbba26c998ae11567>>
+ * @relayHash f6a0aba417ad6001cdd982852ff0dee6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 64bae99ca9feb609966232a9f6bf5307
+// @relayRequestID f6a0aba417ad6001cdd982852ff0dee6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -383,6 +383,13 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "viewerIsOwner",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ClubSuspension",
                 "kind": "LinkedField",
                 "name": "suspension",
@@ -537,7 +544,7 @@ return {
     ]
   },
   "params": {
-    "id": "64bae99ca9feb609966232a9f6bf5307",
+    "id": "f6a0aba417ad6001cdd982852ff0dee6",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

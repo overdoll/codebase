@@ -8,7 +8,10 @@ import LargeClubHeader from '../../../../ManageClub/components/LargeClubHeader/L
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
-import { LinkTile } from '@//:modules/content/ContentSelection'
+import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
+import ClubPageButton from '../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton'
+import ProfilePageButton from '../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import ProfileStaffButton from '../../../../Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 
 interface Props {
   query: PreloadedQuery<StaffClubQuery>
@@ -21,9 +24,11 @@ const Query = graphql`
       ...LargeClubHeaderFragment
       ...StaffClubStatusFragment
       ...StaffClubInfractionsFragment
+      ...ClubPageButtonFragment
       owner {
-        username
         ...LargeAccountHeaderFragment
+        ...ProfilePageButtonFragment
+        ...ProfileStaffButtonFragment
       }
     }
   }
@@ -41,8 +46,13 @@ export default function StaffClub ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={6}>
-      <HStack spacing={3}>
+      <HStack spacing={2} justify='space-between'>
         <LargeClubHeader query={queryData.club} />
+        <Menu
+          p={1}
+        >
+          <ClubPageButton query={queryData.club} />
+        </Menu>
       </HStack>
       <Stack spacing={8}>
         <Box>
@@ -59,9 +69,15 @@ export default function StaffClub ({ query }: Props): JSX.Element {
               </Trans>
             </PageSectionTitle>
           </PageSectionWrap>
-          <LinkTile to={`/staff/account/${queryData.club.owner.username}`}>
+          <HStack spacing={2} justify='space-between'>
             <LargeAccountHeader query={queryData.club.owner} />
-          </LinkTile>
+            <Menu
+              p={1}
+            >
+              <ProfilePageButton query={queryData.club.owner} />
+              <ProfileStaffButton query={queryData.club.owner} />
+            </Menu>
+          </HStack>
         </Box>
       </Stack>
     </Stack>
