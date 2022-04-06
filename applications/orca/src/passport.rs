@@ -1,7 +1,6 @@
-use apollo_router_core::ResponseBody::GraphQL;
 use apollo_router_core::{
-    register_plugin, Plugin, QueryPlannerRequest, QueryPlannerResponse, ResponseBody,
-    RouterRequest, RouterResponse, ServiceBuilderExt, SubgraphRequest, SubgraphResponse,
+    register_plugin, Plugin, ResponseBody, RouterRequest, RouterResponse, SubgraphRequest,
+    SubgraphResponse,
 };
 use tower::{util::BoxService, BoxError, ServiceExt};
 

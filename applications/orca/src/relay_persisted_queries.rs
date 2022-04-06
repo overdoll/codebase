@@ -1,13 +1,12 @@
 use std::env;
-use std::{ops::ControlFlow, path::PathBuf};
+use std::ops::ControlFlow;
 
 use apollo_router_core::{
-    plugin_utils, register_plugin, Plugin, QueryPlannerRequest, QueryPlannerResponse, ResponseBody,
-    RouterRequest, RouterResponse, ServiceBuilderExt, SubgraphRequest, SubgraphResponse,
+    plugin_utils, register_plugin, Plugin, RouterRequest, RouterResponse, ServiceBuilderExt,
 };
 use http::StatusCode;
-use redis::aio::{Connection, ConnectionLike, MultiplexedConnection};
-use redis::{RedisError, RedisResult};
+use redis::aio::MultiplexedConnection;
+use redis::RedisResult;
 use tower::{util::BoxService, BoxError, ServiceBuilder, ServiceExt};
 
 struct RelayPersistedQueries {
@@ -35,12 +34,12 @@ impl Plugin for RelayPersistedQueries {
         &mut self,
         service: BoxService<RouterRequest, RouterResponse, BoxError>,
     ) -> BoxService<RouterRequest, RouterResponse, BoxError> {
-        let conn = self.conn.clone();
+        let conn: Option<MultiplexedConnection> = self.conn.clone();
         ServiceBuilder::new()
             .async_checkpoint(move |req: RouterRequest| {
+                let new_conn: Option<MultiplexedConnection> = conn.clone();
                 return Box::pin(async move {
                     let query_key = req.context.request.body().extensions.get("queryId");
-                    let new_conn: &mut MultiplexedConnection = conn.as_ref().as_mut().unwrap();
 
                     if query_key.is_none() {
                         return Ok(ControlFlow::Continue(req));
@@ -48,7 +47,7 @@ impl Plugin for RelayPersistedQueries {
 
                     let result: RedisResult<String> = redis::cmd("GET")
                         .arg(query_key.unwrap().to_string())
-                        .query_async(new_conn)
+                        .query_async(&mut new_conn.unwrap())
                         .await;
 
                     if result.is_err() {
@@ -66,11 +65,13 @@ impl Plugin for RelayPersistedQueries {
                         return Ok(ControlFlow::Break(res));
                     }
 
+                    let resulted = result.unwrap().clone();
+
                     req.context
                         .upsert(
                             &"relay_persisted_query".to_string(),
                             |_passport: String| {
-                                return result.unwrap();
+                                return resulted.clone();
                             },
                             || "".to_string(),
                         )

@@ -17,6 +17,7 @@ _DEPS = [
     "@crates//:http",
     "@crates//:schemars",
     "@crates//:dotenv",
+    "@crates//:redis",
 ]
 
 _DATA = [
