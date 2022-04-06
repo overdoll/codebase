@@ -1,2 +1,14 @@
 server:
+  cors:
+    allow_any_origin: false
+    origins: [ ]
+    allow_credentials: false
+    allow_headers: [ ]
+    methods: [ ]
+    expose_headers: [ ]
+
   listen: 0.0.0.0:8000
+
+plugins:
+  overdoll.passport
+  overdoll.relay_persisted_queries

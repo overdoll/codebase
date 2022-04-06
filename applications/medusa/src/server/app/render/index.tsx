@@ -77,8 +77,10 @@ async function request (req, res): Promise<void> {
         process.env.SERVER_GRAPHQL_ENDPOINT as string,
         {
           operationName: params.name,
-          queryId: params.id,
-          variables
+          variables,
+          extensions: {
+            queryId: params.id
+          }
         },
         {
           // forward all headers coming from client

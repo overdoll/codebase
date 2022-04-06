@@ -7,6 +7,15 @@ package(default_visibility = ["//visibility:public"])
 _DEPS = [
     "@crates//:anyhow",
     "@crates//:apollo-router",
+    "@crates//:apollo-router-core",
+    "@crates//:tower",
+    "@crates//:tokio",
+    "@crates//:tokio-util",
+    "@crates//:serde",
+    "@crates//:serde_json",
+    "@crates//:serde_json_bytes",
+    "@crates//:http",
+    "@crates//:schemars",
     "@crates//:dotenv",
 ]
 
@@ -16,7 +25,9 @@ _DATA = [
 ]
 
 _SRCS = [
-    "src/main.rs"
+    "src/main.rs",
+    "src/passport.rs",
+    "src/relay_persisted_queries.rs",
 ]
 
 rust_binary(

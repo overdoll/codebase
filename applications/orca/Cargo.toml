@@ -9,5 +9,15 @@ path = "src/main.rs"
 
 [dependencies]
 apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.2" }
+apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.2" }
+tower = { version = "0.4.12", features = ["full"] }
+tokio = { version = "1.17.0", features = ["full"] }
+tokio-util = { version = "0.7.0", features = ["net", "codec"] }
+serde = "1.0.136"
+serde_json = "1.0.79"
+serde_json_bytes = "0.2.0"
 anyhow = "1.0.55"
 dotenv = "0.15.0"
+http = "0.2.6"
+schemars = "0.8.8"
+redis = { version = "0.21.5", features = ["tokio-comp"] }

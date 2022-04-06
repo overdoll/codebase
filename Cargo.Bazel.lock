@@ -1,5 +1,5 @@
 {
-  "checksum": "88edd245cc346e369bce8982997ca73b2984c8dba3c597ab9e4144bab14fde19",
+  "checksum": "f31a7d3698d7ad6b5c59959f58b0389ff8c5b88218748cae0f1ed709414037c9",
   "crates": {
     "addr2line 0.17.0": {
       "name": "addr2line",
@@ -4815,6 +4815,51 @@
       },
       "license": "MIT OR Apache-2.0"
     },
+    "dotenv 0.15.0": {
+      "name": "dotenv",
+      "version": "0.15.0",
+      "repository": {
+        "Http": {
+          "url": "https://crates.io/api/v1/crates/dotenv/0.15.0/download",
+          "sha256": "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
+        }
+      },
+      "targets": [
+        {
+          "Library": {
+            "crate_name": "dotenv",
+            "crate_root": "src/lib.rs",
+            "srcs": {
+              "include": [
+                "**/*.rs"
+              ],
+              "exclude": []
+            }
+          }
+        },
+        {
+          "Binary": {
+            "crate_name": "dotenv",
+            "crate_root": "src/bin/dotenv.rs",
+            "srcs": {
+              "include": [
+                "**/*.rs"
+              ],
+              "exclude": []
+            }
+          }
+        }
+      ],
+      "library_target_name": "dotenv",
+      "common_attrs": {
+        "compile_data_glob": [
+          "**"
+        ],
+        "edition": "2018",
+        "version": "0.15.0"
+      },
+      "license": "MIT"
+    },
     "downcast 0.11.0": {
       "name": "downcast",
       "version": "0.11.0",
@@ -4959,13 +5004,13 @@
       },
       "license": "MIT/Apache-2.0"
     },
-    "encoding_rs 0.8.30": {
+    "encoding_rs 0.8.31": {
       "name": "encoding_rs",
-      "version": "0.8.30",
+      "version": "0.8.31",
       "repository": {
         "Http": {
-          "url": "https://crates.io/api/v1/crates/encoding_rs/0.8.30/download",
-          "sha256": "7896dc8abb250ffdda33912550faa54c88ec8b998dec0b2c55ab224921ce11df"
+          "url": "https://crates.io/api/v1/crates/encoding_rs/0.8.31/download",
+          "sha256": "9852635589dc9f9ea1b6fe9f05b50ef208c85c834a562f0c6abb1c475736ec2b"
         }
       },
       "targets": [
@@ -5010,21 +5055,21 @@
               "target": "cfg_if"
             },
             {
-              "id": "encoding_rs 0.8.30",
+              "id": "encoding_rs 0.8.31",
               "target": "build_script_build"
             }
           ],
           "selects": {}
         },
         "edition": "2018",
-        "version": "0.8.30"
+        "version": "0.8.31"
       },
       "build_script_attrs": {
         "data_glob": [
           "**"
         ]
       },
-      "license": null
+      "license": "(Apache-2.0 OR MIT) AND BSD-3-Clause"
     },
     "error-chain 0.12.4": {
       "name": "error-chain",
@@ -12615,6 +12660,46 @@
             {
               "id": "apollo-router 0.1.0-preview.2",
               "target": "apollo_router"
+            },
+            {
+              "id": "apollo-router-core 0.1.0-preview.2",
+              "target": "apollo_router_core"
+            },
+            {
+              "id": "dotenv 0.15.0",
+              "target": "dotenv"
+            },
+            {
+              "id": "http 0.2.6",
+              "target": "http"
+            },
+            {
+              "id": "schemars 0.8.8",
+              "target": "schemars"
+            },
+            {
+              "id": "serde 1.0.136",
+              "target": "serde"
+            },
+            {
+              "id": "serde_json 1.0.79",
+              "target": "serde_json"
+            },
+            {
+              "id": "serde_json_bytes 0.2.0",
+              "target": "serde_json_bytes"
+            },
+            {
+              "id": "tokio 1.17.0",
+              "target": "tokio"
+            },
+            {
+              "id": "tokio-util 0.7.1",
+              "target": "tokio_util"
+            },
+            {
+              "id": "tower 0.4.12",
+              "target": "tower"
             }
           ],
           "selects": {}
@@ -15174,7 +15259,7 @@
                 "target": "base64"
               },
               {
-                "id": "encoding_rs 0.8.30",
+                "id": "encoding_rs 0.8.31",
                 "target": "encoding_rs"
               },
               {
@@ -24053,6 +24138,7 @@
     "brotli 3.3.4",
     "brotli-decompressor 2.3.2",
     "cc 1.0.73",
+    "dotenv 0.15.0",
     "prettytable-rs 0.8.0",
     "pulldown-cmark 0.9.1",
     "raw-cpuid 10.3.0",

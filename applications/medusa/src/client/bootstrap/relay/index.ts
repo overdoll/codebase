@@ -24,8 +24,10 @@ async function fetchRelay (params, variables): Promise<any> {
     '/api/graphql',
     {
       operationName: params.name,
-      queryId: params.id,
-      variables
+      variables,
+      extensions: {
+        queryId: params.id
+      }
     },
     {
       headers: {

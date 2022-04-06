@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-const bodyKey = "passport"
+const bodyKey = "extensions.passport"
 
 type bodyLogWriter struct {
 	gin.ResponseWriter

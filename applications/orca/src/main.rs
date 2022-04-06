@@ -4,6 +4,9 @@ use std::env;
 
 use anyhow::Result;
 
+mod passport;
+mod relay_persisted_queries;
+
 fn main() -> Result<()> {
     let my_path = env::current_dir()?;
     let s = format!("{}/applications/orca/.env", my_path.display());
