@@ -8,8 +8,8 @@ name = "orca_library"
 path = "src/main.rs"
 
 [dependencies]
-apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.2" }
-apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.2" }
+apollo-router = { git = "https://github.com/apollographql/router", rev = "e1bdbaa208b56b2386fc43fa54d66dc2999bf33c" }
+apollo-router-core = { git = "https://github.com/apollographql/router", rev = "e1bdbaa208b56b2386fc43fa54d66dc2999bf33c" }
 tower = { version = "0.4.12", features = ["full"] }
 tokio = { version = "1.17.0", features = ["full"] }
 tokio-util = { version = "0.7.0", features = ["net", "codec"] }
@@ -21,3 +21,4 @@ dotenv = "0.15.0"
 http = "0.2.6"
 schemars = "0.8.8"
 redis = { version = "0.21.5", features = ["tokio-comp"] }
+async-trait = "0.1.53"

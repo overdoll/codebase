@@ -1,14 +1,15 @@
 server:
   cors:
     allow_any_origin: false
-    origins: [ ]
-    allow_credentials: false
-    allow_headers: [ ]
-    methods: [ ]
+    origins:
+      - https://overdoll.com
+    allow_credentials: true
+    allow_headers: [ Content-Type, Authorization ]
+    methods: [ POST, OPTIONS ]
     expose_headers: [ ]
 
   listen: 0.0.0.0:8000
 
 plugins:
-  overdoll.passport
-  overdoll.relay_persisted_queries
+  overdoll.passport:
+  overdoll.relay_persisted_queries:

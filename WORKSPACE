@@ -38,11 +38,6 @@ crates_repository(
     lockfile = "//:Cargo.Bazel.lock",
     manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
     annotations = {
-            "openssl-sys": [crate.annotation(
-                build_script_env = {
-                    "OPENSSL_NO_VENDOR": "1",
-                }
-            )],
             "v8": [crate.annotation(
                data = [
                    "@rusty_v8//file"
@@ -67,17 +62,6 @@ crates_repository(
                },
                patch_args = ["-p1"],
                patches = ["@overdoll//.patches:router_bridge.patch"],
-            )],
-            "rover-client": [crate.annotation(
-               gen_build_script = False,
-               data = [
-                   "@overdoll//third_party/rover_client:files"
-               ],
-               rustc_env = {
-                   "STATIC_DIR": "${pwd}/third_party/rover_client",
-               },
-               patch_args = ["-p1"],
-               patches = ["@overdoll//.patches:rover_client.patch"],
             )],
             "opentelemetry-otlp": [crate.annotation(
                build_script_data = [

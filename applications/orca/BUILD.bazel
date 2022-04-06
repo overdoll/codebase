@@ -1,8 +1,12 @@
 load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("@rules_rust//rust:defs.bzl", "rust_library", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
 
 package(default_visibility = ["//visibility:public"])
+
+_PROC_MACRO_DEPS = [
+    "@crates//:async-trait",
+]
 
 _DEPS = [
     "@crates//:anyhow",
@@ -34,24 +38,30 @@ _SRCS = [
 rust_binary(
     name = "internal",
     srcs = _SRCS,
-    deps = _DEPS,
     data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
 )
 
 rust_image(
     name = "local-image",
-    base = "@rust_base_image//image",
     srcs = _SRCS,
+    base = "@rust_base_image//image",
+    data = _DATA + [
+        ".env",
+        "dev.router.yaml",
+    ],
+    proc_macro_deps = _PROC_MACRO_DEPS,
     deps = _DEPS,
-    data = _DATA + [".env", "dev.router.yaml"],
 )
 
 rust_image(
     name = "image",
-    base = "@rust_base_image//image",
     srcs = _SRCS,
-    deps = _DEPS,
+    base = "@rust_base_image//image",
     data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
 )
 
 container_push(

@@ -8,7 +8,7 @@ const RedisStore = connect(session)
 export default {
   store: new RedisStore({
     client: redis.createClient({
-      host: process.env.REDIS_URL,
+      host: process.env.REDIS_HOST,
       db: 0
     }),
     serializer: {

@@ -444,18 +444,24 @@ type AccountResolver interface {
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Audience) (*types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceCurationProfileResolver interface {
 	Audiences(ctx context.Context, obj *types.AudienceCurationProfile) ([]*types.Audience, error)
 }
 type CategoryResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Category) (*types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CategoryCurationProfileResolver interface {
 	Categories(ctx context.Context, obj *types.CategoryCurationProfile) ([]*types.Category, error)
 }
 type CharacterResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Character) (*types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type ClubResolver interface {
@@ -525,6 +531,8 @@ type QueryResolver interface {
 	Serial(ctx context.Context, slug string) (*types.Series, error)
 }
 type SeriesResolver interface {
+	Thumbnail(ctx context.Context, obj *types.Series) (*types.Resource, error)
+
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 
@@ -2256,7 +2264,7 @@ var sources = []*ast.Source{
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail: Resource @goField(forceResolver: true)
 
   """A title for this audience."""
   title: String!
@@ -2449,7 +2457,7 @@ extend type Mutation {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail: Resource @goField(forceResolver: true)
 
   """A title for this category."""
   title: String!
@@ -2616,7 +2624,7 @@ type Mutation {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail: Resource @goField(forceResolver: true)
 
   """A name for this character."""
   name: String!
@@ -3611,7 +3619,7 @@ extend type Club @key(fields: "id")  {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail: Resource @goField(forceResolver: true)
 
   """A title for this series."""
   title: String!
@@ -3770,6 +3778,8 @@ extend type Mutation {
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
+
+scalar Date
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
@@ -6007,14 +6017,14 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 		Object:     "Audience",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Audience().Thumbnail(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6571,14 +6581,14 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		Object:     "Category",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Category().Thumbnail(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7100,14 +7110,14 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		Object:     "Character",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Character().Thumbnail(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11580,14 +11590,14 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 		Object:     "Series",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail, nil
+		return ec.resolvers.Series().Thumbnail(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15065,12 +15075,22 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Audience_thumbnail(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Audience_thumbnail(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Audience_title(ctx, field, obj)
@@ -15326,12 +15346,22 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Category_thumbnail(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Category_thumbnail(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Category_title(ctx, field, obj)
@@ -15577,12 +15607,22 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Character_thumbnail(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Character_thumbnail(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "name":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Character_name(ctx, field, obj)
@@ -17524,12 +17564,22 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Series_thumbnail(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Series_thumbnail(ctx, field, obj)
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
+			})
 		case "title":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Series_title(ctx, field, obj)

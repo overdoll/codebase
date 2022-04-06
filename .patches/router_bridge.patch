@@ -25,31 +25,44 @@ index b4b1fa3..9157fdc 100644
  }
 
 diff --git a/src/js.rs b/src/js.rs
-index f84892e..36adefe 100644
+index 40875be..aca6659 100644
 --- a/src/js.rs
 +++ b/src/js.rs
-@@ -39,7 +39,7 @@ impl Js {
-         source: &'static str,
-     ) -> Result<Ok, Error> {
+@@ -55,7 +55,7 @@ impl Js {
+             .build();
+
          // The snapshot is created in our build.rs script and included in our binary image
--        let buffer = include_bytes!("../snapshots/query_runtime.snap");
+-        let buffer = include_bytes!(concat!(env!("OUT_DIR"), "/query_runtime.snap"));
 +        let buffer = include_bytes!(concat!(env!("STATIC_DIR"), "/snapshots/query_runtime.snap"));
 
          // Use our snapshot to provision our new runtime
          let options = RuntimeOptions {
-diff --git a/src/plan.rs b/src/plan.rs
-index 3905e11..70eba86 100644
---- a/src/plan.rs
-+++ b/src/plan.rs
-@@ -156,7 +156,7 @@ pub fn plan<T: DeserializeOwned + 'static>(
-         .with_parameter("queryString", context.query)?
-         .with_parameter("options", options)?
-         .with_parameter("operationName", context.operation_name)?
--        .execute("do_plan", include_str!("../js-dist/do_plan.js"))
-+        .execute("do_plan", include_str!(concat!(env!("STATIC_DIR"), "/js-dist/do_plan.js")))
-         .map(|inner: Result<T, Vec<PlanningError>>| {
-             inner.map_err(|errors| PlanningErrors { errors })
-         })
+diff --git a/src/planner.rs b/src/planner.rs
+index 8d125bd..4736aa4 100644
+--- a/src/planner.rs
++++ b/src/planner.rs
+@@ -199,7 +199,7 @@ where
+     /// Instantiate a `Planner` from a schema string
+     pub async fn new(schema: String) -> Result<Self, Vec<BridgeError>> {
+         let worker =
+-            JsWorker::<PlanCmd, BridgeResult<T>>::new(include_str!("../js-dist/plan_worker.js"));
++            JsWorker::<PlanCmd, BridgeResult<T>>::new(include_str!(concat!(env!("STATIC_DIR"), "/js-dist/plan_worker.js")));
+         let worker_is_set_up = worker
+             .request(PlanCmd::UpdateSchema { schema })
+             .await
+diff --git a/src/worker.rs b/src/worker.rs
+index 0f6ba7b..30da264 100644
+--- a/src/worker.rs
++++ b/src/worker.rs
+@@ -42,7 +42,7 @@ where
+                 })
+                 .build();
+             // Initialize a runtime instance
+-            let buffer = include_bytes!(concat!(env!("OUT_DIR"), "/query_runtime.snap"));
++            let buffer = include_bytes!(concat!(env!("STATIC_DIR"), "/snapshots/query_runtime.snap"));
+
+             let mut js_runtime = JsRuntime::new(RuntimeOptions {
+                 extensions: vec![my_ext],
 --
 2.25.1
 

@@ -13,21 +13,28 @@ struct RelayPersistedQueries {
     conn: Option<MultiplexedConnection>,
 }
 
+#[async_trait::async_trait]
 impl Plugin for RelayPersistedQueries {
     type Config = ();
 
     fn new(_configuration: Self::Config) -> Result<Self, BoxError> {
+        Ok(Self { conn: None })
+    }
+
+    async fn startup(&mut self) -> Result<(), BoxError> {
         // Create new connection to redis
-        let redis_var = env::var("REDIS_HOST").is_err();
-        let client = redis::Client::open(format!("redis://{}/", redis_var))?;
+        let redis_var = env::var("REDIS_HOST");
 
-        let rt = tokio::runtime::Runtime::new().unwrap();
+        let client = redis::Client::open(format!(
+            "redis://{}/2",
+            redis_var.expect("error connecting to redis")
+        ))?;
 
-        let conn = rt
-            .block_on(client.get_multiplexed_tokio_connection())
-            .unwrap();
+        let conn = client.get_multiplexed_tokio_connection().await.unwrap();
 
-        Ok(Self { conn: Some(conn) })
+        self.conn = Option::from(conn);
+
+        Ok(())
     }
 
     fn router_service(
@@ -45,12 +52,32 @@ impl Plugin for RelayPersistedQueries {
                         return Ok(ControlFlow::Continue(req));
                     }
 
-                    let result: RedisResult<String> = redis::cmd("GET")
-                        .arg(query_key.unwrap().to_string())
+                    let query_key_redis = "query:".to_owned();
+                    let new_query_key = query_key.unwrap().as_str().unwrap();
+
+                    let result: RedisResult<Option<String>> = redis::cmd("GET")
+                        .arg(query_key_redis + new_query_key)
                         .query_async(&mut new_conn.unwrap())
                         .await;
 
                     if result.is_err() {
+                        let res = plugin_utils::RouterResponse::builder()
+                            .errors(vec![apollo_router_core::Error {
+                                message: format!(
+                                    "error fetching query with id '{}'",
+                                    query_key.unwrap().to_string()
+                                ),
+                                ..Default::default()
+                            }])
+                            .build()
+                            .with_status(StatusCode::BAD_REQUEST);
+
+                        return Ok(ControlFlow::Break(res));
+                    }
+
+                    let resulted = result.unwrap().clone();
+
+                    if resulted.is_none() {
                         let res = plugin_utils::RouterResponse::builder()
                             .errors(vec![apollo_router_core::Error {
                                 message: format!(
@@ -65,13 +92,11 @@ impl Plugin for RelayPersistedQueries {
                         return Ok(ControlFlow::Break(res));
                     }
 
-                    let resulted = result.unwrap().clone();
-
                     req.context
                         .upsert(
                             &"relay_persisted_query".to_string(),
                             |_passport: String| {
-                                return resulted.clone();
+                                return resulted.clone().expect("result is blank");
                             },
                             || "".to_string(),
                         )

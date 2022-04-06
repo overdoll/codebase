@@ -77,6 +77,7 @@ async function request (req, res): Promise<void> {
         process.env.SERVER_GRAPHQL_ENDPOINT as string,
         {
           operationName: params.name,
+          query: 'PERSISTED_QUERY',
           variables,
           extensions: {
             queryId: params.id
@@ -108,7 +109,7 @@ async function request (req, res): Promise<void> {
 
       // GraphQL returns exceptions (for example, a missing required variable) in the "errors"
       // property of the response. If any exceptions occurred when processing the request,
-      // throw an error to indicate to the developer what went wrong.
+      // throw an error to indicate to the developer what went wrongs.
       if (Array.isArray(json.errors)) {
         throw new Error(JSON.stringify(json.errors))
       }

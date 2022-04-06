@@ -2291,6 +2291,7 @@ dependencies = [
  "anyhow",
  "apollo-router",
  "apollo-router-core",
+ "async-trait",
  "dotenv",
  "http",
  "redis",
