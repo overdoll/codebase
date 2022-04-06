@@ -11,7 +11,11 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 export default function CatchAll (): JSX.Element {
   return (
     <NotFound>
-      <Helmet title='error' />
+      <Helmet>
+        <title>
+          Not Found :: overdoll
+        </title>
+      </Helmet>
       <PageWrapper>
         <Icon
           icon={BadgeCircle}

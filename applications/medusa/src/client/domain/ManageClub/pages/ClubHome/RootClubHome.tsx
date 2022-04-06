@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'
@@ -23,15 +22,12 @@ export default function RootClubSettings (props: Props): JSX.Element {
   const match = useParams()
 
   return (
-    <>
-      <Helmet title='club home' />
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
-          <Suspense fallback={<SkeletonStack />}>
-            <ClubHome query={queryRef as PreloadedQuery<ClubHomeQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageWrapper>
+      <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
+        <Suspense fallback={<SkeletonStack />}>
+          <ClubHome query={queryRef as PreloadedQuery<ClubHomeQueryType>} />
+        </Suspense>
+      </QueryErrorBoundary>
+    </PageWrapper>
   )
 }

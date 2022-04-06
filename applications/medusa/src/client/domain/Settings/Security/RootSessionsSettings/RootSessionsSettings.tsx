@@ -26,7 +26,11 @@ export default function RootSessionsSettings (props: Props): JSX.Element | null 
 
   return (
     <>
-      <Helmet title='sessions settings' />
+      <Helmet>
+        <title>
+          Sessions - Security - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/security'>
           <Trans>

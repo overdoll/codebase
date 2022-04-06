@@ -26,7 +26,11 @@ export default function RootStaffClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='staff club' />
+      <Helmet>
+        <title>
+          Club - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
           <Suspense fallback={<SkeletonStack />}>

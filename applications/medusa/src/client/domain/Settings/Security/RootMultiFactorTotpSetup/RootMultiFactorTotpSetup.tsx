@@ -26,7 +26,11 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
 
   return (
     <>
-      <Helmet title='authenticator setup' />
+      <Helmet>
+        <title>
+          Authenticator Setup - Security - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/security'>
           <Trans>

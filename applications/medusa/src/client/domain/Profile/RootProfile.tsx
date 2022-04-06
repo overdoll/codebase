@@ -25,7 +25,11 @@ export default function RootProfile (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='profile' />
+      <Helmet>
+        <title>
+          Profile :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: params?.username ?? '' })}>
           <Suspense fallback={<SkeletonPost />}>

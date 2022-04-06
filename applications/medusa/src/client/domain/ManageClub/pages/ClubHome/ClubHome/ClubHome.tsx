@@ -7,6 +7,7 @@ import StatisticNumber from '../../../components/StatisticNumber/StatisticNumber
 import { useLingui } from '@lingui/react'
 import { ClubMembers } from '@//:assets/icons/interface'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -15,6 +16,7 @@ interface Props {
 const Query = graphql`
   query ClubHomeQuery($slug: String!) {
     club(slug: $slug) {
+      name
       membersCount
       viewerIsOwner
       ...LargeClubHeaderFragment
@@ -41,13 +43,20 @@ export default function ClubHome ({ query }: Props): JSX.Element {
   }
 
   return (
-    <Stack spacing={8}>
-      <LargeClubHeader query={queryData?.club} />
-      <StatisticNumber
-        value={number}
-        text={i18n._(t`Members`)}
-        icon={ClubMembers}
-      />
-    </Stack>
+    <>
+      <Helmet>
+        <title>
+          Manage {queryData.club.name} :: overdoll.com
+        </title>
+      </Helmet>
+      <Stack spacing={8}>
+        <LargeClubHeader query={queryData?.club} />
+        <StatisticNumber
+          value={number}
+          text={i18n._(t`Members`)}
+          icon={ClubMembers}
+        />
+      </Stack>
+    </>
   )
 }

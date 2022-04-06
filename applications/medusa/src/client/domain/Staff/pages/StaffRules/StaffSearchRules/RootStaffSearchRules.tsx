@@ -16,7 +16,11 @@ export default function RootStaffSearchRules (): JSX.Element {
 
   return (
     <>
-      <Helmet title='search rules' />
+      <Helmet>
+        <title>
+          Search Rules - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

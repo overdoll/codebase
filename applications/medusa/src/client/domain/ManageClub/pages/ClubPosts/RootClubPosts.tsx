@@ -43,7 +43,11 @@ export default function RootClubPosts (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='my posts' />
+      <Helmet>
+        <title>
+          My Posts :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <Box>

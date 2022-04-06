@@ -24,7 +24,11 @@ export default function RootStaffCreateAudience (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create audience' />
+      <Helmet>
+        <title>
+          Create Audience - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

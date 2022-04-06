@@ -25,7 +25,11 @@ export default function RootStaffSearchCategories (): JSX.Element {
 
   return (
     <>
-      <Helmet title='search categories' />
+      <Helmet>
+        <title>
+          Search Categories - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

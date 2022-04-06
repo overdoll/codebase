@@ -26,7 +26,11 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
 
   return (
     <>
-      <Helmet title='curation profile setup' />
+      <Helmet>
+        <title>
+          Curation Profile - Preferences - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/billing'>
           <Trans>

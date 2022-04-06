@@ -24,7 +24,11 @@ export default function RootStaffCreateRule (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create rule' />
+      <Helmet>
+        <title>
+          Create Rule - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

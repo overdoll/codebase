@@ -31,7 +31,11 @@ export default function RootSearch (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='search' />
+      <Helmet>
+        <title>
+          Search :: overdoll.com
+        </title>
+      </Helmet>
       <PageFixedHeader>
         <FixedHeaderWrapper>
           <Flex justify='space-between'>

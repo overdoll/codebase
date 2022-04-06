@@ -30,7 +30,11 @@ export default function RootStaffAccountClubSupporterSubscription (props: Props)
 
   return (
     <>
-      <Helmet title='staff subscription' />
+      <Helmet>
+        <title>
+          Subscription - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
           <Suspense fallback={<SkeletonStack />}>

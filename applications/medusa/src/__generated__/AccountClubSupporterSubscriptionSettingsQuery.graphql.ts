@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<38aca246e4d55ed9be3ef3779282ec66>>
- * @relayHash de55ad225bec3dac6226e27f33e84a6b
+ * @generated SignedSource<<be56d47307f264af4c155ced1c34cd04>>
+ * @relayHash d9d45cc561ba4139a0023558637e586c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID de55ad225bec3dac6226e27f33e84a6b
+// @relayRequestID d9d45cc561ba4139a0023558637e586c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -301,6 +301,19 @@ v16 = {
                   ],
                   "storageKey": null
                 },
+                (v10/*: any*/)
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Club",
+              "kind": "LinkedField",
+              "name": "club",
+              "plural": false,
+              "selections": [
+                (v5/*: any*/),
                 (v10/*: any*/)
               ],
               "storageKey": null
@@ -658,7 +671,7 @@ return {
     ]
   },
   "params": {
-    "id": "de55ad225bec3dac6226e27f33e84a6b",
+    "id": "d9d45cc561ba4139a0023558637e586c",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

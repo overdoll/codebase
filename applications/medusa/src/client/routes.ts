@@ -2084,7 +2084,7 @@ const routes: Route[] = [
         ]
       },
       {
-        path: '/p/:reference',
+        path: '/:slug/p/:reference',
         dependencies: [
           {
             resource: loadable(async (environment) =>

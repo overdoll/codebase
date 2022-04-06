@@ -24,7 +24,11 @@ export default function RootStaffCreateCancellationReason (props: Props): JSX.El
 
   return (
     <>
-      <Helmet title='create cancellation reason' />
+      <Helmet>
+        <title>
+          Create Cancellation Reason - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

@@ -16,7 +16,11 @@ interface Props {
 export default function Profile (props: Props): JSX.Element {
   return (
     <ChildrenBoundary fallback={props.children}>
-      <Helmet title='profile settings' />
+      <Helmet>
+        <title>
+          Profile - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <RootAccountSettings query={props.prepared.query} />
       </PageWrapper>

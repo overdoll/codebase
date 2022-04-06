@@ -27,6 +27,7 @@ const Fragment = graphql`
       ...PostSupporterContentFragment
     }
     club {
+      slug
       ...PostSupporterContentClubFragment
     }
     ...PostClickableCategoriesFragment
@@ -74,7 +75,7 @@ export default function PostGalleryPublicSimple ({
                       variant='ghost'
                       colorScheme='gray'
                       rightIcon={<Icon w={2} h={2} icon={ArrowButtonRight} fill='inherit' />}
-                      to={`/p/${data?.reference}`}
+                      to={`/${data.club.slug}/p/${data?.reference}`}
                     >
                       <Trans>
                         View Post

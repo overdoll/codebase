@@ -39,7 +39,11 @@ export default function RootClubPublicPosts (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='club posts' />
+      <Helmet>
+        <title>
+          Club Posts :: overdoll
+        </title>
+      </Helmet>
       <PageFixedHeader>
         <FixedHeaderWrapper>
           <Flex justify='space-between'>

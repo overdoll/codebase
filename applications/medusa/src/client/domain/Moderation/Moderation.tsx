@@ -5,6 +5,7 @@ import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigatio
 import { FileMultiple, FlagReport, TimeHourGlass } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Can from '@//:modules/authorization/Can'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   children: ReactNode
@@ -14,49 +15,56 @@ export default function Moderation ({ children }: Props): JSX.Element {
   const location = useLocation()
 
   return (
-    <VerticalNavigation>
-      <VerticalNavigation.Content title={
-        <Trans>
-          Moderation
-        </Trans>
-      }
-      >
-        <VerticalNavigation.Button
-          to='/moderation/queue'
-          colorScheme='purple'
-          title={
-            <Trans>
-              Queue
-            </Trans>
-          }
-          icon={FileMultiple}
-        />
-        <VerticalNavigation.Button
-          to='/moderation/history'
-          colorScheme='purple'
-          title={
-            <Trans>
-              History
-            </Trans>
-          }
-          icon={TimeHourGlass}
-        />
-        <Can I='staff' a='Post'>
+    <>
+      <Helmet>
+        <title>
+          Moderation :: overdoll.com
+        </title>
+      </Helmet>
+      <VerticalNavigation>
+        <VerticalNavigation.Content title={
+          <Trans>
+            Moderation
+          </Trans>
+        }
+        >
           <VerticalNavigation.Button
-            to='/moderation/reports'
+            to='/moderation/queue'
             colorScheme='purple'
             title={
               <Trans>
-                Reports
+                Queue
               </Trans>
             }
-            icon={FlagReport}
+            icon={FileMultiple}
           />
-        </Can>
-      </VerticalNavigation.Content>
-      <VerticalNavigation.Page>
-        {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}
-      </VerticalNavigation.Page>
-    </VerticalNavigation>
+          <VerticalNavigation.Button
+            to='/moderation/history'
+            colorScheme='purple'
+            title={
+              <Trans>
+                History
+              </Trans>
+            }
+            icon={TimeHourGlass}
+          />
+          <Can I='staff' a='Post'>
+            <VerticalNavigation.Button
+              to='/moderation/reports'
+              colorScheme='purple'
+              title={
+                <Trans>
+                  Reports
+                </Trans>
+              }
+              icon={FlagReport}
+            />
+          </Can>
+        </VerticalNavigation.Content>
+        <VerticalNavigation.Page>
+          {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}
+        </VerticalNavigation.Page>
+      </VerticalNavigation>
+    </>
   )
 }

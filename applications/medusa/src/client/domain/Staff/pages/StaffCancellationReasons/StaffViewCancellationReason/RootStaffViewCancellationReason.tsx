@@ -31,7 +31,11 @@ export default function RootStaffViewCancellationReason (props: Props): JSX.Elem
 
   return (
     <>
-      <Helmet title='view cancellation reason' />
+      <Helmet>
+        <title>
+          View Cancellation Reason - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <BackButton to='/staff/cancellation-reason/search'>

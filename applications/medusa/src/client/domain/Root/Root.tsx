@@ -36,7 +36,7 @@ export default function Root (props: Props): JSX.Element {
   return (
     <>
       <Helmet>
-        <title>overdoll</title>
+        <title>overdoll :: Find Your Club</title>
         <meta name='viewport' content='width=device-width' />
       </Helmet>
       <AccountAuthorizer queryRef={data.viewer}>

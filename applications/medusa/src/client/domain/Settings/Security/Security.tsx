@@ -26,7 +26,11 @@ interface Props {
 export default function Security (props: Props): JSX.Element {
   return (
     <ChildrenBoundary fallback={props.children}>
-      <Helmet title='security settings' />
+      <Helmet>
+        <title>
+          Security - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Box>

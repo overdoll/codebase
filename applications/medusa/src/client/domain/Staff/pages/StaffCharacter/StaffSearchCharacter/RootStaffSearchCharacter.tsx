@@ -24,7 +24,11 @@ export default function RootStaffSearchCharacter (): JSX.Element {
   const { i18n } = useLingui()
   return (
     <>
-      <Helmet title='search character' />
+      <Helmet>
+        <title>
+          Search Characters - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

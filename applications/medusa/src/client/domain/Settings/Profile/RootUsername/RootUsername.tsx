@@ -26,7 +26,11 @@ export default function RootUsername (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet title='username settings' />
+      <Helmet>
+        <title>
+          Username - Profile - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/profile'>
           <Trans>

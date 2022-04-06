@@ -27,7 +27,11 @@ export default function RootSavedPaymentMethodsSettings (props: Props): JSX.Elem
 
   return (
     <>
-      <Helmet title='payment methods' />
+      <Helmet>
+        <title>
+          Saved Payment Methods - Billing - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/billing'>
           <Trans>

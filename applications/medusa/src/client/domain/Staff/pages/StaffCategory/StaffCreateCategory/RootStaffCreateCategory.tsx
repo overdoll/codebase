@@ -24,7 +24,11 @@ export default function RootStaffCreateCategory (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create category' />
+      <Helmet>
+        <title>
+          Create Category - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

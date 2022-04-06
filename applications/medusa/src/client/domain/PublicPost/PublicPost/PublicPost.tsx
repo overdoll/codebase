@@ -19,6 +19,9 @@ import { useQueryParam } from 'use-query-params'
 import ClubSuspendedStaffAlert
   from '../../ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import LockedAccountTrigger from '../../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import { Helmet } from 'react-helmet-async'
+import { useHistory, useParams } from '@//:modules/routing'
+import { useEffect } from 'react'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -32,6 +35,11 @@ const Query = graphql`
       ...SuggestedPostsFragment
       club {
         ...ClubSuspendedStaffAlertFragment
+        name
+        slug
+      }
+      characters {
+        name
       }
     }
     viewer {
@@ -46,6 +54,10 @@ export default function PublicPost (props: Props): JSX.Element {
     Query,
     props.query
   )
+
+  const history = useHistory()
+
+  const match = useParams()
 
   if (queryData?.post == null) {
     return (
@@ -113,20 +125,40 @@ export default function PublicPost (props: Props): JSX.Element {
     }
   }
 
+  const getCharacterNames = (): string => {
+    if (queryData?.post?.characters.length === 1) {
+      return queryData?.post?.characters[0].name
+    }
+    return ((queryData?.post?.characters as Array<{ name: string }>).map((item) => item.name)).join(', ')
+  }
+
   useUpdateEffect(() => {
     setParamStep(undefined)
   }, [queryData.post.reference])
 
+  useEffect(() => {
+    if (match.slug != null && match.slug !== queryData?.post?.club.slug) {
+      history.replace(`/${queryData?.post?.club.slug as string}/p/${queryData?.post?.reference as string}`)
+    }
+  }, [match.slug])
+
   return (
-    <FlowBuilder
-      stepsArray={steps}
-      stepsComponents={components}
-      stepsHeaders={headers}
-      useParams
-    >
-      <GlobalVideoManagerProvider>
-        <FlowBuilderBody />
-      </GlobalVideoManagerProvider>
-    </FlowBuilder>
+    <>
+      <Helmet>
+        <title>
+          {getCharacterNames()} by {queryData.post.club.name} :: overdoll.com/{queryData.post.club.slug}
+        </title>
+      </Helmet>
+      <FlowBuilder
+        stepsArray={steps}
+        stepsComponents={components}
+        stepsHeaders={headers}
+        useParams
+      >
+        <GlobalVideoManagerProvider>
+          <FlowBuilderBody />
+        </GlobalVideoManagerProvider>
+      </FlowBuilder>
+    </>
   )
 }

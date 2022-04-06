@@ -32,7 +32,11 @@ export default function RootAccountClubSupporterSubscriptionSettings (props: Pro
 
   return (
     <>
-      <Helmet title='view subscription' />
+      <Helmet>
+        <title>
+          Subscription - Billing - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/billing/subscriptions'>
           <Trans>

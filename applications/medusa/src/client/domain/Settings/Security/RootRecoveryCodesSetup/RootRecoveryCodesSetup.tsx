@@ -26,7 +26,11 @@ export default function RootRecoveryCodesSetup (props: Props): JSX.Element | nul
 
   return (
     <>
-      <Helmet title='recovery setup' />
+      <Helmet>
+        <title>
+          Recovery Codes - Security - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/security'>
           <Trans>

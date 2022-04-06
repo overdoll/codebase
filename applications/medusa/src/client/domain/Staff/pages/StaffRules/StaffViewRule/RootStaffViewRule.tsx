@@ -29,7 +29,11 @@ export default function RootStaffViewRule (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='view rule' />
+      <Helmet>
+        <title>
+          View Rule - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <BackButton to='/staff/rule/search'>

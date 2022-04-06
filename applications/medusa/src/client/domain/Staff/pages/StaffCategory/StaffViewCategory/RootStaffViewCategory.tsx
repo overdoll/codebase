@@ -29,7 +29,11 @@ export default function RootStaffViewCategory (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='view category' />
+      <Helmet>
+        <title>
+          View Categories - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <BackButton to='/staff/category/search'>

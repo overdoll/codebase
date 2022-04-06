@@ -28,7 +28,11 @@ export default function RootStaffAccountTransaction (props: Props): JSX.Element 
 
   return (
     <>
-      <Helmet title='staff transaction' />
+      <Helmet>
+        <title>
+          Transaction - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
           <Suspense fallback={<SkeletonStack />}>

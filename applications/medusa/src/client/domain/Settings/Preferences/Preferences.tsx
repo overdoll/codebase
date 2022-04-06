@@ -16,7 +16,11 @@ interface Props {
 export default function Preferences (props: Props): JSX.Element {
   return (
     <ChildrenBoundary fallback={props.children}>
-      <Helmet title='preference settings' />
+      <Helmet>
+        <title>
+          Preferences - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <RootCurationSettings query={props.prepared.curationQuery} />
       </PageWrapper>

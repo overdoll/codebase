@@ -6,6 +6,7 @@ import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
 import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
 import { t, Trans } from '@lingui/macro'
+import { Helmet } from 'react-helmet-async'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -64,36 +65,43 @@ export default function ConfirmEmail (): JSX.Element {
   }, [])
 
   return (
-    <Flex
-      mt={40}
-      h='100%'
-      align='center'
-      justify='center'
-      direction='column'
-    >
-      <Spinner
-        mb={6}
-        thickness='4'
-        size='xl'
-        color='primary.500'
-      />
-      <Heading
-        mb={1}
-        size='md'
-        color='gray.00'
+    <>
+      <Helmet>
+        <title>
+          Confirming Email... :: overdoll
+        </title>
+      </Helmet>
+      <Flex
+        mt={40}
+        h='100%'
+        align='center'
+        justify='center'
+        direction='column'
       >
-        <Trans>
-          Confirming Email
-        </Trans>
-      </Heading>
-      <Text
-        size='sm'
-        color='gray.100'
-      >
-        <Trans>
-          Please wait while we confirm your email...
-        </Trans>
-      </Text>
-    </Flex>
+        <Spinner
+          mb={6}
+          thickness='4'
+          size='xl'
+          color='primary.500'
+        />
+        <Heading
+          mb={1}
+          size='md'
+          color='gray.00'
+        >
+          <Trans>
+            Confirming Email
+          </Trans>
+        </Heading>
+        <Text
+          size='sm'
+          color='gray.100'
+        >
+          <Trans>
+            Please wait while we confirm your email...
+          </Trans>
+        </Text>
+      </Flex>
+    </>
   )
 }

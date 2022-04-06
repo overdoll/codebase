@@ -28,7 +28,11 @@ export default function RootModerationPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='moderate post' />
+      <Helmet>
+        <title>
+          Post - Moderation :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

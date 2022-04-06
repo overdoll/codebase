@@ -4,6 +4,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPostsQuery>
@@ -19,6 +20,7 @@ const Query = graphql`
   ) {
     club(slug: $slug) {
       slug
+      name
       ...ClubPublicPostsFragment
     }
     viewer {
@@ -72,14 +74,21 @@ export default function ClubPublicPosts (props: Props): JSX.Element {
   )
 
   return (
-    <GlobalVideoManagerProvider>
-      <PostsInfiniteScroll
-        hasNext={hasNext}
-        isLoadingNext={isLoadingNext}
-        loadNext={loadNext}
-        query={data.posts}
-        viewerQuery={queryData.viewer}
-      />
-    </GlobalVideoManagerProvider>
+    <>
+      <Helmet>
+        <title>
+          {queryData.club.name}'s Posts :: overdoll.com/{queryData.club.slug}
+        </title>
+      </Helmet>
+      <GlobalVideoManagerProvider>
+        <PostsInfiniteScroll
+          hasNext={hasNext}
+          isLoadingNext={isLoadingNext}
+          loadNext={loadNext}
+          query={data.posts}
+          viewerQuery={queryData.viewer}
+        />
+      </GlobalVideoManagerProvider>
+    </>
   )
 }

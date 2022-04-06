@@ -21,12 +21,22 @@ import {
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Stack } from '@chakra-ui/react'
-import { CLUB_GUIDELINES, SUPPORTER_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE, COMMUNITY_GUIDELINES } from '@//:modules/constants/links'
+import {
+  CLUB_GUIDELINES,
+  COMMUNITY_GUIDELINES,
+  PRIVACY_POLICY,
+  SUPPORTER_GUIDELINES,
+  TERMS_OF_SERVICE
+} from '@//:modules/constants/links'
 
 export default function Help (): JSX.Element {
   return (
     <>
-      <Helmet title='help' />
+      <Helmet>
+        <title>
+          Help :: overdoll
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={4}>
           <Box>

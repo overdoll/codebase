@@ -29,7 +29,11 @@ export default function RootStaffViewAudience (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='view category' />
+      <Helmet>
+        <title>
+          View Audience - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <BackButton to='/staff/audience/search'>

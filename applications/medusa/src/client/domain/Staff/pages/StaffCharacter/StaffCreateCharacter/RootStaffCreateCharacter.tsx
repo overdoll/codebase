@@ -24,7 +24,11 @@ export default function RootStaffCreateCharacter (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create character' />
+      <Helmet>
+        <title>
+          Create Character - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

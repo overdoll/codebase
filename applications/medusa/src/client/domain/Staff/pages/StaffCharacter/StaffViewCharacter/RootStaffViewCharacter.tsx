@@ -31,7 +31,11 @@ export default function RootStaffViewCharacter (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='view character' />
+      <Helmet>
+        <title>
+          View Character - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <BackButton to='/staff/character/search'>

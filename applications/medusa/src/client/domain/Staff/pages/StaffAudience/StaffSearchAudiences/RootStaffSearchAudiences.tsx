@@ -25,7 +25,11 @@ export default function RootStaffSearchAudiences (): JSX.Element {
 
   return (
     <>
-      <Helmet title='search audiences' />
+      <Helmet>
+        <title>
+          Search Audiences - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

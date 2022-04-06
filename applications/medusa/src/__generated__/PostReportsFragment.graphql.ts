@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a35aa388288d52ce3161e5244367ab0>>
+ * @generated SignedSource<<0bb2c48411653ba68951bcf098a098e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,9 @@ export type PostReportsFragment$data = {
         };
         readonly post: {
           readonly reference: string;
+          readonly club: {
+            readonly slug: string;
+          };
         };
       };
     }>;
@@ -177,6 +180,24 @@ return {
                       "kind": "ScalarField",
                       "name": "reference",
                       "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "Club",
+                      "kind": "LinkedField",
+                      "name": "club",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "slug",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
@@ -235,6 +256,6 @@ return {
 };
 })();
 
-(node as any).hash = "aedec6f581a255fa59ef5dd104945398";
+(node as any).hash = "87453b1c5eba973efea492408afaf65c";
 
 export default node;

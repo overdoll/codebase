@@ -26,7 +26,11 @@ export default function RootEmails (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet title='email settings' />
+      <Helmet>
+        <title>
+          Emails - Profile - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/profile'>
           <Trans>

@@ -21,6 +21,9 @@ const PostFragment = graphql`
       node {
         reference
         ...PostPreviewContentFragment
+        club {
+          slug
+        }
       }
     }
   }
@@ -55,7 +58,7 @@ export default function PostsHorizontalPreview ({
             key={index}
           >
             <GridTile>
-              <LinkTile to={`/p/${item.node.reference}`}>
+              <LinkTile to={`${item.node.club.slug}/p/${item.node.reference}`}>
                 <PostPreviewContent query={item.node} />
               </LinkTile>
             </GridTile>

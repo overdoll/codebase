@@ -18,6 +18,7 @@ import ClubExclusivePosts from './ClubExclusivePosts/ClubExclusivePosts'
 import SupportClubButton from './SupportClubButton/SupportClubButton'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   query: PreloadedQuery<ClubPublicPageQuery>
@@ -26,6 +27,8 @@ interface Props {
 const Query = graphql`
   query ClubPublicPageQuery($slug: String!) {
     club(slug: $slug) {
+      name
+      slug
       membersCount
       backgroundPost: posts(first: 1) {
         edges {
@@ -70,6 +73,11 @@ export default function ClubPublicPage (props: Props): JSX.Element {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {queryData.club.name} on overdoll :: overdoll.com/{queryData.club.slug}
+        </title>
+      </Helmet>
       <ClubSuspendedStaffAlert query={queryData?.club} />
       <Stack spacing={8}>
         <Box h={200}>

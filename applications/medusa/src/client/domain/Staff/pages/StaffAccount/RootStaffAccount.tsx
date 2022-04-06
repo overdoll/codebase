@@ -26,7 +26,11 @@ export default function RootStaffAccount (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='staff account' />
+      <Helmet>
+        <title>
+          Account - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapperDesktop>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: match.username as string })}>
           <Suspense fallback={<SkeletonStack />}>

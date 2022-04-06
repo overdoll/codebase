@@ -27,7 +27,11 @@ export default function RootSubscriptionsSettings (props: Props): JSX.Element | 
 
   return (
     <>
-      <Helmet title='my subscriptions' />
+      <Helmet>
+        <title>
+          My Subscriptions - Billing - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <BackButton to='/settings/billing'>
           <Trans>

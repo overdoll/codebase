@@ -24,7 +24,6 @@ export default function RootClubMembers (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='club members' />
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

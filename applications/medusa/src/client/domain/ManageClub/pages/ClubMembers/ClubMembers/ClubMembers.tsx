@@ -8,6 +8,7 @@ import AccountTileOverlay
   from '../../../../../../modules/content/ContentSelection/TileOverlay/AccountTileOverlay/AccountTileOverlay'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { LinkTile } from '@//:modules/content/ContentSelection'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -17,6 +18,7 @@ const Query = graphql`
   query ClubMembersQuery($slug: String!) {
     club(slug: $slug) {
       ...ClubMembersFragment
+      name
       viewerIsOwner
     }
   }
@@ -78,19 +80,26 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
   }
 
   return (
-    <GridWrap justify='flex-start'>
-      {data.members.edges.map((item, index) =>
-        <GridTile key={index}>
-          <LinkTile to={`/m/${item.node.account.username as string}`}>
-            <AccountTileOverlay query={item.node.account} />
-          </LinkTile>
-        </GridTile>
-      )}
-      <LoadMoreGridTile
-        hasNext={hasNext}
-        onLoadNext={() => loadNext(20)}
-        isLoadingNext={isLoadingNext}
-      />
-    </GridWrap>
+    <>
+      <Helmet>
+        <title>
+          {queryData.club.name}'s Members :: overdoll.com
+        </title>
+      </Helmet>
+      <GridWrap justify='flex-start'>
+        {data.members.edges.map((item, index) =>
+          <GridTile key={index}>
+            <LinkTile to={`/m/${item.node.account.username as string}`}>
+              <AccountTileOverlay query={item.node.account} />
+            </LinkTile>
+          </GridTile>
+        )}
+        <LoadMoreGridTile
+          hasNext={hasNext}
+          onLoadNext={() => loadNext(20)}
+          isLoadingNext={isLoadingNext}
+        />
+      </GridWrap>
+    </>
   )
 }

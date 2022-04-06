@@ -29,7 +29,11 @@ export default function Reports (): JSX.Element | null {
 
   return (
     <>
-      <Helmet title='post reports' />
+      <Helmet>
+        <title>
+          Reports - Moderation :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

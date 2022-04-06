@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<63b5d0e28e42b41bbba26c998ae11567>>
- * @relayHash f6a0aba417ad6001cdd982852ff0dee6
+ * @generated SignedSource<<b94fbaf2c2c9e5414b30054bb251ac00>>
+ * @relayHash 817203fed510c0affd05299ab49971fb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f6a0aba417ad6001cdd982852ff0dee6
+// @relayRequestID 817203fed510c0affd05299ab49971fb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,8 +21,13 @@ export type PublicPostQuery$data = {
   readonly post: {
     readonly reference: string;
     readonly club: {
+      readonly name: string;
+      readonly slug: string;
       readonly " $fragmentSpreads": FragmentRefs<"ClubSuspendedStaffAlertFragment">;
     };
+    readonly characters: ReadonlyArray<{
+      readonly name: string;
+    }>;
     readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment" | "SuggestedPostsFragment">;
   } | null;
   readonly viewer: {
@@ -61,7 +66,7 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
@@ -75,7 +80,7 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
@@ -133,7 +138,7 @@ v9 = {
       "storageKey": null
     },
     (v8/*: any*/),
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -152,7 +157,7 @@ v10 = {
       "name": "isSupporter",
       "storageKey": null
     },
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -174,7 +179,7 @@ v11 = {
       "selections": [
         (v8/*: any*/),
         (v7/*: any*/),
-        (v3/*: any*/)
+        (v5/*: any*/)
       ],
       "storageKey": null
     },
@@ -192,7 +197,7 @@ v11 = {
       "name": "isSupporterOnly",
       "storageKey": null
     },
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -212,7 +217,7 @@ v13 = {
   "plural": false,
   "selections": [
     (v12/*: any*/),
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -248,14 +253,14 @@ v16 = {
       "selections": [
         (v15/*: any*/),
         (v4/*: any*/),
-        (v3/*: any*/)
+        (v5/*: any*/)
       ],
       "storageKey": null
     },
-    (v5/*: any*/),
+    (v3/*: any*/),
     (v4/*: any*/),
     (v9/*: any*/),
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -270,7 +275,7 @@ v17 = {
     (v4/*: any*/),
     (v15/*: any*/),
     (v9/*: any*/),
-    (v3/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -319,7 +324,21 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "ClubSuspendedStaffAlertFragment"
-              }
+              },
+              (v3/*: any*/),
+              (v4/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Character",
+            "kind": "LinkedField",
+            "name": "characters",
+            "plural": true,
+            "selections": [
+              (v3/*: any*/)
             ],
             "storageKey": null
           }
@@ -366,7 +385,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -376,8 +395,8 @@ return {
             "plural": false,
             "selections": [
               (v4/*: any*/),
-              (v3/*: any*/),
               (v5/*: any*/),
+              (v3/*: any*/),
               (v9/*: any*/),
               (v10/*: any*/),
               {
@@ -446,7 +465,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v12/*: any*/),
-                      (v3/*: any*/),
+                      (v5/*: any*/),
                       (v2/*: any*/),
                       (v11/*: any*/),
                       {
@@ -458,8 +477,8 @@ return {
                         "plural": false,
                         "selections": [
                           (v4/*: any*/),
-                          (v3/*: any*/),
                           (v5/*: any*/),
+                          (v3/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/)
                         ],
@@ -523,7 +542,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -544,7 +563,7 @@ return {
     ]
   },
   "params": {
-    "id": "f6a0aba417ad6001cdd982852ff0dee6",
+    "id": "817203fed510c0affd05299ab49971fb",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -553,6 +572,6 @@ return {
 };
 })();
 
-(node as any).hash = "f24d6345123a8eeea1c317fc50368d6c";
+(node as any).hash = "150571eace437ed1ac03d3f51ac8692d";
 
 export default node;

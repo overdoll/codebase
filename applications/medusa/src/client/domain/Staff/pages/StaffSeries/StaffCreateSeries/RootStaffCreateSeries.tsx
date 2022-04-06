@@ -24,7 +24,11 @@ export default function RootStaffCreateSeries (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create series' />
+      <Helmet>
+        <title>
+          Create Series - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

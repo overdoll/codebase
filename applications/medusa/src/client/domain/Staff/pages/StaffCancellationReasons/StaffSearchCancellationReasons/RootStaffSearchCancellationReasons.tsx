@@ -16,7 +16,11 @@ export default function RootStaffSearchCancellationReasons (): JSX.Element {
 
   return (
     <>
-      <Helmet title='search cancellation reasons' />
+      <Helmet>
+        <title>
+          Search Cancellation Reasons - Staff :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

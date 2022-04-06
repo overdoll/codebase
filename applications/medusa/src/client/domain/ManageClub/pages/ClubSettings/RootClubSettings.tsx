@@ -37,7 +37,11 @@ export default function RootClubSettings (props: Props): JSX.Element {
 
   return (
     <ChildrenBoundary fallback={props.children}>
-      <Helmet title='club settings' />
+      <Helmet>
+        <title>
+          Club Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Box>

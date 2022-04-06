@@ -24,6 +24,9 @@ const Fragment = graphql`
     ...PostCopyLinkButtonFragment
     ...PostModerateButtonFragment
     ...PostArchiveButtonFragment
+    club {
+      slug
+    }
   }
 `
 
@@ -47,7 +50,7 @@ export default function PublishedPost ({
         </PostMenu>
       </HStack>
       <GridTile>
-        <LinkTile to={`/p/${data.reference}`}>
+        <LinkTile to={`${data.club.slug}/p/${data.reference}`}>
           <PostPreviewContent query={data} />
         </LinkTile>
       </GridTile>

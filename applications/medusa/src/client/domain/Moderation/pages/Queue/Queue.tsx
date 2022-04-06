@@ -25,7 +25,11 @@ export default function Queue (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet title='queue' />
+      <Helmet>
+        <title>
+          Queue - Moderation :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

@@ -21,7 +21,11 @@ interface Props {
 export default function Billing ({ children }: Props): JSX.Element {
   return (
     <ChildrenBoundary fallback={children}>
-      <Helmet title='billing settings' />
+      <Helmet>
+        <title>
+          Billing - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Box>
