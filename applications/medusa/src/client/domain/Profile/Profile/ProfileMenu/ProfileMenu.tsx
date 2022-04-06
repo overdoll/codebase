@@ -19,7 +19,7 @@ export default function ProfileMenu ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Menu variant='ghost'>
+    <Menu p={1}>
       <ProfileCopyLinkButton query={data} />
       <ProfileStaffButton query={data} />
     </Menu>

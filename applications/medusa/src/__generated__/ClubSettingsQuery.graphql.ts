@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<deafe98efc2a68237f885665c11b0084>>
- * @relayHash 9e4612f3a1682903dae75b8e601f5e32
+ * @generated SignedSource<<dbf994c801d3c4306d83d759497c7309>>
+ * @relayHash 50d04b23c073ce20ee16d93af36d8912
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9e4612f3a1682903dae75b8e601f5e32
+// @relayRequestID 50d04b23c073ce20ee16d93af36d8912
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,6 +24,7 @@ export type ClubSettingsQuery$data = {
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly viewerIsOwner: boolean;
   } | null;
 };
 export type ClubSettingsQueryResponse = ClubSettingsQuery$data;
@@ -65,10 +66,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "viewerIsOwner",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -107,7 +115,8 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -147,7 +156,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -166,7 +175,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -177,18 +186,19 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v4/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "9e4612f3a1682903dae75b8e601f5e32",
+    "id": "50d04b23c073ce20ee16d93af36d8912",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",
@@ -197,6 +207,6 @@ return {
 };
 })();
 
-(node as any).hash = "10739b142cd3c197c82e778b1be54ef2";
+(node as any).hash = "69774fa2bd9d01f7d990d4133741c94d";
 
 export default node;

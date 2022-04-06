@@ -4,6 +4,7 @@ import type { ClubMenuFragment$key } from '@//:artifacts/ClubMenuFragment.graphq
 import Can from '@//:modules/authorization/Can'
 import ClubStaffButton from './ClubStaffButton/ClubStaffButton'
 import ClubCopyLinkButton from './ClubCopyLinkButton/ClubCopyLinkButton'
+import ClubManageButton from './ClubManageButton/ClubManageButton'
 
 interface Props {
   query: ClubMenuFragment$key
@@ -13,6 +14,7 @@ const Fragment = graphql`
   fragment ClubMenuFragment on Club {
     ...ClubStaffButtonFragment
     ...ClubCopyLinkButtonFragment
+    ...ClubManageButtonFragment
   }
 `
 
@@ -23,10 +25,11 @@ export default function ClubMenu ({ query }: Props): JSX.Element {
     <Can I='interact' a='Club' passThrough>
       {allowed => (
         <Menu
-          variant='ghost'
+          p={1}
           isDisabled={allowed === false}
         >
           <ClubCopyLinkButton query={data} />
+          <ClubManageButton query={data} />
           <ClubStaffButton query={data} />
         </Menu>)}
     </Can>

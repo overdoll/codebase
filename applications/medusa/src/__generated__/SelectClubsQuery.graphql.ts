@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7d58549b361c3bdcdf7ecbcba5443e5f>>
- * @relayHash 976fb6d4623bb07058ca77808c3a89b1
+ * @generated SignedSource<<74a11e0b22fb5b09033e3999cce54a0a>>
+ * @relayHash d516f7cdfb139cc4ab65682a27afa393
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 976fb6d4623bb07058ca77808c3a89b1
+// @relayRequestID d516f7cdfb139cc4ab65682a27afa393
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,10 +19,8 @@ export type SelectClubsQuery$variables = {
 export type SelectClubsQueryVariables = SelectClubsQuery$variables;
 export type SelectClubsQuery$data = {
   readonly club: {
+    readonly viewerIsOwner: boolean;
     readonly slug: string;
-    readonly owner: {
-      readonly id: string;
-    };
     readonly " $fragmentSpreads": FragmentRefs<"ClubPreviewFragment" | "SuspendedClubBannerFragment">;
   } | null;
   readonly viewer: {
@@ -55,26 +53,21 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "viewerIsOwner",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "slug",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
-  "concreteType": "Account",
-  "kind": "LinkedField",
-  "name": "owner",
-  "plural": false,
-  "selections": [
-    (v3/*: any*/)
-  ],
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
@@ -85,7 +78,7 @@ v5 = {
   "name": "viewer",
   "plural": false,
   "selections": [
-    (v3/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -119,6 +112,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -128,8 +122,7 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "SuspendedClubBannerFragment"
-          },
-          (v4/*: any*/)
+          }
         ],
         "storageKey": null
       },
@@ -153,6 +146,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -206,7 +200,7 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v3/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -235,7 +229,6 @@ return {
             ],
             "storageKey": null
           },
-          (v3/*: any*/),
           (v4/*: any*/)
         ],
         "storageKey": null
@@ -244,7 +237,7 @@ return {
     ]
   },
   "params": {
-    "id": "976fb6d4623bb07058ca77808c3a89b1",
+    "id": "d516f7cdfb139cc4ab65682a27afa393",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",
@@ -253,6 +246,6 @@ return {
 };
 })();
 
-(node as any).hash = "e081b737948ca22519e468e5d050fb5a";
+(node as any).hash = "dd53af37a0aa9395490e39e29e4c2008";
 
 export default node;

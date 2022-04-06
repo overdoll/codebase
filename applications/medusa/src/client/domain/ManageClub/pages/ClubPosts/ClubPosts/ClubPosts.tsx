@@ -22,6 +22,7 @@ const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
       __typename
+      viewerIsOwner
       ...ClubPostsFragment
     }
   }
@@ -69,6 +70,10 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
   )
 
   if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
+
+  if (!queryData.club?.viewerIsOwner) {
     return <NotFoundClub />
   }
 

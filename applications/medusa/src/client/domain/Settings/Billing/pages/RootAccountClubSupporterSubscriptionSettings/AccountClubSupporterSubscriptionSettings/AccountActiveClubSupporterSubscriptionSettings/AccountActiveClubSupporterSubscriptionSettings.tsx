@@ -14,8 +14,9 @@ import ManageActiveSubscriptionButton from './ManageActiveSubscriptionButton/Man
 import { ConnectionProp } from '@//:types/components'
 import AccountActiveClubSupporterSubscriptionDetails
   from '../../../../components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails'
-import ClubExclusivePosts from '../../../../../../ClubPublicPage/ClubPublicPage/ClubExclusivePosts/ClubExclusivePosts'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import ClubExclusiveContentSuspensionNotice
+  from '../ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice'
 
 interface Props extends ConnectionProp {
   query: AccountActiveClubSupporterSubscriptionSettingsFragment$key
@@ -27,7 +28,7 @@ const Fragment = graphql`
     ...ManageActiveSubscriptionButtonFragment
     club {
       slug
-      ...ClubExclusivePostsFragment
+      ...ClubExclusiveContentSuspensionNoticeFragment
     }
   }
 `
@@ -72,7 +73,7 @@ export default function AccountActiveClubSupporterSubscriptionSettings ({
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
-        <ClubExclusivePosts query={data.club} />
+        <ClubExclusiveContentSuspensionNotice query={data.club} />
       </Box>
       <ManageActiveSubscriptionButton connectionId={connectionId} query={data} />
     </Stack>

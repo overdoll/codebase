@@ -16,6 +16,7 @@ const Query = graphql`
   query ClubHomeQuery($slug: String!) {
     club(slug: $slug) {
       membersCount
+      viewerIsOwner
       ...LargeClubHeaderFragment
     }
   }
@@ -32,6 +33,10 @@ export default function ClubHome ({ query }: Props): JSX.Element {
   const number = queryData?.club?.membersCount.toLocaleString() as string
 
   if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
+
+  if (!queryData.club?.viewerIsOwner) {
     return <NotFoundClub />
   }
 

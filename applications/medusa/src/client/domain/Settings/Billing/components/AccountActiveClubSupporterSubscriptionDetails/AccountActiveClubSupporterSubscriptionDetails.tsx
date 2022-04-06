@@ -9,7 +9,8 @@ import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import { LinkTile } from '@//:modules/content/ContentSelection'
+import Icon from '../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import { WarningTriangle } from '@//:assets/icons'
 
 interface Props {
   query: AccountActiveClubSupporterSubscriptionDetailsFragment$key
@@ -24,6 +25,9 @@ const Fragment = graphql`
       slug
       thumbnail {
         ...ResourceIconFragment
+      }
+      suspension {
+        expires
       }
     }
   }
@@ -54,7 +58,7 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
   return (
     <Stack w='100%' spacing={2}>
       <HStack spacing={2} justify='space-between'>
-        <HStack spacing={3}>
+        <HStack align='center' spacing={3}>
           <ResourceIcon h={10} w={10} query={data?.club.thumbnail} />
           <Heading
             isTruncated
@@ -63,6 +67,7 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
           >
             {data?.club.name}
           </Heading>
+          {data.club.suspension != null && <Icon icon={WarningTriangle} fill='orange.400' w={4} h={4} />}
         </HStack>
         <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
           <Trans>

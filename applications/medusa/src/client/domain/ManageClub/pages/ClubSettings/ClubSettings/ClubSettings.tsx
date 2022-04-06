@@ -18,6 +18,7 @@ const Query = graphql`
       thumbnail {
         ...ResourceIconFragment
       }
+      viewerIsOwner
     }
   }
 `
@@ -29,6 +30,10 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
   )
 
   if (queryData?.club == null) {
+    return <NotFoundClub />
+  }
+
+  if (!queryData.club?.viewerIsOwner) {
     return <NotFoundClub />
   }
 

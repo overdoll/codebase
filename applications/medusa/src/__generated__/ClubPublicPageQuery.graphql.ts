@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<73d366c81f21dc02616f195d038f5216>>
- * @relayHash 17c05910c91ec247e2e4ac8c2d8ae106
+ * @generated SignedSource<<1aa44989026cf503fcd36a0021e24437>>
+ * @relayHash f0f9aa1678884b528be1eff068dedaca
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 17c05910c91ec247e2e4ac8c2d8ae106
+// @relayRequestID f0f9aa1678884b528be1eff068dedaca
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,7 +31,7 @@ export type ClubPublicPageQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment" | "ClubSuspendedStaffAlertFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment">;
@@ -394,6 +394,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "SupportClubButtonClubFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubSuspendedStaffAlertFragment"
           }
         ],
         "storageKey": null
@@ -550,6 +555,13 @@ return {
             "storageKey": null
           },
           {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "viewerIsOwner",
+            "storageKey": null
+          },
+          {
             "alias": "topPosts",
             "args": (v11/*: any*/),
             "concreteType": "PostConnection",
@@ -624,6 +636,24 @@ return {
                   (v16/*: any*/),
                   (v15/*: any*/)
                 ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
                 "storageKey": null
               }
             ],
@@ -741,7 +771,7 @@ return {
     ]
   },
   "params": {
-    "id": "17c05910c91ec247e2e4ac8c2d8ae106",
+    "id": "f0f9aa1678884b528be1eff068dedaca",
     "metadata": {},
     "name": "ClubPublicPageQuery",
     "operationKind": "query",
@@ -750,6 +780,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd2c396718e78b1a20943990487cbef8";
+(node as any).hash = "6a38137d83a1452467f47109feac43a4";
 
 export default node;

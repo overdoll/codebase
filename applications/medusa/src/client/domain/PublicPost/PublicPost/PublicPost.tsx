@@ -16,6 +16,8 @@ import PostSearchButton from '../../../components/PostsSearch/components/PostSea
 import FixedHeaderWrapper from '../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
 import { useQueryParam } from 'use-query-params'
+import ClubSuspendedStaffAlert
+  from '../../ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -27,6 +29,9 @@ const Query = graphql`
       reference
       ...FullDetailedPostFragment
       ...SuggestedPostsFragment
+      club {
+        ...ClubSuspendedStaffAlertFragment
+      }
     }
     viewer {
       ...FullDetailedPostViewerFragment
@@ -53,6 +58,7 @@ export default function PublicPost (props: Props): JSX.Element {
 
   const PostComponent = (
     <PageFilledWrapper>
+      <ClubSuspendedStaffAlert query={queryData.post.club} />
       <Stack spacing={4}>
         <ObserverManagerProvider>
           <PostVideoManagerProvider>

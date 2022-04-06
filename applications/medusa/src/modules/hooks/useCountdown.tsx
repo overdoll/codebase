@@ -1,4 +1,7 @@
-import { formatDistanceStrict, formatDuration, intervalToDuration, isPast } from 'date-fns'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
+import formatDuration from 'date-fns/formatDuration'
+import intervalToDuration from 'date-fns/intervalToDuration'
+import isPast from 'date-fns/isPast'
 import { useEffect, useState } from 'react'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '../locale'

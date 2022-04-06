@@ -49,26 +49,27 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
           </Heading>
         </Flex>
       </SmallBackgroundBox>
-      {!hasPassed && (
-        <SmallBackgroundBox>
-          <Flex w='100%' h='100%' align='center' justify='center'>
-            <Text color='gray.00' fontSize='lg'>
-              {remaining}
-            </Text>
-          </Flex>
-        </SmallBackgroundBox>)}
       {isSuspended
         ? (
-          <Collapse>
-            <CollapseButton>
-              <Trans>
-                Remove Suspension
-              </Trans>
-            </CollapseButton>
-            <CollapseBody>
-              <StaffClubUnSuspendButton query={data} />
-            </CollapseBody>
-          </Collapse>)
+          <>
+            <SmallBackgroundBox h={10}>
+              <Flex w='100%' h='100%' align='center' justify='center'>
+                <Text color='gray.00' fontSize='lg'>
+                  {hasPassed ? remaining : <Trans>Can be unlocked</Trans>}
+                </Text>
+              </Flex>
+            </SmallBackgroundBox>
+            <Collapse>
+              <CollapseButton>
+                <Trans>
+                  Remove Suspension
+                </Trans>
+              </CollapseButton>
+              <CollapseBody>
+                <StaffClubUnSuspendButton query={data} />
+              </CollapseBody>
+            </Collapse>
+          </>)
         : (
           <Collapse>
             <CollapseButton>

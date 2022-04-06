@@ -10,11 +10,12 @@ import {
 } from '@//:modules/content/PageLayout'
 import { Box, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import ClubExclusivePosts from '../../../../../../ClubPublicPage/ClubPublicPage/ClubExclusivePosts/ClubExclusivePosts'
 import ManageCancelledSubscriptionButton from './ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton'
 import AccountCancelledClubSupporterSubscriptionDetails
   from '../../../../components/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import ClubExclusiveContentSuspensionNotice
+  from '../ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice'
 
 interface Props {
   query: AccountCancelledClubSupporterSubscriptionSettingsFragment$key
@@ -26,7 +27,7 @@ const Fragment = graphql`
     ...ManageCancelledSubscriptionButtonFragment
     club {
       slug
-      ...ClubExclusivePostsFragment
+      ...ClubExclusiveContentSuspensionNoticeFragment
     }
   }
 `
@@ -70,7 +71,7 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
-        <ClubExclusivePosts query={data.club} />
+        <ClubExclusiveContentSuspensionNotice query={data.club} />
       </Box>
       <ManageCancelledSubscriptionButton query={data} />
     </Stack>

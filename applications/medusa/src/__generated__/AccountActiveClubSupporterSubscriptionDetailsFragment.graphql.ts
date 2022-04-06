@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<01963f82f327446d37b052034c57ba1e>>
+ * @generated SignedSource<<4b1a0788fce777444b84dfe647c933ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,9 @@ export type AccountActiveClubSupporterSubscriptionDetailsFragment$data = {
     readonly slug: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+    } | null;
+    readonly suspension: {
+      readonly expires: any;
     } | null;
   };
   readonly " $fragmentType": "AccountActiveClubSupporterSubscriptionDetailsFragment";
@@ -85,6 +88,24 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ClubSuspension",
+          "kind": "LinkedField",
+          "name": "suspension",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "expires",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -94,6 +115,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "478023ad9c4761d70cb621f23eb77493";
+(node as any).hash = "c23346724579f956d0a9f88a022d2d6c";
 
 export default node;
