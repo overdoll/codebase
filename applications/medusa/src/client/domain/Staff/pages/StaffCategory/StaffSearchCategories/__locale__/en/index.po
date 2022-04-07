@@ -13,10 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:32
+#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:36
 msgid "Search Categories"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:38
+#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:42
 msgid "Search for a category"
 msgstr ""

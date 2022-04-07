@@ -85,7 +85,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:29
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:32
 msgid "Copy Link"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:127
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:132
 msgid "Like"
 msgstr ""
 
@@ -570,8 +570,8 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:28
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:80
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:31
 msgid "View Post"
 msgstr ""
 

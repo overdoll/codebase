@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:85
+#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:92
 msgid "Confirming Email"
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:93
+#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:100
 msgid "Please wait while we confirm your email..."
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:47
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:56
+#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:48
+#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:57
 msgid "This confirmation link is either invalid or has expired"
 msgstr ""
 
-#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:50
+#: src/client/domain/ConfirmEmail/ConfirmEmail.tsx:51
 msgid "{0} was confirmed successfully"
 msgstr ""

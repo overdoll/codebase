@@ -25,7 +25,7 @@ msgstr ""
 msgid "Category {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/RootStaffCreateCategory.tsx:30
+#: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/RootStaffCreateCategory.tsx:34
 #: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
 msgid "Create Category"
 msgstr ""

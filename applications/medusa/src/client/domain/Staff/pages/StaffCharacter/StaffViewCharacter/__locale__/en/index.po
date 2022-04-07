@@ -17,7 +17,7 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter/RootStaffViewCharacter.tsx:38
+#: src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter/RootStaffViewCharacter.tsx:42
 msgid "Back to search"
 msgstr ""
 

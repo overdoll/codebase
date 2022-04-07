@@ -29,7 +29,7 @@ msgstr ""
 msgid "Audience {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/RootStaffCreateAudience.tsx:30
+#: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/RootStaffCreateAudience.tsx:34
 #: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:166
 msgid "Create Audience"
 msgstr ""

@@ -25,6 +25,10 @@ msgstr ""
 msgid "Not supporting any clubs"
 msgstr ""
 
+#: src/client/domain/Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton.tsx:24
+msgid "Public Profile"
+msgstr ""
+
 #: src/client/domain/Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
 msgid "Staff"
 msgstr ""

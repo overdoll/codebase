@@ -17,7 +17,7 @@ msgstr ""
 msgid "ARCHIVED"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:75
 msgid "Archived"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 msgid "DRAFT"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:66
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:70
 msgid "Draft"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Edit Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:80
 msgid "In Review"
 msgstr ""
 
@@ -41,12 +41,12 @@ msgstr ""
 #~ msgid "Load More"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:78
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:83
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:39
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:42
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:65
 msgid "Published"
 msgstr ""
 
@@ -55,11 +55,11 @@ msgid "REMOVED"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:35
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:81
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:85
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:86
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:90
 msgid "Removed"
 msgstr ""
 

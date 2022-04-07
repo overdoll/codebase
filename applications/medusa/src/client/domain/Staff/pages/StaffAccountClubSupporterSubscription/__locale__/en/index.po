@@ -48,7 +48,7 @@ msgid "Close"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:68
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionClub/StaffClubSupporterSubscriptionClub.tsx:32
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionClub/StaffClubSupporterSubscriptionClub.tsx:35
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:61
 msgid "Club"
 msgstr ""
@@ -120,11 +120,11 @@ msgid "Subscription"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:73
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:41
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:44
 msgid "Supporter"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:53
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:62
 msgid "Supporter Since"
 msgstr ""
 

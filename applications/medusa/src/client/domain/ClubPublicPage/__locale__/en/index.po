@@ -95,7 +95,15 @@ msgstr ""
 msgid "Leave"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:90
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:59
+msgid "Manage"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubMenu/ClubManageButton/ClubManageButton.tsx:29
+msgid "Manage Club"
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubPublicPage.tsx:102
 msgid "Members"
 msgstr ""
 
@@ -107,7 +115,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:39
+#: src/client/domain/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:42
 msgid "No posts found"
 msgstr ""
 
@@ -120,6 +128,10 @@ msgstr ""
 msgid "Preferred Billing Currency"
 msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton.tsx:24
+msgid "Public Page"
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:137
 msgid "Remember this payment method"
 msgstr ""
@@ -128,7 +140,7 @@ msgstr ""
 #~ msgid "See All"
 #~ msgstr ""
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:69
+#: src/client/domain/ClubPublicPage/ClubPublicPage/PostsHorizontalPreview/PostsHorizontalPreview.tsx:72
 msgid "See all"
 msgstr ""
 
@@ -194,9 +206,21 @@ msgstr ""
 msgid "Thanks for supporting this club! You can now access all of its exclusive content."
 msgstr ""
 
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:45
+msgid "The owner can unlock the club."
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:47
+msgid "The suspension expires in {remaining}."
+msgstr ""
+
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:111
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:129
 msgid "There was an error subscribing. Please try again later."
+msgstr ""
+
+#: src/client/domain/ClubPublicPage/ClubPublicPage/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:39
+msgid "This club is currently suspended. Only staff can see this page."
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:91

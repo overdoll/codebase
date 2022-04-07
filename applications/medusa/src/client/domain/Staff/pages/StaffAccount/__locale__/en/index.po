@@ -136,7 +136,7 @@ msgstr ""
 msgid "Payment Transactions"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:43
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:53
 msgid "Permissions"
 msgstr ""
 
@@ -182,7 +182,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:48
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:58
 msgid "Subscriptions"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 msgid "There was an error unlocking the account"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:53
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:63
 msgid "Transactions"
 msgstr ""
 

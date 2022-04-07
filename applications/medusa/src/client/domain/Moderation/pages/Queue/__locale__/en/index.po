@@ -29,7 +29,7 @@ msgstr ""
 msgid "Audience"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:37
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:41
 msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Moderation Paused"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:32
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:36
 msgid "Moderation Queue"
 msgstr ""
 

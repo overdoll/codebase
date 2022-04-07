@@ -111,7 +111,7 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                   <LinkButton
                     size='sm'
                     variant='link'
-                    to={`${item.node.post.club.slug}/p/${item.node.post.reference as string}`}
+                    to={`${item.node.post.club.slug as string}/p/${item.node.post.reference as string}`}
                   >
                     <Trans>
                       View Post
