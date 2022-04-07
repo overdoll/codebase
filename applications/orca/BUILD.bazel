@@ -1,67 +1,56 @@
-load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-_PROC_MACRO_DEPS = [
-    "@crates//:async-trait",
-]
-
 _DEPS = [
-    "@crates//:anyhow",
-    "@crates//:apollo-router",
-    "@crates//:apollo-router-core",
-    "@crates//:tower",
-    "@crates//:tokio",
-    "@crates//:tokio-util",
-    "@crates//:serde",
-    "@crates//:serde_json",
-    "@crates//:serde_json_bytes",
-    "@crates//:http",
-    "@crates//:schemars",
-    "@crates//:dotenv",
-    "@crates//:redis",
+    "@npm//@apollo/gateway",
+    "@npm//apollo-server",
+    "@npm//apollo-server-express",
+    "@npm//express",
+    "@npm//graphql",
+    "@npm//body-parser",
 ]
 
 _DATA = [
     "schema/schema.graphql",
-    "router.yaml",
 ]
 
 _SRCS = [
-    "src/main.rs",
-    "src/passport.rs",
-    "src/relay_persisted_queries.rs",
+    "apollo-gateway.ts",
 ]
 
-rust_binary(
+ts_library(
+    name = "internal_lib",
+    srcs = _SRCS,
+    data = _DATA,
+    module_name = "orca",
+    deps = _DEPS,
+)
+
+nodejs_binary(
     name = "internal",
-    srcs = _SRCS,
-    data = _DATA,
-    proc_macro_deps = _PROC_MACRO_DEPS,
-    deps = _DEPS,
-)
-
-rust_image(
-    name = "local-image",
-    srcs = _SRCS,
-    base = "@rust_base_image//image",
-    data = _DATA + [
-        ".env",
-        "dev.router.yaml",
+    data = [
+        ":internal_lib",
     ],
-    proc_macro_deps = _PROC_MACRO_DEPS,
-    deps = _DEPS,
+    entry_point = ":apollo-server.ts",
 )
 
-rust_image(
+nodejs_image(
+    name = "local-image",
+    binary = ":internal",
+    data = [".env"],
+    include_node_repo_args = False,
+    node_repository_name = "nodejs_linux_amd64",
+)
+
+nodejs_image(
     name = "image",
-    srcs = _SRCS,
-    base = "@rust_base_image//image",
-    data = _DATA,
-    proc_macro_deps = _PROC_MACRO_DEPS,
-    deps = _DEPS,
+    binary = ":internal",
+    include_node_repo_args = False,
+    node_repository_name = "nodejs_linux_amd64",
 )
 
 container_push(

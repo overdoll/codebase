@@ -9,7 +9,6 @@ import universalCookies from 'universal-cookie-express'
 import coverage from './app/coverage'
 import error from './app/error'
 import flash from './app/flash'
-import graphql from './app/graphql'
 import nonce from './app/nonce'
 import render from './app/render'
 import version from './app/version'
@@ -61,9 +60,6 @@ index.use(coverage)
 
 // Version endpoint - used by the client to always stay up-to-date
 index.use(version)
-
-// GraphQL Server
-void graphql(index)
 
 // Our entrypoint
 index.use(render)

@@ -23,7 +23,7 @@ async function fetchRelay (params, variables): Promise<any> {
   const response = await axios.post(
     '/api/graphql',
     {
-      // operationName: params.name,
+      operationName: params.name,
       query: 'PERSISTED_QUERY',
       variables,
       extensions: {

@@ -45,7 +45,8 @@
     }
   },
   "include": [
-    "./applications/medusa/**/*"
+    "./applications/medusa/**/*",
+    "./applications/orca/apollo-gateway.ts"
   ],
   "exclude": [
     "./applications/medusa/.nyc_output",

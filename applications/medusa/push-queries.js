@@ -1,8 +1,15 @@
 const Redis = require('ioredis')
+const path = require('path')
 
-require('dotenv').config()
-
-console.log(process.env.REDIS_HOST)
+if (process.env.BUILDKITE_BUILD_ID != null) {
+  // load CI .env.ci when in CI
+  require('dotenv').config({
+    path: path.resolve(process.cwd(), '.env.ci')
+  })
+} else {
+  // load local .env
+  require('dotenv').config()
+}
 
 const client = new Redis(6379, process.env.REDIS_HOST, { db: 2 })
 

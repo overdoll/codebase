@@ -1,6 +1,13 @@
 import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { gql } from 'apollo-server'
-import { ApolloServer } from 'apollo-server-micro'
+import { ApolloServer } from 'apollo-server-express'
+import Redis from 'ioredis'
+
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
+
+import express from 'express'
+
+import http from 'http'
 
 import { DocumentNode, graphqlSync, parse, visit } from 'graphql'
 import { buildFederatedSchema } from '@apollo/federation'
@@ -9,28 +16,12 @@ import { GraphQLDataSource } from '@apollo/gateway/src/datasources/types'
 import { ServiceEndpointDefinition } from '@apollo/gateway/src/config'
 import { GraphQLResponse } from 'apollo-server-types'
 
-const services = [
-  {
-    name: 'eva',
-    url: process.env.EVA_GRAPHQL_URL
-  },
-  {
-    name: 'sting',
-    url: process.env.STING_GRAPHQL_URL
-  },
-  {
-    name: 'parley',
-    url: process.env.PARLEY_GRAPHQL_URL
-  },
-  {
-    name: 'stella',
-    url: process.env.STELLA_GRAPHQL_URL
-  },
-  {
-    name: 'loader',
-    url: process.env.LOADER_GRAPHQL_URL
-  }
-]
+import { readFileSync } from 'fs'
+import bodyParser from 'body-parser'
+
+const supergraphSdl = readFileSync('./schema/schema.graphql').toString()
+
+require('dotenv').config()
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -234,12 +225,14 @@ class PassportDataSource extends RemoteGraphQLDataSource {
     })
 
     // make sure passport is forwarded back in the response as well
-    if (response.passport != null) {
+    // @ts-expect-error
+    if (response.extensions.passport != null) {
       const originalSend = context.res.send
 
       context.res.send = (data) => {
         const parse = JSON.parse(data)
-        parse.passport = response.passport
+        // @ts-expect-error
+        parse.extensions.passport = response.extensions.passport
         data = JSON.stringify(parse)
 
         context.res.send = originalSend // set function back to avoid the 'double-send'
@@ -257,61 +250,71 @@ class PassportDataSource extends RemoteGraphQLDataSource {
       return
     }
 
-    const passportForward = requestContext.context.req.body.passport
+    const passportForward = requestContext.context.req.body.extensions.passport
 
     if (passportForward != null) {
-      requestContext.request.passport = passportForward
+      requestContext.request.extensions.passport = passportForward
     }
   }
 }
 
 const gateway = new NodeGateway({
-  serviceList: services,
+  supergraphSdl: supergraphSdl,
   buildService ({ url }) {
     return new PassportDataSource({ url })
   }
 })
 
-// GraphQL Server
-const server = new ApolloServer({
-  gateway,
-  subscriptions: false,
-  context: ({
-    req,
-    res
-  }) => ({
-    req,
-    res
-  }),
-  // disable playground, add middleware for a custom playground
-  playground: false
-})
+const jsonParser = bodyParser.json()
 
-const startServer = server.start()
+// @ts-expect-error
+const client = new Redis(6379, process.env.REDIS_HOST, { db: 2 })
 
-export default async function handler (req, res): Promise<void> {
-  res.setHeader('Access-Control-Allow-Credentials', 'true')
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://studio.apollographql.com'
-  )
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
-  if (req.method === 'OPTIONS') {
-    res.end()
-    return
-  }
+function matchQueryMiddleware (req, res, next): void {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  return jsonParser(req, res, async () => {
+    const { queryId } = req.body.extensions
+    if (queryId != null) {
+      const query = await client.get(`query:${queryId as string}`)
+      if (query != null) {
+        req.body.query = query
+      } else {
+        res.status(400).send({ error: `cannot find queryId: ${queryId as string}` })
+        return
+      }
+    }
+    next()
+  })
+}
 
-  await startServer
-  await server.createHandler({
+void (async () => {
+  const app = express()
+  const httpServer = http.createServer(app)
+  const server = new ApolloServer({
+    gateway,
+    // @ts-expect-error
+    subscriptions: false,
+    context: ({
+      req,
+      res
+    }) => ({
+      req,
+      res
+    }),
+    // disable playground, add middleware for a custom playground
+    playground: false,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+  })
+
+  await server.start()
+
+  app.use('/api/graphql', matchQueryMiddleware)
+
+  server.applyMiddleware({
+    app,
     path: '/api/graphql'
-  })(req, res)
-}
+  })
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
-}
+  await new Promise<void>(resolve => httpServer.listen({ port: 8000 }, resolve))
+  console.log(`🚀 Server ready at http://localhost:8000${server.graphqlPath}`)
+})()

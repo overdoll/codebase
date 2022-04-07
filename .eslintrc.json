@@ -27,6 +27,7 @@
         "jest"
       ],
       "files": [
+        "applications/orca/apollo-gateway.ts",
         "applications/medusa/src/**/*.spec.tsx",
         "applications/medusa/src/**/*.spec.ts"
       ]

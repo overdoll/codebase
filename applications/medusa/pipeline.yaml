@@ -24,6 +24,7 @@ steps:
     commands:
       # compile localization files
       - npm run locale:compile
+      - npm run push-all-queries
     coverage:
       - name: medusa.e2e
         paths:

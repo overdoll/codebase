@@ -3,6 +3,7 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 
 exports_files([
     "package.json",
+    "tsconfig.json",
 ])
 
 package(default_visibility = ["//visibility:public"])
