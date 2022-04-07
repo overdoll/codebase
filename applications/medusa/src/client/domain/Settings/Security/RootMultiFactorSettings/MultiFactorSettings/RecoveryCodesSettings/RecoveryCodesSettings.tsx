@@ -18,7 +18,7 @@ export default function RecoveryCodesSettings (props: Props): JSX.Element {
   const data = useFragment(RecoveryCodesFragmentGQL, props.data)
 
   return (
-    <PagePanelWrap path='/configure/multi-factor/recovery-codes'>
+    <PagePanelWrap path='/settings/security/multi-factor/recovery-codes'>
       <PagePanelIcon icon={Barcode} colorScheme='teal' />
       <PagePanelText
         title={

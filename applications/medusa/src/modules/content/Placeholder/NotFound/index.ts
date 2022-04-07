@@ -3,3 +3,4 @@ export { default as NotFoundPublicPost } from './NotFoundPublicPost/NotFoundPubl
 export { default as NotFoundClub } from './NotFoundClub/NotFoundClub'
 export { default as NotFoundAccount } from './NotFoundAccount/NotFoundAccount'
 export { default as NotFoundGeneric } from './NotFoundGeneric/NotFoundGeneric'
+export { default as NotFoundSubscription } from './NotFoundSubscription/NotFoundSubscription'

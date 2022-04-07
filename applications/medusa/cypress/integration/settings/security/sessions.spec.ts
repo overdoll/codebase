@@ -9,7 +9,10 @@ describe('Settings - Add Email', () => {
 
   it('can see current session', () => {
     cy.visit('/settings/security')
-    cy.findByText(/Sessions/).should('exist')
+    cy.findByText('Account Sessions').should('be.visible').click()
+    cy.url().should('include', '/settings/security/sessions')
+
+    cy.findByText(/Here is a list of devices/).should('exist')
     cy.findByText(/Current Session/).should('exist')
   })
 
@@ -18,8 +21,8 @@ describe('Settings - Add Email', () => {
     cy.clearCookies()
 
     cy.joinWithExistingAccount(username)
-    cy.visit('/settings/security')
-    cy.findByText(/Sessions/).should('exist')
+    cy.visit('/settings/security/sessions')
+    cy.findByText(/Here is a list of devices/).should('exist')
     cy.findByText(/Last Accessed/iu).should('exist').click()
     cy.findByRole('button', { name: /Revoke Session/iu }).should('not.be.disabled').click()
     cy.findByText(/Last Accessed/iu).should('not.exist')

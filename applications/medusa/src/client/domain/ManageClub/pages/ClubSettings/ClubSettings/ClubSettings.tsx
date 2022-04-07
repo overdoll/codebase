@@ -1,10 +1,10 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubSettingsQuery } from '@//:artifacts/ClubSettingsQuery.graphql'
-import { Box, Stack } from '@chakra-ui/react'
-import ChangeClubName from './ChangeClubName/ChangeClubName'
-import ClubAliases from './ClubAliases/ClubAliases'
-import ChangeClubThumbnail from './ChangeClubThumbnail/ChangeClubThumbnail'
+import { Stack } from '@chakra-ui/react'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { PagePanelIcon, PagePanelText, PagePanelWrap, ResourceIcon } from '@//:modules/content/PageLayout'
+import { Barcode, SeriesIdentifier } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -13,9 +13,12 @@ interface Props {
 const Query = graphql`
   query ClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
-      ...ChangeClubNameFragment
-      ...ClubAliasesFragment
-      ...ChangeClubThumbnailFragment
+      slug
+      name
+      thumbnail {
+        ...ResourceIconFragment
+      }
+      viewerIsOwner
     }
   }
 `
@@ -30,17 +33,44 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
+  if (!queryData.club?.viewerIsOwner) {
+    return <NotFoundClub />
+  }
+
   return (
-    <Stack spacing={8}>
-      <Box>
-        <ChangeClubName query={queryData.club} />
-      </Box>
-      <Box>
-        <ClubAliases query={queryData.club} />
-      </Box>
-      <Box>
-        <ChangeClubThumbnail query={queryData.club} />
-      </Box>
+    <Stack spacing={2}>
+      <PagePanelWrap path={`/club/${queryData.club.slug}/settings/name`}>
+        <PagePanelIcon icon={Barcode} colorScheme='green' />
+        <PagePanelText
+          title={
+            <Trans>Update Name</Trans>
+          }
+          description={queryData.club.name}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap path={`/club/${queryData.club.slug}/settings/aliases`}>
+        <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
+        <PagePanelText
+          title={
+            <Trans>Manage Aliases</Trans>
+          }
+          description={`overdoll.com/${queryData.club.slug}`}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap path={`/club/${queryData.club.slug}/settings/thumbnail`}>
+        <ResourceIcon
+          h={10}
+          w={10}
+          borderRadius='md'
+          query={queryData.club.thumbnail}
+        />
+        <PagePanelText
+          title={
+            <Trans>Club Thumbnail</Trans>
+          }
+          description={<Trans>Update your club thumbnail</Trans>}
+        />
+      </PagePanelWrap>
     </Stack>
   )
 }

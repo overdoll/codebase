@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -23,7 +22,6 @@ export default function RootHome (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='home' />
       <PageInfiniteScrollWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>

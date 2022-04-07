@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6b48449e144c1168a561614cef100682>>
- * @relayHash c38dfadb66e6617bfb9812eefbc03bf7
+ * @generated SignedSource<<e054c899d882ddfef5a87294df470b7f>>
+ * @relayHash 39fe94df08c0d22695d194a10409c8fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c38dfadb66e6617bfb9812eefbc03bf7
+// @relayRequestID 39fe94df08c0d22695d194a10409c8fa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -281,6 +281,25 @@ return {
                             "storageKey": null
                           },
                           (v8/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "slug",
+                                "storageKey": null
+                              },
+                              (v8/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v7/*: any*/)
                         ],
                         "storageKey": null
@@ -335,7 +354,7 @@ return {
                 "name": "posts"
               }
             ],
-            "type": "Account",
+            "type": "Club",
             "abstractKey": null
           }
         ],
@@ -344,7 +363,7 @@ return {
     ]
   },
   "params": {
-    "id": "c38dfadb66e6617bfb9812eefbc03bf7",
+    "id": "39fe94df08c0d22695d194a10409c8fa",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",
@@ -353,6 +372,6 @@ return {
 };
 })();
 
-(node as any).hash = "c3b4fcf0e06f3c773e4591ea3b428baf";
+(node as any).hash = "7aee6b0058c74428e51d383ba68f3a6a";
 
 export default node;

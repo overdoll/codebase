@@ -25,11 +25,11 @@ msgstr ""
 msgid "If you closed the original tab, just open it back up in the same url!"
 msgstr ""
 
-#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:81
+#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:82
 msgid "No, this is not me"
 msgstr ""
 
-#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:54
+#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:55
 msgid "Please confirm that you are attempting to login from the following device & location"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "The login link you are using is either invalid or expired"
 msgstr ""
 
-#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:92
+#: src/client/domain/VerifyToken/Confirm/Confirm.tsx:93
 msgid "Yes, this is me"
 msgstr ""
 

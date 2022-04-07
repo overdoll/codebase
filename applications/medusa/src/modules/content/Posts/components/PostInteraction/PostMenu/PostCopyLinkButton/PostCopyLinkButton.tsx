@@ -13,6 +13,9 @@ interface Props {
 const Fragment = graphql`
   fragment PostCopyLinkButtonFragment on Post {
     reference
+    club {
+      slug
+    }
   }
 `
 
@@ -21,7 +24,7 @@ export default function PostCopyLinkButton ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com/p/${data?.reference}` })
+  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com/${data.club.slug}/p/${data?.reference}` })
 
   return (
     <MenuItem

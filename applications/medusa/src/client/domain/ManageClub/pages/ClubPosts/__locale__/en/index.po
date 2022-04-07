@@ -13,7 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:48
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:35
+msgid "ARCHIVED"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
+msgid "Archived"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:51
 msgid "DRAFT"
 msgstr ""
 
@@ -21,11 +29,11 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:56
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/DraftPost/DraftPost.tsx:59
 msgid "Edit Draft"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
 msgid "In Review"
 msgstr ""
 
@@ -33,20 +41,28 @@ msgstr ""
 #~ msgid "Load More"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:78
 msgid "No posts found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:36
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:39
 #: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
 msgid "Published"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:32
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RemovedPost/RemovedPost.tsx:35
+msgid "REMOVED"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:35
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:81
 msgid "Rejected"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:32
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:86
+msgid "Removed"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:29
 msgid "Review"
 msgstr ""

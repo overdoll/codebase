@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<23c398b3d6771be391e30122cc081ee8>>
- * @relayHash 171051e9bb7904dad67f7fa454e99ee5
+ * @generated SignedSource<<49d67a15f5f7109df4d5f546a3e63724>>
+ * @relayHash d73ff19cfc5bc8fa9e39cf836294da25
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 171051e9bb7904dad67f7fa454e99ee5
+// @relayRequestID d73ff19cfc5bc8fa9e39cf836294da25
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -79,7 +79,14 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v7 = [
   (v2/*: any*/),
   (v3/*: any*/),
   {
@@ -96,7 +103,7 @@ v6 = [
     ]
   }
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -152,16 +159,10 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "slug",
-                "storageKey": null
-              },
+              (v6/*: any*/),
               {
                 "alias": "exclusivePosts",
-                "args": (v6/*: any*/),
+                "args": (v7/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
                 "name": "posts",
@@ -238,7 +239,7 @@ return {
                                     "name": "urls",
                                     "plural": true,
                                     "selections": [
-                                      (v7/*: any*/),
+                                      (v8/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -257,7 +258,7 @@ return {
                                     "name": "videoThumbnail",
                                     "plural": false,
                                     "selections": [
-                                      (v7/*: any*/)
+                                      (v8/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -279,6 +280,19 @@ return {
                                 ],
                                 "storageKey": null
                               },
+                              (v5/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": [
+                              (v6/*: any*/),
                               (v5/*: any*/)
                             ],
                             "storageKey": null
@@ -319,7 +333,7 @@ return {
               },
               {
                 "alias": "exclusivePosts",
-                "args": (v6/*: any*/),
+                "args": (v7/*: any*/),
                 "filters": [
                   "sortBy",
                   "supporterOnlyStatus"
@@ -339,7 +353,7 @@ return {
     ]
   },
   "params": {
-    "id": "171051e9bb7904dad67f7fa454e99ee5",
+    "id": "d73ff19cfc5bc8fa9e39cf836294da25",
     "metadata": {},
     "name": "ClubExclusivePostsPaginationQuery",
     "operationKind": "query",

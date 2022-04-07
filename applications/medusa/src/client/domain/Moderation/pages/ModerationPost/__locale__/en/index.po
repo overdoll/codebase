@@ -13,12 +13,24 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:65
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:99
+msgid "Actions"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:123
+msgid "Add a note describing the reason in detail..."
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:123
 msgid "Club"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:75
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:135
 msgid "Contributor"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:89
+msgid "Information"
 msgstr ""
 
 #: src/client/domain/Moderation/pages/ModerationPost/RootModerationPost.tsx:35
@@ -29,12 +41,42 @@ msgstr ""
 msgid "No reports found"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:85
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:119
+msgid "Note"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationPostActions.tsx:27
+msgid "Remove"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationPostActions.tsx:34
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:132
+msgid "Remove Post"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:94
 msgid "Reports"
 msgstr ""
 
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:107
 #: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:84
 msgid "Rule"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:111
+msgid "State"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:83
+msgid "Successfully removed post"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:147
+msgid "Tags"
+msgstr ""
+
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPostActions/ModerationRemovePostForm/ModerationRemovePostForm.tsx:89
+msgid "There was an error removing the post"
 msgstr ""
 
 #: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ViewPostReports/ViewPostReports.tsx:79

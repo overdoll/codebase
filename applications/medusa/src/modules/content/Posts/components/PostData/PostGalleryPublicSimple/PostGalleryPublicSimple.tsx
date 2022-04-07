@@ -3,7 +3,7 @@ import { Box, Flex, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import { useContext } from 'react'
-import { PostVideoManagerContext } from '../../../helpers/PostVideoManager/PostVideoManager'
+import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import PostMedia from '../../PostMedia/PostMedia'
 import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
@@ -27,6 +27,7 @@ const Fragment = graphql`
       ...PostSupporterContentFragment
     }
     club {
+      slug
       ...PostSupporterContentClubFragment
     }
     ...PostClickableCategoriesFragment
@@ -74,7 +75,7 @@ export default function PostGalleryPublicSimple ({
                       variant='ghost'
                       colorScheme='gray'
                       rightIcon={<Icon w={2} h={2} icon={ArrowButtonRight} fill='inherit' />}
-                      to={`/p/${data?.reference}`}
+                      to={`/${data.club.slug}/p/${data?.reference}`}
                     >
                       <Trans>
                         View Post

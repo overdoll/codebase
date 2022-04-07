@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Stack } from '@chakra-ui/react'
+import { Link, Stack, Text } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
@@ -9,11 +9,12 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useFlash } from '@//:modules/flash'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -101,7 +102,9 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='register' />
+      <Helmet>
+        <title>Create Your Account :: overdoll</title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon
@@ -112,10 +115,39 @@ export default function Register ({ queryRef }: Props): JSX.Element {
             ml='auto'
             mr='auto'
           />
-          <RegisterForm
-            onSubmit={onSubmit}
-            loading={isInFlight}
-          />
+          <Stack spacing={2}>
+            <RegisterForm
+              onSubmit={onSubmit}
+              loading={isInFlight}
+            />
+            <Text color='gray.200' fontSize='lg'>
+              <Trans>
+                Creating an account on overdoll means you agree to follow our{' '}
+                <Link
+                  color='gray.100'
+                  fontSize='lg'
+                  isExternal
+                  href={COMMUNITY_GUIDELINES}
+                >Community Guidelines
+                </Link>{' '}
+                and understand our{' '}
+                <Link
+                  color='gray.100'
+                  fontSize='lg'
+                  isExternal
+                  href={TERMS_OF_SERVICE}
+                >Terms of Service
+                </Link>{' '} and {' '}
+                <Link
+                  color='gray.100'
+                  fontSize='lg'
+                  isExternal
+                  href={PRIVACY_POLICY}
+                >Privacy Policy
+                </Link>.
+              </Trans>
+            </Text>
+          </Stack>
         </Stack>
       </PageWrapper>
     </>

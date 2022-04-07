@@ -22,7 +22,11 @@ export default function RootHome (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='my clubs' />
+      <Helmet>
+        <title>
+          My Clubs :: overdoll
+        </title>
+      </Helmet>
       <QueryErrorBoundary loadQuery={() => loadQuery({})}>
         <Suspense fallback={(
           <PageWrapper>

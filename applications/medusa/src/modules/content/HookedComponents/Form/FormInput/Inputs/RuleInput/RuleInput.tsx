@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
-import SelectRuleButton from '../../../../../../../client/domain/Admin/components/SelectRuleButton/SelectRuleButton'
+import SelectRuleButton from './SelectRuleButton/SelectRuleButton'
 
 export default function RuleInput (): JSX.Element {
   const {

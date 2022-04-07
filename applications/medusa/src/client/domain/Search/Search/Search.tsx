@@ -47,17 +47,17 @@ const Fragment = graphql`
 export default function Search (props: Props): JSX.Element {
   const queryData = usePreloadedQuery<SearchQuery>(
     Query,
-    props.query
+    props.query,
   )
 
   const {
     data,
     loadNext,
     hasNext,
-    isLoadingNext
+    isLoadingNext,
   } = usePaginationFragment<SearchQuery, any>(
     Fragment,
-    queryData
+    queryData,
   )
 
   return (

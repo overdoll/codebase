@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ee585689ffac7a03987de7f73d824e79>>
- * @relayHash 1b8fbb04acc29fe328d9f299b6a50ef3
+ * @generated SignedSource<<b9588883a18fe83fea48e589b5f9d9f0>>
+ * @relayHash cb187903847a950abea2d3fb450479fb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1b8fbb04acc29fe328d9f299b6a50ef3
+// @relayRequestID cb187903847a950abea2d3fb450479fb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -79,7 +79,14 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v7 = [
   (v2/*: any*/),
   (v3/*: any*/),
   {
@@ -88,7 +95,7 @@ v6 = [
     "value": "TOP"
   }
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -144,16 +151,10 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "slug",
-                "storageKey": null
-              },
+              (v6/*: any*/),
               {
                 "alias": "topPosts",
-                "args": (v6/*: any*/),
+                "args": (v7/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
                 "name": "posts",
@@ -230,7 +231,7 @@ return {
                                     "name": "urls",
                                     "plural": true,
                                     "selections": [
-                                      (v7/*: any*/),
+                                      (v8/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -249,7 +250,7 @@ return {
                                     "name": "videoThumbnail",
                                     "plural": false,
                                     "selections": [
-                                      (v7/*: any*/)
+                                      (v8/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -271,6 +272,19 @@ return {
                                 ],
                                 "storageKey": null
                               },
+                              (v5/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": [
+                              (v6/*: any*/),
                               (v5/*: any*/)
                             ],
                             "storageKey": null
@@ -311,7 +325,7 @@ return {
               },
               {
                 "alias": "topPosts",
-                "args": (v6/*: any*/),
+                "args": (v7/*: any*/),
                 "filters": [
                   "sortBy"
                 ],
@@ -330,7 +344,7 @@ return {
     ]
   },
   "params": {
-    "id": "1b8fbb04acc29fe328d9f299b6a50ef3",
+    "id": "cb187903847a950abea2d3fb450479fb",
     "metadata": {},
     "name": "ClubTopPostsPaginationQuery",
     "operationKind": "query",

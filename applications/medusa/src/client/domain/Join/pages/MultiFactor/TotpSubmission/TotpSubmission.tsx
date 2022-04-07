@@ -3,7 +3,7 @@ import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
 import { useHistory } from '@//:modules/routing'
-import { prepareViewer } from '../../../helpers/support'
+import { prepareViewer } from '../../../support/support'
 import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
 import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
 import { t, Trans } from '@lingui/macro'
@@ -19,6 +19,7 @@ import {
   FormInput,
   FormSubmitButton,
   InputBody,
+  InputFooter,
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -148,6 +149,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
             <InputBody>
               <TextInput placeholder='123456' />
             </InputBody>
+            <InputFooter />
           </FormInput>
           <FormSubmitButton
             size='xl'

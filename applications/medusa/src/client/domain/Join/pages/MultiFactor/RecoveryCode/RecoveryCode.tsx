@@ -1,12 +1,10 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Flex, FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
+import { HStack, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { useHistory } from '@//:modules/routing'
-import { prepareViewer } from '../../../helpers/support'
-import StyledInput from '@//:modules/content/ThemeComponents/StyledInput/StyledInput'
+import { prepareViewer } from '../../../support/support'
 import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql'
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
 import { useLingui } from '@lingui/react'
@@ -14,6 +12,15 @@ import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFooter,
+  InputHeader,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
 
 interface CodeValues {
   code: string
@@ -62,20 +69,13 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       })
   })
 
-  const {
-    register,
-    setError,
-    handleSubmit,
-    formState: {
-      errors,
-      isDirty,
-      isSubmitted
-    }
-  } = useForm<CodeValues>({
+  const methods = useForm<CodeValues>({
     resolver: joiResolver(
       schema
     )
   })
+
+  const { setError } = methods
 
   const notify = useToast()
 
@@ -117,8 +117,6 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
     })
   }
 
-  const success = isDirty && (errors.code == null) && isSubmitted
-
   return (
     <Stack spacing={3}>
       <Alert colorScheme='teal' status='info'>
@@ -134,43 +132,31 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
           </Trans>
         </AlertDescription>
       </Alert>
-      <form
-        noValidate
-        onSubmit={handleSubmit(onSubmitCode)}
-      >
-        <FormControl
-          isInvalid={errors.code != null}
-        >
-          <FormLabel>
-            <Trans>
-              Enter a recovery code
-            </Trans>
-          </FormLabel>
-          <Flex justify='center'>
-            <StyledInput
-              register={register('code')}
-              success={success}
-              error={errors.code != null}
-              placeholder={i18n._(t`An 8-character recovery code`)}
-              errorMessage={errors.code?.message}
-              size='md'
-            />
-            <Button
-              size='md'
-              variant='solid'
-              type='submit'
-              colorScheme='gray'
-              isDisabled={errors.code != null}
-              isLoading={isSubmittingCode}
-              ml={2}
-            >
+      <Form {...methods} onSubmit={onSubmitCode}>
+        <HStack spacing={2} justify='space-between'>
+          <FormInput size='md' id='code'>
+            <InputHeader>
               <Trans>
-                Submit
+                Code
               </Trans>
-            </Button>
-          </Flex>
-        </FormControl>
-      </form>
+            </InputHeader>
+            <InputBody>
+              <TextInput placeholder={i18n._(t`An 8-character recovery code`)} />
+            </InputBody>
+            <InputFooter />
+          </FormInput>
+          <FormSubmitButton
+            size='md'
+            variant='solid'
+            colorScheme='gray'
+            isLoading={isSubmittingCode}
+          >
+            <Trans>
+              Submit
+            </Trans>
+          </FormSubmitButton>
+        </HStack>
+      </Form>
     </Stack>
   )
 }

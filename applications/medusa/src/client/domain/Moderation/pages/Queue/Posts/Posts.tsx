@@ -17,7 +17,8 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
+import PostTagsPreview from './PostTagsPreview/PostTagsPreview'
 
 interface Props {
   query: PreloadedQuery<PostsQuery>
@@ -49,6 +50,7 @@ const PostsGQL = graphql`
             id
             ...PostPreviewFragment
             ...ModeratePostFragment
+            ...PostTagsPreviewFragment
             postedAt
           }
         }
@@ -187,6 +189,7 @@ export default function Posts (props: Props): JSX.Element {
                 <PostPreview query={item.node.post} />
               </PostVideoManagerProvider>
             </ObserverManagerProvider>
+            <PostTagsPreview query={item.node.post} />
             <Flex justify='flex-end' mt={4}>
               <ModeratePost
                 connectionID={postsConnection}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3faefe019d6ab3ebe0fc8bc74d7e3e64>>
+ * @generated SignedSource<<c564353683abee56d1f831cb82b03135>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostPreviewFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PostStaticAudienceFragment" | "PostStaticCharactersFragment" | "PostStaticCategoriesFragment" | "PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostIndexerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostIndexerFragment">;
   readonly " $fragmentType": "PostPreviewFragment";
 };
 export type PostPreviewFragment = PostPreviewFragment$data;
@@ -26,21 +26,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostPreviewFragment",
   "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostStaticAudienceFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostStaticCharactersFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostStaticCategoriesFragment"
-    },
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -61,6 +46,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "153b93b4556af1f72295fbb272a26e00";
+(node as any).hash = "7eb864b1b893cba2c3c0bee9fdb2e7d4";
 
 export default node;

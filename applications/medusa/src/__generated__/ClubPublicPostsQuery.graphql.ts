@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2813d2847a90036045152918a9787951>>
- * @relayHash b30566862c6348adedf070d9aba46bb3
+ * @generated SignedSource<<5375b46f9faa6186dc15b11ddc97e89a>>
+ * @relayHash 06fe76f00fbc99a8e1872280b33c4a11
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b30566862c6348adedf070d9aba46bb3
+// @relayRequestID 06fe76f00fbc99a8e1872280b33c4a11
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -27,6 +27,7 @@ export type ClubPublicPostsQueryVariables = ClubPublicPostsQuery$variables;
 export type ClubPublicPostsQuery$data = {
   readonly club: {
     readonly slug: string;
+    readonly name: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPostsFragment">;
   } | null;
   readonly viewer: {
@@ -84,7 +85,14 @@ v7 = {
   "name": "slug",
   "storageKey": null
 },
-v8 = [
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v9 = [
   {
     "kind": "Variable",
     "name": "categorySlugs",
@@ -116,35 +124,35 @@ v8 = [
     "variableName": "supporterOnlyStatus"
   }
 ],
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -152,7 +160,7 @@ v13 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v12/*: any*/),
+    (v13/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -163,13 +171,6 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
 v15 = {
   "alias": null,
   "args": null,
@@ -178,7 +179,7 @@ v15 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
-    (v13/*: any*/),
+    (v14/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -187,12 +188,12 @@ v15 = {
       "name": "videoThumbnail",
       "plural": false,
       "selections": [
-        (v12/*: any*/)
+        (v13/*: any*/)
       ],
       "storageKey": null
     },
-    (v11/*: any*/),
-    (v10/*: any*/)
+    (v12/*: any*/),
+    (v11/*: any*/)
   ],
   "storageKey": null
 },
@@ -226,6 +227,7 @@ return {
         "plural": false,
         "selections": [
           (v7/*: any*/),
+          (v8/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -276,9 +278,10 @@ return {
         "plural": false,
         "selections": [
           (v7/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v9/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -292,7 +295,7 @@ return {
                 "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -308,8 +311,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
                       (v10/*: any*/),
+                      (v11/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -333,9 +336,9 @@ return {
                             "name": "resource",
                             "plural": false,
                             "selections": [
-                              (v11/*: any*/),
-                              (v13/*: any*/),
-                              (v10/*: any*/)
+                              (v12/*: any*/),
+                              (v14/*: any*/),
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -353,7 +356,7 @@ return {
                             "name": "isSupporterOnly",
                             "storageKey": null
                           },
-                          (v10/*: any*/)
+                          (v11/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -366,8 +369,8 @@ return {
                         "plural": false,
                         "selections": [
                           (v7/*: any*/),
-                          (v10/*: any*/),
-                          (v14/*: any*/),
+                          (v11/*: any*/),
+                          (v8/*: any*/),
                           (v15/*: any*/),
                           {
                             "alias": null,
@@ -384,7 +387,7 @@ return {
                                 "name": "isSupporter",
                                 "storageKey": null
                               },
-                              (v10/*: any*/)
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -402,7 +405,7 @@ return {
                           (v7/*: any*/),
                           (v16/*: any*/),
                           (v15/*: any*/),
-                          (v10/*: any*/)
+                          (v11/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -424,14 +427,14 @@ return {
                             "selections": [
                               (v16/*: any*/),
                               (v7/*: any*/),
-                              (v10/*: any*/)
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v14/*: any*/),
+                          (v8/*: any*/),
                           (v7/*: any*/),
                           (v15/*: any*/),
-                          (v10/*: any*/)
+                          (v11/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -443,8 +446,8 @@ return {
                         "name": "viewerLiked",
                         "plural": false,
                         "selections": [
-                          (v9/*: any*/),
-                          (v10/*: any*/)
+                          (v10/*: any*/),
+                          (v11/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -491,7 +494,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v9/*: any*/),
             "filters": [
               "sortBy",
               "categorySlugs",
@@ -504,7 +507,7 @@ return {
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v10/*: any*/)
+          (v11/*: any*/)
         ],
         "storageKey": null
       },
@@ -516,7 +519,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v10/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -537,7 +540,7 @@ return {
     ]
   },
   "params": {
-    "id": "b30566862c6348adedf070d9aba46bb3",
+    "id": "06fe76f00fbc99a8e1872280b33c4a11",
     "metadata": {},
     "name": "ClubPublicPostsQuery",
     "operationKind": "query",
@@ -546,6 +549,6 @@ return {
 };
 })();
 
-(node as any).hash = "b04a0f2308f53d39d4163f193f6dda17";
+(node as any).hash = "f5698b77f30e909b11443ba1046cb42a";
 
 export default node;

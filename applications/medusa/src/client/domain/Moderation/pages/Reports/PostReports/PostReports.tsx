@@ -46,6 +46,9 @@ const Fragment = graphql`
           }
           post {
             reference
+            club {
+              slug
+            }
           }
         }
       }
@@ -105,7 +108,11 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
                   {item.node.rule.title}
                 </TableBodyColumn>
                 <TableBodyColumn column={1}>
-                  <LinkButton size='sm' variant='link' to={`/p/${item.node.post.reference as string}`}>
+                  <LinkButton
+                    size='sm'
+                    variant='link'
+                    to={`${item.node.post.club.slug}/p/${item.node.post.reference as string}`}
+                  >
                     <Trans>
                       View Post
                     </Trans>

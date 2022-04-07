@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5d0bfaaf24e947634a5eb95270a8f18>>
+ * @generated SignedSource<<7411c749ff0b1e2a25e3815b9b0313c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,16 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountActiveClubSupporterSubscriptionPreviewFragment$data = {
-  readonly supporterSince: any;
-  readonly nextBillingDate: any;
-  readonly club: {
-    readonly name: string;
-    readonly slug: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-  };
-  readonly " $fragmentSpreads": FragmentRefs<"ManageActiveSubscriptionButtonFragment">;
+  readonly reference: string;
+  readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionDetailsFragment">;
   readonly " $fragmentType": "AccountActiveClubSupporterSubscriptionPreviewFragment";
 };
 export type AccountActiveClubSupporterSubscriptionPreviewFragment = AccountActiveClubSupporterSubscriptionPreviewFragment$data;
@@ -39,67 +31,19 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "supporterSince",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "nextBillingDate",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Club",
-      "kind": "LinkedField",
-      "name": "club",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "slug",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "thumbnail",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceIconFragment"
-            }
-          ],
-          "storageKey": null
-        }
-      ],
+      "name": "reference",
       "storageKey": null
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ManageActiveSubscriptionButtonFragment"
+      "name": "AccountActiveClubSupporterSubscriptionDetailsFragment"
     }
   ],
   "type": "AccountActiveClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "592aef6b4d814fe0b967ca713a816fe3";
+(node as any).hash = "21a20895dd66624d889ade10697fc76f";
 
 export default node;

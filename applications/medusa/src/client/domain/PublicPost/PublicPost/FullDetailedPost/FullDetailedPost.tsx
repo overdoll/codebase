@@ -24,8 +24,9 @@ import PostReportButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import JoinClubFromPost
-  from '../../../ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+import JoinClubFromPost from '../../../ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+import PostArchiveButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -44,8 +45,10 @@ const PostFragment = graphql`
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
     ...PostIndexerFragment
+    ...PostArchiveButtonFragment
     club @required(action: THROW) {
       ...JoinClubFromPostFragment
+      viewerIsOwner
     }
   }
 `
@@ -88,7 +91,9 @@ export default function FullDetailedPost ({
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
               <PostCopyLinkButton query={data} />
-              <PostReportButton query={data} viewerQuery={viewerData} />
+              {data.club.viewerIsOwner
+                ? <PostArchiveButton query={data} />
+                : <PostReportButton query={data} viewerQuery={viewerData} />}
               <PostModerateButton query={data} />
             </PostMenu>)}
         />

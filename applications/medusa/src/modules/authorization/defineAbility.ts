@@ -24,7 +24,7 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
 
     if (data.isStaff) {
       if (!data.isLocked) {
-        can('admin', ['Tags', 'Club', 'Account', 'Post', 'Billing'])
+        can('staff', ['Tags', 'Club', 'Account', 'Post', 'Billing'])
       }
     }
   }

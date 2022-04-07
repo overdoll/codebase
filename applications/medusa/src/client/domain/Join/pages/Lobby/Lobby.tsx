@@ -8,6 +8,7 @@ import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { Trans } from '@lingui/macro'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
+import { Helmet } from 'react-helmet-async'
 
 interface Props {
   refresh: () => void
@@ -51,46 +52,51 @@ export default function Lobby ({
   }, [])
 
   return (
-    <PageWrapper>
-      <Stack spacing={8}>
-        <Icon
-          icon={BadgeCircle}
-          w={100}
-          h={100}
-          fill='purple.300'
-          ml='auto'
-          mr='auto'
-        />
-        <Heading
-          align='center'
-          size='md'
-          color='gray.00'
-        >
-          <Trans>
-            Tap on the link you received in your email inbox to continue
-          </Trans>
-        </Heading>
-        <Flex
-          justify='center'
-          wordBreak='break-all'
-          pt={3}
-          pb={3}
-          pr={2}
-          borderRadius={5}
-          bg='gray.800'
-          w='100%'
-        >
-          <Text
-            fontSize='lg'
-            color='purple.300'
+    <>
+      <Helmet>
+        <title>Waiting For Authentication :: overdoll</title>
+      </Helmet>
+      <PageWrapper>
+        <Stack spacing={8}>
+          <Icon
+            icon={BadgeCircle}
+            w={100}
+            h={100}
+            fill='purple.300'
+            ml='auto'
+            mr='auto'
+          />
+          <Heading
+            align='center'
+            size='md'
+            color='gray.00'
           >
-            {email ?? data.email}
-          </Text>
-        </Flex>
-        <Flex w='100%' justify='center'>
-          <RevokeTokenButton queryRef={data} />
-        </Flex>
-      </Stack>
-    </PageWrapper>
+            <Trans>
+              Tap on the link you received in your email inbox to continue
+            </Trans>
+          </Heading>
+          <Flex
+            justify='center'
+            wordBreak='break-all'
+            pt={3}
+            pb={3}
+            pr={2}
+            borderRadius={5}
+            bg='gray.800'
+            w='100%'
+          >
+            <Text
+              fontSize='lg'
+              color='purple.300'
+            >
+              {email ?? data.email}
+            </Text>
+          </Flex>
+          <Flex w='100%' justify='center'>
+            <RevokeTokenButton queryRef={data} />
+          </Flex>
+        </Stack>
+      </PageWrapper>
+    </>
   )
 }

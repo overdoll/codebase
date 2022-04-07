@@ -283,7 +283,7 @@ msgid "Open Search"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:95
-msgid "Platform Admin"
+msgid "Platform Staff"
 msgstr ""
 
 #: src/modules/validation/Totp.ts:13

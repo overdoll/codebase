@@ -5,7 +5,7 @@ import { useHistory } from '@//:modules/routing'
 import { stringify } from 'query-string'
 import { useQueryParams } from 'use-query-params'
 import { useChoiceContext } from '@//:modules/content/HookedComponents/Choice'
-import { filterObjectByKeyValue } from '../../../../../helpers/filterObjectByKeyValue'
+import { filterObjectByKeyValue } from '../../../../../support/filterObjectByKeyValue'
 import { configMap } from '../../../../../constants'
 
 interface Props {

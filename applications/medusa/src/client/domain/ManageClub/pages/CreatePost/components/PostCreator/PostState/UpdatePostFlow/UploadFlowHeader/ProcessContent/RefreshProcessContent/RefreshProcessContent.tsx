@@ -21,6 +21,8 @@ const Query = graphql`
       reference
       content {
         id
+        viewerCanViewSupporterOnlyContent
+        isSupporterOnly
         resource {
           processed
           videoDuration

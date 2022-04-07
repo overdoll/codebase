@@ -87,7 +87,7 @@ export default function AddEmailForm ({
 
   return (
     <Form {...methods} onSubmit={onSubmit}>
-      <FormInput size='sm' id='email'>
+      <FormInput size='md' id='email'>
         <InputHeader>
           <Trans>
             Add an email
@@ -99,7 +99,7 @@ export default function AddEmailForm ({
             <InputFeedback />
           </InputBody>
           <FormSubmitButton
-            size='sm'
+            size='md'
             isLoading={isAddingEmail}
             isDisabled={isDisabled}
           >

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2664751836b06daadd2e01c5c9bd9f9a>>
+ * @generated SignedSource<<a933ca0a380deba72fd3a4da81c6a660>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,8 @@ return {
           "kind": "Literal",
           "name": "status",
           "value": [
-            "ACTIVE"
+            "ACTIVE",
+            "CANCELLED"
           ]
         }
       ],
@@ -209,7 +210,7 @@ return {
         },
         (v2/*: any*/)
       ],
-      "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\"])"
+      "storageKey": "__ClubSupporterSubscriptions_clubSupporterSubscriptions_connection(status:[\"ACTIVE\",\"CANCELLED\"])"
     },
     (v1/*: any*/)
   ],
@@ -218,6 +219,6 @@ return {
 };
 })();
 
-(node as any).hash = "f2301d0e4a9f73856c570eae46682ae5";
+(node as any).hash = "6e111bf075b3fb282703351e63d617d9";
 
 export default node;

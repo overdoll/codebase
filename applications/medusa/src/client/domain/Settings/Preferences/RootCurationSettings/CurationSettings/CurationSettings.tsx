@@ -30,7 +30,7 @@ export default function CurationSettings (props: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <PagePanelWrap path='/configure/curation-profile'>
+      <PagePanelWrap path='/settings/preferences/curation-profile'>
         <PagePanelIcon icon={BirdHouse} colorScheme='orange' />
         <PagePanelText
           title={

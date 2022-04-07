@@ -49,6 +49,15 @@ declare global {
        * @example cy.displayLastEmail(Date.now(), 'register email', 'test.123@testmail.app')
        */
       displayLastEmail: (startTimestamp: number, name: string, email: string) => Chainable<Element>
+
+      /**
+       * Create a club
+       *
+       * You must be logged into an account that is able to create clubs
+       *
+       * @example cy.createClub('MyClubName')
+       */
+      createClub: (name: string) => Chainable<Element>
     }
   }
 }

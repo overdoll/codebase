@@ -25,7 +25,11 @@ export default function RootPublicPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='view post' />
+      <Helmet>
+        <title>
+          Post :: overdoll.com
+        </title>
+      </Helmet>
       <QueryErrorBoundary loadQuery={() => loadQuery({ reference: params?.reference ?? '' })}>
         <Suspense fallback={(
           <PageWrapper>

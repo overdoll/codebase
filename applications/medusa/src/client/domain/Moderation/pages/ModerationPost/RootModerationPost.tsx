@@ -18,7 +18,7 @@ interface Props {
   }
 }
 
-export default function RootAdminClub (props: Props): JSX.Element {
+export default function RootModerationPost (props: Props): JSX.Element {
   const [queryRef, loadQuery] = useQueryLoader<ModerationPostQueryType>(
     ModerationPostQuery,
     props.prepared.query
@@ -28,7 +28,11 @@ export default function RootAdminClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='moderate post' />
+      <Helmet>
+        <title>
+          Post - Moderation :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

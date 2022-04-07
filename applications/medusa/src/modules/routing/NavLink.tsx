@@ -5,7 +5,7 @@ import { createLocation } from 'history'
 import { useLocation } from './Location'
 import getBasePath from './getBasePath'
 import { MaybeRenderProp } from '@//:types/components'
-import { runIfFunction } from '../support'
+import runIfFunction from '../support/runIfFunction'
 
 interface ChildrenCallable extends ChildrenCallableLink {
   isActive: boolean

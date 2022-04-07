@@ -12,6 +12,8 @@ import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import { MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { ContentBrushPen } from '@//:assets/icons'
+import PostDeleteButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
 
 interface Props {
   query: DraftPostFragment$key
@@ -22,6 +24,7 @@ const Fragment = graphql`
     reference
     ...PostPreviewContentFragment
     ...PostModerateButtonFragment
+    ...PostDeleteButtonFragment
   }
 `
 
@@ -58,6 +61,7 @@ export default function DraftPost ({
               </Trans>)}
             icon={ContentBrushPen}
           />
+          <PostDeleteButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

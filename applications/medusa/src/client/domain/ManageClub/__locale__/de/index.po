@@ -42,7 +42,7 @@ msgid "Add, arrange, or remove the files you're uploading. You can encourage you
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPublicPage/ClubPublicPage/ClubMenu/ClubMenu.tsx:29
-#~ msgid "Admin"
+#~ msgid "Staff"
 #~ msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubAliases/ManageClubSlugAliases/ManageClubSlugAliases.tsx:139

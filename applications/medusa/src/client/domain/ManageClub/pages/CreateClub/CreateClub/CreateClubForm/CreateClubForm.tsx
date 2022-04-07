@@ -13,7 +13,7 @@ import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import useSlugSubscribe from '../../../../../Admin/helpers/useSlugSubscribe'
+import useSlugSubscribe from '../../../../../Staff/support/useSlugSubscribe'
 import {
   Form,
   FormInput,

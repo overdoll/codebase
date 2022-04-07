@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SelectClubsQuery } from '@//:artifacts/SelectClubsQuery.graphql'
 import { Flex, Heading, Stack } from '@chakra-ui/react'
-import ClubPreview from '../ClubPreview/ClubPreview'
+import ClubPreview from './ClubPreview/ClubPreview'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'
 import { Icon } from '@//:modules/content/PageLayout'
 import { SwapCircle } from '@//:assets/icons/interface'
@@ -16,12 +16,10 @@ interface Props {
 const Query = graphql`
   query SelectClubsQuery($slug: String!) {
     club(slug: $slug) {
+      viewerIsOwner
       slug
       ...ClubPreviewFragment
       ...SuspendedClubBannerFragment
-      owner {
-        id
-      }
     }
     viewer {
       id
@@ -62,7 +60,7 @@ export default function SelectClubs ({ query }: Props): JSX.Element {
     )
   }
 
-  if (queryData?.viewer.id !== queryData?.club.owner.id) {
+  if (!queryData?.club.viewerIsOwner) {
     return (
       <Flex {...flexProps}>
         <Heading color='gray.00' fontSize='lg'>

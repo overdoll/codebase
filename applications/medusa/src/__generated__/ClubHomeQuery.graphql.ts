@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<20f4a2529bd9c00ea1a2b02604bd6014>>
- * @relayHash b3e53ac2335aed510522228d706026f2
+ * @generated SignedSource<<d4cbc861f26af1d246da586ec61408be>>
+ * @relayHash b3e9b0fcb7f55b5f4f2a1ff6025bdf95
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3e53ac2335aed510522228d706026f2
+// @relayRequestID b3e9b0fcb7f55b5f4f2a1ff6025bdf95
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,9 @@ export type ClubHomeQuery$variables = {
 export type ClubHomeQueryVariables = ClubHomeQuery$variables;
 export type ClubHomeQuery$data = {
   readonly club: {
+    readonly name: string;
     readonly membersCount: number;
+    readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
   } | null;
 };
@@ -48,17 +50,31 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "membersCount",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "membersCount",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "viewerIsOwner",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -81,6 +97,8 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -108,13 +126,8 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -131,7 +144,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -150,7 +163,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -161,18 +174,18 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v4/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "b3e53ac2335aed510522228d706026f2",
+    "id": "b3e9b0fcb7f55b5f4f2a1ff6025bdf95",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -181,6 +194,6 @@ return {
 };
 })();
 
-(node as any).hash = "a6c85a9956f7543bd21b2b4da4c5831d";
+(node as any).hash = "bae4267c4abe2834b940404df87f12c9";
 
 export default node;

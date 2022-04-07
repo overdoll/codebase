@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f4d21f517f1a6fced51e6ad6bb81be7>>
+ * @generated SignedSource<<b814584d345c24988c42f5ef3a1192f6>>
  * @relayHash 49bc9695722aec29945c08b6966f3e7c
  * @lightSyntaxTransform
  * @nogrep
@@ -248,7 +248,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminSeriesConnection_series",
+        "key": "StaffSeriesConnection_series",
         "kind": "LinkedHandle",
         "name": "series"
       }
@@ -264,6 +264,6 @@ return {
 };
 })();
 
-(node as any).hash = "1dc6d9645105adcecb0dfb8a33fdf658";
+(node as any).hash = "940fce9b654e784856987e513ef7843e";
 
 export default node;

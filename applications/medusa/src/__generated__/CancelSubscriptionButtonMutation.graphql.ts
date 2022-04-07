@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8daf58f2974c012412e6261493fab3bc>>
- * @relayHash f3fc73c18822a3fc1c209049f9dfc7ff
+ * @generated SignedSource<<fee1ccdc81636cf5a5104df871e8042d>>
+ * @relayHash 60b15c8b79a4c42c67fa076ec6bc61fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f3fc73c18822a3fc1c209049f9dfc7ff
+// @relayRequestID 60b15c8b79a4c42c67fa076ec6bc61fa
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -27,6 +27,7 @@ export type CancelSubscriptionButtonMutation$data = {
     readonly clubSupporterSubscription: {
       readonly __typename: string;
       readonly id?: string;
+      readonly reference?: string;
       readonly supporterSince?: any;
       readonly cancelledAt?: any;
       readonly endDate?: any;
@@ -92,38 +93,45 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "supporterSince",
+  "name": "reference",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cancelledAt",
+  "name": "supporterSince",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "endDate",
+  "name": "cancelledAt",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "endDate",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "name",
   "storageKey": null
 },
 v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -165,6 +173,7 @@ return {
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -173,8 +182,8 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
                       (v11/*: any*/),
+                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -247,6 +256,7 @@ return {
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -255,8 +265,8 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
                       (v11/*: any*/),
+                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -273,7 +283,7 @@ return {
                             "name": "urls",
                             "plural": true,
                             "selections": [
-                              (v12/*: any*/),
+                              (v13/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -292,7 +302,7 @@ return {
                             "name": "videoThumbnail",
                             "plural": false,
                             "selections": [
-                              (v12/*: any*/)
+                              (v13/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -351,7 +361,7 @@ return {
     ]
   },
   "params": {
-    "id": "f3fc73c18822a3fc1c209049f9dfc7ff",
+    "id": "60b15c8b79a4c42c67fa076ec6bc61fa",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",
@@ -360,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "a848b091f747b93876c1d8bf469a1b00";
+(node as any).hash = "ca7fff688fc16aef241b2a4011fcb8ba";
 
 export default node;

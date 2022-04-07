@@ -21,12 +21,22 @@ import {
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Stack } from '@chakra-ui/react'
-import { SUPPORTER_GUIDELINES } from '@//:modules/constants/links'
+import {
+  CLUB_GUIDELINES,
+  COMMUNITY_GUIDELINES,
+  PRIVACY_POLICY,
+  SUPPORTER_GUIDELINES,
+  TERMS_OF_SERVICE
+} from '@//:modules/constants/links'
 
 export default function Help (): JSX.Element {
   return (
     <>
-      <Helmet title='help' />
+      <Helmet>
+        <title>
+          Help :: overdoll
+        </title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={4}>
           <Box>
@@ -48,7 +58,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='https://www.corpodoll.com/community-guidelines/'>
+                <PagePanelWrap isExternal path={COMMUNITY_GUIDELINES}>
                   <PagePanelIcon icon={FlagReport} colorScheme='green' />
                   <PagePanelText
                     title={
@@ -59,7 +69,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path='https://www.corpodoll.com/club-guidelines/'>
+                <PagePanelWrap isExternal path={CLUB_GUIDELINES}>
                   <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
                   <PagePanelText
                     title={
@@ -93,7 +103,7 @@ export default function Help (): JSX.Element {
               </PageSectionTitle>
             </PageSectionWrap>
             <ListSpacer>
-              <PagePanelWrap isExternal path='https://www.corpodoll.com/tos/'>
+              <PagePanelWrap isExternal path={TERMS_OF_SERVICE}>
                 <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
                 <PagePanelText
                   title={
@@ -104,7 +114,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='https://www.corpodoll.com/your-privacy'>
+              <PagePanelWrap isExternal path={PRIVACY_POLICY}>
                 <PagePanelIcon icon={SearchBar} colorScheme='purple' />
                 <PagePanelText
                   title={

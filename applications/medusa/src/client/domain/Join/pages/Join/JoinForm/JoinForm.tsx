@@ -11,6 +11,7 @@ import {
   FormSubmitButton,
   InputBody,
   InputFeedback,
+  InputFooter,
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -57,8 +58,9 @@ export default function JoinForm ({
               i18n._(t`Enter an email`)
             }
             />
+            <InputFeedback />
           </InputBody>
-          <InputFeedback />
+          <InputFooter />
         </FormInput>
         <FormSubmitButton
           size='xl'

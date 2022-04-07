@@ -7,6 +7,7 @@ import { UppyContext } from '../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import ClubSuspended from '../ClubSuspended/ClubSuspended'
+import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -24,6 +25,7 @@ const Query = graphql`
       suspension {
         expires
       }
+      viewerIsOwner
     }
   }
 `
@@ -104,6 +106,10 @@ export default function PostCreator ({ query }: Props): JSX.Element {
       })
     })
   }, [uppy])
+
+  if (data?.club?.viewerIsOwner === false) {
+    return <NotFoundClub />
+  }
 
   if (data?.club != null && data.club?.suspension != null) {
     return <ClubSuspended />

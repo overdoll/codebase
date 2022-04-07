@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fb1dba192702780d9d2443ee4cbc1f53>>
+ * @generated SignedSource<<ff00c2779e57a5d6c3f7efa2d92f7d87>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type PostsHorizontalPreviewFragment$data = {
   readonly edges: ReadonlyArray<{
     readonly node: {
       readonly reference: string;
+      readonly club: {
+        readonly slug: string;
+      };
       readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
     };
   }>;
@@ -58,6 +61,24 @@ const node: ReaderFragment = {
               "args": null,
               "kind": "FragmentSpread",
               "name": "PostPreviewContentFragment"
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Club",
+              "kind": "LinkedField",
+              "name": "club",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "slug",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -70,6 +91,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f8f5a403bedad5b435dcc3cfccbce02e";
+(node as any).hash = "b3567e19d7120719748b367b3ec92ec9";
 
 export default node;
