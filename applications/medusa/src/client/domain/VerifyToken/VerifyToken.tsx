@@ -110,31 +110,36 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
   // If the token is invalid, show the user this feedback
   if (data == null) {
     return (
-      <PageWrapper>
-        <Alert
-          mb={4}
-          status='warning'
-        >
-          <AlertIcon />
-          <AlertDescription>
-            <Trans>
-              The login link you are using is either invalid or expired
-            </Trans>
-          </AlertDescription>
-        </Alert>
-        <Flex justify='center'>
-          <LinkButton
-            size='lg'
-            colorScheme='gray'
-            variant='solid'
-            to='/join'
+      <>
+        <Helmet>
+          <title>Invalid Authentication :: overdoll</title>
+        </Helmet>
+        <PageWrapper>
+          <Alert
+            mb={4}
+            status='warning'
           >
-            <Trans>
-              Back to the Join page
-            </Trans>
-          </LinkButton>
-        </Flex>
-      </PageWrapper>
+            <AlertIcon />
+            <AlertDescription>
+              <Trans>
+                The login link you are using is either invalid or expired
+              </Trans>
+            </AlertDescription>
+          </Alert>
+          <Flex justify='center'>
+            <LinkButton
+              size='lg'
+              colorScheme='gray'
+              variant='solid'
+              to='/join'
+            >
+              <Trans>
+                Back to the Join page
+              </Trans>
+            </LinkButton>
+          </Flex>
+        </PageWrapper>
+      </>
     )
   }
 
@@ -171,7 +176,9 @@ export default function VerifyToken ({ prepared }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='complete' />
+      <Helmet>
+        <title>Verification Complete :: overdoll</title>
+      </Helmet>
       <PageWrapper>
         <Icon
           icon={BadgeCircle}

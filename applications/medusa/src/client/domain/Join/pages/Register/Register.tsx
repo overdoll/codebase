@@ -102,7 +102,9 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='register' />
+      <Helmet>
+        <title>Create Your Account :: overdoll</title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon

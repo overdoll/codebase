@@ -36,7 +36,9 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='multifactor authentication' />
+      <Helmet>
+        <title>Two-Factor Authentication :: overdoll</title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           {data.accountStatus?.multiFactor?.totp === true && <TotpSubmission queryRef={data} />}
