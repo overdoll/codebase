@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/RootStaffSearchCancellationReasons.tsx:23
+#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/RootStaffSearchCancellationReasons.tsx:27
 msgid "Search Cancellation Reasons"
 msgstr ""

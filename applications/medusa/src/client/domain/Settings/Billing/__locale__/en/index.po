@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:45
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:49
 msgid "A list of charges that occurred for your club supporter subscriptions. <0>CCBill.com *overdoll Inc.</0> will appear on your Cardholder statement."
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 msgid "A list with one or more subscriptions should appear. <0>Find the Subscription ID that correlates to the one listed here</0> and click on <1>Click here to update your payment information</1> to update your payment information."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:68
+#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:73
 msgid "ACTIVE"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "After cancelling your subscription, you will no longer be billed. You will keep your benefits until {nextBillingDate}. After this date, they will expire."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:44
+#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:48
 msgid "All of the clubs where you are a paid supporter and you have access to exclusive content."
 msgstr ""
 
@@ -37,8 +37,8 @@ msgstr ""
 msgid "Are you sure you would like to delete this payment method? You won't be able to use it to support another club and will have to re-enter your payment information the next time you subscribe."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:70
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:68
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:71
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:69
 msgid "As a supporter, you have access to all exclusive content from this club."
 msgstr ""
 
@@ -46,11 +46,11 @@ msgstr ""
 #~ msgid "Benefits expire on"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:30
+#: src/client/domain/Settings/Billing/Billing.tsx:34
 msgid "Billing"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:92
+#: src/client/domain/Settings/Billing/Billing.tsx:96
 msgid "Billing agreement and help"
 msgstr ""
 
@@ -76,8 +76,8 @@ msgstr ""
 msgid "Cancelled on"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:65
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:63
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:66
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:64
 msgid "Club Benefits"
 msgstr ""
 
@@ -127,17 +127,17 @@ msgstr ""
 #~ msgid "Get help with billing"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/RootAccountClubSupporterSubscriptionSettings.tsx:38
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/RootAccountClubSupporterSubscriptionSettings.tsx:42
 msgid "Go back to My Subscriptions"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:33
-#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:33
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:34
+#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:37
+#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:37
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:38
 msgid "Go back to billing"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:80
+#: src/client/domain/Settings/Billing/Billing.tsx:84
 msgid "Help"
 msgstr ""
 
@@ -165,8 +165,8 @@ msgstr ""
 msgid "Manually Enter Information"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:40
-#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:39
+#: src/client/domain/Settings/Billing/Billing.tsx:44
+#: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:43
 msgid "My Subscriptions"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Navigate to the"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:86
+#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:91
 msgid "Next renewal on"
 msgstr ""
 
@@ -190,8 +190,8 @@ msgstr ""
 #~ msgid "Open the CCBill Support Center link using the button below and click <0>Search</0>"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:53
-#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:39
+#: src/client/domain/Settings/Billing/Billing.tsx:57
+#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:43
 msgid "Payment Methods"
 msgstr ""
 
@@ -211,7 +211,7 @@ msgstr ""
 msgid "Set Up"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:69
+#: src/client/domain/Settings/Billing/Billing.tsx:73
 msgid "Show when and the amount you were billed"
 msgstr ""
 
@@ -219,8 +219,8 @@ msgstr ""
 #~ msgid "Subscription Agreement"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:46
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:44
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:47
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:45
 msgid "Subscription Details"
 msgstr ""
 
@@ -240,14 +240,18 @@ msgstr ""
 #~ msgid "Supported for"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:89
+#: src/client/domain/Settings/Billing/Billing.tsx:93
 msgid "Supporter Guidelines"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:76
+#: src/client/domain/Settings/Billing/components/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:81
 #: src/client/domain/Settings/Billing/components/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:75
 #: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:81
 msgid "Supporter since"
+msgstr ""
+
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice.tsx:42
+msgid "The suspension is longer than 30 days."
 msgstr ""
 
 #: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:141
@@ -258,8 +262,12 @@ msgstr ""
 msgid "There was an error deleting your payment method"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:66
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:40
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice.tsx:38
+msgid "This club is currently suspended. You cannot access its exclusive content."
+msgstr ""
+
+#: src/client/domain/Settings/Billing/Billing.tsx:70
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:44
 msgid "Transaction History"
 msgstr ""
 
@@ -272,12 +280,12 @@ msgstr ""
 msgid "Use Generated Link"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:55
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:53
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:56
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:54
 msgid "View Club"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:43
+#: src/client/domain/Settings/Billing/Billing.tsx:47
 msgid "View and manage your subscriptions"
 msgstr ""
 
@@ -285,7 +293,7 @@ msgstr ""
 #~ msgid "When you become a club supporter, you'll have the option to remember the payment method for next time."
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:44
+#: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:48
 msgid "When you become a club supporter, you'll have the option to remember the payment method for next time. Note that you can only modify a payment method through the My Subscriptions page."
 msgstr ""
 
@@ -309,7 +317,7 @@ msgstr ""
 msgid "Your payment method cannot be directly updated through our platform. To update your payment method, please follow the steps below to update it through our billing provider's website."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/Billing.tsx:56
+#: src/client/domain/Settings/Billing/Billing.tsx:60
 msgid "Your saved payment methods"
 msgstr ""
 

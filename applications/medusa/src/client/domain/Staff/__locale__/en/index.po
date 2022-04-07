@@ -116,7 +116,7 @@ msgstr ""
 msgid "Audience {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:83
+#: src/client/domain/Staff/Staff.tsx:90
 msgid "Audiences"
 msgstr ""
 
@@ -130,12 +130,12 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAudience/StaffViewAudience/RootStaffViewAudience.tsx:36
-#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/RootStaffViewCancellationReason.tsx:38
-#: src/client/domain/Staff/pages/StaffCategory/StaffViewCategory/RootStaffViewCategory.tsx:36
-#: src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter/RootStaffViewCharacter.tsx:38
-#: src/client/domain/Staff/pages/StaffRules/StaffViewRule/RootStaffViewRule.tsx:36
-#: src/client/domain/Staff/pages/StaffSeries/StaffViewSeries/RootStaffViewSeries.tsx:36
+#: src/client/domain/Staff/pages/StaffAudience/StaffViewAudience/RootStaffViewAudience.tsx:40
+#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/RootStaffViewCancellationReason.tsx:42
+#: src/client/domain/Staff/pages/StaffCategory/StaffViewCategory/RootStaffViewCategory.tsx:40
+#: src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter/RootStaffViewCharacter.tsx:42
+#: src/client/domain/Staff/pages/StaffRules/StaffViewRule/RootStaffViewRule.tsx:40
+#: src/client/domain/Staff/pages/StaffSeries/StaffViewSeries/RootStaffViewSeries.tsx:40
 msgid "Back to search"
 msgstr ""
 
@@ -174,6 +174,10 @@ msgstr ""
 msgid "CCBill Transaction ID"
 msgstr ""
 
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:58
+msgid "Can be unlocked"
+msgstr ""
+
 #: src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
 #: src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecatedForm/ChangeCancellationReasonDeprecatedForm.tsx:106
 msgid "Cancellation Reason Deprecated"
@@ -184,7 +188,7 @@ msgstr ""
 msgid "Cancellation Reason Title"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:119
+#: src/client/domain/Staff/Staff.tsx:126
 msgid "Cancellation Reasons"
 msgstr ""
 
@@ -204,7 +208,7 @@ msgstr ""
 msgid "Cancelled At"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:64
+#: src/client/domain/Staff/Staff.tsx:71
 msgid "Categories"
 msgstr ""
 
@@ -303,7 +307,7 @@ msgstr ""
 msgid "Character {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:27
+#: src/client/domain/Staff/Staff.tsx:34
 msgid "Characters"
 msgstr ""
 
@@ -321,44 +325,44 @@ msgstr ""
 
 #: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:71
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:68
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionClub/StaffClubSupporterSubscriptionClub.tsx:32
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionClub/StaffClubSupporterSubscriptionClub.tsx:35
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:61
 #: src/client/domain/Staff/pages/StaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:57
 msgid "Club"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:90
-#: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/RootStaffCreateAudience.tsx:30
+#: src/client/domain/Staff/Staff.tsx:97
+#: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/RootStaffCreateAudience.tsx:34
 #: src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:166
 msgid "Create Audience"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:126
-#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/RootStaffCreateCancellationReason.tsx:30
+#: src/client/domain/Staff/Staff.tsx:133
+#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/RootStaffCreateCancellationReason.tsx:34
 #: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/StaffCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:106
 msgid "Create Cancellation Reason"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:72
-#: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/RootStaffCreateCategory.tsx:30
+#: src/client/domain/Staff/Staff.tsx:79
+#: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/RootStaffCreateCategory.tsx:34
 #: src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
 msgid "Create Category"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:34
-#: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/RootStaffCreateCharacter.tsx:30
+#: src/client/domain/Staff/Staff.tsx:41
+#: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/RootStaffCreateCharacter.tsx:34
 #: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:156
 msgid "Create Character"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:108
-#: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/RootStaffCreateRule.tsx:30
+#: src/client/domain/Staff/Staff.tsx:115
+#: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/RootStaffCreateRule.tsx:34
 #: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:148
 msgid "Create Rule"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:53
-#: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/RootStaffCreateSeries.tsx:30
+#: src/client/domain/Staff/Staff.tsx:60
+#: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/RootStaffCreateSeries.tsx:34
 #: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/StaffCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
 msgid "Create Series"
 msgstr ""
@@ -625,7 +629,7 @@ msgstr ""
 msgid "No infractions found"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClub.tsx:57
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClub.tsx:67
 msgid "Owner"
 msgstr ""
 
@@ -633,11 +637,11 @@ msgstr ""
 msgid "Payment Transactions"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:43
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:53
 msgid "Permissions"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:21
+#: src/client/domain/Staff/Staff.tsx:28
 msgid "Platform Staff"
 msgstr ""
 
@@ -740,53 +744,53 @@ msgstr ""
 msgid "Rule {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:101
+#: src/client/domain/Staff/Staff.tsx:108
 msgid "Rules"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:96
-#: src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences/RootStaffSearchAudiences.tsx:32
+#: src/client/domain/Staff/Staff.tsx:103
+#: src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences/RootStaffSearchAudiences.tsx:36
 msgid "Search Audiences"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:132
-#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/RootStaffSearchCancellationReasons.tsx:23
+#: src/client/domain/Staff/Staff.tsx:139
+#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/RootStaffSearchCancellationReasons.tsx:27
 msgid "Search Cancellation Reasons"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:78
-#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:32
+#: src/client/domain/Staff/Staff.tsx:85
+#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:36
 msgid "Search Categories"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:40
+#: src/client/domain/Staff/Staff.tsx:47
 msgid "Search Characters"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:114
-#: src/client/domain/Staff/pages/StaffRules/StaffSearchRules/RootStaffSearchRules.tsx:23
+#: src/client/domain/Staff/Staff.tsx:121
+#: src/client/domain/Staff/pages/StaffRules/StaffSearchRules/RootStaffSearchRules.tsx:27
 msgid "Search Rules"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:59
-#: src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter/RootStaffSearchCharacter.tsx:31
-#: src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries/RootStaffSearchSeries.tsx:32
+#: src/client/domain/Staff/Staff.tsx:66
+#: src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter/RootStaffSearchCharacter.tsx:35
+#: src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries/RootStaffSearchSeries.tsx:36
 msgid "Search Series"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:38
+#: src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/RootStaffSearchCategories.tsx:42
 msgid "Search for a category"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter/RootStaffSearchCharacter.tsx:37
+#: src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter/RootStaffSearchCharacter.tsx:41
 msgid "Search for a character"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries/RootStaffSearchSeries.tsx:38
+#: src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries/RootStaffSearchSeries.tsx:42
 msgid "Search for a series"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences/RootStaffSearchAudiences.tsx:38
+#: src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences/RootStaffSearchAudiences.tsx:42
 msgid "Search for an audience"
 msgstr ""
 
@@ -818,7 +822,7 @@ msgstr ""
 msgid "Selection cannot be empty"
 msgstr ""
 
-#: src/client/domain/Staff/Staff.tsx:45
+#: src/client/domain/Staff/Staff.tsx:52
 msgid "Series"
 msgstr ""
 
@@ -879,7 +883,7 @@ msgstr ""
 msgid "Subscription"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:48
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:58
 msgid "Subscriptions"
 msgstr ""
 
@@ -956,11 +960,11 @@ msgid "Successfully updated series thumbnail"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:73
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:41
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:44
 msgid "Supporter"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:53
+#: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionAccount/StaffClubSupporterSubscriptionAccount.tsx:62
 msgid "Supporter Since"
 msgstr ""
 
@@ -969,7 +973,7 @@ msgid "Supporting Since"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:75
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:76
 msgid "Suspend Club"
 msgstr ""
 
@@ -1106,7 +1110,7 @@ msgstr ""
 msgid "Transaction"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:53
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffAccount.tsx:63
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:63
 msgid "Transactions"
 msgstr ""

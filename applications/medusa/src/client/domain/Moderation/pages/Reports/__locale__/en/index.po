@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:74
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:77
 msgid "No reports found"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:91
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:94
 msgid "Post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/Reports.tsx:36
+#: src/client/domain/Moderation/pages/Reports/Reports.tsx:40
 msgid "Post Reports"
 msgstr ""
 
@@ -29,15 +29,15 @@ msgstr ""
 #~ msgid "Reports"
 #~ msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:86
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:89
 msgid "Rule"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:81
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:84
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:109
+#: src/client/domain/Moderation/pages/Reports/PostReports/PostReports.tsx:116
 msgid "View Post"
 msgstr ""
 
@@ -45,6 +45,6 @@ msgstr ""
 #~ msgid "View reported items"
 #~ msgstr ""
 
-#: src/client/domain/Moderation/pages/Reports/Reports.tsx:41
+#: src/client/domain/Moderation/pages/Reports/Reports.tsx:45
 msgid "View reported posts"
 msgstr ""

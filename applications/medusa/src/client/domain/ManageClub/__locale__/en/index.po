@@ -53,7 +53,7 @@ msgstr ""
 msgid "All characters must be of legal age"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:71
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:75
 msgid "Archived"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Change Club Thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:69
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:73
 msgid "Club Guidelines"
 msgstr ""
 
@@ -107,12 +107,12 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/components/SelectClubs/SelectClubs.tsx:55
-#: src/client/domain/ManageClub/components/SelectClubs/SelectClubs.tsx:69
+#: src/client/domain/ManageClub/components/SelectClubs/SelectClubs.tsx:53
+#: src/client/domain/ManageClub/components/SelectClubs/SelectClubs.tsx:67
 msgid "Club Not Found"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:122
+#: src/client/domain/ManageClub/RootManageClub.tsx:129
 msgid "Club Page"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Club Suspended"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:64
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:69
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
 msgid "Club Thumbnail"
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:72
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:76
 msgid "Content and club guidelines"
 msgstr ""
 
@@ -142,11 +142,11 @@ msgstr ""
 msgid "Create Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:29
+#: src/client/domain/ManageClub/pages/CreateClub/RootCreateClub.tsx:33
 msgid "Create a Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:75
+#: src/client/domain/ManageClub/RootManageClub.tsx:82
 msgid "Create a Post"
 msgstr ""
 
@@ -166,7 +166,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:66
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:70
 msgid "Draft"
 msgstr ""
 
@@ -213,11 +213,11 @@ msgstr ""
 #~ msgid "Go to my posts"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:60
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:64
 msgid "Help"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:85
+#: src/client/domain/ManageClub/RootManageClub.tsx:92
 msgid "Home"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:76
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:80
 msgid "In Review"
 msgstr ""
 
@@ -247,11 +247,11 @@ msgstr ""
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:50
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:55
 msgid "Manage Aliases"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:54
+#: src/client/domain/ManageClub/RootManageClub.tsx:61
 msgid "Manage Club"
 msgstr ""
 
@@ -259,8 +259,8 @@ msgstr ""
 msgid "Mark this content as Supporter Only"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:105
-#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:43
+#: src/client/domain/ManageClub/RootManageClub.tsx:112
+#: src/client/domain/ManageClub/pages/ClubHome/ClubHome/ClubHome.tsx:56
 msgid "Members"
 msgstr ""
 
@@ -283,11 +283,11 @@ msgstr ""
 #~ msgid "No clubs founds"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:68
+#: src/client/domain/ManageClub/pages/ClubMembers/ClubMembers/ClubMembers.tsx:75
 msgid "No members found"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:78
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/ClubPosts.tsx:83
 msgid "No posts found"
 msgstr ""
 
@@ -327,7 +327,7 @@ msgstr ""
 msgid "Posting {0} media"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:95
+#: src/client/domain/ManageClub/RootManageClub.tsx:102
 msgid "Posts"
 msgstr ""
 
@@ -339,8 +339,8 @@ msgstr ""
 msgid "Processing Post Content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:39
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:61
+#: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:42
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:65
 msgid "Published"
 msgstr ""
 
@@ -349,7 +349,7 @@ msgid "REMOVED"
 msgstr ""
 
 #: src/client/domain/ManageClub/pages/ClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:35
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:81
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:85
 msgid "Rejected"
 msgstr ""
 
@@ -365,7 +365,7 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:86
+#: src/client/domain/ManageClub/pages/ClubPosts/RootClubPosts.tsx:90
 msgid "Removed"
 msgstr ""
 
@@ -424,8 +424,8 @@ msgstr ""
 msgid "Set Default"
 msgstr ""
 
-#: src/client/domain/ManageClub/RootManageClub.tsx:113
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:46
+#: src/client/domain/ManageClub/RootManageClub.tsx:120
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:50
 msgid "Settings"
 msgstr ""
 
@@ -568,11 +568,11 @@ msgstr ""
 msgid "Un-Suspend Club"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:41
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:46
 msgid "Update Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:66
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:71
 msgid "Update your club thumbnail"
 msgstr ""
 

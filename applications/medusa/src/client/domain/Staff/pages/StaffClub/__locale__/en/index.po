@@ -21,6 +21,10 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:58
+msgid "Can be unlocked"
+msgstr ""
+
 #: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
 msgid "Duration"
 msgstr ""
@@ -42,7 +46,7 @@ msgstr ""
 msgid "No infractions found"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClub.tsx:57
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClub.tsx:67
 msgid "Owner"
 msgstr ""
 
@@ -68,7 +72,7 @@ msgid "Successfully un-suspended club"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:75
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:76
 msgid "Suspend Club"
 msgstr ""
 

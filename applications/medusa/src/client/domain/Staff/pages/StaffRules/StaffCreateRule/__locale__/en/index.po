@@ -17,7 +17,7 @@ msgstr ""
 msgid "Causes an infraction"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/RootStaffCreateRule.tsx:30
+#: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/RootStaffCreateRule.tsx:34
 #: src/client/domain/Staff/pages/StaffRules/StaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:148
 msgid "Create Rule"
 msgstr ""

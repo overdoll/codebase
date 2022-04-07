@@ -21,7 +21,7 @@ msgstr ""
 msgid "Cancellation reason {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/RootStaffCreateCancellationReason.tsx:30
+#: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/RootStaffCreateCancellationReason.tsx:34
 #: src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/StaffCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:106
 msgid "Create Cancellation Reason"
 msgstr ""

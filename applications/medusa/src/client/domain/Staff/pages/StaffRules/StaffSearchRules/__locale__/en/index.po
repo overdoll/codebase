@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Staff/pages/StaffRules/StaffSearchRules/RootStaffSearchRules.tsx:23
+#: src/client/domain/Staff/pages/StaffRules/StaffSearchRules/RootStaffSearchRules.tsx:27
 msgid "Search Rules"
 msgstr ""

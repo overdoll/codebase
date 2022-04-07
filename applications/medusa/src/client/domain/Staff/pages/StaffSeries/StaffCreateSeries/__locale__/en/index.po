@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/RootStaffCreateSeries.tsx:30
+#: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/RootStaffCreateSeries.tsx:34
 #: src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/StaffCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:142
 msgid "Create Series"
 msgstr ""

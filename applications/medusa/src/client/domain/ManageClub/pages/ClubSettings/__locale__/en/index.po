@@ -35,7 +35,7 @@ msgstr ""
 msgid "Change Club Thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:69
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:73
 msgid "Club Guidelines"
 msgstr ""
 
@@ -47,13 +47,13 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:64
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:69
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
 #: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
 msgid "Club Thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:72
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:76
 msgid "Content and club guidelines"
 msgstr ""
 
@@ -71,11 +71,11 @@ msgstr ""
 msgid "Enter a new club name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:60
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:64
 msgid "Help"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:50
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:55
 msgid "Manage Aliases"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Set Default"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:46
+#: src/client/domain/ManageClub/pages/ClubSettings/RootClubSettings.tsx:50
 msgid "Settings"
 msgstr ""
 
@@ -137,11 +137,11 @@ msgstr ""
 msgid "There was an error updating your club thumbnail"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:41
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:46
 msgid "Update Name"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:66
+#: src/client/domain/ManageClub/pages/ClubSettings/ClubSettings/ClubSettings.tsx:71
 msgid "Update your club thumbnail"
 msgstr ""
 

@@ -29,7 +29,7 @@ msgstr ""
 msgid "Character {0} was created successfully"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/RootStaffCreateCharacter.tsx:30
+#: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/RootStaffCreateCharacter.tsx:34
 #: src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:156
 msgid "Create Character"
 msgstr ""

@@ -54,7 +54,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/client/domain/Join/pages/Register/Register.tsx:122
+#: src/client/domain/Join/pages/Register/Register.tsx:124
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand our <1>Terms of Service</1>  and  <2>Privacy Policy</2>."
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
-#: src/client/domain/Join/pages/MultiFactor/MultiFactor.tsx:49
+#: src/client/domain/Join/pages/MultiFactor/MultiFactor.tsx:51
 msgid "I lost access to my device"
 msgstr ""
 
@@ -94,7 +94,7 @@ msgstr ""
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:110
+#: src/client/domain/Join/pages/Grant/Grant.tsx:115
 msgid "Logging in"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:118
+#: src/client/domain/Join/pages/Grant/Grant.tsx:123
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -118,15 +118,15 @@ msgstr ""
 msgid "Submit Code"
 msgstr ""
 
-#: src/client/domain/Join/pages/Lobby/Lobby.tsx:69
+#: src/client/domain/Join/pages/Lobby/Lobby.tsx:74
 msgid "Tap on the link you received in your email inbox to continue"
 msgstr ""
 
-#: src/client/domain/Join/pages/Join/Join.tsx:123
+#: src/client/domain/Join/pages/Join/Join.tsx:125
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:84
+#: src/client/domain/Join/pages/Grant/Grant.tsx:85
 msgid "There was an error logging you in"
 msgstr ""
 
@@ -150,7 +150,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/client/domain/Join/pages/Grant/Grant.tsx:72
+#: src/client/domain/Join/pages/Grant/Grant.tsx:73
 msgid "Welcome back!"
 msgstr ""
 

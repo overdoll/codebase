@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:99
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:105
 msgid "Actions"
 msgstr ""
 
@@ -21,19 +21,19 @@ msgstr ""
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:123
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:129
 msgid "Club"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:135
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:147
 msgid "Contributor"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:89
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:95
 msgid "Information"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/RootModerationPost.tsx:35
+#: src/client/domain/Moderation/pages/ModerationPost/RootModerationPost.tsx:39
 msgid "Moderate Post"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Remove Post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:94
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:100
 msgid "Reports"
 msgstr ""
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:111
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:117
 msgid "State"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Successfully removed post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:147
+#: src/client/domain/Moderation/pages/ModerationPost/ModerationPost/ModerationPost.tsx:165
 msgid "Tags"
 msgstr ""
 
