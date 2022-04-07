@@ -34,7 +34,7 @@ export default function RootMultiFactorTotpSetup (props: Props): JSX.Element | n
       <PageWrapper>
         <BackButton to='/settings/security'>
           <Trans>
-            Back to settings
+            Back to security settings
           </Trans>
         </BackButton>
         <PageSectionWrap>
