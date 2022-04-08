@@ -2918,10 +2918,6 @@ type Mutation {
   verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
 }
 
-"""
-An object with an ID.
-Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
-"""
 interface Node {
   id: ID!
 }
@@ -3439,7 +3435,6 @@ type Query {
 
   """List of all available languages"""
   languages: [Language!]!
-  node(id: ID!): Node
 
   """Look up a single post"""
   post(

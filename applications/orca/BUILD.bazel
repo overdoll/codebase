@@ -2,6 +2,7 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
 package(default_visibility = ["//visibility:public"])
 
 _DEPS = [
@@ -20,7 +21,7 @@ _DEPS = [
 
 _DATA = [
     "schema/schema.graphql",
-    "tsconfig.json"
+    "tsconfig.json",
 ]
 
 _SRCS = [
@@ -30,9 +31,9 @@ _SRCS = [
 ts_project(
     name = "internal_lib",
     srcs = _SRCS,
+    data = _DATA + glob([".*"]),
     tsconfig = "tsconfig.json",
     deps = _DEPS,
-    data = _DATA + glob([".*"]),
 )
 
 nodejs_binary(
@@ -43,12 +44,12 @@ nodejs_binary(
 
 nodejs_image(
     name = "local-image",
-    binary = ":internal"
+    binary = ":internal",
 )
 
 nodejs_image(
     name = "image",
-    binary = ":internal"
+    binary = ":internal",
 )
 
 container_push(

@@ -1,4 +1,4 @@
-import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
+import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { gql } from 'apollo-server'
 import { ApolloServer } from 'apollo-server-express'
 import Redis from 'ioredis'
@@ -11,10 +11,7 @@ import express from 'express'
 import http from 'http'
 
 import { DocumentNode, graphqlSync, parse, visit } from 'graphql'
-import { buildFederatedSchema } from '@apollo/federation'
-import { CompositionUpdate } from '@apollo/gateway/dist/config'
-import { GraphQLDataSource } from '@apollo/gateway/src/datasources/types'
-import { ServiceEndpointDefinition } from '@apollo/gateway/src/config'
+import { buildFederatedSchema, ServiceDefinition } from '@apollo/federation'
 import { GraphQLResponse } from 'apollo-server-types'
 
 import { readFileSync } from 'fs'
@@ -118,19 +115,16 @@ interface Module {
  */
 // @ts-expect-error
 class NodeGateway extends ApolloGateway {
-  async loadServiceDefinitions (config): Promise<CompositionUpdate> {
-    const defs = await super.loadServiceDefinitions(config)
-
-    if (!('serviceDefinitions' in defs) || (defs.serviceDefinitions === undefined)) {
-      return defs
-    }
-
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  private createSchemaFromServiceList (
+    serviceList: ServiceDefinition[]
+  ) {
     // Once all real service definitions have been loaded, we need to find all
     // types that implement the Node interface. These must also become concrete
     // types in the Node service, so we build a GraphQL module for each.
     const modules: Module[] = []
     const seenNodeTypes: Set<string> = new Set()
-    for (const service of defs.serviceDefinitions) {
+    for (const service of serviceList) {
       // Manipulate the typeDefs of the service
       service.typeDefs = visit(service.typeDefs, {
         ObjectTypeDefinition (node) {
@@ -156,10 +150,6 @@ class NodeGateway extends ApolloGateway {
           }
         }
       })
-    }
-
-    if (modules.length === 0) {
-      return defs
     }
 
     // Dynamically construct a service to do Node resolution. This requires
@@ -188,28 +178,12 @@ class NodeGateway extends ApolloGateway {
       source: 'query { _service { sdl } }'
     })
 
-    defs.serviceDefinitions.push({
+    // @ts-expect-error
+    return super.createSchemaFromServiceList([...serviceList, {
       typeDefs: parse(res?.data?._service.sdl),
-      // @ts-expect-error
       schema: nodeSchema,
       name: NODE_SERVICE_NAME
-    })
-
-    return defs
-  }
-
-  /**
-   * Override `createDataSource` to let the local Node resolution service be
-   * created without complaining about missing a URL.
-   */
-  createDataSource (serviceDef: ServiceEndpointDefinition): GraphQLDataSource {
-    // @ts-expect-error
-    if (serviceDef.schema != null) {
-      // @ts-expect-error
-      return new LocalGraphQLDataSource(serviceDef.schema)
-    }
-    // @ts-expect-error
-    return super.createDataSource(serviceDef)
+    }])
   }
 }
 
@@ -273,6 +247,7 @@ class PassportDataSource extends RemoteGraphQLDataSource {
 
 const gateway = new NodeGateway({
   supergraphSdl: supergraphSdl,
+  serviceList: [],
   buildService ({ url }) {
     return new PassportDataSource({ url })
   }
