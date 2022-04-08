@@ -1,11 +1,11 @@
 steps:
   build:
     targets:
-      - //applications/orca/internal:internal
+      - //applications/orca:internal
 
   push_image:
     targets:
-      - //applications/orca/internal:publish-testing
+      - //applications/orca:publish-testing
   e2e_test:
     setup:
       dockerfile:
@@ -17,4 +17,4 @@ steps:
 
   publish_image:
     targets:
-      - //applications/orca/internal:publish
+      - //applications/orca:publish
