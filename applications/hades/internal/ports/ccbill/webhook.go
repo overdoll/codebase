@@ -20,6 +20,8 @@ var (
 		{net.ParseIP("64.38.240.1"), net.ParseIP("64.38.240.254")},
 		{net.ParseIP("64.38.241.1"), net.ParseIP("64.38.241.254")},
 		{net.ParseIP("127.0.0.1"), net.ParseIP("127.0.0.1")},
+		{net.ParseIP("172.16.0.0"), net.ParseIP("172.31.255.255")},
+		{net.ParseIP("10.0.0.0"), net.ParseIP("10.255.255.255")},
 	}
 )
 
