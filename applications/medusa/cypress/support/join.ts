@@ -2,27 +2,25 @@ import { generateEmailFromExistingUsername } from './generate'
 import URL from 'url-parse'
 import { getEmail } from './email'
 import { parse } from 'node-html-parser'
-
-const Tokens = require('csrf')
-const sign = require('cookie-signature').sign
-const Cookie = require('cookie')
+import _crypto from 'crypto'
+import Cookie from 'cookie'
 
 const getGraphqlRequest = (): any => {
-  const tokens = new Tokens()
+  const token = _crypto.randomBytes(64).toString('hex')
 
-  const secret = tokens.secretSync()
-
-  const token = tokens.create(secret)
-
-  const val = `s:${sign(secret, Cypress.env('SESSION_SECRET')) as string}`
+  const iv = _crypto.randomBytes(12)
+  const cipher = _crypto.createCipheriv('aes-256-gcm', Cypress.env('SECURITY_SECRET'), iv)
+  const encrypted = Buffer.concat([iv, cipher.update(token), cipher.final(), cipher.getAuthTag()]).toString(
+    'hex'
+  )
 
   return {
     method: 'POST',
     url: '/api/graphql',
     headers: {
       'Content-Type': 'application/json',
-      'x-csrf-token': token,
-      Cookie: Cookie.serialize('_csrf', val)
+      'X-overdoll-Security': token,
+      Cookie: Cookie.serialize('od.security', encrypted)
     }
   }
 }

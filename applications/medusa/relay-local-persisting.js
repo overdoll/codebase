@@ -1,6 +1,9 @@
 const http = require('http')
 const crypto = require('crypto')
 const fs = require('fs')
+const push = require('./push-queries')
+
+require('dotenv').config()
 
 function md5 (input) {
   return crypto.createHash('md5').update(input).digest('hex')
@@ -54,6 +57,7 @@ async function requestListener (req, res) {
         throw new Error('Expected to have `text` parameter in the POST.')
       }
       const id = queryMap.saveQuery(text)
+      push.pushSingleQuery(id, text)
       res.end(JSON.stringify({ id: id }))
     } catch (e) {
       console.error(e)

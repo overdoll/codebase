@@ -30,6 +30,7 @@ artifacts
 .next
 out
 cypress.json
+target
 
 # IDEA
 .ijwb
@@ -37,6 +38,8 @@ cypress.json
 .idea
 .garden
 tilt_options.json
+
+.env.backup
 
 development/local-files
 

@@ -12,8 +12,8 @@ def go_repositories():
         name = "com_github_99designs_gqlgen",
         build_file_proto_mode = "disable",
         importpath = "github.com/99designs/gqlgen",
-        sum = "h1:48bRXecwlCNTa/n2bMSp2rQsXNxwZ54QHbiULNf78ec=",
-        version = "v0.15.1",
+        sum = "h1:yczvlwMsfcVu/JtejqfrLwXuSP0yZFhmcss3caEvHw8=",
+        version = "v0.17.2",
     )
 
     go_repository(
@@ -1072,8 +1072,8 @@ def go_repositories():
         name = "com_github_matryer_moq",
         build_file_proto_mode = "disable",
         importpath = "github.com/matryer/moq",
-        sum = "h1:Q06vEqnBYjjfx5KKgHfYRKE/lvlRu+Nj+xodG4YdHnU=",
-        version = "v0.2.3",
+        sum = "h1:RtpiPUM8L7ZSCbSwK+QcZH/E9tgqAkFjKQxsRs25b4w=",
+        version = "v0.2.7",
     )
     go_repository(
         name = "com_github_mattn_go_colorable",
@@ -1744,16 +1744,16 @@ def go_repositories():
         name = "com_github_urfave_cli_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/urfave/cli/v2",
-        sum = "h1:qph92Y649prgesehzOrQjdWyxFOp/QVM+6imKHad91M=",
-        version = "v2.3.0",
+        sum = "h1:m2pxjjDFgDxSPtO8WSdbndj17Wu2y8vOT86wE/tjr+I=",
+        version = "v2.4.0",
     )
 
     go_repository(
         name = "com_github_vektah_gqlparser_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/vektah/gqlparser/v2",
-        sum = "h1:bAc3slekAAJW6sZTi07aGq0OrfaCjj4jxARAaC7g2EM=",
-        version = "v2.2.0",
+        sum = "h1:QOyEn8DAPMUMARGMeshKDkDgNmVoEaEGiDB0uWxcSlQ=",
+        version = "v2.4.1",
     )
 
     go_repository(
@@ -2055,8 +2055,8 @@ def go_repositories():
         name = "org_golang_x_crypto",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/crypto",
-        sum = "h1:/UOmuWzQfxxo9UtlXMwuQU8CMgg1eZXqTRwkSQJWKOI=",
-        version = "v0.0.0-20210711020723-a769d52b0f97",
+        sum = "h1:7I4JAnoQBe7ZtJcBaYHi5UtiO8tQHbUSXxL+pnGRANg=",
+        version = "v0.0.0-20210921155107-089bfa567519",
     )
     go_repository(
         name = "org_golang_x_exp",
@@ -2090,8 +2090,8 @@ def go_repositories():
         name = "org_golang_x_mod",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/mod",
-        sum = "h1:OJxoQ/rynoF0dcCdI7cLPktw/hR2cueqYfjm43oqK38=",
-        version = "v0.5.1",
+        sum = "h1:kQgndtyPBW/JIYERgdxfwMYh3AVStj88WQTlNDi2a+o=",
+        version = "v0.6.0-dev.0.20220106191415-9b9b3d81d5e3",
     )
     go_repository(
         name = "org_golang_x_net",
@@ -2119,8 +2119,8 @@ def go_repositories():
         name = "org_golang_x_sys",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/sys",
-        sum = "h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=",
-        version = "v0.0.0-20220114195835-da31bd327af9",
+        sum = "h1:QyVthZKMsyaQwBTJE04jdNN0Pp5Fn9Qga0mrgxyERQM=",
+        version = "v0.0.0-20220406163625-3f8b81556e12",
     )
     go_repository(
         name = "org_golang_x_term",
@@ -2147,8 +2147,8 @@ def go_repositories():
         name = "org_golang_x_tools",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/tools",
-        sum = "h1:P1HhGGuLW4aAclzjtmJdf0mJOjVUZUzOTqkAkWL+l6w=",
-        version = "v0.1.8",
+        sum = "h1:QjFRCZxdOhBJ/UNgnBZLbNV13DlbnK0quyivTnXJM20=",
+        version = "v0.1.10",
     )
     go_repository(
         name = "org_golang_x_xerrors",

@@ -9,8 +9,8 @@ const data = SafeJSONParse(
 )
 
 // Get CSRF token
-const csrfToken = document
-  .querySelector('meta[name="csrf-token"]')
+const securityToken = document
+  .querySelector('meta[name="security-token"]')
   ?.getAttribute('content')
 
 /**
@@ -24,13 +24,16 @@ async function fetchRelay (params, variables): Promise<any> {
     '/api/graphql',
     {
       operationName: params.name,
-      queryId: params.id,
-      variables
+      query: 'PERSISTED_QUERY',
+      variables,
+      extensions: {
+        queryId: params.id
+      }
     },
     {
       headers: {
         'Content-Type': 'application/json',
-        'CSRF-Token': csrfToken
+        'X-overdoll-Security': securityToken
       }
     }
   )

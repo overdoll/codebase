@@ -20,6 +20,8 @@ var (
 		{net.ParseIP("64.38.240.1"), net.ParseIP("64.38.240.254")},
 		{net.ParseIP("64.38.241.1"), net.ParseIP("64.38.241.254")},
 		{net.ParseIP("127.0.0.1"), net.ParseIP("127.0.0.1")},
+		{net.ParseIP("172.16.0.0"), net.ParseIP("172.31.255.255")},
+		{net.ParseIP("10.0.0.0"), net.ParseIP("10.255.255.255")},
 	}
 )
 
@@ -30,6 +32,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 
 		trial := net.ParseIP(ip)
 		if trial.To4() == nil {
+			fmt.Println("invalid ip header")
 			c.Data(http.StatusBadRequest, "text", []byte("invalid ip header"))
 			return
 		}
@@ -48,6 +51,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		}
 
 		if !validIp {
+			fmt.Printf("bad ip: %s", ip)
 			c.Data(http.StatusBadRequest, "text", []byte("bad ip"))
 			return
 		}

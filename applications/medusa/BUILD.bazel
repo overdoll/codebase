@@ -82,7 +82,6 @@ _RUNTIME_DEPS = [
     "@npm//@loadable/component",
     "@npm//helmet",
     "@npm//cookie-parser",
-    "@npm//csurf",
     "@npm//winston",
     "@npm//@emotion/react",
     "@npm//@emotion/cache",

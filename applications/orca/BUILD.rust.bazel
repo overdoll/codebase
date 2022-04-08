@@ -1,0 +1,84 @@
+load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+
+package(default_visibility = ["//visibility:public"])
+
+_PROC_MACRO_DEPS = [
+    "@crates//:async-trait",
+]
+
+_DEPS = [
+    "@crates//:anyhow",
+    "@crates//:apollo-router",
+    "@crates//:apollo-router-core",
+    "@crates//:tower",
+    "@crates//:tokio",
+    "@crates//:tokio-util",
+    "@crates//:serde",
+    "@crates//:serde_json",
+    "@crates//:serde_json_bytes",
+    "@crates//:http",
+    "@crates//:schemars",
+    "@crates//:dotenv",
+    "@crates//:redis",
+]
+
+_DATA = [
+    "schema/schema.graphql",
+    "router.yaml",
+]
+
+_SRCS = [
+    "src/main.rs",
+    "src/passport.rs",
+    "src/relay_persisted_queries.rs",
+]
+
+rust_binary(
+    name = "internal",
+    srcs = _SRCS,
+    data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
+)
+
+rust_image(
+    name = "local-image",
+    srcs = _SRCS,
+    base = "@rust_base_image//image",
+    data = _DATA + [
+        ".env",
+        "dev.router.yaml",
+    ],
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
+)
+
+rust_image(
+    name = "image",
+    srcs = _SRCS,
+    base = "@rust_base_image//image",
+    data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "sting/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "sting",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
+)
