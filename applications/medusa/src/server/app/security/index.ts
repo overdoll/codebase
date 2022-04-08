@@ -51,7 +51,8 @@ const generateAndSetSecurityCookie = (req: any, res: any): string => {
   const data = serialize('od.security', encrypted, {
     httpOnly: true,
     secure: true,
-    sameSite: 'none'
+    sameSite: 'none',
+    path: '/'
   })
 
   if (req.headers.cookie === undefined) {
