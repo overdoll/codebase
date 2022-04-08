@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "sourceMap": false,
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext",
+      "ES6"
+    ],
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "isolatedModules": true,
+    // Explicitly set types settings so typescript doesn't auto-discover types.
+    // If all types are discovered then all types need to be included as deps
+    // or typescript may error out with TS2688: Cannot find type definition file for 'foo'.
+    "types": [],
+    "rootDirs": [
+      ".",
+      "./bazel-out/host/bin/",
+      "./bazel-out/darwin-fastbuild/bin/",
+      "./bazel-out/k8-fastbuild/bin/",
+      "./bazel-out/x64_windows-fastbuild/bin/",
+      "./bazel-out/darwin-dbg/bin/",
+      "./bazel-out/k8-dbg/bin/",
+      "./bazel-out/x64_windows-dbg/bin/"
+    ]
+  }
+}

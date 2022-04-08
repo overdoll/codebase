@@ -22,9 +22,13 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w.RegisterWorkflow(workflows.SubmitPost)
 	w.RegisterWorkflow(workflows.DiscardPost)
+	w.RegisterWorkflow(workflows.RemovePost)
+	w.RegisterWorkflow(workflows.DeletePost)
 	w.RegisterWorkflow(workflows.PublishPost)
 	w.RegisterWorkflow(workflows.AddPostLike)
 	w.RegisterWorkflow(workflows.RemovePostLike)
+	w.RegisterWorkflow(workflows.ArchivePost)
+	w.RegisterWorkflow(workflows.UnArchivePost)
 	w.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
 	w.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 

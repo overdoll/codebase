@@ -39,6 +39,8 @@ target
 .garden
 tilt_options.json
 
+.env.backup
+
 development/local-files
 
 yarn-error.log

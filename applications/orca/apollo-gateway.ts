@@ -2,6 +2,7 @@ import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '
 import { gql } from 'apollo-server'
 import { ApolloServer } from 'apollo-server-express'
 import Redis from 'ioredis'
+import cors from 'cors'
 
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
@@ -17,11 +18,15 @@ import { ServiceEndpointDefinition } from '@apollo/gateway/src/config'
 import { GraphQLResponse } from 'apollo-server-types'
 
 import { readFileSync } from 'fs'
+import { join, resolve } from 'path'
 import bodyParser from 'body-parser'
+import dotenv from 'dotenv'
 
-const supergraphSdl = readFileSync('./schema/schema.graphql').toString()
+const supergraphSdl = readFileSync(join(__dirname, './schema/schema.graphql')).toString()
 
-require('dotenv').config()
+dotenv.config({
+  path: resolve(__dirname, '.env')
+})
 
 const NODE_SERVICE_NAME = 'NODE_SERVICE'
 
@@ -225,12 +230,16 @@ class PassportDataSource extends RemoteGraphQLDataSource {
     })
 
     // make sure passport is forwarded back in the response as well
-    // @ts-expect-error
-    if (response.extensions.passport != null) {
+    if (response.extensions?.passport != null) {
       const originalSend = context.res.send
 
       context.res.send = (data) => {
         const parse = JSON.parse(data)
+
+        if (parse.extensions == null) {
+          parse.extensions = {}
+        }
+
         // @ts-expect-error
         parse.extensions.passport = response.extensions.passport
         data = JSON.stringify(parse)
@@ -253,6 +262,10 @@ class PassportDataSource extends RemoteGraphQLDataSource {
     const passportForward = requestContext.context.req.body.extensions.passport
 
     if (passportForward != null) {
+      if (requestContext.request.extensions == null) {
+        requestContext.request.extensions = {}
+      }
+
       requestContext.request.extensions.passport = passportForward
     }
   }
@@ -308,13 +321,28 @@ void (async () => {
 
   await server.start()
 
-  app.use('/api/graphql', matchQueryMiddleware)
+  app.use(cors({
+    origin: [
+      // @ts-expect-error
+      process.env.APP_URL,
+      'https://studio.apollographql.com'
+    ],
+    credentials: true,
+    methods: ['OPTIONS', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }))
+
+  app.use(matchQueryMiddleware)
 
   server.applyMiddleware({
     app,
-    path: '/api/graphql'
+    path: '/',
+    cors: false
   })
 
-  await new Promise<void>(resolve => httpServer.listen({ port: 8000 }, resolve))
-  console.log(`🚀 Server ready at http://localhost:8000${server.graphqlPath}`)
+  await new Promise<void>(resolve => httpServer.listen({
+    port: 8000,
+    hostname: '0.0.0.0'
+  }, resolve))
+  console.log(`🚀 Server ready at http://0.0.0.0:8000${server.graphqlPath}`)
 })()

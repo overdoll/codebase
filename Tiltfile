@@ -163,27 +163,19 @@ applications = {
         ],
     },
     "orca": {
-        "type": "go",
+        "type": "node",
         "directory": "orca",
         "image_reference": "orca-image",
         "image_target": "//applications/orca:local-image",
-        "binary_target": "//applications/orca:internal",
-        "binary_output": "applications/orca/internal",
-        "container_workdir": "/app/applications/orca/local-image_binary.runfiles/overdoll/",
-        "container_binary": "applications/orca/local-image_binary",
         "bazel_image": "bazel/applications/orca:local-image",
+        "container_workdir": "",
+        "container_binary": "",
+        "entrypoint": "/app/applications/orca/internal",
         "dependencies": [
-            "applications/orca/schema/schema.graphql",
-            "applications/orca/router.yaml",
-            "applications/orca/dev.router.yaml",
+            "applications/orca/apollo-gateway.ts",
             "applications/orca/.env",
         ],
-        "live_update": [
-            sync("applications/orca/schema/schema.graphql", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/schema/schema.graphql"),
-            sync("applications/orca/router.yaml", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/router.yaml"),
-            sync("applications/orca/dev.router.yaml", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/dev.router.yaml"),
-            sync("applications/orca/.env", "/app/applications/orca/local-image.binary.runfiles/overdoll/applications/orca/.env"),
-        ],
+        "live_update": [],
     },
 }
 

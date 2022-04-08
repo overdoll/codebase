@@ -247,3 +247,5 @@ container_push(
     skip_unchanged_digest = True,
     tag = "$(CONTAINER_TAG)",
 )
+
+
