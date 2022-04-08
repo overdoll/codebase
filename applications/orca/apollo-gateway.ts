@@ -329,7 +329,7 @@ void (async () => {
     ],
     credentials: true,
     methods: ['OPTIONS', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-overdoll-Security']
   }))
 
   app.use(matchQueryMiddleware)

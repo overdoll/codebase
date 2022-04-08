@@ -39,10 +39,7 @@ async function request (req, res): Promise<void> {
     // eventually, the graphql gateway is gonna be moved to it's own service so its helpful to be ready for that here
     network: Network.create(async function (params, variables) {
       const headers = {
-        // add CSRF token since its added by client
-        'Content-Type': 'application/json',
-        'Csrf-Token': req.csrfToken(),
-        cookie: ''
+        'Content-Type': 'application/json'
       }
 
       Object.entries(
@@ -51,27 +48,7 @@ async function request (req, res): Promise<void> {
         headers[key] = value
       })
 
-      // on the server, we need to pass the _csrf cookie as a real cookie or else it bugs out
-
-      const setCookie = res
-        .getHeader('set-cookie')
-
-      if (setCookie != null) {
-        setCookie
-          .forEach((setCookie) => {
-            parseCookies(setCookie)
-              .forEach((ck) => {
-                if (ck.cookieName === '_csrf') {
-                  const actualCookie = '_csrf=' + ck.cookieValue
-                  if (headers.cookie === undefined) {
-                    headers.cookie = actualCookie
-                  } else {
-                    headers.cookie += ';' + actualCookie
-                  }
-                }
-              })
-          })
-      }
+      console.log(headers)
 
       const response = await axios.post(
         process.env.SERVER_GRAPHQL_ENDPOINT as string,
@@ -210,7 +187,7 @@ async function request (req, res): Promise<void> {
     emotionIds: ids.join(' '),
     emotionCss: css,
     html,
-    csrfToken: req.csrfToken(),
+    securityToken: req.security(),
     relayStore: serialize(
       environment
         .getStore()
