@@ -9,6 +9,13 @@ export const generateUsername = (): string => {
   })
 }
 
+export const generateClubName = (): string => {
+  return chance.capitalize(chance.string({
+    length: 8,
+    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+  }))
+}
+
 export const generateEmailFromExistingUsername = (username: string): string => {
   return getEmail(username)
 }

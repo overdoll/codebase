@@ -13,6 +13,9 @@ interface Props {
 const Fragment = graphql`
   fragment PostViewButtonFragment on Post {
     reference
+    club {
+      slug
+    }
   }
 `
 
@@ -23,7 +26,7 @@ export default function PostViewButton ({
 
   return (
     <MenuLinkItem
-      to={`/p/${data.reference}`}
+      to={`${data.club.slug}/p/${data.reference}`}
       text={(
         <Trans>
           View Post

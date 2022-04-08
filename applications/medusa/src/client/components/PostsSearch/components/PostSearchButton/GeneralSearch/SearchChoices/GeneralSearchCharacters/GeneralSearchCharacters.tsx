@@ -1,6 +1,6 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'react-relay/hooks'
-import { removeNode } from '@//:modules/support'
+import removeNode from '@//:modules/support/removeNode'
 import type { GeneralSearchCharactersFragment$key } from '@//:artifacts/GeneralSearchCharactersFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { Choice, useChoiceContext } from '@//:modules/content/HookedComponents/Choice'

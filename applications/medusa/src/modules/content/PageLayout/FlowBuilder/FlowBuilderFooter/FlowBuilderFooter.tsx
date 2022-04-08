@@ -4,7 +4,7 @@ import { FlowContext } from '../FlowBuilder'
 import FlowBuilderPreviousButton from './FlowBuilderPreviousButton/FlowBuilderPreviousButton'
 import FlowBuilderNextButton from './FlowBuilderNextButton/FlowBuilderNextButton'
 import { MaybeRenderProp } from '@//:types/components'
-import { runIfFunction } from '../../../../support'
+import runIfFunction from '../../../../support/runIfFunction'
 
 interface ChildrenCallable {
   currentStep: string

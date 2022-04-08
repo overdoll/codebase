@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'
@@ -24,7 +23,6 @@ export default function RootClubMembers (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='club members' />
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

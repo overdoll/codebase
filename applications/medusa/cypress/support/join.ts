@@ -201,3 +201,39 @@ Cypress.Commands.add('joinWithNewAccount', (username: string) => {
     cy.getCookie('od.session').should('exist')
   })
 })
+
+Cypress.Commands.add('createClub', (name: string) => {
+  const clubMutation = `mutation ClubMutation($input: CreateClubInput!) {
+    createClub(input: $input) {
+      club {
+        id
+        slug
+        name
+        owner {
+          id
+        }
+      }
+      validation
+    }
+  }`
+
+  cy
+    .request(
+      {
+        ...getGraphqlRequest(),
+        body: {
+          query: clubMutation,
+          variables: {
+            input: {
+              name: name,
+              slug: name
+            }
+          }
+        },
+        retryOnNetworkFailure: false
+      }
+    ).then(({ body }) => {
+      expect(body.data.createClub.validation).to.equal(null)
+      expect(body.data.createClub.club).to.not.equal(null)
+    })
+})

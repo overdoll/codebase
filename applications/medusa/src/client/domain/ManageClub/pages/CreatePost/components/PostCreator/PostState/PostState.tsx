@@ -9,7 +9,6 @@ import { PauseCircle } from '@//:assets/icons/interface'
 import { useHistory } from '@//:modules/routing'
 import type { PostStateFragment$key } from '@//:artifacts/PostStateFragment.graphql'
 import type { PostStateClubFragment$key } from '@//:artifacts/PostStateClubFragment.graphql'
-
 import { Trans } from '@lingui/macro'
 import PostSubmitted from './PostSubmitted/PostSubmitted'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
@@ -66,9 +65,9 @@ export default function PostState ({
             </Trans>
           </Heading>
           <Box ml={4}>
-            <Text><Trans>Nothing extremely offensive or shocking</Trans></Text>
             <Text><Trans>All characters must be of legal age</Trans></Text>
             <Text><Trans>You own the rights to the content you upload</Trans></Text>
+            <Text><Trans>Nothing extremely offensive, shocking, or illegal</Trans></Text>
           </Box>
         </Box>
         <Box>
@@ -81,8 +80,7 @@ export default function PostState ({
                 href='https://www.corpodoll.com/club-guidelines/'
               >
                 Club Guidelines
-              </Link>
-              {' '}carefully before posting
+              </Link>{' '}carefully before posting
             </Trans>
           </Text>
         </Box>

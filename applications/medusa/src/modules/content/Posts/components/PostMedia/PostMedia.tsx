@@ -4,8 +4,8 @@ import { useContext } from 'react'
 import { PostMediaFragment$key } from '@//:artifacts/PostMediaFragment.graphql'
 import ImageSnippet from '../../../DataDisplay/ImageSnippet/ImageSnippet'
 import ControlledVideo from './ControlledVideo/ControlledVideo'
-import { PostVideoManagerContext } from '../../helpers/PostVideoManager/PostVideoManager'
-import { GlobalVideoManagerContext } from '../../helpers/GlobalVideoManager/GlobalVideoManager'
+import { PostVideoManagerContext } from '../../support/PostVideoManager/PostVideoManager'
+import { GlobalVideoManagerContext } from '../../support/GlobalVideoManager/GlobalVideoManager'
 
 export interface PostMediaProps {
   index: number

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5d12161128ffcccc45a175471b9a4fa3>>
- * @relayHash 7ff03b3de6f52af6e8dce5de75c05639
+ * @generated SignedSource<<e67b260452e82b18754726ff6c6a55af>>
+ * @relayHash cdb5e2aff73584a3dbb3af672a4dff4a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7ff03b3de6f52af6e8dce5de75c05639
+// @relayRequestID cdb5e2aff73584a3dbb3af672a4dff4a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,6 +186,25 @@ return {
                         "name": "reference",
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "slug",
+                            "storageKey": null
+                          },
+                          (v4/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v4/*: any*/)
                     ],
                     "storageKey": null
@@ -253,7 +272,7 @@ return {
     ]
   },
   "params": {
-    "id": "7ff03b3de6f52af6e8dce5de75c05639",
+    "id": "cdb5e2aff73584a3dbb3af672a4dff4a",
     "metadata": {},
     "name": "PostReportsPaginationQuery",
     "operationKind": "query",
@@ -262,6 +281,6 @@ return {
 };
 })();
 
-(node as any).hash = "aedec6f581a255fa59ef5dd104945398";
+(node as any).hash = "87453b1c5eba973efea492408afaf65c";
 
 export default node;

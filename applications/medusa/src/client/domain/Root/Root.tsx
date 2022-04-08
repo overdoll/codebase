@@ -36,15 +36,15 @@ export default function Root (props: Props): JSX.Element {
   return (
     <>
       <Helmet>
-        <title>overdoll</title>
-        <meta name="viewport" content="width=device-width"/>
+        <title>overdoll :: Find Your Club</title>
+        <meta name='viewport' content='width=device-width' />
       </Helmet>
       <AccountAuthorizer queryRef={data.viewer}>
-        <UniversalNavigator queryRef={data.viewer}/>
+        <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
           {props.children}
         </PageContents>
-        <NoScript/>
+        <NoScript />
       </AccountAuthorizer>
     </>
   )

@@ -144,7 +144,7 @@ export default function Home (props: Props): JSX.Element {
             <LinkButton
               size='lg'
               colorScheme='primary'
-              to='/configure/curation-profile'
+              to='/settings/preferences/curation-profile'
             >
               <Trans>
                 Set up profile

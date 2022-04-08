@@ -15,7 +15,6 @@ export const logout = (): void => {
   cy.findByRole('button', { name: /Log Out/iu })
     .click()
 
-  cy.waitUntil(() => cy.findAllByText(/home/iu).should('exist'))
   cy.waitUntil(() => cy.findAllByText(/You have been logged out/iu).should('exist'))
 }
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e61db32f513af3aebcb2699171b29b2>>
+ * @generated SignedSource<<4d9de7774d0fc3e4d0efe2efce8285cc>>
  * @relayHash c5443782756f4482302f6a1c2873753c
  * @lightSyntaxTransform
  * @nogrep
@@ -226,7 +226,7 @@ return {
           "title"
         ],
         "handle": "connection",
-        "key": "AdminSeriesConnection_series",
+        "key": "StaffSeriesConnection_series",
         "kind": "LinkedHandle",
         "name": "series"
       }

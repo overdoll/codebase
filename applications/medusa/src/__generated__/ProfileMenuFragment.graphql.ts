@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<599f34050ac4259c28842a1cec5855a0>>
+ * @generated SignedSource<<a08b829f55722532e42f9992753cd8e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProfileMenuFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ProfileAdminButtonFragment" | "ProfileCopyLinkButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ProfileStaffButtonFragment" | "ProfileCopyLinkButtonFragment">;
   readonly " $fragmentType": "ProfileMenuFragment";
 };
 export type ProfileMenuFragment = ProfileMenuFragment$data;
@@ -29,7 +29,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ProfileAdminButtonFragment"
+      "name": "ProfileStaffButtonFragment"
     },
     {
       "args": null,
@@ -41,6 +41,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "61209ba310631ba6155f06fb864b3da8";
+(node as any).hash = "177e4c5c668a87ac5f3502c8cb701aa3";
 
 export default node;

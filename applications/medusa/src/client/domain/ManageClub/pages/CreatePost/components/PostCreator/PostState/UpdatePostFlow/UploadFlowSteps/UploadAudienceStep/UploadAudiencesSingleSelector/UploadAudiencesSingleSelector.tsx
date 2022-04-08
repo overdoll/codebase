@@ -3,7 +3,7 @@ import type { UploadAudiencesSingleSelectorQuery } from '@//:artifacts/UploadAud
 import { StackTile } from '@//:modules/content/ContentSelection'
 import { ListSpacer } from '@//:modules/content/PageLayout'
 import AudienceTileOverlay
-  from '@//:modules/content/ContentSelection/components/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
+  from '@//:modules/content/ContentSelection/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'

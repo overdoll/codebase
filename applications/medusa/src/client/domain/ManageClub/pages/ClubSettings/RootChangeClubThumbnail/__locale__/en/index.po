@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-03-29 21:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:34
+msgid "Back to club settings"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnail.tsx:42
+msgid "Change Club Thumbnail"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:99
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail.tsx:40
+msgid "Club Thumbnail"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:111
+msgid "Submit"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:75
+msgid "Successfully updated your club thumbnail"
+msgstr ""
+
+#: src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/ChangeClubThumbnail/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:81
+msgid "There was an error updating your club thumbnail"
+msgstr ""

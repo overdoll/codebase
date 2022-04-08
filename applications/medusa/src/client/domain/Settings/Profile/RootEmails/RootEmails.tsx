@@ -5,34 +5,56 @@ import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack
 import { Suspense } from 'react'
 import type { EmailsQuery as EmailsQueryType } from '@//:artifacts/EmailsQuery.graphql'
 import EmailsQuery from '@//:artifacts/EmailsQuery.graphql'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
+import { Helmet } from 'react-helmet-async'
+import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
-  query: PreloadedQuery<EmailsQueryType>
+  prepared: {
+    query: PreloadedQuery<EmailsQueryType>
+  }
+
 }
 
 export default function RootEmails (props: Props): JSX.Element | null {
   const [queryRef, loadQuery] = useQueryLoader(
     EmailsQuery,
-    props.query
+    props.prepared.query
   )
 
   return (
     <>
-      <PageSectionWrap>
-        <PageSectionTitle colorScheme='green'>
+      <Helmet>
+        <title>
+          Emails - Profile - Settings :: overdoll.com
+        </title>
+      </Helmet>
+      <PageWrapper>
+        <BackButton to='/settings/profile'>
           <Trans>
-            Emails
+            Back to profile settings
           </Trans>
-        </PageSectionTitle>
-      </PageSectionWrap>
-      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-        <Suspense fallback={<SkeletonStack />}>
-          <Emails query={queryRef as PreloadedQuery<EmailsQueryType>} />
-        </Suspense>
-      </QueryErrorBoundary>
+        </BackButton>
+        <PageSectionWrap>
+          <PageSectionTitle colorScheme='teal'>
+            <Trans>
+              Emails
+            </Trans>
+          </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans>
+              Add, remove, or promote your emails
+            </Trans>
+          </PageSectionDescription>
+        </PageSectionWrap>
+        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+          <Suspense fallback={<SkeletonStack />}>
+            <Emails query={queryRef as PreloadedQuery<EmailsQueryType>} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </PageWrapper>
     </>
   )
 }

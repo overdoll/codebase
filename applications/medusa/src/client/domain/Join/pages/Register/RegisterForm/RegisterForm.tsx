@@ -9,6 +9,7 @@ import {
   FormInput,
   FormSubmitButton,
   InputBody,
+  InputFooter,
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -54,6 +55,7 @@ export default function RegisterForm ({
           <InputBody>
             <TextInput placeholder={i18n._(t`Enter a username`)} />
           </InputBody>
+          <InputFooter />
         </FormInput>
         <FormSubmitButton
           size='xl'

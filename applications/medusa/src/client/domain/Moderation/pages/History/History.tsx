@@ -25,7 +25,11 @@ export default function History (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet title='history' />
+      <Helmet>
+        <title>
+          History - Moderation :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

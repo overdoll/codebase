@@ -13,26 +13,26 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Settings.tsx:21
+#: src/client/domain/Settings/Settings.tsx:28
 msgid "Account Settings"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:60
+#: src/client/domain/Settings/Settings.tsx:67
 msgid "Billing"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:71
+#: src/client/domain/Settings/Settings.tsx:78
 msgid "Moderation"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:50
+#: src/client/domain/Settings/Settings.tsx:57
 msgid "Preferences"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:30
+#: src/client/domain/Settings/Settings.tsx:37
 msgid "Profile"
 msgstr ""
 
-#: src/client/domain/Settings/Settings.tsx:40
+#: src/client/domain/Settings/Settings.tsx:47
 msgid "Security"
 msgstr ""

@@ -56,8 +56,7 @@ export default function Search (props: Props): JSX.Element {
     hasNext,
     isLoadingNext
   } = usePaginationFragment<SearchQuery, any>(
-    Fragment,
-    queryData
+    Fragment, queryData
   )
 
   return (

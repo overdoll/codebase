@@ -13,8 +13,8 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/ClubPublicPage/ClubPublicPage/components/ClubMenu/ClubAdminButton/ClubAdminButton.tsx:26
-msgid "Admin"
+#: src/client/domain/ClubPublicPage/ClubPublicPage/components/ClubMenu/ClubStaffButton/ClubStaffButton.tsx:26
+msgid "Staff"
 msgstr ""
 
 #: src/client/domain/ClubPublicPage/ClubPublicPage/components/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:116

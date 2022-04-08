@@ -103,7 +103,9 @@ export default function Join ({
   // Ask user to authenticate
   return (
     <>
-      <Helmet title='join' />
+      <Helmet>
+        <title>Join :: overdoll</title>
+      </Helmet>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon

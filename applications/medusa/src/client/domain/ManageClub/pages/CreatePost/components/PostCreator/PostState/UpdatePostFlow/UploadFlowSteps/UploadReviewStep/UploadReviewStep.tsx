@@ -5,7 +5,7 @@ import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/helpers/ObserverManager/ObserverManager'
+import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import { Stack } from '@chakra-ui/react'
 
 interface Props {

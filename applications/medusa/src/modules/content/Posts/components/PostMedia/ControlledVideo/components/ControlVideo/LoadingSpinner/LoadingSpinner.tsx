@@ -46,6 +46,5 @@ export default function LoadingSpinner ({
         size='lg'
       />
     </Flex>
-
   )
 }

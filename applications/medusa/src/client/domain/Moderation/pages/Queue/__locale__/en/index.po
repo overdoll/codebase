@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:127
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:119
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
@@ -25,19 +25,19 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:54
+#: src/client/domain/Moderation/pages/Queue/Posts/PostTagsPreview/PostTagsPreview.tsx:30
 msgid "Audience"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:37
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:41
 msgid "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines."
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:70
+#: src/client/domain/Moderation/pages/Queue/Posts/PostTagsPreview/PostTagsPreview.tsx:46
 msgid "Categories"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/PostPreview/PostPreview.tsx:62
+#: src/client/domain/Moderation/pages/Queue/Posts/PostTagsPreview/PostTagsPreview.tsx:38
 msgid "Characters"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Moderation Paused"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Queue.tsx:32
+#: src/client/domain/Moderation/pages/Queue/Queue.tsx:36
 msgid "Moderation Queue"
 msgstr ""
 
@@ -53,15 +53,15 @@ msgstr ""
 msgid "Moderation Settings"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:123
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:115
 msgid "Note"
 msgstr ""
 
 #: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:74
-msgid "Please add a note"
-msgstr ""
+#~ msgid "Please add a note"
+#~ msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:66
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:67
 msgid "Please select a rejection reason"
 msgstr ""
 
@@ -73,11 +73,11 @@ msgstr ""
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/Posts.tsx:160
+#: src/client/domain/Moderation/pages/Queue/Posts/Posts.tsx:162
 msgid "Posted on {formattedDate}"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:107
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:99
 msgid "Reason"
 msgstr ""
 
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Reject"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:145
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:137
 msgid "Reject Post"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Select a reason for rejecting this post"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:111
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:103
 msgid "Select the rejection reason"
 msgstr ""
 
@@ -102,12 +102,12 @@ msgid "Since you've paused your moderator status, you won't get anymore new case
 msgstr ""
 
 #: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:76
-msgid "The note cannot exceed 255 characters"
-msgstr ""
+#~ msgid "The note cannot exceed 255 characters"
+#~ msgstr ""
 
 #: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:75
-msgid "The note needs at least 5 characters"
-msgstr ""
+#~ msgid "The note needs at least 5 characters"
+#~ msgstr ""
 
 #: src/client/domain/Moderation/pages/Queue/Posts/NoPostsPlaceholder/NoPostsPlaceholder.tsx:73
 msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
@@ -121,7 +121,7 @@ msgstr ""
 msgid "There was an error rejecting the post created by {0}"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:134
+#: src/client/domain/Moderation/pages/Queue/Posts/ModeratePost/RejectionReasons/RejectionReasons.tsx:126
 msgid "This rejection reason is an infraction. The poster's account will be temporarily suspended."
 msgstr ""
 

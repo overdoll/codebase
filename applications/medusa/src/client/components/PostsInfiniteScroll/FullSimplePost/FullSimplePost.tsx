@@ -21,7 +21,7 @@ import PostReportButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostViewButton from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton'
 import JoinClubFromPost
-  from '../../../domain/ClubPublicPage/ClubPublicPage/components/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../domain/ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props {
   query: FullSimplePostFragment$key

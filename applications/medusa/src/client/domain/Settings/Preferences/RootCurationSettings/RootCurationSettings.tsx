@@ -22,7 +22,7 @@ export default function RootCurationSettings (props: Props): JSX.Element | null 
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle colorScheme='orange'>
+        <PageSectionTitle>
           <Trans>
             Content Curation
           </Trans>

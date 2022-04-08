@@ -4,10 +4,7 @@ import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent
   from '../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
-import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
-import PostModerateButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 
 interface Props {
   query: ReviewPostFragment$key
@@ -27,15 +24,12 @@ export default function ReviewPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='space-between'>
+      <HStack align='center' spacing={3} justify='flex-start'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
           <Trans>
             Review
           </Trans>
         </Badge>
-        <PostMenu size='xs'>
-          <PostModerateButton query={data} />
-        </PostMenu>
       </HStack>
       <GridTile>
         <PostPreviewContent query={data} />

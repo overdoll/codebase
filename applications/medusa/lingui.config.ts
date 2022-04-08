@@ -57,28 +57,60 @@ export default {
       include: ['src/client/domain/Settings/Profile']
     },
     {
+      path: 'src/client/domain/Settings/Profile/RootEmails/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Profile/RootEmails']
+    },
+    {
+      path: 'src/client/domain/Settings/Profile/RootUsername/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Profile/RootUsername']
+    },
+    {
+      path: 'src/client/domain/ConfirmEmail/__locale__/{locale}/index',
+      include: ['src/client/domain/ConfirmEmail']
+    },
+    {
       path: 'src/client/domain/Settings/Security/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Security']
     },
     {
-      path: 'src/client/domain/Settings/Profile/RootEmails/ConfirmEmail/__locale__/{locale}/index',
-      include: ['src/client/domain/Settings/Profile/RootEmails/ConfirmEmail']
+      path: 'src/client/domain/Settings/Security/RootSessionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootSessionsSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Security/RootMultiFactorTotpSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootMultiFactorTotpSetup']
+    },
+    {
+      path: 'src/client/domain/Settings/Security/RootRecoveryCodesSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Security/RootRecoveryCodesSetup']
     },
     {
       path: 'src/client/domain/Settings/Preferences/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Preferences']
     },
     {
+      path: 'src/client/domain/Settings/Preferences/RootCurationProfileSetup/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Preferences/RootCurationProfileSetup']
+    },
+    {
       path: 'src/client/domain/Settings/Billing/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Billing']
     },
     {
-      path: 'src/client/domain/Settings/Billing/RootSubscriptionsSettings/__locale__/{locale}/index',
+      path: 'src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Billing/RootSubscriptionsSettings']
     },
     {
-      path: 'src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
+      path: 'src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/__locale__/{locale}/index',
       include: ['src/client/domain/Settings/Billing/RootSavedPaymentMethodsSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootAccountClubSupporterSubscriptionSettings']
+    },
+    {
+      path: 'src/client/domain/Settings/Billing/pages/RootTransactionsSettings/__locale__/{locale}/index',
+      include: ['src/client/domain/Settings/Billing/RootTransactionsSettings']
     },
     {
       path: 'src/client/domain/Moderation/__locale__/{locale}/index',
@@ -125,12 +157,24 @@ export default {
       include: ['src/client/domain/ClubPublicPage']
     },
     {
-      path: 'src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts/__locale__/{locale}/index',
-      include: ['src/client/domain/ClubPublicPage/ClubPublicPage/pages/ClubPublicPosts']
+      path: 'src/client/domain/ClubPublicPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/ClubPublicPosts']
     },
     {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',
       include: ['src/client/domain/ManageClub/pages/ClubSettings']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubName']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootChangeClubThumbnail']
+    },
+    {
+      path: 'src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases/__locale__/{locale}/index',
+      include: ['src/client/domain/ManageClub/pages/ClubSettings/RootClubAliases']
     },
     {
       path: 'src/client/domain/ManageClub/pages/CreateClub/__locale__/{locale}/index',
@@ -149,96 +193,96 @@ export default {
       include: ['src/client/domain/Help']
     },
     {
-      path: 'src/client/domain/Admin/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin']
+      path: 'src/client/domain/Staff/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAudience/AdminCreateAudience']
+      path: 'src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAudience/StaffCreateAudience']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAudience/AdminSearchAudiences']
+      path: 'src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAudience/StaffSearchAudiences']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAudience/AdminViewAudience/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAudience/AdminViewAudience']
+      path: 'src/client/domain/Staff/pages/StaffAudience/StaffViewAudience/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAudience/StaffViewAudience']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminCreateCharacter']
+      path: 'src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCharacter/StaffCreateCharacter']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminSearchCharacter']
+      path: 'src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCharacter/StaffSearchCharacter']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCharacter/AdminViewCharacter']
+      path: 'src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCharacter/StaffViewCharacter']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCategory/AdminCreateCategory']
+      path: 'src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCategory/StaffCreateCategory']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCategory/AdminSearchCategories']
+      path: 'src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCategory/StaffSearchCategories']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCategory/AdminViewCategory/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCategory/AdminViewCategory']
+      path: 'src/client/domain/Staff/pages/StaffCategory/StaffViewCategory/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCategory/StaffViewCategory']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminRules/AdminSearchRules/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminRules/AdminSearchRules']
+      path: 'src/client/domain/Staff/pages/StaffRules/StaffSearchRules/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffRules/StaffSearchRules']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminRules/AdminCreateRule/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminRules/AdminCreateRule']
+      path: 'src/client/domain/Staff/pages/StaffRules/StaffCreateRule/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffRules/StaffCreateRule']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminRules/AdminViewRule/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminRules/AdminViewRule']
+      path: 'src/client/domain/Staff/pages/StaffRules/StaffViewRule/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffRules/StaffViewRule']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminSeries/AdminCreateSeries']
+      path: 'src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffSeries/StaffCreateSeries']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminSeries/AdminSearchSeries']
+      path: 'src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffSeries/StaffSearchSeries']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminSeries/AdminViewSeries/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminSeries/AdminViewSeries']
+      path: 'src/client/domain/Staff/pages/StaffSeries/StaffViewSeries/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffSeries/StaffViewSeries']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminCreateCancellationReason']
+      path: 'src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCancellationReasons/StaffCreateCancellationReason']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminSearchCancellationReasons']
+      path: 'src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCancellationReasons/StaffSearchCancellationReasons']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminCancellationReasons/AdminViewCancellationReason']
+      path: 'src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAccount/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAccount']
+      path: 'src/client/domain/Staff/pages/StaffAccount/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAccount']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminClub/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminClub']
+      path: 'src/client/domain/Staff/pages/StaffClub/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffClub']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAccountClubSupporterSubscription']
+      path: 'src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription']
     },
     {
-      path: 'src/client/domain/Admin/pages/AdminAccountTransaction/__locale__/{locale}/index',
-      include: ['src/client/domain/Admin/pages/AdminAccountTransaction']
+      path: 'src/client/domain/Staff/pages/StaffAccountTransaction/__locale__/{locale}/index',
+      include: ['src/client/domain/Staff/pages/StaffAccountTransaction']
     }
   ],
   format: 'po',

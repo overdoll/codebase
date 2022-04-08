@@ -1,27 +1,17 @@
-import { generateUsernameAndEmail } from '../../support/generate'
-import ChanceJS from 'chance'
-import { createClubWithName } from '../../support/artist_actions'
-
-const chance = new ChanceJS()
+import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 
 Cypress.config('defaultCommandTimeout', 10000)
-//
+
 describe('Club - Configure', () => {
   const [username, email] = generateUsernameAndEmail()
 
-  const clubName = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const clubName = generateClubName()
 
-  const newClubName = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const newClubName = generateClubName()
 
   before(() => {
     cy.joinWithNewAccount(username, email)
-    createClubWithName(clubName)
+    cy.createClub(clubName)
   })
 
   beforeEach(() => {
@@ -29,9 +19,11 @@ describe('Club - Configure', () => {
   })
 
   it('visit club settings and change them', () => {
-    cy.visit(`/club/${clubName}/settings`)
-
     // change club name
+    cy.visit(`/club/${clubName}/settings`)
+    cy.findByText('Update Name').should('be.visible').click()
+    cy.url().should('include', '/settings/name')
+
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Club Name/iu }).should('not.be.disabled').click())
     cy.findByPlaceholderText(/Enter a new club name/).should('be.visible').type(newClubName)
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
@@ -39,6 +31,10 @@ describe('Club - Configure', () => {
     cy.findByRole('button', { name: /Change Club Name/iu }).click()
 
     // add club link and change to it
+    cy.visit(`/club/${clubName}/settings`)
+    cy.findByText('Manage Aliases').should('be.visible').click()
+    cy.url().should('include', '/settings/aliases')
+
     cy.waitUntil(() => cy.findByRole('button', { name: /Add Club Link Alias/iu }).should('not.be.disabled').click())
     cy.findByPlaceholderText(/Enter a new club link/).should('be.visible').type(newClubName)
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
@@ -52,6 +48,10 @@ describe('Club - Configure', () => {
     cy.findByPlaceholderText(/Enter a new club link/).should('not.be.visible')
 
     // add new logo
+    cy.visit(`/club/${newClubName}/settings`)
+    cy.findByText('Club Thumbnail').should('be.visible').click()
+    cy.url().should('include', '/settings/thumbnail')
+
     cy.waitUntil(() => cy.findByRole('button', { name: /Change Club Thumbnail/iu }).should('not.be.disabled').click({ force: true }))
     cy.findByText(/Drag and drop or/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.findByText(/Remove upload/iu).should('exist')

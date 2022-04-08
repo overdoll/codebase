@@ -21,6 +21,14 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton.tsx:66
+msgid "Archive Post"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:108
+msgid "Are you sure you'd like to delete this post? You cannot undo this action and it will be gone forever."
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
@@ -41,6 +49,10 @@ msgstr ""
 msgid "Best"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:114
+msgid "Cancel"
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:76
 msgid "Changing to your preferred language..."
 msgstr ""
@@ -54,28 +66,26 @@ msgid "Close"
 msgstr ""
 
 #: src/client/components/ContentHints/CommunityGuidelines/CommunityGuidelines.tsx:14
-msgid "Community Guidelines"
-msgstr ""
+#~ msgid "Community Guidelines"
+#~ msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:107
 msgid "Content Moderation"
 msgstr ""
 
-#: src/modules/hooks/useCopyToClipboardWrapper/index.ts:23
+#: src/modules/hooks/useCopyToClipboardWrapper.ts:23
 msgid "Copied to clipboard!"
 msgstr ""
 
 #: src/client/components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard.tsx:22
-msgid "Copied!"
-msgstr ""
+#~ msgid "Copied!"
+#~ msgstr ""
 
 #: src/client/components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard.tsx:23
-#: src/client/components/ContentHints/CopyLinkToClipboard/CopyLinkToClipboard.tsx:22
-#: src/client/components/ContentHints/CopyToClipboardButton/CopyToClipboardButton.tsx:33
 msgid "Copy"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:29
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:32
 msgid "Copy Link"
 msgstr ""
 
@@ -89,6 +99,12 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:85
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:99
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:119
+msgid "Delete Post"
+msgstr ""
+
 #: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:106
 msgid "Drag and drop or tap to upload"
 msgstr ""
@@ -97,9 +113,17 @@ msgstr ""
 msgid "Dropdown Menu"
 msgstr ""
 
+#: src/client/domain/Root/NoScript/NoScript.tsx:23
+msgid "Enable JavaScript"
+msgstr ""
+
 #: src/client/components/SearchInput/SearchInput.tsx:53
 #~ msgid "Enter a search term"
 #~ msgstr ""
+
+#: src/modules/content/DataDisplay/ImageSnippet/ImageSnippet.tsx:41
+msgid "Error Loading Image"
+msgstr ""
 
 #: src/modules/content/Posts/components/PostMedia/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:23
 msgid "Error Loading Video"
@@ -122,8 +146,8 @@ msgid "Go Back"
 msgstr ""
 
 #: src/modules/content/PageLayout/BuildingBlocks/ConfigureBackButton/ConfigureBackButton.tsx:28
-msgid "Go back to settings"
-msgstr ""
+#~ msgid "Go back to settings"
+#~ msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:28
@@ -148,16 +172,20 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
+#: src/client/domain/Root/NoScript/NoScript.tsx:28
+msgid "In order for the platform to function correctly, JavaScript must be enabled in your browser. Please enable it and refresh the page."
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:80
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:127
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:132
 msgid "Like"
 msgstr ""
 
-#: src/modules/content/ContentSelection/components/LoadMore/LoadMore.tsx:40
+#: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:40
 msgid "Load More"
 msgstr ""
 
@@ -209,23 +237,23 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:10
 msgid "No audiences were found{0}"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:10
 msgid "No categories were found{0}"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:10
 msgid "No categories, characters, or series were found{0}"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
 msgid "No characters were found{0}"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:10
 msgid "No clubs were found{0}"
 msgstr ""
 
@@ -233,7 +261,7 @@ msgstr ""
 #~ msgid "No more content available"
 #~ msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:8
+#: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:7
 msgid "No payment methods found"
 msgstr ""
 
@@ -245,19 +273,19 @@ msgstr ""
 #~ msgid "No reason was found"
 #~ msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyRules/EmptyRules.tsx:11
+#: src/modules/content/Placeholder/Empty/EmptyRules/EmptyRules.tsx:7
 msgid "No rules were found"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:15
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:10
 msgid "No series were found{0}"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:8
+#: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:7
 msgid "No subscriptions were found"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyTransactions/EmptyTransactions.tsx:8
+#: src/modules/content/Placeholder/Empty/EmptyTransactions/EmptyTransactions.tsx:7
 msgid "No transactions were found"
 msgstr ""
 
@@ -265,7 +293,7 @@ msgstr ""
 #~ msgid "Nothing was found"
 #~ msgstr ""
 
-#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:51
+#: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:53
 msgid "Open"
 msgstr ""
 
@@ -283,7 +311,7 @@ msgid "Open Search"
 msgstr ""
 
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:95
-msgid "Platform Admin"
+msgid "Platform Staff"
 msgstr ""
 
 #: src/modules/validation/Totp.ts:13
@@ -326,6 +354,18 @@ msgstr ""
 msgid "Post report was submitted successfully"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton.tsx:50
+msgid "Post was archived successfully"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:68
+msgid "Post was removed successfully"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:50
+msgid "Post was un-archived successfully"
+msgstr ""
+
 #: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:131
 msgid "Remove Upload"
 msgstr ""
@@ -345,8 +385,8 @@ msgid "Retry"
 msgstr ""
 
 #: src/client/components/ContentHints/SpoilerText/SpoilerText.tsx:38
-msgid "Reveal Spoiler"
-msgstr ""
+#~ msgid "Reveal Spoiler"
+#~ msgstr ""
 
 #: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:85
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
@@ -357,8 +397,28 @@ msgstr ""
 #~ msgid "Save ({0})"
 #~ msgstr ""
 
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:113
+msgid "Search for a series"
+msgstr ""
+
 #: src/client/components/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:64
 msgid "Search for characters, categories, or series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:76
+msgid "Select Rule"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:85
+msgid "Select Series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:91
+msgid "Select a rule"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:100
+msgid "Select a series"
 msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton.tsx:13
@@ -390,8 +450,12 @@ msgid "Supporter Only"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:38
-msgid "The club link can only contain numbers, letters, and dashes."
+msgid "The club link can only contain numbers and letters."
 msgstr ""
+
+#: src/modules/validation/ClubSlug.ts:38
+#~ msgid "The club link can only contain numbers, letters, and dashes."
+#~ msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:37
 msgid "The club link cannot exceed 15 characters"
@@ -425,8 +489,20 @@ msgstr ""
 #~ msgid "There was an erro submitting the report"
 #~ msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton.tsx:56
+msgid "There was an error archiving the post"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:75
+msgid "There was an error removing the post"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:121
 msgid "There was an error submitting the report"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:56
+msgid "There was an error un-archiving the post"
 msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
@@ -462,9 +538,17 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
+#: src/modules/content/Placeholder/NotFound/NotFoundSubscription/NotFoundSubscription.tsx:12
+msgid "This subscription was not found"
+msgstr ""
+
 #: src/client/components/FloatingGeneralSearchButton/components/GeneralSearch/SaveSearchButton/SaveSearchButton.tsx:86
 #~ msgid "Top"
 #~ msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:66
+msgid "Un-Archive Post"
+msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:110
 msgid "Unlock Account"
@@ -486,8 +570,8 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:28
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:80
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:31
 msgid "View Post"
 msgstr ""
 
@@ -537,5 +621,5 @@ msgstr ""
 #~ msgstr ""
 
 #: src/modules/content/ThemeComponents/StyledInput/StyledInput.tsx:63
-msgid "{helperText}"
-msgstr ""
+#~ msgid "{helperText}"
+#~ msgstr ""

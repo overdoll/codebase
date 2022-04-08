@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Moderation/pages/History/History.tsx:37
+#: src/client/domain/Moderation/pages/History/History.tsx:41
 msgid "Any moderation actions you take will appear here."
 msgstr ""
 
-#: src/client/domain/Moderation/pages/History/History.tsx:53
+#: src/client/domain/Moderation/pages/History/History.tsx:57
 msgid "Club"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/History/History.tsx:46
+#: src/client/domain/Moderation/pages/History/History.tsx:50
 msgid "Date Posted"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/History/History.tsx:32
+#: src/client/domain/Moderation/pages/History/History.tsx:36
 msgid "Moderation History"
 msgstr ""
 
@@ -41,6 +41,6 @@ msgstr ""
 msgid "Only the last 7 days of logs are available"
 msgstr ""
 
-#: src/client/domain/Moderation/pages/History/History.tsx:60
+#: src/client/domain/Moderation/pages/History/History.tsx:64
 msgid "Status"
 msgstr ""

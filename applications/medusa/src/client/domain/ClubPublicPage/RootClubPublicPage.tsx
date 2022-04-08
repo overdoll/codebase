@@ -28,7 +28,11 @@ export default function RootClubPublicPage (props: Props): JSX.Element {
   return (
     <>
       <LockedAccountBanner />
-      <Helmet title='club' />
+      <Helmet>
+        <title>
+          Club :: overdoll
+        </title>
+      </Helmet>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
           <Suspense fallback={<SkeletonPost />}>

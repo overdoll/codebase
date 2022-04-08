@@ -1,8 +1,12 @@
-import { Box, HTMLChakraProps, Skeleton } from '@chakra-ui/react'
+import { Box, Heading, HTMLChakraProps, Skeleton, Stack } from '@chakra-ui/react'
 import SuspenseImage from '../../../operations/SuspenseImage'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
+import { useState } from 'react'
+import Icon from '../../PageLayout/Flair/Icon/Icon'
+import { WarningTriangle } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 interface Props extends HTMLChakraProps<any> {
   query: ImageSnippetFragment$key | null
@@ -27,7 +31,20 @@ export default function ImageSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  // TODO add a placeholder in case the URL fails to load due to some error
+  const [hasError, setHasError] = useState(false)
+
+  if (hasError) {
+    return (
+      <Stack borderRadius='md' p={4} bg='dimmers.500' direction='column' justify='center' align='center' spacing={2}>
+        <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />
+        <Heading fontSize='md' color='orange.300'>
+          <Trans>
+            Error Loading Image
+          </Trans>
+        </Heading>
+      </Stack>
+    )
+  }
 
   return (
     <Box h={h} w={w} as='picture'>
@@ -41,6 +58,7 @@ export default function ImageSnippet ({
         )
       )}
       <SuspenseImage
+        onError={() => setHasError(true)}
         alt='thumbnail'
         w='inherit'
         h='inherit'

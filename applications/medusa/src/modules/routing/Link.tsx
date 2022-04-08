@@ -1,7 +1,7 @@
 import { useRoutingContext } from './RoutingContext'
 import { useCallback, useTransition } from 'react'
 import { MaybeRenderProp } from '@//:types/components'
-import { runIfFunction } from '../support'
+import runIfFunction from '../support/runIfFunction'
 
 export interface ChildrenCallableLink {
   isPending: boolean

@@ -30,7 +30,7 @@ describe('Settings - Curation Profile', () => {
     cy.joinWithNewAccount(username, email)
     cy.visit('/settings/preferences')
     cy.waitUntil(() => cy.findByRole('button', { name: /Complete Curation Profile/iu }).should('not.be.disabled').click())
-    cy.url().should('include', '/configure/curation-profile')
+    cy.url().should('include', '/settings/preferences/curation-profile')
 
     // fill out the age section
     isOnStep('age')
@@ -58,7 +58,7 @@ describe('Settings - Curation Profile', () => {
     clickOnTile(preferenceCategory)
     saveCurrentStep()
     cy.findByRole('button', { name: /Go home/iu }).should('exist').click()
-    cy.visit('/configure/curation-profile')
+    cy.visit('/settings/preferences/curation-profile')
     gotoNextStep()
     isOnStep('audience')
     gotoNextStep()

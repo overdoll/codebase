@@ -13,7 +13,11 @@ interface Props {
 export default function Moderation (props: Props): JSX.Element {
   return (
     <>
-      <Helmet title='moderation settings' />
+      <Helmet>
+        <title>
+          Moderation - Settings :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <RootQueueSettings query={props.prepared.queueQuery} />
       </PageWrapper>

@@ -112,7 +112,11 @@ export default function CreatePost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create post' />
+      <Helmet>
+        <title>
+          Create a Post :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <SequenceProvider {...methods}>
           <UppyContext.Provider value={uppy}>

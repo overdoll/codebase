@@ -115,9 +115,19 @@ export default function SessionCard ({
                     Location
                   </Trans>
                 </Heading>
-                <Text fontSize='sm'>
-                  {data.location.city}, {data.location.subdivision} ({data.location.country})
-                </Text>
+                {data.location.city === '' && data.location.subdivision === '' && data.location.country === ''
+                  ? (
+                    <Text fontSize='sm'>
+                      <Trans>
+                        Unknown
+                      </Trans>
+                    </Text>
+                    )
+                  : (
+                    <Text fontSize='sm'>
+                      {data.location.city}{data.location.subdivision !== '' ? `, ${data.location.subdivision}` : ''} {data.location.country !== '' ? ` (${data.location.country})` : ''}
+                    </Text>
+                    )}
               </Box>
               <Box>
                 <Heading color='gray.200' fontSize='md'>

@@ -7,11 +7,12 @@ import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
 import { useMutation } from 'react-relay/hooks'
 import { Icon } from '../../../../PageLayout'
 import { ButtonProps, Flex, Heading } from '@chakra-ui/react'
-import { abbreviateNumber } from '../../../../../support'
+import abbreviateNumber from '../../../../../support/abbreviateNumber'
 import IconButton from '../../../../../form/IconButton/IconButton'
 import Can from '../../../../../authorization/Can'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
+import { useHistory } from '../../../../../routing'
 
 interface Props extends ButtonProps {
   query: PostLikeButtonFragment$key | null
@@ -69,6 +70,8 @@ export default function PostLikeButton ({
 
   const { i18n } = useLingui()
 
+  const history = useHistory()
+
   const hasLiked = data?.viewerLiked != null
 
   const onLikePost = (): void => {
@@ -119,6 +122,8 @@ export default function PostLikeButton ({
 
   const likes = abbreviateNumber(data?.likes ?? 0, 2)
 
+  const isLoggedIn = viewerData != null
+
   return (
     <Can I='interact' a='Post'>
       {allowed => (
@@ -126,7 +131,7 @@ export default function PostLikeButton ({
           <IconButton
             aria-label={i18n._(t`Like`)}
             borderRadius='xl'
-            isDisabled={allowed === false || viewerData == null}
+            isDisabled={allowed === false}
             mr={1}
             bg='transparent'
             isLoading={isLiking || isUnliking}
@@ -137,7 +142,7 @@ export default function PostLikeButton ({
               h='100%'
               w='100%'
                    />)}
-            onClick={hasLiked ? () => onUndoLike() : () => onLikePost()}
+            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => history.push('/join')}
             {...rest}
           />
           <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>

@@ -22,7 +22,11 @@ export default function RootCreateClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet title='create club' />
+      <Helmet>
+        <title>
+          Create Your Club! :: overdoll.com
+        </title>
+      </Helmet>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

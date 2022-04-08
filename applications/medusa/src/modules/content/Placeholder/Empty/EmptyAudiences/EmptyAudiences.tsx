@@ -1,19 +1,13 @@
-import { Flex, Text } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
 
-interface Props {
-  hint?: string | undefined | null
-}
-
-export default function EmptyAudiences ({ hint }: Props): JSX.Element {
+export default function EmptyAudiences ({ hint }: HintProp): JSX.Element {
   const { i18n } = useLingui()
 
   return (
-    <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-      <Text color='gray.200' textAlign='center' fontSize='lg'>
-        {i18n._(t`No audiences were found${hint != null ? ` with the title ${hint}` : ''}`)}
-      </Text>
-    </Flex>
+    <EmptyBackground>
+      {i18n._(t`No audiences were found${hint != null ? ` with the title ${hint}` : ''}`)}
+    </EmptyBackground>
   )
 }

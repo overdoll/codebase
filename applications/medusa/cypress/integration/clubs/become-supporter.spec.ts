@@ -1,10 +1,6 @@
-import { generateUsernameAndEmail } from '../../support/generate'
-import ChanceJS from 'chance'
-import { createClubWithName } from '../../support/artist_actions'
-import { clickOnButton } from '../../support/user_actions'
+import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
+import { clickOnButton, clickOnToggle } from '../../support/user_actions'
 import { gotoNextStep } from '../../support/flow_builder'
-
-const chance = new ChanceJS()
 
 const testCardDetails = {
   firstName: 'Test',
@@ -26,20 +22,14 @@ describe('Club - Become Supporter', () => {
   const [artistUsername, artistEmail] = generateUsernameAndEmail()
   const [username, email] = generateUsernameAndEmail()
 
-  const newPaymentMethodClub = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const newPaymentMethodClub = generateClubName()
 
-  const savedPaymentMethodClub = chance.string({
-    length: 12,
-    pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
-  })
+  const savedPaymentMethodClub = generateClubName()
 
   before(() => {
     cy.joinWithNewAccount(artistUsername, artistEmail)
-    createClubWithName(newPaymentMethodClub)
-    createClubWithName(savedPaymentMethodClub)
+    cy.createClub(newPaymentMethodClub)
+    cy.createClub(savedPaymentMethodClub)
   })
 
   beforeEach(() => {
@@ -59,7 +49,8 @@ describe('Club - Become Supporter', () => {
     // check if agreement blocking works
     clickOnButton(/Subscribe with CCBill/iu)
     cy.findByText(/You must agree to the guidelines/iu).should('be.visible')
-    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
+    clickOnToggle(/I have read and agree to the/iu, true)
+    clickOnToggle(/Remember this payment method/iu, true)
 
     // fill out payment details in new window
     cy.window().then((win) => {
@@ -105,12 +96,12 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
 
     // generate recovery codes
-    cy.visit('/configure/multi-factor/recovery-codes')
+    cy.visit('/settings/security/multi-factor/recovery-codes')
     cy.findByRole('button', { name: /Generate Recovery Codes/ }).click()
     cy.findByText(/Make sure you save these codes/iu).should('be.visible')
 
     // enable totp
-    cy.visit('/configure/multi-factor/totp')
+    cy.visit('/settings/security/multi-factor/totp')
     gotoNextStep()
     cy.get('[aria-label="Copy"]').find('code').invoke('text').then(secret => {
       // use a plugin to generate a one time password using the secret
@@ -124,7 +115,12 @@ describe('Club - Become Supporter', () => {
   })
 
   it('cancel subscription and update payment method', () => {
-    cy.visit('/settings/billing/subscriptions')
+    cy.visit('/settings/billing')
+    cy.findByText('My Subscriptions').should('be.visible').click()
+    cy.url().should('include', '/settings/billing/subscriptions')
+
+    cy.findByText(newPaymentMethodClub).should('be.visible').click()
+    cy.findByText('Subscription Details').should('be.visible')
     clickOnButton(/Manage Subscription/iu)
 
     // update payment method modal
@@ -137,6 +133,8 @@ describe('Club - Become Supporter', () => {
     cy.findByText('Cancel Subscription').should('be.visible').click()
     cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
     clickOnButton('Cancel Subscription')
+    cy.findByText(newPaymentMethodClub).should('be.visible').click()
+    cy.reload()
     cy.findByText(/Benefits expire in/iu).should('be.visible')
   })
 
@@ -163,14 +161,12 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click()
     clickOnButton('Next')
     cy.findByText(/Select a saved payment method/iu).should('be.visible')
-    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
 
     // use saved payment method to subscribe
     clickOnButton('Subscribe')
-    cy.findByText(/You must agree to the guidelines/iu).should('exist')
     cy.findByText(/Please select a payment method/iu).should('exist')
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click()
-    cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().findByRole('checkbox').click({ force: true })
+    clickOnToggle(/I have read and agree to the/iu, true)
     clickOnButton('Subscribe')
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
@@ -178,11 +174,22 @@ describe('Club - Become Supporter', () => {
   })
 
   it('remove saved payment method', () => {
-    cy.visit('/settings/billing/payment-methods')
+    cy.visit('/settings/billing')
+    cy.findByText('Payment Methods').should('be.visible').click()
+    cy.url().should('include', '/settings/billing/payment-methods')
+
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('be.visible')
     cy.get('button[aria-label="Open Menu"]').click()
     cy.findByText(/Delete Payment Method/iu).should('be.visible').click()
     clickOnButton('Delete Saved Payment Method')
     cy.findByText(/No payment methods found/iu).should('be.visible')
+  })
+
+  it('view transactions', () => {
+    cy.visit('/settings/billing')
+    cy.findByText('Transaction History').should('be.visible').click()
+    cy.url().should('include', '/settings/billing/transactions')
+
+    cy.findByText(newPaymentMethodClub).should('be.visible')
   })
 })

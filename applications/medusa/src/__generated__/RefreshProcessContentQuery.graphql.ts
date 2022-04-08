@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9af363340135bb2b91397e1256a6881e>>
- * @relayHash c69acd8b7c7a7bbe19e62275a91e1cdc
+ * @generated SignedSource<<232c6fa631ce0084ffd660c294c486d6>>
+ * @relayHash e41d896db6bebcfcf9b6ab20ec236166
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c69acd8b7c7a7bbe19e62275a91e1cdc
+// @relayRequestID e41d896db6bebcfcf9b6ab20ec236166
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -22,6 +22,8 @@ export type RefreshProcessContentQuery$data = {
     readonly reference: string;
     readonly content: ReadonlyArray<{
       readonly id: string;
+      readonly viewerCanViewSupporterOnlyContent: boolean;
+      readonly isSupporterOnly: boolean;
       readonly resource: {
         readonly processed: boolean;
         readonly videoDuration: number;
@@ -75,24 +77,38 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "processed",
+  "name": "viewerCanViewSupporterOnlyContent",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "videoDuration",
+  "name": "isSupporterOnly",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "processed",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -100,11 +116,11 @@ v7 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/)
+    (v8/*: any*/)
   ],
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -119,7 +135,7 @@ v8 = {
       "name": "mimeType",
       "storageKey": null
     },
-    (v6/*: any*/)
+    (v8/*: any*/)
   ],
   "storageKey": null
 };
@@ -149,6 +165,8 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -157,10 +175,10 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   (v7/*: any*/),
-                  (v8/*: any*/)
+                  (v9/*: any*/),
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -199,6 +217,8 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -207,10 +227,10 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   (v7/*: any*/),
-                  (v8/*: any*/),
+                  (v9/*: any*/),
+                  (v10/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -224,7 +244,7 @@ return {
     ]
   },
   "params": {
-    "id": "c69acd8b7c7a7bbe19e62275a91e1cdc",
+    "id": "e41d896db6bebcfcf9b6ab20ec236166",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -233,6 +253,6 @@ return {
 };
 })();
 
-(node as any).hash = "9cccadf3be01de8b079899f1911344d6";
+(node as any).hash = "94b7ad4738f2e381333ef8cb266236e1";
 
 export default node;

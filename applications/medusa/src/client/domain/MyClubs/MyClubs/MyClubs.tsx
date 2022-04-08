@@ -7,7 +7,11 @@ import { FlowBuilder, FlowBuilderBody, FlowBuilderFloatingFooter, PageWrapper } 
 import { ClubPeopleGroup } from '@//:assets/icons'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, HStack, Stack } from '@chakra-ui/react'
+import FixedHeaderWrapper from '../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import LockedAccountTrigger from '../../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import PostSearchButton from '../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>
@@ -40,6 +44,14 @@ export default function MyClubs (props: Props): JSX.Element {
 
   const PostsFeed = (
     <PageInfiniteScrollWrapper>
+      <PageFixedHeader>
+        <FixedHeaderWrapper>
+          <HStack spacing={2} justify='flex-end'>
+            <LockedAccountTrigger />
+            <PostSearchButton routeTo='/search' />
+          </HStack>
+        </FixedHeaderWrapper>
+      </PageFixedHeader>
       <Box w='100%' h='100%' position='relative'>
         <ClubPostsFeed
           query={queryData.viewer}
