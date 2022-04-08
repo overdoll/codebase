@@ -23,3 +23,7 @@ subgraphs:
     routing_url: http://hades:8000/api/graphql
     schema:
       subgraph_url: http://hades:8000/api/graphql
+  relay:
+    routing_url: http://some-fake-endpoint
+    schema:
+      file: ./relay.graphql

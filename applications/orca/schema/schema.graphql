@@ -1,20 +1,20 @@
 schema
-  @core(feature: "https://specs.apollo.dev/core/v0.1"),
-  @core(feature: "https://specs.apollo.dev/join/v0.1")
+  @core(feature: "https://specs.apollo.dev/core/v0.2"),
+  @core(feature: "https://specs.apollo.dev/join/v0.1", for: EXECUTION)
 {
   query: Query
   mutation: Mutation
 }
 
-directive @core(feature: String!) repeatable on SCHEMA
+directive @core(as: String, feature: String!, for: core__Purpose) repeatable on SCHEMA
 
-directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet) on FIELD_DEFINITION
-
-directive @join__type(graph: join__Graph!, key: join__FieldSet) repeatable on OBJECT | INTERFACE
-
-directive @join__owner(graph: join__Graph!) on OBJECT | INTERFACE
+directive @join__field(graph: join__Graph, provides: join__FieldSet, requires: join__FieldSet) on FIELD_DEFINITION
 
 directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__owner(graph: join__Graph!) on INTERFACE | OBJECT
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet) repeatable on INTERFACE | OBJECT
 
 type Account implements Node
   @join__owner(graph: EVA)
@@ -766,12 +766,6 @@ type AccountSessionEdge {
   node: AccountSession!
 }
 
-"""Properties by which accounts connections can be sorted."""
-enum AccountsSort {
-  """Accounts by newest first"""
-  NEW
-}
-
 """
 A transaction item.
 
@@ -870,6 +864,12 @@ enum AccountTransactionType {
   PAYMENT
   REFUND
   VOID
+}
+
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
 }
 
 """Add an email to the account"""
@@ -1177,6 +1177,141 @@ type BillingContact {
   phoneNumber: String!
 }
 
+enum CCBillDeclineError {
+  CARD_EXPIRED
+  GENERAL_SYSTEM_ERROR
+  INSUFFICIENT_FUNDS
+  RATE_LIMIT_ERROR
+  TRANSACTION_APPROVAL_REQUIRED
+  TRANSACTION_DECLINED
+  TRANSACTION_DENIED_OR_REFUSED_BY_BANK
+}
+
+"""
+The ccbill subscription details.
+
+When this object is present, this means that it can only be updated through CCBill support. https://support.ccbill.com/
+
+For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
+"""
+type CCBillSubscription {
+  """The identifier for this subscription."""
+  ccbillSubscriptionId: String!
+
+  """The email belonging to this subscription."""
+  email: String!
+
+  """A link to modify the subscription."""
+  link: URI!
+
+  """The payment method belonging to this subscription."""
+  paymentMethod: String!
+}
+
+type CCBillSubscriptionDetails {
+  """The account linked to this ccbill subscription."""
+  account: Account!
+  accountingCurrency: Currency!
+
+  """Accounting details."""
+  accountingInitialPrice: Int!
+  accountingRecurringPrice: Int!
+  billedCurrency: Currency!
+
+  """Billed details."""
+  billedInitialPrice: Int!
+  billedRecurringPrice: Int!
+
+  """If this subscription was cancelled, the date it occurred."""
+  cancelDate: Time
+
+  """The amount of chargebacks issued."""
+  chargebacksIssued: Int!
+
+  """The club linked to this ccbill subscription, if there is one."""
+  club: Club
+
+  """If this subscription was cancelled, the expiration date."""
+  expirationDate: Time
+
+  """The ID of the subscription."""
+  id: ID!
+
+  """Whether or not this is recurring, or a one-time charge."""
+  isRecurring: Boolean!
+
+  """Payment method linked to this CCBill subscription."""
+  paymentMethod: PaymentMethod!
+
+  """The amount of refunds issued."""
+  refundsIssued: Int!
+
+  """The signup date."""
+  signupDate: Time!
+
+  """The status of the CCBill subscription."""
+  status: CCBillSubscriptionStatus!
+  subscriptionCurrency: Currency!
+
+  """Subscription details."""
+  subscriptionInitialPrice: Int!
+  subscriptionRecurringPrice: Int!
+
+  """The amount of rebills that occurred."""
+  timesRebilled: Int!
+
+  """When this subscription was updated last."""
+  updatedAt: Time!
+
+  """The amount of voids issued."""
+  voidsIssued: Int!
+}
+
+enum CCBillSubscriptionStatus {
+  """An active subscription that was cancelled, or a one-time charge."""
+  ACTIVE_AND_CANCELLED
+
+  """An active subscription that is not cancelled."""
+  ACTIVE_AND_NOT_CANCELLED
+
+  """An inactive subscription, i.e. expired."""
+  INACTIVE
+}
+
+"""
+Represents a CCBill transaction, which may or may not contain these fields.
+"""
+type CCBillTransaction {
+  ccbillSubscriptionId: String!
+  ccbillTransactionId: String
+}
+
+type CCBillTransactionDetails {
+  """Whether or not the transaction was approved."""
+  approved: Boolean!
+
+  """The decline code from CCBill."""
+  declineCode: String
+
+  """The error from CCBill, if the transaction was not approved."""
+  declineError: CCBillDeclineError
+
+  """The decline text from CCBill."""
+  declineText: String
+
+  """An ID uniquely identifying this transaction."""
+  id: ID!
+
+  """
+  If this transaction was approved, poll this field to until this is not null anymore.
+  
+  This signifies that the transaction has processed successfully (on our end),
+  
+  and the supporter benefits are now available.
+  """
+  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription
+}
+
 """Cancel account club supporter subscription input."""
 input CancelAccountClubSupporterSubscriptionInput {
   """The cancellation reason for this subscription."""
@@ -1338,141 +1473,6 @@ type CategoryCurationProfile {
 type CategoryEdge {
   cursor: String!
   node: Category!
-}
-
-enum CCBillDeclineError {
-  CARD_EXPIRED
-  GENERAL_SYSTEM_ERROR
-  INSUFFICIENT_FUNDS
-  RATE_LIMIT_ERROR
-  TRANSACTION_APPROVAL_REQUIRED
-  TRANSACTION_DECLINED
-  TRANSACTION_DENIED_OR_REFUSED_BY_BANK
-}
-
-"""
-The ccbill subscription details.
-
-When this object is present, this means that it can only be updated through CCBill support. https://support.ccbill.com/
-
-For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
-"""
-type CCBillSubscription {
-  """The identifier for this subscription."""
-  ccbillSubscriptionId: String!
-
-  """The email belonging to this subscription."""
-  email: String!
-
-  """A link to modify the subscription."""
-  link: URI!
-
-  """The payment method belonging to this subscription."""
-  paymentMethod: String!
-}
-
-type CCBillSubscriptionDetails {
-  """The account linked to this ccbill subscription."""
-  account: Account!
-  accountingCurrency: Currency!
-
-  """Accounting details."""
-  accountingInitialPrice: Int!
-  accountingRecurringPrice: Int!
-  billedCurrency: Currency!
-
-  """Billed details."""
-  billedInitialPrice: Int!
-  billedRecurringPrice: Int!
-
-  """If this subscription was cancelled, the date it occurred."""
-  cancelDate: Time
-
-  """The amount of chargebacks issued."""
-  chargebacksIssued: Int!
-
-  """The club linked to this ccbill subscription, if there is one."""
-  club: Club
-
-  """If this subscription was cancelled, the expiration date."""
-  expirationDate: Time
-
-  """The ID of the subscription."""
-  id: ID!
-
-  """Whether or not this is recurring, or a one-time charge."""
-  isRecurring: Boolean!
-
-  """Payment method linked to this CCBill subscription."""
-  paymentMethod: PaymentMethod!
-
-  """The amount of refunds issued."""
-  refundsIssued: Int!
-
-  """The signup date."""
-  signupDate: Time!
-
-  """The status of the CCBill subscription."""
-  status: CCBillSubscriptionStatus!
-  subscriptionCurrency: Currency!
-
-  """Subscription details."""
-  subscriptionInitialPrice: Int!
-  subscriptionRecurringPrice: Int!
-
-  """The amount of rebills that occurred."""
-  timesRebilled: Int!
-
-  """When this subscription was updated last."""
-  updatedAt: Time!
-
-  """The amount of voids issued."""
-  voidsIssued: Int!
-}
-
-enum CCBillSubscriptionStatus {
-  """An active subscription that was cancelled, or a one-time charge."""
-  ACTIVE_AND_CANCELLED
-
-  """An active subscription that is not cancelled."""
-  ACTIVE_AND_NOT_CANCELLED
-
-  """An inactive subscription, i.e. expired."""
-  INACTIVE
-}
-
-"""
-Represents a CCBill transaction, which may or may not contain these fields.
-"""
-type CCBillTransaction {
-  ccbillSubscriptionId: String!
-  ccbillTransactionId: String
-}
-
-type CCBillTransactionDetails {
-  """Whether or not the transaction was approved."""
-  approved: Boolean!
-
-  """The decline code from CCBill."""
-  declineCode: String
-
-  """The error from CCBill, if the transaction was not approved."""
-  declineError: CCBillDeclineError
-
-  """The decline text from CCBill."""
-  declineText: String
-
-  """An ID uniquely identifying this transaction."""
-  id: ID!
-
-  """
-  If this transaction was approved, poll this field to until this is not null anymore.
-  
-  This signifies that the transaction has processed successfully (on our end),
-  
-  and the supporter benefits are now available.
-  """
-  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription
 }
 
 type Character implements Node
@@ -1788,15 +1788,15 @@ type ClubSlugAlias {
   slug: String!
 }
 
+type ClubSuspension {
+  """When the suspension expires. Can call UnSuspendClub when time = now."""
+  expires: Time!
+}
+
 """Properties by which club connections can be sorted."""
 enum ClubsSort {
   """Clubs by popularity"""
   POPULAR
-}
-
-type ClubSuspension {
-  """When the suspension expires. Can call UnSuspendClub when time = now."""
-  expires: Time!
 }
 
 """Input for confirming the account email"""
@@ -2478,17 +2478,6 @@ input IssueClubInfractionInput {
 type IssueClubInfractionPayload {
   """The new club infraction history item."""
   clubInfractionHistory: ClubInfractionHistory
-}
-
-scalar join__FieldSet
-
-enum join__Graph {
-  EVA @join__graph(name: "eva" url: "http://eva:8000/api/graphql")
-  HADES @join__graph(name: "hades" url: "http://hades:8000/api/graphql")
-  LOADER @join__graph(name: "loader" url: "http://loader:8000/api/graphql")
-  PARLEY @join__graph(name: "parley" url: "http://parley:8000/api/graphql")
-  STELLA @join__graph(name: "stella" url: "http://stella:8000/api/graphql")
-  STING @join__graph(name: "sting" url: "http://sting:8000/api/graphql")
 }
 
 """Join a club input."""
@@ -3279,15 +3268,6 @@ type PostReportEdge {
   node: PostReport!
 }
 
-"""Properties by which posts connections can be sorted."""
-enum PostsSort {
-  """Posts by newest first"""
-  NEW
-
-  """Posts by top likes"""
-  TOP
-}
-
 enum PostState {
   ARCHIVED
   DISCARDED
@@ -3296,6 +3276,15 @@ enum PostState {
   REJECTED
   REMOVED
   REVIEW
+}
+
+"""Properties by which posts connections can be sorted."""
+enum PostsSort {
+  """Posts by newest first"""
+  NEW
+
+  """Posts by top likes"""
+  TOP
 }
 
 """Type describing a price."""
@@ -3526,6 +3515,9 @@ type Query {
 
   """List of all available languages"""
   languages: [Language!]! @join__field(graph: EVA)
+
+  """Fetch a node by the ID"""
+  node(id: ID!): Node @join__field(graph: RELAY)
 
   """Look up a single post"""
   post(
@@ -4111,6 +4103,9 @@ type Translation {
   text: String!
 }
 
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
+
 """Un-Archive post."""
 input UnArchivePostInput {
   """The post to un-archive"""
@@ -4121,6 +4116,18 @@ input UnArchivePostInput {
 type UnArchivePostPayload {
   """The un-archived post."""
   post: Post
+}
+
+"""Un-Suspend the club."""
+input UnSuspendClubInput {
+  """The club to un-suspend."""
+  clubId: ID!
+}
+
+"""Un suspend club payload."""
+type UnSuspendClubPayload {
+  """The new club after it's not suspended anymore."""
+  club: Club
 }
 
 """Undo like on a post."""
@@ -4145,18 +4152,6 @@ input UnlockAccountInput {
 type UnlockAccountPayload {
   """Account that was unlocked"""
   account: Account
-}
-
-"""Un-Suspend the club."""
-input UnSuspendClubInput {
-  """The club to un-suspend."""
-  clubId: ID!
-}
-
-"""Un suspend club payload."""
-type UnSuspendClubPayload {
-  """The new club after it's not suspended anymore."""
-  club: Club
 }
 
 """Input for updating the account status to primary"""
@@ -4662,9 +4657,6 @@ type UpdateSeriesTitlePayload {
   series: Series
 }
 
-"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
-scalar URI
-
 """Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
   """Secret (get it from the email)"""
@@ -4686,4 +4678,28 @@ type VerifyAuthenticationTokenPayload {
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
   TOKEN_INVALID
+}
+
+enum core__Purpose {
+  """
+  `EXECUTION` features provide metadata necessary to for operation execution.
+  """
+  EXECUTION
+
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  EVA @join__graph(name: "eva" url: "http://eva:8000/api/graphql")
+  HADES @join__graph(name: "hades" url: "http://hades:8000/api/graphql")
+  LOADER @join__graph(name: "loader" url: "http://loader:8000/api/graphql")
+  PARLEY @join__graph(name: "parley" url: "http://parley:8000/api/graphql")
+  RELAY @join__graph(name: "relay" url: "http://some-fake-endpoint")
+  STELLA @join__graph(name: "stella" url: "http://stella:8000/api/graphql")
+  STING @join__graph(name: "sting" url: "http://sting:8000/api/graphql")
 }

@@ -1,8 +1,9 @@
-import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
+import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { gql } from 'apollo-server'
 import { ApolloServer } from 'apollo-server-express'
 import Redis from 'ioredis'
 import cors from 'cors'
+import { buildSubgraphSchema } from '@apollo/federation'
 
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
@@ -10,14 +11,14 @@ import express from 'express'
 
 import http from 'http'
 
-import { DocumentNode, graphqlSync, parse, visit } from 'graphql'
-import { buildFederatedSchema, ServiceDefinition } from '@apollo/federation'
+import { DocumentNode, GraphQLSchema, Source, visit } from 'graphql'
 import { GraphQLResponse } from 'apollo-server-types'
 
 import { readFileSync } from 'fs'
 import { join, resolve } from 'path'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import { CoreSchema } from '@apollo/core-schema'
 
 const supergraphSdl = readFileSync(join(__dirname, './schema/schema.graphql')).toString()
 
@@ -25,7 +26,7 @@ dotenv.config({
   path: resolve(__dirname, '.env')
 })
 
-const NODE_SERVICE_NAME = 'NODE_SERVICE'
+const NODE_SERVICE_NAME = 'relay'
 
 const isNode = (node): boolean =>
   node.interfaces.some(({ name }) => name.value === 'Node')
@@ -105,90 +106,72 @@ class RootModule {
   `
 }
 
-interface Module {
-  typeDefs: DocumentNode
-}
-
 /**
  * An ApolloGateway which provides `Node` resolution across all federated
  * services, and a global `node` field, like Relay.
  */
 // @ts-expect-error
 class NodeGateway extends ApolloGateway {
+  private nodeSchema: GraphQLSchema
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  private createSchemaFromServiceList (
-    serviceList: ServiceDefinition[]
-  ) {
+  createSchemaFromSupergraphSdl (supergraphSdl: string) {
+    const core = CoreSchema.fromSource(
+      new Source(supergraphSdl, 'supergraphSdl')
+    )
+
     // Once all real service definitions have been loaded, we need to find all
     // types that implement the Node interface. These must also become concrete
     // types in the Node service, so we build a GraphQL module for each.
-    const modules: Module[] = []
-    const seenNodeTypes: Set<string> = new Set()
-    for (const service of serviceList) {
-      // Manipulate the typeDefs of the service
-      service.typeDefs = visit(service.typeDefs, {
-        ObjectTypeDefinition (node) {
-          const name = node.name.value
+    const modules = []
+    const seenNodeTypes = new Set()
 
-          // Remove existing `query { node }` from service to avoid collisions
-          if (name === 'Query') {
-            return visit(node, {
-              FieldDefinition (node) {
-                if (node.name.value === 'node') {
-                  throw new Error(`Service "${service.name} should not implement "node" Query type`)
-                }
-              }
-            })
-          }
+    visit(core.document, {
+      ObjectTypeDefinition (node) {
+        const name = node.name.value
 
-          // Add any new Nodes from this service to the Node service's modules
-          if (isNode(node) && !seenNodeTypes.has(name)) {
-            // We don't need any resolvers for these modules; they're just
-            // simple objects with a single `id` property.
-            modules.push({ typeDefs: toTypeDefs(name) })
-            seenNodeTypes.add(name)
-          }
+        // Add any new Nodes from this service to the Node service's modules
+        if (isNode(node) && !seenNodeTypes.has(name)) {
+          // We don't need any resolvers for these modules; they're just
+          // simple objects with a single `id` property.
+          // @ts-expect-error
+          modules.push({ typeDefs: toTypeDefs(name) })
+          seenNodeTypes.add(name)
         }
-      })
-    }
+      }
+    })
 
     // Dynamically construct a service to do Node resolution. This requires
     // building a federated schema, and introspecting it using the
     // `_service.sdl` field so that all the machinery is correct. Effectively
     // this is what would have happened if this were a real service.
-    const nodeSchema = buildFederatedSchema([
+    this.nodeSchema = buildSubgraphSchema([
       // The Node service must include the Node interface and a module for
       // translating the IDs into concrete types
       {
         resolvers,
         typeDefs
       },
+      // @ts-expect-error
       new RootModule(seenNodeTypes),
-
       // The Node service must also have concrete types for each type. This
       // just requires the a type definition with an `id` field for each
       ...modules
     ])
 
-    // This is a local schema, but we treat it as if it were a remote schema,
-    // because all other schemas are (probably) remote. In that case, we need
-    // to provide the Federated SDL as part of the type definitions.
-    const res = graphqlSync({
-      schema: nodeSchema,
-      source: 'query { _service { sdl } }'
-    })
+    // @ts-expect-error
+    return super.createSchemaFromSupergraphSdl(supergraphSdl)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  createDataSource (serviceDef) {
+    if (serviceDef.name === NODE_SERVICE_NAME) {
+      return new LocalGraphQLDataSource(this.nodeSchema)
+    }
 
     // @ts-expect-error
-    return super.createSchemaFromServiceList([...serviceList, {
-      typeDefs: parse(res?.data?._service.sdl),
-      schema: nodeSchema,
-      name: NODE_SERVICE_NAME
-    }])
+    return super.createDataSource(serviceDef)
   }
-}
-
-interface PassportDataResponse extends GraphQLResponse {
-  passport?: string
 }
 
 // Ensures passport is forwarded from downstream services
@@ -198,7 +181,8 @@ class PassportDataSource extends RemoteGraphQLDataSource {
     request,
     context
   }): Promise<GraphQLResponse> {
-    const response: PassportDataResponse = await super.process({
+    // @ts-expect-error
+    const response: any = await super.process({
       request,
       context
     })
@@ -214,7 +198,6 @@ class PassportDataSource extends RemoteGraphQLDataSource {
           parse.extensions = {}
         }
 
-        // @ts-expect-error
         parse.extensions.passport = response.extensions.passport
         data = JSON.stringify(parse)
 
@@ -247,7 +230,6 @@ class PassportDataSource extends RemoteGraphQLDataSource {
 
 const gateway = new NodeGateway({
   supergraphSdl: supergraphSdl,
-  serviceList: [],
   buildService ({ url }) {
     return new PassportDataSource({ url })
   }

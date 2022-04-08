@@ -11,11 +11,11 @@
     ],
     "allowJs": false,
     "checkJs": false,
-    "skipLibCheck": false,
     "esModuleInterop": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
+    "skipLibCheck": true,
     "isolatedModules": true,
     // Explicitly set types settings so typescript doesn't auto-discover types.
     // If all types are discovered then all types need to be included as deps
