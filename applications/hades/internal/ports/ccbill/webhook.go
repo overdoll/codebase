@@ -30,6 +30,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 
 		trial := net.ParseIP(ip)
 		if trial.To4() == nil {
+			fmt.Println("invalid ip header")
 			c.Data(http.StatusBadRequest, "text", []byte("invalid ip header"))
 			return
 		}
@@ -48,6 +49,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		}
 
 		if !validIp {
+			fmt.Printf("bad ip: %s", ip)
 			c.Data(http.StatusBadRequest, "text", []byte("bad ip"))
 			return
 		}
