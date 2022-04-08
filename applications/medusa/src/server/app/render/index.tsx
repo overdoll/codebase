@@ -48,8 +48,6 @@ async function request (req, res): Promise<void> {
         headers[key] = value
       })
 
-      console.log(headers)
-
       const response = await axios.post(
         process.env.SERVER_GRAPHQL_ENDPOINT as string,
         {

@@ -22,7 +22,7 @@ steps:
 
   e2e_test:
     commands:
-      # compile localization files
+      # compile localization files, push queries
       - npm run locale:compile
       - npm run push-all-queries
     coverage:
