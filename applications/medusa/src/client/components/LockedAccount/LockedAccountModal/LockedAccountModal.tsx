@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import {
   Box,
   Heading,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,6 +16,8 @@ import UnlockAccountForm from './UnlockAccountForm/UnlockAccountForm'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCountdown } from '@//:modules/hooks'
+import LinkInline from '../../ContentHints/LinkInline/LinkInline'
+import { COMMUNITY_GUIDELINES } from '@//:modules/constants/links'
 
 interface Props {
   queryRef: LockedAccountModalFragment$key
@@ -52,6 +53,7 @@ export default function LockedAccountModal ({
       isOpen={isOpen}
       onClose={onClose}
       isCentered
+      size='lg'
     >
       <ModalOverlay />
       <ModalContent>
@@ -62,12 +64,12 @@ export default function LockedAccountModal ({
         <ModalBody>
           <Stack m={5} spacing={4}>
             <Heading
-              fontSize='4xl'
+              fontSize='2xl'
               color='gray.00'
             >
               {hasPassed
                 ? <Trans>Account Locked</Trans>
-                : <Trans>Banned for {remaining}</Trans>}
+                : <Trans>Locked for {remaining}</Trans>}
             </Heading>
             <Text mb={2}>
               <Trans>
@@ -78,19 +80,17 @@ export default function LockedAccountModal ({
             <Box>
               <Text fontSize='md'>
                 <Trans>
-                  Please review the
-                  {' '}
-                  <Link
-                    color='teal.400'
-                    fontSize='md'
+                  Please review the{' '}
+                  <LinkInline
                     isExternal
-                    href='https://www.corpodoll.com/community-guidelines/'
+                    color='green.400'
+                    to={COMMUNITY_GUIDELINES}
+                    fontSize='md'
                   >
                     <Trans>
                       Community Guidelines
                     </Trans>
-                  </Link>
-                  {' '}
+                  </LinkInline>{' '}
                   to make sure this doesn't happen again.
                 </Trans>
               </Text>

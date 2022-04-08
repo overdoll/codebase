@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74345a2efe02e00151f3b561b11716f7>>
+ * @generated SignedSource<<38ff3c72c73ee14be3f62485dff56cdc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SupportClubButtonClubFragment$data = {
+  readonly slug: string;
   readonly viewerMember: {
     readonly isSupporter: boolean;
   } | null;
@@ -36,6 +37,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "SupportClubButtonClubFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -100,6 +108,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "4f9df7dd6c4f6923079a4ca335fb8401";
+(node as any).hash = "d2a6654e15a220047e2d2ed1268ad3c1";
 
 export default node;

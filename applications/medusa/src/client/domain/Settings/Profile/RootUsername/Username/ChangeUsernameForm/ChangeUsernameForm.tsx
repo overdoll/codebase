@@ -34,7 +34,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import Highlight from '../../../../../../components/ContentHints/HighlightText/Highlight'
+import HighlightInline from '../../../../../../components/ContentHints/HighlightInline/HighlightInline'
 
 interface UsernameValues {
   username: string
@@ -185,7 +185,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
                 <Text>
                   <Trans>
                     Are you sure you'd like to change your username to
-                  </Trans> <Highlight colorScheme='green'>{selectedUsername as string}</Highlight>
+                  </Trans> <HighlightInline colorScheme='green'>{selectedUsername as string}</HighlightInline>
                 </Text>
               </Box>
             </Stack>

@@ -8,7 +8,8 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { SuspendClubFormMutation } from '@//:artifacts/SuspendClubFormMutation.graphql'
 import { SuspendClubFormFragment$key } from '@//:artifacts/SuspendClubFormFragment.graphql'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
-import LockDurationSelect from '../../../../StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect'
+import LockDurationSelect
+  from '../../../../StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect'
 import GenericDate from '../../../../../validation/GenericDate'
 
 interface Props {
@@ -106,7 +107,7 @@ export default function SuspendClubForm ({
           colorScheme='orange'
         >
           <Trans>
-            Suspend Club
+            Confirm Suspend Club
           </Trans>
         </FormSubmitButton>
       </Stack>

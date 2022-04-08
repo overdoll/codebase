@@ -1,8 +1,8 @@
-import { ArrayParam, JsonParam, StringParam } from 'serialize-query-params'
+import { ArrayParam, ObjectParam, StringParam } from 'serialize-query-params'
 
 export const configMap = {
   categories: ArrayParam,
-  characters: JsonParam,
+  characters: ObjectParam,
   series: ArrayParam,
   sort: StringParam,
   supporter: ArrayParam

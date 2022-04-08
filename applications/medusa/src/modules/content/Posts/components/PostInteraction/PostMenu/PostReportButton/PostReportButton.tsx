@@ -27,6 +27,7 @@ import useSearch from '../../../../../HookedComponents/Search/hooks/useSearch'
 import { useChoice } from '../../../../../HookedComponents/Choice'
 import Button from '../../../../../../form/Button/Button'
 import { useToast } from '../../../../../ThemeComponents'
+import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
 
 interface Props {
   query: PostReportButtonFragment$key
@@ -40,6 +41,10 @@ interface ChoiceProps {
 const Fragment = graphql`
   fragment PostReportButtonFragment on Post {
     id
+    reference
+    club {
+      slug
+    }
   }
 `
 
@@ -97,6 +102,8 @@ export default function PostReportButton ({
 
   const notify = useToast()
 
+  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
+
   const onSubmit = (): void => {
     const ruleId = Object.keys(values)[0]
 
@@ -129,7 +136,7 @@ export default function PostReportButton ({
       {viewerData == null
         ? (
           <MenuLinkItem
-            to='/join'
+            to={redirect}
             text={<Trans>Report Post</Trans>}
             icon={FlagReport}
           />

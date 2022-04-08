@@ -11,7 +11,7 @@ describe('Visit Public Post', () => {
 
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
-    cy.visit('/p/25WqmS7kgwotdDaxQDEa6I4CjuO')
+    cy.visit('/TestClub/p/25WqmS7kgwotdDaxQDEa6I4CjuO')
     cy.findByText(/Recommended Posts/iu).should('exist')
   })
 

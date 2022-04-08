@@ -27,13 +27,13 @@ export default function RootClubPublicPage (props: Props): JSX.Element {
 
   return (
     <>
-      <LockedAccountBanner />
       <Helmet>
         <title>
           Club :: overdoll
         </title>
       </Helmet>
       <PageWrapper>
+        <LockedAccountBanner />
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
           <Suspense fallback={<SkeletonPost />}>
             <ClubPublicPage query={queryRef as PreloadedQuery<ClubPublicPageQueryType>} />

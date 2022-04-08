@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import {
   Box,
   Heading,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,6 +16,8 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCountdown } from '@//:modules/hooks'
 import UnSuspendClubForm from './UnSuspendClubForm/UnSuspendClubForm'
+import LinkInline from '../../../../../../components/ContentHints/LinkInline/LinkInline'
+import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 
 interface Props {
   query: SuspendedClubModalFragment$key
@@ -52,6 +53,7 @@ export default function SuspendedClubModal ({
       isOpen={isOpen}
       onClose={onClose}
       isCentered
+      size='lg'
     >
       <ModalOverlay />
       <ModalContent>
@@ -62,12 +64,12 @@ export default function SuspendedClubModal ({
         <ModalBody>
           <Stack m={5} spacing={4}>
             <Heading
-              fontSize='4xl'
+              fontSize='2xl'
               color='gray.00'
             >
               {hasPassed
                 ? <Trans>Club Locked</Trans>
-                : <Trans>Banned for {remaining}</Trans>}
+                : <Trans>Locked for {remaining}</Trans>}
             </Heading>
             <Text mb={2}>
               <Trans>
@@ -78,14 +80,12 @@ export default function SuspendedClubModal ({
             <Box>
               <Text fontSize='md'>
                 <Trans>
-                  Please review the
-                  {' '}
-                  <Link color='teal.400' fontSize='md' isExternal href='https://www.corpodoll.com/club-guidelines/'>
+                  Please review the{' '}
+                  <LinkInline isExternal color='green.400' to={CLUB_GUIDELINES} fontSize='md'>
                     <Trans>
                       Club Guidelines
                     </Trans>
-                  </Link>
-                  {' '}
+                  </LinkInline>{' '}
                   to make sure this doesn't happen again.
                 </Trans>
               </Text>
@@ -94,12 +94,12 @@ export default function SuspendedClubModal ({
               {hasPassed
                 ? (
                   <Trans>
-                    You may unlock your account after agreeing to the community guidelines.
+                    You may unlock your club after agreeing to the community guidelines.
                   </Trans>
                   )
                 : (
                   <Trans>
-                    Your account has been locked and you'll have the ability to unlock it after
+                    Your club has been locked and you'll have the ability to unlock it after
                   </Trans>
                   )}
             </Text>

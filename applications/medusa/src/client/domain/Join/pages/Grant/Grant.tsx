@@ -11,6 +11,7 @@ import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { Helmet } from 'react-helmet-async'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -36,6 +37,8 @@ const GrantFragment = graphql`
 
 export default function Grant ({ queryRef }: Props): JSX.Element {
   const [commit] = useMutation<GrantMutation>(GrantAction)
+
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
 
   const data = useFragment(GrantFragment, queryRef)
 
@@ -77,7 +80,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         prepareViewer(store, payload)
         removeCookie('token')
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
       },
       onError (data) {
         notify({

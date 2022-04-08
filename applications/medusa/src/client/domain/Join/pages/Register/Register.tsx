@@ -15,6 +15,7 @@ import { useFlash } from '@//:modules/flash'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -43,6 +44,8 @@ export default function Register ({ queryRef }: Props): JSX.Element {
   )
 
   const data = useFragment(RegisterFragment, queryRef)
+
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
 
   const notify = useToast()
 
@@ -82,7 +85,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
         flash('new.account', '')
         removeCookie('token')
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',

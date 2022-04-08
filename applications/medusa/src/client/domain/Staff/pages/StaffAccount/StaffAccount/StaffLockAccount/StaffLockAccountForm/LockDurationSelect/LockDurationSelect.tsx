@@ -1,6 +1,7 @@
 import { SelectInput } from '@//:modules/content/HookedComponents/Form'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import subHours from 'date-fns/subHours'
 import addHours from 'date-fns/addHours'
 import addDays from 'date-fns/addDays'
 import addMonths from 'date-fns/addMonths'
@@ -12,7 +13,7 @@ export default function LockDurationSelect (): JSX.Element {
   const durations = [
     {
       title: i18n._(t`Warning (none)`),
-      value: new Date()
+      value: subHours(new Date(), 1)
     },
     {
       title: i18n._(t`12 hours`),

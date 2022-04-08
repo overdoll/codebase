@@ -21,6 +21,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 interface CodeValues {
   code: string
@@ -53,6 +54,8 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
   const [submitCode, isSubmittingCode] = useMutation<RecoveryCodeMutation>(
     RecoveryCodeMutationGQL
   )
+
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
 
   const { i18n } = useLingui()
 
@@ -101,7 +104,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
           status: 'success',
           title: t`A recovery code was successfully used up to log you in`
         })
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')

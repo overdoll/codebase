@@ -9,6 +9,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { PremiumStar } from '@//:assets/icons'
 import BecomeMemberButton from '../BecomeMemberButton/BecomeMemberButton'
 import Button from '@//:modules/form/Button/Button'
+import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 
 interface Props extends ButtonProps {
   clubQuery: JoinClubFromTileFragment$key
@@ -44,10 +45,12 @@ export default function JoinClubFromTile ({
   const isClubMember = clubData?.viewerMember !== null
   const isClubSupporter = clubData?.viewerMember?.isSupporter === true
 
+  const redirect = encodeJoinRedirect(`/${clubData.slug}`)
+
   if (viewerData == null) {
     return (
       <LinkButton
-        to='/join'
+        to={redirect}
         colorScheme='primary'
         {...rest}
       >

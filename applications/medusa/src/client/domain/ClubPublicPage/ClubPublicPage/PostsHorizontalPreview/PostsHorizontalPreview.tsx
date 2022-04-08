@@ -58,7 +58,7 @@ export default function PostsHorizontalPreview ({
             key={index}
           >
             <GridTile>
-              <LinkTile to={`${item.node.club.slug}/p/${item.node.reference}`}>
+              <LinkTile to={`/${item.node.club.slug}/p/${item.node.reference}`}>
                 <PostPreviewContent query={item.node} />
               </LinkTile>
             </GridTile>

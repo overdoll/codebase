@@ -20,13 +20,16 @@ import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
 import PostCopyLinkButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
-import PostReportButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import JoinClubFromPost from '../../../ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+import JoinClubFromPost
+  from '../../../../ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 import PostArchiveButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
+import PostUnArchiveButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton'
+import PostReportButton
+  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -36,6 +39,7 @@ interface Props {
 const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
     reference
+    state
     ...PostGalleryPublicDetailedFragment
     ...PostCopyLinkButtonFragment
     ...PostReportButtonFragment
@@ -46,6 +50,7 @@ const PostFragment = graphql`
     ...PostClickableCategoriesFragment
     ...PostIndexerFragment
     ...PostArchiveButtonFragment
+    ...PostUnArchiveButtonFragment
     club @required(action: THROW) {
       ...JoinClubFromPostFragment
       viewerIsOwner
@@ -73,6 +78,19 @@ export default function FullDetailedPost ({
     currentSlide
   } = useContext(PostVideoManagerContext)
 
+  const ArchiveButton = (): JSX.Element => {
+    if (data.club.viewerIsOwner) {
+      if (data.state === 'ARCHIVED') {
+        return <PostUnArchiveButton query={data} />
+      }
+
+      if (data.state === 'PUBLISHED') {
+        return <PostArchiveButton query={data} />
+      }
+    }
+    return <PostReportButton query={data} viewerQuery={viewerData} />
+  }
+
   return (
     <Stack spacing={8}>
       <Stack h='100%' justify='space-between' spacing={2}>
@@ -90,10 +108,8 @@ export default function FullDetailedPost ({
                       />}
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
-              <PostCopyLinkButton query={data} />
-              {data.club.viewerIsOwner
-                ? <PostArchiveButton query={data} />
-                : <PostReportButton query={data} viewerQuery={viewerData} />}
+              {data.state === 'PUBLISHED' && <PostCopyLinkButton query={data} />}
+              <ArchiveButton />
               <PostModerateButton query={data} />
             </PostMenu>)}
         />

@@ -6,7 +6,7 @@ interface Props extends TextProps {
   colorScheme?: ColorScheme | undefined
 }
 
-export default function Highlight ({
+export default function HighlightInline ({
   children,
   colorScheme = 'gray',
   ...rest

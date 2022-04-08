@@ -9,6 +9,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { PremiumStar, RemoveCross } from '@//:assets/icons'
 import BecomeMemberButton from '../BecomeMemberButton/BecomeMemberButton'
 import WithdrawMembershipButton from '../WithdrawMembershipButton/WithdrawMembershipButton'
+import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 
 interface Props extends ButtonProps {
   clubQuery: JoinClubFromPostFragment$key
@@ -44,10 +45,12 @@ export default function JoinClubFromPost ({
   const isClubMember = clubData?.viewerMember !== null
   const isClubSupporter = clubData?.viewerMember?.isSupporter === true
 
+  const redirect = encodeJoinRedirect(`/${clubData.slug}`)
+
   if (viewerData == null) {
     return (
       <LinkButton
-        to='/join'
+        to={redirect}
         colorScheme='primary'
         {...rest}
       >

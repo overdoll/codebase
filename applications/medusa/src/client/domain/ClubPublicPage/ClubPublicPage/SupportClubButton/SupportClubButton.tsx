@@ -18,6 +18,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { PremiumStar } from '@//:assets/icons'
 import { useUpdateEffect } from 'usehooks-ts'
 import SupportClubTransactionProcess from './SupportClubTransactionProcess/SupportClubTransactionProcess'
+import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 
 interface Props extends ButtonProps {
   clubQuery: SupportClubButtonClubFragment$key
@@ -26,6 +27,7 @@ interface Props extends ButtonProps {
 
 const ClubFragment = graphql`
   fragment SupportClubButtonClubFragment on Club {
+    slug
     viewerMember {
       isSupporter
     }
@@ -65,6 +67,8 @@ export default function SupportClubButton ({
     locale: locale
   })
 
+  const redirect = encodeJoinRedirect(`/${clubData.slug}`)
+
   const buttonProps = {
     children: (
       <Trans>
@@ -91,7 +95,7 @@ export default function SupportClubButton ({
           </Trans>
         </Text>
         <LinkButton
-          to='/join'
+          to={redirect}
           {...buttonProps}
           {...rest}
         />

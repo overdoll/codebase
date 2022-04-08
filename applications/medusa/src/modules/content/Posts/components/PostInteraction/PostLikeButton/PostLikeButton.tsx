@@ -13,15 +13,20 @@ import Can from '../../../../../authorization/Can'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import { useHistory } from '../../../../../routing'
+import encodeJoinRedirect from '../../../../../support/encodeJoinRedirect'
 
 interface Props extends ButtonProps {
-  query: PostLikeButtonFragment$key | null
+  query: PostLikeButtonFragment$key
   viewerQuery: PostLikeButtonViewerFragment$key | null
 }
 
 const Fragment = graphql`
   fragment PostLikeButtonFragment on Post {
     id
+    reference
+    club {
+      slug
+    }
     viewerLiked {
       __typename
     }
@@ -67,6 +72,8 @@ export default function PostLikeButton ({
 
   const [likePost, isLiking] = useMutation(LikeMutation)
   const [undoLike, isUnliking] = useMutation(UndoMutation)
+
+  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
 
   const { i18n } = useLingui()
 
@@ -142,7 +149,7 @@ export default function PostLikeButton ({
               h='100%'
               w='100%'
                    />)}
-            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => history.push('/join')}
+            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => history.push(redirect)}
             {...rest}
           />
           <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>
