@@ -1,13 +1,13 @@
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import SiteLinkLogo from './SiteLinkLogo/SiteLinkLogo'
 import MainMenu from './MainMenu/MainMenu'
-import { useLocation } from '@//:modules/routing'
 import getBasePath from '@//:modules/routing/getBasePath'
 import { graphql, useFragment } from 'react-relay/hooks'
 import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
 import { UniversalNavigatorFragment$key } from '@//:artifacts/UniversalNavigatorFragment.graphql'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 import { Box } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 interface Props {
   queryRef: UniversalNavigatorFragment$key | null
@@ -27,9 +27,9 @@ const hidden = [
 ]
 
 export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
-  const location = useLocation()
+  const router = useRouter()
 
-  const isHidden = hidden.includes(getBasePath(location.pathname))
+  const isHidden = hidden.includes(getBasePath(router.pathname))
 
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 

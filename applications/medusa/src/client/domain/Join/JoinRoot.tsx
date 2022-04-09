@@ -8,16 +8,17 @@ import Grant from './pages/Grant/Grant'
 import MultiFactor from './pages/MultiFactor/MultiFactor'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
+import Root from '../Root/Root'
 
 interface Props {
-  prepared: {
+  queryRefs: {
     joinQuery: PreloadedQuery<JoinRootQuery>
   }
 }
 
 const JoinTokenStatus = graphql`
-  query JoinRootQuery($token: String!) {
-    viewAuthenticationToken(token: $token) {
+  query JoinRootQuery($token: String!) @preloadable {
+    viewAuthenticationToken(token: $token)  {
       id
       ...LobbyFragment
       ...JoinFragment
@@ -39,10 +40,10 @@ const JoinTokenStatus = graphql`
 
 // import translation and load the resource
 
-export default function JoinRoot (props: Props): JSX.Element {
+const JoinRoot = (props: Props): JSX.Element => {
   const [queryRef, loadQuery] = useQueryLoader<JoinRootQuery>(
     JoinTokenStatus,
-    props.prepared.joinQuery
+    props.queryRefs.joinQuery
   )
 
   const ref = usePreloadedQuery<JoinRootQuery>(JoinTokenStatus, queryRef as PreloadedQuery<JoinRootQuery>)
@@ -123,3 +124,14 @@ export default function JoinRoot (props: Props): JSX.Element {
   // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
   return (<Grant queryRef={data} />)
 }
+
+JoinRoot.getRelayPreloadProps = () => ({
+  queries: {
+    joinQuery: {
+      params: JoinTokenStatus.params,
+      variables: {}
+    }
+  }
+})
+
+export default Root

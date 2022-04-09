@@ -5,6 +5,7 @@ module.exports = {
   schemaExtensions: ['./src/client/schema'],
   src: resolve(__dirname, 'src'),
   language: 'typescript',
+  excludes: ['**/.next/**', '**/node_modules/**', '**/schema/**'],
   artifactDirectory: resolve(
     __dirname,
     'src/__generated__'

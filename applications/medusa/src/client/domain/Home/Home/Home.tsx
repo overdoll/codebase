@@ -31,7 +31,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query HomeQuery {
+  query HomeQuery @preloadable {
     ...HomeFragment
     viewer {
       ...PostsInfiniteScrollViewerFragment

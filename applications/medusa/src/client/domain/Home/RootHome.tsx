@@ -9,15 +9,15 @@ import PageInfiniteScrollWrapper
   from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 
 interface Props {
-  prepared: {
-    query: PreloadedQuery<HomeQueryType>
+  queryRefs: {
+    homeQuery: PreloadedQuery<HomeQueryType>
   }
 }
 
-export default function RootHome (props: Props): JSX.Element {
+const RootHome = (props: Props): JSX.Element => {
   const [queryRef, loadQuery] = useQueryLoader(
     HomeQuery,
-    props.prepared.query
+    props.queryRefs.homeQuery
   )
 
   return (
@@ -32,3 +32,14 @@ export default function RootHome (props: Props): JSX.Element {
     </>
   )
 }
+
+RootHome.getRelayPreloadProps = () => ({
+  queries: {
+    homeQuery: {
+      params: HomeQuery.params,
+      variables: {}
+    }
+  }
+})
+
+export default RootHome

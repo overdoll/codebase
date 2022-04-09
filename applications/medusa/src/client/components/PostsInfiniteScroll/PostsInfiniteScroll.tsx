@@ -1,8 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
-import './css/scrollbar.min.css'
 import { Box, Spinner } from '@chakra-ui/react'
 import SwiperCore, { Mousewheel, Scrollbar, Virtual } from 'swiper'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'

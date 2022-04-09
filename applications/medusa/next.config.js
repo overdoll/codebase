@@ -1,4 +1,5 @@
 const path = require('path')
+const relay = require('./relay.config.js')
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -45,7 +46,11 @@ module.exports = {
     ]
   },
   experimental: {
-    externalDir: true
+    externalDir: true,
+    concurrentFeatures: true
+  },
+  serverRuntimeConfig: {
+    projectRoot: __dirname
   },
   reactStrictMode: true,
   webpack: (config) => {

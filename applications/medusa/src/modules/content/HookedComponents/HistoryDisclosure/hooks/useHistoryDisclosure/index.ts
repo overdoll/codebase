@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDisclosure, UseDisclosureProps, UseDisclosureReturn } from '@chakra-ui/react'
-import { useHistory } from '../../../../../routing'
+import { useRouter } from 'next/router'
 
 /**
  * useDisclosure hook modified so that when it is opened
@@ -21,21 +21,21 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
     ...rest
   } = useDisclosure(props)
 
-  const history = useHistory()
+  const router = useRouter()
 
   const onOpen = (): void => {
-    const currentLocation = `${history.location.pathname}${history.location.search}`
-    history.push(currentLocation, { hasModal: true })
+    // const currentLocation = router.asPath
+    // history.push(currentLocation, { hasModal: true })
     onOpenAction()
   }
 
   const onClose = (): void => {
-    const currentHistory = history.location
-    const state = currentHistory.state as HistoryDisclosureState
-    if (state?.hasModal === true) {
-      // TODO: if there was a route change, this makes the modal un-usable?
-      //  history.goBack()
-    }
+    // const currentHistory = history.location
+    // const state = currentHistory.state as HistoryDisclosureState
+    // if (state?.hasModal === true) {
+    //   // TODO: if there was a route change, this makes the modal un-usable?
+    //   //  history.goBack()
+    // }
     onCloseAction()
   }
 
