@@ -3,23 +3,23 @@ import { registerLoader } from './moduleLoader'
 // TODO: think about lifetime of cache entries
 let operationResponseCache = {}
 
-export function addToOperationResponseCache (cacheKey, response) {
+export const addToOperationResponseCache = (cacheKey, response) => {
   operationResponseCache = {
     ...operationResponseCache,
     [cacheKey]: response
   }
 }
 
-export function getOperationResponseCacheKey (operation, variables) {
+export const getOperationResponseCacheKey = (operation, variables) => {
   // TODO: stable stringify?
   return `${operation.id}_${JSON.stringify(variables)}`
 }
 
-export function resetOperationResponseCache () {
+export const resetOperationResponseCache = () => {
   operationResponseCache = {}
 }
 
-function withPreloaderCache (fetchFn) {
+const withPreloaderCache = (fetchFn) => {
   return function fetchQuery (operation, variables) {
     const cacheKey = getOperationResponseCacheKey(operation, variables)
     const cachedResponse = operationResponseCache[cacheKey]
@@ -31,7 +31,7 @@ function withPreloaderCache (fetchFn) {
   }
 }
 
-function withModuleLoader (fetchFn) {
+const withModuleLoader = (fetchFn) => {
   return function fetchQuery (...args) {
     return fetchFn(...args).then((response) => {
       if (Array.isArray(response.extensions?.modules)) {
@@ -42,7 +42,7 @@ function withModuleLoader (fetchFn) {
   }
 }
 
-function registerModuleLoaders (modules) {
+const registerModuleLoaders = (modules) => {
   modules.forEach((module) => {
     registerLoader(module, async () => await import(`../../__generated__/${module}`))
   })

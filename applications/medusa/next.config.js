@@ -47,6 +47,7 @@ module.exports = {
   },
   experimental: {
     externalDir: true,
+    runtime: 'nodejs',
     concurrentFeatures: true
   },
   serverRuntimeConfig: {

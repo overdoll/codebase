@@ -19,8 +19,9 @@ import setupSecurityToken from './security'
 import * as plurals from 'make-plural'
 import createCache from '@emotion/cache'
 import NextQueryParamProvider from './NextQueryParamProvider'
-import { Cookies, CookiesProvider } from 'react-cookie'
+import { CookiesProvider } from 'react-cookie'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
+import { FlashProvider } from '@//:modules/flash'
 
 const IS_SERVER = typeof window === typeof undefined
 
@@ -53,7 +54,7 @@ const serverFetch = (req, res) => {
       headers[key] = value
     })
 
-    return await fetch(
+    const response = await fetch(
       process.env.SERVER_GRAPHQL_ENDPOINT as string,
       {
         method: 'POST',
@@ -61,26 +62,25 @@ const serverFetch = (req, res) => {
         body: JSON.stringify(data)
       }
     )
-      .then(async response => {
-        const responseData = await response.json()
-        const responseSetCookie = res.getHeader('set-cookie')
 
-        if (responseSetCookie != null) {
-          responseSetCookie
-            .forEach((setCookie) => {
-              console.log(setCookie)
-              const cookieSetHeader = res.getHeader('set-cookie')
+    const responseData = await response.json()
 
-              if (cookieSetHeader != null) {
-                res.setHeader('set-cookie', [...cookieSetHeader, setCookie])
-              } else {
-                res.setHeader('set-cookie', [data])
-              }
-            })
-        }
+    const responseSetCookie = response.headers.get('set-cookie')
 
-        return responseData
-      })
+    if (responseSetCookie != null) {
+      responseSetCookie
+        .split(',')
+        .forEach((setCookie) => {
+          const cookieSetHeader = res.getHeader('set-cookie')
+          if (cookieSetHeader != null) {
+            res.setHeader('set-cookie', [...cookieSetHeader, setCookie])
+          } else {
+            res.setHeader('set-cookie', [setCookie])
+          }
+        })
+    }
+
+    return responseData
   }
 }
 
@@ -91,8 +91,7 @@ export default function App ({
   componentProps,
   requestProps,
   securityToken,
-  i18n,
-  cookies
+  i18n
 }): JSX.Element {
   // For initial request and transitions to pages that export `getServerSideProps`,
   // `RelayApp.getInitialProps` isn't invoked on the client and props are sent over the wire.
@@ -101,7 +100,8 @@ export default function App ({
   environment = useMemo(() => (IS_SERVER ? environment : getEnvironment(clientFetch(securityToken))), [])
   i18n = useMemo(() => {
     if (IS_SERVER) return i18n
-    clientI18n.activate('en', { plurals: plurals.en })
+    clientI18n.loadLocaleData('en', { plurals: plurals.en })
+    clientI18n.activate('en', [])
     return clientI18n
   }, [])
   const emotionCache = useMemo(() => createCache({ key: 'od' }), [])
@@ -135,17 +135,19 @@ export default function App ({
       <CacheProvider value={emotionCache}>
         <I18nProvider i18n={i18n}>
           <ChakraProvider theme={theme}>
-            <CookiesProvider cookies={IS_SERVER ? new Cookies(cookies) : undefined}>
-              <ReactRelayContext.Provider value={{ environment }}>
-                <ErrorBoundary>
-                  <Suspense fallback={null}>
-                    <Root {...componentProps}>
-                      <Component {...pageProps} {...componentProps} />
-                    </Root>
-                  </Suspense>
-                </ErrorBoundary>
-              </ReactRelayContext.Provider>
-            </CookiesProvider>
+            <FlashProvider>
+              <CookiesProvider>
+                <ReactRelayContext.Provider value={{ environment }}>
+                  <ErrorBoundary>
+                    <Suspense fallback={null}>
+                      <Root {...componentProps}>
+                        <Component {...pageProps} {...componentProps} />
+                      </Root>
+                    </Suspense>
+                  </ErrorBoundary>
+                </ReactRelayContext.Provider>
+              </CookiesProvider>
+            </FlashProvider>
           </ChakraProvider>
         </I18nProvider>
       </CacheProvider>
@@ -165,7 +167,8 @@ App.getInitialProps = async function (app) {
     fetchFn = serverFetch(app.ctx.req, app.ctx.res)
     environment = getEnvironment(fetchFn)
     const serverI18n = setupI18n()
-    serverI18n.activate('en', { plurals: plurals.en })
+    serverI18n.loadLocaleData('en', { plurals: plurals.en })
+    serverI18n.activate('en', [])
     i18n = serverI18n
   } else {
     fetchFn = clientFetch(securityToken)
@@ -234,8 +237,7 @@ App.getInitialProps = async function (app) {
     i18n,
     componentProps,
     requestProps,
-    securityToken,
-    cookies: app.ctx.req?.cookies
+    securityToken
   }
 }
 

@@ -1,14 +1,16 @@
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
+import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
+import RootQuery from '@//:artifacts/RootQuery.graphql'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
 import NoScript from './NoScript/NoScript'
+import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 
 interface Props {
   queryRefs: {
-    rootQuery: PreloadedQuery<RootQuery>
+    rootQuery: PreloadedQuery<RootQueryType>
   }
   children: ReactNode
 }
@@ -26,7 +28,7 @@ const RootQueryGQL = graphql`
 `
 
 const Root = (props: Props): JSX.Element => {
-  const data = usePreloadedQuery<RootQuery>(
+  const data = usePreloadedQuery<RootQueryType>(
     RootQueryGQL,
     props.queryRefs.rootQuery
   )
@@ -40,7 +42,11 @@ const Root = (props: Props): JSX.Element => {
       <AccountAuthorizer queryRef={data.viewer}>
         {/* <UniversalNavigator queryRef={data.viewer} /> */}
         <PageContents>
-          {props.children}
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              {props.children}
+            </Suspense>
+          </ErrorBoundary>
         </PageContents>
         <NoScript />
       </AccountAuthorizer>
@@ -51,7 +57,7 @@ const Root = (props: Props): JSX.Element => {
 Root.getRelayPreloadProps = () => ({
   queries: {
     rootQuery: {
-      params: RootQueryGQL.default.params,
+      params: RootQuery.params,
       variables: {}
     }
   }

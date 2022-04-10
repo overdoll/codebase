@@ -50,11 +50,11 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
   // When it detects that the user clicked the Back button and the modal
   // is still open, it will close the modal for the user
   useEffect(() => {
-    return history.listen((location, action) => {
-      if (isOpen && action === 'POP') {
-        onCloseAction()
-      }
-    })
+    // return history.listen((location, action) => {
+    //   if (isOpen && action === 'POP') {
+    //     onCloseAction()
+    //   }
+    // })
   }, [isOpen])
 
   return {
