@@ -17,12 +17,20 @@ msgstr ""
 msgid "(Optional) Custom Duration"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:46
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:48
 msgid "Active"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:58
-msgid "Can be unlocked"
+#~ msgid "Can be unlocked"
+#~ msgstr ""
+
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:60
+msgid "Can be unsuspended"
+msgstr ""
+
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:109
+msgid "Confirm Suspend Club"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
@@ -50,7 +58,7 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:64
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:66
 msgid "Remove Suspension"
 msgstr ""
 
@@ -63,7 +71,7 @@ msgstr ""
 msgid "Successfully issued infraction to club"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:71
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:72
 msgid "Successfully suspended club"
 msgstr ""
 
@@ -71,16 +79,15 @@ msgstr ""
 msgid "Successfully un-suspended club"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:76
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:78
 msgid "Suspend Club"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:42
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:44
 msgid "Suspended"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:95
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:96
 msgid "Suspension Duration"
 msgstr ""
 
@@ -88,7 +95,7 @@ msgstr ""
 msgid "There was an error issuing an infraction"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:77
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:78
 msgid "There was an error suspending the club"
 msgstr ""
 

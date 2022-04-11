@@ -23,6 +23,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 interface CodeValues {
   code: string
@@ -53,6 +54,8 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
   const data = useFragment(Fragment, queryRef)
 
   const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionMutation>(Mutation)
+
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
 
   const { i18n } = useLingui()
 
@@ -94,7 +97,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store) => {
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
         prepareViewer(store, payload)
       },

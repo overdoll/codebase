@@ -7,7 +7,7 @@ export interface ChildrenCallableLink {
   isPending: boolean
 }
 
-interface Props {
+export interface LinkProps {
   children?: MaybeRenderProp<ChildrenCallableLink>
   disabled?: boolean
   to: string
@@ -49,7 +49,7 @@ export default function Link ({
 
   if (disabled || isPending) {
     return (
-      <span>
+      <span {...rest}>
         {runIfFunction(children, { isPending })}
       </span>
     )

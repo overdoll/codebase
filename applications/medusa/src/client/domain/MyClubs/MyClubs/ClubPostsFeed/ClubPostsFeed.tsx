@@ -3,7 +3,7 @@ import type { ClubPostsFeedViewerFragment$key } from '@//:artifacts/ClubPostsFee
 
 import { graphql, usePaginationFragment } from 'react-relay'
 import { MyClubsQuery } from '@//:artifacts/MyClubsQuery.graphql'
-import PostsInfiniteScroll from '../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll from '../../../../../modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFragment } from 'react-relay/hooks'
 
 interface Props {

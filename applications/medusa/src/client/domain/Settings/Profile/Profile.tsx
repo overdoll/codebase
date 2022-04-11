@@ -4,7 +4,7 @@ import type { AccountSettingsQuery } from '@//:artifacts/AccountSettingsQuery.gr
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import RootAccountSettings from './RootAccountSettings/RootAccountSettings'
 import { ReactNode } from 'react'
-import ChildrenBoundary from '../../../components/ChildrenBoundary/ChildrenBoundary'
+import ChildrenBoundary from '../../../../modules/content/Placeholder/Fallback/ChildrenBoundary/ChildrenBoundary'
 
 interface Props {
   prepared: {

@@ -4,7 +4,7 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import RootCurationSettings from './RootCurationSettings/RootCurationSettings'
 import type { CurationSettingsQuery as CurationSettingsQueryType } from '@//:artifacts/CurationSettingsQuery.graphql'
 import { ReactNode } from 'react'
-import ChildrenBoundary from '../../../components/ChildrenBoundary/ChildrenBoundary'
+import ChildrenBoundary from '../../../../modules/content/Placeholder/Fallback/ChildrenBoundary/ChildrenBoundary'
 
 interface Props {
   prepared: {

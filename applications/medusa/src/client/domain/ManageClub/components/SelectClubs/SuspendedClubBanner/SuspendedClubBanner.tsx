@@ -34,8 +34,6 @@ export default function SuspendedClubBanner ({ query }: Props): JSX.Element {
   return (
     <Box>
       <Alert
-        borderRadius='none'
-        border='none'
         status='warning'
       >
         <Flex
@@ -47,7 +45,7 @@ export default function SuspendedClubBanner ({ query }: Props): JSX.Element {
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                Club is currently locked and access is limited.
+                Club is currently locked and access is limited
               </Trans>
             </AlertDescription>
           </Flex>

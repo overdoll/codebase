@@ -26,7 +26,7 @@ export default function PostViewButton ({
 
   return (
     <MenuLinkItem
-      to={`${data.club.slug}/p/${data.reference}`}
+      to={`/${data.club.slug}/p/${data.reference}`}
       text={(
         <Trans>
           View Post

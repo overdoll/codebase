@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2013d81cdf39841c44bbad615bc2143>>
+ * @generated SignedSource<<8f4348361d11c236ca6267a06ce2d8c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type StaffAccountActiveClubSupporterSubscriptionOptionsFragment$data = {
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment" | "StaffCancelSubscriptionButtonFragment">;
   readonly " $fragmentType": "StaffAccountActiveClubSupporterSubscriptionOptionsFragment";
 };
 export type StaffAccountActiveClubSupporterSubscriptionOptionsFragment = StaffAccountActiveClubSupporterSubscriptionOptionsFragment$data;
@@ -84,12 +84,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffSyncSubscriptionButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffCancelSubscriptionButtonFragment"
     }
   ],
   "type": "AccountActiveClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "d3688b223e83b9e02ecbdb002844bd2a";
+(node as any).hash = "70dab34d1d843fb6f5a4dbc466a633dd";
 
 export default node;

@@ -6,7 +6,7 @@ import { BillingIdentifier, SecurityShield, SettingWrench, UserHuman } from '@//
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
-import LockedAccountBanner from '../../components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner from '../Home/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import { Helmet } from 'react-helmet-async'
 
 interface Props {

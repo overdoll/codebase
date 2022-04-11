@@ -37,6 +37,8 @@ const GrantFragment = graphql`
 export default function Grant ({ queryRef }: Props): JSX.Element {
   const [commit] = useMutation<GrantMutation>(GrantAction)
 
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
+
   const data = useFragment(GrantFragment, queryRef)
 
   const notify = useToast()
@@ -77,7 +79,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
         prepareViewer(store, payload)
         removeCookie('token')
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
       },
       onError (data) {
         notify({

@@ -33,7 +33,7 @@ msgstr ""
 msgid "Add, arrange, or remove the files you're uploading. You can encourage your fans to become paid supporters by marking some content as supporter-only."
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:68
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:69
 msgid "All characters must be of legal age"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 #~ msgid "Arrange your uploads"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:63
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:64
 msgid "As a reminder of the guidelines"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgstr ""
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:115
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:116
 #: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
@@ -113,7 +113,7 @@ msgstr ""
 #~ msgid "Nothing extremely offensive or shocking"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:71
 msgid "Nothing extremely offensive, shocking, or illegal"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "There was an error updating the post content"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:104
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:105
 msgid "This post was already submitted"
 msgstr ""
 
@@ -285,7 +285,7 @@ msgstr ""
 #~ msgid "Upstanding netizens will read all the rules before posting"
 #~ msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:75
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:76
 msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
 msgstr ""
 
@@ -326,7 +326,7 @@ msgstr ""
 msgid "You cannot post until your club is no longer suspended"
 msgstr ""
 
-#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:69
+#: src/client/domain/ManageClub/pages/CreatePost/components/PostCreator/PostState/PostState.tsx:70
 msgid "You own the rights to the content you upload"
 msgstr ""
 

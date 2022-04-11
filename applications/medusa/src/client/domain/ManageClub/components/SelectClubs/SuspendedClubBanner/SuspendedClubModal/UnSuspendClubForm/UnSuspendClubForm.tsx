@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack, Text } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
@@ -8,7 +8,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UnSuspendClubFormMutation } from '@//:artifacts/UnSuspendClubFormMutation.graphql'
 import { UnSuspendClubFormFragment$key } from '@//:artifacts/UnSuspendClubFormFragment.graphql'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { CheckboxInput, Form, FormInput, FormSubmitButton } from '@//:modules/content/HookedComponents/Form'
+import { Form, FormInput, FormSubmitButton, InputFooter, SwitchInput } from '@//:modules/content/HookedComponents/Form'
 
 interface FormValues {
   checkbox: boolean
@@ -91,14 +91,18 @@ export default function UnSuspendClubForm ({ query }: Props): JSX.Element | null
     <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={3}>
         <FormInput
-          size='sm'
+          size='md'
           id='checkbox'
         >
-          <CheckboxInput>
-            <Trans>
-              I promise to be better and to follow the community guidelines more closely
-            </Trans>
-          </CheckboxInput>
+          <HStack spacing={2}>
+            <SwitchInput colorScheme='green' />
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                I promise to be better and to follow the club guidelines more closely
+              </Trans>
+            </Text>
+          </HStack>
+          <InputFooter />
         </FormInput>
         <FormSubmitButton
           isLoading={IsInFlight}

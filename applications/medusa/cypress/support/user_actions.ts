@@ -1,9 +1,9 @@
-export const searchForTerm = (placeholder: string, search: string): void => {
+export const searchForTerm = (placeholder: string | RegExp, search: string): void => {
   cy.findByPlaceholderText(placeholder).should('be.visible').clear().type(search)
   cy.waitUntil(() => cy.get('button[aria-label="Clear Search"]').should('be.visible'))
 }
 
-export const clickOnTile = (text: string): void => {
+export const clickOnTile = (text: string | RegExp): void => {
   cy.findByText(text).should('not.be.disabled').click()
 }
 

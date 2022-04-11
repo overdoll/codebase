@@ -40,6 +40,7 @@ export type RegisterFunction = (key: RegisterSearchKey, method: RegisterMethod) 
 // useChoice Hook
 export declare type UseSearchProps<TArguments> = Partial<{
   defaultValue?: TArguments
+  onChange?: (args: UseSearchQueryState<TArguments>) => void
 }>
 
 export interface UseSearchReturn<TArguments> extends ComponentSearchArguments<TArguments> {

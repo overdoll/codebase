@@ -11,10 +11,12 @@ import {
 } from '../../types'
 import { useCallback, useState, useTransition } from 'react'
 import { FetchPolicy } from 'relay-runtime'
+import { useUpdateEffect } from 'usehooks-ts'
 
 function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArguments>): UseSearchReturn<TArguments> {
   const {
-    defaultValue = {}
+    defaultValue = {},
+    onChange: onChangeCallback
   } = props
 
   const queryState = {
@@ -88,6 +90,10 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
       onChangeRegister
     }
   }
+
+  useUpdateEffect(() => {
+    onChangeCallback?.(searchArgs)
+  }, [searchArgs])
 
   return {
     register,

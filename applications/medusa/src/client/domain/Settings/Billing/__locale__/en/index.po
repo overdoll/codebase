@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:49
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:50
 msgid "A list of charges that occurred for your club supporter subscriptions. <0>CCBill.com *overdoll Inc.</0> will appear on your Cardholder statement."
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:156
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:157
 msgid "A list with one or more subscriptions should appear. <0>Find the Subscription ID that correlates to the one listed here</0> and click on <1>Click here to update your payment information</1> to update your payment information."
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 msgid "ACTIVE"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:182
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:183
 msgid "After cancelling your subscription, you will no longer be billed. You will keep your benefits until {nextBillingDate}. After this date, they will expire."
 msgstr ""
 
@@ -58,7 +58,7 @@ msgstr ""
 msgid "CANCELLED"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:96
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:97
 msgid "CCBill Support Center"
 msgstr ""
 
@@ -66,9 +66,9 @@ msgstr ""
 #~ msgid "CCBill.com *overdoll will appear on your Cardholder statement"
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:153
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:167
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:214
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:154
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:168
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:215
 msgid "Cancel Subscription"
 msgstr ""
 
@@ -106,8 +106,8 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:76
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:132
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:77
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:133
 msgid "Email"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr ""
 
 #: src/client/domain/Settings/Billing/pages/RootSavedPaymentMethodsSettings/RootSavedPaymentMethodsSettings.tsx:37
 #: src/client/domain/Settings/Billing/pages/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:37
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:38
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:39
 msgid "Go back to billing"
 msgstr ""
 
@@ -141,15 +141,15 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:117
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:118
 msgid "In the section where it asks <0>Enter 2 of the following pieces of information to run a search</0>, enter these two pieces of information and click <1>Search</1>"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:65
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:66
 msgid "In the section where it asks <0>Enter 2 of the following pieces of information to run a search</0>, enter this information and click <1>Search</1>"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:104
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:105
 msgid "In the section where it asks <0>Tell us how you purchased your subscription</0>, enter this information"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Manage Subscription"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:41
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:42
 msgid "Manually Enter Information"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgstr ""
 msgid "My Subscriptions"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:91
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:92
 msgid "Navigate to the"
 msgstr ""
 
@@ -178,11 +178,11 @@ msgstr ""
 msgid "Next renewal on"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:57
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:58
 msgid "Open Generated Support Center Link"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:51
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:52
 msgid "Open the CCBill Support Center link using the button below"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 #~ msgid "Please tell us why you would like to cancel the subscription."
 #~ msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:190
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:191
 msgid "Please tell us why you would like to cancel the subscription. We'll communicate this to the club so they can continue to improve their content."
 msgstr ""
 
@@ -224,7 +224,7 @@ msgstr ""
 msgid "Subscription Details"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:142
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:143
 msgid "Subscription ID"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgid "This club is currently suspended. You cannot access its exclusive content
 msgstr ""
 
 #: src/client/domain/Settings/Billing/Billing.tsx:70
-#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:44
+#: src/client/domain/Settings/Billing/pages/RootTransactionsSettings/RootTransactionsSettings.tsx:45
 msgid "Transaction History"
 msgstr ""
 
@@ -276,7 +276,7 @@ msgstr ""
 msgid "Update Payment Method"
 msgstr ""
 
-#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:36
+#: src/client/domain/Settings/Billing/pages/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:37
 msgid "Use Generated Link"
 msgstr ""
 

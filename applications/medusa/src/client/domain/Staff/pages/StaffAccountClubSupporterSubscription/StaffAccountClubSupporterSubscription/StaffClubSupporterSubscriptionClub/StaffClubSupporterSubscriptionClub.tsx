@@ -7,8 +7,8 @@ import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayou
 import { Trans } from '@lingui/macro'
 import LargeClubHeader from '../../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
-import ClubPageButton from '../../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton'
-import ClubStaffButton from '../../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubStaffButton/ClubStaffButton'
+import ClubPageButton from '../../../../../PublicClub/PublicClub/ClubMenu/ClubPageButton/ClubPageButton'
+import ClubStaffButton from '../../../../../PublicClub/PublicClub/ClubMenu/ClubStaffButton/ClubStaffButton'
 
 interface Props {
   query: StaffClubSupporterSubscriptionClubFragment$key

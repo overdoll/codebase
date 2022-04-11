@@ -44,6 +44,8 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const data = useFragment(RegisterFragment, queryRef)
 
+  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
+
   const notify = useToast()
 
   const { i18n } = useLingui()
@@ -82,7 +84,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
         flash('new.account', '')
         removeCookie('token')
-        history.push('/')
+        history.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',

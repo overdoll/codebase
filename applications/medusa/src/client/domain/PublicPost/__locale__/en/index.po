@@ -17,6 +17,14 @@ msgstr ""
 #~ msgid "Suggested Posts"
 #~ msgstr ""
 
+#: src/client/domain/PublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:74
+msgid "This post is archived. Only you can see it"
+msgstr ""
+
+#: src/client/domain/PublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:63
+msgid "This post is not published. Only you can see it"
+msgstr ""
+
 #: src/client/domain/PublicPost/PublicPost/PublicPost.tsx:73
 #~ msgid "View Post"
 #~ msgstr ""
