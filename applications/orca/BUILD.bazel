@@ -1,0 +1,72 @@
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+_DEPS = [
+    "@npm//@apollo/gateway",
+    "@npm//apollo-server",
+    "@npm//apollo-server-express",
+    "@npm//express",
+    "@npm//graphql",
+    "@npm//body-parser",
+    "@npm//ioredis",
+    "@npm//dotenv",
+    "@npm//@types/node",
+    "@npm//node-fetch",
+    "@npm//cors",
+]
+
+_DATA = [
+    "schema/schema.graphql",
+    "tsconfig.json",
+]
+
+_SRCS = [
+    "apollo-gateway.ts",
+]
+
+ts_project(
+    name = "internal_lib",
+    srcs = _SRCS,
+    data = _DATA + glob([".*"]),
+    tsconfig = "tsconfig.json",
+    deps = _DEPS,
+)
+
+nodejs_binary(
+    name = "internal",
+    data = ["internal_lib"],
+    entry_point = "apollo-gateway.js",
+)
+
+nodejs_image(
+    name = "local-image",
+    binary = ":internal",
+)
+
+nodejs_image(
+    name = "image",
+    binary = ":internal",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "orca/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "orca",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
+)

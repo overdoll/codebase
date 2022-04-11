@@ -6,7 +6,7 @@ type Character implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource
+  thumbnail: Resource @goField(forceResolver: true)
 
   """A name for this character."""
   name: String!

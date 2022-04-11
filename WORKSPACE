@@ -8,6 +8,104 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
+    name = "rules_rust",
+    sha256 = "39655ab175e3c6b979f362f55f58085528f1647957b0e9b3a07f81d8a9c3ea0a",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
+    ],
+)
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains(version = "1.59.0", edition="2021", rustfmt_version = "1.59.0")
+
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository", "crate", "render_config")
+
+# download rusty_v8 dependency
+load("//third_party/rusty_v8:rusty_v8_repositories.bzl", "rusty_v8_repositories")
+
+rusty_v8_repositories()
+
+crates_repository(
+    name = "crates",
+    lockfile = "//:Cargo.Bazel.lock",
+    manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
+    annotations = {
+            "v8": [crate.annotation(
+               data = [
+                   "@rusty_v8//file"
+               ],
+               compile_data = [
+                   "@rusty_v8//file"
+               ],
+               build_script_data = [
+                   "@rusty_v8//file"
+               ],
+               rustc_flags = [
+                   "-Lall=external/rusty_v8/file"
+               ],
+            )],
+            "router-bridge": [crate.annotation(
+               gen_build_script = False,
+               data = [
+                   "@overdoll//third_party/router_bridge:files"
+               ],
+               rustc_env = {
+                   "STATIC_DIR": "${pwd}/third_party/router_bridge",
+               },
+               patch_args = ["-p1"],
+               patches = ["@overdoll//.patches:router_bridge.patch"],
+            )],
+            "opentelemetry-otlp": [crate.annotation(
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
+                    "BUILD_WORKSPACE_DIRECTORY": "."
+               },
+            )],
+            "apollo-spaceport": [crate.annotation(
+               version = "0.1.0-preview.1",
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    "@crates__prost-build-0.9.0//:third-party",
+                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+                    "PROTOC_INCLUDE": "${pwd}/external/crates__prost-build-0.9.0/third-party/protobuf/include",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
+                    "BUILD_WORKSPACE_DIRECTORY": "."
+               },
+            )],
+            "prost-build": [crate.annotation(
+               additive_build_file_content = "filegroup(name=\"third-party\", srcs = glob([\"third-party/**\"]))",
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    ":third-party",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)"
+               },
+            )],
+        },
+)
+
+load("@crates//:defs.bzl", "crate_repositories")
+
+crate_repositories()
+
+http_archive(
     name = "io_bazel_rules_go",
     sha256 = "d6b2513456fe2229811da7eb67a444be7785f5323c6708b38d851d2b51e54d83",
     urls = [
@@ -40,24 +138,20 @@ gazelle_dependencies()
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "4521794f0fba2e20f3bf15846ab5e01d5332e587e9ce81629c7f96c793bb7036",
-    strip_prefix = "rules_docker-0.14.4",
-    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.14.4/rules_docker-v0.14.4.tar.gz"],
+    sha256 = "85ffff62a4c22a74dbd98d05da6cf40f497344b3dbf1e1ab0a37ab2a1a6ca014",
+    strip_prefix = "rules_docker-0.23.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.23.0/rules_docker-v0.23.0.tar.gz"],
 )
 
-load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
-
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
 container_repositories()
 
 load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
 
 container_deps()
-
-load("@io_bazel_rules_docker//repositories:pip_repositories.bzl", "pip_deps")
-
-pip_deps()
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "com_google_protobuf",
@@ -93,9 +187,17 @@ load("@io_bazel_rules_docker//go:image.bzl", go_image_repos = "repositories")
 go_image_repos()
 
 load(
+    "@io_bazel_rules_docker//rust:image.bzl",
+    rust_image_repos = "repositories",
+)
+
+rust_image_repos()
+
+load(
     "@io_bazel_rules_docker//nodejs:image.bzl",
     nodejs_image_repos = "repositories",
 )
+
 load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 
 nodejs_image_repos()
@@ -115,6 +217,13 @@ container_pull(
     registry = "docker.io",
     repository = "library/golang",
     tag = "1.16",
+)
+
+container_pull(
+    name = "rust_base_image",
+    registry = "docker.io",
+    repository = "library/rust",
+    tag = "1.59.0",
 )
 
 container_pull(

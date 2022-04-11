@@ -162,6 +162,21 @@ applications = {
             sync("applications/hades/database", "/app/applications/hades/internal/local-image.binary.runfiles/overdoll/applications/hades/database"),
         ],
     },
+    "orca": {
+        "type": "node",
+        "directory": "orca",
+        "image_reference": "orca-image",
+        "image_target": "//applications/orca:local-image",
+        "bazel_image": "bazel/applications/orca:local-image",
+        "container_workdir": "",
+        "container_binary": "",
+        "entrypoint": "/app/applications/orca/internal",
+        "dependencies": [
+            "applications/orca/apollo-gateway.ts",
+            "applications/orca/.env",
+        ],
+        "live_update": [],
+    },
 }
 
 # Build applications with our helper function

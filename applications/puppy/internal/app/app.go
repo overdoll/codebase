@@ -82,7 +82,7 @@ func (a *Application) UpdateDeviceLanguageEvent(ctx context.Context, res *http.R
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 	}
 
 	res.Header.Add("Set-Cookie", ck.String())
@@ -150,7 +150,7 @@ func (a *Application) NewAccountSessionEvent(ctx context.Context, res *http.Resp
 		MaxAge:   2147483647,
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 	}
 
 	res.Header.Add("Set-Cookie", ck.String())
@@ -174,7 +174,7 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 				MaxAge:   -1,
 				HttpOnly: true,
 				Secure:   true,
-				SameSite: http.SameSiteLaxMode,
+				SameSite: http.SameSiteNoneMode,
 			}
 
 			res.Header.Add("Set-Cookie", ck.String())
@@ -203,7 +203,7 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 				Path:     "/",
 				HttpOnly: true,
 				Secure:   true,
-				SameSite: http.SameSiteLaxMode,
+				SameSite: http.SameSiteNoneMode,
 			}
 
 			res.Header.Add("Set-Cookie", ck.String())

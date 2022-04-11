@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  orca:
+    image: $CONTAINER_REGISTRY/orca/dev:$BUILDKITE_COMMIT
+    entrypoint: ""
+    command: /bin/sh -c "/app/applications/orca/internal"
+    env_file: ../../applications/orca/.env.ci
+    ports:
+      - 6760:8000
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 20
+
+  run:
+    depends_on:
+      - orca

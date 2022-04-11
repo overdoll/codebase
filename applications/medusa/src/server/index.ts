@@ -1,5 +1,4 @@
 import cookieParser from 'cookie-parser'
-import csrf from 'csurf'
 import express from 'express'
 import hbs from 'express-handlebars'
 import session from 'express-session'
@@ -9,12 +8,11 @@ import universalCookies from 'universal-cookie-express'
 import coverage from './app/coverage'
 import error from './app/error'
 import flash from './app/flash'
-import graphql from './app/graphql'
 import nonce from './app/nonce'
 import render from './app/render'
 import version from './app/version'
 import cookieConfig from './config/cookie'
-import csrfConfig from './config/csrf'
+import security from './app/security'
 import hbsConfig from './config/hbs'
 import helmetConfig from './config/helmet'
 import sessionCfg from './config/session'
@@ -50,8 +48,8 @@ index.use(helmet(helmetConfig))
 // Sessions
 index.use(session(sessionCfg))
 
-// CSRF
-index.use(csrf(csrfConfig))
+// CSRF security
+index.use(security)
 
 // Flash sessions
 index.use(flash)
@@ -61,9 +59,6 @@ index.use(coverage)
 
 // Version endpoint - used by the client to always stay up-to-date
 index.use(version)
-
-// GraphQL Server
-void graphql(index)
 
 // Our entrypoint
 index.use(render)

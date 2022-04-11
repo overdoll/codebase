@@ -2,28 +2,27 @@ const fs = require('fs')
 const cli = require('@graphql-codegen/cli')
 const path = require('path')
 const Cookie = require('cookie')
-const Tokens = require('csrf')
-const sign = require('cookie-signature').sign
+const _crypto = require('crypto')
 
 require('dotenv').config()
 
 // a custom graphql fetcher that implements CSRF, so we can have CSRF always enabled
 async function generate () {
-  const tokens = new Tokens()
+  const token = _crypto.randomBytes(64).toString('hex')
 
-  const secret = tokens.secretSync()
-
-  const token = tokens.create(secret)
-
-  const val = 's:' + sign(secret, process.env.SESSION_SECRET)
+  const iv = _crypto.randomBytes(12)
+  const cipher = _crypto.createCipheriv('aes-256-gcm', process.env.SECURITY_SECRET, iv)
+  const encrypted = Buffer.concat([iv, cipher.update(token), cipher.final(), cipher.getAuthTag()]).toString(
+    'hex'
+  )
 
   const output = await cli.generate(
     {
       schema: {
         [process.env.URL + '/api/graphql']: {
           headers: {
-            'x-csrf-token': token,
-            Cookie: Cookie.serialize('_csrf', val)
+            'X-overdoll-Security': token,
+            Cookie: Cookie.serialize('od.security', encrypted)
           }
         }
       },

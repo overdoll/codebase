@@ -4,6 +4,7 @@ go_library(
     name = "crypt",
     srcs = [
         "base.go",
+        "custom.go",
         "default.go",
     ],
     importpath = "overdoll/libraries/crypt",

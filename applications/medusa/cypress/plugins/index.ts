@@ -36,7 +36,7 @@ module.exports = (on, config) => {
   // copy any needed variables from process.env to config.env
   config.env.TESTMAIL_API_KEY = process.env.TESTMAIL_API_KEY
   config.env.TESTMAIL_NAMESPACE = process.env.TESTMAIL_NAMESPACE
-  config.env.SESSION_SECRET = process.env.SESSION_SECRET
+  config.env.SECURITY_SECRET = process.env.SECURITY_SECRET
 
   // IMPORTANT to return the config object
   // with the any changed environment variables
