@@ -9,7 +9,6 @@ import RecoveryCode from './RecoveryCode/RecoveryCode'
 import { Trans } from '@lingui/macro'
 import Icon from '../../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons/interface'
-import { StringParam, useQueryParam } from 'use-query-params'
 
 interface Props {
   queryRef: MultiFactorFragment$key

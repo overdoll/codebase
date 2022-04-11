@@ -23,7 +23,7 @@ import PostCopyLinkButton
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import JoinClubFromPost
-  from '../../../../ClubPublicPage/ClubPublicPage/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../../PublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 import PostArchiveButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 import PostUnArchiveButton

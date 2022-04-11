@@ -1,5 +1,4 @@
 import { HTMLChakraProps, Tag, TagCloseButton, TagLabel } from '@chakra-ui/react'
-import { useLingui } from '@lingui/react'
 
 interface Props extends HTMLChakraProps<any> {
   onRemove: (id) => void
@@ -13,8 +12,6 @@ export default function RemovableTag ({
   onRemove,
   ...rest
 }: Props): JSX.Element {
-  const { i18n } = useLingui()
-
   return (
     <Tag color='gray.00' borderRadius='full' size='lg' {...rest}>
       <TagLabel>{title}</TagLabel>

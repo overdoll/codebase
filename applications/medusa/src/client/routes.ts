@@ -3,7 +3,7 @@ import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/authorization/defineAbility'
 import { AppAbility } from '@//:modules/authorization/types'
 import { AccountAuthorizerFragment$data } from '@//:artifacts/AccountAuthorizerFragment.graphql'
-import { decodeRouterArguments } from './components/PostsSearch'
+import { decodeRouterArguments } from '../modules/content/Posts/components/PostNavigation/PostsSearch'
 
 // hacky way to get the current viewer
 function getAccountFromEnvironment (environment): AccountAuthorizerFragment$data | null {
@@ -2585,14 +2585,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/ClubPublicPage/RootClubPublicPage'
+            './domain/PublicClub/RootPublicClub'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/ClubPublicPage/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/PublicClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2621,14 +2621,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            './domain/ClubPublicPosts/RootClubPublicPosts'
+            './domain/PublicClubPosts/RootPublicClubPosts'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./domain/ClubPublicPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./domain/PublicClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages

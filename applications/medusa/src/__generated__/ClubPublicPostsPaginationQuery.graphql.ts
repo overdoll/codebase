@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f5a40bc2c2e13674459359e0131aaf85>>
- * @relayHash 6648371acbe4e5b0c2cf11b82efe5e2e
+ * @generated SignedSource<<49c4c6a424b3df99c48d6be279c882b5>>
+ * @relayHash 6a8da6c15ec286fdb2bd46ce27107619
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6648371acbe4e5b0c2cf11b82efe5e2e
+// @relayRequestID 6a8da6c15ec286fdb2bd46ce27107619
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,7 +28,7 @@ export type ClubPublicPostsPaginationQuery$variables = {
 export type ClubPublicPostsPaginationQueryVariables = ClubPublicPostsPaginationQuery$variables;
 export type ClubPublicPostsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment">;
   } | null;
 };
 export type ClubPublicPostsPaginationQueryResponse = ClubPublicPostsPaginationQuery$data;
@@ -248,7 +248,7 @@ return {
               (v10/*: any*/)
             ],
             "kind": "FragmentSpread",
-            "name": "ClubPublicPostsFragment"
+            "name": "PublicClubPostsFragment"
           }
         ],
         "storageKey": null
@@ -523,7 +523,7 @@ return {
     ]
   },
   "params": {
-    "id": "6648371acbe4e5b0c2cf11b82efe5e2e",
+    "id": "6a8da6c15ec286fdb2bd46ce27107619",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",
@@ -532,6 +532,6 @@ return {
 };
 })();
 
-(node as any).hash = "88b63414cd1eb1d79458f6ea4c3a29ec";
+(node as any).hash = "e0a179a3e096c370af937c7c3192d1f3";
 
 export default node;

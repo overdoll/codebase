@@ -5,7 +5,7 @@ import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { useHistory } from '../../../../../routing'
-import { configMap } from '../../../../../../client/components/PostsSearch/constants'
+import { configMap } from '../../PostNavigation/PostsSearch/constants'
 
 interface Props {
   query: PostClickableCategoriesFragment$key | null

@@ -1,7 +1,7 @@
 import { clickOnButton, clickOnTile, searchForTerm } from '../../support/user_actions'
 
 describe('Use Search', () => {
-  const character = 'Orion Strong'
+  // const character = 'Orion Strong'
   const series = 'Foreigner On Mars'
   const category = 'Assure'
 

@@ -34,7 +34,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import HighlightInline from '../../../../../../components/ContentHints/HighlightInline/HighlightInline'
+import HighlightInline from '../../../../../../../modules/content/ContentHints/HighlightInline/HighlightInline'
 
 interface UsernameValues {
   username: string

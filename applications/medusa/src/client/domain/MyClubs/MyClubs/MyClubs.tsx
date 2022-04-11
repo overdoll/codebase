@@ -8,10 +8,10 @@ import { ClubPeopleGroup } from '@//:assets/icons'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import { Box, HStack, Stack } from '@chakra-ui/react'
-import FixedHeaderWrapper from '../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import LockedAccountTrigger from '../../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
-import PostSearchButton from '../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
-import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
+import FixedHeaderWrapper from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import LockedAccountTrigger from '../../Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import PostSearchButton from '../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
 
 interface Props {
   query: PreloadedQuery<MyClubsQuery>

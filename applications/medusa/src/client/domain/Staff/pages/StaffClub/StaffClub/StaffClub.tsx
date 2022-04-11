@@ -9,7 +9,7 @@ import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayou
 import { Trans } from '@lingui/macro'
 import LargeAccountHeader from '../../../components/LargeAccountHeader/LargeAccountHeader'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
-import ClubPageButton from '../../../../ClubPublicPage/ClubPublicPage/ClubMenu/ClubPageButton/ClubPageButton'
+import ClubPageButton from '../../../../PublicClub/PublicClub/ClubMenu/ClubPageButton/ClubPageButton'
 import ProfilePageButton from '../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
 import ProfileStaffButton from '../../../../Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 

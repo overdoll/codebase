@@ -16,7 +16,7 @@ import {
 } from '../../../StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionCard/StaffTransactionCard'
 import StaffRefundAccountTransactionButton
   from './StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton'
-import CopyCodeToClipboard from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard from '../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {
   query: StaffAccountTransactionOptionsFragment$key

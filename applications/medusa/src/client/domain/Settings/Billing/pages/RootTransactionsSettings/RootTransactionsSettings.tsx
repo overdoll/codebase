@@ -12,8 +12,7 @@ import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import TransactionsSettings from './TransactionsSettings/TransactionsSettings'
-import HighlightInline from '../../../../../components/ContentHints/HighlightInline/HighlightInline'
-import LockedAccountAlert from '../../../../../components/LockedAccount/LockedAccountAlert/LockedAccountAlert'
+import HighlightInline from '../../../../../../modules/content/ContentHints/HighlightInline/HighlightInline'
 
 interface Props {
   prepared: {

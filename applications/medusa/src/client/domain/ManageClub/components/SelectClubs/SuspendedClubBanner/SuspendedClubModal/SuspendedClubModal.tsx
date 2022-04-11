@@ -16,7 +16,7 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCountdown } from '@//:modules/hooks'
 import UnSuspendClubForm from './UnSuspendClubForm/UnSuspendClubForm'
-import LinkInline from '../../../../../../components/ContentHints/LinkInline/LinkInline'
+import LinkInline from '../../../../../../../modules/content/ContentHints/LinkInline/LinkInline'
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 
 interface Props {

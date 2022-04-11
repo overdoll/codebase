@@ -2,13 +2,12 @@ import { useRoutingContext } from './RoutingContext'
 import { useCallback, useTransition } from 'react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../support/runIfFunction'
-import { HTMLChakraProps } from '@chakra-ui/react'
 
 export interface ChildrenCallableLink {
   isPending: boolean
 }
 
-export interface LinkProps{
+export interface LinkProps {
   children?: MaybeRenderProp<ChildrenCallableLink>
   disabled?: boolean
   to: string

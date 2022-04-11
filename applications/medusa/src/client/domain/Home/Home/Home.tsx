@@ -2,7 +2,7 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll from '../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll from '../../../../modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFlash } from '@//:modules/flash'
 import {
   HStack,
@@ -21,10 +21,10 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import PostSearchButton from '../../../components/PostsSearch/components/PostSearchButton/PostSearchButton'
-import PageFixedHeader from '../../../components/PageFixedHeader/PageFixedHeader'
-import FixedHeaderWrapper from '../../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import LockedAccountTrigger from '../../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import PostSearchButton from '../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageFixedHeader from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
+import FixedHeaderWrapper from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import LockedAccountTrigger from '../LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>

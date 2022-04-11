@@ -12,7 +12,7 @@ import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
 import StaffSyncSubscriptionButton from '../StaffSyncSubscriptionButton/StaffSyncSubscriptionButton'
-import CopyCodeToClipboard from '../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard from '../../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {
   query: StaffAccountCancelledClubSupporterSubscriptionOptionsFragment$key

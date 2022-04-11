@@ -6,14 +6,14 @@ import type { SearchQuery as SearchQueryType } from '@//:artifacts/SearchQuery.g
 import SearchQuery from '@//:artifacts/SearchQuery.graphql'
 import Search from './Search/Search'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import useGeneralSearchArguments from '../../components/PostsSearch/support/useGeneralSearchArguments'
-import { PostOrderButton, PostSearchButton } from '../../components/PostsSearch'
-import PageFixedHeader from '../../components/PageFixedHeader/PageFixedHeader'
+import useGeneralSearchArguments from '../../../modules/content/Posts/components/PostNavigation/PostsSearch/support/useGeneralSearchArguments'
+import { PostOrderButton, PostSearchButton } from '../../../modules/content/Posts/components/PostNavigation/PostsSearch'
+import PageFixedHeader from '../../../modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
 import PageInfiniteScrollWrapper
   from '../../../modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
-import FixedHeaderWrapper from '../../components/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import FixedHeaderWrapper from '../../../modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import { Flex, HStack } from '@chakra-ui/react'
-import LockedAccountTrigger from '../../components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import LockedAccountTrigger from '../Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 
 interface Props {
   prepared: {

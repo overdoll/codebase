@@ -5,11 +5,11 @@ import type {
 import { Trans } from '@lingui/macro'
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import CopyCodeToClipboard
-  from '../../../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import HighlightInline from '../../../../../../../../../../components/ContentHints/HighlightInline/HighlightInline'
+  from '../../../../../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import HighlightInline from '../../../../../../../../../../../modules/content/ContentHints/HighlightInline/HighlightInline'
 import { ExternalLink } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
-import LinkInline from '../../../../../../../../../../components/ContentHints/LinkInline/LinkInline'
+import LinkInline from '../../../../../../../../../../../modules/content/ContentHints/LinkInline/LinkInline'
 
 interface Props {
   query: CCBillUpdatePaymentMethodInstructionsFragment$key
