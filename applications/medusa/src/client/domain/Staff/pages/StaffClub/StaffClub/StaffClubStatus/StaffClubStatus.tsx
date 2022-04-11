@@ -6,7 +6,7 @@ import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/Them
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import useCountdown from '@//:modules/hooks/useCountdown'
 import StaffClubUnSuspendButton from './StaffClubUnSuspendButton/StaffClubUnSuspendButton'
-import SuspendClubForm from '../StaffClubInfractions/SuspendClubForm/SuspendClubForm'
+import SuspendClubForm from './SuspendClubForm/SuspendClubForm'
 
 interface Props {
   query: StaffClubStatusFragment$key
@@ -26,6 +26,8 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const isSuspended = data.suspension != null
+
+  //
 
   const {
     hasPassed,
@@ -55,7 +57,7 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
             <SmallBackgroundBox h={10}>
               <Flex w='100%' h='100%' align='center' justify='center'>
                 <Text color='gray.00' fontSize='lg'>
-                  {hasPassed ? remaining : <Trans>Can be unlocked</Trans>}
+                  {hasPassed ? <Trans>Can be unsuspended</Trans> : remaining}
                 </Text>
               </Flex>
             </SmallBackgroundBox>

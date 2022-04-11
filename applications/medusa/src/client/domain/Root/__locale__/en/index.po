@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:69
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
 msgid "Account Locked"
 msgstr ""
 
@@ -38,8 +38,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:70
-msgid "Banned for {remaining}"
-msgstr ""
+#~ msgid "Banned for {remaining}"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:92
 msgid "Become a Supporter"
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:100
+#: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:132
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:139
 msgid "Like"
 msgstr ""
 
@@ -205,11 +205,15 @@ msgstr ""
 msgid "Locale does not match BCP47 pattern"
 msgstr ""
 
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
+msgid "Locked for {remaining}"
+msgstr ""
+
 #: src/client/domain/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:147
 msgid "Log Out"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:73
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:75
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -342,15 +346,19 @@ msgstr ""
 msgid "Please enter an email"
 msgstr ""
 
+#: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:82
+msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
+msgstr ""
+
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
 #~ msgid "Please review the community guidelines to make sure this doesn't happen again."
 #~ msgstr ""
 
 #: src/client/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:80
-msgid "Please review the<0>Community Guidelines</0>to make sure this doesn't happen again."
-msgstr ""
+#~ msgid "Please review the<0>Community Guidelines</0>to make sure this doesn't happen again."
+#~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:113
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -370,12 +378,12 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:133
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:140
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:147
 msgid "Report Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:154
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:161
 msgid "Report post"
 msgstr ""
 
@@ -441,7 +449,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:182
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:189
 msgid "Submit Report"
 msgstr ""
 
@@ -497,7 +505,7 @@ msgstr ""
 msgid "There was an error removing the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:121
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:128
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -550,7 +558,7 @@ msgstr ""
 msgid "Un-Archive Post"
 msgstr ""
 
-#: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:110
+#: src/client/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 msgid "Unlock Account"
 msgstr ""
 

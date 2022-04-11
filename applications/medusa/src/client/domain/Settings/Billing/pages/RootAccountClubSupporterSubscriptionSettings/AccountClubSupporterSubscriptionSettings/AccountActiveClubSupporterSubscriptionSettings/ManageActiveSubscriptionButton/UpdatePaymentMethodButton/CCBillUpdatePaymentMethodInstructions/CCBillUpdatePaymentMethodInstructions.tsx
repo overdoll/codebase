@@ -3,12 +3,13 @@ import type {
   CCBillUpdatePaymentMethodInstructionsFragment$key
 } from '@//:artifacts/CCBillUpdatePaymentMethodInstructionsFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { Box, Link, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import CopyCodeToClipboard
-  from '../../../../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import Highlight from '../../../../../../../../../../components/ContentHints/HighlightText/Highlight'
+  from '../../../../../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import HighlightInline from '../../../../../../../../../../../modules/content/ContentHints/HighlightInline/HighlightInline'
 import { ExternalLink } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
+import LinkInline from '../../../../../../../../../../../modules/content/ContentHints/LinkInline/LinkInline'
 
 interface Props {
   query: CCBillUpdatePaymentMethodInstructionsFragment$key
@@ -64,11 +65,11 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                 <Text fontSize='sm' color='gray.00'>
                   <Trans>
                     In the section where it asks{' '}
-                    <Highlight colorScheme='teal'>Enter 2 of the following pieces of
+                    <HighlightInline colorScheme='teal'>Enter 2 of the following pieces of
                       information to
                       run a search
-                    </Highlight>
-                    {' '}, enter this information and click <Highlight colorScheme='teal'>Search</Highlight>
+                    </HighlightInline>
+                    {' '}, enter this information and click <HighlightInline colorScheme='teal'>Search</HighlightInline>
                   </Trans>
                 </Text>
                 <Box>
@@ -92,19 +93,19 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                     Navigate to the
                   </Trans>
                   {' '}
-                  <Link color='teal.400' fontSize='sm' isExternal href='https://support.ccbill.com/'>
+                  <LinkInline isExternal color='teal.400' fontSize='sm' to='https://support.ccbill.com/'>
                     <Trans>
                       CCBill Support Center
                     </Trans>
-                  </Link>
+                  </LinkInline>
                 </Text>
               </Box>
               <Stack spacing={1}>
                 <Text fontSize='sm' color='gray.00'>
                   <Trans> In the section where it asks{' '}
-                    <Highlight colorScheme='teal'>Tell us how you purchased your
+                    <HighlightInline colorScheme='teal'>Tell us how you purchased your
                       subscription
-                    </Highlight>
+                    </HighlightInline>
                     {' '}, enter this information
                   </Trans>
                 </Text>
@@ -116,15 +117,15 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                 <Text fontSize='sm' color='gray.00'>
                   <Trans>
                     In the section where it asks{' '}
-                    <Highlight colorScheme='teal'>Enter 2 of the following pieces of
+                    <HighlightInline colorScheme='teal'>Enter 2 of the following pieces of
                       information to
                       run a search
-                    </Highlight>
+                    </HighlightInline>
                     {' '}, enter these two pieces of information and click{' '}
-                    <Highlight
+                    <HighlightInline
                       colorScheme='teal'
                     >Search
-                    </Highlight>
+                    </HighlightInline>
                   </Trans>
                 </Text>
                 <Box>
@@ -155,13 +156,13 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
       <Text fontSize='sm' color='gray.00'>
         <Trans>
           A list with one or more subscriptions should appear.{' '}
-          <Highlight colorScheme='teal'>Find the Subscription ID
+          <HighlightInline colorScheme='teal'>Find the Subscription ID
             that correlates to the one
             listed here
-          </Highlight>{' '}and click on{' '}
-          <Highlight colorScheme='teal'>Click here to update your payment
+          </HighlightInline>{' '}and click on{' '}
+          <HighlightInline colorScheme='teal'>Click here to update your payment
             information
-          </Highlight>{' '}to update your payment information.
+          </HighlightInline>{' '}to update your payment information.
         </Trans>
       </Text>
     </Stack>

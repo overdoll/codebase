@@ -7,7 +7,7 @@ export interface ChildrenCallableLink {
   isPending: boolean
 }
 
-interface Props {
+export interface LinkProps {
   children?: MaybeRenderProp<ChildrenCallableLink>
   disabled?: boolean
   to: string
@@ -20,8 +20,9 @@ interface Props {
 export default function Link ({
   children,
   disabled = false,
-  to
-}: Props): JSX.Element {
+  to,
+  ...rest
+}: LinkProps): JSX.Element {
   const router = useRoutingContext()
 
   // @ts-expect-error
@@ -56,7 +57,7 @@ export default function Link ({
 
   if (disabled || isPending) {
     return (
-      <span>
+      <span {...rest}>
         {runIfFunction(children, { isPending })}
       </span>
     )
@@ -68,6 +69,7 @@ export default function Link ({
       onClick={changeRoute}
       onMouseEnter={preloadRouteCode}
       onMouseDown={preloadRoute}
+      {...rest}
     >
       {runIfFunction(children, { isPending })}
     </a>

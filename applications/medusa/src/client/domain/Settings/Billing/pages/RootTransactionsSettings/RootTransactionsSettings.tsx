@@ -12,7 +12,7 @@ import { Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import TransactionsSettings from './TransactionsSettings/TransactionsSettings'
-import Highlight from '../../../../../components/ContentHints/HighlightText/Highlight'
+import HighlightInline from '../../../../../../modules/content/ContentHints/HighlightInline/HighlightInline'
 
 interface Props {
   prepared: {
@@ -48,9 +48,9 @@ export default function RootSubscriptionsSettings (props: Props): JSX.Element | 
           <PageSectionDescription>
             <Trans>
               A list of charges that occurred for your club supporter subscriptions.{' '}
-              <Highlight color='purple.200'>CCBill.com
+              <HighlightInline color='purple.200'>CCBill.com
                 *overdoll Inc.
-              </Highlight> will appear on your Cardholder
+              </HighlightInline> will appear on your Cardholder
               statement.
             </Trans>
           </PageSectionDescription>

@@ -5,7 +5,7 @@ import type {
 } from '@//:artifacts/ClubExclusiveContentSuspensionNoticeFragment.graphql'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { HStack } from '@chakra-ui/react'
-import ClubExclusivePosts from '../../../../../../ClubPublicPage/ClubPublicPage/ClubExclusivePosts/ClubExclusivePosts'
+import ClubExclusivePosts from '../../../../../../PublicClub/PublicClub/ClubExclusivePosts/ClubExclusivePosts'
 import differenceInDays from 'date-fns/differenceInDays'
 
 interface Props {

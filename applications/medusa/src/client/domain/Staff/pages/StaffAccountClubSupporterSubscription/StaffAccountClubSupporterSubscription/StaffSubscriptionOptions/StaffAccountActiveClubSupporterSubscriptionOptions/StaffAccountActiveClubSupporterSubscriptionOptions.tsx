@@ -13,7 +13,9 @@ import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
 import StaffSyncSubscriptionButton
   from '../StaffSyncSubscriptionButton/StaffSyncSubscriptionButton'
-import CopyCodeToClipboard from '../../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard
+  from '../../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import StaffCancelSubscriptionButton from '../StaffCancelSubscriptionButton/StaffCancelSubscriptionButton'
 
 interface Props {
   query: StaffAccountActiveClubSupporterSubscriptionOptionsFragment$key
@@ -29,6 +31,7 @@ const Fragment = graphql`
       ccbillSubscriptionId
     }
     ...StaffSyncSubscriptionButtonFragment
+    ...StaffCancelSubscriptionButtonFragment
   }
 `
 
@@ -128,6 +131,7 @@ export default function StaffAccountActiveClubSupporterSubscriptionOptions ({ qu
             </Trans>
           </MenuButton>
           <MenuList minW='230px' boxShadow='outline'>
+            <StaffCancelSubscriptionButton query={data} />
             <StaffSyncSubscriptionButton query={data} />
           </MenuList>
         </Menu>

@@ -147,6 +147,7 @@ export default function CancelSubscriptionButton ({
   return (
     <>
       <MenuItem
+        colorScheme='orange'
         onClick={onOpen}
         icon={DeleteCircle}
         text={(

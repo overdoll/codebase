@@ -17,35 +17,35 @@ msgstr ""
 msgid "(Optional) Custom Duration"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:38
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:41
 msgid "1 month"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:46
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:49
 msgid "1 year"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:18
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:21
 msgid "12 hours"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:34
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:37
 msgid "2 weeks"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:22
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:25
 msgid "24 hours"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:26
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:29
 msgid "3 days"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:42
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:45
 msgid "3 months"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:30
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:33
 msgid "7 days"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "ACTIVE"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:46
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:48
 msgid "Active"
 msgstr ""
 
@@ -174,8 +174,12 @@ msgstr ""
 msgid "CCBill Transaction ID"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:58
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:50
 msgid "Can be unlocked"
+msgstr ""
+
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:60
+msgid "Can be unsuspended"
 msgstr ""
 
 #: src/client/domain/Staff/pages/StaffCancellationReasons/StaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonDeprecated/ChangeCancellationReasonDeprecated.tsx:28
@@ -329,6 +333,14 @@ msgstr ""
 #: src/client/domain/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:61
 #: src/client/domain/Staff/pages/StaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:57
 msgid "Club"
+msgstr ""
+
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:108
+msgid "Confirm Lock Account"
+msgstr ""
+
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:109
+msgid "Confirm Suspend Club"
 msgstr ""
 
 #: src/client/domain/Staff/Staff.tsx:97
@@ -578,8 +590,7 @@ msgstr ""
 msgid "Locale"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:59
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:108
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:62
 msgid "Lock Account"
 msgstr ""
 
@@ -672,7 +683,7 @@ msgstr ""
 msgid "Pricing"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:50
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:53
 msgid "Purge"
 msgstr ""
 
@@ -698,7 +709,7 @@ msgstr ""
 msgid "Refund Transactions"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:64
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:66
 msgid "Remove Suspension"
 msgstr ""
 
@@ -810,7 +821,7 @@ msgstr ""
 #~ msgid "Select a series"
 #~ msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:56
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:59
 msgid "Select duration"
 msgstr ""
 
@@ -915,7 +926,7 @@ msgstr ""
 msgid "Successfully revoked staff role"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:71
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:72
 msgid "Successfully suspended club"
 msgstr ""
 
@@ -972,16 +983,15 @@ msgstr ""
 msgid "Supporting Since"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:108
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:76
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:78
 msgid "Suspend Club"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:42
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:44
 msgid "Suspended"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:95
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:96
 msgid "Suspension Duration"
 msgstr ""
 
@@ -1062,7 +1072,7 @@ msgstr ""
 msgid "There was an error revoking the staff role"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubInfractions/SuspendClubForm/SuspendClubForm.tsx:77
+#: src/client/domain/Staff/pages/StaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:78
 msgid "There was an error suspending the club"
 msgstr ""
 
@@ -1125,7 +1135,7 @@ msgstr ""
 msgid "Un-Suspend Club"
 msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:55
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:58
 #: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffUnlockAccountForm/StaffUnlockAccountForm.tsx:71
 msgid "Unlock Account"
 msgstr ""
@@ -1176,7 +1186,7 @@ msgstr ""
 #~ msgid "Void"
 #~ msgstr ""
 
-#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:14
+#: src/client/domain/Staff/pages/StaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:17
 msgid "Warning (none)"
 msgstr ""
 

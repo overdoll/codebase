@@ -15,7 +15,7 @@ import ClubSettingsQuery, { ClubSettingsQuery as ClubSettingsQueryType } from '@
 import ClubSettings from './ClubSettings/ClubSettings'
 import { useParams } from '@//:modules/routing/useParams'
 import { Trans } from '@lingui/macro'
-import ChildrenBoundary from '../../../../components/ChildrenBoundary/ChildrenBoundary'
+import ChildrenBoundary from '../../../../../modules/content/Placeholder/Fallback/ChildrenBoundary/ChildrenBoundary'
 import { Box, Stack } from '@chakra-ui/react'
 import { ClubPeopleGroup } from '@//:assets/icons'
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'

@@ -153,12 +153,12 @@ export default {
       include: ['src/client/domain/ManageClub/pages/ClubPosts']
     },
     {
-      path: 'src/client/domain/ClubPublicPage/__locale__/{locale}/index',
-      include: ['src/client/domain/ClubPublicPage']
+      path: 'src/client/domain/PublicClub/__locale__/{locale}/index',
+      include: ['src/client/domain/PublicClub']
     },
     {
-      path: 'src/client/domain/ClubPublicPosts/__locale__/{locale}/index',
-      include: ['src/client/domain/ClubPublicPosts']
+      path: 'src/client/domain/PublicClubPosts/__locale__/{locale}/index',
+      include: ['src/client/domain/PublicClubPosts']
     },
     {
       path: 'src/client/domain/ManageClub/pages/ClubSettings/__locale__/{locale}/index',

@@ -106,7 +106,7 @@ export default function StaffLockAccountForm ({
           colorScheme='orange'
         >
           <Trans>
-            Lock Account
+            Confirm Lock Account
           </Trans>
         </FormSubmitButton>
       </Stack>

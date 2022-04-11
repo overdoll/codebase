@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Skeleton, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import SuspenseImage from '@//:modules/operations/SuspenseImage'
 import CopyCodeToClipboard
-  from '../../../../../../components/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+  from '../../../../../../../modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 
 interface Props {
   secret: string | undefined

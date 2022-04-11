@@ -13,7 +13,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import { PreloadedQuery } from 'react-relay/hooks'
 import { DesktopComputer } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import ChildrenBoundary from '../../../components/ChildrenBoundary/ChildrenBoundary'
+import ChildrenBoundary from '../../../../modules/content/Placeholder/Fallback/ChildrenBoundary/ChildrenBoundary'
 import { ReactNode } from 'react'
 
 interface Props {

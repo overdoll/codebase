@@ -13,6 +13,7 @@ import { Trans } from '@lingui/macro'
 import PostSubmitted from './PostSubmitted/PostSubmitted'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -77,7 +78,7 @@ export default function PostState ({
                 color='teal.400'
                 fontSize='md'
                 isExternal
-                href='https://www.corpodoll.com/club-guidelines/'
+                href={CLUB_GUIDELINES}
               >
                 Club Guidelines
               </Link>{' '}carefully before posting

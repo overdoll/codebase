@@ -2,7 +2,7 @@ import type { SuggestedPostsFragment$key } from '@//:artifacts/SuggestedPostsFra
 import type { SuggestedPostsViewerFragment$key } from '@//:artifacts/SuggestedPostsViewerFragment.graphql'
 
 import { graphql, usePaginationFragment } from 'react-relay'
-import PostsInfiniteScroll from '../../../../components/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll from '../../../../../modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFragment } from 'react-relay/hooks'
 import { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
 
