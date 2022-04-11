@@ -14,8 +14,10 @@ describe('Suspend/UnSuspend Club', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.visit(`/staff/club/${club}`)
     clickOnButton('Suspend Club')
-    cy.findAllByText('Select duration').first().parent().select('Warning (none)')
+    cy.findByText('Suspension Duration').should('be.visible')
+    cy.findAllByText('Select duration').first().parent().should('be.visible').select('Warning (none)')
     clickOnButton('Confirm Suspend Club')
+    cy.findByText('Can be unsuspended').should('be.visible')
   })
 
   it('login as suspended club and unsuspend', () => {

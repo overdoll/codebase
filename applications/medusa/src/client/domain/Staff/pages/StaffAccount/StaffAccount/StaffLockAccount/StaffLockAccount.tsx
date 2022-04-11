@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { StaffLockAccountFragment$key } from '@//:artifacts/StaffLockAccountFragment.graphql'
-import { Stack } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import BooleanHeader from '../../../../components/BooleanHeader/BooleanHeader'
@@ -44,10 +44,13 @@ export default function StaffLockAccount ({ query }: Props): JSX.Element {
       </PageSectionWrap>
       <Stack spacing={2}>
         <BooleanHeader isEnabled={isLocked} />
-        {!hasPassed && (
-          <SmallBackgroundBox>
-            {remaining}
-          </SmallBackgroundBox>)}
+        <SmallBackgroundBox>
+          <Flex w='100%' h='100%' align='center' justify='center'>
+            <Text color='gray.00' fontSize='lg'>
+              {hasPassed ? <Trans>Can be unlocked</Trans> : remaining}
+            </Text>
+          </Flex>
+        </SmallBackgroundBox>
         <Collapse>
           <CollapseButton>
             {isLocked
