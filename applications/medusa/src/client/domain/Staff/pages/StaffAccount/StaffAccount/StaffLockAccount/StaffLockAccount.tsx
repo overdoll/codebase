@@ -44,13 +44,15 @@ export default function StaffLockAccount ({ query }: Props): JSX.Element {
       </PageSectionWrap>
       <Stack spacing={2}>
         <BooleanHeader isEnabled={isLocked} />
-        <SmallBackgroundBox>
-          <Flex w='100%' h='100%' align='center' justify='center'>
-            <Text color='gray.00' fontSize='lg'>
-              {hasPassed ? <Trans>Can be unlocked</Trans> : remaining}
-            </Text>
-          </Flex>
-        </SmallBackgroundBox>
+        {isLocked && (
+          <SmallBackgroundBox>
+            <Flex w='100%' h='100%' align='center' justify='center'>
+              <Text color='gray.00' fontSize='lg'>
+                {hasPassed ? <Trans>Can be unlocked</Trans> : remaining}
+              </Text>
+            </Flex>
+          </SmallBackgroundBox>
+        )}
         <Collapse>
           <CollapseButton>
             {isLocked

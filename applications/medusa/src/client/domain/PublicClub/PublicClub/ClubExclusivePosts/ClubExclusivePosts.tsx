@@ -4,8 +4,8 @@ import type { ClubExclusivePostsFragment$key } from '@//:artifacts/ClubExclusive
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
-import { configMap } from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/constants'
-import { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
+import { configMap } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/constants'
+import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 
 interface Props {
   query: ClubExclusivePostsFragment$key
@@ -33,7 +33,7 @@ export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
   const {
     data,
     hasNext
-  } = usePaginationFragment<ClubPublicPageQuery, any>(
+  } = usePaginationFragment<PublicClubQuery, any>(
     Fragment,
     query
   )

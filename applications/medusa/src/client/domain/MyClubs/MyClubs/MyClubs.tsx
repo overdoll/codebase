@@ -8,9 +8,11 @@ import { ClubPeopleGroup } from '@//:assets/icons'
 import PageInfiniteScrollWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import { Box, HStack, Stack } from '@chakra-ui/react'
-import FixedHeaderWrapper from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
+import FixedHeaderWrapper
+  from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import LockedAccountTrigger from '../../Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
-import PostSearchButton from '../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PostSearchButton
+  from '../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import PageFixedHeader from '../../../../modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
 
 interface Props {
@@ -18,8 +20,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query MyClubsQuery($search: String) {
-    ...SuggestedClubsFragment
+  query MyClubsQuery {
     viewer {
       ...ClubPostsFeedFragment
       ...ClubPostsFeedViewerFragment

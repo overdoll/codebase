@@ -1,23 +1,28 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
-import type { ClubPostsQuery as ClubPostsQueryType } from '@//:artifacts/ClubPostsQuery.graphql'
+import type { ClubPostsQuery as ClubPostsQueryType, PostState } from '@//:artifacts/ClubPostsQuery.graphql'
 import ClubPostsQuery from '@//:artifacts/ClubPostsQuery.graphql'
 import ClubPosts from './ClubPosts/ClubPosts'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
 import { Box, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { useQueryParam } from 'use-query-params'
 import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
-import Select from '@//:modules/form/Select/Select'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import SearchSelect from '@//:modules/content/HookedComponents/Search/components/SearchSelect/SearchSelect'
 
 interface Props {
   prepared: {
     query: PreloadedQuery<ClubPostsQueryType>
   }
+}
+
+interface SearchProps {
+  slug: string
+  state: PostState | null | undefined
 }
 
 export default function RootClubPosts (props: Props): JSX.Element {
@@ -28,18 +33,16 @@ export default function RootClubPosts (props: Props): JSX.Element {
 
   const match = useParams()
 
-  const [postState, setPostState] = useQueryParam<'PUBLISHED' | 'DRAFT' | 'REVIEW' | 'REJECTED' | null | undefined>('state')
-
-  const onChange = (e): void => {
-    setPostState(e.target.value === '' ? undefined : e.target.value)
-  }
-
-  useEffect(() => {
-    loadQuery({
+  const {
+    searchArguments,
+    register
+  } = useSearch<SearchProps>({
+    defaultValue: {
       slug: match.slug as string,
-      state: postState
-    })
-  }, [postState])
+      state: null
+    },
+    onChange: (args) => loadQuery({ ...args.variables })
+  })
 
   return (
     <>
@@ -56,10 +59,10 @@ export default function RootClubPosts (props: Props): JSX.Element {
                 Club Posts
               </PageSectionTitle>
             </PageSectionWrap>
-            <Select
+            <SearchSelect
+              variant='outline'
               placeholder='All Posts'
-              defaultValue={postState ?? undefined}
-              onChange={onChange}
+              {...register('state', 'change')}
             >
               <option value='PUBLISHED'>
                 <Trans>
@@ -91,9 +94,9 @@ export default function RootClubPosts (props: Props): JSX.Element {
                   Removed
                 </Trans>
               </option>
-            </Select>
+            </SearchSelect>
           </Box>
-          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
+          <QueryErrorBoundary loadQuery={() => loadQuery({ ...searchArguments.variables })}>
             <Suspense fallback={<SkeletonRectangleGrid />}>
               <ClubPosts query={queryRef as PreloadedQuery<ClubPostsQueryType>} />
             </Suspense>

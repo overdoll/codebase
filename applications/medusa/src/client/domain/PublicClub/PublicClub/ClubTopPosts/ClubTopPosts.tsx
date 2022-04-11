@@ -4,7 +4,7 @@ import type { ClubTopPostsFragment$key } from '@//:artifacts/ClubTopPostsFragmen
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
-import { ClubPublicPageQuery } from '@//:artifacts/ClubPublicPageQuery.graphql'
+import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 
 interface Props {
   query: ClubTopPostsFragment$key
@@ -32,7 +32,7 @@ export default function ClubTopPosts ({ query }: Props): JSX.Element {
   const {
     data,
     hasNext
-  } = usePaginationFragment<ClubPublicPageQuery, any>(
+  } = usePaginationFragment<PublicClubQuery, any>(
     Fragment,
     query
   )

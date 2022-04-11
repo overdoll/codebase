@@ -7,8 +7,7 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
-import JoinClubFromTile
-  from '../../../../PublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
+import JoinClubFromTile from '../../../../PublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -62,32 +61,34 @@ export default function SuggestedClubs ({
   )
 
   return (
-    <EmptyBoundary
-      fallback={
-        <SmallBackgroundBox>
-          <Trans>No clubs found</Trans>
-        </SmallBackgroundBox>
-      }
-      condition={data.clubs.edges.length < 1}
-    >
-      <GridWrap>
-        {data.clubs.edges.map((item, index) =>
-          <Box key={index} h='100%'>
-            <GridTile key={index}>
-              <LinkTile to={`/${item.node.slug as string}`}>
-                <ClubTileOverlay query={item.node} />
-              </LinkTile>
-            </GridTile>
-            <Box mt={2}>
-              <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={queryData?.viewer} />
-            </Box>
-          </Box>)}
-        <LoadMoreGridTile
-          hasNext={hasNext}
-          onLoadNext={() => loadNext(9)}
-          isLoadingNext={isLoadingNext}
-        />
-      </GridWrap>
-    </EmptyBoundary>
+    <>
+      <EmptyBoundary
+        fallback={
+          <SmallBackgroundBox>
+            <Trans>No clubs found</Trans>
+          </SmallBackgroundBox>
+        }
+        condition={data.clubs.edges.length < 1}
+      >
+        <GridWrap>
+          {data.clubs.edges.map((item, index) =>
+            <Box key={index} h='100%'>
+              <GridTile key={index}>
+                <LinkTile to={`/${item.node.slug as string}`}>
+                  <ClubTileOverlay query={item.node} />
+                </LinkTile>
+              </GridTile>
+              <Box mt={2}>
+                <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={queryData?.viewer} />
+              </Box>
+            </Box>)}
+          <LoadMoreGridTile
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(9)}
+            isLoadingNext={isLoadingNext}
+          />
+        </GridWrap>
+      </EmptyBoundary>
+    </>
   )
 }

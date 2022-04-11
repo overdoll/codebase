@@ -2602,7 +2602,7 @@ const routes: Route[] = [
           params,
           query
         }) => {
-          const Query = require('@//:artifacts/ClubPublicPageQuery.graphql')
+          const Query = require('@//:artifacts/PublicClubQuery.graphql')
           return {
             query: {
               query: Query,
@@ -2648,7 +2648,7 @@ const routes: Route[] = [
           query,
           params
         }) => {
-          const Query = require('@//:artifacts/ClubPublicPostsQuery.graphql')
+          const Query = require('@//:artifacts/PublicClubPostsQuery.graphql')
           return {
             query: {
               query: Query,
