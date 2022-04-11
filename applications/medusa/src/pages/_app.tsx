@@ -1,29 +1,29 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { CacheProvider } from '@emotion/react'
 import theme from '../client/theme'
-import { Suspense, useEffect, useMemo } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { getEnvironment } from '@//:modules/relay/environment'
 import { ReactRelayContext } from 'react-relay'
 import { I18nProvider } from '@lingui/react'
-import { i18n as clientI18n, setupI18n } from '@lingui/core'
+import { setupI18n } from '@lingui/core'
 import NextApp from 'next/app'
-import fetchQuery, {
-  addToOperationResponseCache,
-  getOperationResponseCacheKey,
-  resetOperationResponseCache
-} from '@//:modules/relay/fetchQuery'
+import fetchQuery, { addToOperationResponseCache, getOperationResponseCacheKey } from '@//:modules/relay/fetchQuery'
 import Root from '../client/domain/Root/Root'
 import 'swiper/swiper.min.css'
 import '../client/components/PostsInfiniteScroll/css/scrollbar.min.css'
 import setupSecurityToken from './security'
-import * as plurals from 'make-plural'
 import createCache from '@emotion/cache'
 import NextQueryParamProvider from './NextQueryParamProvider'
 import { CookiesProvider } from 'react-cookie'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import { FlashProvider } from '@//:modules/flash'
+import Cookies from 'universal-cookie'
+import { useRouter } from 'next/router'
+import { initializeLocaleData } from '@//:modules/locale'
 
 const IS_SERVER = typeof window === typeof undefined
+
+let securityTokenCache = ''
 
 const clientFetch = (securityToken) => {
   return async (data) => await fetch(
@@ -91,44 +91,65 @@ export default function App ({
   componentProps,
   requestProps,
   securityToken,
-  i18n
+  i18n,
+  translationProps
 }): JSX.Element {
+  if (!IS_SERVER) {
+    securityTokenCache = securityToken
+  }
+
   // For initial request and transitions to pages that export `getServerSideProps`,
   // `RelayApp.getInitialProps` isn't invoked on the client and props are sent over the wire.
   // So we always create an environment (or use a previously created and cached one) on the client.
+  environment = useMemo(() => (IS_SERVER ? environment : getEnvironment(clientFetch(securityTokenCache))), [])
 
-  environment = useMemo(() => (IS_SERVER ? environment : getEnvironment(clientFetch(securityToken))), [])
+  const router = useRouter()
+  const locale: string = router.locale ?? router.defaultLocale
+
+  // Set up localization - either grab the value from the server or memoize a new instance for the client
   i18n = useMemo(() => {
-    if (IS_SERVER) return i18n
-    clientI18n.loadLocaleData('en', { plurals: plurals.en })
-    clientI18n.activate('en', [])
-    return clientI18n
+    const targetI18n = IS_SERVER ? i18n : setupI18n()
+    initializeLocaleData(locale, targetI18n)
+    return targetI18n
   }, [])
+
+  const firstRender = useRef(true)
+  // Load localization data into lingui
+  if (translationProps != null && firstRender.current) {
+    i18n.load(locale, translationProps)
+    i18n.activate(locale)
+    firstRender.current = false
+  }
+
+  // listen for the locale changes
+  useEffect(() => {
+    if (translationProps != null) {
+      i18n.load(locale, translationProps)
+      i18n.activate(locale)
+    }
+  }, [locale, translationProps])
+
   const emotionCache = useMemo(() => createCache({ key: 'od' }), [])
 
-  useEffect(() => {
-    if (IS_SERVER) {
-      throw new Error('useEffect unexpectedly invoked on server')
-    }
+  if (!IS_SERVER) {
+    useMemo(() => {
+      addPreloadedQueryResultsToCache(requestProps)
 
-    addPreloadedQueryResultsToCache(requestProps)
-
-    // Adjusting preloaded queries to be consumable in the `usePreloadedQuery`.
-    // `preloadedQuery` is the return value of the `loadQuery` function. But
-    // we cannot use these results directly in the Next.js (as these are not serializable)
-    // for that we're creating a `SerializedPreloadedQuery` object, and adjusting it to look
-    // like the result of the `loadQuery` with the correct environment
-    Object.entries(componentProps.queryRefs ?? {}).forEach(
-      ([_, preloadedQuery]) => {
-        if (preloadedQuery.kind === 'SerializedPreloadedQuery') {
-          preloadedQuery.kind = 'PreloadedQuery'
-          preloadedQuery.environment = environment
+      // Adjusting preloaded queries to be consumable in the `usePreloadedQuery`.
+      // `preloadedQuery` is the return value of the `loadQuery` function. But
+      // we cannot use these results directly in the Next.js (as these are not serializable)
+      // for that we're creating a `SerializedPreloadedQuery` object, and adjusting it to look
+      // like the result of the `loadQuery` with the correct environment
+      Object.entries(componentProps.queryRefs ?? {}).forEach(
+        ([_, preloadedQuery]) => {
+          if (preloadedQuery.kind === 'SerializedPreloadedQuery') {
+            preloadedQuery.kind = 'PreloadedQuery'
+            preloadedQuery.environment = environment
+          }
         }
-      }
-    )
-
-    return resetOperationResponseCache
-  }, [requestProps, componentProps])
+      )
+    }, [requestProps, componentProps])
+  }
 
   return (
     <NextQueryParamProvider>
@@ -157,36 +178,43 @@ export default function App ({
 
 //
 App.getInitialProps = async function (app) {
-  const securityToken = setupSecurityToken(app.ctx)
-
+  let securityToken
   let environment = null
-  let fetchFn
   let i18n
+  let fetchFn
 
   if (IS_SERVER) {
+    securityToken = setupSecurityToken(app.ctx)
     fetchFn = serverFetch(app.ctx.req, app.ctx.res)
     environment = getEnvironment(fetchFn)
-    const serverI18n = setupI18n()
-    serverI18n.loadLocaleData('en', { plurals: plurals.en })
-    serverI18n.activate('en', [])
-    i18n = serverI18n
+    i18n = setupI18n()
+    app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {
+    securityToken = securityTokenCache
     fetchFn = clientFetch(securityToken)
-    i18n = clientI18n
+    app.ctx.cookies = new Cookies()
   }
 
   const componentProps = {}
   const requestProps = {}
+  let translationProps = {}
   let queries = {}
 
-  // root is a separate one - we also run this
   if (Root.getRelayPreloadProps != null) {
     queries = { ...queries, ...Root.getRelayPreloadProps(app.ctx).queries }
+  }
+
+  if (Root.getTranslationProps != null) {
+    translationProps = { ...translationProps, ...await Root.getTranslationProps(app.ctx) }
   }
 
   // Component represents a page with relay preloading enabled
   if (app.Component.getRelayPreloadProps != null) {
     queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
+  }
+
+  if (app.Component.getTranslationProps != null) {
+    translationProps = { ...translationProps, ...await app.Component.getTranslationProps(app.ctx) }
   }
 
   // preload query results on the server and flush them with requestProps
@@ -237,7 +265,8 @@ App.getInitialProps = async function (app) {
     i18n,
     componentProps,
     requestProps,
-    securityToken
+    securityToken,
+    translationProps
   }
 }
 

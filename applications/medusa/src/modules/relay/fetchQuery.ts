@@ -15,7 +15,7 @@ export const getOperationResponseCacheKey = (operation, variables) => {
   return `${operation.id}_${JSON.stringify(variables)}`
 }
 
-export const resetOperationResponseCache = () => {
+export const resetOperationResponseCache = (): void => {
   operationResponseCache = {}
 }
 
@@ -24,7 +24,8 @@ const withPreloaderCache = (fetchFn) => {
     const cacheKey = getOperationResponseCacheKey(operation, variables)
     const cachedResponse = operationResponseCache[cacheKey]
     if (cachedResponse != null) {
-      delete operationResponseCache[cacheKey]
+      // TODO: should empty cache, but right now it double-renders because of a weird error, so we skip for now
+      //   delete operationResponseCache[cacheKey]
       return Promise.resolve(cachedResponse)
     }
     return fetchFn(operation, variables)
@@ -42,7 +43,7 @@ const withModuleLoader = (fetchFn) => {
   }
 }
 
-const registerModuleLoaders = (modules) => {
+const registerModuleLoaders = (modules): void => {
   modules.forEach((module) => {
     registerLoader(module, async () => await import(`../../__generated__/${module}`))
   })
@@ -50,9 +51,7 @@ const registerModuleLoaders = (modules) => {
 
 const fetchFunction = (fetchFn) => withModuleLoader(
   withPreloaderCache(async (operation, variables) => {
-    // TODO: figure out how not to use hardcoded hostname and port
-    // TODO: consider bypassing api fetch and directly invoking graphql on server
-    return await fetchFn({
+    return fetchFn({
       operationName: operation.name,
       query: 'PERSISTED_QUERY',
       variables,

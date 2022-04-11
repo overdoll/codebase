@@ -2,13 +2,14 @@ import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import { LanguageManagerQuery } from '@//:artifacts/LanguageManagerQuery.graphql'
 import { ChangeEvent, useEffect } from 'react'
 import { LanguageManagerMutation } from '@//:artifacts/LanguageManagerMutation.graphql'
-import { useHistory } from '@//:modules/routing'
 import { useFragment } from 'react-relay'
 import { LanguageManagerAccountMutation } from '@//:artifacts/LanguageManagerAccountMutation.graphql'
 import { LanguageManagerFragment$key } from '@//:artifacts/LanguageManagerFragment.graphql'
 import { t } from '@lingui/macro'
 import Select from '@//:modules/form/Select/Select'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { useRouter } from 'next/router'
+
 interface Props {
   queryRef: LanguageManagerFragment$key | null
 }
@@ -64,7 +65,8 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
   const [updateBrowserLanguage, isUpdatingBrowserLanguage] = useMutation<LanguageManagerMutation>(LanguageManagerMutationGQL)
   const [updateAccountLanguage, isUpdatingAccountLanguage] = useMutation<LanguageManagerAccountMutation>(LanguageManagerAccountMutationGQL)
 
-  const history = useHistory()
+  const router = useRouter()
+
   const notify = useToast()
 
   // if account language does not match up with the current language, change the language
@@ -106,13 +108,12 @@ export default function LanguageManager ({ queryRef }: Props): JSX.Element {
                 return
               }
 
-              history.go(0)
+              router.reload()
             }
           })
           return
         }
-
-        history.go(0)
+        router.reload()
       }
     })
   }

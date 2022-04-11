@@ -51,7 +51,6 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
 
   return (
     <NavLink
-      exact={exact}
       to={to}
     >
       {({

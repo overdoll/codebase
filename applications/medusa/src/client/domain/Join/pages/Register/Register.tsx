@@ -3,7 +3,6 @@ import { Link, Stack, Text } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { BadgeCircle } from '@//:assets/icons/navigation'
@@ -15,6 +14,7 @@ import { useFlash } from '@//:modules/flash'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
+import Head from 'next/head'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -102,9 +102,9 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>Create Your Account :: overdoll</title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon

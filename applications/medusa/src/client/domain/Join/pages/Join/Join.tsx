@@ -1,6 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Stack } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import { BadgeCircle } from '@//:assets/icons/navigation'
@@ -11,6 +10,7 @@ import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import Head from 'next/head'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -103,9 +103,9 @@ export default function Join ({
   // Ask user to authenticate
   return (
     <>
-      <Helmet>
+      <Head>
         <title>Join :: overdoll</title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon

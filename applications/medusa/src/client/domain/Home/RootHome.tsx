@@ -33,6 +33,16 @@ const RootHome = (props: Props): JSX.Element => {
   )
 }
 
+RootHome.getTranslationProps = async (ctx) => {
+  const translation = await import(
+    `./__locale__/${ctx.locale as string}/index.js`
+  )
+
+  return {
+    ...translation.messages
+  }
+}
+
 RootHome.getRelayPreloadProps = () => ({
   queries: {
     homeQuery: {

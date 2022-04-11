@@ -3,12 +3,12 @@ import { Suspense, useCallback, useEffect, useState, useTransition } from 'react
 import Register from './pages/Register/Register'
 import Lobby from './pages/Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
+import JoinRootData from '@//:artifacts/JoinRootQuery.graphql'
 import Join from './pages/Join/Join'
 import Grant from './pages/Grant/Grant'
 import MultiFactor from './pages/MultiFactor/MultiFactor'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
-import Root from '../Root/Root'
 
 interface Props {
   queryRefs: {
@@ -125,13 +125,32 @@ const JoinRoot = (props: Props): JSX.Element => {
   return (<Grant queryRef={data} />)
 }
 
-JoinRoot.getRelayPreloadProps = () => ({
-  queries: {
-    joinQuery: {
-      params: JoinTokenStatus.params,
-      variables: {}
+JoinRoot.getTranslationProps = async (ctx) => {
+  const translation = await import(
+    `./__locale__/${ctx.locale as string}/index.js`
+  )
+
+  return {
+    ...translation.messages
+  }
+}
+
+JoinRoot.getRelayPreloadProps = (ctx) => {
+  let tokenCookie = ctx.cookies.get('token')
+
+  if (tokenCookie != null) {
+    tokenCookie = tokenCookie.split(';')[0]
+  }
+  return {
+    queries: {
+      joinQuery: {
+        params: JoinRootData.params,
+        variables: {
+          token: tokenCookie ?? ''
+        }
+      }
     }
   }
-})
+}
 
-export default Root
+export default JoinRoot

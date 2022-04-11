@@ -8,7 +8,7 @@ import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { Trans } from '@lingui/macro'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
-import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   refresh: () => void
@@ -53,9 +53,9 @@ export default function Lobby ({
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>Waiting For Authentication :: overdoll</title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={8}>
           <Icon

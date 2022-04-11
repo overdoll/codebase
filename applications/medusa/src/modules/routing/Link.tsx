@@ -1,7 +1,7 @@
-import { useRoutingContext } from './RoutingContext'
 import { useCallback, useTransition } from 'react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../support/runIfFunction'
+import { useRouter } from 'next/router'
 
 export interface ChildrenCallableLink {
   isPending: boolean
@@ -22,7 +22,7 @@ export default function Link ({
   disabled = false,
   to
 }: Props): JSX.Element {
-  const router = useRoutingContext()
+  const router = useRouter()
 
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
@@ -32,9 +32,9 @@ export default function Link ({
   // When the user clicks, change route
   const changeRoute = useCallback(
     event => {
+      event.preventDefault()
       startTransition(() => {
-        event.preventDefault()
-        router.history.push(to)
+        void router.push(to)
       })
     },
     [to, router]
@@ -44,14 +44,7 @@ export default function Link ({
   // we pass this to onMouseEnter, which is a weaker signal
   // that the user *may* navigate to the route.
   const preloadRouteCode = useCallback(() => {
-    router.preloadCode(to)
-  }, [to, router])
-
-  // Callback to preload the code and data for the route:
-  // we pass this to onMouseDown, since this is a stronger
-  // signal that the user will likely complete the navigation
-  const preloadRoute = useCallback(() => {
-    router.preload(to)
+    void router.prefetch(to)
   }, [to, router])
 
   if (disabled || isPending) {
@@ -67,7 +60,6 @@ export default function Link ({
       href={to}
       onClick={changeRoute}
       onMouseEnter={preloadRouteCode}
-      onMouseDown={preloadRoute}
     >
       {runIfFunction(children, { isPending })}
     </a>

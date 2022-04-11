@@ -10,7 +10,7 @@ import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -91,9 +91,9 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
   // Ask user to authenticate
   return (
     <>
-      <Helmet>
+      <Head>
         <title>Logging In... :: overdoll</title>
-      </Helmet>
+      </Head>
       <Flex
         mt={40}
         h='100%'

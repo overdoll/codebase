@@ -169,7 +169,11 @@ func (m *Club) UnSuspend(requester *principal.Principal) error {
 		return err
 	}
 
-	if !m.suspendedUntil.After(time.Now()) {
+	if !m.suspended {
+		return nil
+	}
+
+	if !time.Now().After(*m.suspendedUntil) {
 		return errors.New("cannot un suspend yet")
 	}
 

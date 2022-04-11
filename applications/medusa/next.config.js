@@ -45,8 +45,11 @@ module.exports = {
       }
     ]
   },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en'
+  },
   experimental: {
-    externalDir: true,
     runtime: 'nodejs',
     concurrentFeatures: true
   },
