@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package applications.grpc.ringer.v1;
+
+service Ringer {
+  rpc ClubPaymentDeposit(ClubPaymentDeposit) returns (google.protobuf.Empty) {}
+  rpc ClubPaymentDeduction(ClubPaymentDeduction) returns (google.protobuf.Empty) {}
+}
+
+enum PaymentSource {
+  CLUB_SUPPORTER_SUBSCRIPTION = 0;
+}
+
+message Payment {
+  int64 amount = 1;
+  string currency = 2;
+}
+
+message ClubPaymentDeposit {
+  string accountTransactionId = 1;
+  string sourceAccountId = 2;
+  string destinationClubId = 3;
+  Payment payment = 4;
+  google.protobuf.Timestamp timestamp = 5;
+  PaymentSource source = 6;
+}
+
+message ClubPaymentDeduction {
+  string accountTransactionId = 1;
+  string sourceAccountId = 2;
+  string destinationClubId = 3;
+  Payment payment = 4;
+  google.protobuf.Timestamp timestamp = 5;
+  PaymentSource source = 6;
+}

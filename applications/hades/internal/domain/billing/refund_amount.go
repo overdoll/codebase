@@ -1,16 +1,17 @@
 package billing
 
 import (
+	"overdoll/libraries/money"
 	"time"
 )
 
 type RefundAmount struct {
 	proratedAmount int64
 	maxAmount      int64
-	currency       Currency
+	currency       money.Currency
 }
 
-func newRefundAmountWithProrated(originalAmount int64, currency Currency, lastBillingDate time.Time, nextBillingDate time.Time) (*RefundAmount, error) {
+func newRefundAmountWithProrated(originalAmount int64, currency money.Currency, lastBillingDate time.Time, nextBillingDate time.Time) (*RefundAmount, error) {
 
 	// 30 days
 	daysDifferenceBilling := nextBillingDate.Sub(lastBillingDate).Hours() / 24
@@ -39,6 +40,6 @@ func (r *RefundAmount) MaxAmount() int64 {
 	return r.maxAmount
 }
 
-func (r *RefundAmount) Currency() Currency {
+func (r *RefundAmount) Currency() money.Currency {
 	return r.currency
 }

@@ -2,6 +2,7 @@ package billing
 
 import (
 	"errors"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -16,7 +17,7 @@ type SavedPaymentMethod struct {
 
 	accountId string
 	id        string
-	currency  Currency
+	currency  money.Currency
 
 	paymentMethod *PaymentMethod
 
@@ -26,7 +27,7 @@ type SavedPaymentMethod struct {
 }
 
 func NewSavedPaymentMethodFromCCBill(accountId string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, currency string) (*SavedPaymentMethod, error) {
-	cr, _ := CurrencyFromString(currency)
+	cr, _ := money.CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   *ccbillSubscriptionId,
@@ -61,7 +62,7 @@ func (c *SavedPaymentMethod) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
-func (c *SavedPaymentMethod) Currency() Currency {
+func (c *SavedPaymentMethod) Currency() money.Currency {
 	return c.currency
 }
 
@@ -87,7 +88,7 @@ func (c *SavedPaymentMethod) CanDelete(requester *principal.Principal) error {
 }
 
 func UnmarshalSavedPaymentMethodFromDatabase(accountId, id string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, updatedAt time.Time, currency string) *SavedPaymentMethod {
-	cr, _ := CurrencyFromString(currency)
+	cr, _ := money.CurrencyFromString(currency)
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   id,

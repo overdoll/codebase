@@ -80,14 +80,6 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
-	// an existing subscription was found, so we need to tell it to void this new subscription
-	if subscription != nil {
-		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
-			DuplicateSupportSameSubscription:      false,
-			DuplicateSupportDifferentSubscription: true,
-		}, nil
-	}
-
 	// if we reached here, we have a brand new subscription, so we construct it
 
 	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
@@ -165,6 +157,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		accountingRecurringPrice,
 		input.AccountingCurrency,
 		input.IdempotencyKey,
+		subscription != nil,
 	)
 
 	if err != nil {
@@ -173,6 +166,14 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 
 	if err := h.billing.CreateCCBillSubscriptionDetailsOperator(ctx, ccbillSubscription); err != nil {
 		return nil, err
+	}
+
+	// an existing subscription was found, so we need to tell it to void this new subscription
+	if ccbillSubscription.Duplicate() {
+		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
+			DuplicateSupportSameSubscription:      false,
+			DuplicateSupportDifferentSubscription: true,
+		}, nil
 	}
 
 	// new ccbill subscription record was created

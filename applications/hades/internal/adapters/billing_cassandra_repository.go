@@ -263,6 +263,8 @@ var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
 		"accounting_currency",
 
 		"idempotency_key",
+
+		"duplicate",
 	},
 	PartKey: []string{"ccbill_subscription_id"},
 	SortKey: []string{},
@@ -288,6 +290,7 @@ type ccbillSubscriptionDetails struct {
 	AccountingCurrency       string `db:"accounting_currency"`
 
 	IdempotencyKey string `db:"idempotency_key"`
+	Duplicate      bool   `db:"duplicate"`
 }
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
@@ -1387,6 +1390,7 @@ func (r BillingCassandraRepository) GetCCBillSubscriptionDetailsByIdOperator(ctx
 		ccbillSubscription.AccountingRecurringPrice,
 		ccbillSubscription.AccountingCurrency,
 		ccbillSubscription.IdempotencyKey,
+		ccbillSubscription.Duplicate,
 	), nil
 }
 

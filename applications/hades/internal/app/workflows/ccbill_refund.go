@@ -39,6 +39,11 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	// ignore duplicate subscription
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {

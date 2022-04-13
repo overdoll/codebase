@@ -34,6 +34,11 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
+	// ignore duplicate subscription
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -34,7 +35,7 @@ func Test_ChargeByPrevious_Refund(t *testing.T) {
 		requester,
 		uuid.New().String(),
 		existingSubscriptionId,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
+		billing.UnmarshalPricingFromDatabase(money.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")
@@ -84,7 +85,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 		requester,
 		uuid.New().String(),
 		existingSubscriptionId2,
-		billing.UnmarshalPricingFromDatabase(billing.USD, 699),
+		billing.UnmarshalPricingFromDatabase(money.USD, 699),
 	)
 
 	require.NoError(t, err, "no error generating a chargeByPrevious url")
