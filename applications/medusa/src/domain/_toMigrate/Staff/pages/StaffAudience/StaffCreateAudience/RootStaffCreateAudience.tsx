@@ -9,6 +9,7 @@ import StaffCreateAudienceQuery, {
 } from '@//:artifacts/StaffCreateAudienceQuery.graphql'
 import StaffCreateAudience from './StaffCreateAudience/StaffCreateAudience'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -24,11 +25,11 @@ export default function RootStaffCreateAudience (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Create Audience - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

@@ -56,7 +56,7 @@ const CatchAll: PageProps<{}> = (): JSX.Element => {
             <LinkButton
               size='lg'
               colorScheme='primary'
-              to='/'
+              href='/'
             >
               <Trans>
                 Home

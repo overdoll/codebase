@@ -66,7 +66,7 @@ export default function StaffSearchCategories ({ searchArguments }: Props): JSX.
       <GridWrap justify='center'>
         {categories.map((item, index) => (
           <GridTile key={index}>
-            <LinkTile to={`/staff/category/search/${item.slug as string}`}>
+            <LinkTile href={`/staff/category/search/${item.slug as string}`}>
               <CategoryTileOverlay query={item} />
             </LinkTile>
           </GridTile>

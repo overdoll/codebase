@@ -4,19 +4,16 @@ import { Trans } from '@lingui/macro'
 
 export default function SiteLinkLogo (): JSX.Element {
   return (
-    <Link to='/'>
-      {({ isPending }) => (
-        <Button
-          textColor='primary.500'
-          fontWeight='bold'
-          fontFamily='heading'
-          variant='link'
-          colorScheme='primary'
-          isLoading={isPending}
-        >
-          <Trans>overdoll</Trans>
-        </Button>
-      )}
+    <Link href='/'>
+      <Button
+        textColor='primary.500'
+        fontWeight='bold'
+        fontFamily='heading'
+        variant='link'
+        colorScheme='primary'
+      >
+        <Trans>overdoll</Trans>
+      </Button>
     </Link>
   )
 }

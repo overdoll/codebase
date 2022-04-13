@@ -1,5 +1,5 @@
-import { Heading, HStack, Spinner } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { Heading, HStack } from '@chakra-ui/react'
+import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import { ShareExternalLink } from '@//:assets/icons/interface'
 import { ClickableBox, Icon } from '../../../../PageLayout'
 
@@ -10,34 +10,25 @@ interface Props {
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
   isActive: boolean
-  isPending: boolean
+  onClick?: (() => void) | undefined
 }
 
-export default function VerticalNavigationButtonBody ({
+const VerticalNavigationButtonBody = forwardRef<any, Props>(({
   title,
   icon,
   colorScheme = 'gray',
   buttonType = 'secondary',
   isExternal = false,
   isActive,
-  isPending
-}: Props): JSX.Element {
+  onClick,
+  ...rest
+}: Props, forwardedRef): JSX.Element => {
   const IconComponent = (): JSX.Element => {
     const color = isActive
       ? 'gray.00'
       : buttonType === 'primary'
         ? `${colorScheme}.900`
         : 'gray.200'
-
-    if (isPending) {
-      return (
-        <Spinner
-          w={4}
-          h={4}
-          color={color}
-        />
-      )
-    }
 
     if (icon == null) {
       return <></>
@@ -54,6 +45,7 @@ export default function VerticalNavigationButtonBody ({
   }
   return (
     <ClickableBox
+      ref={forwardedRef}
       h={10}
       borderRadius='md'
       _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'initial' }}
@@ -63,6 +55,7 @@ export default function VerticalNavigationButtonBody ({
         : buttonType === 'primary'
           ? `${colorScheme}.400`
           : 'transparent'}
+      onClick={onClick}
     >
       <HStack
         w='100%'
@@ -96,4 +89,6 @@ export default function VerticalNavigationButtonBody ({
       </HStack>
     </ClickableBox>
   )
-}
+})
+
+export default VerticalNavigationButtonBody

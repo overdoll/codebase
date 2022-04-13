@@ -25,7 +25,7 @@ export default function StaffAccountTransactionSubscription ({ query }: Props): 
   const data = useFragment(Fragment, query)
 
   return (
-    <TableBodyRowLink to={`/staff/subscription/${data?.clubSupporterSubscription?.reference as string}`}>
+    <TableBodyRowLink href={`/staff/subscription/${data?.clubSupporterSubscription?.reference as string}`}>
       <StaffClubSupporterSubscriptionPreview query={data.clubSupporterSubscription} />
     </TableBodyRowLink>
   )

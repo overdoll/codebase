@@ -13,14 +13,14 @@ export default function MainMenu (): JSX.Element {
       <HorizontalNavigation.Button
         exact
         colorScheme='primary'
-        to='/'
+        href='/'
         icon={BirdHouse}
         label={i18n._(t`Home`)}
       />
       <HorizontalNavigation.Button
         exact
         colorScheme='primary'
-        to='/clubs'
+        href='/clubs'
         icon={ClubPeopleGroup}
         label={i18n._(t`My Clubs`)}
       />
@@ -31,7 +31,7 @@ export default function MainMenu (): JSX.Element {
         <HorizontalNavigation.Button
           exact
           colorScheme='primary'
-          to='/join'
+          href='/join'
           icon={ContentBrushPen}
           label={i18n._(t`Create a Post`)}
         />

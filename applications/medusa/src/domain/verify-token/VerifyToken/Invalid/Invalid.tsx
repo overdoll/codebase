@@ -28,7 +28,7 @@ export default function Invalid (): JSX.Element {
             size='lg'
             colorScheme='gray'
             variant='solid'
-            to='/join'
+            href='/join'
           >
             <Trans>
               Back to the Join page

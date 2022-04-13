@@ -50,7 +50,7 @@ export default function JoinClubFromPost ({
   if (viewerData == null) {
     return (
       <LinkButton
-        to={redirect}
+        href={redirect}
         colorScheme='primary'
         {...rest}
       >
@@ -64,7 +64,7 @@ export default function JoinClubFromPost ({
   if (isClubSupporter) {
     return (
       <LinkButton
-        to={`/${clubData.slug}`}
+        href={`/${clubData.slug}`}
         colorScheme='orange'
         leftIcon={(
           <Icon
@@ -86,7 +86,7 @@ export default function JoinClubFromPost ({
     return (
       <HStack spacing={2}>
         <LinkButton
-          to={`/${clubData.slug}?support=true`}
+          href={`/${clubData.slug}?support=true`}
           leftIcon={(
             <Icon
               icon={PremiumStar}

@@ -8,6 +8,7 @@ import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -37,11 +38,11 @@ export default function Profile (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           {queryData.account.username}'s Profile :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <Stack spacing={8}>
         <Box h={200}>
           <TileOverlay

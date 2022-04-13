@@ -83,7 +83,7 @@ export default function SavedPaymentMethodsSettings (props: Props): JSX.Element 
                 size='sm'
                 colorScheme='orange'
                 variant='solid'
-                to='/settings/security'
+                href='/settings/security'
               >
                 <Trans>
                   Set Up

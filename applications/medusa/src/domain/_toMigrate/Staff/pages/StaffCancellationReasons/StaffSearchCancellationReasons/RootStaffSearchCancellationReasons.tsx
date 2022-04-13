@@ -7,6 +7,7 @@ import { Trans } from '@lingui/macro'
 import StaffSearchCancellationReasons from './StaffSearchCancellationReasons/StaffSearchCancellationReasons'
 import { Stack } from '@chakra-ui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import Head from 'next/head'
 
 export default function RootStaffSearchCancellationReasons (): JSX.Element {
   const {
@@ -16,11 +17,11 @@ export default function RootStaffSearchCancellationReasons (): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Search Cancellation Reasons - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

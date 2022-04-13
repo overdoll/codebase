@@ -1,44 +1,49 @@
-import Link, { ChildrenCallableLink } from './Link'
-import { MaybeRenderProp } from '../../types/components'
+import Link from './Link'
+import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../support/runIfFunction'
 import { useRouter } from 'next/router'
+import { LinkProps } from 'next/link'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
 
-interface ChildrenCallable extends ChildrenCallableLink {
+interface ChildrenCallable {
   isActive: boolean
   isActiveBasePath: boolean
 }
 
-interface Props {
+interface Props extends LinkProps {
   children: MaybeRenderProp<ChildrenCallable>
-  to: string
 }
 
-// implementation taken from https://github.com/ReactTraining/react-router/blob/master/packages/react-router-dom/modules/NavLink.js
-// modified to work with our version of link (preloading, etc...)
-// as well as changing the link to use an isActive children prop since we use css-in-js and not classnames
+/**
+ * Modified version of the Link component but to tell us when the href is active
+ */
+
 const NavLink = ({
   children,
-  to,
+  href,
   ...rest
 }: Props): JSX.Element => {
-  const { pathname } = useRouter()
+  const router = useRouter()
 
-  const isActiveBasePath = pathname.includes(to)
+  const {
+    asPath
+  } = router
 
-  const isActive = pathname === to
+  const [, resolved] = resolveHref(router, href, true)
+
+  const isActiveBasePath = asPath.startsWith(resolved)
+
+  const isActive = asPath === resolved
 
   return (
     <Link
+      href={href}
       {...rest}
-      to={to}
     >
-      {({ isPending }) => (
-        runIfFunction(children, {
-          isActive,
-          isActiveBasePath,
-          isPending
-        })
-      )}
+      {runIfFunction(children, {
+        isActive,
+        isActiveBasePath
+      })}
     </Link>
   )
 }

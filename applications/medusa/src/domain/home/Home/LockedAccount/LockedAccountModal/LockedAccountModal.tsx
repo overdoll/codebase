@@ -84,7 +84,7 @@ export default function LockedAccountModal ({
                   <LinkInline
                     isExternal
                     color='green.400'
-                    to={COMMUNITY_GUIDELINES}
+                    href={COMMUNITY_GUIDELINES}
                     fontSize='md'
                   >
                     <Trans>

@@ -45,7 +45,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
       <RenderOnDesktop>
         <Can not I='configure' a='Account'>
           <HorizontalNavigation.Button
-            to='/join'
+            href='/join'
             icon={LoginKeys}
             label={
               <Trans>
@@ -58,7 +58,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           <QuickAccessButtonProfile queryRef={data} />
         </Can>
         <HorizontalNavigation.Button
-          to='/help'
+          href='/help'
           icon={SafetyFloat}
           label={
             <Trans>
@@ -73,7 +73,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
       >
         <Can not I='configure' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
-            to='/join'
+            href='/join'
             icon={LoginKeys}
             colorScheme='green'
             label={
@@ -88,7 +88,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can I='staff' a='Tags'>
           <HorizontalNavigationDropdownMenu.Button
-            to='/staff'
+            href='/staff'
             colorScheme='purple'
             icon={LoginKeys}
             label={
@@ -100,7 +100,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can I='moderate' a='Post'>
           <HorizontalNavigationDropdownMenu.Button
-            to='/moderation/queue'
+            href='/moderation/queue'
             colorScheme='purple'
             icon={LoginKeys}
             label={
@@ -118,7 +118,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             <DropdownMenuButtonClub />
           </Suspense>
           <HorizontalNavigationDropdownMenu.Button
-            to='/settings/profile'
+            href='/settings/profile'
             colorScheme='green'
             icon={CogDouble}
             label={
@@ -129,7 +129,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           />
         </Can>
         <HorizontalNavigationDropdownMenu.Button
-          to='/help'
+          href='/help'
           colorScheme='primary'
           icon={SafetyFloat}
           label={
@@ -140,7 +140,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         />
         <Can I='configure' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
-            to='/logout'
+            href='/logout'
             color='orange.300'
             icon={SafetyExitDoorLeft}
             label={

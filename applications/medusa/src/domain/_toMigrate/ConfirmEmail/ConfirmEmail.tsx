@@ -7,6 +7,7 @@ import { useFlash } from '@//:modules/flash'
 import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -66,11 +67,11 @@ export default function ConfirmEmail (): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Confirming Email... :: overdoll
         </title>
-      </Helmet>
+      </Head>
       <Flex
         mt={40}
         h='100%'

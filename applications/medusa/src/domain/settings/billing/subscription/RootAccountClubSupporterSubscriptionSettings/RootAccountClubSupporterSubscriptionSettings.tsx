@@ -39,7 +39,7 @@ const RootAccountClubSupporterSubscriptionSettings: PageProps<Props> = (props: P
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/billing/subscriptions'>
+        <BackButton href='/settings/billing/subscriptions'>
           <Trans>
             Go back to My Subscriptions
           </Trans>

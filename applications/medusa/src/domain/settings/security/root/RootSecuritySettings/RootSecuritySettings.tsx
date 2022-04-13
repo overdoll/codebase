@@ -44,7 +44,7 @@ const RootSecuritySettings: PageProps<Props> = (props: Props) => {
                 </Trans>
               </PageSectionTitle>
             </PageSectionWrap>
-            <PagePanelWrap path='/settings/security/sessions'>
+            <PagePanelWrap href='/settings/security/sessions'>
               <PagePanelIcon icon={DesktopComputer} colorScheme='orange' />
               <PagePanelText
                 title={

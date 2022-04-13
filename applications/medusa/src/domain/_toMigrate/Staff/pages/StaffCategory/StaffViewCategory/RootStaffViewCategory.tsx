@@ -12,6 +12,7 @@ import StaffViewCategory from './StaffViewCategory/StaffViewCategory'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -29,14 +30,14 @@ export default function RootStaffViewCategory (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           View Categories - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={2}>
-          <BackButton to='/staff/category/search'>
+          <BackButton href='/staff/category/search'>
             <Trans>
               Back to search
             </Trans>

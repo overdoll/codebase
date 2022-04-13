@@ -53,7 +53,7 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                     Open the CCBill Support Center link using the button below
                   </Trans>
                 </Text>
-                <ExternalLink to={data.ccbillSubscription.link}>
+                <ExternalLink href={data.ccbillSubscription.link}>
                   <Button size='sm' colorScheme='teal'>
                     <Trans>
                       Open Generated Support Center Link
@@ -93,7 +93,7 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                     Navigate to the
                   </Trans>
                   {' '}
-                  <LinkInline isExternal color='teal.400' fontSize='sm' to='https://support.ccbill.com/'>
+                  <LinkInline isExternal color='teal.400' fontSize='sm' href='https://support.ccbill.com/'>
                     <Trans>
                       CCBill Support Center
                     </Trans>

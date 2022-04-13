@@ -11,6 +11,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useParams } from '@//:modules/routing/useParams'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import StaffAccountTransaction from './StaffAccountTransaction/StaffAccountTransaction'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -28,11 +29,11 @@ export default function RootStaffAccountTransaction (props: Props): JSX.Element 
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Transaction - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
           <Suspense fallback={<SkeletonStack />}>

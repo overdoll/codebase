@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid "Back to settings"
 #~ msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:79
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:80
 msgid "Current Session"
 msgstr ""
 
@@ -29,15 +29,15 @@ msgstr ""
 msgid "Here is a list of devices that have logged into your account. You can tap on one to view the details."
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:104
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:105
 msgid "IP Address"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:79
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:80
 msgid "Last Accessed {formattedDate}"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:134
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:135
 msgid "Last Login"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:114
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:115
 msgid "Location"
 msgstr ""
 
@@ -65,10 +65,10 @@ msgstr ""
 msgid "There was an error revoking the session"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:121
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:122
 msgid "Unknown"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:70
+#: src/domain/settings/security/sessions/RootSessionsSettings/SessionsSettings/SessionCard/SessionCard.tsx:71
 msgid "{0} on {1}"
 msgstr ""

@@ -17,7 +17,7 @@ export default function NotFoundFooter (): JSX.Element {
       <LinkButton
         colorScheme='primary'
         size='lg'
-        to='/'
+        href='/'
       >
         <Trans>
           Home

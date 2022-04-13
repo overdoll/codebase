@@ -73,7 +73,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
       <GridWrap justify='center'>
         {characters.map((item, index) => (
           <GridTile key={index}>
-            <LinkTile to={`/staff/character/search/${item.slug as string}/${item.series.slug as string}`}>
+            <LinkTile href={`/staff/character/search/${item.slug as string}/${item.series.slug as string}`}>
               <CharacterTileOverlay query={item} />
             </LinkTile>
           </GridTile>

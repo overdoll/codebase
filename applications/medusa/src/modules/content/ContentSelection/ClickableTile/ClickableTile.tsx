@@ -1,19 +1,20 @@
-import { Box, Flex, HTMLChakraProps, Spinner } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { Box, ButtonProps, Flex, Spinner } from '@chakra-ui/react'
+import { forwardRef, ReactNode } from 'react'
 import { ClickableBox } from '../../PageLayout'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends ButtonProps {
   children: ReactNode
   isPending?: boolean | undefined
 }
 
-export default function ClickableTile ({
+const ClickableTile = forwardRef<any, Props>(({
   children,
   isPending,
   ...rest
-}: Props): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   return (
     <ClickableBox
+      ref={forwardRef}
       isDisabled={isPending}
       ignoreTransition
       p={0}
@@ -39,4 +40,5 @@ export default function ClickableTile ({
         </Box>}
     </ClickableBox>
   )
-}
+})
+export default ClickableTile

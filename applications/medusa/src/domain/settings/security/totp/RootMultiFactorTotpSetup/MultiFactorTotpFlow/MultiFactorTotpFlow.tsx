@@ -166,7 +166,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <LinkButton size='lg' colorScheme='green' to='/settings/security'>
+            <LinkButton size='lg' colorScheme='green' href='/settings/security'>
               <Trans>
                 Back to settings
               </Trans>

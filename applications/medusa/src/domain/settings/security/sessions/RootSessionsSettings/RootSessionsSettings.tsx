@@ -33,7 +33,7 @@ const RootSessionsSettings: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/security'>
+        <BackButton href='/settings/security'>
           <Trans>
             Back to Security Settings
           </Trans>

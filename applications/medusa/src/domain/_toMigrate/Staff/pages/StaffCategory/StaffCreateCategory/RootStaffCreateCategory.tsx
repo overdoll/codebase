@@ -9,6 +9,7 @@ import StaffCreateCategoryQuery, {
 } from '@//:artifacts/StaffCreateCategoryQuery.graphql'
 import StaffCreateCategory from './StaffCreateCategory/StaffCreateCategory'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -24,11 +25,11 @@ export default function RootStaffCreateCategory (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Create Category - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

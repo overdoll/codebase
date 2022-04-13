@@ -47,7 +47,7 @@ export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
     <Box>
       <PostsHorizontalPreview
         hasNext={hasNext}
-        to={`/${data.slug as string}/posts?${stringify(newPostsEncodedQuery)}`}
+        href={`/${data.slug as string}/posts?${stringify(newPostsEncodedQuery)}`}
         query={data.exclusivePosts}
       />
     </Box>

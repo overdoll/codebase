@@ -10,6 +10,7 @@ import SearchDateRange, {
   getDateRangeDefault
 } from '@//:modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange'
 import { Stack } from '@chakra-ui/react'
+import Head from 'next/head'
 
 interface SearchProps {
   from: Date
@@ -29,11 +30,11 @@ export default function Reports (): JSX.Element | null {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Reports - Moderation :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

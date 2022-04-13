@@ -21,7 +21,7 @@ export default function ProfileStaffButton ({ query }: Props): JSX.Element {
   return (
     <Can I='staff' a='Account'>
       <MenuLinkItem
-        to={`/staff/account/${data.username}`}
+        href={`/staff/account/${data.username}`}
         text={(
           <Trans>
             Staff

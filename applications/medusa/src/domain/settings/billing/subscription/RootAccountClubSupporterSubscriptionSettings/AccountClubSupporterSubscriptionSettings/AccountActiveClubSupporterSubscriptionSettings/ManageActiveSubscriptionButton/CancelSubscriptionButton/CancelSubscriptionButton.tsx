@@ -23,7 +23,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import { Suspense } from 'react'
 import SelectCancellationReasonList from './SelectCancellationReasonList/SelectCancellationReasonList'
-import LargeClubHeader from '../../../../../../../../_toMigrate/ManageClub/components/LargeClubHeader/LargeClubHeader'
+import LargeClubHeader from '../../../../../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import format from 'date-fns/format'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'

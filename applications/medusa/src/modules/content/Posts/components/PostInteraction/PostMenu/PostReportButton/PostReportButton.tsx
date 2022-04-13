@@ -136,7 +136,7 @@ export default function PostReportButton ({
       {viewerData == null
         ? (
           <MenuLinkItem
-            to={redirect}
+            href={redirect}
             text={<Trans>Report Post</Trans>}
             icon={FlagReport}
           />

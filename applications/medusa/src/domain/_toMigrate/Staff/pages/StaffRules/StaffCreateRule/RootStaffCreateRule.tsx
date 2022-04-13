@@ -9,6 +9,7 @@ import StaffCreateRuleQuery, {
 } from '@//:artifacts/StaffCreateRuleQuery.graphql'
 import StaffCreateRule from './StaffCreateRule/StaffCreateRule'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -24,11 +25,11 @@ export default function RootStaffCreateRule (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Create Rule - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

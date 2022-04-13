@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-13 16:39-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/club/settings/root/RootClubSettings/RootClubSettings.tsx:72
+msgid "Club Guidelines"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:84
+msgid "Club Thumbnail"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/RootClubSettings.tsx:75
+msgid "Content and club guidelines"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/RootClubSettings.tsx:63
+msgid "Help"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:66
+msgid "Manage Aliases"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/RootClubSettings.tsx:49
+msgid "Settings"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:53
+msgid "Update Name"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:86
+msgid "Update your club thumbnail"
+msgstr ""

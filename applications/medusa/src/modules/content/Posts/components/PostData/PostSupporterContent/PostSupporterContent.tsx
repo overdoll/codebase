@@ -77,7 +77,7 @@ export default function PostSupporterContent ({
               <Can I='interact' a='Club' passThrough>
                 {allowed => (
                   <LinkButton
-                    to={allowed === false ? `/${clubData.slug}` : `/${clubData.slug}?support=true`}
+                    href={allowed === false ? `/${clubData.slug}` : `/${clubData.slug}?support=true`}
                     leftIcon={(
                       <Icon
                         icon={PremiumStar}

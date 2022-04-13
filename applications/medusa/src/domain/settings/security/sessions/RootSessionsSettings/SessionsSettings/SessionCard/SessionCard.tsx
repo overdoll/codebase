@@ -11,6 +11,7 @@ import RevokeSession from './RevokeSession/RevokeSession'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons/navigation'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
+import { dateFormatWithTime } from '@//:modules/constants/format'
 
 interface Props {
   connectionID: string
@@ -43,8 +44,8 @@ export default function SessionCard ({
   const locale = dateFnsLocaleFromI18n(i18n)
 
   const userAgent = UAParser(data.device)
-  const formattedDate = format(new Date(data.lastSeen as Date), 'LLLL Lo, y', { locale })
-  const signedInDate = format(new Date(data.created as Date), 'LLLL Lo, y', { locale })
+  const formattedDate = format(new Date(data.lastSeen as Date), dateFormatWithTime, { locale })
+  const signedInDate = format(new Date(data.created as Date), dateFormatWithTime, { locale })
 
   return (
     <AccordionItem>

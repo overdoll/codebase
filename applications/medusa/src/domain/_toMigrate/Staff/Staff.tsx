@@ -9,6 +9,7 @@ import {
   SeriesIdentifier
 } from '@//:assets/icons'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   children: ReactNode
@@ -17,11 +18,11 @@ interface Props {
 export default function Staff (props: Props): JSX.Element {
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <VerticalNavigation>
         <VerticalNavigation.Content
           title={
@@ -36,13 +37,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/character'
           >
             <VerticalNavigation.Button
-              to='/staff/character/create'
+              href='/staff/character/create'
               title={
                 <Trans>Create Character</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/character/search'
+              href='/staff/character/search'
               title={
                 <Trans>Search Characters</Trans>
               }
@@ -54,14 +55,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/series'
           >
             <VerticalNavigation.Button
-              to='/staff/series/create'
-              exact
+              href='/staff/series/create'
               title={
                 <Trans>Create Series</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/series/search'
+              href='/staff/series/search'
               title={
                 <Trans>Search Series</Trans>
               }
@@ -73,14 +73,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/category'
           >
             <VerticalNavigation.Button
-              to='/staff/category/create'
-              exact
+              href='/staff/category/create'
               title={
                 <Trans>Create Category</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/category/search'
+              href='/staff/category/search'
               title={
                 <Trans>Search Categories</Trans>
               }
@@ -92,13 +91,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/audience'
           >
             <VerticalNavigation.Button
-              to='/staff/audience/create'
+              href='/staff/audience/create'
               title={
                 <Trans>Create Audience</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/audience/search'
+              href='/staff/audience/search'
               title={
                 <Trans>Search Audiences</Trans>
               }
@@ -110,13 +109,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/rule'
           >
             <VerticalNavigation.Button
-              to='/staff/rule/create'
+              href='/staff/rule/create'
               title={
                 <Trans>Create Rule</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/rule/search'
+              href='/staff/rule/search'
               title={
                 <Trans>Search Rules</Trans>
               }
@@ -128,13 +127,13 @@ export default function Staff (props: Props): JSX.Element {
             baseUrl='/staff/cancellation-reason'
           >
             <VerticalNavigation.Button
-              to='/staff/cancellation-reason/create'
+              href='/staff/cancellation-reason/create'
               title={
                 <Trans>Create Cancellation Reason</Trans>
               }
             />
             <VerticalNavigation.Button
-              to='/staff/cancellation-reason/search'
+              href='/staff/cancellation-reason/search'
               title={
                 <Trans>Search Cancellation Reasons</Trans>
               }

@@ -69,7 +69,7 @@ export default function StaffSearchAudiences ({ searchArguments }: Props): JSX.E
       <ListSpacer>
         {audiences.map((item, index) => (
           <StackTile key={index}>
-            <LinkTile to={`/staff/audience/search/${item.slug as string}`}>
+            <LinkTile href={`/staff/audience/search/${item.slug as string}`}>
               <AudienceTileOverlay query={item} />
             </LinkTile>
           </StackTile>

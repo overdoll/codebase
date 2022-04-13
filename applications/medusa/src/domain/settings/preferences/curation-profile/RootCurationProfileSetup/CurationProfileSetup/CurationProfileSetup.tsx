@@ -230,7 +230,7 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <LinkButton size='lg' colorScheme='primary' to='/'>
+            <LinkButton size='lg' colorScheme='primary' href='/'>
               <Trans>
                 Go home
               </Trans>

@@ -8,6 +8,7 @@ import { useParams } from '@//:modules/routing/useParams'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import Profile from './Profile/Profile'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -25,11 +26,11 @@ export default function RootProfile (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Profile :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: params?.username ?? '' })}>
           <Suspense fallback={<SkeletonPost />}>

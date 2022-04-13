@@ -28,7 +28,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
   if (data.viewer?.clubs?.edges == null || data?.viewer?.clubs?.edges.length < 1) {
     return (
       <HorizontalNavigationDropdownMenu.Button
-        to='/configure/create-club'
+        href='/clubs/create-club'
         colorScheme='teal'
         icon={AddPlus}
         label={
@@ -49,7 +49,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
 
   return (
     <HorizontalNavigationDropdownMenu.Button
-      to={newPath}
+      href={newPath}
       colorScheme='teal'
       icon={ClubPeopleGroup}
       label={

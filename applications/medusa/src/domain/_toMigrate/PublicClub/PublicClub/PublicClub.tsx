@@ -1,9 +1,9 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import { graphql } from 'react-relay'
-import LargeClubHeader from '../../ManageClub/components/LargeClubHeader/LargeClubHeader'
+import LargeClubHeader from '../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import { Box, Flex, Stack } from '@chakra-ui/react'
-import StatisticNumber from '../../ManageClub/components/StatisticNumber/StatisticNumber'
+import StatisticNumber from '../../../club/home/RootClubHome/ClubHome/StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import abbreviateNumber from '@//:modules/support/abbreviateNumber'
@@ -19,6 +19,7 @@ import SupportClubButton from './SupportClubButton/SupportClubButton'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -73,11 +74,11 @@ export default function PublicClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           {queryData.club.name} on overdoll :: overdoll.com/{queryData.club.slug}
         </title>
-      </Helmet>
+      </Head>
       <ClubSuspendedStaffAlert query={queryData?.club} />
       <Stack spacing={8}>
         <Box h={200}>

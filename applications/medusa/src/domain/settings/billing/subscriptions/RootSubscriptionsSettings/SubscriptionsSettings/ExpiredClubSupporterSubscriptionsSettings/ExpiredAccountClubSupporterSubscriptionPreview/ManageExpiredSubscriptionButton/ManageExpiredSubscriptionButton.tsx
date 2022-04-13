@@ -25,7 +25,7 @@ export default function ManageExpiredSubscriptionButton ({ query }: Props): JSX.
   return (
     <LinkButton
       w='100%'
-      to={`/${data.club.slug}?support=true`}
+      href={`/${data.club.slug}?support=true`}
       leftIcon={(
         <Icon
           icon={PremiumStar}

@@ -74,7 +74,7 @@ export default function SelectMethodChoice ({
             <LargeBackgroundBox bg='gray.900'>
               <Center>
                 <HStack spacing={2}>
-                  <Heading color='gray.00' fontSize='xl' align='center'>
+                  <Heading color='gray.00' fontSize='xl' textAlign='center'>
                     <Trans>
                       Use a saved payment method
                     </Trans>
@@ -100,7 +100,7 @@ export default function SelectMethodChoice ({
                     size='sm'
                     colorScheme='orange'
                     variant='solid'
-                    to='/settings/security'
+                    href='/settings/security'
                   >
                     <Trans>
                       Set Up
@@ -119,7 +119,7 @@ export default function SelectMethodChoice ({
           <Choice {...register('new_payment', {})}>
             <LargeBackgroundBox bg='gray.900'>
               <Center>
-                <Heading color='gray.00' fontSize='xl' align='center'>
+                <Heading color='gray.00' fontSize='xl' textAlign='center'>
                   <Trans>
                     Enter a new payment method
                   </Trans>

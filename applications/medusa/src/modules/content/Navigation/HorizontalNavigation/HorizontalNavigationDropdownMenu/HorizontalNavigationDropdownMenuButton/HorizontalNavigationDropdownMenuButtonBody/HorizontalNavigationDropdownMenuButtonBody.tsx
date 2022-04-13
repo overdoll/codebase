@@ -1,7 +1,7 @@
-import { Flex, Heading, Spinner } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox } from '../../../../../PageLayout'
-import { FunctionComponent, ReactNode } from 'react'
+import { forwardRef, FunctionComponent, ReactNode } from 'react'
 
 interface Props {
   label?: ReactNode
@@ -12,10 +12,9 @@ interface Props {
   colorScheme?: string
   color?: string
   children?: ReactNode
-  isPending?: boolean | undefined
 }
 
-export default function HorizontalNavigationDropdownMenuButtonBody ({
+const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   children,
   icon,
   colorScheme = 'gray',
@@ -23,9 +22,8 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
   label,
   isActive,
   isDisabled = false,
-  onClick,
-  isPending
-}: Props): JSX.Element {
+  onClick
+}: Props, forwardRef): JSX.Element => {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 
   const TextComponent = (): JSX.Element => {
@@ -64,36 +62,30 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
         }}
         bg={isActive ? colorPalette : 'gray.500'}
       >
-        {isPending === true
-          ? <Spinner
-              m={1}
-              w={4}
-              h={4}
-              color={fill}
-            />
-          : <Icon
-              icon={icon}
-              w={6}
-              h={6}
-              p={1}
-              fill={fill}
-            />}
+        <Icon
+          icon={icon}
+          w={6}
+          h={6}
+          p={1}
+          fill={fill}
+        />
       </Flex>
     )
   }
 
   return (
     <ClickableBox
+      ref={forwardRef}
       ignoreTransition
       onClick={onClick}
-      isDisabled={isDisabled || isPending}
+      isDisabled={isDisabled}
       borderRadius='md'
       bg={isActive ? 'gray.900' : 'gray.800'}
       p={2}
       whiteSpace='break-spaces'
     >
       <Flex
-        m={1}
+        p={1}
         w={{
           base: 24,
           md: '100%'
@@ -118,4 +110,6 @@ export default function HorizontalNavigationDropdownMenuButtonBody ({
       </Flex>
     </ClickableBox>
   )
-}
+})
+
+export default HorizontalNavigationDropdownMenuButtonBody

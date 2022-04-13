@@ -65,7 +65,7 @@ export default function StaffSearchCancellationReasons ({ searchArguments }: Pro
       <Stack spacing={2}>
         {cancellationReasons.map((item, index) => (
           <StackTile key={index}>
-            <LinkTile to={`/staff/cancellation-reason/search/${item.reference as string}`}>
+            <LinkTile href={`/staff/cancellation-reason/search/${item.reference as string}`}>
               <CancellationReasonOverlay query={item} />
             </LinkTile>
           </StackTile>

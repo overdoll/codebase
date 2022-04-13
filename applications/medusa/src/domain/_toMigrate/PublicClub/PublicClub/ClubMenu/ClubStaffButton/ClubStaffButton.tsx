@@ -21,7 +21,7 @@ export default function ClubStaffButton ({ query }: Props): JSX.Element {
   return (
     <Can I='staff' a='Club'>
       <MenuLinkItem
-        to={`/staff/club/${data.slug}`}
+        href={`/staff/club/${data.slug}`}
         text={(
           <Trans>
             Staff

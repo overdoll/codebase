@@ -55,7 +55,7 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
     <LargeBackgroundBox w='100%'>
       <Stack spacing={4}>
         <HStack spacing={2} justify='space-between'>
-          <LinkTile to={`/${data.club.slug}`}>
+          <LinkTile href={`/${data.club.slug}`}>
             <HStack spacing={3}>
               <ResourceIcon h={10} w={10} query={data?.club.thumbnail} />
               <Heading

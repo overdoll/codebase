@@ -1,9 +1,8 @@
 import { forwardRef, ReactNode, useTransition } from 'react'
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
 import useSSRDisable from '../../hooks/useSSRDisable'
-import { ForwardRefProp } from '../../../types/components'
 
-interface Props extends ButtonProps, ForwardRefProp {
+interface Props extends ButtonProps {
   children?: ReactNode
   ignoreTransition?: boolean
 }

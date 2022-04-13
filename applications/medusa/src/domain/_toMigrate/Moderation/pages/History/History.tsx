@@ -10,6 +10,7 @@ import AuditLogs from './AuditLogs/AuditLogs'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -25,11 +26,11 @@ export default function History (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           History - Moderation :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

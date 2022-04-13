@@ -9,6 +9,7 @@ import StaffCreateCancellationReasonQuery, {
 } from '@//:artifacts/StaffCreateCancellationReasonQuery.graphql'
 import StaffCreateCancellationReason from './StaffCreateCancellationReason/StaffCreateCancellationReason'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -24,11 +25,11 @@ export default function RootStaffCreateCancellationReason (props: Props): JSX.El
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Create Cancellation Reason - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

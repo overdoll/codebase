@@ -8,6 +8,7 @@ import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
 import { useParams } from '@//:modules/routing/useParams'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -25,11 +26,11 @@ export default function RootPublicPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Post :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <QueryErrorBoundary loadQuery={() => loadQuery({ reference: params?.reference ?? '' })}>
         <Suspense fallback={(
           <PageWrapper>

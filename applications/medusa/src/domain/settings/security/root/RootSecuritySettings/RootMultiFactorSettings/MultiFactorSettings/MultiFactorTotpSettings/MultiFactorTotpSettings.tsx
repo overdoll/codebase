@@ -20,8 +20,8 @@ export default function MultiFactorTotpSettings (props: Props): JSX.Element {
 
   return (
     <PagePanelWrap
-      disabled={!data.recoveryCodesGenerated}
-      path='/settings/security/totp'
+      isDisabled={!data.recoveryCodesGenerated}
+      href='/settings/security/totp'
     >
       <PagePanelIcon icon={QrCode} colorScheme='green' />
       <PagePanelText

@@ -39,7 +39,7 @@ export default function MultiFactorTotpHeader (props: Props): JSX.Element | null
           </AlertDescription>
         </Alert>
         <LinkButton
-          to='/settings/security/recovery-codes'
+          href='/settings/security/recovery-codes'
           colorScheme='gray'
           size='md'
         >

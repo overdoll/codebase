@@ -84,6 +84,48 @@ const SettingsCatalogs = [
   }
 ]
 
+const ClubCatalog = [
+  {
+    path: 'src/domain/club/create-post/__locale__/{locale}/index',
+    include: ['src/domain/club/create-post/']
+  },
+  {
+    path: 'src/domain/club/home/__locale__/{locale}/index',
+    include: ['src/domain/club/home/']
+  },
+  {
+    path: 'src/domain/club/members/__locale__/{locale}/index',
+    include: ['src/domain/club/members/']
+  },
+  {
+    path: 'src/domain/club/posts/__locale__/{locale}/index',
+    include: ['src/domain/club/posts/']
+  },
+  {
+    path: 'src/domain/club/settings/root/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/root/']
+  },
+  {
+    path: 'src/domain/club/settings/aliases/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/aliases/']
+  },
+  {
+    path: 'src/domain/club/settings/name/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/name/']
+  },
+  {
+    path: 'src/domain/club/settings/thumbnail/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/thumbnail/']
+  }
+]
+
+const ClubsCatalog = [
+  {
+    path: 'src/domain/clubs/create-club/__locale__/{locale}/index',
+    include: ['src/domain/clubs/create-club/']
+  }
+]
+
 export default {
   locales: [
     'en'
@@ -100,7 +142,9 @@ export default {
   ],
   catalogs: [
     ...GeneralCatalogs,
-    ...SettingsCatalogs
+    ...SettingsCatalogs,
+    ...ClubCatalog,
+    ...ClubsCatalog
   ],
   format: 'po',
   fallbackLocales: {

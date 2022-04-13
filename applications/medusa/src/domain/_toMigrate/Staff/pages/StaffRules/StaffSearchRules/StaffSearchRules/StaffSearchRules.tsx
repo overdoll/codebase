@@ -65,7 +65,7 @@ export default function StaffSearchRules ({ searchArguments }: Props): JSX.Eleme
       <ListSpacer>
         {rules.map((item, index) => (
           <StackTile key={index}>
-            <LinkTile to={`/staff/rule/search/${item.reference as string}`}>
+            <LinkTile href={`/staff/rule/search/${item.reference as string}`}>
               <RuleTileOverlay query={item} />
             </LinkTile>
           </StackTile>

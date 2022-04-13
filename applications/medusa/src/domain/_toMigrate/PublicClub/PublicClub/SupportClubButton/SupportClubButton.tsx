@@ -95,7 +95,7 @@ export default function SupportClubButton ({
           </Trans>
         </Text>
         <LinkButton
-          to={redirect}
+          href={redirect}
           {...buttonProps}
           {...rest}
         />
@@ -134,7 +134,7 @@ export default function SupportClubButton ({
               size='lg'
               w='100%'
               {...rest}
-              to='/settings/billing/subscriptions'
+              href='/settings/billing/subscriptions'
             >
               <Trans>
                 My Subscriptions

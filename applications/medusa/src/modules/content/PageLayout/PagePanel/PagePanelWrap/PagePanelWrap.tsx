@@ -1,63 +1,41 @@
-import { Flex, HStack } from '@chakra-ui/react'
-import Icon from '../../Flair/Icon/Icon'
+import { ButtonProps } from '@chakra-ui/react'
 import { ExternalLink, Link } from '../../../../routing'
-import { ArrowButtonRight } from '@//:assets/icons/navigation'
-import { ClickableBox } from '../../index'
-import { ReactNode } from 'react'
-import { ShareExternalLink } from '@//:assets/icons/interface'
+import { forwardRef, ReactNode } from 'react'
+import PagePanelBox from '../PagePanelBox/PagePanelBox'
+import { UrlObject } from 'url'
 
-interface Props {
+interface Props extends ButtonProps {
   children: ReactNode
-  path: string
-  disabled?: boolean
+  href: string | UrlObject
   isExternal?: boolean
 }
 
-export default function PagePanelWrap ({
-  path,
+const PagePanelWrap = forwardRef(({
+  href,
   children,
-  disabled,
-  isExternal = false
-}: Props): JSX.Element {
-  const BoxComponent = (): JSX.Element => (
-    <ClickableBox disabled={disabled} p={3}>
-      <Flex justify='space-between'>
-        <HStack
-          spacing={3}
-          w='100%'
-          align='center'
-        >
-          {children}
-        </HStack>
-        <Flex
-          w={6}
-          ml={1}
-          align='center'
-          justify='center'
-        >
-          <Icon
-            icon={isExternal ? ShareExternalLink : ArrowButtonRight}
-            w={6}
-            fill='gray.500'
-          />
-        </Flex>
-      </Flex>
-    </ClickableBox>)
-
+  isExternal = false,
+  isDisabled,
+  ...rest
+}: Props, forwardRef): JSX.Element => {
   if (isExternal) {
     return (
-      <ExternalLink to={path}>
-        <BoxComponent />
+      <ExternalLink href={href as string}>
+        <PagePanelBox ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
+          {children}
+        </PagePanelBox>
       </ExternalLink>
     )
   }
 
   return (
     <Link
-      disabled={disabled}
-      to={path}
+      href={href}
     >
-      <BoxComponent />
+      <PagePanelBox ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
+        {children}
+      </PagePanelBox>
     </Link>
   )
-}
+})
+
+export default PagePanelWrap

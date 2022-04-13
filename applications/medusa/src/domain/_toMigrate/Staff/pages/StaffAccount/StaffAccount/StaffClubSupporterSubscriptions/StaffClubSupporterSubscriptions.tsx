@@ -86,7 +86,7 @@ export default function StaffClubSupporterSubscriptions ({ query }: Props): JSX.
         </TableHeader>
         <TableBody>
           {data.clubSupporterSubscriptions.edges.map((item, index) => (
-            <TableBodyRowLink key={index} to={`/staff/subscription/${item.node.reference as string}`}>
+            <TableBodyRowLink key={index} href={`/staff/subscription/${item.node.reference as string}`}>
               <StaffClubSupporterSubscriptionPreview query={item.node} />
             </TableBodyRowLink>
           ))}

@@ -7,6 +7,7 @@ import MyClubsQuery from '@//:artifacts/MyClubsQuery.graphql'
 import MyClubs from './MyClubs/MyClubs'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -22,11 +23,11 @@ export default function RootHome (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           My Clubs :: overdoll
         </title>
-      </Helmet>
+      </Head>
       <QueryErrorBoundary loadQuery={() => loadQuery({})}>
         <Suspense fallback={(
           <PageWrapper>

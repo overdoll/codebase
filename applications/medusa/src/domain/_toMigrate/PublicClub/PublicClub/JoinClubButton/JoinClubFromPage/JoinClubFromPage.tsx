@@ -53,7 +53,7 @@ export default function JoinClubFromPage ({
       <Box w='100%'>
         <LinkButton
           w='100%'
-          to={redirect}
+          href={redirect}
           colorScheme='gray'
           {...rest}
         >

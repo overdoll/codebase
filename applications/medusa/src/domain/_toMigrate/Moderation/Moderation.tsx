@@ -6,6 +6,7 @@ import { FileMultiple, FlagReport, TimeHourGlass } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Can from '@//:modules/authorization/Can'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   children: ReactNode
@@ -16,11 +17,11 @@ export default function Moderation ({ children }: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Moderation :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <VerticalNavigation>
         <VerticalNavigation.Content title={
           <Trans>
@@ -29,7 +30,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
         }
         >
           <VerticalNavigation.Button
-            to='/moderation/queue'
+            href='/moderation/queue'
             colorScheme='purple'
             title={
               <Trans>
@@ -39,7 +40,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
             icon={FileMultiple}
           />
           <VerticalNavigation.Button
-            to='/moderation/history'
+            href='/moderation/history'
             colorScheme='purple'
             title={
               <Trans>
@@ -50,7 +51,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
           />
           <Can I='staff' a='Post'>
             <VerticalNavigation.Button
-              to='/moderation/reports'
+              href='/moderation/reports'
               colorScheme='purple'
               title={
                 <Trans>
@@ -62,7 +63,7 @@ export default function Moderation ({ children }: Props): JSX.Element {
           </Can>
         </VerticalNavigation.Content>
         <VerticalNavigation.Page>
-          {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}
+          {children}
         </VerticalNavigation.Page>
       </VerticalNavigation>
     </>

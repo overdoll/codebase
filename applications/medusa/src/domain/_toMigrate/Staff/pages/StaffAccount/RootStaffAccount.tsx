@@ -9,6 +9,7 @@ import { useParams } from '@//:modules/routing/useParams'
 import StaffAccount from './StaffAccount/StaffAccount'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import PageWrapperDesktop from '../../components/PageWrapperDesktop/PageWrapperDesktop'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -26,11 +27,11 @@ export default function RootStaffAccount (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Account - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapperDesktop>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: match.username as string })}>
           <Suspense fallback={<SkeletonStack />}>

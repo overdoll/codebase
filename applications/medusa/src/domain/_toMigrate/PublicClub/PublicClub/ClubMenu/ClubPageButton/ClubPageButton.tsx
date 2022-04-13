@@ -19,7 +19,7 @@ export default function ClubPageButton ({ query }: Props): JSX.Element {
 
   return (
     <MenuLinkItem
-      to={`/${data.slug}`}
+      href={`/${data.slug}`}
       text={(
         <Trans>
           Public Page

@@ -24,7 +24,7 @@ export default function ClubManageButton ({ query }: Props): JSX.Element {
 
   return (
     <MenuLinkItem
-      to={`/club/${data.slug}/home`}
+      href={`/club/${data.slug}/home`}
       text={(
         <Trans>
           Manage Club

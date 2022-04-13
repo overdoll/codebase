@@ -47,7 +47,7 @@ export default function ClubTopPosts ({ query }: Props): JSX.Element {
     <Box>
       <PostsHorizontalPreview
         hasNext={hasNext}
-        to={`/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
+        href={`/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
         query={data.topPosts}
       />
     </Box>

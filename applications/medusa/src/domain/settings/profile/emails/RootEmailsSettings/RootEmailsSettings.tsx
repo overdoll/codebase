@@ -32,7 +32,7 @@ const RootEmailsSettings: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/profile'>
+        <BackButton href='/settings/profile'>
           <Trans>
             Back to Profile Settings
           </Trans>

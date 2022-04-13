@@ -9,6 +9,7 @@ import StaffCreateSeriesQuery, {
 } from '@//:artifacts/StaffCreateSeriesQuery.graphql'
 import StaffCreateSeries from './StaffCreateSeries/StaffCreateSeries'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -24,11 +25,11 @@ export default function RootStaffCreateSeries (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Create Series - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionTitle>
           <Trans>

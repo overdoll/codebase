@@ -1,10 +1,11 @@
 import NavLink from '../../../../../routing/NavLink'
-import { FunctionComponent, ReactNode, useContext } from 'react'
+import { forwardRef, FunctionComponent, ReactNode, useContext } from 'react'
 import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationDropdownMenuButtonBody
   from './HorizontalNavigationDropdownMenuButtonBody/HorizontalNavigationDropdownMenuButtonBody'
+import { LinkProps } from 'next/link'
 
-interface Props {
+interface Props extends LinkProps {
   label?: ReactNode
   icon?: FunctionComponent<any>
   to?: string
@@ -16,17 +17,18 @@ interface Props {
   isActive?: boolean
 }
 
-export default function HorizontalNavigationDropdownMenuButton ({
+const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({
   label,
   icon,
   onClick,
   isDisabled,
   color,
   children,
-  to,
   colorScheme,
-  isActive = false
-}: Props): JSX.Element {
+  isActive = false,
+  href,
+  ...rest
+}: Props, forwardRef): JSX.Element => {
   const ctx = useContext(HorizontalNavigationDropdownMenuContext)
 
   const onClickMenu = (): void => {
@@ -46,9 +48,10 @@ export default function HorizontalNavigationDropdownMenuButton ({
     colorScheme
   }
 
-  if (to == null) {
+  if (href == null) {
     return (
       <HorizontalNavigationDropdownMenuButtonBody
+        ref={forwardRef}
         isActive={isActive}
         {...ButtonProps}
       >
@@ -58,13 +61,15 @@ export default function HorizontalNavigationDropdownMenuButton ({
   }
 
   return (
-    <NavLink to={to}>
+    <NavLink
+      href={href}
+      {...rest}
+    >
       {({
-        isActiveBasePath,
-        isPending
+        isActiveBasePath
       }) => (
         <HorizontalNavigationDropdownMenuButtonBody
-          isPending={isPending}
+          ref={forwardRef}
           isActive={isActiveBasePath}
           {...ButtonProps}
         >
@@ -73,4 +78,6 @@ export default function HorizontalNavigationDropdownMenuButton ({
       )}
     </NavLink>
   )
-}
+})
+
+export default HorizontalNavigationDropdownMenuButton

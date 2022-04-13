@@ -57,6 +57,23 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:71
+msgid "Club Locked"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:56
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:70
+msgid "Club Not Found"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:125
+msgid "Club Page"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubBanner.tsx:47
+msgid "Club is currently locked and access is limited"
+msgstr ""
+
 #: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:107
 #~ msgid "Content Moderation"
 #~ msgstr ""
@@ -78,15 +95,18 @@ msgstr ""
 #~ msgid "Create a Club"
 #~ msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/MainMenu/MainMenu.tsx:36
-#: src/domain/root/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:59
-#~ msgid "Create a Post"
-#~ msgstr ""
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:68
+msgid "Create a Post"
+msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:85
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:99
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:119
 msgid "Delete Post"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubBanner.tsx:58
+msgid "Details"
 msgstr ""
 
 #: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:106
@@ -135,8 +155,13 @@ msgstr ""
 #~ msgid "Help"
 #~ msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:80
 #: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:22
 msgid "Home"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:100
+msgid "I promise to be better and to follow the club guidelines more closely"
 msgstr ""
 
 #: src/domain/root/Root/NoScript/NoScript.tsx:28
@@ -172,9 +197,25 @@ msgstr ""
 msgid "Locale does not match BCP47 pattern"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:72
+msgid "Locked for {remaining}"
+msgstr ""
+
 #: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:147
 #~ msgid "Log Out"
 #~ msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:75
+msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:45
+msgid "Manage Club"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:104
+msgid "Members"
+msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton.tsx:30
 msgid "Moderate"
@@ -245,7 +286,7 @@ msgid "Open"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:47
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:48
 msgid "Open Menu"
 msgstr ""
 
@@ -285,6 +326,10 @@ msgstr ""
 msgid "Please enter an email"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:82
+msgid "Please review the <0>Club Guidelines</0> to make sure this doesn't happen again."
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
 msgid "Post report was submitted successfully"
 msgstr ""
@@ -299,6 +344,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:50
 msgid "Post was un-archived successfully"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:92
+msgid "Posts"
 msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:46
@@ -360,6 +409,10 @@ msgstr ""
 msgid "Select a series"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:114
+msgid "Settings"
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton.tsx:13
 msgid "Skip"
 msgstr ""
@@ -382,6 +435,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton.tsx:26
 msgid "Supporter Only"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/MultipleClubsModal/MultipleClubsModal.tsx:45
+msgid "Switch to club"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:38
@@ -432,6 +489,10 @@ msgstr ""
 msgid "There was an error un-archiving the post"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:82
+msgid "There was an error un-suspending your club"
+msgstr ""
+
 #: src/modules/content/Placeholder/NotFound/NotFoundAccount/NotFoundAccount.tsx:12
 msgid "This account was not found"
 msgstr ""
@@ -469,6 +530,10 @@ msgstr ""
 msgid "Un-Archive Post"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:112
+msgid "Un-Suspend Club"
+msgstr ""
+
 #: src/modules/validation/Username.ts:16
 msgid "Username length cannot exceed 15 characters"
 msgstr ""
@@ -486,10 +551,30 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:96
+msgid "You may unlock your club after agreeing to the community guidelines."
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:53
+msgid "You must agree to follow the community guidelines"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:101
+msgid "Your club has been locked and you'll have the ability to unlock it after"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:76
+msgid "Your club has been un-suspended"
+msgstr ""
+
 #: src/domain/root/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo.tsx:17
 #~ msgid "overdoll"
 #~ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:75
 msgid "{0}"
+msgstr ""
+
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:111
+msgid "{countdown}"
 msgstr ""

@@ -71,7 +71,7 @@ export default function StaffTransactionsList ({
         </TableHeader>
         <TableBody>
           {data.edges.map((item, index) => (
-            <TableBodyRowLink key={index} to={`/staff/transaction/${item.node.reference}`}>
+            <TableBodyRowLink key={index} href={`/staff/transaction/${item.node.reference}`}>
               <StaffTransactionCard query={item.node} />
             </TableBodyRowLink>
           ))}

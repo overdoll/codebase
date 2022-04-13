@@ -5,7 +5,7 @@ import type {
 import { Box, HStack, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import LargeClubHeader from '../../../../../ManageClub/components/LargeClubHeader/LargeClubHeader'
+import LargeClubHeader from '../../../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import ClubPageButton from '../../../../../PublicClub/PublicClub/ClubMenu/ClubPageButton/ClubPageButton'
 import ClubStaffButton from '../../../../../PublicClub/PublicClub/ClubMenu/ClubStaffButton/ClubStaffButton'

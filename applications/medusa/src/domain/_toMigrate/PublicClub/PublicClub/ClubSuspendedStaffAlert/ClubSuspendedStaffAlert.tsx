@@ -54,7 +54,7 @@ export default function ClubSuspendedStaffAlert ({ query }: Props): JSX.Element 
               size='sm'
               colorScheme='orange'
               variant='solid'
-              to={`/staff/club/${data.slug}`}
+              href={`/staff/club/${data.slug}`}
             >
               <Trans>
                 Manage

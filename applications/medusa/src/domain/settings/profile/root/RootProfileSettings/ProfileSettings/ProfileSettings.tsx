@@ -35,7 +35,7 @@ export default function ProfileSettings (props: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <PagePanelWrap path='/settings/profile/username'>
+      <PagePanelWrap href='/settings/profile/username'>
         <PagePanelIcon icon={UserHuman} colorScheme='green' />
         <PagePanelText
           title={
@@ -44,7 +44,7 @@ export default function ProfileSettings (props: Props): JSX.Element {
           description={data.viewer.username}
         />
       </PagePanelWrap>
-      <PagePanelWrap path='/settings/profile/emails'>
+      <PagePanelWrap href='/settings/profile/emails'>
         <PagePanelIcon icon={MailEnvelope} colorScheme='teal' />
         <PagePanelText
           title={

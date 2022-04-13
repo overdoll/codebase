@@ -1,19 +1,18 @@
-import { HTMLChakraProps } from '@chakra-ui/react'
-import { ForwardedRef, forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
+import { Url } from 'url'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props {
   icon?: FunctionComponent<any>
   label: ReactNode
   exact?: boolean
-  to?: string | undefined
   onClick?: () => void
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
   as?: any
-  forwardRef?: ForwardedRef<any>
+  href?: string | Url
 }
 
 const HorizontalNavigationButton = forwardRef<any, Props>(({
@@ -21,12 +20,11 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
   label,
   onClick,
   children,
-  to,
   exact = false,
   colorScheme = 'gray',
   isActive = false,
   as,
-  ...rest
+  href
 }: Props, forwardRef): JSX.Element => {
   const ButtonProps = {
     icon,
@@ -34,11 +32,10 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
     onClick,
     colorScheme,
     as,
-    ref: forwardRef,
-    ...rest
+    ref: forwardRef
   }
 
-  if (to == null) {
+  if (href == null) {
     return (
       <HorizontalNavigationButtonBody
         isActive={isActive}
@@ -51,17 +48,15 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
 
   return (
     <NavLink
-      to={to}
+      href={href}
     >
       {({
         isActiveBasePath,
-        isActive,
-        isPending
+        isActive
       }) => {
         const determineActive = exact ? isActive : isActiveBasePath
         return (
           <HorizontalNavigationButtonBody
-            isPending={isPending}
             isActive={determineActive}
             {...ButtonProps}
           >

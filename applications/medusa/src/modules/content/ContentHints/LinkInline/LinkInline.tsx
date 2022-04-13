@@ -1,19 +1,18 @@
 import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
-import { ColorScheme } from '../../../../types/components'
-import { Link } from '../../../routing'
+import { ColorScheme } from '@//:types/components'
 import { ReactNode } from 'react'
 
 interface Props extends LinkProps {
   children: ReactNode
   colorScheme?: ColorScheme | undefined
   isExternal?: boolean | undefined
-  to: string
+  href: string
 }
 
 export default function LinkInline ({
   children,
   colorScheme = 'gray',
-  to,
+  href,
   isExternal,
   ...rest
 }: Props): JSX.Element {
@@ -24,7 +23,7 @@ export default function LinkInline ({
       <ChakraLink
         color={color}
         isExternal
-        href={to}
+        href={href}
         {...rest}
       >
         {children}
@@ -33,8 +32,6 @@ export default function LinkInline ({
   }
 
   return (
-    <Link to={to}>
-      {children}
-    </Link>
+    <></>
   )
 }

@@ -20,7 +20,7 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
       }
       >
         <VerticalNavigation.Button
-          to='/settings/profile'
+          href='/settings/profile'
           colorScheme='green'
           title={
             <Trans>
@@ -30,7 +30,7 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
           icon={UserHuman}
         />
         <VerticalNavigation.Button
-          to='/settings/security'
+          href='/settings/security'
           colorScheme='green'
           title={
             <Trans>
@@ -40,7 +40,7 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
           icon={SecurityShield}
         />
         <VerticalNavigation.Button
-          to='/settings/preferences'
+          href='/settings/preferences'
           colorScheme='green'
           title={
             <Trans>
@@ -50,7 +50,7 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
           icon={CategoryIdentifier}
         />
         <VerticalNavigation.Button
-          to='/settings/billing'
+          href='/settings/billing'
           colorScheme='green'
           title={
             <Trans>
@@ -61,7 +61,7 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
         />
         <Can I='moderate' a='Post'>
           <VerticalNavigation.Button
-            to='/settings/moderation'
+            href='/settings/moderation'
             colorScheme='purple'
             title={
               <Trans>

@@ -9,6 +9,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useParams } from '@//:modules/routing/useParams'
 import StaffClub from './StaffClub/StaffClub'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -26,11 +27,11 @@ export default function RootStaffClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Club - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>
           <Suspense fallback={<SkeletonStack />}>

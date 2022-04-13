@@ -14,6 +14,7 @@ import StaffViewCharacter from './StaffViewCharacter/StaffViewCharacter'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -31,14 +32,14 @@ export default function RootStaffViewCharacter (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           View Character - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={2}>
-          <BackButton to='/staff/character/search'>
+          <BackButton href='/staff/character/search'>
             <Trans>
               Back to search
             </Trans>

@@ -7,7 +7,7 @@ import type { ModerationPostQuery as ModerationPostQueryType } from '@//:artifac
 import ModerationPostQuery from '@//:artifacts/ModerationPostQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useParams } from '@//:modules/routing/useParams'
-
+import Head from 'next/head'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
 import ModerationPost from './ModerationPost/ModerationPost'
@@ -28,11 +28,11 @@ export default function RootModerationPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Post - Moderation :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

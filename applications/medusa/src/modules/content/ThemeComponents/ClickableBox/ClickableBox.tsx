@@ -1,18 +1,19 @@
 import Button from '../../../form/Button/Button'
-import { HTMLChakraProps } from '@chakra-ui/react'
-import { ForwardedRef, ReactNode } from 'react'
+import { ButtonProps } from '@chakra-ui/react'
+import { forwardRef, ReactNode } from 'react'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends ButtonProps {
   children: ReactNode
-  forwardRef?: ForwardedRef<any>
+  ignoreTransition?: boolean | undefined
 }
 
-export default function ClickableBox ({
+const ClickableBox = forwardRef<any, Props>(({
   children,
   ...rest
-}: Props, forwardRef): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   return (
     <Button
+      ref={forwardRef}
       w='100%'
       h='fill'
       size='sm'
@@ -26,4 +27,6 @@ export default function ClickableBox ({
       {children}
     </Button>
   )
-}
+})
+
+export default ClickableBox

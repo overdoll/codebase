@@ -50,7 +50,7 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
         <LargeBackgroundBox>
           <Stack spacing={2}>
             <AccountCancelledClubSupporterSubscriptionDetails query={data} />
-            <LinkButton w='100%' size='md' colorScheme='gray' to={`/${data.club.slug}`}>
+            <LinkButton w='100%' size='md' colorScheme='gray' href={`/${data.club.slug}`}>
               <Trans>
                 View Club
               </Trans>

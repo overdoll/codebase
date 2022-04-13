@@ -5,6 +5,7 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { Helmet } from 'react-helmet-async'
+import Head from 'next/head'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -75,11 +76,11 @@ export default function PublicClubPosts (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           {queryData.club.name}'s Posts :: overdoll.com/{queryData.club.slug}
         </title>
-      </Helmet>
+      </Head>
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll
           hasNext={hasNext}

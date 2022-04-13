@@ -64,7 +64,7 @@ export default function StaffSearchSeries ({ searchArguments }: Props): JSX.Elem
       <GridWrap justify='center'>
         {series.map((item, index) => (
           <GridTile key={index}>
-            <LinkTile to={`/staff/series/search/${item.slug as string}`}>
+            <LinkTile href={`/staff/series/search/${item.slug as string}`}>
               <SeriesTileOverlay query={item} />
             </LinkTile>
           </GridTile>

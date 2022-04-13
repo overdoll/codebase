@@ -50,7 +50,7 @@ export default function JoinClubFromTile ({
   if (viewerData == null) {
     return (
       <LinkButton
-        to={redirect}
+        href={redirect}
         colorScheme='primary'
         {...rest}
       >
@@ -85,7 +85,7 @@ export default function JoinClubFromTile ({
   if (isClubMember) {
     return (
       <LinkButton
-        to={`/${clubData.slug}?support=true`}
+        href={`/${clubData.slug}?support=true`}
         leftIcon={(
           <Icon
             icon={PremiumStar}

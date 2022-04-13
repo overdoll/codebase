@@ -74,7 +74,7 @@ export default function SuggestedClubs ({
           {data.clubs.edges.map((item, index) =>
             <Box key={index} h='100%'>
               <GridTile key={index}>
-                <LinkTile to={`/${item.node.slug as string}`}>
+                <LinkTile href={`/${item.node.slug as string}`}>
                   <ClubTileOverlay query={item.node} />
                 </LinkTile>
               </GridTile>

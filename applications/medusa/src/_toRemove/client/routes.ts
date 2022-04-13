@@ -2161,7 +2161,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/CreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/clubs/create-club/RootCreateClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2169,7 +2169,7 @@ const routes: Route[] = [
         ],
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/ManageClub/pages/CreateClub/RootCreateClub'
+            '../../domain/clubs/create-club/RootCreateClub/RootCreateClub'
           )
         ),
         prepare: ({
@@ -2257,7 +2257,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubHome/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/club/home/RootClubHome/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -2265,7 +2265,7 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/ManageClub/pages/ClubHome/RootClubHome'
+                '../../domain/club/home/RootClubHome/RootClubHome'
               )
             ),
             prepare: ({
@@ -2292,7 +2292,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubMembers/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/club/members/RootClubMembers/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -2300,7 +2300,7 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/ManageClub/pages/ClubMembers/RootClubMembers'
+                '../../domain/club/members/RootClubMembers/RootClubMembers'
               )
             ),
             prepare: ({
@@ -2327,7 +2327,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/club/settings/root/RootClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -2335,7 +2335,7 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/ManageClub/pages/ClubSettings/RootClubSettings'
+                '../../domain/club/settings/root/RootClubSettings/RootClubSettings'
               )
             ),
             prepare: ({
@@ -2361,7 +2361,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubSettings/RootChangeClubName/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./applications/medusa/src/domain/club/settings/name/RootNameClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -2369,7 +2369,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    '../../domain/_toMigrate/ManageClub/pages/ClubSettings/RootChangeClubName/RootChangeClubName'
+                    '../../domain/club/settings/name/RootNameClubSettings/RootChangeClubName'
                   )
                 ),
                 prepare: ({
@@ -2395,7 +2395,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./applications/medusa/src/domain/club/settings/thumbnail/RootThumbnailClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -2403,7 +2403,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    '../../domain/_toMigrate/ManageClub/pages/ClubSettings/RootChangeClubThumbnail/RootChangeClubThumbnail'
+                    '../../domain/club/settings/thumbnail/RootThumbnailClubSettings/RootThumbnailClubSettings'
                   )
                 ),
                 prepare: ({
@@ -2429,7 +2429,7 @@ const routes: Route[] = [
                   {
                     resource: loadable(async (environment) =>
                       await import(
-                        `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubSettings/RootClubAliases/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                        `./applications/medusa/src/domain/club/settings/aliases/RootAliasesClubSettings/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                       )
                     ),
                     then: loadMessages
@@ -2437,7 +2437,7 @@ const routes: Route[] = [
                 ],
                 component: loadable(async () =>
                   await import(
-                    '../../domain/_toMigrate/ManageClub/pages/ClubSettings/RootClubAliases/RootClubAliases'
+                    '../../domain/club/settings/aliases/RootAliasesClubSettings/RootAliasesClubSettings'
                   )
                 ),
                 prepare: ({
@@ -2465,7 +2465,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/ClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/club/posts/RootClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -2473,7 +2473,7 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/ManageClub/pages/ClubPosts/RootClubPosts'
+                '../../domain/club/posts/RootClubPosts/RootClubPosts'
               )
             ),
             prepare: ({
@@ -2515,7 +2515,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/ManageClub/pages/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/club/create-post/CreatePost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -2523,7 +2523,7 @@ const routes: Route[] = [
             ],
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/ManageClub/pages/CreatePost/CreatePost'
+                '../../domain/club/create-post/CreatePost/CreatePost'
               )
             ),
             prepare: ({

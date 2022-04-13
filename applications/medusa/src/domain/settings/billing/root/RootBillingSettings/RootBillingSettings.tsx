@@ -32,7 +32,7 @@ const RootBillingSettings: PageProps<{}> = () => {
               </PageSectionTitle>
             </PageSectionWrap>
             <Stack spacing={2}>
-              <PagePanelWrap path='/settings/billing/subscriptions'>
+              <PagePanelWrap href='/settings/billing/subscriptions'>
                 <PagePanelIcon icon={SubscriptionIdentifier} colorScheme='green' />
                 <PagePanelText
                   title={
@@ -45,7 +45,7 @@ const RootBillingSettings: PageProps<{}> = () => {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap path='/settings/billing/payment-methods'>
+              <PagePanelWrap href='/settings/billing/payment-methods'>
                 <PagePanelIcon icon={PaymentMethodIdentifier} colorScheme='teal' />
                 <PagePanelText
                   title={
@@ -58,7 +58,7 @@ const RootBillingSettings: PageProps<{}> = () => {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap path='/settings/billing/transactions'>
+              <PagePanelWrap href='/settings/billing/transactions'>
                 <PagePanelIcon icon={TimeHourGlass} colorScheme='purple' />
                 <PagePanelText
                   title={
@@ -81,7 +81,7 @@ const RootBillingSettings: PageProps<{}> = () => {
                 </Trans>
               </PageSectionTitle>
             </PageSectionWrap>
-            <PagePanelWrap isExternal path={SUPPORTER_GUIDELINES}>
+            <PagePanelWrap isExternal href={SUPPORTER_GUIDELINES}>
               <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
               <PagePanelText
                 title={

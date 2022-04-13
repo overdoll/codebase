@@ -27,7 +27,7 @@ export default function AccountActiveClubSupporterSubscriptionPreview ({
   const data = useFragment(Fragment, query)
 
   return (
-    <LinkTile to={`/settings/billing/subscription/${data.reference}`}>
+    <LinkTile href={`/settings/billing/subscription/${data.reference}`}>
       <StackTile>
         <LargeBackgroundBox w='100%'>
           <HStack spacing={4} justify='space-between' align='center'>

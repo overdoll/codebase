@@ -42,7 +42,7 @@ export default function PostHeader (props: Props): JSX.Element {
           </Trans>
         </Text>
         <LinkButton
-          to='/settings/moderation'
+          href='/settings/moderation'
           colorScheme='gray'
           variant='ghost'
           size='md'

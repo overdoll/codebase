@@ -11,7 +11,7 @@ import { RelayEnvironmentProvider } from 'react-relay/hooks'
 
 // components to help with testing
 const LinkComponent = (): JSX.Element => {
-  return <Link to='/test'>test</Link>
+  return <Link href='/test'>test</Link>
 }
 
 const Component = (): string => {

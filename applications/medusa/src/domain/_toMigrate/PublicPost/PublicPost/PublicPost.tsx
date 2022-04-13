@@ -17,6 +17,7 @@ import { Helmet } from 'react-helmet-async'
 import { useHistory, useParams } from '@//:modules/routing'
 import { useEffect } from 'react'
 import PublicPostPage from './PublicPostPage/PublicPostPage'
+import Head from 'next/head'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -119,11 +120,11 @@ export default function PublicPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           {getCharacterNames()} by {queryData.post.club.name} :: overdoll.com/{queryData.post.club.slug}
         </title>
-      </Helmet>
+      </Head>
       <FlowBuilder
         stepsArray={steps}
         stepsComponents={components}

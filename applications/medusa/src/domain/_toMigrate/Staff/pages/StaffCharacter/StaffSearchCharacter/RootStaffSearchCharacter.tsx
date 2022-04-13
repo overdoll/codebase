@@ -9,6 +9,7 @@ import SearchInput from '@//:modules/content/HookedComponents/Search/components/
 import { Stack } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import Head from 'next/head'
 
 interface SearchProps {
   name: string
@@ -24,11 +25,11 @@ export default function RootStaffSearchCharacter (): JSX.Element {
   const { i18n } = useLingui()
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Search Characters - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={2}>
           <PageSectionTitle>

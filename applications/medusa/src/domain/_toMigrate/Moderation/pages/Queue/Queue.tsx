@@ -10,6 +10,7 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -25,11 +26,11 @@ export default function Queue (props: Props): JSX.Element | null {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Queue - Moderation :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='purple'>

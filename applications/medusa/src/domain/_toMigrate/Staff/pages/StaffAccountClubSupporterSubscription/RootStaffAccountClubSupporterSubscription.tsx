@@ -13,6 +13,7 @@ import { useParams } from '@//:modules/routing/useParams'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import StaffAccountClubSupporterSubscription
   from './StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -30,11 +31,11 @@ export default function RootStaffAccountClubSupporterSubscription (props: Props)
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Subscription - Staff :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
           <Suspense fallback={<SkeletonStack />}>

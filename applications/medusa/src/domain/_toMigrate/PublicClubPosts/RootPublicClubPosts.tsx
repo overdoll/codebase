@@ -17,6 +17,7 @@ import { Flex, HStack } from '@chakra-ui/react'
 import FixedHeaderWrapper from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import PostSupporterStatusButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -39,11 +40,11 @@ export default function RootPublicClubPosts (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Club Posts :: overdoll
         </title>
-      </Helmet>
+      </Head>
       <PageFixedHeader>
         <FixedHeaderWrapper>
           <Flex justify='space-between'>

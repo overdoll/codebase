@@ -33,7 +33,7 @@ const RootMultiFactorTotpSetup: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/preferences'>
+        <BackButton href='/settings/preferences'>
           <Trans>
             Back to Preference Settings
           </Trans>

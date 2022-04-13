@@ -7,10 +7,11 @@ import type { PostsHorizontalPreviewFragment$key } from '@//:artifacts/PostsHori
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
+import { UrlObject } from 'url'
 
 interface Props {
   query: PostsHorizontalPreviewFragment$key | null
-  to: string
+  href: string | UrlObject
   hasNext: boolean
 }
 
@@ -30,7 +31,7 @@ const PostFragment = graphql`
 
 export default function PostsHorizontalPreview ({
   query,
-  to,
+  href,
   hasNext
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
@@ -57,7 +58,7 @@ export default function PostsHorizontalPreview ({
             key={index}
           >
             <GridTile>
-              <LinkTile to={`/${item.node.club.slug}/p/${item.node.reference}`}>
+              <LinkTile href={`/${item.node.club.slug}/p/${item.node.reference}`}>
                 <PostPreviewContent query={item.node} />
               </LinkTile>
             </GridTile>
@@ -65,7 +66,7 @@ export default function PostsHorizontalPreview ({
         {hasNext && (
           <SwiperSlide>
             <GridTile>
-              <LinkTile to={to}>
+              <LinkTile href={href}>
                 <Flex bg='gray.800' h='100%' w='100%' align='center' justify='center'>
                   <Heading fontSize='lg' color='gray.00'>
                     <Trans>

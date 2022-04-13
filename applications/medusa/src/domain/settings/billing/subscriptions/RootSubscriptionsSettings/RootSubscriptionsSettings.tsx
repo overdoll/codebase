@@ -34,7 +34,7 @@ const RootSubscriptionsSettings: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/billing'>
+        <BackButton href='/settings/billing'>
           <Trans>
             Go back to Billing Settings
           </Trans>

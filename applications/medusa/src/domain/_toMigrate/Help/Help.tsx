@@ -28,15 +28,16 @@ import {
   SUPPORTER_GUIDELINES,
   TERMS_OF_SERVICE
 } from '@//:modules/constants/links'
+import Head from 'next/head'
 
 export default function Help (): JSX.Element {
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Help :: overdoll
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <Stack spacing={4}>
           <Box>
@@ -47,7 +48,7 @@ export default function Help (): JSX.Element {
                 </Trans>
               </PageSectionTitle>
               <ListSpacer>
-                <PagePanelWrap isExternal path='https://www.corpodoll.com/about/'>
+                <PagePanelWrap isExternal href='https://www.corpodoll.com/about/'>
                   <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
                   <PagePanelText
                     title={
@@ -58,7 +59,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path={COMMUNITY_GUIDELINES}>
+                <PagePanelWrap isExternal href={COMMUNITY_GUIDELINES}>
                   <PagePanelIcon icon={FlagReport} colorScheme='green' />
                   <PagePanelText
                     title={
@@ -69,7 +70,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path={CLUB_GUIDELINES}>
+                <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
                   <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
                   <PagePanelText
                     title={
@@ -80,7 +81,7 @@ export default function Help (): JSX.Element {
                     )}
                   />
                 </PagePanelWrap>
-                <PagePanelWrap isExternal path={SUPPORTER_GUIDELINES}>
+                <PagePanelWrap isExternal href={SUPPORTER_GUIDELINES}>
                   <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
                   <PagePanelText
                     title={
@@ -103,7 +104,7 @@ export default function Help (): JSX.Element {
               </PageSectionTitle>
             </PageSectionWrap>
             <ListSpacer>
-              <PagePanelWrap isExternal path={TERMS_OF_SERVICE}>
+              <PagePanelWrap isExternal href={TERMS_OF_SERVICE}>
                 <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
                 <PagePanelText
                   title={
@@ -114,7 +115,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path={PRIVACY_POLICY}>
+              <PagePanelWrap isExternal href={PRIVACY_POLICY}>
                 <PagePanelIcon icon={SearchBar} colorScheme='purple' />
                 <PagePanelText
                   title={
@@ -125,7 +126,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='https://www.corpodoll.com/dmca/'>
+              <PagePanelWrap isExternal href='https://www.corpodoll.com/dmca/'>
                 <PagePanelIcon icon={WarningTriangle} colorScheme='orange' />
                 <PagePanelText
                   title={
@@ -136,7 +137,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='https://www.corpodoll.com/2257/'>
+              <PagePanelWrap isExternal href='https://www.corpodoll.com/2257/'>
                 <PagePanelIcon icon={ClubMembers} colorScheme='orange' />
                 <PagePanelText
                   title={
@@ -147,7 +148,7 @@ export default function Help (): JSX.Element {
                   )}
                 />
               </PagePanelWrap>
-              <PagePanelWrap isExternal path='https://www.corpodoll.com/contact/'>
+              <PagePanelWrap isExternal href='https://www.corpodoll.com/contact/'>
                 <PagePanelIcon icon={MailEnvelope} colorScheme='primary' />
                 <PagePanelText
                   title={

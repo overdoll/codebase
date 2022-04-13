@@ -39,7 +39,7 @@ export default function ProfileContributingClubs ({ query }: Props): JSX.Element
       <Stack spacing={2}>
         {data.contributingClubs.edges.map((item, index) =>
           <StackTile key={index}>
-            <LinkTile to={`/${item.node.slug}`}>
+            <LinkTile href={`/${item.node.slug}`}>
               <ClubTileOverlay query={item.node} />
             </LinkTile>
           </StackTile>)}

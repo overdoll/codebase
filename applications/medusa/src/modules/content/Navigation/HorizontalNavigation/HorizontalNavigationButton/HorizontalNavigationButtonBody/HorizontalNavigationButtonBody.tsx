@@ -13,7 +13,6 @@ interface Props extends HTMLChakraProps<any>, ForwardRefProp {
   children?: ReactNode
   isActive?: boolean
   as?: any
-  isPending?: boolean | undefined
 }
 
 const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
@@ -23,8 +22,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   children,
   colorScheme = 'gray',
   isActive = false,
-  as,
-  isPending
+  as
 }: Props, forwardRef): JSX.Element => {
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
@@ -40,7 +38,6 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
       md: '48px'
     },
     onClick: onClick,
-    isLoading: isPending,
     ref: forwardRef
   }
 

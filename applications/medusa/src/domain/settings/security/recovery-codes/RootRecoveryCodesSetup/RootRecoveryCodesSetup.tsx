@@ -33,7 +33,7 @@ const RootRecoveryCodesSetup: PageProps<Props> = (props: Props): JSX.Element => 
         </title>
       </Head>
       <PageWrapper>
-        <BackButton to='/settings/security'>
+        <BackButton href='/settings/security'>
           <Trans>
             Back to Security Settings
           </Trans>

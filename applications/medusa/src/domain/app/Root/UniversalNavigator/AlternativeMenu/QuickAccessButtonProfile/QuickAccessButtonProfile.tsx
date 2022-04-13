@@ -23,7 +23,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
 
   return (
     <HorizontalNavigation.Button
-      to={`/m/${data?.username as string}`}
+      href={`/m/${data?.username as string}`}
       label={
         <Trans>
           Go to my profile

@@ -14,6 +14,7 @@ import PageInfiniteScrollWrapper
 import FixedHeaderWrapper from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import { Flex, HStack } from '@chakra-ui/react'
 import LockedAccountTrigger from '../../home/Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -31,11 +32,11 @@ export default function RootSearch (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Search :: overdoll.com
         </title>
-      </Helmet>
+      </Head>
       <PageFixedHeader>
         <FixedHeaderWrapper>
           <Flex justify='space-between'>

@@ -8,6 +8,7 @@ import { useParams } from '@//:modules/routing/useParams'
 import PublicClub from './PublicClub/PublicClub'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import LockedAccountBanner from '../../home/Home/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import Head from 'next/head'
 
 interface Props {
   prepared: {
@@ -25,11 +26,11 @@ export default function RootPublicClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>
           Club :: overdoll
         </title>
-      </Helmet>
+      </Head>
       <PageWrapper>
         <LockedAccountBanner />
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: match.slug as string })}>

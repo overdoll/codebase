@@ -19,7 +19,7 @@ export default function ProfilePageButton ({ query }: Props): JSX.Element {
 
   return (
     <MenuLinkItem
-      to={`/m/${data.username}`}
+      href={`/m/${data.username}`}
       text={(
         <Trans>
           Public Profile
