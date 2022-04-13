@@ -252,5 +252,25 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return err
 	}
 
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse amount: %s", err)
+	}
+
+	// send a payment
+	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
+		activities.NewClubSupporterSubscriptionPaymentDepositInput{
+			AccountId:     details.AccountInitiator.AccountId,
+			ClubId:        details.CcbillClubSupporter.ClubId,
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Amount:        accountingAmount,
+			Currency:      input.AccountingCurrency,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

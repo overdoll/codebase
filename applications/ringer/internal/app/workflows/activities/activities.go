@@ -1,7 +1,13 @@
 package activities
 
-type Activities struct{}
+import "overdoll/applications/ringer/internal/domain/payment"
 
-func NewActivitiesHandler() *Activities {
-	return &Activities{}
+type Activities struct {
+	pr payment.Repository
+}
+
+func NewActivitiesHandler(pr payment.Repository) *Activities {
+	return &Activities{
+		pr: pr,
+	}
 }

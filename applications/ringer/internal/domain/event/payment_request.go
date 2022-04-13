@@ -43,3 +43,35 @@ func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, s
 		isDeduction:                 true,
 	}, nil
 }
+
+func (p *PaymentRequest) IsClubSupporterSubscription() bool {
+	return p.isClubSupporterSubscription
+}
+
+func (p *PaymentRequest) AccountTransactionId() string {
+	return p.accountTransactionId
+}
+
+func (p *PaymentRequest) SourceAccountId() string {
+	return p.sourceAccountId
+}
+
+func (p *PaymentRequest) DestinationClubId() string {
+	return p.destinationClubId
+}
+
+func (p *PaymentRequest) Amount() int64 {
+	return p.amount
+}
+
+func (p *PaymentRequest) Currency() money.Currency {
+	return p.currency
+}
+
+func (p *PaymentRequest) Timestamp() time.Time {
+	return p.timestamp
+}
+
+func (p *PaymentRequest) IsDeduction() bool {
+	return p.isDeduction
+}

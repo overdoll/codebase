@@ -3,24 +3,22 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
-	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/money"
 	"overdoll/libraries/support"
 	"time"
 )
 
-type ClubPaymentInput struct {
-	Source               payment.Source
-	AccountTransactionId string
-	SourceAccountId      string
-	DestinationClubId    string
-	Amount               int64
-	Currency             money.Currency
-	Timestamp            time.Time
-	IsDeduction          bool
+type ClubPaymentDepositInput struct {
+	AccountTransactionId        string
+	SourceAccountId             string
+	DestinationClubId           string
+	Amount                      int64
+	Currency                    money.Currency
+	Timestamp                   time.Time
+	IsClubSupporterSubscription bool
 }
 
-func ClubPayment(ctx workflow.Context, input ClubPaymentInput) error {
+func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
@@ -34,24 +32,20 @@ func ClubPayment(ctx workflow.Context, input ClubPaymentInput) error {
 
 	paymentId := *uniqueId
 
-	if !input.IsDeduction {
-		// create a pending deposit
-		if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeposit,
-			activities.CreatePendingClubPaymentDepositInput{
-				Id: paymentId,
-			},
-		).Get(ctx, nil); err != nil {
-			return err
-		}
-	} else {
-		// create a pending deposit
-		if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeduction,
-			activities.CreatePendingClubPaymentDeductionInput{
-				Id: paymentId,
-			},
-		).Get(ctx, nil); err != nil {
-			return err
-		}
+	// create a pending deposit
+	if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeposit,
+		activities.CreatePendingClubPaymentDepositInput{
+			Id:                          paymentId,
+			AccountTransactionId:        input.AccountTransactionId,
+			SourceAccountId:             input.SourceAccountId,
+			DestinationClubId:           input.DestinationClubId,
+			Amount:                      input.Amount,
+			Currency:                    input.Currency,
+			Timestamp:                   input.Timestamp,
+			IsClubSupporterSubscription: input.IsClubSupporterSubscription,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
 	}
 
 	var pendingPayment *activities.GetClubPaymentDetailsPayload
@@ -89,13 +83,12 @@ func ClubPayment(ctx workflow.Context, input ClubPaymentInput) error {
 		return err
 	}
 
-	// subtract the amount from the pending balance by using a negative amount
-	if err := workflow.ExecuteActivity(ctx, a.AddToClubPendingBalance,
-		activities.AddToClubPendingBalanceInput{
+	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
+		activities.SubtractFromBalanceInput{
 			PaymentId: paymentId,
 			ClubId:    input.DestinationClubId,
 			Currency:  pendingPayment.Currency,
-			Amount:    -pendingPayment.FinalAmount,
+			Amount:    pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -25,6 +25,14 @@ CREATE TABLE IF NOT EXISTS club_platform_fee
     primary key ( club_id ),
 );
 
+
+CREATE TABLE IF NOT EXISTS club_payments_by_transaction_id
+(
+    account_transaction_id text,
+    id                     text,
+    primary key ( account_transaction_id ),
+);
+
 CREATE TABLE IF NOT EXISTS club_payments
 (
     id                          text,
@@ -33,6 +41,7 @@ CREATE TABLE IF NOT EXISTS club_payments
     state                       text,
     settlement_date             timestamp,
     source_account_id           text,
+    account_transaction_id      text,
     destination_club_id         text,
     base_amount                 bigint,
     base_currency               text,

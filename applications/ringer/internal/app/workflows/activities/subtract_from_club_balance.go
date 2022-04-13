@@ -1,0 +1,17 @@
+package activities
+
+import (
+	"context"
+	"overdoll/libraries/money"
+)
+
+type SubtractFromBalanceInput struct {
+	PaymentId string
+	ClubId    string
+	Amount    int64
+	Currency  money.Currency
+}
+
+func (h *Activities) SubtractFromClubBalance(ctx context.Context, input SubtractFromBalanceInput) error {
+	return h.pr.DecrementClubBalance(ctx, input.ClubId, input.Amount, input.Currency)
+}

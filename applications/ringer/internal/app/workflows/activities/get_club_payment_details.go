@@ -13,5 +13,16 @@ type GetClubPaymentDetailsPayload struct {
 }
 
 func (h *Activities) GetClubPaymentDetails(ctx context.Context, id string) (*GetClubPaymentDetailsPayload, error) {
-	return nil, nil
+
+	pay, err := h.pr.GetClubPaymentById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetClubPaymentDetailsPayload{
+		FinalAmount:    pay.FinalAmount(),
+		Currency:       pay.BaseCurrency(),
+		SettlementDate: pay.SettlementDate(),
+	}, nil
 }
