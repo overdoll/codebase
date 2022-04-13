@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "add_to_club_balance.go",
+        "add_to_club_pending_balance.go",
+        "create_pending_club_payment_deduction.go",
+        "create_pending_club_payment_deposit.go",
+        "get_club_payment_details.go",
+        "make_club_payment_ready_for_payout.go",
+        "subtract_from_club_balance.go",
+        "subtract_from_club_pending_balance.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/app/workflows/activities",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//applications/ringer/internal/domain/payment",
+        "//libraries/money",
+    ],
+)

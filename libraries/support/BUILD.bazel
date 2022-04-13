@@ -15,11 +15,16 @@ go_library(
     name = "support",
     srcs = [
         "debug.go",
+        "generate_unique_id_for_workflow.go",
         "gin.go",
         "ip.go",
         "rsa.go",
     ],
     importpath = "overdoll/libraries/support",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gin_gonic_gin//:gin"],
+    deps = [
+        "//libraries/uuid",
+        "@com_github_gin_gonic_gin//:gin",
+        "@io_temporal_go_sdk//workflow",
+    ],
 )

@@ -13,6 +13,7 @@ go_library(
         "//applications/hades/internal/domain/cancellation",
         "//libraries/graphql",
         "//libraries/graphql/relay",
+        "//libraries/money",
         "//libraries/paging",
         "//libraries/passport",
     ],

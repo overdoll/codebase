@@ -37,5 +37,6 @@ go_library(
         "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/proto:v1_go_proto",
+        "//libraries/money",
     ],
 )
