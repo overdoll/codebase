@@ -21,7 +21,7 @@ export default function Link ({
   children,
   disabled = false,
   to
-}: Props): JSX.Element {
+}: LinkProps): JSX.Element {
   const router = useRouter()
 
   // @ts-expect-error
@@ -49,7 +49,7 @@ export default function Link ({
 
   if (disabled || isPending) {
     return (
-      <span {...rest}>
+      <span>
         {runIfFunction(children, { isPending })}
       </span>
     )

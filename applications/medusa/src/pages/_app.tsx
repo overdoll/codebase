@@ -1,6 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { CacheProvider } from '@emotion/react'
-import theme from '../client/theme'
+import theme from '../modules/theme'
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { getEnvironment } from '@//:modules/relay/environment'
 import { ReactRelayContext } from 'react-relay'
@@ -8,9 +8,9 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import NextApp from 'next/app'
 import fetchQuery, { addToOperationResponseCache, getOperationResponseCacheKey } from '@//:modules/relay/fetchQuery'
-import Root from '../client/domain/Root/Root'
-import 'swiper/swiper.min.css'
-import '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/css/scrollbar.min.css'
+import Root from '../domain/app'
+import 'swiper/css'
+import 'swiper/css/scrollbar'
 import setupSecurityToken from './security'
 import createCache from '@emotion/cache'
 import NextQueryParamProvider from './NextQueryParamProvider'
@@ -20,6 +20,13 @@ import { FlashProvider } from '@//:modules/flash'
 import Cookies from 'universal-cookie'
 import { useRouter } from 'next/router'
 import { initializeLocaleData } from '@//:modules/locale'
+import {
+  ComponentProps,
+  CustomAppProps,
+  GetRelayPreloadPropsReturn,
+  RequestProps,
+  TranslationProps
+} from '@//:types/app'
 
 const IS_SERVER = typeof window === typeof undefined
 
@@ -84,7 +91,7 @@ const serverFetch = (req, res) => {
   }
 }
 
-export default function App ({
+const App = ({
   Component,
   environment,
   pageProps,
@@ -93,7 +100,7 @@ export default function App ({
   securityToken,
   i18n,
   translationProps
-}): JSX.Element {
+}: CustomAppProps): JSX.Element => {
   if (!IS_SERVER) {
     securityTokenCache = securityToken
   }
@@ -104,7 +111,7 @@ export default function App ({
   environment = useMemo(() => (IS_SERVER ? environment : getEnvironment(clientFetch(securityTokenCache))), [])
 
   const router = useRouter()
-  const locale: string = router.locale ?? router.defaultLocale
+  const locale: string = router.locale as string ?? router.defaultLocale as string
 
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   i18n = useMemo(() => {
@@ -120,6 +127,8 @@ export default function App ({
     i18n.activate(locale)
     firstRender.current = false
   }
+
+  const getLayout = Component.getLayout ?? ((page) => page)
 
   // listen for the locale changes
   useEffect(() => {
@@ -162,7 +171,7 @@ export default function App ({
                   <ErrorBoundary>
                     <Suspense fallback={null}>
                       <Root {...componentProps}>
-                        <Component {...pageProps} {...componentProps} />
+                        {getLayout(<Component {...pageProps} {...componentProps} />)}
                       </Root>
                     </Suspense>
                   </ErrorBoundary>
@@ -176,7 +185,8 @@ export default function App ({
   )
 }
 
-//
+export default App
+
 App.getInitialProps = async function (app) {
   let securityToken
   let environment = null
@@ -195,10 +205,10 @@ App.getInitialProps = async function (app) {
     app.ctx.cookies = new Cookies()
   }
 
-  const componentProps = {}
-  const requestProps = {}
-  let translationProps = {}
-  let queries = {}
+  const componentProps: ComponentProps = {}
+  const requestProps: RequestProps = {}
+  let translationProps: TranslationProps = {}
+  let queries: GetRelayPreloadPropsReturn = {}
 
   if (Root.getRelayPreloadProps != null) {
     queries = { ...queries, ...Root.getRelayPreloadProps(app.ctx).queries }

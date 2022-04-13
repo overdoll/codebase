@@ -5,7 +5,7 @@ import { useFragment } from 'react-relay/hooks'
 import { ButtonProps, HStack } from '@chakra-ui/react'
 import { PostHeaderClub } from '../../../index'
 import JoinClubFromPost
-  from '../../../../../../client/domain/PublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../../../../domain/_toMigrate/PublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 
 interface Props extends ButtonProps {
   postQuery: PostHeaderFragment$key

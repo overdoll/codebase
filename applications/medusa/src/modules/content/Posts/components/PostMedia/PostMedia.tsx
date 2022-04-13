@@ -1,5 +1,4 @@
 import { graphql, useFragment } from 'react-relay'
-import 'swiper/swiper.min.css'
 import { useContext } from 'react'
 import { PostMediaFragment$key } from '@//:artifacts/PostMediaFragment.graphql'
 import ImageSnippet from '../../../DataDisplay/ImageSnippet/ImageSnippet'

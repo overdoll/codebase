@@ -98,8 +98,9 @@ export function PostVideoManagerProvider ({ children }: Props): JSX.Element {
   }, [videoVolume, videos])
 
   // Update value when slide index changes
+
   useEffect(() => {
-    if (swiper == null) return
+    if (swiper == null || swiper?.destroyed) return
     swiper.on('slideChange', () => {
       setCurrentSlide(swiper.activeIndex)
     })

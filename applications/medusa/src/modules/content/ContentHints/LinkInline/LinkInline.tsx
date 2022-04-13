@@ -1,5 +1,5 @@
 import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
-import { ColorScheme } from '@//:types/components'
+import { ColorScheme } from '../../../../types/components'
 import { Link } from '../../../routing'
 import { ReactNode } from 'react'
 

@@ -1,3 +1,3 @@
-import RootHome from '../client/domain/Home/RootHome'
+import Home from '../domain/home'
 
-export default RootHome
+export default Home

@@ -1,6 +1,4 @@
 import { graphql, useFragment } from 'react-relay'
-import 'swiper/swiper.min.css'
-import 'swiper/components/navigation/navigation.min.css'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
 import { PostLikeButtonViewerFragment$key } from '@//:artifacts/PostLikeButtonViewerFragment.graphql'
 import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
@@ -12,8 +10,8 @@ import IconButton from '../../../../../form/IconButton/IconButton'
 import Can from '../../../../../authorization/Can'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import { useHistory } from '../../../../../routing'
 import encodeJoinRedirect from '../../../../../support/encodeJoinRedirect'
+import { useRouter } from 'next/router'
 
 interface Props extends ButtonProps {
   query: PostLikeButtonFragment$key
@@ -77,7 +75,7 @@ export default function PostLikeButton ({
 
   const { i18n } = useLingui()
 
-  const history = useHistory()
+  const router = useRouter()
 
   const hasLiked = data?.viewerLiked != null
 
@@ -149,7 +147,7 @@ export default function PostLikeButton ({
               h='100%'
               w='100%'
                    />)}
-            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => history.push(redirect)}
+            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : async () => await router.push(redirect)}
             {...rest}
           />
           <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>

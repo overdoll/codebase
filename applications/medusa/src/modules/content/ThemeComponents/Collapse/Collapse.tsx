@@ -59,7 +59,7 @@ export const CollapseBody = (props: CollapseProps): JSX.Element => {
   const { isOpen } = useContext(CollapseContext)
 
   return (
-    <ChakraCollapse animateOpacity in={isOpen} {...props}>
+    <ChakraCollapse style={{ overflow: isOpen ? 'visible' : 'hidden' }} animateOpacity in={isOpen} {...props}>
       <Box pt={2}>
         {props.children}
       </Box>

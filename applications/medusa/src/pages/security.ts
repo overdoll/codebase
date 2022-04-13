@@ -1,11 +1,13 @@
 import { randomBytes } from 'crypto'
-import gcm from '../server/utilities/gcm'
+import gcm from '../_toRemove/server/utilities/gcm'
 import { serialize } from 'cookie'
+
+export type SetupSecurityTokenReturn = string
 
 export default function setupSecurityToken ({
   req: request,
   res: response
-}): string {
+}): SetupSecurityTokenReturn {
   if (request == null || response == null) {
     return ''
   }

@@ -1,5 +1,4 @@
 import { graphql, useFragment } from 'react-relay'
-import 'swiper/swiper.min.css'
 import { ReactNode } from 'react'
 import { PostSupporterContentFragment$key } from '@//:artifacts/PostSupporterContentFragment.graphql'
 import { PostSupporterContentClubFragment$key } from '@//:artifacts/PostSupporterContentClubFragment.graphql'
@@ -70,7 +69,7 @@ export default function PostSupporterContent ({
               px={8}
               spacing={4}
             >
-              <Heading fontSize='lg' color='gray.00' align='center'>
+              <Heading fontSize='lg' color='gray.00' textAlign='center'>
                 <Trans>
                   This content can only be seen if you are a supporter of the club
                 </Trans>

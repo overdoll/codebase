@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 18:15-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:33
+msgid "Back to the Join page"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:105
+msgid "I closed the original tab"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:117
+msgid "If you closed the original tab, just open it back up!"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:102
+msgid "No, this is not me"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:72
+msgid "Please confirm that you are attempting to login from the following device & location"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:21
+msgid "The login link you are using is either invalid or expired"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:113
+msgid "Yes, this is me"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:63
+msgid "You have been successfully logged in to the requested device"
+msgstr ""
+
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:91
+msgid "You may safely close this window"
+msgstr ""

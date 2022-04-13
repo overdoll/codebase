@@ -14,14 +14,14 @@ process.on('unhandledRejection', (reason, promise) => {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-let app = require('./server').default
+let app = require('./_toRemove/server').default
 
 if (module.hot != null) {
   module.hot.accept('./server', function () {
     console.log('🔁  HMR Reloading `./server`...')
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      app = require('./server').default
+      app = require('./_toRemove/server').default
     } catch (error) {
       console.error(error)
     }

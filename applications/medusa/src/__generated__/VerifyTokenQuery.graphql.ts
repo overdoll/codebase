@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<79cef4d49603369a7462c14e8fcdf855>>
- * @relayHash e9039055b45a00ad887447d612a44778
+ * @generated SignedSource<<e170776c20b261cb58e6c18b517f11b5>>
+ * @relayHash 696da5ea3fe10f5b62b2a2d7776d0f23
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e9039055b45a00ad887447d612a44778
+// @relayRequestID 696da5ea3fe10f5b62b2a2d7776d0f23
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type VerifyTokenQuery$variables = {
   token: string;
   secret?: string | null;
@@ -20,14 +21,8 @@ export type VerifyTokenQueryVariables = VerifyTokenQuery$variables;
 export type VerifyTokenQuery$data = {
   readonly viewAuthenticationToken: {
     readonly verified: boolean;
-    readonly sameDevice: boolean;
-    readonly location: {
-      readonly city: string;
-      readonly subdivision: string;
-      readonly country: string;
-    };
-    readonly userAgent: string;
     readonly secure: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"ConfirmFragment" | "CompleteFragment">;
   } | null;
 };
 export type VerifyTokenQueryResponse = VerifyTokenQuery$data;
@@ -70,52 +65,6 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "sameDevice",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Location",
-  "kind": "LinkedField",
-  "name": "location",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "city",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subdivision",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "country",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "userAgent",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "secure",
   "storageKey": null
 };
@@ -139,9 +88,16 @@ return {
         "selections": [
           (v3/*: any*/),
           (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/)
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ConfirmFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "CompleteFragment"
+          }
         ],
         "storageKey": null
       }
@@ -168,9 +124,52 @@ return {
         "selections": [
           (v3/*: any*/),
           (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "userAgent",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location",
+            "kind": "LinkedField",
+            "name": "location",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subdivision",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "country",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameDevice",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -184,7 +183,7 @@ return {
     ]
   },
   "params": {
-    "id": "e9039055b45a00ad887447d612a44778",
+    "id": "696da5ea3fe10f5b62b2a2d7776d0f23",
     "metadata": {},
     "name": "VerifyTokenQuery",
     "operationKind": "query",
@@ -193,6 +192,6 @@ return {
 };
 })();
 
-(node as any).hash = "25d879576cbd9b2b1c79757e070b1848";
+(node as any).hash = "9cd7069aaa78ce7760eb89dd04ddd91a";
 
 export default node;

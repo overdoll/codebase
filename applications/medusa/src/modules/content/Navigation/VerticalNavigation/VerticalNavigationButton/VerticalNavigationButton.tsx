@@ -5,10 +5,8 @@ import VerticalNavigationButtonBody from './VerticalNavigationButtonBody/Vertica
 interface Props {
   title: ReactNode
   to: string
-  exact?: boolean
   icon?: FunctionComponent<any> | undefined
   colorScheme?: string
-  strict?: boolean
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
 }
@@ -16,8 +14,6 @@ interface Props {
 export default function VerticalNavigationButton ({
   title,
   icon,
-  exact = false,
-  strict = false,
   to,
   colorScheme = 'gray',
   buttonType = 'secondary',
@@ -33,16 +29,14 @@ export default function VerticalNavigationButton ({
 
   return (
     <NavLink
-      exact={exact}
       to={to}
-      strict={strict}
     >
       {({
-        isActive,
-        isPending
+        isPending,
+        isActiveBasePath
       }) => (
         <VerticalNavigationButtonBody
-          isActive={isActive}
+          isActive={isActiveBasePath}
           isPending={isPending}
           {...ButtonProps}
         />

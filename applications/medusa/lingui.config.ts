@@ -1,3 +1,89 @@
+const GeneralCatalogs = [
+  {
+    path: 'src/domain/app/__locale__/{locale}/index',
+    include: ['src/modules/', 'src/common/components/', 'src/domain/root/']
+  },
+  {
+    path: 'src/domain/join/__locale__/{locale}/index',
+    include: ['src/domain/join/']
+  },
+  {
+    path: 'src/domain/home/__locale__/{locale}/index',
+    include: ['src/domain/home/']
+  },
+  {
+    path: 'src/domain/verify-token/__locale__/{locale}/index',
+    include: ['src/domain/verify-token/']
+  },
+  {
+    path: 'src/domain/404/__locale__/{locale}/index',
+    include: ['src/domain/404/']
+  }
+]
+
+const SettingsCatalogs = [
+  {
+    path: 'src/domain/settings/profile/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/root/']
+  },
+  {
+    path: 'src/domain/settings/profile/username/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/username/']
+  },
+  {
+    path: 'src/domain/settings/profile/emails/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/emails/']
+  },
+  {
+    path: 'src/domain/settings/security/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/root/']
+  },
+  {
+    path: 'src/domain/settings/security/recovery-codes/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/recovery-codes/']
+  },
+  {
+    path: 'src/domain/settings/security/sessions/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/sessions/']
+  },
+  {
+    path: 'src/domain/settings/security/totp/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/totp/']
+  },
+  {
+    path: 'src/domain/settings/billing/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/root/']
+  },
+  {
+    path: 'src/domain/settings/billing/payment-methods/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/payment-methods/']
+  },
+  {
+    path: 'src/domain/settings/billing/subscriptions/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/subscriptions/']
+  },
+  {
+    path: 'src/domain/settings/billing/subscription/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/subscription/']
+  },
+  {
+    path: 'src/domain/settings/billing/transactions/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/transactions/']
+  },
+  {
+    path: 'src/domain/settings/preferences/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/preferences/root/']
+  },
+  {
+    path: 'src/domain/settings/preferences/curation-profile/__locale__/{locale}/index',
+    include: ['src/domain/settings/preferences/curation-profile/']
+  },
+  {
+    path: 'src/domain/settings/moderation/__locale__/{locale}/index',
+    include: ['src/domain/settings/moderation/']
+  }
+]
+
 export default {
   locales: [
     'en'
@@ -13,14 +99,17 @@ export default {
     // 'cs'
   ],
   catalogs: [
-    {
-      path: 'src/client/domain/Root/__locale__/{locale}/index',
-      include: ['src/modules/', 'src/client/components/', 'src/client/domain/Root/']
-    },
-    {
-      path: 'src/client/domain/Join/__locale__/{locale}/index',
-      include: ['src/client/domain/Join/']
-    }, {
+    ...GeneralCatalogs,
+    ...SettingsCatalogs
+  ],
+  format: 'po',
+  fallbackLocales: {
+    default: 'en'
+  }
+}
+
+/*
+{
       path: 'src/client/domain/Logout/__locale__/{locale}/index',
       include: ['src/client/domain/Logout/']
     },
@@ -284,9 +373,4 @@ export default {
       path: 'src/client/domain/Staff/pages/StaffAccountTransaction/__locale__/{locale}/index',
       include: ['src/client/domain/Staff/pages/StaffAccountTransaction']
     }
-  ],
-  format: 'po',
-  fallbackLocales: {
-    default: 'en'
-  }
-}
+ */

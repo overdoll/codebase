@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Box, Spinner } from '@chakra-ui/react'
-import SwiperCore, { Mousewheel, Scrollbar, Virtual } from 'swiper'
+import SwiperCore, { FreeMode, Mousewheel, Scrollbar, Virtual } from 'swiper'
 import { PostVideoManagerProvider } from '../../../index'
 import { ObserverManagerProvider } from '../../../support/ObserverManager/ObserverManager'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
@@ -47,8 +47,6 @@ export default function PostsInfiniteScroll ({
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  SwiperCore.use([Scrollbar, Mousewheel, Virtual])
-
   const [swiper, setSwiper] = useState<SwiperCore | null>(null)
 
   const onCompleteLoaded = (): void => {
@@ -83,6 +81,7 @@ export default function PostsInfiniteScroll ({
       <Swiper
         onSwiper={(swiper) => setSwiper(swiper)}
         onSlideChange={(swiper) => onSlideChange(swiper)}
+        modules={[Scrollbar, Mousewheel, Virtual, FreeMode]}
         scrollbar={{ hide: true }}
         style={{ height: 'calc(100vh - 54px)' }}
         mousewheel
@@ -94,8 +93,10 @@ export default function PostsInfiniteScroll ({
           addSlidesAfter: 12
         }}
         slidesPerView={1.1}
-        freeModeSticky
-        freeMode
+        freeMode={{
+          enabled: true,
+          sticky: true
+        }}
         direction='vertical'
       >
         {data?.edges.map((item, index) =>

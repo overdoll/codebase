@@ -1,5 +1,5 @@
 import Link, { ChildrenCallableLink } from './Link'
-import { MaybeRenderProp } from '@//:types/components'
+import { MaybeRenderProp } from '../../types/components'
 import runIfFunction from '../support/runIfFunction'
 import { useRouter } from 'next/router'
 
@@ -23,7 +23,7 @@ const NavLink = ({
 }: Props): JSX.Element => {
   const { pathname } = useRouter()
 
-  const isActiveBasePath = pathname.startsWith(to)
+  const isActiveBasePath = pathname.includes(to)
 
   const isActive = pathname === to
 

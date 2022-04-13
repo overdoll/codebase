@@ -1,7 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicDetailedFragment$key } from '@//:artifacts/PostGalleryPublicDetailedFragment.graphql'

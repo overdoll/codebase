@@ -1,7 +1,0 @@
-extend type AuthenticationToken {
-  email: String
-}
-
-type Count {
-  categories: Int!
-}

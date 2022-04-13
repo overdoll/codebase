@@ -1,3 +1,3 @@
-import JoinRoot from '../../client/domain/Join/JoinRoot'
+import Join from '../../domain/join'
 
-export default JoinRoot
+export default Join
