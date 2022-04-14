@@ -6,13 +6,13 @@ export const filterOutDefault = (array): string[] => {
 }
 
 export default function decodeRouterArguments (query): PostSearchProps {
-  const characters = decodeObject(query.get('characters'))
-  const categories = query.getAll('categories')
-  const series = query.getAll('series')
-  const supporter = query.getAll('supporter')
+  const characters = decodeObject(query.characters)
+  const categories = query.categories
+  const series = query.series
+  const supporter = query.supporter
 
   return {
-    sortBy: query.get('sort') ?? 'TOP',
+    sortBy: query.sort ?? 'TOP',
     categorySlugs: filterOutDefault(categories),
     seriesSlugs: filterOutDefault(series),
     characterSlugs: characters != null ? filterOutDefault(Object.keys(characters)) : [],

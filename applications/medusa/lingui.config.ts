@@ -18,6 +18,26 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/404/__locale__/{locale}/index',
     include: ['src/domain/404/']
+  },
+  {
+    path: 'src/domain/confirm-email/__locale__/{locale}/index',
+    include: ['src/domain/confirm-email/']
+  },
+  {
+    path: 'src/domain/help/__locale__/{locale}/index',
+    include: ['src/domain/help/']
+  },
+  {
+    path: 'src/domain/search/__locale__/{locale}/index',
+    include: ['src/domain/search/']
+  },
+  {
+    path: 'src/domain/logout/__locale__/{locale}/index',
+    include: ['src/domain/logout/']
+  },
+  {
+    path: 'src/domain/profile/__locale__/{locale}/index',
+    include: ['src/domain/profile/']
   }
 ]
 
@@ -121,8 +141,39 @@ const ClubCatalog = [
 
 const ClubsCatalog = [
   {
+    path: 'src/domain/clubs/root/__locale__/{locale}/index',
+    include: ['src/domain/clubs/root/']
+  },
+  {
     path: 'src/domain/clubs/create-club/__locale__/{locale}/index',
     include: ['src/domain/clubs/create-club/']
+  },
+  {
+    path: 'src/domain/[slug]/root/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/root/']
+  },
+  {
+    path: 'src/domain/[slug]/p/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/p/']
+  },
+  {
+    path: 'src/domain/[slug]/posts/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/posts/']
+  }
+]
+
+const ModerationCatalog = [
+  {
+    path: 'src/domain/moderation/audit-logs/__locale__/{locale}/index',
+    include: ['src/domain/moderation/audit-logs/']
+  },
+  {
+    path: 'src/domain/moderation/post-queue/__locale__/{locale}/index',
+    include: ['src/domain/moderation/post-queue/']
+  },
+  {
+    path: 'src/domain/moderation/post-reports/__locale__/{locale}/index',
+    include: ['src/domain/moderation/post-reports/']
   }
 ]
 
@@ -144,7 +195,8 @@ export default {
     ...GeneralCatalogs,
     ...SettingsCatalogs,
     ...ClubCatalog,
-    ...ClubsCatalog
+    ...ClubsCatalog,
+    ...ModerationCatalog
   ],
   format: 'po',
   fallbackLocales: {

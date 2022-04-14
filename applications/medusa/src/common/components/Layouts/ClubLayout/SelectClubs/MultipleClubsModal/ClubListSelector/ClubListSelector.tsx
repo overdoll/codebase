@@ -1,14 +1,12 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { ClubListSelectorQuery } from '@//:artifacts/ClubListSelectorQuery.graphql'
-import ClubTileOverlay
-  from '@//:modules/content/ContentSelection/TileOverlay/ClubTileOverlay/ClubTileOverlay'
-import generatePath from '@//:modules/routing/generatePath'
-import { useHistory, useParams } from '@//:modules/routing'
+import ClubTileOverlay from '@//:modules/content/ContentSelection/TileOverlay/ClubTileOverlay/ClubTileOverlay'
 import { useLazyLoadQuery } from 'react-relay/hooks'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import EmptyClubs from '@//:modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs'
 import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
+import { useRouter } from 'next/router'
 
 const Query = graphql`
   query ClubListSelectorQuery {
@@ -60,17 +58,19 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
     queryData?.viewer
   )
 
-  const params = useParams()
+  const router = useRouter()
 
-  const history = useHistory()
+  const {
+    query: { slug },
+    pathname
+  } = router
 
   const onChange = (id): void => {
     if (id == null) return
-    const newPath = generatePath('/club/:slug/:entity', {
-      slug: id,
-      entity: params.entity
+    void router.push({
+      pathname: pathname,
+      query: { slug: id }
     })
-    history.push(newPath)
     onClose()
   }
 
@@ -78,7 +78,7 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
     register
   } = useChoice<{}>({
     defaultValue: {
-      [params.slug as string]: {}
+      [slug as string]: {}
     },
     max: 1,
     onChange: (choices) => onChange(Object.keys(choices)[0])

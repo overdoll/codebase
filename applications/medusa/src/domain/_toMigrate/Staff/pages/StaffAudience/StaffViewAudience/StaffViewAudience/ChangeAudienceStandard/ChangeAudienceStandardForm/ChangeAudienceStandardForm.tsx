@@ -8,7 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagStandard } from '@//:types/form'
 import { ChangeAudienceStandardFormMutation } from '@//:artifacts/ChangeAudienceStandardFormMutation.graphql'
 import { ChangeAudienceStandardFormFragment$key } from '@//:artifacts/ChangeAudienceStandardFormFragment.graphql'
-import GenericBoolean from '../../../../../../validation/GenericBoolean'
+import GenericBoolean from '../../../../../../../../../common/validation/GenericBoolean'
 import {
   Form,
   FormInput,

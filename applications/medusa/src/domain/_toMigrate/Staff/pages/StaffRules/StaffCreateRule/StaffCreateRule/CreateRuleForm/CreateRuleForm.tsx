@@ -8,10 +8,10 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import { CreateRuleFormMutation } from '@//:artifacts/CreateRuleFormMutation.graphql'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import GenericTagTitle from '../../../../../validation/GenericTagTitle'
+import GenericTagTitle from '../../../../../../../../common/validation/GenericTagTitle'
 import { TagDescription, TagInfraction, TagTitle } from '@//:types/form'
-import GenericBoolean from '../../../../../validation/GenericBoolean'
-import GenericTagDescription from '../../../../../validation/GenericTagDescription'
+import GenericBoolean from '../../../../../../../../common/validation/GenericBoolean'
+import GenericTagDescription from '../../../../../../../../common/validation/GenericTagDescription'
 import {
   Form,
   FormInput,

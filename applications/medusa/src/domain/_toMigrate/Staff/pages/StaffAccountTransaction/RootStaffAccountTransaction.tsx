@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
@@ -8,10 +7,10 @@ import type {
 } from '@//:artifacts/StaffAccountTransactionQuery.graphql'
 import StaffAccountTransactionQuery from '@//:artifacts/StaffAccountTransactionQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useParams } from '@//:modules/routing/useParams'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import StaffAccountTransaction from './StaffAccountTransaction/StaffAccountTransaction'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 interface Props {
   prepared: {
@@ -25,7 +24,7 @@ export default function RootStaffAccountTransaction (props: Props): JSX.Element 
     props.prepared.query
   )
 
-  const match = useParams()
+  const { query: { reference } } = useRouter()
 
   return (
     <>
@@ -35,7 +34,7 @@ export default function RootStaffAccountTransaction (props: Props): JSX.Element 
         </title>
       </Head>
       <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
+        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string })}>
           <Suspense fallback={<SkeletonStack />}>
             <StaffAccountTransaction query={queryRef as PreloadedQuery<StaffAccountTransactionQueryType>} />
           </Suspense>

@@ -8,7 +8,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import { CreateCancellationReasonFormMutation } from '@//:artifacts/CreateCancellationReasonFormMutation.graphql'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import GenericTagTitle from '../../../../../validation/GenericTagTitle'
+import GenericTagTitle from '../../../../../../../../common/validation/GenericTagTitle'
 import { TagTitle } from '@//:types/form'
 import {
   Form,

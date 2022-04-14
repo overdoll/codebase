@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'
@@ -9,6 +8,7 @@ import StaffCreateCharacterQuery, {
 } from '@//:artifacts/StaffCreateCharacterQuery.graphql'
 import StaffCreateCharacter from './StaffCreateCharacter/StaffCreateCharacter'
 import { Trans } from '@lingui/macro'
+import Head from 'next/head'
 
 interface Props {
   prepared: {

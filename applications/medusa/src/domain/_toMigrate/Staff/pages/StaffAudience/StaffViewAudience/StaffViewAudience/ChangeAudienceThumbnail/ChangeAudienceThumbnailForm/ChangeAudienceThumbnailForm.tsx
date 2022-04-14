@@ -8,7 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagThumbnail } from '@//:types/form'
 import { ChangeAudienceThumbnailFormFragment$key } from '@//:artifacts/ChangeAudienceThumbnailFormFragment.graphql'
 import { ChangeAudienceThumbnailFormMutation } from '@//:artifacts/ChangeAudienceThumbnailFormMutation.graphql'
-import GenericFile from '../../../../../../validation/GenericFile'
+import GenericFile from '../../../../../../../../../common/validation/GenericFile'
 import {
   Form,
   FormInput,

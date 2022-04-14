@@ -6,9 +6,10 @@ import { Icon } from '../../../../../../PageLayout'
 import { SearchSmall } from '@//:assets/icons/navigation'
 import IconButton from '../../../../../../../form/IconButton/IconButton'
 import GeneralSearch from './GeneralSearch/GeneralSearch'
+import { UrlObject } from 'url'
 
 interface Props {
-  routeTo: string
+  routeTo: string | UrlObject
 }
 
 export default function PostSearchButton ({ routeTo }: Props): JSX.Element {

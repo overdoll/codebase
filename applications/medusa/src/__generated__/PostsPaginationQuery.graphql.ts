@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d4183c14485bd32c6369c88f2810eae8>>
- * @relayHash 888e75f1f7035b25940576ead845e314
+ * @generated SignedSource<<84fa83e8bbeb0d4b356c83e5cf1e5785>>
+ * @relayHash 780ef78352977622ebff24919f84a511
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 888e75f1f7035b25940576ead845e314
+// @relayRequestID 780ef78352977622ebff24919f84a511
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type PostsPaginationQuery$variables = {
 export type PostsPaginationQueryVariables = PostsPaginationQuery$variables;
 export type PostsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostModerationQueueFragment">;
   } | null;
 };
 export type PostsPaginationQueryResponse = PostsPaginationQuery$data;
@@ -149,7 +149,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "PostsFragment"
+            "name": "PostModerationQueueFragment"
           }
         ],
         "storageKey": null
@@ -448,7 +448,7 @@ return {
     ]
   },
   "params": {
-    "id": "888e75f1f7035b25940576ead845e314",
+    "id": "780ef78352977622ebff24919f84a511",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
@@ -457,6 +457,6 @@ return {
 };
 })();
 
-(node as any).hash = "b5a68f194ae75e39849fdbba5d82fec8";
+(node as any).hash = "7c425557c42abec81a42baa3e8e5f3af";
 
 export default node;

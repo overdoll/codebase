@@ -21,7 +21,7 @@ import {
   TextareaInput,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import GenericTagDescription from '../../../../../../validation/GenericTagDescription'
+import GenericTagDescription from '../../../../../../../../../common/validation/GenericTagDescription'
 
 interface Props {
   query: ChangeRuleDescriptionFormFragment$key

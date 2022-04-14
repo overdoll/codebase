@@ -6,8 +6,6 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { CreateClubFormMutation } from '@//:artifacts/CreateClubFormMutation.graphql'
-import { useHistory } from '@//:modules/routing'
-import generatePath from '@//:modules/routing/generatePath'
 import ClubName from '@//:modules/validation/ClubName'
 import ClubSlug from '@//:modules/validation/ClubSlug'
 import translateValidation from '@//:modules/validation/translateValidation'
@@ -25,6 +23,8 @@ import {
   InputHelperText,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import { useRouter } from 'next/router'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
 
 interface Props extends ConnectionProp {
   isDisabled: boolean
@@ -63,7 +63,7 @@ export default function CreateClubForm ({
 
   const { i18n } = useLingui()
 
-  const history = useHistory()
+  const router = useRouter()
 
   const schema = Joi.object({
     name: ClubName(),
@@ -100,11 +100,14 @@ export default function CreateClubForm ({
           status: 'success',
           title: t`Club ${formValues.name} was created successfully`
         })
-        const redirectPath = generatePath('/club/:slug/:entity', {
-          slug: data.createClub?.club?.slug,
-          entity: 'home'
-        })
-        history.push(redirectPath)
+        const [, resolved] = resolveHref(router, {
+          pathname: 'club/[slug]/home',
+          query: {
+            slug: data.createClub?.club?.slug
+          }
+        }, true)
+
+        void router.push(resolved)
       },
       updater: (store, payload) => {
         const node = store.get(payload?.createClub?.club?.owner?.id as string)

@@ -10,10 +10,10 @@ import translateValidation from '@//:modules/validation/translateValidation'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import useSlugSubscribe from '../../../../../support/useSlugSubscribe'
-import GenericTagSlug from '../../../../../validation/GenericTagSlug'
+import GenericTagSlug from '../../../../../../../../common/validation/GenericTagSlug'
 import { TagName, TagSeriesId, TagSlug } from '@//:types/form'
-import GenericTagId from '../../../../../validation/GenericTagId'
-import GenericTagName from '../../../../../validation/GenericTagName'
+import GenericTagId from '../../../../../../../../common/validation/GenericTagId'
+import GenericTagName from '../../../../../../../../common/validation/GenericTagName'
 import {
   Form,
   FormInput,

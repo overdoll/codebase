@@ -1,18 +1,17 @@
 import { Suspense } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { StaffViewRuleQuery as StaffViewRuleQueryType } from '@//:artifacts/StaffViewRuleQuery.graphql'
 import StaffViewRuleQuery from '@//:artifacts/StaffViewRuleQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useParams } from '@//:modules/routing/useParams'
 import { Stack } from '@chakra-ui/react'
 import StaffViewRule from './StaffViewRule/StaffViewRule'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 interface Props {
   prepared: {
@@ -26,7 +25,7 @@ export default function RootStaffViewRule (props: Props): JSX.Element {
     props.prepared.query
   )
 
-  const match = useParams()
+  const { query: { reference } } = useRouter()
 
   return (
     <>
@@ -43,7 +42,7 @@ export default function RootStaffViewRule (props: Props): JSX.Element {
             </Trans>
           </BackButton>
           <QueryErrorBoundary loadQuery={() => loadQuery({
-            reference: match.reference as string
+            reference: reference as string
           })}
           >
             <Suspense fallback={<SkeletonStack />}>

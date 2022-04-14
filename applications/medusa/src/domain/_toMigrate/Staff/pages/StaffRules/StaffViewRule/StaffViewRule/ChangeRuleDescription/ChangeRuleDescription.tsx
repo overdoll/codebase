@@ -4,7 +4,7 @@ import { Stack, Text } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import ChangeRuleDescriptionForm from './ChangeRuleDescriptionForm/ChangeRuleDescriptionForm'
-import TranslationSnippet from '../../../../../components/TranslationSnippet/TranslationSnippet'
+import TranslationSnippet from '../../../../../../../../common/components/TranslationSnippet/TranslationSnippet'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {

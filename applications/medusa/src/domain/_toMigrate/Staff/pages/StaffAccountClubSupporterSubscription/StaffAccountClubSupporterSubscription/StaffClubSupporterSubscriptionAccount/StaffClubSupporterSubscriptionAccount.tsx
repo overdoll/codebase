@@ -9,10 +9,10 @@ import { dateFormat } from '@//:modules/constants/format'
 import { Box, HStack, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import LargeAccountHeader from '../../../../components/LargeAccountHeader/LargeAccountHeader'
+import LargeAccountHeader from '../../../../../../../common/components/LargeAccountHeader/LargeAccountHeader'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
-import ProfilePageButton from '../../../../../Profile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
-import ProfileStaffButton from '../../../../../Profile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
+import ProfilePageButton from '../../../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import ProfileStaffButton from '../../../../../../profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 
 interface Props {
   query: StaffClubSupporterSubscriptionAccountFragment$key

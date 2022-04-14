@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
@@ -9,11 +8,11 @@ import type {
 import StaffAccountClubSupporterSubscriptionQuery
   from '@//:artifacts/StaffAccountClubSupporterSubscriptionQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useParams } from '@//:modules/routing/useParams'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import StaffAccountClubSupporterSubscription
   from './StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 interface Props {
   prepared: {
@@ -27,7 +26,7 @@ export default function RootStaffAccountClubSupporterSubscription (props: Props)
     props.prepared.query
   )
 
-  const match = useParams()
+  const { query: { reference } } = useRouter()
 
   return (
     <>
@@ -37,7 +36,7 @@ export default function RootStaffAccountClubSupporterSubscription (props: Props)
         </title>
       </Head>
       <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: match.reference as string })}>
+        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string })}>
           <Suspense fallback={<SkeletonStack />}>
             <StaffAccountClubSupporterSubscription
               query={queryRef as PreloadedQuery<StaffAccountClubSupporterSubscriptionQueryType>}

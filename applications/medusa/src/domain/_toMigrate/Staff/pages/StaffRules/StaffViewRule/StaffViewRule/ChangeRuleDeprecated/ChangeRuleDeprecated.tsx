@@ -3,7 +3,7 @@ import { ChangeRuleDeprecatedFragment$key } from '@//:artifacts/ChangeRuleDeprec
 import { Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import BooleanHeader from '../../../../../components/BooleanHeader/BooleanHeader'
+import BooleanHeader from '../../../../../../../../common/components/BooleanHeader/BooleanHeader'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeRuleDeprecatedForm from './ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm'
 

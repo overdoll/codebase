@@ -8,7 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagInfraction } from '@//:types/form'
 import { ChangeRuleInfractionFormMutation } from '@//:artifacts/ChangeRuleInfractionFormMutation.graphql'
 import { ChangeRuleInfractionFormFragment$key } from '@//:artifacts/ChangeRuleInfractionFormFragment.graphql'
-import GenericBoolean from '../../../../../../validation/GenericBoolean'
+import GenericBoolean from '../../../../../../../../../common/validation/GenericBoolean'
 import {
   Form,
   FormInput,

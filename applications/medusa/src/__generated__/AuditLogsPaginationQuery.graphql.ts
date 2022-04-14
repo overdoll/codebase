@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fcad85518d4a1c952fa72055ae42e9c9>>
- * @relayHash cb8c01ca5377a4e920efae5dc69847ce
+ * @generated SignedSource<<da58ab61c342b19eea2c7e6f16186bdb>>
+ * @relayHash cf9e2449323e3e9c248f1f4060fea575
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cb8c01ca5377a4e920efae5dc69847ce
+// @relayRequestID cf9e2449323e3e9c248f1f4060fea575
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +23,7 @@ export type AuditLogsPaginationQuery$variables = {
 export type AuditLogsPaginationQueryVariables = AuditLogsPaginationQuery$variables;
 export type AuditLogsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"AuditLogsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostAuditLogsFragment">;
   } | null;
 };
 export type AuditLogsPaginationQueryResponse = AuditLogsPaginationQuery$data;
@@ -163,7 +163,7 @@ return {
               (v7/*: any*/)
             ],
             "kind": "FragmentSpread",
-            "name": "AuditLogsFragment"
+            "name": "PostAuditLogsFragment"
           }
         ],
         "storageKey": null
@@ -418,7 +418,7 @@ return {
     ]
   },
   "params": {
-    "id": "cb8c01ca5377a4e920efae5dc69847ce",
+    "id": "cf9e2449323e3e9c248f1f4060fea575",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -427,6 +427,6 @@ return {
 };
 })();
 
-(node as any).hash = "9e48b41821b4768855f604989e03da42";
+(node as any).hash = "35d731a3714412c25e492f66c8d47707";
 
 export default node;

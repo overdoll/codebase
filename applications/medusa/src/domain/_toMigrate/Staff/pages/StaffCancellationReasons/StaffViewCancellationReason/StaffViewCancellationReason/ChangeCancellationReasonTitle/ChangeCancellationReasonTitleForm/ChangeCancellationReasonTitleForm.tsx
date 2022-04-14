@@ -24,7 +24,7 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import GenericTagTitle from '../../../../../../validation/GenericTagTitle'
+import GenericTagTitle from '../../../../../../../../../common/validation/GenericTagTitle'
 
 interface Props {
   query: ChangeCancellationReasonTitleFormFragment$key

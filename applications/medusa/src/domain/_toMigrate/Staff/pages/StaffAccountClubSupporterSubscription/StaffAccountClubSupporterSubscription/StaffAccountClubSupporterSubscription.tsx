@@ -5,7 +5,7 @@ import {
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import StaffClubSupporterSubscriptionPreview
-  from '../../StaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
+  from '../../../../../staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
 import { TableBodyRowBackground } from '@//:modules/content/ThemeComponents/Table/Table'
 import { Trans } from '@lingui/macro'
 import StaffClubSupporterSubscriptionBillingError

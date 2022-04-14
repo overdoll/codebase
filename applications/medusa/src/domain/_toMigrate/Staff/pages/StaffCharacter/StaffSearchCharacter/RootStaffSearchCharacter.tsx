@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async'
 import { PageSectionTitle, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Suspense } from 'react'

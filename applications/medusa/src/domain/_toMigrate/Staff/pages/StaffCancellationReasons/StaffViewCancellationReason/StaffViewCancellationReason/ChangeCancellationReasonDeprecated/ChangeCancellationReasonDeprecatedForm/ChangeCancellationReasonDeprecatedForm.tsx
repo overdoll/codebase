@@ -12,7 +12,7 @@ import {
 import {
   ChangeCancellationReasonDeprecatedFormFragment$key
 } from '@//:artifacts/ChangeCancellationReasonDeprecatedFormFragment.graphql'
-import GenericBoolean from '../../../../../../validation/GenericBoolean'
+import GenericBoolean from '../../../../../../../../../common/validation/GenericBoolean'
 import {
   Form,
   FormInput,

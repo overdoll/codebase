@@ -8,7 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagThumbnail } from '@//:types/form'
 import { ChangeCategoryThumbnailFormFragment$key } from '@//:artifacts/ChangeCategoryThumbnailFormFragment.graphql'
 import { ChangeCategoryThumbnailFormMutation } from '@//:artifacts/ChangeCategoryThumbnailFormMutation.graphql'
-import GenericFile from '../../../../../../validation/GenericFile'
+import GenericFile from '../../../../../../../../../common/validation/GenericFile'
 import UploadInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/UploadInput/UploadInput'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
 

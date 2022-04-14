@@ -7,7 +7,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagThumbnail } from '@//:types/form'
 import { ChangeCharacterThumbnailFormFragment$key } from '@//:artifacts/ChangeCharacterThumbnailFormFragment.graphql'
-import GenericFile from '../../../../../../validation/GenericFile'
+import GenericFile from '../../../../../../../../../common/validation/GenericFile'
 import { ChangeCharacterThumbnailFormMutation } from '@//:artifacts/ChangeCharacterThumbnailFormMutation.graphql'
 import {
   Form,

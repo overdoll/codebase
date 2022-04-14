@@ -139,7 +139,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/Logout/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/logout/Logout/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -147,7 +147,7 @@ const routes: Route[] = [
         ],
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/Logout/Logout'
+            '../../domain/logout/Logout/Logout'
           )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
@@ -285,14 +285,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/ConfirmEmail/ConfirmEmail'
+            '../../domain/confirm-email/ConfirmEmail/ConfirmEmail'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/confirm-email/ConfirmEmail/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -351,14 +351,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/Search/RootSearch'
+            '../../domain/search/RootSearch/RootSearch'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/Search/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/search/RootSearch/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -396,14 +396,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/MyClubs/RootMyClubs'
+            '../../domain/clubs/root/RootMyClubs/RootMyClubs'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/MyClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/clubs/root/RootMyClubs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -459,14 +459,14 @@ const routes: Route[] = [
             path: '/moderation/queue',
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Moderation/pages/Queue/Queue'
+                '../../domain/moderation/post-queue/RootPostModerationQueue/RootPostModerationQueue'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Moderation/pages/Queue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/moderation/post-queue/RootPostModerationQueue/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -489,14 +489,14 @@ const routes: Route[] = [
             path: '/moderation/history',
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Moderation/pages/History/History'
+                '../../domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Moderation/pages/History/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/moderation/audit-logs/RootPostAuditLogs/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -522,14 +522,14 @@ const routes: Route[] = [
             path: '/moderation/reports',
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Moderation/pages/Reports/Reports'
+                '../../domain/moderation/post-reports/RootPostReports/RootPostReports'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Moderation/pages/Reports/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/moderation/post-reports/RootPostReports/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -554,14 +554,14 @@ const routes: Route[] = [
             path: '/moderation/post/:reference',
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Moderation/pages/ModerationPost/RootModerationPost'
+                '../../domain/staff/post/RootStaffPost/RootStaffPost'
               )
             ),
             dependencies: [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Moderation/pages/ModerationPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/staff/post/RootStaffPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1395,7 +1395,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Staff/pages/StaffAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/staff/account/RootStaffAccount/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1418,7 +1418,7 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Staff/pages/StaffAccount/RootStaffAccount'
+                '../../domain/staff/account/RootStaffAccount/RootStaffAccount'
               )
             ),
             prepare: ({ params }) => {
@@ -1443,7 +1443,7 @@ const routes: Route[] = [
               {
                 resource: loadable(async (environment) =>
                   await import(
-                    `./applications/medusa/src/domain/_toMigrate/Staff/pages/StaffClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                    `./applications/medusa/src/domain/staff/club/RootStaffClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
                   )
                 ),
                 then: loadMessages
@@ -1466,7 +1466,7 @@ const routes: Route[] = [
             exact: true,
             component: loadable(async () =>
               await import(
-                '../../domain/_toMigrate/Staff/pages/StaffClub/RootStaffClub'
+                '../../domain/staff/club/RootStaffClub/RootStaffClub'
               )
             ),
             prepare: ({ params }) => {
@@ -2089,7 +2089,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/PublicPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/[slug]/p/RootPublicPost/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2098,7 +2098,7 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/PublicPost/RootPublicPost'
+            '../../domain/[slug]/p/RootPublicPost/RootPublicPost'
           )
         ),
         prepare: ({
@@ -2126,7 +2126,7 @@ const routes: Route[] = [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/Profile/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/profile/RootProfile/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2134,7 +2134,7 @@ const routes: Route[] = [
         ],
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/Profile/RootProfile'
+            '../../domain/profile/RootProfile/RootProfile'
           )
         ),
         prepare: ({
@@ -2566,14 +2566,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/Help/Help'
+            '../../domain/help/Help/Help'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/Help/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/help/Help/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2585,14 +2585,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/PublicClub/RootPublicClub'
+            '../../domain/[slug]/root/RootPublicClub/RootPublicClub'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/PublicClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/[slug]/root/RootPublicClub/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages
@@ -2621,14 +2621,14 @@ const routes: Route[] = [
         exact: true,
         component: loadable(async () =>
           await import(
-            '../../domain/_toMigrate/PublicClubPosts/RootPublicClubPosts'
+            '../../domain/[slug]/posts/RootPublicClubPosts/RootPublicClubPosts'
           )
         ),
         dependencies: [
           {
             resource: loadable(async (environment) =>
               await import(
-                `./applications/medusa/src/domain/_toMigrate/PublicClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
+                `./applications/medusa/src/domain/[slug]/posts/RootPublicClubPosts/__locale__/${getLanguageFromEnvironment(environment)}/index.js`
               )
             ),
             then: loadMessages

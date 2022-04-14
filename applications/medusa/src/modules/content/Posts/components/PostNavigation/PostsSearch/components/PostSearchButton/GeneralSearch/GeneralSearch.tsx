@@ -8,9 +8,10 @@ import { SearchInput, SearchProvider, useSearch } from '../../../../../../../Hoo
 import SearchChoices from './SearchChoices/SearchChoices'
 import { configMap, GeneralSearchProps } from '../../../constants'
 import { Stack } from '@chakra-ui/react'
+import { UrlObject } from 'url'
 
 interface Props {
-  routeTo: string
+  routeTo: string | UrlObject
   onClose: () => void
 }
 
@@ -35,8 +36,6 @@ export default function GeneralSearch ({
 
     return [[character], query.characters[character] as string]
   }
-
-  //
 
   const searchMethods = useSearch<GeneralSearchProps>({
     defaultValue: {

@@ -8,7 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagDeprecated } from '@//:types/form'
 import { ChangeRuleDeprecatedFormMutation } from '@//:artifacts/ChangeRuleDeprecatedFormMutation.graphql'
 import { ChangeRuleDeprecatedFormFragment$key } from '@//:artifacts/ChangeRuleDeprecatedFormFragment.graphql'
-import GenericBoolean from '../../../../../../validation/GenericBoolean'
+import GenericBoolean from '../../../../../../../../../common/validation/GenericBoolean'
 import {
   Form,
   FormInput,

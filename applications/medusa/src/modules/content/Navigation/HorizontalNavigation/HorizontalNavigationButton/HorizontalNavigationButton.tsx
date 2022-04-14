@@ -1,7 +1,7 @@
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
-import { Url } from 'url'
+import { UrlObject } from 'url'
 
 interface Props {
   icon?: FunctionComponent<any>
@@ -12,7 +12,7 @@ interface Props {
   children?: ReactNode
   isActive?: boolean
   as?: any
-  href?: string | Url
+  href?: string | UrlObject
 }
 
 const HorizontalNavigationButton = forwardRef<any, Props>(({

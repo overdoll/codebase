@@ -4,8 +4,8 @@ import { Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import ChangeAudienceTitleForm from './ChangeAudienceTitleForm/ChangeAudienceTitleForm'
-import TagHeader from '../../../../../components/TagHeader/TagHeader'
-import TranslationSnippet from '../../../../../components/TranslationSnippet/TranslationSnippet'
+import TagHeader from '../../../../../../../../common/components/TagHeader/TagHeader'
+import TranslationSnippet from '../../../../../../../../common/components/TranslationSnippet/TranslationSnippet'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {

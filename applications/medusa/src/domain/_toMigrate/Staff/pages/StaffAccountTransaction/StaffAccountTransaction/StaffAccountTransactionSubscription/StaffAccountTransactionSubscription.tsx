@@ -3,7 +3,7 @@ import type {
   StaffAccountTransactionSubscriptionFragment$key
 } from '@//:artifacts/StaffAccountTransactionSubscriptionFragment.graphql'
 import StaffClubSupporterSubscriptionPreview
-  from '../../../StaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
+  from '../../../../../../staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
 import { TableBodyRowLink } from '@//:modules/content/ThemeComponents/Table/Table'
 
 interface Props {

@@ -24,7 +24,10 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
 
   return (
     <HorizontalNavigationDropdownMenu.Button
-      href={`/m/${data?.username as string}`}
+      href={{
+        pathname: '/profile/[username]',
+        query: { username: data?.username }
+      }}
     >
       <RenderOnDesktop>
         <Flex

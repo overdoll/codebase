@@ -10,7 +10,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagLocale, TagTitle } from '@//:types/form'
 import { ChangeSeriesTitleFormMutation } from '@//:artifacts/ChangeSeriesTitleFormMutation.graphql'
 import { ChangeSeriesTitleFormFragment$key } from '@//:artifacts/ChangeSeriesTitleFormFragment.graphql'
-import GenericTagTitle from '../../../../../../validation/GenericTagTitle'
+import GenericTagTitle from '../../../../../../../../../common/validation/GenericTagTitle'
 import Locale from '@//:modules/validation/Locale'
 import {
   Form,
