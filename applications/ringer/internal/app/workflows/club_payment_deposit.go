@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
 	"overdoll/libraries/money"
@@ -80,6 +81,25 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			PaymentId: paymentId,
 		},
 	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// spawn an async child workflow which will tally payments at the end of each month
+	// in order to create a payout
+	childWorkflowOptions := workflow.ChildWorkflowOptions{
+		WorkflowID:            "GenerateClubMonthlyPayout_" + input.DestinationClubId,
+		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		CronSchedule:          "0 0 1 * *",
+	}
+
+	if err := workflow.ExecuteChildWorkflow(workflow.WithChildOptions(ctx, childWorkflowOptions), GenerateClubMonthlyPayout,
+		GenerateClubMonthlyPayoutInput{
+			ClubId: input.DestinationClubId,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(ctx, nil); err != nil {
 		return err
 	}
 

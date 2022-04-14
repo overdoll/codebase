@@ -20,4 +20,6 @@ type Repository interface {
 	DecrementClubBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error
 	UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *Payment) error) (*Payment, error)
 	UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *PlatformFee) error) (*PlatformFee, error)
+	AddPaymentToClubReadyList(ctx context.Context, payment *Payment) error
+	ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, currency money.Currency)) error
 }

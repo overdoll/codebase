@@ -11,11 +11,15 @@ type MakeClubPaymentReadyForPayout struct {
 
 func (h *Activities) MakeClubPaymentReadyForPayout(ctx context.Context, input MakeClubPaymentReadyForPayout) error {
 
-	_, err := h.pr.UpdateClubPaymentStatus(ctx, input.PaymentId, func(pay *payment.Payment) error {
+	readyPayment, err := h.pr.UpdateClubPaymentStatus(ctx, input.PaymentId, func(pay *payment.Payment) error {
 		return pay.MakeReady()
 	})
 
 	if err != nil {
+		return err
+	}
+
+	if err := h.pr.AddPaymentToClubReadyList(ctx, readyPayment); err != nil {
 		return err
 	}
 
