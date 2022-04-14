@@ -25,8 +25,6 @@ export default function ClubCopyLinkButton ({
 
   const router = useRouter()
 
-  const { basePath } = router
-
   const [, resolved] = resolveHref(router, {
     pathname: '/[slug]',
     query: {
@@ -34,7 +32,7 @@ export default function ClubCopyLinkButton ({
     }
   }, true)
 
-  const [, onCopy] = useCopyToClipboardWrapper({ text: `${basePath}${resolved}` })
+  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
     <MenuItem

@@ -28,8 +28,6 @@ export default function PostCopyLinkButton ({
 
   const router = useRouter()
 
-  const { basePath } = router
-
   const [, resolved] = resolveHref(router, {
     pathname: '/[slug]/p/[reference]',
     query: {
@@ -38,7 +36,7 @@ export default function PostCopyLinkButton ({
     }
   }, true)
 
-  const [, onCopy] = useCopyToClipboardWrapper({ text: `${basePath}${resolved}` })
+  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
     <MenuItem

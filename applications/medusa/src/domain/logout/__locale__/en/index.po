@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 10:37-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/logout/Logout/Logout.tsx:49
+msgid "There was an error logging out"
+msgstr ""
+
+#: src/domain/logout/Logout/Logout.tsx:30
+msgid "You have been logged out"
+msgstr ""

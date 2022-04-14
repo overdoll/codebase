@@ -1,5 +1,5 @@
 import { randomBytes } from 'crypto'
-import gcm from '../_toRemove/server/utilities/gcm'
+import gcm from '../utilities/gcm'
 import { serialize } from 'cookie'
 
 export type SetupSecurityTokenReturn = string

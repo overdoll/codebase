@@ -8,6 +8,7 @@ import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql
 import { t, Trans } from '@lingui/macro'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import { useRouter } from 'next/router'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -29,7 +30,7 @@ const ConfirmEmail: PageProps<{}> = (): JSX.Element => {
     ConfirmEmailMutationGQL
   )
 
-  const history = useHistory()
+  const router = useRouter()
 
   const { flash } = useFlash()
 
@@ -47,16 +48,16 @@ const ConfirmEmail: PageProps<{}> = (): JSX.Element => {
         if (data != null) {
           if (data.accountEmail == null) {
             flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
-            history.push('/settings/profile/emails')
+            void router.push('/settings/profile/emails')
           } else {
             flash('confirmation.success', t`${data.accountEmail.email} was confirmed successfully`)
-            history.push('/settings/profile/emails')
+            void router.push('/settings/profile/emails')
           }
         }
       },
       onError () {
         flash('confirmation.error', t`This confirmation link is either invalid or has expired`)
-        history.push('/settings/profile/emails')
+        void router.push('/settings/profile/emails')
       }
     })
   }

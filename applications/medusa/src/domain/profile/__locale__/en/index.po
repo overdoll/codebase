@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 10:37-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfileCopyLinkButton/ProfileCopyLinkButton.tsx:40
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/profile/RootProfile/Profile/ProfileContributingClubs/ProfileContributingClubs.tsx:34
+msgid "Not contributing to any clubs"
+msgstr ""
+
+#: src/domain/profile/RootProfile/Profile/ProfileSupportedClubs/ProfileSupportedClubs.tsx:34
+msgid "Not supporting any clubs"
+msgstr ""
+
+#: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton.tsx:27
+msgid "Public Profile"
+msgstr ""
+
+#: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
+msgid "Staff"
+msgstr ""

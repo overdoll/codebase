@@ -25,8 +25,6 @@ export default function ProfileCopyLinkButton ({
 
   const router = useRouter()
 
-  const { basePath } = router
-
   const [, resolved] = resolveHref(router, {
     pathname: '/profile/[username]',
     query: {
@@ -34,7 +32,7 @@ export default function ProfileCopyLinkButton ({
     }
   }, true)
 
-  const [, onCopy] = useCopyToClipboardWrapper({ text: `${basePath}${resolved}` })
+  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
     <MenuItem

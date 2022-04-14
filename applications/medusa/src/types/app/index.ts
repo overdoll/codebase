@@ -9,12 +9,13 @@ import {
   Variables
 } from 'relay-runtime'
 import { i18n, Messages } from '@lingui/core'
-import { SetupSecurityTokenReturn } from '../../pages/security'
+import { SetupSecurityTokenReturn } from '@//:modules/next/security'
 import { EnvironmentProviderOptions } from 'react-relay/hooks'
 import { PreloadFetchPolicy } from 'react-relay/relay-hooks/EntryPointTypes'
 import { BaseContext, NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils'
 import { ComponentType } from 'react'
 import Cookies from 'universal-cookie'
+import { NextResponse, NextRequest, NextFetchEvent } from 'next/server'
 
 interface CustomPreloadedQuery {
   kind: 'PreloadedQuery' | 'SerializedPreloadedQuery'
@@ -77,3 +78,11 @@ export declare type CustomComponentType<C extends BaseContext = PageContext, P =
 export type PageProps<P = {}, IP = P> =
   NextComponentType<PageContext, IP, P>
   & CustomComponentType<PageContext, P>
+
+// middleware
+type NextMiddlewareResult = NextResponse | Response | null | undefined
+
+export type Middleware = (
+  request: NextRequest,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>

@@ -3,9 +3,9 @@ import type { ClickSeriesFragment$key } from '@//:artifacts/ClickSeriesFragment.
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { configMap } from '../../../PostNavigation/PostsSearch/constants'
-import { useHistory } from '../../../../../../routing'
 import { Heading } from '@chakra-ui/react'
 import ClickableBox from '../../../../../ThemeComponents/ClickableBox/ClickableBox'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: ClickSeriesFragment$key
@@ -23,7 +23,7 @@ const Fragment = graphql`
 export default function ClickSeries ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const history = useHistory()
+  const router = useRouter()
 
   const onClick = (): void => {
     const encodedQuery = encodeQueryParams(configMap, {
@@ -31,7 +31,7 @@ export default function ClickSeries ({ query }: Props): JSX.Element {
       sort: 'TOP'
     })
 
-    history.push(`/search?${stringify(encodedQuery)}`)
+    void router.push(`/search?${stringify(encodedQuery)}`)
   }
 
   return (

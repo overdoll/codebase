@@ -3,7 +3,6 @@ import { HStack, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../../support/support'
 import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql'
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
@@ -22,6 +21,7 @@ import {
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
+import { useRouter } from 'next/router'
 
 interface CodeValues {
   code: string
@@ -82,7 +82,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const history = useHistory()
+  const router = useRouter()
 
   const onSubmitCode = ({ code }: CodeValues): void => {
     submitCode({
@@ -104,12 +104,12 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
           status: 'success',
           title: t`A recovery code was successfully used up to log you in`
         })
-        history.push(redirect != null ? redirect : '/')
+        void router.push(redirect != null ? redirect : '/')
       },
-      updater: (store) => {
-        const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
+      updater: (store, payload) => {
+        const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
 
-        prepareViewer(store, payload)
+        prepareViewer(store, viewerPayload)
       },
       onError (data) {
         notify({

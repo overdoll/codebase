@@ -31,7 +31,7 @@ import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { DeleteCircle } from '@//:assets/icons'
 import { dateFormat } from '@//:modules/constants/format'
 import { ConnectionProp } from '@//:types/components'
-import { useHistory } from '@//:modules/routing'
+import { useRouter } from 'next/router'
 
 interface Props extends ConnectionProp {
   query: CancelSubscriptionButtonFragment$key
@@ -83,7 +83,7 @@ export default function CancelSubscriptionButton ({
 
   const [commit, isInFlight] = useMutation<CancelSubscriptionButtonMutation>(Mutation)
 
-  const history = useHistory()
+  const router = useRouter()
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
 
@@ -130,7 +130,7 @@ export default function CancelSubscriptionButton ({
         })
         onClose()
         clearValues()
-        history.push('/settings/billing/subscriptions')
+        void router.push('/settings/billing/subscriptions')
       },
       updater: (store) => {
         store.delete(data.id)

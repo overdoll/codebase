@@ -36,7 +36,6 @@ const securityHeaders = [
 ]
 
 module.exports = {
-  basePath: 'https://overdoll.com',
   async headers () {
     return [
       {

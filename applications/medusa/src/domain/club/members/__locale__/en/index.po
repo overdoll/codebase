@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/members/RootClubMembers/ClubMembers/ClubMembers.tsx:74
+#: src/domain/club/members/RootClubMembers/ClubMembers/ClubMembers.tsx:73
 msgid "No members found"
 msgstr ""

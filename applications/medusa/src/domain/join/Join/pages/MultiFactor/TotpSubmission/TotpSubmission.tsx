@@ -24,6 +24,7 @@ import {
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
+import { useRouter } from 'next/router'
 
 interface CodeValues {
   code: string
@@ -73,7 +74,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const history = useHistory()
+  const router = useRouter()
 
   const onSubmitTotp = (formData): void => {
     submitTotp({
@@ -97,7 +98,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store) => {
-        history.push(redirect != null ? redirect : '/')
+        void router.push(redirect != null ? redirect : '/')
         const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
         prepareViewer(store, payload)
       },
@@ -123,7 +124,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
           mb={8}
         />
         <Heading
-          align='center'
+          textAlign='center'
           fontSize='xl'
           color='gray.00'
         >

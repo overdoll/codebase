@@ -7,9 +7,8 @@ import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { ManageClubSlugAliasesRemoveMutation } from '@//:artifacts/ManageClubSlugAliasesRemoveMutation.graphql'
 import { ManageClubSlugAliasesPromoteMutation } from '@//:artifacts/ManageClubSlugAliasesPromoteMutation.graphql'
-
-import { useHistory } from '@//:modules/routing'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: ManageClubSlugAliasesFragment$key | null
@@ -58,7 +57,9 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
 
   const [promoteSlug, isPromotingSlug] = useMutation<ManageClubSlugAliasesPromoteMutation>(PromoteClubSlugMutationGQL)
 
-  const history = useHistory()
+  const router = useRouter()
+
+  const { pathname } = router
 
   const { i18n } = useLingui()
 
@@ -102,7 +103,6 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
           title: t`Successfully promoted the link alias ${slug} to default`,
           isClosable: true
         })
-        history.replace(`/club/${slug as string}/settings/aliases`)
       },
       updater: (store, payload) => {
         const node = store.get(data.id)
@@ -110,6 +110,10 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
           const newSlug = payload?.promoteClubSlugAliasToDefault?.club?.slug
           node.setValue(newSlug, 'slug')
         }
+        void router.replace({
+          pathname: pathname,
+          query: { slug: slug }
+        })
       },
       onError (data) {
         notify({

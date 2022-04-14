@@ -21,7 +21,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:51
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:40
 msgid "DRAFT"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:59
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:51
 msgid "Edit Draft"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:42
+#: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:43
 #: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:70
 msgid "Published"
 msgstr ""

@@ -1,7 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Link, Stack, Text } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
-import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import RegisterForm from './RegisterForm/RegisterForm'
 import { PageWrapper } from '@//:modules/content/PageLayout'
@@ -15,6 +14,8 @@ import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
 import Head from 'next/head'
+import { StringParam, useQueryParam } from 'use-query-params'
+import { useRouter } from 'next/router'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -52,7 +53,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const [, , removeCookie] = useCookies<string>(['token'])
 
-  const history = useHistory()
+  const router = useRouter()
 
   const { flash } = useFlash()
 
@@ -84,7 +85,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
         flash('new.account', '')
         removeCookie('token')
-        history.push(redirect != null ? redirect : '/')
+        void router.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',

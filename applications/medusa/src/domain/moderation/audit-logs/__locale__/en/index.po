@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 10:37-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs.tsx:42
+msgid "Any moderation actions you take will appear here."
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs.tsx:58
+msgid "Club"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs.tsx:51
+msgid "Date Posted"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:89
+msgid "Load More"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:74
+msgid "No audit logs were found"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:96
+msgid "Only the last 7 days of logs are available"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs.tsx:37
+msgid "Post Audit Logs"
+msgstr ""
+
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/RootPostAuditLogs.tsx:65
+msgid "Status"
+msgstr ""

@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
-import gcm from '../../utilities/gcm'
+import gcm from '@//:modules/utilities/gcm'
 
 // Security middleware
 // Handles issuing a security cookie + header

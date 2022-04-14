@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 10:37-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/clubs/root/RootMyClubs/MyClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:68
+msgid "No clubs found"
+msgstr ""
+
+#: src/domain/clubs/root/RootMyClubs/MyClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:29
+msgid "Search for a club by name"
+msgstr ""

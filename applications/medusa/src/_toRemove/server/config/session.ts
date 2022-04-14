@@ -1,7 +1,7 @@
 import redis from 'redis'
 import connect from 'connect-redis'
 import session from 'express-session'
-import gcm from '../utilities/gcm'
+import gcm from '@//:modules/utilities/gcm'
 
 const RedisStore = connect(session)
 

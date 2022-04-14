@@ -11,9 +11,9 @@ import fetchQuery, { addToOperationResponseCache, getOperationResponseCacheKey }
 import Root from '../domain/app'
 import 'swiper/css'
 import 'swiper/css/scrollbar'
-import setupSecurityToken from './security'
+import setupSecurityToken from '@//:modules/next/security'
 import createCache from '@emotion/cache'
-import NextQueryParamProvider from './NextQueryParamProvider'
+import NextQueryParamProvider from '@//:modules/next/NextQueryParamProvider'
 import { CookiesProvider } from 'react-cookie'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import { FlashProvider } from '@//:modules/flash'
@@ -48,7 +48,7 @@ const clientFetch = (securityToken) => {
     .then(async response => await response.json())
 }
 
-const serverFetch = (req, res) => {
+export const serverFetch = (req, res) => {
   return async (data) => {
     const headers = {
       'Content-Type': 'application/json',

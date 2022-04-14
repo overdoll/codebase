@@ -1,11 +1,12 @@
 import { ReactNode } from 'react'
-import { useRoutingContext } from './RoutingContext'
+import Error from 'next/error'
 
 interface Props {
   children: ReactNode
 }
 
 export default function NotFound ({ children }: Props): JSX.Element {
+  /*
   const router = useRoutingContext()
 
   // this will only run on the server
@@ -13,5 +14,12 @@ export default function NotFound ({ children }: Props): JSX.Element {
     router.staticContext.status = 404
   }
 
-  return children as JSX.Element
+   */
+
+  return (
+    <>
+      <Error statusCode={404} />
+      {children}
+    </>
+  )
 }

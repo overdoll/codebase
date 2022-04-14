@@ -1528,6 +1528,7 @@ const routes: Route[] = [
                   },
                   options: {
                     fetchPolicy: 'store-or-network'
+                    fetchPolicy: 'store-or-network'
                   }
                 }
               }

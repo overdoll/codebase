@@ -25,6 +25,14 @@ msgstr ""
 msgid "Are you sure you'd like to delete this post? You cannot undo this action and it will be gone forever."
 msgstr ""
 
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:76
+msgid "Audiences"
+msgstr ""
+
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:34
+msgid "Audit Logs"
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
@@ -45,15 +53,27 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:112
+msgid "Cancellation Reasons"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:58
+msgid "Categories"
+msgstr ""
+
 #: src/domain/root/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:78
 #~ msgid "Changing to your preferred language..."
 #~ msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:22
+msgid "Characters"
+msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:47
 msgid "Clear Search"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:71
+#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:77
 msgid "Close"
 msgstr ""
 
@@ -86,8 +106,32 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:32
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:44
 msgid "Copy Link"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:83
+msgid "Create Audience"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:119
+msgid "Create Cancellation Reason"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:65
+msgid "Create Category"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:29
+msgid "Create Character"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:101
+msgid "Create Rule"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:47
+msgid "Create Series"
 msgstr ""
 
 #: src/domain/root/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonClub/DropdownMenuButtonClub.tsx:35
@@ -221,6 +265,7 @@ msgstr ""
 msgid "Moderate"
 msgstr ""
 
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:15
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:67
 msgid "Moderation"
 msgstr ""
@@ -235,6 +280,10 @@ msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:23
 msgid "Next"
+msgstr ""
+
+#: src/common/components/BooleanHeader/BooleanHeader.tsx:27
+msgid "No"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:10
@@ -286,17 +335,21 @@ msgid "Open"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:48
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:46
 msgid "Open Menu"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton.tsx:26
+#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton.tsx:27
 msgid "Open Search"
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:95
-#~ msgid "Platform Staff"
-#~ msgstr ""
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:16
+msgid "Platform Staff"
+msgstr ""
+
+#: src/modules/validation/ModerationNote.ts:13
+msgid "Please add a note"
+msgstr ""
 
 #: src/modules/validation/Totp.ts:13
 msgid "Please enter a 6-digit authentication code"
@@ -330,6 +383,10 @@ msgstr ""
 msgid "Please review the <0>Club Guidelines</0> to make sure this doesn't happen again."
 msgstr ""
 
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:45
+msgid "Post Reports"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
 msgid "Post report was submitted successfully"
 msgstr ""
@@ -348,6 +405,10 @@ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:92
 msgid "Posts"
+msgstr ""
+
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:24
+msgid "Posts Queue"
 msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:46
@@ -376,16 +437,44 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:94
+msgid "Rules"
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:85
+#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:91
 msgid "Save"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:89
+msgid "Search Audiences"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:125
+msgid "Search Cancellation Reasons"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:71
+msgid "Search Categories"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:35
+msgid "Search Characters"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:107
+msgid "Search Rules"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:53
+msgid "Search Series"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:113
 msgid "Search for a series"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:64
+#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:63
 msgid "Search for characters, categories, or series"
 msgstr ""
 
@@ -407,6 +496,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:100
 msgid "Select a series"
+msgstr ""
+
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:40
+msgid "Series"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:114
@@ -471,6 +564,14 @@ msgstr ""
 
 #: src/modules/validation/ClubName.ts:14
 msgid "The name must be at least 3 characters"
+msgstr ""
+
+#: src/modules/validation/ModerationNote.ts:15
+msgid "The note cannot exceed 255 characters"
+msgstr ""
+
+#: src/modules/validation/ModerationNote.ts:14
+msgid "The note needs at least 5 characters"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton.tsx:56
@@ -549,6 +650,10 @@ msgstr ""
 #: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:31
 msgid "View Post"
+msgstr ""
+
+#: src/common/components/BooleanHeader/BooleanHeader.tsx:16
+msgid "Yes"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:96

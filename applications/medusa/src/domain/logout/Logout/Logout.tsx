@@ -1,10 +1,10 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
-import { useHistory } from '@//:modules/routing'
 import { useEffect } from 'react'
 import CenteredSpinner from '@//:modules/content/Placeholder/Loading/CenteredSpinner/CenteredSpinner'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { PageProps } from '@//:types/app'
+import { useRouter } from 'next/router'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -17,7 +17,7 @@ const LogoutButtonGQL = graphql`
 const Logout: PageProps<{}> = () => {
   const [logout] = useMutation(LogoutButtonGQL)
 
-  const history = useHistory()
+  const router = useRouter()
 
   const notify = useToast()
 
@@ -31,10 +31,8 @@ const Logout: PageProps<{}> = () => {
         })
       },
       updater: (store, payload) => {
-        history.replace('/')
+        void router.replace('/')
 
-        // listen to history until its at a certain path and then logout
-        // to fix double refresh bug
         const viewer = store
           .getRoot()
           .getLinkedRecord('viewer')

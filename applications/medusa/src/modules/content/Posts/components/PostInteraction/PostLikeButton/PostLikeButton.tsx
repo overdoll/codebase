@@ -147,7 +147,7 @@ export default function PostLikeButton ({
               h='100%'
               w='100%'
                    />)}
-            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : async () => await router.push(redirect)}
+            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => void router.push(redirect)}
             {...rest}
           />
           <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>
