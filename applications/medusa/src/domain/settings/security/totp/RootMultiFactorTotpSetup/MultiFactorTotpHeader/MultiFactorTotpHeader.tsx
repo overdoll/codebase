@@ -11,7 +11,7 @@ interface Props {
 }
 
 const MultiFactorTotpHeaderQueryGQL = graphql`
-  query MultiFactorTotpHeaderQuery {
+  query MultiFactorTotpHeaderQuery @preloadable {
     viewer @required(action: THROW) {
       multiFactorTotpConfigured
       recoveryCodesGenerated

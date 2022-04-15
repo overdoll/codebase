@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6e9f8c56e0c186be38b869d8466376e4>>
- * @relayHash f6a662ba07d47c1fecb3b45caa9cbd41
+ * @generated SignedSource<<b9132ccfc0172eb071e232adeb8d4357>>
+ * @relayHash 5d53877ba90b5b65c8b3649e7d09f65b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f6a662ba07d47c1fecb3b45caa9cbd41
+// @relayRequestID 5d53877ba90b5b65c8b3649e7d09f65b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type HomeQuery$variables = {};
 export type HomeQueryVariables = HomeQuery$variables;
 export type HomeQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "NewAccountModalFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
@@ -158,6 +158,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PostsInfiniteScrollViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "NewAccountModalFragment"
           }
         ],
         "storageKey": null
@@ -425,7 +430,7 @@ return {
     ]
   },
   "params": {
-    "id": "f6a662ba07d47c1fecb3b45caa9cbd41",
+    "id": "5d53877ba90b5b65c8b3649e7d09f65b",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",
@@ -434,7 +439,7 @@ return {
 };
 })();
 
-(node as any).hash = "99ebab1a7ae42d7b8984f70c511a5aca";
+(node as any).hash = "48223e2f5162779bfb9a95d3989f4085";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

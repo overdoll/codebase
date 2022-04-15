@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query VerifyTokenQuery($token: String!, $secret: String) {
+  query VerifyTokenQuery($token: String!, $secret: String) @preloadable {
     viewAuthenticationToken(token: $token, secret: $secret) {
       verified
       secure

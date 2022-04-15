@@ -76,8 +76,9 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           return
         }
 
-        if (payload?.createAccountWithAuthenticationToken?.account != null) {
-          prepareViewer(store, payload?.createAccountWithAuthenticationToken?.account)
+        if (payload?.createAccountWithAuthenticationToken?.account?.id != null) {
+          const account = store.get(payload?.createAccountWithAuthenticationToken?.account?.id)
+          prepareViewer(store, account)
           removeCookie('token')
           flash('new.account', '')
           void router.push(redirect != null ? redirect : '/')

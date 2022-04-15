@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query MultiFactorSettingsQuery {
+  query MultiFactorSettingsQuery @preloadable {
     viewer @required(action: THROW) {
       multiFactorTotpConfigured
       ...DisableMultiFactorFragment

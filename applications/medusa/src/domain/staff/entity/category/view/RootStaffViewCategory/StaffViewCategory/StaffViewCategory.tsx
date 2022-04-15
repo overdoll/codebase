@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query StaffViewCategoryQuery($slug: String!) {
+  query StaffViewCategoryQuery($slug: String!) @preloadable {
     category(slug: $slug) {
       ...ChangeCategoryTitleFragment
       ...ChangeCategoryThumbnailFragment

@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { useHistory } from '@//:modules/routing'
 import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
 import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'

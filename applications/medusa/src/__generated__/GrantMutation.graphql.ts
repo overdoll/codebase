@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0bdb42c9e74996d146334b6ad41c4643>>
- * @relayHash e0eab03a9eb7bac4d8f18fc3b7cd5baf
+ * @generated SignedSource<<21ba1804c12d34a29176ae576d938aef>>
+ * @relayHash 4606d53b2c70d55f0d169ccff51aa6c4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e0eab03a9eb7bac4d8f18fc3b7cd5baf
+// @relayRequestID 4606d53b2c70d55f0d169ccff51aa6c4
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
@@ -25,6 +25,7 @@ export type GrantMutation$data = {
     readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
     readonly account: {
       readonly id: string;
+      readonly username: string;
     } | null;
   } | null;
 };
@@ -78,6 +79,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -104,7 +112,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "e0eab03a9eb7bac4d8f18fc3b7cd5baf",
+    "id": "4606d53b2c70d55f0d169ccff51aa6c4",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -113,6 +121,6 @@ return {
 };
 })();
 
-(node as any).hash = "6b2c028444331b480f4d1f2434620388";
+(node as any).hash = "8db813159e2a742d11a7a24c53ceccba";
 
 export default node;

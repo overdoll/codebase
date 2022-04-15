@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df538ab99dc1a37b75fc8c6dba29c20d>>
+ * @generated SignedSource<<1142ea4a5c6bee5814c7b444156418d3>>
  * @relayHash b362964b720ce01b03d1ca29b8bb9e55
  * @lightSyntaxTransform
  * @nogrep
@@ -111,6 +111,9 @@ const node: ConcreteRequest = {
   }
 };
 
-(node as any).hash = "7c379e6864f97bdee5f0522c04bc93cf";
+(node as any).hash = "57ff9744625fc42fac1ebff3305c7f18";
+
+import { PreloadableQueryRegistry } from 'relay-runtime';
+PreloadableQueryRegistry.set(node.params.id, node);
 
 export default node;

@@ -23,6 +23,7 @@ const GrantAction = graphql`
       validation
       account {
         id
+        username
       }
     }
   }
@@ -77,8 +78,9 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
-        if (payload?.grantAccountAccessWithAuthenticationToken?.account != null) {
-          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationToken?.account)
+        if (payload?.grantAccountAccessWithAuthenticationToken?.account?.id != null) {
+          const account = store.get(payload?.grantAccountAccessWithAuthenticationToken?.account?.id)
+          prepareViewer(store, account)
           removeCookie('token')
           void router.push(redirect != null ? redirect : '/')
         }
@@ -105,9 +107,10 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         justify='center'
         direction='column'
       >
+        <Spinner color='teal.400' w={4} h={4} />
         <Spinner
           mb={6}
-          thickness='4'
+          thickness='4px'
           w={20}
           h={20}
           color='primary.400'

@@ -18,6 +18,7 @@ import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutati
 import Button from '@//:modules/form/Button/Button'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { useCookies } from 'react-cookie'
 
 interface Props {
   queryRef: RevokeTokenButtonFragment$key
@@ -53,6 +54,9 @@ export default function RevokeTokenButton ({
   const [revokeToken, isRevokingToken] = useMutation<RevokeTokenButtonMutation>(
     Mutation
   )
+
+  const [, , removeCookie] = useCookies(['token'])
+
   const onRevokeToken = (): void => {
     revokeToken({
       variables: {
@@ -62,6 +66,7 @@ export default function RevokeTokenButton ({
       },
       onCompleted () {
         onClose()
+        removeCookie('token')
       }
     })
   }

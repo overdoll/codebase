@@ -11,12 +11,13 @@ import { t, Trans } from '@lingui/macro'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   query: PreloadedQuery<RecoveryCodesSetupQuery>
 }
 
 const RecoveryCodesSetupQueryGQL = graphql`
-  query RecoveryCodesSetupQuery {
+  query RecoveryCodesSetupQuery @preloadable {
     viewer @required(action: THROW) {
       id
       recoveryCodes {
@@ -144,7 +145,7 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
                       px={3}
                       py={1}
                       borderRadius='base'
-                      justify='center'
+                      textAlign='center'
                       fontSize='lg'
                       bg='gray.800'
                       color='teal.300'

@@ -17,7 +17,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query EmailsSettingsQuery {
+  query EmailsSettingsQuery @preloadable {
     viewer {
       ...EmailsSettingsFragment
       emailsLimit

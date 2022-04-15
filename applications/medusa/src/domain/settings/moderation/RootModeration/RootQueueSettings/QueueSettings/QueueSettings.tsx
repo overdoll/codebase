@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query QueueSettingsQuery {
+  query QueueSettingsQuery @preloadable {
     viewer @required(action: THROW) {
       ...QueueSettingsFragment
     }

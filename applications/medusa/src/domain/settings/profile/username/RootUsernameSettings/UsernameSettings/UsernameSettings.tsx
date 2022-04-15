@@ -11,8 +11,12 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
+interface Props {
+  query: PreloadedQuery<UsernameSettingsQuery>
+}
+
 const Query = graphql`
-  query UsernameSettingsQuery {
+  query UsernameSettingsQuery @preloadable {
     viewer @required(action: THROW) {
       ...UsernameSettingsFragment
     }
@@ -25,10 +29,6 @@ const Fragment = graphql`
     usernameEditAvailableAt
   }
 `
-
-interface Props {
-  query: PreloadedQuery<UsernameSettingsQuery>
-}
 
 export default function UsernameSettings (props: Props): JSX.Element | null {
   const queryData = usePreloadedQuery<UsernameSettingsQuery>(

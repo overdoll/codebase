@@ -101,8 +101,9 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
-        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account != null) {
-          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account)
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id != null) {
+          const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id)
+          prepareViewer(store, account)
           removeCookie('token')
           void router.push(redirect != null ? redirect : '/')
         }

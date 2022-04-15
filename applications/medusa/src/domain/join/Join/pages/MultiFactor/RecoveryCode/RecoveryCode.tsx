@@ -110,8 +110,9 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
-        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account != null) {
-          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account)
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id != null) {
+          const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id)
+          prepareViewer(store, account)
           removeCookie('token')
           void router.push(redirect != null ? redirect : '/')
         }

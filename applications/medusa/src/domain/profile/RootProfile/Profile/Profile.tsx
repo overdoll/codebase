@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query ProfileQuery($username: String!) {
+  query ProfileQuery($username: String!) @preloadable {
     account(username: $username) {
       username
       avatar {

@@ -11,6 +11,9 @@ module.exports = {
       '@//:common': path.resolve(__dirname, 'src/common')
     }
   },
+  optimization: {
+    runtimeChunk: 'single'
+  },
   module: {
     rules: [
       {

@@ -73,7 +73,7 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   if (isCreatingPost) {
     return (
       <PostPlaceholder>
-        <Spinner mb={6} thickness='4px' size='lg' color='primary.500' />
+        <Spinner mb={6} thickness='4px' w={12} h={12} color='primary.500' />
         <Text color='gray.100'><Trans>Creating your post...</Trans></Text>
       </PostPlaceholder>
     )

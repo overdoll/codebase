@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query PostAuditLogsQuery ($from: Time!, $to: Time!) {
+  query PostAuditLogsQuery ($from: Time!, $to: Time!) @preloadable {
     viewer {
       ...PostAuditLogsFragment
     }

@@ -5,6 +5,7 @@ import CenteredSpinner from '@//:modules/content/Placeholder/Loading/CenteredSpi
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -15,7 +16,7 @@ const LogoutButtonGQL = graphql`
 `
 
 const Logout: PageProps<{}> = () => {
-  const [logout] = useMutation(LogoutButtonGQL)
+  const [logout] = useMutation<LogoutMutation>(LogoutButtonGQL)
 
   const router = useRouter()
 
@@ -31,15 +32,13 @@ const Logout: PageProps<{}> = () => {
         })
       },
       updater: (store, payload) => {
-        void router.replace('/')
-
-        const viewer = store
-          .getRoot()
-          .getLinkedRecord('viewer')
-
-        if (viewer != null) {
-          viewer.invalidateRecord()
+        if (payload?.revokeAccountAccess?.revokedAccountId != null) {
+          const viewer = store.get(payload?.revokeAccountAccess?.revokedAccountId)
+          if (viewer != null) {
+            viewer.invalidateRecord()
+          }
         }
+        void router.push('/')
       },
       onError () {
         notify({

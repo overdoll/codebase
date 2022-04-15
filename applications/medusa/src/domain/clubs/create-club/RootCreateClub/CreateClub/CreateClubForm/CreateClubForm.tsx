@@ -24,7 +24,6 @@ import {
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { useRouter } from 'next/router'
-import { resolveHref } from 'next/dist/shared/lib/router/router'
 
 interface Props extends ConnectionProp {
   isDisabled: boolean
@@ -100,14 +99,13 @@ export default function CreateClubForm ({
           status: 'success',
           title: t`Club ${formValues.name} was created successfully`
         })
-        const [, resolved] = resolveHref(router, {
-          pathname: 'club/[slug]/home',
+
+        void router.push({
+          pathname: '/club/[slug]/home',
           query: {
             slug: data.createClub?.club?.slug
           }
-        }, true)
-
-        void router.push(resolved)
+        })
       },
       updater: (store, payload) => {
         const node = store.get(payload?.createClub?.club?.owner?.id as string)

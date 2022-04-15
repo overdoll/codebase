@@ -2,19 +2,20 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { SearchQuery } from '@//:artifacts/SearchQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 
 interface Props {
   query: PreloadedQuery<SearchQuery>
 }
 
 const Query = graphql`
-  query SearchQuery(
+  query SearchQuery (
     $sortBy: PostsSort!,
     $categorySlugs: [String!],
     $seriesSlugs: [String!],
     $characterSlugs: [String!]
-  ) {
+  ) @preloadable {
     ...SearchFragment
     viewer {
       ...PostsInfiniteScrollViewerFragment

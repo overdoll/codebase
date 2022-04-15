@@ -13,7 +13,7 @@ interface Props {
 }
 
 const SessionsSettingsQueryGQL = graphql`
-  query SessionsSettingsQuery {
+  query SessionsSettingsQuery @preloadable {
     viewer {
       ...SessionsSettingsFragment
     }

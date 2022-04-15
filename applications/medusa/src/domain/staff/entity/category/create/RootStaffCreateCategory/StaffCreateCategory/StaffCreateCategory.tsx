@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query StaffCreateCategoryQuery($first: Int, $after: String) {
+  query StaffCreateCategoryQuery($first: Int, $after: String) @preloadable {
     categories (first: $first, after: $after)
     @connection(key: "StaffCategoriesConnection_categories") {
       __id

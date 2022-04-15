@@ -24,7 +24,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query PostModerationQueueQuery {
+  query PostModerationQueueQuery @preloadable {
     viewer {
       ...PostModerationQueueFragment
     }
