@@ -66,8 +66,6 @@ export default function SelectSeriesButton ({
 
   const { i18n } = useLingui()
 
-  console.log(isOpen)
-
   return (
     <>
       <Stack spacing={2}>

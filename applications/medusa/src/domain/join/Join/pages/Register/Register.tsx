@@ -16,6 +16,7 @@ import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modu
 import Head from 'next/head'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
+import { prepareViewer } from '../../support/support'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -75,17 +76,12 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           return
         }
 
-        // basically just invalidate the viewer so it can be re-fetched
-        const viewer = store
-          .getRoot()
-          .getLinkedRecord('viewer')
-
-        if (viewer !== null) {
-          viewer.invalidateRecord()
+        if (payload?.createAccountWithAuthenticationToken?.account != null) {
+          prepareViewer(store, payload?.createAccountWithAuthenticationToken?.account)
+          removeCookie('token')
+          flash('new.account', '')
+          void router.push(redirect != null ? redirect : '/')
         }
-        flash('new.account', '')
-        removeCookie('token')
-        void router.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',

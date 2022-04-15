@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<07b32bc2f5c1c3bc3fceb29379b742a7>>
- * @relayHash 58034fa7073cc309429438b94b4c630d
+ * @generated SignedSource<<2b93cbf3bbc27777eed986a13d951012>>
+ * @relayHash 6bab7ad661dc060cc1fbfe094f8327d8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 58034fa7073cc309429438b94b4c630d
+// @relayRequestID 6bab7ad661dc060cc1fbfe094f8327d8
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
@@ -26,6 +26,7 @@ export type TotpSubmissionMutation$data = {
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
     readonly account: {
       readonly id: string;
+      readonly username: string;
     } | null;
   } | null;
 };
@@ -79,6 +80,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -105,7 +113,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "58034fa7073cc309429438b94b4c630d",
+    "id": "6bab7ad661dc060cc1fbfe094f8327d8",
     "metadata": {},
     "name": "TotpSubmissionMutation",
     "operationKind": "mutation",
@@ -114,6 +122,6 @@ return {
 };
 })();
 
-(node as any).hash = "2669e660cadc249a8cef4a11d5ee9a1b";
+(node as any).hash = "eb8656e9c0b56319d37b365708d09a2f";
 
 export default node;

@@ -2,7 +2,6 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { BadgeCircle } from '@//:assets/icons/navigation'
-import { useHistory } from '@//:modules/routing'
 import { prepareViewer } from '../../../support/support'
 import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
 import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
@@ -25,6 +24,7 @@ import {
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
+import { useCookies } from 'react-cookie'
 
 interface CodeValues {
   code: string
@@ -46,6 +46,7 @@ const Mutation = graphql`
       validation
       account {
         id
+        username
       }
     }
   }
@@ -57,6 +58,8 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
   const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionMutation>(Mutation)
 
   const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
+
+  const [, , removeCookie] = useCookies<string>(['token'])
 
   const { i18n } = useLingui()
 
@@ -97,10 +100,12 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
           title: t`Welcome back! Thanks for using two-factor to log in!`
         })
       },
-      updater: (store) => {
-        void router.push(redirect != null ? redirect : '/')
-        const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
-        prepareViewer(store, payload)
+      updater: (store, payload) => {
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account != null) {
+          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account)
+          removeCookie('token')
+          void router.push(redirect != null ? redirect : '/')
+        }
       },
       onError () {
         notify({

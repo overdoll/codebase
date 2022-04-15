@@ -22,6 +22,7 @@ import {
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
+import { useCookies } from 'react-cookie'
 
 interface CodeValues {
   code: string
@@ -37,6 +38,7 @@ const RecoveryCodeMutationGQL = graphql`
       validation
       account {
         id
+        username
       }
     }
   }
@@ -56,6 +58,8 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
   )
 
   const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
+
+  const [, , removeCookie] = useCookies<string>(['token'])
 
   const { i18n } = useLingui()
 
@@ -104,12 +108,13 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
           status: 'success',
           title: t`A recovery code was successfully used up to log you in`
         })
-        void router.push(redirect != null ? redirect : '/')
       },
       updater: (store, payload) => {
-        const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
-
-        prepareViewer(store, viewerPayload)
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account != null) {
+          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account)
+          removeCookie('token')
+          void router.push(redirect != null ? redirect : '/')
+        }
       },
       onError (data) {
         notify({

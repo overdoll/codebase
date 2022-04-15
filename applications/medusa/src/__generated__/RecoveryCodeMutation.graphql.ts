@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6e329a934487f828b0a64b912d4e57be>>
- * @relayHash a376f0c63f1f30bde5d56d40f0d03e3f
+ * @generated SignedSource<<c655bc45353996bfdc170ce8f683c544>>
+ * @relayHash 2a6ea9287211f18f08035ee999701114
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a376f0c63f1f30bde5d56d40f0d03e3f
+// @relayRequestID 2a6ea9287211f18f08035ee999701114
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "RECOVERY_CODE_INVALID" | "TOKEN_INVALID" | "%future added value";
@@ -26,6 +26,7 @@ export type RecoveryCodeMutation$data = {
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
     readonly account: {
       readonly id: string;
+      readonly username: string;
     } | null;
   } | null;
 };
@@ -79,6 +80,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -105,7 +113,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "a376f0c63f1f30bde5d56d40f0d03e3f",
+    "id": "2a6ea9287211f18f08035ee999701114",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",
@@ -114,6 +122,6 @@ return {
 };
 })();
 
-(node as any).hash = "588c613c78f3d1c6744e4aadffe805b8";
+(node as any).hash = "a75d8fa389dbaf84e9bf968a687008f7";
 
 export default node;

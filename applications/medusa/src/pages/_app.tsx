@@ -28,6 +28,19 @@ import {
   TranslationProps
 } from '@//:types/app'
 
+const mapping = {
+  en: 'en-US'
+}
+
+// dateFNS has weird mapping - so we check to make sure its proper here
+function getDateFnsLocale (locale: string): string {
+  if (mapping[locale] != null) {
+    return mapping[locale]
+  }
+
+  return locale
+}
+
 const IS_SERVER = typeof window === typeof undefined
 
 let securityTokenCache = ''
@@ -120,6 +133,14 @@ const App = ({
     return targetI18n
   }, [])
 
+  useMemo(() => {
+    void import(
+      /* webpackExclude: /_lib/ */`date-fns/locale/${getDateFnsLocale(locale)}/index.js`
+    ).then((res) => {
+      i18n.load(locale, { dateFns: res })
+    })
+  }, [])
+
   const firstRender = useRef(true)
   // Load localization data into lingui
   if (translationProps != null && firstRender.current) {
@@ -192,6 +213,10 @@ App.getInitialProps = async function (app) {
   let environment = null
   let i18n
   let fetchFn
+
+  if (app.ctx.locale == null) {
+    app.ctx.locale = 'en'
+  }
 
   if (IS_SERVER) {
     securityToken = setupSecurityToken(app.ctx)
