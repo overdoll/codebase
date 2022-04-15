@@ -53,7 +53,6 @@ func (h *Activities) AppendOrCreateDepositRequest(ctx context.Context, input App
 		if err := h.par.CreateDepositRequest(ctx, deposit); err != nil {
 			return err
 		}
-
 	}
 
 	if err := h.par.AddPayoutToDepositRequest(ctx, depositId, payoutItem); err != nil {

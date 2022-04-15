@@ -6,10 +6,9 @@ import (
 )
 
 type SubtractFromBalanceInput struct {
-	PaymentId string
-	ClubId    string
-	Amount    int64
-	Currency  money.Currency
+	ClubId   string
+	Amount   int64
+	Currency money.Currency
 }
 
 func (h *Activities) SubtractFromClubBalance(ctx context.Context, input SubtractFromBalanceInput) error {

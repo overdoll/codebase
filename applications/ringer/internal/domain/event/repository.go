@@ -2,6 +2,7 @@ package event
 
 import (
 	"context"
+	"overdoll/applications/ringer/internal/domain/payout"
 )
 
 type Repository interface {
@@ -11,4 +12,5 @@ type Repository interface {
 	RetryClubPayout(ctx context.Context, payoutId string) error
 	CancelClubPayoutSignal(ctx context.Context, payoutWorkflowId string) error
 	RetryClubPayoutSignal(ctx context.Context, payoutWorkflowId string) error
+	DelayClubPayout(ctx context.Context, pay *payout.ClubPayout) error
 }

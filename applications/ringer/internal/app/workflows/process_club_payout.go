@@ -14,6 +14,8 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 
 	var a *activities.Activities
 
+	successfulPayout := false
+
 	const NumberOfAttempts = 3
 	for i := 1; i < NumberOfAttempts; i++ {
 
@@ -28,18 +30,9 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			return err
 		}
 
-		// mark if successful
 		if payload.Success {
-
-			if err := workflow.ExecuteActivity(ctx, a.MarkPayoutDeposited,
-				activities.MarkPayoutDepositedInput{
-					PayoutId: input.PayoutId,
-				},
-			).Get(ctx, nil); err != nil {
-				return err
-			}
-
-			return nil
+			successfulPayout = true
+			break
 		}
 
 		// if there's an error, we add a failure, and the loop will try again
@@ -54,12 +47,46 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 		}
 	}
 
-	// finally, mark it as failed since there's an error
-	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutFailed,
-		activities.MarkPayoutFailedInput{
+	if !successfulPayout {
+		// finally, mark it as failed since there's an error
+		if err := workflow.ExecuteActivity(ctx, a.MarkPayoutFailed,
+			activities.MarkPayoutFailedInput{
+				PayoutId: input.PayoutId,
+			},
+		).Get(ctx, nil); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	// payout was successful, finish up logic
+	var deposit *activities.MarkPayoutDepositedPayload
+
+	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutDeposited,
+		activities.MarkPayoutDepositedInput{
 			PayoutId: input.PayoutId,
 		},
+	).Get(ctx, deposit); err != nil {
+		return err
+	}
+
+	// subtract from the club's balance since the payout has now been deposited
+	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
+		activities.SubtractFromBalanceInput{
+			ClubId:   deposit.ClubId,
+			Currency: deposit.Currency,
+			Amount:   deposit.Amount,
+		},
 	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	if err := workflow.ExecuteActivity(ctx, a.MakeClubPaymentsForPayoutComplete,
+		activities.MakeClubPaymentsForPayoutCompleteInput{
+			PayoutId: input.PayoutId,
+		},
+	).Get(ctx, deposit); err != nil {
 		return err
 	}
 

@@ -61,10 +61,9 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	// add to the club's pending balance, so they can see it
 	if err := workflow.ExecuteActivity(ctx, a.AddToClubPendingBalance,
 		activities.AddToClubPendingBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -105,10 +104,9 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 
 	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
 		activities.SubtractFromBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -117,10 +115,9 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	// add to the club's balance - this is the actual balance that will be paid out
 	if err := workflow.ExecuteActivity(ctx, a.AddToClubBalance,
 		activities.AddToClubBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

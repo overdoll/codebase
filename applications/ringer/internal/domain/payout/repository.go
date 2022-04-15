@@ -23,5 +23,6 @@ type Repository interface {
 	GetClubPayoutsByDepositRequest(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, depositRequestId string) ([]*DepositRequest, error)
 	GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*DepositRequest, error)
 	UpdatePayoutState(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
+	UpdatePayoutDepositDate(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	UpdatePayoutEvents(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 }

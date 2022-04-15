@@ -9,6 +9,7 @@ type Status struct {
 var (
 	UnknownStatus = Status{""}
 	Queued        = Status{"QUEUED"}
+	Processing    = Status{"PROCESSING"}
 	Failed        = Status{"FAILED"}
 	Cancelled     = Status{"CANCELLED"}
 	Deposited     = Status{"DEPOSITED"}
@@ -26,6 +27,10 @@ func StatusFromString(s string) (Status, error) {
 		return Failed, nil
 	case Deposited.slug:
 		return Deposited, nil
+	case Cancelled.slug:
+		return Cancelled, nil
+	case Processing.slug:
+		return Processing, nil
 	}
 
 	return UnknownStatus, errors.New("unknown status: " + s)

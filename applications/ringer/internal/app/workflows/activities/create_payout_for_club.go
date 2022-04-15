@@ -14,20 +14,25 @@ type CreatePayoutForClubInput struct {
 	TotalAmount           int64
 	Currency              money.Currency
 	Timestamp             time.Time
+	DepositDate           *time.Time
 	AccountPayoutMethodId string
 }
 
-func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayoutForClubInput) error {
+type CreatePayoutForClubPayload struct {
+	DepositDate time.Time
+}
 
-	newPayout, err := payout.NewQueuedPayout(input.AccountPayoutMethodId, input.PayoutId, input.ClubId, input.TotalAmount, input.Currency, input.Timestamp)
+func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayoutForClubInput) (*CreatePayoutForClubPayload, error) {
+
+	newPayout, err := payout.NewQueuedPayout(input.AccountPayoutMethodId, input.PayoutId, input.ClubId, input.TotalAmount, input.Currency, input.Timestamp, input.DepositDate)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := h.par.CreateClubPayout(ctx, newPayout); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &CreatePayoutForClubPayload{DepositDate: newPayout.DepositDate()}, nil
 }

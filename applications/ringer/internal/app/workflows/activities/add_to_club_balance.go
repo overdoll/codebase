@@ -6,10 +6,9 @@ import (
 )
 
 type AddToClubBalanceInput struct {
-	PaymentId string
-	ClubId    string
-	Amount    int64
-	Currency  money.Currency
+	ClubId   string
+	Amount   int64
+	Currency money.Currency
 }
 
 func (h *Activities) AddToClubBalance(ctx context.Context, input AddToClubBalanceInput) error {

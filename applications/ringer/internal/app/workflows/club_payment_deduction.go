@@ -61,10 +61,9 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 
 	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
 		activities.SubtractFromBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -87,10 +86,9 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 	// we remove our deduction from the pending balance
 	if err := workflow.ExecuteActivity(ctx, a.AddToClubPendingBalance,
 		activities.AddToClubPendingBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -99,10 +97,9 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 	// subtract from the club's balance since this is a deduction
 	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
 		activities.SubtractFromBalanceInput{
-			PaymentId: paymentId,
-			ClubId:    input.DestinationClubId,
-			Currency:  pendingPayment.Currency,
-			Amount:    pendingPayment.FinalAmount,
+			ClubId:   input.DestinationClubId,
+			Currency: pendingPayment.Currency,
+			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

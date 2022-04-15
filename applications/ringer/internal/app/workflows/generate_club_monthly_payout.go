@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+const (
+	UpdatePayoutDateSignal = "UpdatePayoutDate"
+)
+
 type GenerateClubMonthlyPayoutInput struct {
 	ClubId     string
 	FutureTime *time.Time
@@ -67,12 +71,9 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
+	var createPayload *activities.CreatePayoutForClubPayload
+
 	ts := workflow.Now(ctx)
-	// if we don't specify a future time, we do our own time
-	if input.FutureTime == nil {
-		newTs := ts.AddDate(0, 0, 15)
-		input.FutureTime = &newTs
-	}
 
 	// create a payout record
 	if err := workflow.ExecuteActivity(ctx, a.CreatePayoutForClub,
@@ -83,10 +84,15 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			Currency:              group.Currency,
 			ClubId:                input.ClubId,
 			Timestamp:             ts,
+			DepositDate:           input.FutureTime,
 			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
 		},
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, createPayload); err != nil {
 		return err
+	}
+
+	if input.FutureTime == nil {
+		input.FutureTime = &createPayload.DepositDate
 	}
 
 	depositId, err := support.GenerateUniqueIdForWorkflow(ctx)
@@ -106,8 +112,47 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
-	// sleep until the specified future time
-	if err := workflow.Sleep(ctx, ts.Sub(*input.FutureTime)); err != nil {
+	timerFired := false
+
+	wakeupChannel := workflow.GetSignalChannel(ctx, UpdatePayoutDateSignal)
+
+	// basically here, we wait until our specified future time, when the deposit is supposed to actually occur.
+	// we can delay a payout at any time, so this supports updating the time
+	// source: https://github.com/temporalio/samples-go/blob/main/updatabletimer/workflow.go
+	for !timerFired && ctx.Err() == nil {
+		timerCtx, timerCancel := workflow.WithCancel(ctx)
+		duration := input.FutureTime.Sub(workflow.Now(timerCtx))
+		timer := workflow.NewTimer(timerCtx, duration)
+
+		workflow.NewSelector(timerCtx).
+			AddFuture(timer, func(f workflow.Future) {
+				// if a timer returned an error then it was canceled
+				if err := f.Get(timerCtx, nil); err == nil {
+					timerFired = true
+				}
+			}).
+			AddReceive(wakeupChannel, func(c workflow.ReceiveChannel, more bool) {
+				timerCancel()                          // cancel outstanding timer
+				c.Receive(timerCtx, &input.FutureTime) // update wake-up time
+			}).
+			Select(timerCtx)
+
+		if !timerFired {
+			// schedule an activity to update settlement date for the payout
+			if err := workflow.ExecuteActivity(timerCtx, a.UpdatePayoutDepositDate,
+				activities.UpdatePayoutDepositDateInput{DepositDate: *input.FutureTime},
+			).Get(ctx, nil); err != nil {
+				return err
+			}
+		}
+	}
+
+	// mark the payout as "processing" - our initial period of x days until deposit has passed
+	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutProcessing,
+		activities.MarkPayoutProcessingInput{
+			PayoutId: *payoutId,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
