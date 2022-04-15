@@ -1,6 +1,7 @@
 package payout
 
 import (
+	"errors"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -51,6 +52,34 @@ func (p *ClubPayout) MakeDeposited() error {
 
 func (p *ClubPayout) MakeFailed() error {
 	p.status = Failed
+	return nil
+}
+
+func (p *ClubPayout) MakeQueued() error {
+	p.status = Queued
+	return nil
+}
+
+func (p *ClubPayout) MakeCancelled() error {
+	p.status = Cancelled
+	return nil
+}
+
+func (p *ClubPayout) CanCancel() error {
+
+	if p.status != Queued {
+		return errors.New("can only cancel a queued payout")
+	}
+
+	return nil
+}
+
+func (p *ClubPayout) CanRetry() error {
+
+	if p.status != Failed {
+		return errors.New("can only retry a failed payout")
+	}
+
 	return nil
 }
 

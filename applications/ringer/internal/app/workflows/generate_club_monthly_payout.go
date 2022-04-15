@@ -113,7 +113,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 	// spawn a child workflow to process the payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "ProcessClubPayout_" + input.ClubId,
+		WorkflowID:        "ProcessClubPayout_" + *payoutId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 

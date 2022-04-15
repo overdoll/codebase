@@ -10,6 +10,7 @@ var (
 	UnknownStatus = Status{""}
 	Queued        = Status{"QUEUED"}
 	Failed        = Status{"FAILED"}
+	Cancelled     = Status{"CANCELLED"}
 	Deposited     = Status{"DEPOSITED"}
 )
 

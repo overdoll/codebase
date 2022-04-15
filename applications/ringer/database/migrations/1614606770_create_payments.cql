@@ -107,6 +107,13 @@ CREATE TABLE IF NOT EXISTS club_payouts_by_club
     primary key ( club_id, id ),
 );
 
+CREATE TABLE IF NOT EXISTS club_locked_payout
+(
+    club_id   text,
+    payout_id text,
+    primary key ( club_id ),
+);
+
 CREATE TABLE IF NOT EXISTS club_payments_by_payout
 (
     payout_id                   text,
