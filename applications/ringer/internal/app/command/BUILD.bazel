@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "command",
+    srcs = [
+        "club_payment_deduction.go",
+        "club_payment_deposit.go",
+        "update_club_platform_fee.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/app/command",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//applications/ringer/internal/domain/event",
+        "//applications/ringer/internal/domain/payment",
+        "//libraries/money",
+        "//libraries/principal",
+    ],
+)

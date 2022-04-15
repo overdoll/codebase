@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "payment",
+    srcs = [
+        "balance.go",
+        "payment.go",
+        "platform_fee.go",
+        "repository.go",
+        "source.go",
+        "status.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/domain/payment",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//libraries/money",
+        "//libraries/principal",
+    ],
+)

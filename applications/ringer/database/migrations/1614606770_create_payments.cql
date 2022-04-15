@@ -25,14 +25,14 @@ CREATE TABLE IF NOT EXISTS club_platform_fee
     primary key ( club_id ),
 );
 
-CREATE TABLE IF NOT EXISTS payments_by_transaction_id
+CREATE TABLE IF NOT EXISTS club_payments_by_transaction_id
 (
     account_transaction_id text,
     id                     text,
     primary key ( account_transaction_id ),
 );
 
-CREATE TABLE IF NOT EXISTS payments
+CREATE TABLE IF NOT EXISTS club_payments
 (
     id                          text,
     source                      text,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS account_payout_method
 (
     id             text,
     account_id     text,
-    kind           text,
+    method         text,
     opennode_email text,
     is_default     boolean,
     primary key ( id ),
@@ -73,13 +73,13 @@ CREATE TABLE IF NOT EXISTS account_payout_method_by_account
 (
     id             text,
     account_id     text,
-    kind           text,
+    method         text,
     opennode_email text,
     is_default     boolean,
     primary key ( account_id, id ),
 );
 
-CREATE TABLE IF NOT EXISTS payouts
+CREATE TABLE IF NOT EXISTS club_payouts
 (
     id                       text,
     status                   text,
@@ -88,10 +88,12 @@ CREATE TABLE IF NOT EXISTS payouts
     total_amount             bigint,
     currency                 text,
     account_payout_method_id text,
+    timestamp                timestamp,
+    events                   list<text>,
     primary key ( id ),
 );
 
-CREATE TABLE IF NOT EXISTS payouts_by_club
+CREATE TABLE IF NOT EXISTS club_payouts_by_club
 (
     club_id                  text,
     id                       text,
@@ -100,16 +102,17 @@ CREATE TABLE IF NOT EXISTS payouts_by_club
     total_amount             bigint,
     currency                 text,
     account_payout_method_id text,
+    timestamp                timestamp,
+    events                   list<text>,
     primary key ( club_id, id ),
 );
 
-CREATE TABLE IF NOT EXISTS payments_by_payout
+CREATE TABLE IF NOT EXISTS club_payments_by_payout
 (
     payout_id                   text,
     payment_id                  text,
     source                      text,
     status                      text,
-    state                       text,
     settlement_date             timestamp,
     source_account_id           text,
     account_transaction_id      text,
@@ -120,17 +123,30 @@ CREATE TABLE IF NOT EXISTS payments_by_payout
     final_amount                bigint,
     is_deduction                boolean,
     deduction_source_payment_id text,
+    timestamp                   timestamp,
     primary key ( payout_id, payment_id ),
+);
+
+CREATE TABLE IF NOT EXISTS deposit_requests
+(
+    id                    text,
+    last_date_for_deposit timestamp,
+    total_amount          bigint,
+    currency              text,
+    payout_method         text,
+    timestamp             timestamp,
+    primary key ( id ),
 );
 
 CREATE TABLE IF NOT EXISTS deposit_requests_by_month
 (
-    bucket                     int,
-    id                         text,
-    last_date_for_deposit      timestamp,
-    total_amount               bigint,
-    currency                   text,
-    account_payout_method_kind text,
+    bucket                int,
+    id                    text,
+    last_date_for_deposit timestamp,
+    total_amount          bigint,
+    currency              text,
+    payout_method         text,
+    timestamp             timestamp,
     primary key ( bucket, id ),
 );
 
@@ -144,5 +160,16 @@ CREATE TABLE IF NOT EXISTS payouts_by_deposit_requests
     total_amount             bigint,
     currency                 text,
     account_payout_method_id text,
+    timestamp                timestamp,
+    events                   list<text>,
     primary key ( requested_deposit_id, id ),
+);
+
+CREATE TABLE IF NOT EXISTS account_details
+(
+    account_id                          text,
+    first_name                          text,
+    last_name                           text,
+    country_of_residence_iso3166_alpha3 text,
+    primary key ( account_id ),
 );

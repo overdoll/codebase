@@ -22,7 +22,7 @@ func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayo
 
 	var payload *GetClubPayoutMethodsPayload
 
-	methods, err := h.par.GetAccountPayoutMethods(ctx, accountId)
+	methods, err := h.par.GetAccountPayoutMethodsOperator(ctx, accountId)
 
 	if err != nil {
 		return nil, err

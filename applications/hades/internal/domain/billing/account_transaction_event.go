@@ -35,6 +35,7 @@ func (e *AccountTransactionEvent) Reason() string {
 
 func UnmarshalAccountTransactionEventFromDatabase(id string, timestamp time.Time, amount int64, currency string, reason string) *AccountTransactionEvent {
 	cr, _ := money.CurrencyFromString(currency)
+
 	return &AccountTransactionEvent{
 		id:        id,
 		timestamp: timestamp,

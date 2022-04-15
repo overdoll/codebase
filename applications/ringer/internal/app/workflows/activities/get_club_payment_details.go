@@ -14,7 +14,7 @@ type GetClubPaymentDetailsPayload struct {
 
 func (h *Activities) GetClubPaymentDetails(ctx context.Context, id string) (*GetClubPaymentDetailsPayload, error) {
 
-	pay, err := h.pr.GetClubPaymentById(ctx, id)
+	pay, err := h.pr.GetClubPaymentByIdOperator(ctx, id)
 
 	if err != nil {
 		return nil, err

@@ -45,8 +45,9 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 		// if there's an error, we add a failure, and the loop will try again
 		if err := workflow.ExecuteActivity(ctx, a.AddFailureToPayout,
 			activities.AddFailureToPayoutInput{
-				PayoutId: input.PayoutId,
-				Error:    *payload.Error,
+				Timestamp: payload.Timestamp,
+				PayoutId:  input.PayoutId,
+				Error:     *payload.Error,
 			},
 		).Get(ctx, nil); err != nil {
 			return err

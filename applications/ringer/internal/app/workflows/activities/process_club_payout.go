@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/ringer/internal/domain/opennode"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"time"
 )
 
 type ProcessClubPayoutInput struct {
@@ -11,14 +12,15 @@ type ProcessClubPayoutInput struct {
 }
 
 type ProcessClubPayoutPayload struct {
-	Success bool
-	Error   *string
+	Success   bool
+	Error     *string
+	Timestamp time.Time
 }
 
 func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPayoutInput) (*ProcessClubPayoutPayload, error) {
 
 	// get payout
-	clubPayout, err := h.par.GetPayoutById(ctx, input.PayoutId)
+	clubPayout, err := h.par.GetClubPayoutByIdOperator(ctx, input.PayoutId)
 
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 		return nil, err
 	}
 
-	switch accountMethod.Kind() {
+	switch accountMethod.Method() {
 	case payout.OpenNode:
 		transfer, err := opennode.NewTransfer(*accountMethod.OpennodeEmail(), clubPayout.Amount(), clubPayout.Currency())
 
@@ -44,5 +46,5 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 		}
 	}
 
-	return &ProcessClubPayoutPayload{Success: true}, nil
+	return &ProcessClubPayoutPayload{Success: true, Timestamp: time.Now()}, nil
 }

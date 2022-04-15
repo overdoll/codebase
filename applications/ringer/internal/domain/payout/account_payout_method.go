@@ -1,21 +1,34 @@
 package payout
 
-import "overdoll/libraries/money"
+import (
+	"overdoll/libraries/money"
+	"overdoll/libraries/uuid"
+)
 
 type AccountPayoutMethod struct {
 	id            string
 	accountId     string
-	kind          Kind
+	method        Method
 	opennodeEmail *string
 	isDefault     bool
+}
+
+func NewOpenNodeAccountPayoutMethod(accountId, email string) (*AccountPayoutMethod, error) {
+	return &AccountPayoutMethod{
+		id:            uuid.New().String(),
+		accountId:     accountId,
+		method:        OpenNode,
+		opennodeEmail: &email,
+		isDefault:     false,
+	}, nil
 }
 
 func (p *AccountPayoutMethod) Id() string {
 	return p.id
 }
 
-func (p *AccountPayoutMethod) Kind() Kind {
-	return p.kind
+func (p *AccountPayoutMethod) Method() Method {
+	return p.method
 }
 
 func (p *AccountPayoutMethod) IsDefault() bool {
@@ -29,7 +42,7 @@ func (p *AccountPayoutMethod) OpennodeEmail() *string {
 func (p *AccountPayoutMethod) Validate(amount int64, currency money.Currency) bool {
 
 	// only opennode for now
-	if p.kind != OpenNode {
+	if p.method != OpenNode {
 		return false
 	}
 

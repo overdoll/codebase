@@ -11,7 +11,7 @@ type MakeClubPaymentReadyForPayout struct {
 
 func (h *Activities) MakeClubPaymentReadyForPayout(ctx context.Context, input MakeClubPaymentReadyForPayout) error {
 
-	readyPayment, err := h.pr.UpdateClubPaymentStatus(ctx, input.PaymentId, func(pay *payment.Payment) error {
+	readyPayment, err := h.pr.UpdateClubPaymentStatus(ctx, input.PaymentId, func(pay *payment.ClubPayment) error {
 		return pay.MakeReady()
 	})
 

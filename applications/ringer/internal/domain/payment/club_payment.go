@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Payment struct {
+type ClubPayment struct {
 	id                   string
 	source               Source
 	status               Status
@@ -27,7 +27,7 @@ type Payment struct {
 	settlementDate time.Time
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *Payment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*Payment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 	// get percent of original platform fee
 	platformFee, err := NewPlatformFeeFromAmountAndFinalAmount(destinationClubId, existingPayment.baseAmount, existingPayment.finalAmount)
 
@@ -41,7 +41,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *Paymen
 	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 	existingId := existingPayment.id
 
-	return &Payment{
+	return &ClubPayment{
 		id:                       id,
 		source:                   ClubSupporterSubscription,
 		status:                   Pending,
@@ -59,13 +59,13 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *Paymen
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *PlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*Payment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *PlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
 	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 
-	return &Payment{
+	return &ClubPayment{
 		id:                       id,
 		source:                   ClubSupporterSubscription,
 		status:                   Pending,
@@ -83,63 +83,63 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *PlatformFee,
 	}, nil
 }
 
-func (p *Payment) Id() string {
+func (p *ClubPayment) Id() string {
 	return p.id
 }
 
-func (p *Payment) Source() Source {
+func (p *ClubPayment) Source() Source {
 	return p.source
 }
 
-func (p *Payment) Status() Status {
+func (p *ClubPayment) Status() Status {
 	return p.status
 }
 
-func (p *Payment) SourceAccountId() string {
+func (p *ClubPayment) SourceAccountId() string {
 	return p.sourceAccountId
 }
 
-func (p *Payment) AccountTransactionId() string {
+func (p *ClubPayment) AccountTransactionId() string {
 	return p.accountTransactionId
 }
 
-func (p *Payment) DestinationClubId() string {
+func (p *ClubPayment) DestinationClubId() string {
 	return p.destinationClubId
 }
 
-func (p *Payment) BaseAmount() int64 {
+func (p *ClubPayment) BaseAmount() int64 {
 	return p.baseAmount
 }
 
-func (p *Payment) BaseCurrency() money.Currency {
+func (p *ClubPayment) BaseCurrency() money.Currency {
 	return p.baseCurrency
 }
 
-func (p *Payment) PlatformFeeAmount() int64 {
+func (p *ClubPayment) PlatformFeeAmount() int64 {
 	return p.platformFeeAmount
 }
 
-func (p *Payment) FinalAmount() int64 {
+func (p *ClubPayment) FinalAmount() int64 {
 	return p.finalAmount
 }
 
-func (p *Payment) IsDeduction() bool {
+func (p *ClubPayment) IsDeduction() bool {
 	return p.isDeduction
 }
 
-func (p *Payment) DeductionSourcePaymentId() *string {
+func (p *ClubPayment) DeductionSourcePaymentId() *string {
 	return p.deductionSourcePaymentId
 }
 
-func (p *Payment) Timestamp() time.Time {
+func (p *ClubPayment) Timestamp() time.Time {
 	return p.timestamp
 }
 
-func (p *Payment) SettlementDate() time.Time {
+func (p *ClubPayment) SettlementDate() time.Time {
 	return p.settlementDate
 }
 
-func (p *Payment) MakeReady() error {
+func (p *ClubPayment) MakeReady() error {
 	p.status = Ready
 	return nil
 }

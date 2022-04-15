@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = ["event_temporal_repository.go"],
+    importpath = "overdoll/applications/ringer/internal/adapters",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//applications/ringer/internal/app/workflows",
+        "//applications/ringer/internal/domain/event",
+        "@com_github_spf13_viper//:viper",
+        "@io_temporal_go_sdk//client",
+    ],
+)

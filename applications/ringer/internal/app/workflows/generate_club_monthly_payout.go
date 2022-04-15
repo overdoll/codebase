@@ -89,9 +89,16 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
+	depositId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
 	// create a deposit request or append to an existing one for this month
 	if err := workflow.ExecuteActivity(ctx, a.AppendOrCreateDepositRequest,
 		activities.AppendOrCreateDepositRequestInput{
+			DepositId: *depositId,
 			PayoutId:  *payoutId,
 			Timestamp: ts,
 		},
