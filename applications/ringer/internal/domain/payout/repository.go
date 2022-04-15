@@ -25,4 +25,5 @@ type Repository interface {
 	UpdatePayoutState(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	UpdatePayoutDepositDate(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	UpdatePayoutEvents(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
+	CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error
 }

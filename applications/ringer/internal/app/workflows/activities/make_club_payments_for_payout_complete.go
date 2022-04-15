@@ -9,9 +9,5 @@ type MakeClubPaymentsForPayoutCompleteInput struct {
 }
 
 func (h *Activities) MakeClubPaymentsForPayoutComplete(ctx context.Context, input MakeClubPaymentsForPayoutCompleteInput) error {
-
-	// delete all payments from the "ready" list from this payout
-	// mark all payment IDs as "complete"
-
-	return nil
+	return h.pr.GetClubPaymentsForClubPayoutAndMarkAsCompleted(ctx, input.PayoutId)
 }

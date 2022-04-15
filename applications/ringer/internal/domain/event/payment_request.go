@@ -1,6 +1,7 @@
 package event
 
 import (
+	"errors"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -20,6 +21,11 @@ type PaymentRequest struct {
 }
 
 func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+
+	if currency != money.USD {
+		return nil, errors.New("deposits are only accepted in USD")
+	}
+
 	return &PaymentRequest{
 		isClubSupporterSubscription: true,
 		accountTransactionId:        accountTransactionId,
@@ -32,6 +38,11 @@ func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sou
 }
 
 func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+
+	if currency != money.USD {
+		return nil, errors.New("deductions are only accepted in USD")
+	}
+
 	return &PaymentRequest{
 		isClubSupporterSubscription: true,
 		accountTransactionId:        accountTransactionId,
