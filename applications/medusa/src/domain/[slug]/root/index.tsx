@@ -10,11 +10,13 @@ RootPublicClub.getTranslationProps = async (ctx) => {
   }
 }
 
-RootPublicClub.getRelayPreloadProps = () => ({
+RootPublicClub.getRelayPreloadProps = (ctx) => ({
   queries: {
     publicClubQuery: {
       params: PublicClubQuery.params,
-      variables: {}
+      variables: {
+        slug: ctx.query.slug
+      }
     }
   }
 })

@@ -1,0 +1,211 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 17:29-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:41
+msgid "1 month"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:49
+msgid "1 year"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:21
+msgid "12 hours"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:37
+msgid "2 weeks"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:25
+msgid "24 hours"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:29
+msgid "3 days"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:45
+msgid "3 months"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:33
+msgid "7 days"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountActiveClubSupporterSubscriptionPreview/StaffAccountActiveClubSupporterSubscriptionPreview.tsx:40
+msgid "ACTIVE"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModerator.tsx:45
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModeratorButton/StaffAssignModeratorButton.tsx:70
+msgid "Assign Moderator"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaff.tsx:45
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaffButton/StaffAssignStaffButton.tsx:70
+msgid "Assign Staff"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountCancelledClubSupporterSubscriptionPreview/StaffAccountCancelledClubSupporterSubscriptionPreview.tsx:40
+msgid "CANCELLED"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:51
+msgid "Can be unlocked"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffTransactions/StaffTransactions.tsx:73
+msgid "Chargeback Transactions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:71
+msgid "Club"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:108
+msgid "Confirm Lock Account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:95
+msgid "Duration of Lock"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountExpiredClubSupporterSubscriptionPreview/StaffAccountExpiredClubSupporterSubscriptionPreview.tsx:40
+msgid "EXPIRED"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:64
+msgid "Lock Account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:40
+msgid "Locked"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModerator.tsx:30
+msgid "Moderator"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:81
+msgid "Next/End/Expired Date"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffTransactions/StaffTransactions.tsx:57
+msgid "Payment Transactions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:53
+msgid "Permissions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:53
+msgid "Purge"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffTransactions/StaffTransactions.tsx:65
+msgid "Refund Transactions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModerator.tsx:41
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffRevokeModeratorButton/StaffRevokeModeratorButton.tsx:70
+msgid "Revoke Moderator"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaff.tsx:41
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffRevokeStaffButton/StaffRevokeStaffButton.tsx:70
+msgid "Revoke Staff"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:59
+msgid "Select duration"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaff.tsx:30
+msgid "Staff"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:66
+msgid "Status"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:58
+msgid "Subscriptions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModeratorButton/StaffAssignModeratorButton.tsx:49
+msgid "Successfully assigned moderator role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaffButton/StaffAssignStaffButton.tsx:49
+msgid "Successfully assigned staff role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:71
+msgid "Successfully locked account until {0}"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffRevokeModeratorButton/StaffRevokeModeratorButton.tsx:49
+msgid "Successfully revoked moderator role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffRevokeStaffButton/StaffRevokeStaffButton.tsx:49
+msgid "Successfully revoked staff role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffUnlockAccountForm/StaffUnlockAccountForm.tsx:50
+msgid "Successfully unlocked account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:76
+msgid "Supporting Since"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModeratorButton/StaffAssignModeratorButton.tsx:55
+msgid "There was an error assigning the moderator role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffAssignStaffButton/StaffAssignStaffButton.tsx:55
+msgid "There was an error assigning the staff role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:77
+msgid "There was an error locking the account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffRevokeModeratorButton/StaffRevokeModeratorButton.tsx:55
+msgid "There was an error revoking the moderator role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignStaff/StaffRevokeStaffButton/StaffRevokeStaffButton.tsx:55
+msgid "There was an error revoking the staff role"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffUnlockAccountForm/StaffUnlockAccountForm.tsx:56
+msgid "There was an error unlocking the account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:63
+msgid "Transactions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:60
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffUnlockAccountForm/StaffUnlockAccountForm.tsx:71
+msgid "Unlock Account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:17
+msgid "Warning (none)"
+msgstr ""

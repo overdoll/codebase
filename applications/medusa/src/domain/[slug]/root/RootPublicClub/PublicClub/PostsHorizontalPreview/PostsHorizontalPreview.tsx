@@ -59,7 +59,7 @@ export default function PostsHorizontalPreview ({
           >
             <GridTile>
               <LinkTile href={{
-                pathname: '/[slug]/p/[reference]',
+                pathname: '/[slug]/post/[reference]',
                 query: {
                   slug: item.node.club.slug,
                   reference: item.node.reference

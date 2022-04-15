@@ -86,9 +86,9 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         <Can I='configure' a='Account'>
           <DropdownMenuButtonProfile queryRef={data} />
         </Can>
-        <Can I='staff' a='Tags'>
+        <Can I='staff' a='Entity'>
           <HorizontalNavigationDropdownMenu.Button
-            href='/staff'
+            href='/staff/entity/character/search'
             colorScheme='purple'
             icon={LoginKeys}
             label={
@@ -100,7 +100,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can I='moderate' a='Post'>
           <HorizontalNavigationDropdownMenu.Button
-            href='/moderation/queue'
+            href='/moderation/post-queue'
             colorScheme='purple'
             icon={LoginKeys}
             label={

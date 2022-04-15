@@ -53,7 +53,7 @@ export default function PublishedPost ({
       </HStack>
       <GridTile>
         <LinkTile href={{
-          pathname: '/[slug]/p/[reference]',
+          pathname: '/[slug]/post/[reference]',
           query: {
             slug: data.club.slug,
             reference: data.reference

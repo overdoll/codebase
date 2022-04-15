@@ -18,7 +18,7 @@ export default function ModerationLayout ({ children }: Props): JSX.Element {
       }
       >
         <VerticalNavigation.Button
-          href='/moderation/posts-queue'
+          href='/moderation/post-queue'
           colorScheme='purple'
           title={
             <Trans>

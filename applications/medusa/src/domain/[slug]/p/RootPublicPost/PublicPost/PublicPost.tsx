@@ -116,7 +116,7 @@ export default function PublicPost (props: Props): JSX.Element {
   useEffect(() => {
     if (slug != null && slug !== queryData?.post?.club.slug) {
       void router.replace({
-        pathname: '/[slug]/p/[reference]',
+        pathname: '/[slug]/post/[reference]',
         query: {
           slug: queryData?.post?.club.slug as string,
           reference: queryData?.post?.reference

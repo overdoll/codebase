@@ -17,7 +17,7 @@ msgstr ""
 msgid "ARCHIVED"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:80
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:79
 msgid "Archived"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 msgid "DRAFT"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:75
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:74
 msgid "Draft"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Edit Draft"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:85
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:84
 msgid "In Review"
 msgstr ""
 
@@ -42,7 +42,7 @@ msgid "No posts found"
 msgstr ""
 
 #: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:43
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:70
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:69
 msgid "Published"
 msgstr ""
 
@@ -51,11 +51,11 @@ msgid "REMOVED"
 msgstr ""
 
 #: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:35
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:90
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:89
 msgid "Rejected"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:95
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:94
 msgid "Removed"
 msgstr ""
 

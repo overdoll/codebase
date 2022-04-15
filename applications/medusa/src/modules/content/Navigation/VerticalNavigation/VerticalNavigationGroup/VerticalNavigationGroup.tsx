@@ -2,7 +2,7 @@ import { Collapse, Heading, HStack, Stack, useDisclosure } from '@chakra-ui/reac
 import { FunctionComponent, ReactNode } from 'react'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons'
 import { ClickableBox, Icon } from '../../../PageLayout'
-import { useLocation } from '../../../../routing'
+import { useRouter } from 'next/router'
 
 interface Props {
   title: ReactNode
@@ -17,9 +17,9 @@ export default function VerticalNavigationGroup ({
   baseUrl,
   children
 }: Props): JSX.Element {
-  const location = useLocation()
+  const { asPath } = useRouter()
 
-  const isActive = location.pathname.includes(baseUrl)
+  const isActive = asPath.includes(baseUrl)
 
   const {
     isOpen,

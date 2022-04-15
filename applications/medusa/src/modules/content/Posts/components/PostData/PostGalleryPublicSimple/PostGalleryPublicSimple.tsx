@@ -74,7 +74,7 @@ export default function PostGalleryPublicSimple ({
                       variant='ghost'
                       colorScheme='gray'
                       rightIcon={<Icon w={2} h={2} icon={ArrowButtonRight} fill='inherit' />}
-                      href={`/${data.club.slug}/p/${data?.reference}`}
+                      href={`/${data.club.slug}/post/${data?.reference}`}
                     >
                       <Trans>
                         View Post

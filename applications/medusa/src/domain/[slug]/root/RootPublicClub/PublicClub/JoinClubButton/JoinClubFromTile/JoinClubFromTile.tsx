@@ -45,7 +45,12 @@ export default function JoinClubFromTile ({
   const isClubMember = clubData?.viewerMember !== null
   const isClubSupporter = clubData?.viewerMember?.isSupporter === true
 
-  const redirect = encodeJoinRedirect(`/${clubData.slug}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]',
+    query: {
+      slug: clubData.slug
+    }
+  })
 
   if (viewerData == null) {
     return (

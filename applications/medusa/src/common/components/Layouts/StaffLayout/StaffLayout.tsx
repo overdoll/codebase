@@ -21,16 +21,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Characters</Trans>}
           icon={CharacterIdentifier}
-          baseUrl='/staff/character'
+          baseUrl='/staff/entity/character'
         >
           <VerticalNavigation.Button
-            href='/staff/character/create'
+            href='/staff/entity/character/create'
             title={
               <Trans>Create Character</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/character/search'
+            href='/staff/entity/character/search'
             title={
               <Trans>Search Characters</Trans>
             }
@@ -39,16 +39,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Series</Trans>}
           icon={SeriesIdentifier}
-          baseUrl='/staff/series'
+          baseUrl='/staff/entity/series'
         >
           <VerticalNavigation.Button
-            href='/staff/series/create'
+            href='/staff/entity/series/create'
             title={
               <Trans>Create Series</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/series/search'
+            href='/staff/entity/series/search'
             title={
               <Trans>Search Series</Trans>
             }
@@ -57,16 +57,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Categories</Trans>}
           icon={CategoryIdentifier}
-          baseUrl='/staff/category'
+          baseUrl='/staff/entity/category'
         >
           <VerticalNavigation.Button
-            href='/staff/category/create'
+            href='/staff/entity/category/create'
             title={
               <Trans>Create Category</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/category/search'
+            href='/staff/entity/category/search'
             title={
               <Trans>Search Categories</Trans>
             }
@@ -75,16 +75,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Audiences</Trans>}
           icon={ClubPeopleGroup}
-          baseUrl='/staff/audience'
+          baseUrl='/staff/entity/audience'
         >
           <VerticalNavigation.Button
-            href='/staff/audience/create'
+            href='/staff/entity/audience/create'
             title={
               <Trans>Create Audience</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/audience/search'
+            href='/staff/entity/audience/search'
             title={
               <Trans>Search Audiences</Trans>
             }
@@ -93,16 +93,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Rules</Trans>}
           icon={FlagReport}
-          baseUrl='/staff/rule'
+          baseUrl='/staff/entity/rule'
         >
           <VerticalNavigation.Button
-            href='/staff/rule/create'
+            href='/staff/entity/rule/create'
             title={
               <Trans>Create Rule</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/rule/search'
+            href='/staff/entity/rule/search'
             title={
               <Trans>Search Rules</Trans>
             }
@@ -111,16 +111,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         <VerticalNavigation.Group
           title={<Trans>Cancellation Reasons</Trans>}
           icon={FlagReport}
-          baseUrl='/staff/cancellation-reason'
+          baseUrl='/staff/entity/cancellation-reason'
         >
           <VerticalNavigation.Button
-            href='/staff/cancellation-reason/create'
+            href='/staff/entity/cancellation-reason/create'
             title={
               <Trans>Create Cancellation Reason</Trans>
             }
           />
           <VerticalNavigation.Button
-            href='/staff/cancellation-reason/search'
+            href='/staff/entity/cancellation-reason/search'
             title={
               <Trans>Search Cancellation Reasons</Trans>
             }

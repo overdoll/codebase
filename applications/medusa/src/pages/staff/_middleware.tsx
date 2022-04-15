@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { NextResponse } from 'next/server'
 import { Middleware } from '@//:types/app'
 import getAbilityFromRequest from '@//:modules/next/getAbilityFromRequest'

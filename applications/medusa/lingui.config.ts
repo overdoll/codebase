@@ -153,8 +153,8 @@ const ClubsCatalog = [
     include: ['src/domain/[slug]/root/']
   },
   {
-    path: 'src/domain/[slug]/p/__locale__/{locale}/index',
-    include: ['src/domain/[slug]/p/']
+    path: 'src/domain/[slug]/post/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/post/']
   },
   {
     path: 'src/domain/[slug]/posts/__locale__/{locale}/index',
@@ -177,6 +177,101 @@ const ModerationCatalog = [
   }
 ]
 
+const StaffCatalog = [
+  {
+    path: 'src/domain/staff/account/__locale__/{locale}/index',
+    include: ['src/domain/staff/account/']
+  },
+  {
+    path: 'src/domain/staff/club/__locale__/{locale}/index',
+    include: ['src/domain/staff/club/']
+  },
+  {
+    path: 'src/domain/staff/post/__locale__/{locale}/index',
+    include: ['src/domain/staff/post/']
+  },
+  {
+    path: 'src/domain/staff/billing/subscription/__locale__/{locale}/index',
+    include: ['src/domain/staff/billing/subscription/']
+  },
+  {
+    path: 'src/domain/staff/billing/transaction/__locale__/{locale}/index',
+    include: ['src/domain/staff/billing/transaction/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/view/']
+  }
+]
+
 export default {
   locales: [
     'en'
@@ -196,7 +291,8 @@ export default {
     ...SettingsCatalogs,
     ...ClubCatalog,
     ...ClubsCatalog,
-    ...ModerationCatalog
+    ...ModerationCatalog,
+    ...StaffCatalog
   ],
   format: 'po',
   fallbackLocales: {

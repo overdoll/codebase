@@ -10,11 +10,13 @@ RootPublicPost.getTranslationProps = async (ctx) => {
   }
 }
 
-RootPublicPost.getRelayPreloadProps = () => ({
+RootPublicPost.getRelayPreloadProps = (ctx) => ({
   queries: {
     publicPostQuery: {
       params: PublicPostQuery.params,
-      variables: {}
+      variables: {
+        reference: ctx.query.reference
+      }
     }
   }
 })

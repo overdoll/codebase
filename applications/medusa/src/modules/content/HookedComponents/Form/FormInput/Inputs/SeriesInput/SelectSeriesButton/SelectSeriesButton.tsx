@@ -6,22 +6,20 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack
+  Stack,
+  useDisclosure
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import Button from '../../../../../../../form/Button/Button'
 import CloseButton from '../../../../../../ThemeComponents/CloseButton/CloseButton'
-import { useHistoryDisclosure } from '../../../../../../../hooks'
 import { Suspense } from 'react'
 import { useLingui } from '@lingui/react'
 import SearchInput from '../../../../../Search/components/SearchInput/SearchInput'
 import SkeletonStack from '../../../../../../Placeholder/Loading/SkeletonStack/SkeletonStack'
-import QueryErrorBoundary
-  from '../../../../../../Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+import QueryErrorBoundary from '../../../../../../Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectSeriesSearch from './SelectSeriesSearch/SelectSeriesSearch'
 import { useChoice } from '../../../../../Choice'
-import ChoiceRemovableTags
-  from '../../../../../Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
+import ChoiceRemovableTags from '../../../../../Choice/components/ChoiceRemovableTags/ChoiceRemovableTags'
 import useSearch from '../../../../../Search/hooks/useSearch'
 
 interface Props extends HTMLChakraProps<any> {
@@ -46,7 +44,7 @@ export default function SelectSeriesButton ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const {
     register: registerSearch,
@@ -67,6 +65,8 @@ export default function SelectSeriesButton ({
   })
 
   const { i18n } = useLingui()
+
+  console.log(isOpen)
 
   return (
     <>

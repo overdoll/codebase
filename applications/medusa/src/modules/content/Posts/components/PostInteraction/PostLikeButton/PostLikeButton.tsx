@@ -71,7 +71,13 @@ export default function PostLikeButton ({
   const [likePost, isLiking] = useMutation(LikeMutation)
   const [undoLike, isUnliking] = useMutation(UndoMutation)
 
-  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]/post/[reference]',
+    query: {
+      slug: data.club.slug,
+      reference: data.reference
+    }
+  })
 
   const { i18n } = useLingui()
 

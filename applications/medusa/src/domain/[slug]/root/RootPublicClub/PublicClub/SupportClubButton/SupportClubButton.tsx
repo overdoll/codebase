@@ -67,7 +67,12 @@ export default function SupportClubButton ({
     locale: locale
   })
 
-  const redirect = encodeJoinRedirect(`/${clubData.slug}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]',
+    query: {
+      slug: clubData.slug
+    }
+  })
 
   const buttonProps = {
     children: (

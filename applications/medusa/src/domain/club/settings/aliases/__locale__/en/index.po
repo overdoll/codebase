@@ -17,7 +17,7 @@ msgstr ""
 msgid "Add Club Link Alias"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:138
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:142
 msgid "Alias"
 msgstr ""
 
@@ -38,11 +38,11 @@ msgstr ""
 msgid "Enter a new club link"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:152
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:156
 msgid "Remove Alias"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:145
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:149
 msgid "Set Default"
 msgstr ""
 
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Successfully added the link alias {0}"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:102
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:103
 msgid "Successfully promoted the link alias {slug} to default"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:78
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:79
 msgid "Successfully removed the link alias {slug}. You can no longer use this link."
 msgstr ""
 
@@ -66,11 +66,11 @@ msgstr ""
 msgid "There was an error adding a link alias"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:117
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:121
 msgid "There was an error promoting the link alias to default"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:84
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:85
 msgid "There was an error removing the link alias"
 msgstr ""
 

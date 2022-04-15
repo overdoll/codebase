@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
 import { useDisclosure, UseDisclosureProps, UseDisclosureReturn } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 /**
  * useDisclosure hook modified so that when it is opened
@@ -24,18 +24,12 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
   const router = useRouter()
 
   const onOpen = (): void => {
-    // const currentLocation = router.asPath
-    // history.push(currentLocation, { hasModal: true })
+    const currentLocation = router.asPath
+    void router.push(currentLocation)
     onOpenAction()
   }
 
   const onClose = (): void => {
-    // const currentHistory = history.location
-    // const state = currentHistory.state as HistoryDisclosureState
-    // if (state?.hasModal === true) {
-    //   // TODO: if there was a route change, this makes the modal un-usable?
-    //   //  history.goBack()
-    // }
     onCloseAction()
   }
 
@@ -50,11 +44,12 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
   // When it detects that the user clicked the Back button and the modal
   // is still open, it will close the modal for the user
   useEffect(() => {
-    // return history.listen((location, action) => {
-    //   if (isOpen && action === 'POP') {
-    //     onCloseAction()
-    //   }
-    // })
+    return router.beforePopState((state) => {
+      if (isOpen) {
+        onCloseAction()
+      }
+      return true
+    })
   }, [isOpen])
 
   return {

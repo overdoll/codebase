@@ -86,7 +86,13 @@ export default function StaffClubSupporterSubscriptions ({ query }: Props): JSX.
         </TableHeader>
         <TableBody>
           {data.clubSupporterSubscriptions.edges.map((item, index) => (
-            <TableBodyRowLink key={index} href={`/staff/subscription/${item.node.reference as string}`}>
+            <TableBodyRowLink
+              key={index}
+              href={{
+                pathname: '/staff/billing/subscription/[reference]',
+                query: { reference: item.node.reference }
+              }}
+            >
               <StaffClubSupporterSubscriptionPreview query={item.node} />
             </TableBodyRowLink>
           ))}

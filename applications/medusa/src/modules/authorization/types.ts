@@ -12,8 +12,8 @@ interface Club {
   kind: 'Club'
 }
 
-interface Tag {
-  kind: 'Tag'
+interface Entity {
+  kind: 'Entity'
 }
 
 interface Billing {
@@ -22,7 +22,7 @@ interface Billing {
 
 type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
 ['configure', InferSubjects<Account> | InferSubjects<Club>] |
-['staff', InferSubjects<Account> | InferSubjects<Tag> | InferSubjects<Club> | InferSubjects<Post> | InferSubjects<Billing>]
+['staff', InferSubjects<Account> | InferSubjects<Entity> | InferSubjects<Club> | InferSubjects<Post> | InferSubjects<Billing>]
 
 export type AppAbility = Ability<Abilities>
 export const App = Ability as AbilityClass<AppAbility>

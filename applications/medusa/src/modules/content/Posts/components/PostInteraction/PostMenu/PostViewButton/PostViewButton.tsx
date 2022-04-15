@@ -26,7 +26,13 @@ export default function PostViewButton ({
 
   return (
     <MenuLinkItem
-      href={`/${data.club.slug}/p/${data.reference}`}
+      href={{
+        pathname: '/[slug]/post/[reference]',
+        query: {
+          slug: data.club.slug,
+          reference: data.reference
+        }
+      }}
       text={(
         <Trans>
           View Post

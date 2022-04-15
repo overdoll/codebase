@@ -1,7 +1,7 @@
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
 import { createClientRouter, Route, RouterInstance } from '../routing/router'
-import Bootstrap from '../../_toRemove/client/Bootstrap'
+import Bootstrap from '../../common/deprecated/client/Bootstrap'
 import createCache from '@emotion/cache'
 import { EMOTION_CACHE_KEY } from '../constants/emotion'
 import { IEnvironment } from 'relay-runtime'

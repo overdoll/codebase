@@ -34,7 +34,7 @@ msgid "Cancel"
 msgstr ""
 
 #: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:142
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:148
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:149
 msgid "Code"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:126
+#: src/domain/join/Join/pages/Register/Register.tsx:127
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand our <1>Terms of Service</1>  and  <2>Privacy Policy</2>."
 msgstr ""
 
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Enter an email"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:130
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:131
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:163
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:164
 msgid "Submit Code"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgstr ""
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:107
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:108
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:98
+#: src/domain/join/Join/pages/Register/Register.tsx:99
 msgid "There was an issue with registration."
 msgstr ""
 
@@ -142,11 +142,11 @@ msgstr ""
 msgid "Welcome back!"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:96
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:97
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:91
+#: src/domain/join/Join/pages/Register/Register.tsx:92
 msgid "Welcome to overdoll!"
 msgstr ""
 
@@ -154,6 +154,6 @@ msgstr ""
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:139
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:140
 msgid "You can find this in the same app you used to set up two-factor authentication"
 msgstr ""

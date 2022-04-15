@@ -102,7 +102,13 @@ export default function PostReportButton ({
 
   const notify = useToast()
 
-  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]/post/[reference]',
+    query: {
+      slug: data.club.slug,
+      reference: data.reference
+    }
+  })
 
   const onSubmit = (): void => {
     const ruleId = Object.keys(values)[0]

@@ -4,7 +4,7 @@ import { StaffAccountQuery } from '@//:artifacts/StaffAccountQuery.graphql'
 import { StaffTransactionsFragment$key } from '@//:artifacts/StaffTransactionsFragment.graphql'
 
 import StaffTransactionsList
-  from '../../../../../_toMigrate/Staff/pages/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList'
+  from '../../../../billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList'
 import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import TransactionCountBadge from './TransactionCountBadge/TransactionCountBadge'
