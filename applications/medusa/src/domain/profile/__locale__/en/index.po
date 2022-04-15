@@ -29,6 +29,6 @@ msgstr ""
 msgid "Public Profile"
 msgstr ""
 
-#: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:26
+#: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:29
 msgid "Staff"
 msgstr ""

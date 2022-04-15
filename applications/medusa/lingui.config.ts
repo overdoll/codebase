@@ -20,6 +20,10 @@ const GeneralCatalogs = [
     include: ['src/domain/404/']
   },
   {
+    path: 'src/domain/500/__locale__/{locale}/index',
+    include: ['src/domain/500/']
+  },
+  {
     path: 'src/domain/confirm-email/__locale__/{locale}/index',
     include: ['src/domain/confirm-email/']
   },

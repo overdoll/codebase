@@ -1,6 +1,6 @@
-import CatchAll from './CatchAll/CatchAll'
+import ServerError from './ServerError/ServerError'
 
-CatchAll.getTranslationProps = async (ctx) => {
+ServerError.getTranslationProps = async (ctx) => {
   const translation = await import(
     `./__locale__/${ctx.locale as string}/index.js`
   )
@@ -9,4 +9,4 @@ CatchAll.getTranslationProps = async (ctx) => {
   }
 }
 
-export default CatchAll
+export default ServerError

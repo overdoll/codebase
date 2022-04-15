@@ -30,7 +30,7 @@ const CatchAll: PageProps<{}> = (): JSX.Element => {
           mb={8}
         />
         <Heading
-          size='md'
+          fontSize='lg'
           textAlign='center'
           color='gray.00'
         >

@@ -1,7 +1,6 @@
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import SiteLinkLogo from './SiteLinkLogo/SiteLinkLogo'
 import MainMenu from './MainMenu/MainMenu'
-import getBasePath from '@//:modules/routing/getBasePath'
 import { graphql, useFragment } from 'react-relay/hooks'
 import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
 import { UniversalNavigatorFragment$key } from '@//:artifacts/UniversalNavigatorFragment.graphql'
@@ -29,7 +28,7 @@ const hidden = [
 export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const router = useRouter()
 
-  const isHidden = hidden.includes(getBasePath(router.pathname))
+  const isHidden = hidden.includes(router.asPath)
 
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 

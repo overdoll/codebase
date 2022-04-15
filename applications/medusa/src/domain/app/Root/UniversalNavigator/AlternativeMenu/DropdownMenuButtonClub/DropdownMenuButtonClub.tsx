@@ -2,7 +2,6 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { Trans } from '@lingui/macro'
-import generatePath from '@//:modules/routing/generatePath'
 import { ClubPeopleGroup } from '@//:assets/icons/navigation'
 import { AddPlus } from '@//:assets/icons/interface'
 import { DropdownMenuButtonClubQuery } from '@//:artifacts/DropdownMenuButtonClubQuery.graphql'
@@ -42,14 +41,12 @@ export default function DropdownMenuButtonClub (): JSX.Element {
 
   const selectedClub = data.viewer?.clubs.edges[0].node
 
-  const newPath = generatePath('/club/:slug/:entity', {
-    slug: selectedClub.slug,
-    entity: 'home'
-  })
-
   return (
     <HorizontalNavigationDropdownMenu.Button
-      href={newPath}
+      href={{
+        pathname: '/club/[slug]/home',
+        query: { slug: selectedClub.slug }
+      }}
       colorScheme='teal'
       icon={ClubPeopleGroup}
       label={

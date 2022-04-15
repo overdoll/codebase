@@ -1,6 +1,5 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
-import generatePath from '@//:modules/routing/generatePath'
 import { ContentBrushPen } from '@//:assets/icons/navigation'
 import { AddPlus } from '@//:assets/icons/interface'
 import { MainMenuButtonCreatePostQuery } from '@//:artifacts/MainMenuButtonCreatePostQuery.graphql'
@@ -45,16 +44,14 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
 
   const selectedClub = data.viewer?.clubs?.edges[0]?.node
 
-  const newPath = generatePath('/club/:slug/:entity', {
-    slug: selectedClub.slug,
-    entity: 'create-post'
-  })
-
   return (
     <HorizontalNavigation.Button
       exact
       colorScheme='teal'
-      href={newPath}
+      href={{
+        pathname: '/club/[slug]/create-post',
+        query: { slug: selectedClub.slug }
+      }}
       icon={ContentBrushPen}
       label={i18n._(t`Create a Post`)}
     />

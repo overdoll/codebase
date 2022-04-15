@@ -217,7 +217,7 @@ msgstr ""
 #~ msgid "Join"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:137
+#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:143
 msgid "Like"
 msgstr ""
 
@@ -261,7 +261,7 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton.tsx:30
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton.tsx:33
 msgid "Moderate"
 msgstr ""
 
@@ -387,7 +387,7 @@ msgstr ""
 msgid "Post Reports"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:120
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:126
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -423,12 +423,12 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:140
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:147
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:146
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
 msgid "Report Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:161
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:167
 msgid "Report post"
 msgstr ""
 
@@ -522,7 +522,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:189
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:195
 msgid "Submit Report"
 msgstr ""
 
@@ -582,7 +582,7 @@ msgstr ""
 msgid "There was an error removing the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:128
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:134
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -648,7 +648,7 @@ msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:31
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
 msgstr ""
 

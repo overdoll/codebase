@@ -10,11 +10,13 @@ RootProfile.getTranslationProps = async (ctx) => {
   }
 }
 
-RootProfile.getRelayPreloadProps = () => ({
+RootProfile.getRelayPreloadProps = (ctx) => ({
   queries: {
     profileQuery: {
       params: ProfileQuery.params,
-      variables: {}
+      variables: {
+        username: ctx.query.username
+      }
     }
   }
 })

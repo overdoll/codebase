@@ -76,11 +76,12 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
           title: t`Welcome back!`
         })
       },
-      updater: (store) => {
-        const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
-        prepareViewer(store, payload)
-        removeCookie('token')
-        void router.push(redirect != null ? redirect : '/')
+      updater: (store, payload) => {
+        if (payload?.grantAccountAccessWithAuthenticationToken?.account != null) {
+          prepareViewer(store, payload?.grantAccountAccessWithAuthenticationToken?.account)
+          removeCookie('token')
+          void router.push(redirect != null ? redirect : '/')
+        }
       },
       onError (data) {
         notify({

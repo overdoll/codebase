@@ -7,15 +7,13 @@ import {
 } from '@//:assets/icons/navigation'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
+import { RenderOnDesktop } from '@//:modules/content/PageLayout'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
-import LanguageManager from './LanguageManager/LanguageManager'
-import { Box } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -31,7 +29,6 @@ const AlternativeMenuGQL = graphql`
   fragment AlternativeMenuFragment on Account {
     ...DropdownMenuButtonProfileFragment
     ...QuickAccessButtonProfileFragment
-    ...LanguageManagerFragment
   }
 `
 
@@ -150,24 +147,6 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
-        <RenderOnMobile>
-          <Suspense fallback={
-            <SkeletonDropdownMenuButton />
-          }
-          >
-            <Box>
-              <LanguageManager queryRef={data} />
-            </Box>
-          </Suspense>
-        </RenderOnMobile>
-        <RenderOnDesktop>
-          <Suspense fallback={
-            <SkeletonDropdownMenuButton />
-          }
-          >
-            <LanguageManager queryRef={data} />
-          </Suspense>
-        </RenderOnDesktop>
       </HorizontalNavigationDropdownMenu>
     </>
   )
