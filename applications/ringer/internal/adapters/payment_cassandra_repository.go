@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payment"
@@ -13,13 +12,6 @@ import (
 	"overdoll/libraries/principal"
 	"time"
 )
-
-var balanceColumns = []string{
-	"club_id",
-	"currency",
-	"amount",
-	"last_insert_id",
-}
 
 var clubPaymentsTable = table.New(table.Metadata{
 	Name: "club_payments",
@@ -71,27 +63,6 @@ type clubPayment struct {
 	ClubPayoutIds            []string  `db:"club_payout_ids"`
 }
 
-var clubPendingBalanceTable = table.New(table.Metadata{
-	Name:    "club_pending_balance",
-	Columns: balanceColumns,
-	PartKey: []string{"club_id"},
-	SortKey: []string{},
-})
-
-var clubBalanceTable = table.New(table.Metadata{
-	Name:    "club_balance",
-	Columns: balanceColumns,
-	PartKey: []string{"club_id"},
-	SortKey: []string{},
-})
-
-type clubBalance struct {
-	ClubId       string     `db:"club_id"`
-	Currency     string     `db:"currency"`
-	Amount       int64      `db:"amount"`
-	LastInsertId gocql.UUID `db:"last_insert_id"`
-}
-
 var clubPlatformFeeTable = table.New(table.Metadata{
 	Name: "club_platform_fee",
 	Columns: []string{
@@ -136,13 +107,13 @@ func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*c
 	}, nil
 }
 
-func (r PaymentCassandraRepository) canViewSensitive(ctx context.Context, requester *principal.Principal, clubId string) error {
+func canViewSensitive(ctx context.Context, stella query.StellaService, requester *principal.Principal, clubId string) error {
 
 	if requester.IsStaff() {
 		return nil
 	}
 
-	canView, err := r.stella.CanAccountCreatePostUnderClub(ctx, requester.AccountId(), clubId)
+	canView, err := stella.CanAccountCreatePostUnderClub(ctx, requester.AccountId(), clubId)
 
 	if err != nil {
 		return err
@@ -153,44 +124,6 @@ func (r PaymentCassandraRepository) canViewSensitive(ctx context.Context, reques
 	}
 
 	return nil
-}
-
-func (r PaymentCassandraRepository) getPlatformFeeForClub(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
-
-	var platformFee clubPlatformFee
-
-	if err := r.session.
-		Query(clubPlatformFeeTable.Get()).
-		BindStruct(clubPlatformFee{ClubId: clubId}).
-		Get(&platformFee); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return payment.NewDefaultPlatformFee(clubId)
-		}
-
-		return nil, fmt.Errorf("failed to get platform fee for club: %v", err)
-	}
-
-	return payment.UnmarshalClubPlatformFeeFromDatabase(platformFee.ClubId, platformFee.Percent), nil
-}
-
-func (r PaymentCassandraRepository) GetPlatformFeeForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubPlatformFee, error) {
-
-	fee, err := r.getPlatformFeeForClub(ctx, clubId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := r.canViewSensitive(ctx, requester, clubId); err != nil {
-		return nil, err
-	}
-
-	return fee, nil
-}
-
-func (r PaymentCassandraRepository) GetPlatformFeeForClubOperator(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
-	return r.getPlatformFeeForClub(ctx, clubId)
 }
 
 func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, payment *payment.ClubPayment) error {
@@ -235,37 +168,6 @@ func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, pa
 	return nil
 }
 
-func (r PaymentCassandraRepository) getBalanceForClub(ctx context.Context, requester *principal.Principal, clubId string, table *table.Table) (*payment.ClubBalance, error) {
-
-	var clubBal clubBalance
-
-	if err := r.session.
-		Query(table.Get()).
-		BindStruct(clubBalance{ClubId: clubId}).
-		Get(&clubBal); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return payment.NewDefaultBalance(clubId)
-		}
-
-		return nil, fmt.Errorf("failed to get balance for club: %v", err)
-	}
-
-	if err := r.canViewSensitive(ctx, requester, clubId); err != nil {
-		return nil, err
-	}
-
-	return payment.UnmarshalClubBalanceFromDatabase(clubBal.ClubId, clubBal.Amount, clubBal.Currency), nil
-}
-
-func (r PaymentCassandraRepository) GetPendingBalanceForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubBalance, error) {
-	return r.getBalanceForClub(ctx, requester, clubId, clubPendingBalanceTable)
-}
-
-func (r PaymentCassandraRepository) GetBalanceForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubBalance, error) {
-	return r.getBalanceForClub(ctx, requester, clubId, clubBalanceTable)
-}
-
 func (r PaymentCassandraRepository) getClubPaymentById(ctx context.Context, paymentId string) (*payment.ClubPayment, error) {
 
 	var clubPay clubPayment
@@ -304,7 +206,7 @@ func (r PaymentCassandraRepository) GetClubPaymentById(ctx context.Context, requ
 		return nil, err
 	}
 
-	if err := r.canViewSensitive(ctx, requester, pay.DestinationClubId()); err != nil {
+	if err := canViewSensitive(ctx, r.stella, requester, pay.DestinationClubId()); err != nil {
 		return nil, err
 	}
 
@@ -329,94 +231,7 @@ func (r PaymentCassandraRepository) GetClubPaymentByAccountTransactionId(ctx con
 	return r.getClubPaymentById(ctx, clubPay.Id)
 }
 
-func (r PaymentCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx context.Context, table *table.Table, clubId string, amount int64, currency money.Currency, increment bool) error {
-
-	var balance clubBalance
-
-	// basically here, we try to get the club balance
-	// if we can't find it, we create a new one, using a unique insert on purpose
-	if err := r.session.
-		Query(table.Get()).
-		BindStruct(clubBalance{ClubId: clubId}).
-		Get(&balance); err != nil {
-
-		if err == gocql.ErrNotFound {
-
-			balance = clubBalance{
-				ClubId:       clubId,
-				Currency:     currency.String(),
-				Amount:       0,
-				LastInsertId: gocql.TimeUUID(),
-			}
-
-			applied, err := table.InsertBuilder().
-				Unique().
-				Query(r.session).
-				SerialConsistency(gocql.Serial).
-				BindStruct(balance).
-				ExecCAS()
-
-			if err != nil {
-				return fmt.Errorf("failed to create club balance: %v", err)
-			}
-
-			if !applied {
-				return fmt.Errorf("failed to insert unique club balance: %v", err)
-			}
-		}
-
-		return fmt.Errorf("failed to get club balance: %v", err)
-	}
-
-	finalBalance := balance.Amount
-
-	if increment {
-		finalBalance += amount
-	} else {
-		finalBalance -= amount
-	}
-
-	// now, do an increment or decrement of the balance
-	ok, err := table.UpdateBuilder("last_insert_id", "amount").
-		If(qb.EqLit("last_insert_id", balance.LastInsertId.String())).
-		Query(r.session).
-		BindStruct(clubBalance{ClubId: clubId, LastInsertId: gocql.TimeUUID(), Amount: finalBalance}).
-		SerialConsistency(gocql.Serial).
-		ExecCAS()
-
-	if err != nil {
-		return fmt.Errorf("failed to update balance: %v", err)
-	}
-
-	if !ok {
-		return fmt.Errorf("failed to execute transaction to update balance: %v", err)
-	}
-
-	return nil
-}
-
-func (r PaymentCassandraRepository) IncrementClubPendingBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubPendingBalanceTable, clubId, amount, currency, true)
-}
-
-func (r PaymentCassandraRepository) DecrementClubPendingBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubPendingBalanceTable, clubId, amount, currency, false)
-}
-
-func (r PaymentCassandraRepository) IncrementClubBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubBalanceTable, clubId, amount, currency, true)
-}
-
-func (r PaymentCassandraRepository) DecrementClubBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubBalanceTable, clubId, amount, currency, false)
-}
-
 func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r PaymentCassandraRepository) UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *payment.ClubPlatformFee) error) (*payment.ClubPlatformFee, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -439,4 +254,47 @@ func (r PaymentCassandraRepository) ScanClubPaymentsListForPayout(ctx context.Co
 func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (r PaymentCassandraRepository) UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *payment.ClubPlatformFee) error) (*payment.ClubPlatformFee, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r PaymentCassandraRepository) getPlatformFeeForClub(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
+
+	var platformFee clubPlatformFee
+
+	if err := r.session.
+		Query(clubPlatformFeeTable.Get()).
+		BindStruct(clubPlatformFee{ClubId: clubId}).
+		Get(&platformFee); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return payment.NewDefaultPlatformFee(clubId)
+		}
+
+		return nil, fmt.Errorf("failed to get platform fee for club: %v", err)
+	}
+
+	return payment.UnmarshalClubPlatformFeeFromDatabase(platformFee.ClubId, platformFee.Percent), nil
+}
+
+func (r PaymentCassandraRepository) GetPlatformFeeForClubOperator(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
+	return r.getPlatformFeeForClub(ctx, clubId)
+}
+
+func (r PaymentCassandraRepository) GetPlatformFeeForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubPlatformFee, error) {
+
+	fee, err := r.getPlatformFeeForClub(ctx, clubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := canViewSensitive(ctx, r.stella, requester, clubId); err != nil {
+		return nil, err
+	}
+
+	return fee, nil
 }

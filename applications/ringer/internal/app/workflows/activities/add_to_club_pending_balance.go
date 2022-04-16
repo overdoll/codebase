@@ -12,5 +12,5 @@ type AddToClubPendingBalanceInput struct {
 }
 
 func (h *Activities) AddToClubPendingBalance(ctx context.Context, input AddToClubPendingBalanceInput) error {
-	return h.pr.IncrementClubPendingBalance(ctx, input.ClubId, input.Amount, input.Currency)
+	return h.br.IncrementClubPendingBalance(ctx, input.ClubId, input.Amount, input.Currency)
 }

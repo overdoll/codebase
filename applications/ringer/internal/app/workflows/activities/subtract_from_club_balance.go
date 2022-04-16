@@ -12,5 +12,5 @@ type SubtractFromBalanceInput struct {
 }
 
 func (h *Activities) SubtractFromClubBalance(ctx context.Context, input SubtractFromBalanceInput) error {
-	return h.pr.DecrementClubBalance(ctx, input.ClubId, input.Amount, input.Currency)
+	return h.br.DecrementClubBalance(ctx, input.ClubId, input.Amount, input.Currency)
 }

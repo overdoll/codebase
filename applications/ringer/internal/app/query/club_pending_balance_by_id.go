@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/ringer/internal/domain/payment"
+	"overdoll/applications/ringer/internal/domain/balance"
 	"overdoll/libraries/principal"
 )
 
@@ -12,16 +12,16 @@ type ClubPendingBalanceById struct {
 }
 
 type ClubPendingBalanceByIdHandler struct {
-	pr payment.Repository
+	br balance.Repository
 }
 
-func NewClubPendingBalanceByIdHandlerHandler(pr payment.Repository) ClubPendingBalanceByIdHandler {
-	return ClubPendingBalanceByIdHandler{pr: pr}
+func NewClubPendingBalanceByIdHandlerHandler(br balance.Repository) ClubPendingBalanceByIdHandler {
+	return ClubPendingBalanceByIdHandler{br: br}
 }
 
-func (h ClubPendingBalanceByIdHandler) Handle(ctx context.Context, query ClubBalanceById) (*payment.ClubBalance, error) {
+func (h ClubPendingBalanceByIdHandler) Handle(ctx context.Context, query ClubBalanceById) (*balance.ClubBalance, error) {
 
-	result, err := h.pr.GetPendingBalanceForClub(ctx, query.Principal, query.Id)
+	result, err := h.br.GetPendingBalanceForClub(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

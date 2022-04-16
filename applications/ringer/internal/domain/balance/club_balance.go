@@ -1,4 +1,4 @@
-package payment
+package balance
 
 import (
 	"overdoll/libraries/money"
