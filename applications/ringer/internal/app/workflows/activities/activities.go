@@ -8,13 +8,15 @@ import (
 
 type Activities struct {
 	pr  payment.Repository
+	pi  payment.IndexRepository
 	par payout.Repository
 	or  opennode.Repository
 }
 
-func NewActivitiesHandler(pr payment.Repository, par payout.Repository) *Activities {
+func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par payout.Repository) *Activities {
 	return &Activities{
 		pr:  pr,
 		par: par,
+		pi:  pi,
 	}
 }

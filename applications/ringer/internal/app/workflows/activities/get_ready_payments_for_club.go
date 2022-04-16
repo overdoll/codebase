@@ -30,7 +30,7 @@ func (h *Activities) GetReadyPaymentsForClub(ctx context.Context, input GetReady
 
 	if err := h.pr.ScanClubReadyPaymentsList(ctx,
 		input.ClubId,
-		func(paymentId string, amount int64, currency money.Currency) {
+		func(paymentId string, amount int64, isDeduction bool, currency money.Currency) {
 
 			if _, ok := currencyMap[currency]; !ok {
 				currencyMap[currency] = &paymentGroup{
@@ -40,7 +40,13 @@ func (h *Activities) GetReadyPaymentsForClub(ctx context.Context, input GetReady
 			}
 
 			currencyMap[currency].paymentIds = append(currencyMap[currency].paymentIds, paymentId)
-			currencyMap[currency].totalAmount += amount
+
+			if !isDeduction {
+				currencyMap[currency].totalAmount += amount
+			} else {
+				currencyMap[currency].totalAmount -= amount
+			}
+
 		},
 	); err != nil {
 		return nil, err

@@ -19,7 +19,11 @@ func (h *Activities) MakeClubPaymentReadyForPayout(ctx context.Context, input Ma
 		return err
 	}
 
-	if err := h.pr.AddPaymentToClubReadyList(ctx, readyPayment); err != nil {
+	if err := h.pr.AddClubPaymentToClubReadyList(ctx, readyPayment); err != nil {
+		return err
+	}
+
+	if err := h.pi.IndexClubPayment(ctx, readyPayment); err != nil {
 		return err
 	}
 

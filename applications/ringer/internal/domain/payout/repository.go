@@ -8,7 +8,7 @@ import (
 )
 
 type Repository interface {
-	CreateClubPayout(ctx context.Context, payout *ClubPayout) error
+	CreateClubPayout(ctx context.Context, payout *ClubPayout, paymentIds []string) error
 	GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*DepositRequest, error)
 	GetPayoutWorkflowId(ctx context.Context, payoutId string) (*string, error)
 	GetAccountPayoutMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*AccountPayoutMethod, error)

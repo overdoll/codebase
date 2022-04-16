@@ -19,7 +19,7 @@ func NewPlatformFeeByClubIdHandler(pr payment.Repository) PlatformFeeByClubIdHan
 	return PlatformFeeByClubIdHandler{pr: pr}
 }
 
-func (h PlatformFeeByClubIdHandler) Handle(ctx context.Context, query PlatformFeeByClubId) (*payment.PlatformFee, error) {
+func (h PlatformFeeByClubIdHandler) Handle(ctx context.Context, query PlatformFeeByClubId) (*payment.ClubPlatformFee, error) {
 
 	result, err := h.pr.GetPlatformFeeForClub(ctx, query.Principal, query.ClubId)
 

@@ -60,9 +60,19 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 		return nil
 	}
 
+	// make the club payments updated
+	if err := workflow.ExecuteActivity(ctx, a.MakeClubPaymentsForPayoutComplete,
+		activities.MakeClubPaymentsForPayoutCompleteInput{
+			PayoutId: input.PayoutId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	// payout was successful, finish up logic
 	var deposit *activities.MarkPayoutDepositedPayload
 
+	// mark deposited, which will also release the lock and allow new payouts to be created
 	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutDeposited,
 		activities.MarkPayoutDepositedInput{
 			PayoutId: input.PayoutId,
@@ -79,14 +89,6 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			Amount:   deposit.Amount,
 		},
 	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	if err := workflow.ExecuteActivity(ctx, a.MakeClubPaymentsForPayoutComplete,
-		activities.MakeClubPaymentsForPayoutCompleteInput{
-			PayoutId: input.PayoutId,
-		},
-	).Get(ctx, deposit); err != nil {
 		return err
 	}
 

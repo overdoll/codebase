@@ -2,10 +2,13 @@ package payment
 
 import (
 	"overdoll/libraries/money"
+	"overdoll/libraries/paging"
 	"time"
 )
 
 type ClubPayment struct {
+	*paging.Node
+
 	id                   string
 	source               Source
 	status               Status
@@ -13,23 +16,24 @@ type ClubPayment struct {
 	accountTransactionId string
 	destinationClubId    string
 
-	baseAmount   int64
-	baseCurrency money.Currency
+	currency money.Currency
 
+	baseAmount        int64
 	platformFeeAmount int64
-
-	finalAmount int64
+	finalAmount       int64
 
 	isDeduction              bool
 	deductionSourcePaymentId *string
 
 	timestamp      time.Time
 	settlementDate time.Time
+
+	clubPayoutIds []string
 }
 
 func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 	// get percent of original platform fee
-	platformFee, err := NewPlatformFeeFromAmountAndFinalAmount(destinationClubId, existingPayment.baseAmount, existingPayment.finalAmount)
+	platformFee, err := NewClubPlatformFeeFromAmountAndFinalAmount(destinationClubId, existingPayment.baseAmount, existingPayment.finalAmount)
 
 	if err != nil {
 		return nil, err
@@ -49,17 +53,18 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 		destinationClubId:        destinationClubId,
 		accountTransactionId:     accountTransactionId,
 		baseAmount:               amount,
-		baseCurrency:             currency,
+		currency:                 currency,
 		platformFeeAmount:        fee,
 		finalAmount:              amt,
 		isDeduction:              true,
 		deductionSourcePaymentId: &existingId,
 		timestamp:                timestamp,
 		settlementDate:           settlementDate,
+		clubPayoutIds:            nil,
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *PlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
@@ -73,7 +78,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *PlatformFee,
 		destinationClubId:        destinationClubId,
 		accountTransactionId:     accountTransactionId,
 		baseAmount:               amount,
-		baseCurrency:             currency,
+		currency:                 currency,
 		platformFeeAmount:        fee,
 		finalAmount:              amt,
 		isDeduction:              false,
@@ -111,8 +116,8 @@ func (p *ClubPayment) BaseAmount() int64 {
 	return p.baseAmount
 }
 
-func (p *ClubPayment) BaseCurrency() money.Currency {
-	return p.baseCurrency
+func (p *ClubPayment) Currency() money.Currency {
+	return p.currency
 }
 
 func (p *ClubPayment) PlatformFeeAmount() int64 {
@@ -125,6 +130,10 @@ func (p *ClubPayment) FinalAmount() int64 {
 
 func (p *ClubPayment) IsDeduction() bool {
 	return p.isDeduction
+}
+
+func (p *ClubPayment) ClubPayoutIds() []string {
+	return p.clubPayoutIds
 }
 
 func (p *ClubPayment) DeductionSourcePaymentId() *string {
@@ -142,4 +151,48 @@ func (p *ClubPayment) SettlementDate() time.Time {
 func (p *ClubPayment) MakeReady() error {
 	p.status = Ready
 	return nil
+}
+
+func UnmarshalClubPaymentFromDatabase(
+	id string,
+	source string,
+	status string,
+	sourceAccountId string,
+	accountTransactionId string,
+	destinationClubId string,
+
+	currency string,
+
+	baseAmount int64,
+	platformFeeAmount int64,
+	finalAmount int64,
+
+	isDeduction bool,
+	deductionSourcePaymentId *string,
+
+	timestamp time.Time,
+	settlementDate time.Time,
+
+	clubPayoutIds []string,
+) *ClubPayment {
+	cr, _ := money.CurrencyFromString(currency)
+	so, _ := SourceFromString(source)
+	st, _ := StatusFromString(status)
+	return &ClubPayment{
+		id:                       id,
+		source:                   so,
+		status:                   st,
+		sourceAccountId:          sourceAccountId,
+		accountTransactionId:     accountTransactionId,
+		destinationClubId:        destinationClubId,
+		currency:                 cr,
+		baseAmount:               baseAmount,
+		platformFeeAmount:        platformFeeAmount,
+		finalAmount:              finalAmount,
+		isDeduction:              isDeduction,
+		deductionSourcePaymentId: deductionSourcePaymentId,
+		timestamp:                timestamp,
+		settlementDate:           settlementDate,
+		clubPayoutIds:            clubPayoutIds,
+	}
 }

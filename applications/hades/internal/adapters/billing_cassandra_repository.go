@@ -994,10 +994,7 @@ func (r BillingCassandraRepository) searchAccountClubSupporterSubscriptions(ctx 
 
 	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindMap(map[string]interface{}{
-			"account_id": filters.AccountId(),
-			"status":     status,
-		}).
+		BindMap(bound).
 		Select(&accountClubSupported); err != nil {
 		return nil, fmt.Errorf("failed to get account club support: %v", err)
 	}

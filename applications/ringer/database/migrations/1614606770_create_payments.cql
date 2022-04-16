@@ -1,20 +1,18 @@
 CREATE TABLE IF NOT EXISTS club_balance
 (
-    club_id                text,
-    currency               text,
-    amount                 bigint,
-    pending_payment_id     text,
-    pending_payment_amount bigint,
+    club_id        text,
+    currency       text,
+    amount         bigint,
+    last_insert_id timeuuid,
     primary key ( club_id ),
 );
 
 CREATE TABLE IF NOT EXISTS club_pending_balance
 (
-    club_id                text,
-    currency               text,
-    amount                 bigint,
-    pending_payment_id     text,
-    pending_payment_amount bigint,
+    club_id        text,
+    currency       text,
+    amount         bigint,
+    last_insert_id timeuuid,
     primary key ( club_id ),
 );
 
@@ -37,24 +35,33 @@ CREATE TABLE IF NOT EXISTS club_payments
     id                          text,
     source                      text,
     status                      text,
-    state                       text,
     settlement_date             timestamp,
     source_account_id           text,
+    club_payout_ids             list<text>,
     account_transaction_id      text,
     destination_club_id         text,
+    currency                    text,
     base_amount                 bigint,
-    base_currency               text,
     platform_fee_amount         bigint,
     final_amount                bigint,
     is_deduction                boolean,
     deduction_source_payment_id text,
+    timestamp                   timestamp,
     primary key ( id ),
+);
+
+CREATE TABLE IF NOT EXISTS club_payments_by_payout
+(
+    payout_id  text,
+    payment_id text,
+    primary key ( payout_id, payment_id ),
 );
 
 CREATE TABLE IF NOT EXISTS club_ready_payments
 (
     club_id      text,
     payment_id   text,
+    is_deduction boolean,
     final_amount bigint,
     primary key ( club_id, payment_id ),
 );
@@ -112,26 +119,6 @@ CREATE TABLE IF NOT EXISTS club_locked_payout
     club_id   text,
     payout_id text,
     primary key ( club_id ),
-);
-
-CREATE TABLE IF NOT EXISTS club_payments_by_payout
-(
-    payout_id                   text,
-    payment_id                  text,
-    source                      text,
-    status                      text,
-    settlement_date             timestamp,
-    source_account_id           text,
-    account_transaction_id      text,
-    destination_club_id         text,
-    base_amount                 bigint,
-    base_currency               text,
-    platform_fee_amount         bigint,
-    final_amount                bigint,
-    is_deduction                boolean,
-    deduction_source_payment_id text,
-    timestamp                   timestamp,
-    primary key ( payout_id, payment_id ),
 );
 
 CREATE TABLE IF NOT EXISTS deposit_requests

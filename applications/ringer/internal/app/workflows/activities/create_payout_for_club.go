@@ -30,7 +30,7 @@ func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayout
 		return nil, err
 	}
 
-	if err := h.par.CreateClubPayout(ctx, newPayout); err != nil {
+	if err := h.par.CreateClubPayout(ctx, newPayout, input.PaymentIds); err != nil {
 		return nil, err
 	}
 

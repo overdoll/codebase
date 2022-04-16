@@ -22,7 +22,7 @@ func (h *Activities) GetClubPaymentDetails(ctx context.Context, id string) (*Get
 
 	return &GetClubPaymentDetailsPayload{
 		FinalAmount:    pay.FinalAmount(),
-		Currency:       pay.BaseCurrency(),
+		Currency:       pay.Currency(),
 		SettlementDate: pay.SettlementDate(),
 	}, nil
 }

@@ -49,5 +49,9 @@ func (h *Activities) CreatePendingClubPaymentDeposit(ctx context.Context, input 
 		return err
 	}
 
+	if err := h.pi.IndexClubPayment(ctx, pay); err != nil {
+		return err
+	}
+
 	return nil
 }
