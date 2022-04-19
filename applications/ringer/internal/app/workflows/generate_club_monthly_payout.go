@@ -16,6 +16,7 @@ const (
 type GenerateClubMonthlyPayoutInput struct {
 	ClubId     string
 	FutureTime *time.Time
+	WorkflowId string
 }
 
 func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPayoutInput) error {
@@ -98,6 +99,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	// create a payout record
 	if err := workflow.ExecuteActivity(ctx, a.CreatePayoutForClub,
 		activities.CreatePayoutForClubInput{
+			TemporalWorkflowId:    input.WorkflowId,
 			DepositRequestId:      depositPayload.DepositRequestId,
 			PayoutId:              *payoutId,
 			Amount:                group.TotalAmount,

@@ -204,7 +204,7 @@ func (r PaymentIndexElasticSearchRepository) SearchClubPayments(ctx context.Cont
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search account transactions: %v", err)
+		return nil, fmt.Errorf("failed to search club payments: %v", err)
 	}
 
 	var pays []*payment.ClubPayment
@@ -317,13 +317,8 @@ func (r PaymentIndexElasticSearchRepository) IndexClubPayment(ctx context.Contex
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index account transaction: %v", err)
+		return fmt.Errorf("failed to index club payment: %v", err)
 	}
 
 	return nil
-}
-
-func (r PaymentIndexElasticSearchRepository) UpdateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
-	//TODO implement me
-	panic("implement me")
 }

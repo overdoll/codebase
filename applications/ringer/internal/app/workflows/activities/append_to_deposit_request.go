@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/money"
 )
 
@@ -13,5 +14,14 @@ type AppendToDepositRequestInput struct {
 }
 
 func (h *Activities) AppendToDepositRequest(ctx context.Context, input AppendToDepositRequestInput) error {
-	return h.par.AppendPayoutToDepositRequest(ctx, input.DepositId, input.PayoutId)
+
+	_, err := h.par.UpdateDepositRequestAmount(ctx, input.DepositId, func(pay *payout.DepositRequest) error {
+		return pay.AppendPayoutAndAmount(input.PayoutId, input.Amount, input.Currency)
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

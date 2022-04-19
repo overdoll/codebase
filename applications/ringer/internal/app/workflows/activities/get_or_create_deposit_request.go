@@ -27,7 +27,7 @@ func (h *Activities) GetOrCreateDepositRequest(ctx context.Context, input GetOrC
 		return nil, err
 	}
 
-	accountPayout, err := h.par.GetAccountPayoutMethodById(ctx, input.AccountPayoutMethodId)
+	accountPayout, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, input.AccountPayoutMethodId)
 
 	if err != nil {
 		return nil, err

@@ -74,13 +74,7 @@ const clubPayoutsIndex = `
 						"timestamp": {
 							"type": "date"
 						},
-						"amount": {
-							"type": "integer"
-						},
-						"currency": {
-							"type": "keyword"
-						},
-						"reason": {
+						"error": {
 							"type": "keyword"
 						}
 					}

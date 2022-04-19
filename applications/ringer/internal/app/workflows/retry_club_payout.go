@@ -23,9 +23,12 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 		return err
 	}
 
+	processPayoutId := "ProcessClubPayout_" + input.PayoutId
+
 	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutQueued,
 		activities.MarkClubPayoutQueuedInput{
-			PayoutId: input.PayoutId,
+			PayoutId:   input.PayoutId,
+			WorkflowId: processPayoutId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -33,7 +36,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	// spawn a child workflow to process the payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "ProcessClubPayout_" + input.PayoutId,
+		WorkflowID:        processPayoutId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 

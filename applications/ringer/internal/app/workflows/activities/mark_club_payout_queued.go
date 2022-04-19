@@ -6,13 +6,14 @@ import (
 )
 
 type MarkClubPayoutQueuedInput struct {
-	PayoutId string
+	PayoutId   string
+	WorkflowId string
 }
 
-func (h *Activities) MarkClubPayoutQueued(ctx context.Context, input MarkClubPayoutCancelledInput) error {
+func (h *Activities) MarkClubPayoutQueued(ctx context.Context, input MarkClubPayoutQueuedInput) error {
 
 	pay, err := h.par.UpdateClubPayoutState(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
-		return pay.MakeQueued()
+		return pay.MakeQueued(input.WorkflowId)
 	})
 
 	if err != nil {

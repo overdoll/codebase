@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS deposit_requests
     payout_method         text,
     payout_ids            list<text>,
     timestamp             timestamp,
+    last_insert_id        timeuuid,
     primary key ( id ),
 );
 
@@ -136,6 +137,7 @@ CREATE TABLE IF NOT EXISTS deposit_requests_by_month
     payout_method         text,
     payout_ids            list<text>,
     timestamp             timestamp,
+    last_insert_id        timeuuid,
     primary key ( bucket, id ),
 );
 

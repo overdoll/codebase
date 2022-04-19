@@ -25,7 +25,7 @@ type CreatePayoutForClubPayload struct {
 
 func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayoutForClubInput) (*CreatePayoutForClubPayload, error) {
 
-	accountMethod, err := h.par.GetAccountPayoutMethodById(ctx, input.AccountPayoutMethodId)
+	accountMethod, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, input.AccountPayoutMethodId)
 
 	if err != nil {
 		return nil, err

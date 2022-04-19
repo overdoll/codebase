@@ -101,8 +101,9 @@ func (p *ClubPayout) MakeFailed() error {
 	return nil
 }
 
-func (p *ClubPayout) MakeQueued() error {
+func (p *ClubPayout) MakeQueued(temporalWorkflowId string) error {
 	p.status = Queued
+	p.temporalWorkflowId = temporalWorkflowId
 	return nil
 }
 

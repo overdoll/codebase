@@ -27,7 +27,7 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 	}
 
 	// get the specific account payout method that's linked
-	accountMethod, err := h.par.GetAccountPayoutMethodById(ctx, clubPayout.AccountPayoutMethodId())
+	accountMethod, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, clubPayout.AccountPayoutMethodId())
 
 	if err != nil {
 		return nil, err

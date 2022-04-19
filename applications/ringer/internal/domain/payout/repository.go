@@ -10,8 +10,10 @@ import (
 type Repository interface {
 	GetAccountPayoutMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*AccountPayoutMethod, error)
 	GetAccountPayoutMethodsOperator(ctx context.Context, accountId string) ([]*AccountPayoutMethod, error)
+	DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *AccountPayoutMethod) error
 	CreateAccountPayoutMethod(ctx context.Context, pay *AccountPayoutMethod) error
-	GetAccountPayoutMethodById(ctx context.Context, accountPayoutMethodId string) (*AccountPayoutMethod, error)
+	GetAccountPayoutMethodByIdOperator(ctx context.Context, accountPayoutMethodId string) (*AccountPayoutMethod, error)
+	GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountPayoutMethodId string) (*AccountPayoutMethod, error)
 
 	CreateClubPayout(ctx context.Context, payout *ClubPayout) error
 	GetClubPayoutById(ctx context.Context, requester *principal.Principal, payoutId string) (*ClubPayout, error)
@@ -22,9 +24,10 @@ type Repository interface {
 	CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error
 
 	CreateDepositRequest(ctx context.Context, deposit *DepositRequest) error
-	GetDepositRequestById(ctx context.Context, id string) (*DepositRequest, error)
+	GetDepositRequestById(ctx context.Context, requester *principal.Principal, id string) (*DepositRequest, error)
+	GetDepositRequestByIdOperator(ctx context.Context, id string) (*DepositRequest, error)
 	GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*DepositRequest, error)
-	AppendPayoutToDepositRequest(ctx context.Context, depositRequestId string, payoutId string) error
+	UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *DepositRequest) error) (*DepositRequest, error)
 	GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*DepositRequest, error)
 }
 
