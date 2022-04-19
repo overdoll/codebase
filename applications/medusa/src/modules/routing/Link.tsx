@@ -21,6 +21,7 @@ export default function Link ({
 
   return (
     <NextLink
+      scroll
       {...rest}
     >
       {children}

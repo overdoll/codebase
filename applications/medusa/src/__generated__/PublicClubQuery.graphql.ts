@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4575a9dcc9ef3509db4fc9ad6a0530b7>>
- * @relayHash aa3efe486a9983d34057107d6dc43d88
+ * @generated SignedSource<<8c46b04a9690cbd734a87a7c50426738>>
+ * @relayHash ad6fc55904bd68ca4f42e9c9ed578ede
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aa3efe486a9983d34057107d6dc43d88
+// @relayRequestID ad6fc55904bd68ca4f42e9c9ed578ede
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ export type PublicClubQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment" | "ClubSuspendedStaffAlertFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment" | "LockedAccountBannerFragment">;
   } | null;
 };
 export type PublicClubQueryResponse = PublicClubQuery$data;
@@ -317,6 +317,13 @@ v18 = {
   "kind": "ScalarField",
   "name": "currency",
   "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "expires",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -451,6 +458,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "SupportClubButtonViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -668,13 +680,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
+              (v19/*: any*/)
             ],
             "storageKey": null
           }
@@ -783,6 +789,19 @@ return {
             "name": "isSecure",
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v14/*: any*/),
+              (v19/*: any*/)
+            ],
+            "storageKey": null
+          },
           (v11/*: any*/)
         ],
         "storageKey": null
@@ -790,7 +809,7 @@ return {
     ]
   },
   "params": {
-    "id": "aa3efe486a9983d34057107d6dc43d88",
+    "id": "ad6fc55904bd68ca4f42e9c9ed578ede",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",
@@ -799,6 +818,6 @@ return {
 };
 })();
 
-(node as any).hash = "a9d136d8bc19c016ea0fcd9dfded61b0";
+(node as any).hash = "fdcd35bb77a33ac929b0784e754b720f";
 
 export default node;

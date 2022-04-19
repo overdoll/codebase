@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import PublicClubQuery, { PublicClubQuery as PublicClubQueryType } from '@//:artifacts/PublicClubQuery.graphql'
 import PublicClub from './PublicClub/PublicClub'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import LockedAccountBanner from '../../../home/RootHome/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner from '../../../../common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
@@ -32,7 +32,6 @@ const RootPublicClub: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <LockedAccountBanner />
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
           <Suspense fallback={<SkeletonPost />}>
             <PublicClub query={queryRef as PreloadedQuery<PublicClubQueryType>} />

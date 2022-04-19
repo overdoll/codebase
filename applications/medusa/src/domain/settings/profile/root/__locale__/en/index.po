@@ -17,10 +17,10 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:51
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:55
 msgid "Manage Emails"
 msgstr ""
 
-#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:42
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:46
 msgid "Manage Username"
 msgstr ""

@@ -59,6 +59,6 @@ msgstr ""
 msgid "Removed"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:29
+#: src/domain/club/posts/RootClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:28
 msgid "Review"
 msgstr ""

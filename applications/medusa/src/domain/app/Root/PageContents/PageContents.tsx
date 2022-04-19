@@ -8,6 +8,17 @@ interface Props {
 }
 
 export default function PageContents ({ children }: Props): JSX.Element {
+  /*
+  adding these two properties
+  position='absolute'
+  overflowY='auto'
+  so that the container is "under" the nav bar as opposed to
+  having the scroll bar fit the entire page will not reset the scroll
+  position when a router change happens
+
+  find a suitable workaround and add the two properties back for styling
+   */
+
   return (
     <Box
       left={0}
@@ -20,9 +31,6 @@ export default function PageContents ({ children }: Props): JSX.Element {
         base: 54,
         md: 0
       }}
-      position='absolute'
-      overflowY='auto'
-      overflowX='hidden'
     >
       <Box>
         <ErrorBoundary fallback='error'>

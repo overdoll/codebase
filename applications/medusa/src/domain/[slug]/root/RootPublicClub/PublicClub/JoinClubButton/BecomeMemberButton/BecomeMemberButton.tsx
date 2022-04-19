@@ -8,15 +8,11 @@ import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useContext } from 'react'
 import { AbilityContext } from '@//:modules/authorization/AbilityContext'
-import { ButtonProps, IconButton } from '@chakra-ui/react'
-import { useLingui } from '@lingui/react'
-import { AddPlus } from '@//:assets/icons'
-import { Icon } from '@//:modules/content/PageLayout'
+import { ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   clubQuery: BecomeMemberButtonClubFragment$key
   viewerQuery: BecomeMemberButtonViewerFragment$key | null
-  isIcon?: boolean | undefined
 }
 
 const ClubFragment = graphql`
@@ -55,7 +51,6 @@ const JoinClubMutation = graphql`
 export default function BecomeMemberButton ({
   clubQuery,
   viewerQuery,
-  isIcon,
   ...rest
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
@@ -63,8 +58,6 @@ export default function BecomeMemberButton ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [becomeMember, isBecomingMember] = useMutation<BecomeMemberButtonMutation>(JoinClubMutation)
-
-  const { i18n } = useLingui()
 
   const canJoinClub = viewerData !== null ? viewerData.clubMembershipsCount < viewerData.clubMembershipsLimit : true
 
@@ -104,20 +97,6 @@ export default function BecomeMemberButton ({
   }
 
   if (canJoinClub) {
-    if (isIcon === true) {
-      return (
-        <IconButton
-          aria-label={i18n._(t`Join Club`)}
-          isDisabled={isDisabled}
-          onClick={onBecomeMember}
-          isLoading={isBecomingMember}
-          icon={<Icon icon={AddPlus} w='100%' h='100%' p={2} fill='primary.900' />}
-          colorScheme='primary'
-          {...rest}
-        />
-      )
-    }
-
     return (
       <Button
         isDisabled={isDisabled}
@@ -130,19 +109,6 @@ export default function BecomeMemberButton ({
           Join
         </Trans>
       </Button>
-    )
-  }
-
-  if (isIcon === true) {
-    return (
-      <IconButton
-        aria-label={i18n._(t`Join Club`)}
-        isDisabled={isDisabled}
-        colorScheme='primary'
-        icon={<Icon icon={AddPlus} w='100%' h='100%' p={2} fill='primary.900' />}
-        onClick={onJoinWhenLimited}
-        {...rest}
-      />
     )
   }
 

@@ -1,12 +1,14 @@
-import { createContext, ReactNode, useEffect, useRef, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-
-interface Props {
-  children: ReactNode
-}
+import { MaybeRenderProp } from '@//:types/components'
+import runIfFunction from '../../../../support/runIfFunction'
 
 interface Context {
   isObserving: boolean
+}
+
+interface Props {
+  children: MaybeRenderProp<Context>
 }
 
 const defaultValue = {
@@ -50,7 +52,9 @@ export function ObserverManagerProvider ({ children }: Props): JSX.Element {
   return (
     <ObserverManagerContext.Provider value={contextValue}>
       <Box h='100%' ref={ref}>
-        {children}
+        {runIfFunction(children, {
+          isObserving: observing
+        })}
       </Box>
     </ObserverManagerContext.Provider>
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<884ff74ba90168147f83ef47a046070d>>
- * @relayHash 7f2d9a0b1e21e48874469389d2192563
+ * @generated SignedSource<<05feef97164470fe884cefca0a95942c>>
+ * @relayHash 6497afcba0337984ed167a337f0655ac
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f2d9a0b1e21e48874469389d2192563
+// @relayRequestID 6497afcba0337984ed167a337f0655ac
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type ProfileSettingsQuery$variables = {};
 export type ProfileSettingsQueryVariables = ProfileSettingsQuery$variables;
@@ -26,6 +27,7 @@ export type ProfileSettingsQuery$data = {
         };
       }>;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"LockedAccountBannerFragment">;
   };
 };
 export type ProfileSettingsQueryResponse = ProfileSettingsQuery$data;
@@ -115,6 +117,11 @@ return {
                 }
               ],
               "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "LockedAccountBannerFragment"
             }
           ],
           "storageKey": null
@@ -177,6 +184,31 @@ return {
             ],
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           (v3/*: any*/)
         ],
         "storageKey": null
@@ -184,7 +216,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f2d9a0b1e21e48874469389d2192563",
+    "id": "6497afcba0337984ed167a337f0655ac",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",
@@ -193,6 +225,6 @@ return {
 };
 })();
 
-(node as any).hash = "522d39b1c3dfc0f53bb54372a0798ed7";
+(node as any).hash = "19145bc211e3aa8c545979575b1c5e2f";
 
 export default node;

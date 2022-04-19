@@ -3,18 +3,12 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PublicPostPageFragment$key } from '@//:artifacts/PublicPostPageFragment.graphql'
 import type { PublicPostPageViewerFragment$key } from '@//:artifacts/PublicPostPageViewerFragment.graphql'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import ClubSuspendedStaffAlert
   from '../../../../root/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
-import PageFixedHeader from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
-import FixedHeaderWrapper from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import LockedAccountTrigger from '../../../../../home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
-import PostSearchButton from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
-import { FlowBuilderFloatingFooter } from '@//:modules/content/PageLayout'
-import PageFilledWrapper from '@//:modules/content/PageLayout/Wrappers/PageFilledWrapper/PageFilledWrapper'
 
 interface Props {
   query: PublicPostPageFragment$key
@@ -45,15 +39,7 @@ export default function PublicPostPage ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PageFilledWrapper>
-      <PageFixedHeader>
-        <FixedHeaderWrapper>
-          <HStack spacing={2} justify='flex-end'>
-            <LockedAccountTrigger />
-            <PostSearchButton routeTo='/search' />
-          </HStack>
-        </FixedHeaderWrapper>
-      </PageFixedHeader>
+    <Box>
       <ClubSuspendedStaffAlert query={data.club} />
       {(!['PUBLISHED', 'ARCHIVED'].includes(data.state)) && (
         <Alert mb={2} status='warning'>
@@ -78,14 +64,11 @@ export default function PublicPostPage ({
           </HStack>
         </Alert>
       )}
-      <Stack spacing={4}>
-        <ObserverManagerProvider>
-          <PostVideoManagerProvider>
-            <FullDetailedPost query={data} viewerQuery={viewerData} />
-          </PostVideoManagerProvider>
-        </ObserverManagerProvider>
-        <FlowBuilderFloatingFooter />
-      </Stack>
-    </PageFilledWrapper>
+      <ObserverManagerProvider>
+        <PostVideoManagerProvider>
+          <FullDetailedPost query={data} viewerQuery={viewerData} />
+        </PostVideoManagerProvider>
+      </ObserverManagerProvider>
+    </Box>
   )
 }

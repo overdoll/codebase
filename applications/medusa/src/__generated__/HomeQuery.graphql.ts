@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<af409ed022c6ad3d250b55210e2a1a29>>
- * @relayHash 59f7133dea2be45ce07c7e143ea16ad0
+ * @generated SignedSource<<c72f334eb5cf3ec61f795f86d587aff2>>
+ * @relayHash 553bbda9209e239db198d1f7cc41a0dd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 59f7133dea2be45ce07c7e143ea16ad0
+// @relayRequestID 553bbda9209e239db198d1f7cc41a0dd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type HomeQuery$variables = {};
 export type HomeQueryVariables = HomeQuery$variables;
 export type HomeQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "NewAccountModalFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "NewAccountModalFragment" | "LockedAccountBannerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
@@ -163,6 +163,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "NewAccountModalFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -423,6 +428,25 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -430,7 +454,7 @@ return {
     ]
   },
   "params": {
-    "id": "59f7133dea2be45ce07c7e143ea16ad0",
+    "id": "553bbda9209e239db198d1f7cc41a0dd",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",
@@ -439,7 +463,7 @@ return {
 };
 })();
 
-(node as any).hash = "48223e2f5162779bfb9a95d3989f4085";
+(node as any).hash = "e18807af2d1d338780f587ef646850bf";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

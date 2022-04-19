@@ -31,7 +31,7 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: 'default-src https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://sandbox-overdoll-resources.s3.amazonaws.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com data: \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src https://dcd9vpqfvvgum.cloudfront.net \'self\' data:;frame-src \'none\' ;object-src \'none\' ;worker-src blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
+    value: 'default-src https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://sandbox-overdoll-resources.s3.amazonaws.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com data: \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src https://dcd9vpqfvvgum.cloudfront.net \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
   }
 ]
 

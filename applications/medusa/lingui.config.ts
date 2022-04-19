@@ -145,8 +145,12 @@ const ClubCatalog = [
 
 const ClubsCatalog = [
   {
-    path: 'src/domain/clubs/root/__locale__/{locale}/index',
-    include: ['src/domain/clubs/root/']
+    path: 'src/domain/clubs/feed/__locale__/{locale}/index',
+    include: ['src/domain/clubs/feed/']
+  },
+  {
+    path: 'src/domain/clubs/discover/__locale__/{locale}/index',
+    include: ['src/domain/clubs/discover/']
   },
   {
     path: 'src/domain/clubs/create-club/__locale__/{locale}/index',

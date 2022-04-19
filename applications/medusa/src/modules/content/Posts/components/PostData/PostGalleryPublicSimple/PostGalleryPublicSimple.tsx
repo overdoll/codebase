@@ -54,13 +54,14 @@ export default function PostGalleryPublicSimple ({
             <SwiperSlide
               key={index}
             >
-              <Link href={{
-                pathname: '/[slug]/post/[reference]',
-                query: {
-                  slug: data.club.slug,
-                  reference: data?.reference
-                }
-              }}
+              <Link
+                href={{
+                  pathname: '/[slug]/post/[reference]',
+                  query: {
+                    slug: data.club.slug,
+                    reference: data?.reference
+                  }
+                }}
               >
                 <Flex bg='gray.800' w='100%' cursor='pointer' minH='50vh' align='center' justify='center'>
                   <PostSupporterContent

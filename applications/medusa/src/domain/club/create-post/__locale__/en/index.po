@@ -62,7 +62,7 @@ msgstr ""
 msgid "Make sure you like what you see before you submit the post."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:80
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:75
 msgid "Mark this content as Supporter Only"
 msgstr ""
 
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Remove File"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:106
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:101
 msgid "Remove Upload"
 msgstr ""
 
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Submitted For Review"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:85
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:80
 msgid "Supporter Only"
 msgstr ""
 

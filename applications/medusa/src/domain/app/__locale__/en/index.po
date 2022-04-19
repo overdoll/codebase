@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:17
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:16
 msgid "Account Settings"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Best"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:56
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:55
 msgid "Billing"
 msgstr ""
 
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Error Loading Image"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostMedia/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:23
+#: src/modules/content/Posts/components/PostMedia/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:25
 msgid "Error Loading Video"
 msgstr ""
 
@@ -266,7 +266,7 @@ msgid "Moderate"
 msgstr ""
 
 #: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:15
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:67
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:66
 msgid "Moderation"
 msgstr ""
 
@@ -311,8 +311,8 @@ msgid "No payment methods found"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll.tsx:71
-msgid "No posts found"
-msgstr ""
+#~ msgid "No posts found"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyRules/EmptyRules.tsx:7
 msgid "No rules were found"
@@ -411,11 +411,11 @@ msgstr ""
 msgid "Posts Queue"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:46
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:45
 msgid "Preferences"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:26
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:25
 msgid "Profile"
 msgstr ""
 
@@ -433,7 +433,7 @@ msgid "Report post"
 msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:54
-#: src/modules/content/Posts/components/PostMedia/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:28
+#: src/modules/content/Posts/components/PostMedia/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:31
 msgid "Retry"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgstr ""
 msgid "Search Series"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:113
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:111
 msgid "Search for a series"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "Search for characters, categories, or series"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:36
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:35
 msgid "Security"
 msgstr ""
 
@@ -486,7 +486,7 @@ msgstr ""
 msgid "Select Rule"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:85
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:83
 msgid "Select Series"
 msgstr ""
 
@@ -494,7 +494,7 @@ msgstr ""
 msgid "Select a rule"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:100
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:98
 msgid "Select a series"
 msgstr ""
 
@@ -647,9 +647,12 @@ msgstr ""
 msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:79
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll.tsx:50
+msgid "We couldn't find any posts"
 msgstr ""
 
 #: src/common/components/BooleanHeader/BooleanHeader.tsx:16

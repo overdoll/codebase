@@ -1,6 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
-import { Box, Spinner, Stack } from '@chakra-ui/react'
+import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import { PostVideoManagerProvider } from '../../../index'
 import { ObserverManagerProvider } from '../../../support/ObserverManager/ObserverManager'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
@@ -54,24 +54,36 @@ export default function PostsInfiniteScroll ({
     )
   }
 
-  // TODO load more when scrolling into view of second last post
-
   return (
     <Stack spacing={16}>
       {data?.edges.map((item, index) =>
         (
           <Box key={index}>
             <ObserverManagerProvider>
-              <PostVideoManagerProvider>
-                <FullSimplePost query={item.node} viewerQuery={viewerData} />
-              </PostVideoManagerProvider>
+              {({ isObserving }) => {
+                if (isObserving && index >= (data.edges.length - 2)) {
+                  if (!isLoadingNext && hasNext) {
+                    loadNext(9, {})
+                  }
+                }
+                return (
+                  <PostVideoManagerProvider>
+                    <FullSimplePost query={item.node} viewerQuery={viewerData} />
+                  </PostVideoManagerProvider>
+                )
+              }}
             </ObserverManagerProvider>
           </Box>))}
       {hasNext &&
         (
           <>
-            {isLoadingNext && <Spinner color='gray.100' size='lg' />}
-          </>)}
+            {isLoadingNext &&
+              (
+                <Flex w='100%' justify='center'>
+                  <Spinner color='gray.100' size='sm' />
+                </Flex>)}
+          </>
+        )}
     </Stack>
   )
 }

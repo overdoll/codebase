@@ -146,7 +146,7 @@ export default function ControlVideo ({
         align='center'
         justify='center'
       >
-        <LoadingSpinner onRetry={onRetry} isLoading={!isLoaded} hasError={hasError} />
+        <LoadingSpinner canControl={canControl} onRetry={onRetry} isLoading={!isLoaded} hasError={hasError} />
       </Flex>
     </>
   )

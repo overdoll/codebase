@@ -4,7 +4,6 @@ import { BillingIdentifier, SecurityShield, SettingWrench, UserHuman } from '@//
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
-import LockedAccountBanner from '../../../../domain/home/RootHome/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 
 interface Props {
   children: ReactNode
@@ -73,7 +72,6 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
         </Can>
       </VerticalNavigation.Content>
       <VerticalNavigation.Page>
-        <LockedAccountBanner />
         {children}
       </VerticalNavigation.Page>
     </VerticalNavigation>

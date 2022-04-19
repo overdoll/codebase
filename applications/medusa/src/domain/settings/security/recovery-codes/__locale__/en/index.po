@@ -21,24 +21,24 @@ msgstr ""
 #~ msgid "Back to settings"
 #~ msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:166
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:167
 msgid "Copy"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:176
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:177
 msgid "Download"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:113
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:203
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:114
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:204
 msgid "Generate Recovery Codes"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:185
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:186
 msgid "Generate new recovery codes"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:190
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:191
 msgid "Generating a new set of recovery codes will invalidate your old codes, meaning you will need to save them again."
 msgstr ""
 
@@ -46,15 +46,15 @@ msgstr ""
 msgid "In the event that you lose access to your device and cannot use the two-factor authentication codes, you can use a recovery code to gain access to your account."
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:129
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:130
 msgid "Make sure you save these codes in a safe place. If you lose access to your device and the codes, you will be permanently locked out of your account."
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:76
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:77
 msgid "Recovery codes successfully generated"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:66
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:67
 msgid "Saving your recovery codes..."
 msgstr ""
 
@@ -62,10 +62,10 @@ msgstr ""
 msgid "Set up recovery codes"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:82
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:83
 msgid "There was an error generating recovery codes"
 msgstr ""
 
-#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:62
+#: src/domain/settings/security/recovery-codes/RootRecoveryCodesSetup/RecoveryCodesSetup/RecoveryCodesSetup.tsx:63
 msgid "overdoll-recovery-codes"
 msgstr ""

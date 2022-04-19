@@ -44,6 +44,8 @@ const Query = graphql`
   }
 `
 
+const TIMEOUT_LIMIT = 20
+
 export default function CCBillDisplayTransaction ({
   searchArguments,
   loadQuery
@@ -191,7 +193,7 @@ export default function CCBillDisplayTransaction ({
     )
   }
 
-  if (timeoutCount > 5 && isVerifying) {
+  if (timeoutCount >= TIMEOUT_LIMIT && isVerifying) {
     return (
       <Stack spacing={4}>
         <Icon
@@ -205,13 +207,13 @@ export default function CCBillDisplayTransaction ({
         <Box>
           <Heading textAlign='center' fontSize='2xl' color='gray.00'>
             <Trans>
-              Pending Transaction
+              Pending Club Benefits
             </Trans>
           </Heading>
           <Text textAlign='center' fontSize='md' color='gray.100'>
             <Trans>
-              We received your payment, but weren't able to verify the transaction in a reasonable amount of time. Try
-              refreshing the page or coming back in a few minutes and you should see your club benefits.
+              We received your payment, but weren't able to issue your club benefits in a reasonable amount of time. Try
+              refreshing the page or coming back in a few minutes and you should see your club benefits!
             </Trans>
           </Text>
         </Box>
@@ -239,6 +241,13 @@ export default function CCBillDisplayTransaction ({
               We've received your payment! Now we're issuing your club benefits. This page will update shortly.
             </Trans>
           </Text>
+          {timeoutCount >= (TIMEOUT_LIMIT / 2) && (
+            <Text textAlign='center' fontSize='sm' color='gray.300'>
+              <Trans>
+                Attempt {timeoutCount} of {TIMEOUT_LIMIT}...
+              </Trans>
+            </Text>
+          )}
         </Box>
       </Stack>
     )

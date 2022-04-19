@@ -8,7 +8,7 @@ import { Heading, HStack, Stack } from '@chakra-ui/react'
 import PostSearchButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import NewAccountModal from '../NewAccountModal/NewAccountModal'
-import LockedAccountBanner from '../LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner from '../../../../common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import { Trans } from '@lingui/macro'
 
 interface Props {
@@ -21,6 +21,7 @@ const Query = graphql`
     viewer {
       ...PostsInfiniteScrollViewerFragment
       ...NewAccountModalFragment
+      ...LockedAccountBannerFragment
     }
   }
 `
@@ -59,26 +60,28 @@ export default function Home (props: Props): JSX.Element {
   )
 
   return (
-    <Stack spacing={8}>
-      <LockedAccountBanner />
-      <HStack spacing={2} justify='space-between'>
-        <Heading color='gray.00' fontSize='2xl'>
-          <Trans>
-            Home
-          </Trans>
-        </Heading>
-        <PostSearchButton routeTo='/search' />
-      </HStack>
-      <GlobalVideoManagerProvider>
-        <PostsInfiniteScroll
-          hasNext={hasNext}
-          isLoadingNext={isLoadingNext}
-          loadNext={loadNext}
-          query={data.posts}
-          viewerQuery={queryData.viewer}
-        />
-      </GlobalVideoManagerProvider>
-      <NewAccountModal query={queryData.viewer} />
-    </Stack>
+    <>
+      <LockedAccountBanner query={queryData?.viewer} />
+      <Stack spacing={8}>
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>
+              Home
+            </Trans>
+          </Heading>
+          <PostSearchButton routeTo='/search' />
+        </HStack>
+        <GlobalVideoManagerProvider>
+          <PostsInfiniteScroll
+            hasNext={hasNext}
+            isLoadingNext={isLoadingNext}
+            loadNext={loadNext}
+            query={data.posts}
+            viewerQuery={queryData.viewer}
+          />
+        </GlobalVideoManagerProvider>
+        <NewAccountModal query={queryData.viewer} />
+      </Stack>
+    </>
   )
 }

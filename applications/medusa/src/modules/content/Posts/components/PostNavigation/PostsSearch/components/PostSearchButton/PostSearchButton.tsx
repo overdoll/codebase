@@ -26,10 +26,10 @@ export default function PostSearchButton ({ routeTo }: Props): JSX.Element {
       <IconButton
         aria-label={i18n._(t`Open Search`)}
         onClick={onOpen}
-        colorScheme='primary'
+        colorScheme='gray'
         size='sm'
         borderRadius='md'
-        icon={<Icon fill='primary.900' w={4} h={4} icon={SearchSmall} />}
+        icon={<Icon fill='gray.100' w={4} h={4} icon={SearchSmall} />}
       />
       <Modal
         isOpen={isOpen}

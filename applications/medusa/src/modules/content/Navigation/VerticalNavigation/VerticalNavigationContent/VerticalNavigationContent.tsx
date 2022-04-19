@@ -55,7 +55,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
           bg='gray.800'
           borderRadius='base'
           zIndex='sidebar'
-          overflowX='hidden'
+
         >
           <Stack spacing={1}>
             {props.title != null &&
@@ -87,7 +87,6 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         flexShrink={0}
         position='fixed'
         zIndex='sidebar'
-        overflowX='hidden'
         display={{
           base: 'none',
           md: 'initial'
