@@ -33,15 +33,27 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 		return nil, err
 	}
 
+	accountDetails, err := h.dr.GetAccountDetailsByIdOperator(ctx, clubPayout.AccountPayoutMethodId())
+
+	if err != nil {
+		return nil, err
+	}
+
 	switch accountMethod.Method() {
 	case payout.Paxum:
-		transfer, err := paxum.NewTransfer(*accountMethod.PaxumEmail(), clubPayout.Amount(), clubPayout.Currency())
+		transfer, err := paxum.NewTransfer(
+			*accountMethod.PaxumEmail(),
+			accountDetails.FirstName(),
+			accountDetails.LastName(),
+			clubPayout.Amount(),
+			clubPayout.Currency(),
+		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if err := h.or.InitiatePayout(ctx, []*paxum.Transfer{transfer}); err != nil {
+		if err := h.or.InitiatePayout(ctx, transfer); err != nil {
 			return nil, err
 		}
 	}

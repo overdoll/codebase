@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -16,6 +17,7 @@ import (
 type PaymentIndexElasticSearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
+	stella  query.StellaService
 }
 
 const clubPaymentsIndex = `
@@ -23,67 +25,47 @@ const clubPaymentsIndex = `
 	"mappings": {
 		"dynamic": "strict",
 		"properties": {
-				"account_id": {
-					"type": "keyword"
-				},
 				"id": {
 					"type": "keyword"
 				},
-				"timestamp": {
+				"source": {
+					"type": "keyword"
+				},
+				"status": {
+					"type": "keyword"
+				},
+				"settlement_date": {
 					"type": "date"
 				},
-				"transaction_type": {
+				"source_account_id": {
 					"type": "keyword"
 				},
-				"club_supporter_subscription_id": {
+				"destination_club_id": {
 					"type": "keyword"
-				},
-				"encrypted_payment_method": {
-					"type": "keyword"
-				},
-				"amount": {
-					"type": "integer"
 				},
 				"currency": {
 					"type": "keyword"
 				},
-				"voided_at": {
-					"type": "date"
+				"base_amount": {
+					"type": "integer"
 				},
-				"void_reason": {
+				"platform_fee_amount": {
+					"type": "integer"
+				},
+				"final_amount": {
+					"type": "integer"
+				},
+				"is_deduction": {
+					"type": "bool"
+				},
+				"deduction_source_payment_id": {
 					"type": "keyword"
 				},
-				"billed_at_date": {
-					"type": "date"
-				},
-				"next_billing_date": {
-					"type": "date"
-				},
-				"ccbill_subscription_id": {
+				"club_payout_ids": {
 					"type": "keyword"
 				},
-				"ccbill_transaction_id": {
-					"type": "keyword"
-				},
-				"events": {
-					"type": "nested",
-					"properties":{
-						"id": {
-							"type": "keyword"
-						},
-						"timestamp": {
-							"type": "date"
-						},
-						"amount": {
-							"type": "integer"
-						},
-						"currency": {
-							"type": "keyword"
-						},
-						"reason": {
-							"type": "keyword"
-						}
-					}
+				"timestamp": {
+					"type": "date"
 				}
 		}
 	}
@@ -109,8 +91,8 @@ type clubPaymentDocument struct {
 
 const ClubPaymentsIndexName = "club_payments"
 
-func NewPaymentIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PaymentIndexElasticSearchRepository {
-	return PaymentIndexElasticSearchRepository{client: client, session: session}
+func NewPaymentIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session, stella query.StellaService) PaymentIndexElasticSearchRepository {
+	return PaymentIndexElasticSearchRepository{client: client, session: session, stella: stella}
 }
 
 func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment, error) {
@@ -173,6 +155,19 @@ func (r PaymentIndexElasticSearchRepository) SearchClubPayments(ctx context.Cont
 
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")
+	}
+
+	// general search
+	if filters.ClubId() == nil && filters.PayoutId() == nil {
+		if !requester.IsStaff() {
+			return nil, principal.ErrNotAuthorized
+		}
+	}
+
+	if filters.ClubId() != nil {
+		if err := canViewSensitive(ctx, r.stella, requester, *filters.ClubId()); err != nil {
+			return nil, err
+		}
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {

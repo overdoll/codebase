@@ -14,9 +14,9 @@ type ClubPayout struct {
 	status Status
 	clubId string
 
-	accountPayoutMethodId string
-	depositRequestId      string
-	temporalWorkflowId    string
+	payoutAccountId    string
+	depositRequestId   string
+	temporalWorkflowId string
 
 	amount   int64
 	currency money.Currency
@@ -34,16 +34,16 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 	}
 
 	return &ClubPayout{
-		depositRequestId:      depositRequestId,
-		accountPayoutMethodId: accountMethod.id,
-		id:                    id,
-		status:                Queued,
-		clubId:                clubId,
-		temporalWorkflowId:    temporalWorkflowId,
-		amount:                amount,
-		depositDate:           *depositDate,
-		currency:              currency,
-		timestamp:             timestamp,
+		depositRequestId:   depositRequestId,
+		payoutAccountId:    accountMethod.accountId,
+		id:                 id,
+		status:             Queued,
+		clubId:             clubId,
+		temporalWorkflowId: temporalWorkflowId,
+		amount:             amount,
+		depositDate:        *depositDate,
+		currency:           currency,
+		timestamp:          timestamp,
 	}, nil
 }
 
@@ -56,7 +56,7 @@ func (p *ClubPayout) Status() Status {
 }
 
 func (p *ClubPayout) AccountPayoutMethodId() string {
-	return p.accountPayoutMethodId
+	return p.payoutAccountId
 }
 
 func (p *ClubPayout) TemporalWorkflowId() string {
@@ -174,16 +174,16 @@ func UnmarshalClubPayoutFromDatabase(
 	st, _ := StatusFromString(status)
 	cr, _ := money.CurrencyFromString(currency)
 	return &ClubPayout{
-		id:                    id,
-		status:                st,
-		clubId:                clubId,
-		accountPayoutMethodId: accountPayoutMethodId,
-		depositRequestId:      depositRequestId,
-		temporalWorkflowId:    temporalWorkflowId,
-		amount:                amount,
-		currency:              cr,
-		timestamp:             timestamp,
-		depositDate:           depositDate,
-		events:                events,
+		id:                 id,
+		status:             st,
+		clubId:             clubId,
+		payoutAccountId:    accountPayoutMethodId,
+		depositRequestId:   depositRequestId,
+		temporalWorkflowId: temporalWorkflowId,
+		amount:             amount,
+		currency:           cr,
+		timestamp:          timestamp,
+		depositDate:        depositDate,
+		events:             events,
 	}
 }

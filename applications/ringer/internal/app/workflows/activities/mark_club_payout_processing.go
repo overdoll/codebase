@@ -11,7 +11,7 @@ type MarkClubPayoutProcessingInput struct {
 
 func (h *Activities) MarkClubPayoutProcessing(ctx context.Context, input MarkClubPayoutProcessingInput) error {
 
-	pay, err := h.par.UpdateClubPayoutState(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	pay, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.MakeProcessing()
 	})
 

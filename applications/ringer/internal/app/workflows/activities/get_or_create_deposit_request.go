@@ -45,7 +45,7 @@ func (h *Activities) GetOrCreateDepositRequest(ctx context.Context, input GetOrC
 
 	if depositId == "" {
 		// did not find a deposit, create a new one and use it
-		deposit, err := payout.NewDepositRequest(input.DepositId, accountPayout.Method(), input.Timestamp, input.Currency)
+		deposit, err := payout.NewDepositRequest(input.DepositId, accountPayout.Method(), input.Timestamp, input.Currency, input.Timestamp)
 
 		if err != nil {
 			return nil, err

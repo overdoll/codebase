@@ -18,7 +18,7 @@ type MarkClubPayoutDepositedPayload struct {
 
 func (h *Activities) MarkClubPayoutDeposited(ctx context.Context, input MarkClubPayoutDepositedInput) (*MarkClubPayoutDepositedPayload, error) {
 
-	pay, err := h.par.UpdateClubPayoutState(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	pay, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.MakeDeposited()
 	})
 

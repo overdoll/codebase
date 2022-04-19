@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payout"
@@ -16,34 +17,21 @@ import (
 	"time"
 )
 
-var accountPayoutMethodColumns = []string{
-	"id",
-	"account_id",
-	"method",
-	"paxum_email",
-	"is_default",
-}
-
 var accountPayoutMethodTable = table.New(table.Metadata{
-	Name:    "account_payout_method",
-	Columns: accountPayoutMethodColumns,
-	PartKey: []string{"id"},
-	SortKey: []string{},
-})
-
-var accountPayoutMethodByAccountTable = table.New(table.Metadata{
-	Name:    "account_payout_method_by_account",
-	Columns: accountPayoutMethodColumns,
+	Name: "account_payout_method",
+	Columns: []string{
+		"account_id",
+		"method",
+		"paxum_email",
+	},
 	PartKey: []string{"account_id"},
 	SortKey: []string{},
 })
 
 type accountPayoutMethod struct {
-	Id         string  `db:"id"`
 	AccountId  string  `db:"account_id"`
 	Method     string  `db:"method"`
 	PaxumEmail *string `db:"paxum_email"`
-	IsDefault  bool    `db:"is_default"`
 }
 
 var clubPayoutsTable = table.New(table.Metadata{
@@ -55,7 +43,7 @@ var clubPayoutsTable = table.New(table.Metadata{
 		"club_id",
 		"currency",
 		"amount",
-		"account_payout_method_id",
+		"payout_account_id",
 		"deposit_request_id",
 		"timestamp",
 		"events",
@@ -72,17 +60,17 @@ type clubPayoutEvent struct {
 }
 
 type clubPayout struct {
-	Id                    string    `db:"id"`
-	Status                string    `db:"status"`
-	DepositDate           time.Time `db:"deposit_date"`
-	ClubId                string    `db:"club_id"`
-	Currency              string    `db:"currency"`
-	Amount                int64     `db:"total_amount"`
-	AccountPayoutMethodId string    `db:"account_payout_method_id"`
-	DepositRequestId      string    `db:"deposit_request_id"`
-	Timestamp             time.Time `db:"timestamp"`
-	Events                []string  `db:"events"`
-	TemporalWorkflowId    string    `db:"temporal_workflow_id"`
+	Id                 string    `db:"id"`
+	Status             string    `db:"status"`
+	DepositDate        time.Time `db:"deposit_date"`
+	ClubId             string    `db:"club_id"`
+	Currency           string    `db:"currency"`
+	Amount             int64     `db:"amount"`
+	PayoutAccountId    string    `db:"payout_account_id"`
+	DepositRequestId   string    `db:"deposit_request_id"`
+	Timestamp          time.Time `db:"timestamp"`
+	Events             []string  `db:"events"`
+	TemporalWorkflowId string    `db:"temporal_workflow_id"`
 }
 
 var clubLockedPayoutTable = table.New(table.Metadata{
@@ -99,18 +87,6 @@ type clubLockedPayout struct {
 	ClubId   string `db:"club_id"`
 	PayoutId string `db:"payout_id"`
 }
-
-//bucket                int,
-//id                    text,
-//last_date_for_deposit timestamp,
-//base_amount           bigint,
-//estimated_fee_amount  bigint,
-//total_amount          bigint,
-//currency              text,
-//payout_method         text,
-//payout_ids            list<text>,
-//timestamp             timestamp,
-//last_insert_id        timeuuid,
 
 var depositRequestsColumns = []string{
 	"bucket",
@@ -182,148 +158,89 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 	}
 
 	return &clubPayout{
-		Id:                    pay.Id(),
-		Status:                pay.Status().String(),
-		DepositDate:           pay.DepositDate(),
-		ClubId:                pay.ClubId(),
-		Currency:              pay.Currency().String(),
-		Amount:                pay.Amount(),
-		AccountPayoutMethodId: pay.AccountPayoutMethodId(),
-		DepositRequestId:      pay.DepositRequestId(),
-		Timestamp:             pay.Timestamp(),
-		Events:                events,
-		TemporalWorkflowId:    pay.TemporalWorkflowId(),
+		Id:                 pay.Id(),
+		Status:             pay.Status().String(),
+		DepositDate:        pay.DepositDate(),
+		ClubId:             pay.ClubId(),
+		Currency:           pay.Currency().String(),
+		Amount:             pay.Amount(),
+		PayoutAccountId:    pay.AccountPayoutMethodId(),
+		DepositRequestId:   pay.DepositRequestId(),
+		Timestamp:          pay.Timestamp(),
+		Events:             events,
+		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
 }
 
-func (r PayoutCassandraRepository) GetAccountPayoutMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*payout.AccountPayoutMethod, error) {
+func (r PayoutCassandraRepository) UpdateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
 
-	if err := payout.CanViewAccountPayoutMethods(accountId, requester); err != nil {
-		return nil, err
-	}
-
-	var accountPayoutMethods []*accountPayoutMethod
-
-	builder := accountPayoutMethodByAccountTable.SelectBuilder()
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	if err := builder.Query(r.session).
+	if err := r.session.Query(accountPayoutMethodTable.Insert()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
-			AccountId: accountId,
+			AccountId:  pay.AccountId(),
+			Method:     pay.Method().String(),
+			PaxumEmail: pay.PaxumEmail(),
 		}).
-		Select(&accountPayoutMethods); err != nil {
+		ExecRelease(); err != nil {
 
-		return nil, fmt.Errorf("failed to get account payout methods for account: %v", err)
-	}
-
-	var savedPayoutMethods []*payout.AccountPayoutMethod
-
-	for _, savedPay := range accountPayoutMethods {
-
-		savedMethod := payout.UnmarshalAccountPayoutMethodFromDatabase(savedPay.Id, savedPay.AccountId, savedPay.Method, savedPay.PaxumEmail, savedPay.IsDefault)
-		savedMethod.Node = paging.NewNode(savedPay.Id)
-		savedPayoutMethods = append(savedPayoutMethods, savedMethod)
-	}
-
-	return savedPayoutMethods, nil
-}
-
-func (r PayoutCassandraRepository) GetAccountPayoutMethodsOperator(ctx context.Context, accountId string) ([]*payout.AccountPayoutMethod, error) {
-
-	var accountPayoutMethods []*accountPayoutMethod
-
-	if err := r.session.Query(accountPayoutMethodByAccountTable.Select()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountPayoutMethod{
-			AccountId: accountId,
-		}).
-		Select(&accountPayoutMethods); err != nil {
-
-		return nil, fmt.Errorf("failed to get account payout methods: %v", err)
-	}
-
-	var savedPayoutMethods []*payout.AccountPayoutMethod
-
-	for _, savedPay := range accountPayoutMethods {
-		savedMethod := payout.UnmarshalAccountPayoutMethodFromDatabase(savedPay.Id, savedPay.AccountId, savedPay.Method, savedPay.PaxumEmail, savedPay.IsDefault)
-		savedPayoutMethods = append(savedPayoutMethods, savedMethod)
-	}
-
-	return savedPayoutMethods, nil
-}
-
-func (r PayoutCassandraRepository) CreateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
-
-	payouts, err := r.GetAccountPayoutMethodsOperator(ctx, pay.AccountId())
-
-	if err != nil {
-		return err
-	}
-
-	isDefault := true
-
-	if len(payouts) > 0 {
-		isDefault = false
-	}
-
-	marshalled := accountPayoutMethod{
-		Id:         pay.Id(),
-		AccountId:  pay.AccountId(),
-		Method:     pay.Method().String(),
-		PaxumEmail: pay.PaxumEmail(),
-		IsDefault:  isDefault,
-	}
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	stmt, _ := accountPayoutMethodTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Id,
-		marshalled.AccountId,
-		marshalled.Method,
-		marshalled.PaxumEmail,
-		marshalled.IsDefault,
-	)
-
-	stmt, _ = accountPayoutMethodByAccountTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.AccountId,
-		marshalled.Id,
-		marshalled.Method,
-		marshalled.PaxumEmail,
-		marshalled.IsDefault,
-	)
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new account payout method: %v", err)
+		return fmt.Errorf("failed to update account payout method: %v", err)
 	}
 
 	return nil
 }
 
-func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx context.Context, accountPayoutMethodId string) (*payout.AccountPayoutMethod, error) {
+func (r PayoutCassandraRepository) DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *payout.AccountPayoutMethod) error {
+
+	if err := pay.CanDelete(requester); err != nil {
+		return err
+	}
+
+	if err := r.session.Query(accountPayoutMethodTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountPayoutMethod{
+			AccountId: pay.AccountId(),
+		}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete account payout method: %v", err)
+	}
+
+	return nil
+}
+
+func (r PayoutCassandraRepository) GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountId string) (*payout.AccountPayoutMethod, error) {
+
+	pay, err := r.GetAccountPayoutMethodByIdOperator(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := pay.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return pay, nil
+}
+
+func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*payout.AccountPayoutMethod, error) {
 
 	var accountPayout *accountPayoutMethod
 
 	if err := r.session.Query(accountPayoutMethodTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
-			Id: accountPayoutMethodId,
+			AccountId: accountId,
 		}).
 		Get(&accountPayout); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, payout.ErrAccountPayoutMethodNotFound
+		}
 
 		return nil, fmt.Errorf("failed to get account payout method by id: %v", err)
 	}
 
-	return payout.UnmarshalAccountPayoutMethodFromDatabase(accountPayout.Id, accountPayout.AccountId, accountPayout.Method, accountPayout.PaxumEmail, accountPayout.IsDefault), nil
+	return payout.UnmarshalAccountPayoutMethodFromDatabase(accountPayout.AccountId, accountPayout.Method, accountPayout.PaxumEmail), nil
 }
 
 func (r PayoutCassandraRepository) CreateClubPayout(ctx context.Context, payout *payout.ClubPayout) error {
@@ -428,7 +345,7 @@ func (r PayoutCassandraRepository) GetClubPayoutByIdOperator(ctx context.Context
 		clubPay.Currency,
 		clubPay.Amount,
 		clubPay.DepositDate,
-		clubPay.AccountPayoutMethodId,
+		clubPay.PayoutAccountId,
 		clubPay.DepositRequestId,
 		clubPay.Timestamp,
 		events,
@@ -566,7 +483,7 @@ func (r PayoutCassandraRepository) CreateDepositRequest(ctx context.Context, dep
 	return nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, id string) (*payout.DepositRequest, error) {
+func (r PayoutCassandraRepository) getDepositRequestById(ctx context.Context, id string) (*depositRequests, error) {
 
 	var deposit depositRequests
 
@@ -579,6 +496,16 @@ func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, id
 		}
 
 		return nil, fmt.Errorf("failed to get deposit request by id: %v", err)
+	}
+
+	return &deposit, nil
+}
+
+func (r PayoutCassandraRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
+	deposit, err := r.getDepositRequestById(ctx, id)
+
+	if err != nil {
+		return nil, err
 	}
 
 	return payout.UnmarshalDepositRequestFromDatabase(
@@ -594,17 +521,190 @@ func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, id
 	), nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*payout.DepositRequest, error) {
-	//TODO implement me
-	panic("implement me")
+func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, requester *principal.Principal, id string) (*payout.DepositRequest, error) {
+
+	deposit, err := r.GetDepositRequestByIdOperator(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := deposit.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return deposit, nil
 }
 
-func (r PayoutCassandraRepository) UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *payout.DepositRequest) error) (*payout.DepositRequest, error) {
-	//TODO implement me
-	panic("implement me")
+func (r PayoutCassandraRepository) GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*payout.DepositRequest, error) {
+
+	if err := payout.CanViewDepositRequests(requester); err != nil {
+		return nil, err
+	}
+
+	var depositResults []*payout.DepositRequest
+
+	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(time.Now())
+	endingBucket := 0
+
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+
+		info := map[string]interface{}{
+			"bucket": bucketId,
+		}
+
+		if cursor != nil {
+			createdCursor, err := cursor.GetCursor()
+
+			if err != nil {
+				return nil, err
+			}
+
+			if createdCursor != nil {
+				info["id"] = createdCursor[0].(string)
+			}
+		}
+
+		builder := depositRequestsByMonthTable.SelectBuilder()
+
+		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
+			return nil, err
+		}
+
+		var results []*depositRequests
+
+		if err := r.session.
+			Query(builder.ToCql()).
+			BindMap(info).
+			Select(&results); err != nil {
+			return nil, fmt.Errorf("failed to search deposit requests %v", err)
+		}
+
+		for _, request := range results {
+
+			result := payout.UnmarshalDepositRequestFromDatabase(
+				request.Id,
+				request.LastDateForDeposit,
+				request.BaseAmount,
+				request.EstimatedFeeAmount,
+				request.TotalAmount,
+				request.PayoutIds,
+				request.Currency,
+				request.PayoutMethod,
+				request.Timestamp,
+			)
+
+			result.Node = paging.NewNode(request.Id)
+			depositResults = append(depositResults, result)
+		}
+
+		if len(depositResults) >= cursor.GetLimit() {
+			break
+		}
+	}
+
+	return depositResults, nil
 }
 
 func (r PayoutCassandraRepository) GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*payout.DepositRequest, error) {
-	//TODO implement me
-	panic("implement me")
+
+	var depositResults []*payout.DepositRequest
+
+	var results []*depositRequests
+
+	if err := r.session.
+		Query(depositRequestsByMonthTable.Select()).
+		BindStruct(&depositRequests{Bucket: bucket.MakeMonthlyBucketFromTimestamp(time)}).
+		Select(&results); err != nil {
+		return nil, fmt.Errorf("failed to search deposit requests %v", err)
+	}
+
+	for _, request := range results {
+
+		result := payout.UnmarshalDepositRequestFromDatabase(
+			request.Id,
+			request.LastDateForDeposit,
+			request.BaseAmount,
+			request.EstimatedFeeAmount,
+			request.TotalAmount,
+			request.PayoutIds,
+			request.Currency,
+			request.PayoutMethod,
+			request.Timestamp,
+		)
+
+		result.Node = paging.NewNode(request.Id)
+		depositResults = append(depositResults, result)
+	}
+
+	return depositResults, nil
+}
+
+func (r PayoutCassandraRepository) UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *payout.DepositRequest) error) (*payout.DepositRequest, error) {
+
+	deposit, err := r.getDepositRequestById(ctx, depositRequestId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	depositRequest := payout.UnmarshalDepositRequestFromDatabase(
+		deposit.Id,
+		deposit.LastDateForDeposit,
+		deposit.BaseAmount,
+		deposit.EstimatedFeeAmount,
+		deposit.TotalAmount,
+		deposit.PayoutIds,
+		deposit.Currency,
+		deposit.PayoutMethod,
+		deposit.Timestamp,
+	)
+
+	if err = updateFn(depositRequest); err != nil {
+		return nil, err
+	}
+
+	marshalled := depositRequests{
+		Bucket:             deposit.Bucket,
+		Id:                 deposit.Id,
+		BaseAmount:         depositRequest.BaseAmount(),
+		EstimatedFeeAmount: depositRequest.EstimatedFeeAmount(),
+		TotalAmount:        depositRequest.TotalAmount(),
+		PayoutIds:          depositRequest.PayoutIds(),
+		LastInsertId:       gocql.TimeUUID(),
+	}
+
+	columns := []string{"last_insert_id", "payout_ids", "estimated_fee_amount", "total_amount", "base_amount"}
+
+	applied, err := depositRequestsTable.UpdateBuilder(columns...).
+		If(qb.EqLit("last_insert_id", deposit.LastInsertId.String())).
+		Query(r.session).
+		BindStruct(marshalled).
+		SerialConsistency(gocql.Serial).
+		ExecCAS()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update deposit request: %v", err)
+	}
+
+	if !applied {
+		return nil, fmt.Errorf("failed to update deposit request")
+	}
+
+	applied, err = depositRequestsByMonthTable.UpdateBuilder(columns...).
+		If(qb.EqLit("last_insert_id", deposit.LastInsertId.String())).
+		Query(r.session).
+		BindStruct(marshalled).
+		SerialConsistency(gocql.Serial).
+		ExecCAS()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update deposit request by month: %v", err)
+	}
+
+	if !applied {
+		return nil, fmt.Errorf("failed to update deposit request by month")
+	}
+
+	return depositRequest, nil
 }

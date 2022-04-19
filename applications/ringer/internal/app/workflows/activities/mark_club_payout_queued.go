@@ -12,7 +12,7 @@ type MarkClubPayoutQueuedInput struct {
 
 func (h *Activities) MarkClubPayoutQueued(ctx context.Context, input MarkClubPayoutQueuedInput) error {
 
-	pay, err := h.par.UpdateClubPayoutState(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	pay, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.MakeQueued(input.WorkflowId)
 	})
 

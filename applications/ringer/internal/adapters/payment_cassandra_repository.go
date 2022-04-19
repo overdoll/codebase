@@ -231,6 +231,11 @@ func (r PaymentCassandraRepository) GetClubPaymentByAccountTransactionId(ctx con
 	return r.getClubPaymentById(ctx, clubPay.Id)
 }
 
+func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
 	//TODO implement me
 	panic("implement me")
@@ -247,11 +252,6 @@ func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Contex
 }
 
 func (r PaymentCassandraRepository) ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 	//TODO implement me
 	panic("implement me")
 }

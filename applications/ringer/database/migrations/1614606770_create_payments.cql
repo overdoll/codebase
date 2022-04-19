@@ -68,37 +68,25 @@ CREATE TABLE IF NOT EXISTS club_ready_payments
 
 CREATE TABLE IF NOT EXISTS account_payout_method
 (
-    id          text,
     account_id  text,
     method      text,
     paxum_email text,
-    is_default  boolean,
-    primary key ( id ),
-);
-
-CREATE TABLE IF NOT EXISTS account_payout_method_by_account
-(
-    id          text,
-    account_id  text,
-    method      text,
-    paxum_email text,
-    is_default  boolean,
-    primary key ( account_id, id ),
+    primary key ( account_id ),
 );
 
 CREATE TABLE IF NOT EXISTS club_payouts
 (
-    id                       text,
-    status                   text,
-    deposit_date             timestamp,
-    club_id                  text,
-    amount                   bigint,
-    currency                 text,
-    account_payout_method_id text,
-    deposit_request_id       text,
-    timestamp                timestamp,
-    events                   list<text>,
-    temporal_workflow_id     text,
+    id                   text,
+    status               text,
+    deposit_date         timestamp,
+    club_id              text,
+    amount               bigint,
+    currency             text,
+    payout_account_id    text,
+    deposit_request_id   text,
+    timestamp            timestamp,
+    events               list<text>,
+    temporal_workflow_id text,
     primary key ( id ),
 );
 

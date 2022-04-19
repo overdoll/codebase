@@ -11,7 +11,7 @@ type MarkClubPayoutFailedInput struct {
 
 func (h *Activities) MarkClubPayoutFailed(ctx context.Context, input MarkClubPayoutFailedInput) error {
 
-	pay, err := h.par.UpdateClubPayoutState(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	pay, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.MakeFailed()
 	})
 

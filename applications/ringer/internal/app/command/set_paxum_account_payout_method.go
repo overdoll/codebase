@@ -8,22 +8,22 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type CreatePaxumAccountPayoutMethod struct {
+type SetPaxumAccountPayoutMethod struct {
 	Requester  *principal.Principal
 	AccountId  string
 	PaxumEmail string
 }
 
-type CreatePaxumAccountPayoutMethodHandler struct {
+type SetPaxumAccountPayoutMethodHandler struct {
 	ir details.Repository
 	pr payout.Repository
 }
 
-func NewCreatePaxumAccountPayoutMethodHandler(ir details.Repository, pr payout.Repository) CreatePaxumAccountPayoutMethodHandler {
-	return CreatePaxumAccountPayoutMethodHandler{ir: ir, pr: pr}
+func NewSetPaxumAccountPayoutMethodHandler(ir details.Repository, pr payout.Repository) SetPaxumAccountPayoutMethodHandler {
+	return SetPaxumAccountPayoutMethodHandler{ir: ir, pr: pr}
 }
 
-func (h CreatePaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd CreatePaxumAccountPayoutMethod) (*payout.AccountPayoutMethod, error) {
+func (h SetPaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd SetPaxumAccountPayoutMethod) (*payout.AccountPayoutMethod, error) {
 
 	_, err := h.ir.GetAccountDetailsById(ctx, cmd.Requester, cmd.AccountId)
 
@@ -42,7 +42,7 @@ func (h CreatePaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd C
 		return nil, err
 	}
 
-	if err := h.pr.CreateAccountPayoutMethod(ctx, pay); err != nil {
+	if err := h.pr.UpdateAccountPayoutMethod(ctx, pay); err != nil {
 		return nil, err
 	}
 

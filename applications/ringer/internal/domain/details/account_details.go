@@ -17,6 +17,14 @@ type AccountDetails struct {
 	countryOfResidence countries.CountryCode
 }
 
+func (a *AccountDetails) FirstName() string {
+	return a.firstName
+}
+
+func (a *AccountDetails) LastName() string {
+	return a.lastName
+}
+
 func (a *AccountDetails) UpdateFirstName(s string) error {
 	a.firstName = s
 	return nil

@@ -2,6 +2,7 @@ package activities
 
 import (
 	"overdoll/applications/ringer/internal/domain/balance"
+	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/paxum"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/applications/ringer/internal/domain/payout"
@@ -14,14 +15,16 @@ type Activities struct {
 	pir payout.IndexRepository
 	par payout.Repository
 	or  paxum.Repository
+	dr  details.Repository
 }
 
-func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par payout.Repository, pir payout.IndexRepository, br balance.Repository) *Activities {
+func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par payout.Repository, pir payout.IndexRepository, br balance.Repository, dr details.Repository) *Activities {
 	return &Activities{
 		pr:  pr,
 		par: par,
 		pi:  pi,
 		br:  br,
 		pir: pir,
+		dr:  dr,
 	}
 }

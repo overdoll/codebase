@@ -3,6 +3,8 @@ package payout
 import (
 	"errors"
 	"overdoll/libraries/money"
+	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -11,6 +13,8 @@ var (
 )
 
 type DepositRequest struct {
+	*paging.Node
+
 	id                      string
 	lastDateForDeposit      time.Time
 	baseAmount              int64
@@ -72,6 +76,14 @@ func (p *DepositRequest) Timestamp() time.Time {
 	return p.timestamp
 }
 
+func (p *DepositRequest) CanView(requester *principal.Principal) error {
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
 func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount int64, currency money.Currency) error {
 
 	if p.currency != currency {
@@ -94,7 +106,8 @@ func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount int64, cu
 	if p.accountPayoutMethodKind == Paxum {
 		// calculate fees for paxum
 		p.baseAmount += amount
-		p.estimatedFeeAmount = 0
+		// paxum has a fee of $1 for p2p transfers
+		p.estimatedFeeAmount += 100
 		p.totalAmount += amount
 	}
 
@@ -116,4 +129,12 @@ func UnmarshalDepositRequestFromDatabase(id string, lastDateForDeposit time.Time
 		accountPayoutMethodKind: mt,
 		timestamp:               timestamp,
 	}
+}
+
+func CanViewDepositRequests(requester *principal.Principal) error {
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
 }

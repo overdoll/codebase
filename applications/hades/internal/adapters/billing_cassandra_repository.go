@@ -829,9 +829,7 @@ func (r BillingCassandraRepository) updateAccountClubSupporterSubscription(ctx c
 		return nil, err
 	}
 
-	err = updateFn(subscription)
-
-	if err != nil {
+	if err = updateFn(subscription); err != nil {
 		return nil, err
 	}
 

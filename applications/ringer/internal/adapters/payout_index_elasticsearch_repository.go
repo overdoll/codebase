@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -16,6 +17,7 @@ import (
 type PayoutIndexElasticSearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
+	stella  query.StellaService
 }
 
 const clubPayoutsIndex = `
@@ -23,22 +25,19 @@ const clubPayoutsIndex = `
 	"mappings": {
 		"dynamic": "strict",
 		"properties": {
-				"account_id": {
-					"type": "keyword"
-				},
 				"id": {
 					"type": "keyword"
 				},
-				"timestamp": {
+				"status": {
+					"type": "keyword"
+				},
+				"deposit_date": {
 					"type": "date"
 				},
-				"transaction_type": {
+				"club_id": {
 					"type": "keyword"
 				},
-				"club_supporter_subscription_id": {
-					"type": "keyword"
-				},
-				"encrypted_payment_method": {
+				"currency": {
 					"type": "keyword"
 				},
 				"amount": {
@@ -47,22 +46,16 @@ const clubPayoutsIndex = `
 				"currency": {
 					"type": "keyword"
 				},
-				"voided_at": {
-					"type": "date"
-				},
-				"void_reason": {
+				"payout_account_id": {
 					"type": "keyword"
 				},
-				"billed_at_date": {
-					"type": "date"
-				},
-				"next_billing_date": {
-					"type": "date"
-				},
-				"ccbill_subscription_id": {
+				"deposit_request_id": {
 					"type": "keyword"
 				},
-				"ccbill_transaction_id": {
+				"timestamp": {
+					"type": "timestamp"
+				},
+				"temporal_workflow_id": {
 					"type": "keyword"
 				},
 				"events": {
@@ -105,8 +98,8 @@ type clubPayoutDocument struct {
 
 const ClubPayoutsIndexName = "club_payouts"
 
-func NewPayoutIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PayoutIndexElasticSearchRepository {
-	return PayoutIndexElasticSearchRepository{client: client, session: session}
+func NewPayoutIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session, stella query.StellaService) PayoutIndexElasticSearchRepository {
+	return PayoutIndexElasticSearchRepository{client: client, session: session, stella: stella}
 }
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
@@ -186,6 +179,26 @@ func (r PayoutIndexElasticSearchRepository) SearchClubPayouts(ctx context.Contex
 
 	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
 		return nil, err
+	}
+
+	// general search
+	if filters.ClubId() == nil && filters.DepositRequestId() == nil {
+		if !requester.IsStaff() {
+			return nil, principal.ErrNotAuthorized
+		}
+	}
+
+	if filters.ClubId() != nil {
+		if err := canViewSensitive(ctx, r.stella, requester, *filters.ClubId()); err != nil {
+			return nil, err
+		}
+	}
+
+	// only staff can look up by deposit
+	if filters.DepositRequestId() != nil {
+		if !requester.IsStaff() {
+			return nil, principal.ErrNotAuthorized
+		}
 	}
 
 	query := elastic.NewBoolQuery()
@@ -272,7 +285,7 @@ func (r PayoutIndexElasticSearchRepository) IndexAllClubPayouts(ctx context.Cont
 				ClubId:                pay.ClubId,
 				Currency:              pay.Currency,
 				Amount:                pay.Amount,
-				AccountPayoutMethodId: pay.AccountPayoutMethodId,
+				AccountPayoutMethodId: pay.PayoutAccountId,
 				DepositRequestId:      pay.DepositRequestId,
 				Timestamp:             pay.Timestamp,
 				Events:                nil,

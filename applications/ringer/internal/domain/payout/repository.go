@@ -8,17 +8,15 @@ import (
 )
 
 type Repository interface {
-	GetAccountPayoutMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*AccountPayoutMethod, error)
-	GetAccountPayoutMethodsOperator(ctx context.Context, accountId string) ([]*AccountPayoutMethod, error)
 	DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *AccountPayoutMethod) error
-	CreateAccountPayoutMethod(ctx context.Context, pay *AccountPayoutMethod) error
-	GetAccountPayoutMethodByIdOperator(ctx context.Context, accountPayoutMethodId string) (*AccountPayoutMethod, error)
-	GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountPayoutMethodId string) (*AccountPayoutMethod, error)
+	UpdateAccountPayoutMethod(ctx context.Context, pay *AccountPayoutMethod) error
+	GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*AccountPayoutMethod, error)
+	GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountId string) (*AccountPayoutMethod, error)
 
 	CreateClubPayout(ctx context.Context, payout *ClubPayout) error
 	GetClubPayoutById(ctx context.Context, requester *principal.Principal, payoutId string) (*ClubPayout, error)
 	GetClubPayoutByIdOperator(ctx context.Context, payoutId string) (*ClubPayout, error)
-	UpdateClubPayoutState(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
+	UpdateClubPayoutStatus(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	UpdateClubPayoutDepositDate(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	UpdateClubPayoutEvents(ctx context.Context, payoutId string, updateFn func(pay *ClubPayout) error) (*ClubPayout, error)
 	CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error
