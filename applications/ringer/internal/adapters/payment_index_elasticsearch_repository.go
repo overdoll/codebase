@@ -322,3 +322,8 @@ func (r PaymentIndexElasticSearchRepository) IndexClubPayment(ctx context.Contex
 
 	return nil
 }
+
+func (r PaymentIndexElasticSearchRepository) UpdateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
+	//TODO implement me
+	panic("implement me")
+}

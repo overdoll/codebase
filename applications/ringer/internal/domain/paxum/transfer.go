@@ -1,4 +1,4 @@
-package opennode
+package paxum
 
 import (
 	"errors"

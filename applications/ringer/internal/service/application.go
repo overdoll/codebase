@@ -45,12 +45,14 @@ func createApplication(ctx context.Context, client client.Client) app.Applicatio
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	paymentRepo := adapters.NewPaymentCassandraRepository(session)
+	paymentIndexRepo := adapters.NewPaymentIndexElasticSearchRepository(esClient, session)
 	payoutRepo := adapters.NewPayoutCassandraRepository(session)
+	payoutIndexRepo := adapters.NewPayoutIndexElasticSearchRepository(esClient, session)
 	balanceRepo := adapters.NewBalanceCassandraRepository(session)
 
 	return app.Application{
 		Commands:   app.Commands{},
 		Queries:    app.Queries{},
-		Activities: activities.NewActivitiesHandler(paymentRepo, payoutRepo, eventRepo, balanceRepo),
+		Activities: activities.NewActivitiesHandler(paymentRepo, paymentIndexRepo, payoutRepo, payoutIndexRepo, balanceRepo),
 	}
 }

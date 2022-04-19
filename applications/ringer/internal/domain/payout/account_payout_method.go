@@ -13,11 +13,11 @@ type AccountPayoutMethod struct {
 	isDefault     bool
 }
 
-func NewOpenNodeAccountPayoutMethod(accountId, email string) (*AccountPayoutMethod, error) {
+func NewPaxumAccountPayoutMethod(accountId, email string) (*AccountPayoutMethod, error) {
 	return &AccountPayoutMethod{
 		id:            uuid.New().String(),
 		accountId:     accountId,
-		method:        OpenNode,
+		method:        Paxum,
 		opennodeEmail: &email,
 		isDefault:     false,
 	}, nil
@@ -35,14 +35,14 @@ func (p *AccountPayoutMethod) IsDefault() bool {
 	return p.isDefault
 }
 
-func (p *AccountPayoutMethod) OpennodeEmail() *string {
+func (p *AccountPayoutMethod) PaxumEmail() *string {
 	return p.opennodeEmail
 }
 
 func (p *AccountPayoutMethod) Validate(amount int64, currency money.Currency) bool {
 
 	// only opennode for now
-	if p.method != OpenNode {
+	if p.method != Paxum {
 		return false
 	}
 

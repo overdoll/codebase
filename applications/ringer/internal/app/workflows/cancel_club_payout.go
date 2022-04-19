@@ -13,20 +13,20 @@ func CancelClubPayout(ctx workflow.Context, input CancelClubPayoutInput) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 	var a *activities.Activities
 
-	var payoutWorkflowId *string
+	var payoutDetails *activities.GetClubPayoutDetailsPayload
 
 	// get payout ID
-	if err := workflow.ExecuteActivity(ctx, a.GetPayoutWorkflowId, input.PayoutId).Get(ctx, payoutWorkflowId); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutDetails, input.PayoutId).Get(ctx, payoutDetails); err != nil {
 		return err
 	}
 
 	// cancel the workflow
-	if err := workflow.RequestCancelExternalWorkflow(ctx, *payoutWorkflowId, "").Get(ctx, nil); err != nil {
+	if err := workflow.RequestCancelExternalWorkflow(ctx, payoutDetails.TemporalWorkflowId, "").Get(ctx, nil); err != nil {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutCancelled,
-		activities.MarkPayoutCancelledInput{
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutCancelled,
+		activities.MarkClubPayoutCancelledInput{
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, nil); err != nil {

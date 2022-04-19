@@ -36,8 +36,8 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 		}
 
 		// if there's an error, we add a failure, and the loop will try again
-		if err := workflow.ExecuteActivity(ctx, a.AddFailureToPayout,
-			activities.AddFailureToPayoutInput{
+		if err := workflow.ExecuteActivity(ctx, a.AddFailureToClubPayout,
+			activities.AddFailureToClubPayoutInput{
 				Timestamp: payload.Timestamp,
 				PayoutId:  input.PayoutId,
 				Error:     *payload.Error,
@@ -49,8 +49,8 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 
 	if !successfulPayout {
 		// finally, mark it as failed since there's an error
-		if err := workflow.ExecuteActivity(ctx, a.MarkPayoutFailed,
-			activities.MarkPayoutFailedInput{
+		if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutFailed,
+			activities.MarkClubPayoutFailedInput{
 				PayoutId: input.PayoutId,
 			},
 		).Get(ctx, nil); err != nil {
@@ -70,11 +70,11 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 	}
 
 	// payout was successful, finish up logic
-	var deposit *activities.MarkPayoutDepositedPayload
+	var deposit *activities.MarkClubPayoutDepositedPayload
 
 	// mark deposited, which will also release the lock and allow new payouts to be created
-	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutDeposited,
-		activities.MarkPayoutDepositedInput{
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutDeposited,
+		activities.MarkClubPayoutDepositedInput{
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, deposit); err != nil {

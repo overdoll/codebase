@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/ringer/internal/domain/opennode"
+	"overdoll/applications/ringer/internal/domain/paxum"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"time"
 )
@@ -34,14 +34,14 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 	}
 
 	switch accountMethod.Method() {
-	case payout.OpenNode:
-		transfer, err := opennode.NewTransfer(*accountMethod.OpennodeEmail(), clubPayout.Amount(), clubPayout.Currency())
+	case payout.Paxum:
+		transfer, err := paxum.NewTransfer(*accountMethod.PaxumEmail(), clubPayout.Amount(), clubPayout.Currency())
 
 		if err != nil {
 			return nil, err
 		}
 
-		if err := h.or.InitiatePayout(ctx, []*opennode.Transfer{transfer}); err != nil {
+		if err := h.or.InitiatePayout(ctx, []*paxum.Transfer{transfer}); err != nil {
 			return nil, err
 		}
 	}

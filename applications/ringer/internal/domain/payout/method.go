@@ -8,7 +8,7 @@ type Method struct {
 
 var (
 	UnknownKind = Method{""}
-	OpenNode    = Method{"OPENNODE"}
+	Paxum       = Method{"PAXUM"}
 )
 
 func (r Method) String() string {
@@ -17,8 +17,8 @@ func (r Method) String() string {
 
 func MethodFromString(s string) (Method, error) {
 	switch s {
-	case OpenNode.slug:
-		return OpenNode, nil
+	case Paxum.slug:
+		return Paxum, nil
 	}
 
 	return UnknownKind, errors.New("unknown method: " + s)

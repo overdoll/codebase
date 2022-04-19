@@ -8,6 +8,8 @@ import (
 type DepositRequest struct {
 	id                      string
 	lastDateForDeposit      time.Time
+	baseAmount              int64
+	estimatedFeeAmount      int64
 	totalAmount             int64
 	currency                money.Currency
 	accountPayoutMethodKind Method

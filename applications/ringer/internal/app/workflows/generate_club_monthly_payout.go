@@ -64,6 +64,28 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return nil
 	}
 
+	ts := workflow.Now(ctx)
+
+	depositId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	var depositPayload *activities.GetOrCreateDepositRequestPayload
+
+	// create a deposit request or append to an existing one for this month
+	if err := workflow.ExecuteActivity(ctx, a.GetOrCreateDepositRequest,
+		activities.GetOrCreateDepositRequestInput{
+			DepositId:             *depositId,
+			Currency:              group.Currency,
+			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
+			Timestamp:             ts,
+		},
+	).Get(ctx, depositPayload); err != nil {
+		return err
+	}
+
 	// generate a unique payout ID
 	payoutId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
@@ -73,14 +95,12 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 	var createPayload *activities.CreatePayoutForClubPayload
 
-	ts := workflow.Now(ctx)
-
 	// create a payout record
 	if err := workflow.ExecuteActivity(ctx, a.CreatePayoutForClub,
 		activities.CreatePayoutForClubInput{
+			DepositRequestId:      depositPayload.DepositRequestId,
 			PayoutId:              *payoutId,
-			PaymentIds:            group.PaymentIds,
-			TotalAmount:           group.TotalAmount,
+			Amount:                group.TotalAmount,
 			Currency:              group.Currency,
 			ClubId:                input.ClubId,
 			Timestamp:             ts,
@@ -91,25 +111,20 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
+	// append to deposit request
+	if err := workflow.ExecuteActivity(ctx, a.AppendToDepositRequest,
+		activities.AppendToDepositRequestInput{
+			PayoutId:  *payoutId,
+			DepositId: *depositId,
+			Amount:    group.TotalAmount,
+			Currency:  group.Currency,
+		},
+	).Get(ctx, depositPayload); err != nil {
+		return err
+	}
+
 	if input.FutureTime == nil {
 		input.FutureTime = &createPayload.DepositDate
-	}
-
-	depositId, err := support.GenerateUniqueIdForWorkflow(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	// create a deposit request or append to an existing one for this month
-	if err := workflow.ExecuteActivity(ctx, a.AppendOrCreateDepositRequest,
-		activities.AppendOrCreateDepositRequestInput{
-			DepositId: *depositId,
-			PayoutId:  *payoutId,
-			Timestamp: ts,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
 	}
 
 	timerFired := false
@@ -139,8 +154,8 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 		if !timerFired {
 			// schedule an activity to update settlement date for the payout
-			if err := workflow.ExecuteActivity(timerCtx, a.UpdatePayoutDepositDate,
-				activities.UpdatePayoutDepositDateInput{DepositDate: *input.FutureTime},
+			if err := workflow.ExecuteActivity(timerCtx, a.UpdateClubPayoutDepositDate,
+				activities.UpdateClubPayoutDepositDateInput{DepositDate: *input.FutureTime},
 			).Get(ctx, nil); err != nil {
 				return err
 			}
@@ -148,8 +163,8 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	}
 
 	// mark the payout as "processing" - our initial period of x days until deposit has passed
-	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutProcessing,
-		activities.MarkPayoutProcessingInput{
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutProcessing,
+		activities.MarkClubPayoutProcessingInput{
 			PayoutId: *payoutId,
 		},
 	).Get(ctx, nil); err != nil {

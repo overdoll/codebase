@@ -8,14 +8,15 @@ import (
 )
 
 type CreatePayoutForClubInput struct {
+	DepositRequestId      string
 	PayoutId              string
 	ClubId                string
-	PaymentIds            []string
-	TotalAmount           int64
+	Amount                int64
 	Currency              money.Currency
 	Timestamp             time.Time
 	DepositDate           *time.Time
 	AccountPayoutMethodId string
+	TemporalWorkflowId    string
 }
 
 type CreatePayoutForClubPayload struct {
@@ -24,13 +25,23 @@ type CreatePayoutForClubPayload struct {
 
 func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayoutForClubInput) (*CreatePayoutForClubPayload, error) {
 
-	newPayout, err := payout.NewQueuedPayout(input.AccountPayoutMethodId, input.PayoutId, input.ClubId, input.TotalAmount, input.Currency, input.Timestamp, input.DepositDate)
+	accountMethod, err := h.par.GetAccountPayoutMethodById(ctx, input.AccountPayoutMethodId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := h.par.CreateClubPayout(ctx, newPayout, input.PaymentIds); err != nil {
+	newPayout, err := payout.NewQueuedPayout(input.DepositRequestId, accountMethod, input.PayoutId, input.ClubId, input.TemporalWorkflowId, input.Amount, input.Currency, input.Timestamp, input.DepositDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.par.CreateClubPayout(ctx, newPayout); err != nil {
+		return nil, err
+	}
+
+	if err := h.pir.IndexClubPayout(ctx, newPayout); err != nil {
 		return nil, err
 	}
 

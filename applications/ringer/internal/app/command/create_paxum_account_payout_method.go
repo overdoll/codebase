@@ -8,22 +8,22 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type CreateOpenNodeAccountPayoutMethod struct {
-	Requester     *principal.Principal
-	AccountId     string
-	OpenNodeEmail string
+type CreatePaxumAccountPayoutMethod struct {
+	Requester  *principal.Principal
+	AccountId  string
+	PaxumEmail string
 }
 
-type CreateOpenNodeAccountPayoutMethodHandler struct {
+type CreatePaxumAccountPayoutMethodHandler struct {
 	ir details.Repository
 	pr payout.Repository
 }
 
-func NewCreateOpenNodeAccountPayoutMethodHandler(ir details.Repository, pr payout.Repository) CreateOpenNodeAccountPayoutMethodHandler {
-	return CreateOpenNodeAccountPayoutMethodHandler{ir: ir, pr: pr}
+func NewCreatePaxumAccountPayoutMethodHandler(ir details.Repository, pr payout.Repository) CreatePaxumAccountPayoutMethodHandler {
+	return CreatePaxumAccountPayoutMethodHandler{ir: ir, pr: pr}
 }
 
-func (h CreateOpenNodeAccountPayoutMethodHandler) Handle(ctx context.Context, cmd CreateOpenNodeAccountPayoutMethod) (*payout.AccountPayoutMethod, error) {
+func (h CreatePaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd CreatePaxumAccountPayoutMethod) (*payout.AccountPayoutMethod, error) {
 
 	_, err := h.ir.GetAccountDetailsById(ctx, cmd.Requester, cmd.AccountId)
 
@@ -36,7 +36,7 @@ func (h CreateOpenNodeAccountPayoutMethodHandler) Handle(ctx context.Context, cm
 		return nil, err
 	}
 
-	pay, err := payout.NewOpenNodeAccountPayoutMethod(cmd.AccountId, cmd.OpenNodeEmail)
+	pay, err := payout.NewPaxumAccountPayoutMethod(cmd.AccountId, cmd.PaxumEmail)
 
 	if err != nil {
 		return nil, err

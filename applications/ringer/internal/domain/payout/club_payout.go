@@ -3,15 +3,20 @@ package payout
 import (
 	"errors"
 	"overdoll/libraries/money"
+	"overdoll/libraries/paging"
 	"time"
 )
 
 type ClubPayout struct {
+	*paging.Node
+
 	id     string
 	status Status
 	clubId string
 
 	accountPayoutMethodId string
+	depositRequestId      string
+	temporalWorkflowId    string
 
 	amount   int64
 	currency money.Currency
@@ -19,20 +24,22 @@ type ClubPayout struct {
 	timestamp   time.Time
 	depositDate time.Time
 
-	events []*Event
+	events []*ClubPayoutEvent
 }
 
-func NewQueuedPayout(accountPayoutMethodId, id, clubId string, amount int64, currency money.Currency, timestamp time.Time, depositDate *time.Time) (*ClubPayout, error) {
+func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod, id, clubId, temporalWorkflowId string, amount int64, currency money.Currency, timestamp time.Time, depositDate *time.Time) (*ClubPayout, error) {
 	if depositDate == nil {
 		dt := timestamp.AddDate(0, 0, 15)
 		depositDate = &dt
 	}
 
 	return &ClubPayout{
-		accountPayoutMethodId: accountPayoutMethodId,
+		depositRequestId:      depositRequestId,
+		accountPayoutMethodId: accountMethod.id,
 		id:                    id,
 		status:                Queued,
 		clubId:                clubId,
+		temporalWorkflowId:    temporalWorkflowId,
 		amount:                amount,
 		depositDate:           *depositDate,
 		currency:              currency,
@@ -40,8 +47,20 @@ func NewQueuedPayout(accountPayoutMethodId, id, clubId string, amount int64, cur
 	}, nil
 }
 
+func (p *ClubPayout) Id() string {
+	return p.id
+}
+
+func (p *ClubPayout) Status() Status {
+	return p.status
+}
+
 func (p *ClubPayout) AccountPayoutMethodId() string {
 	return p.accountPayoutMethodId
+}
+
+func (p *ClubPayout) TemporalWorkflowId() string {
+	return p.temporalWorkflowId
 }
 
 func (p *ClubPayout) Amount() int64 {
@@ -56,8 +75,20 @@ func (p *ClubPayout) ClubId() string {
 	return p.clubId
 }
 
+func (p *ClubPayout) DepositRequestId() string {
+	return p.depositRequestId
+}
+
 func (p *ClubPayout) DepositDate() time.Time {
 	return p.depositDate
+}
+
+func (p *ClubPayout) Timestamp() time.Time {
+	return p.timestamp
+}
+
+func (p *ClubPayout) Events() []*ClubPayoutEvent {
+	return p.events
 }
 
 func (p *ClubPayout) MakeDeposited() error {
@@ -118,10 +149,40 @@ func (p *ClubPayout) CanDelay() error {
 }
 
 func (p *ClubPayout) AddErrorEvent(s string, timestamp time.Time) error {
-	evt, err := NewErrorEvent(s, timestamp)
+	evt, err := NewClubPayoutErrorEvent(s, timestamp)
 	if err != nil {
 		return err
 	}
 	p.events = append(p.events, evt)
 	return nil
+}
+
+func UnmarshalClubPayoutFromDatabase(
+	id string,
+	status string,
+	clubId string,
+	currency string,
+	amount int64,
+	depositDate time.Time,
+	accountPayoutMethodId string,
+	depositRequestId string,
+	timestamp time.Time,
+	events []*ClubPayoutEvent,
+	temporalWorkflowId string,
+) *ClubPayout {
+	st, _ := StatusFromString(status)
+	cr, _ := money.CurrencyFromString(currency)
+	return &ClubPayout{
+		id:                    id,
+		status:                st,
+		clubId:                clubId,
+		accountPayoutMethodId: accountPayoutMethodId,
+		depositRequestId:      depositRequestId,
+		temporalWorkflowId:    temporalWorkflowId,
+		amount:                amount,
+		currency:              cr,
+		timestamp:             timestamp,
+		depositDate:           depositDate,
+		events:                events,
+	}
 }

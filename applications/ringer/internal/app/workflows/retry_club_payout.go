@@ -16,15 +16,15 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	var a *activities.Activities
 
-	var payoutWorkflowId *string
+	var payoutDetails *activities.GetClubPayoutDetailsPayload
 
 	// get payout ID
-	if err := workflow.ExecuteActivity(ctx, a.GetPayoutWorkflowId, input.PayoutId).Get(ctx, payoutWorkflowId); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutDetails, input.PayoutId).Get(ctx, payoutDetails); err != nil {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.MarkPayoutQueued,
-		activities.MarkPayoutQueuedInput{
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutQueued,
+		activities.MarkClubPayoutQueuedInput{
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, nil); err != nil {
