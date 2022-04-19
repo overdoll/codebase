@@ -45,6 +45,28 @@ var clubPaymentsByTransactionTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
+var clubReadyPaymentsTable = table.New(table.Metadata{
+	Name: "club_ready_payments",
+	Columns: []string{
+		"club_id",
+		"payment_id",
+		"is_deduction",
+		"final_amount",
+	},
+	PartKey: []string{"club_id"},
+	SortKey: []string{"payment_id"},
+})
+
+var clubPaymentsByPayoutTable = table.New(table.Metadata{
+	Name: "club_payments_by_payout",
+	Columns: []string{
+		"payout_id",
+		"payment_id",
+	},
+	PartKey: []string{"payout_id"},
+	SortKey: []string{"payment_id"},
+})
+
 type clubPayment struct {
 	Id                       string    `db:"id"`
 	Source                   string    `db:"source"`
@@ -232,33 +254,188 @@ func (r PaymentCassandraRepository) GetClubPaymentByAccountTransactionId(ctx con
 }
 
 func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
-	//TODO implement me
-	panic("implement me")
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// batch update all payments
+	for _, id := range paymentIds {
+		stmt, _ := clubPaymentsTable.Update("status")
+		batch.Query(stmt,
+			id,
+			payment.Complete,
+		)
+	}
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to update club payments completed: %v", err)
+	}
+
+	return nil
 }
 
 func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
-	//TODO implement me
-	panic("implement me")
+
+	pay, err := r.GetClubPaymentByIdOperator(ctx, paymentId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = updateFn(pay); err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalPaymentToDatabase(ctx, pay)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(clubPaymentsTable.Update("status")).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update club payment status: %v", err)
+	}
+
+	return pay, nil
 }
 
 func (r PaymentCassandraRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {
-	//TODO implement me
-	panic("implement me")
+
+	if err := r.session.
+		Query(clubReadyPaymentsTable.Insert()).
+		BindMap(
+			map[string]interface{}{
+				"club_id":      payment.DestinationClubId(),
+				"payment_id":   payment.Id(),
+				"is_deduction": payment.IsDeduction(),
+				"final_amount": payment.FinalAmount(),
+			},
+		).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to add club payment to club ready list: %v", err)
+	}
+
+	return nil
 }
 
 func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error {
-	//TODO implement me
-	panic("implement me")
+
+	var page []byte
+
+	itr := r.session.
+		Query(clubReadyPaymentsTable.Select()).
+		BindMap(map[string]interface{}{
+			"club_id": clubId,
+		}).
+		WithContext(ctx).
+		PageSize(100).
+		PageState(page).
+		Iter()
+
+	defer itr.Close()
+
+	page = itr.PageState()
+	scanner := itr.Scanner()
+
+	for scanner.Next() {
+		pay := &clubPayment{}
+
+		if err := scanner.Scan(
+			&pay.DestinationClubId,
+			&pay.Id,
+			&pay.IsDeduction,
+			&pay.FinalAmount,
+		); err != nil {
+			return err
+		}
+
+		cr, err := money.CurrencyFromString(pay.Currency)
+
+		if err != nil {
+			return err
+		}
+
+		scanFn(pay.Id, pay.FinalAmount, pay.IsDeduction, cr)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r PaymentCassandraRepository) ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error {
-	//TODO implement me
-	panic("implement me")
+
+	var page []byte
+
+	itr := r.session.
+		Query(clubPaymentsByPayoutTable.Select()).
+		BindMap(map[string]interface{}{
+			"payout_id": payoutId,
+		}).
+		WithContext(ctx).
+		PageSize(100).
+		PageState(page).
+		Iter()
+
+	defer itr.Close()
+
+	page = itr.PageState()
+	scanner := itr.Scanner()
+
+	var ids []string
+
+	for scanner.Next() {
+
+		var id *string
+
+		if err := scanner.Scan(
+			nil,
+			&id,
+		); err != nil {
+			return err
+		}
+
+		ids = append(ids, *id)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	if err := scanFn(ids); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r PaymentCassandraRepository) UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *payment.ClubPlatformFee) error) (*payment.ClubPlatformFee, error) {
-	//TODO implement me
-	panic("implement me")
+
+	pay, err := r.GetPlatformFeeForClub(ctx, requester, clubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = updateFn(pay); err != nil {
+		return nil, err
+	}
+
+	if err := r.session.
+		Query(clubPlatformFeeTable.Insert()).
+		BindStruct(&clubPlatformFee{
+			ClubId:  pay.ClubId(),
+			Percent: pay.Percent(),
+		}).
+		ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update club platform fee: %v", err)
+	}
+
+	return pay, nil
 }
 
 func (r PaymentCassandraRepository) getPlatformFeeForClub(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {

@@ -317,3 +317,17 @@ func (r PaymentIndexElasticSearchRepository) IndexClubPayment(ctx context.Contex
 
 	return nil
 }
+
+func (r PaymentIndexElasticSearchRepository) UpdateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
+
+	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
+		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
+		Script(elastic.NewScript("ctx._source.status= params.updatedStatus").Param("updatedStatus", payment.Complete.String()).Lang("painless")).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to update index club payments completed: %v", err)
+	}
+
+	return nil
+}
