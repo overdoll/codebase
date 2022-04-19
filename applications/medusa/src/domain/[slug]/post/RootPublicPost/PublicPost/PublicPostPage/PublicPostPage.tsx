@@ -8,7 +8,7 @@ import ClubSuspendedStaffAlert
   from '../../../../root/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import PageFixedHeader from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
 import FixedHeaderWrapper from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import LockedAccountTrigger from '../../../../../home/Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import LockedAccountTrigger from '../../../../../home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 import PostSearchButton from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import { PostVideoManagerProvider } from '@//:modules/content/Posts'

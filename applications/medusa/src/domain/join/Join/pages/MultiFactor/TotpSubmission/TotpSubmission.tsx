@@ -47,6 +47,10 @@ const Mutation = graphql`
       account {
         id
         username
+        avatar {
+          ...ResourceIconFragment
+          ...ResourceItemFragment
+        }
       }
     }
   }

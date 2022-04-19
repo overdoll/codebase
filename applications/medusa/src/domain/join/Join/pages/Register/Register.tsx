@@ -28,6 +28,11 @@ const RegisterMutationGQL = graphql`
       validation
       account {
         id
+        username
+        avatar {
+          ...ResourceIconFragment
+          ...ResourceItemFragment
+        }
       }
     }
   }

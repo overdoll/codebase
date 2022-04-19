@@ -3,10 +3,10 @@ import type { CCBillDisplayTransactionQuery } from '@//:artifacts/CCBillDisplayT
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Box, Heading, HStack, Spinner, Stack, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { CheckMark, InfoCircle, RemoveCross } from '@//:assets/icons'
+import { CheckMark, InfoCircle, RemoveCross, WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueryParam } from 'use-query-params'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
@@ -57,6 +57,7 @@ export default function CCBillDisplayTransaction ({
   const { onClose } = useHistoryDisclosureContext()
 
   const [, setTokenParam] = useQueryParam<string | null | undefined>('token')
+  const [timeoutCount, setTimeoutCount] = useState(0)
 
   const onCancel = (): void => {
     setTokenParam(undefined)
@@ -72,7 +73,10 @@ export default function CCBillDisplayTransaction ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      isVerifying && loadQuery()
+      if (isVerifying) {
+        loadQuery()
+        setTimeoutCount((prev) => prev + 1)
+      }
     }, 2500)
 
     if (!isVerifying) {
@@ -94,7 +98,7 @@ export default function CCBillDisplayTransaction ({
         />
         <Box>
           <Heading
-            align='center'
+            textAlign='center'
             size='md'
             color='gray.00'
           >
@@ -146,7 +150,7 @@ export default function CCBillDisplayTransaction ({
           <Stack spacing={2}>
             <HStack spacing={2}>
               <Text
-                size='sm'
+                fontSize='sm'
                 color='gray.100'
               >
                 <Trans>
@@ -154,7 +158,7 @@ export default function CCBillDisplayTransaction ({
                 </Trans>
               </Text>
               <Text
-                size='sm'
+                fontSize='sm'
                 color='gray.00'
               >
                 {queryData.ccbillTransactionDetails.declineError}
@@ -162,7 +166,7 @@ export default function CCBillDisplayTransaction ({
             </HStack>
             <HStack spacing={2}>
               <Text
-                size='sm'
+                fontSize='sm'
                 color='gray.100'
               >
                 <Trans>
@@ -170,7 +174,7 @@ export default function CCBillDisplayTransaction ({
                 </Trans>
               </Text>
               <Text
-                size='sm'
+                fontSize='sm'
                 color='gray.00'
               >
                 {queryData.ccbillTransactionDetails.declineText}
@@ -181,6 +185,39 @@ export default function CCBillDisplayTransaction ({
         <Button onClick={onCancel} size='lg' colorScheme='orange'>
           <Trans>
             Back
+          </Trans>
+        </Button>
+      </Stack>
+    )
+  }
+
+  if (timeoutCount > 5 && isVerifying) {
+    return (
+      <Stack spacing={4}>
+        <Icon
+          icon={WarningTriangle}
+          w={20}
+          h={20}
+          fill='orange.400'
+          ml='auto'
+          mr='auto'
+        />
+        <Box>
+          <Heading textAlign='center' fontSize='2xl' color='gray.00'>
+            <Trans>
+              Pending Transaction
+            </Trans>
+          </Heading>
+          <Text textAlign='center' fontSize='md' color='gray.100'>
+            <Trans>
+              We received your payment, but weren't able to verify the transaction in a reasonable amount of time. Try
+              refreshing the page or coming back in a few minutes and you should see your club benefits.
+            </Trans>
+          </Text>
+        </Box>
+        <Button onClick={onComplete} size='lg' colorScheme='orange'>
+          <Trans>
+            Close
           </Trans>
         </Button>
       </Stack>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<be56d47307f264af4c155ced1c34cd04>>
- * @relayHash d9d45cc561ba4139a0023558637e586c
+ * @generated SignedSource<<7223c563484831e8fc33e8a7cf2ce321>>
+ * @relayHash 3ead49f6f48ac22b81e178d948c16578
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d9d45cc561ba4139a0023558637e586c
+// @relayRequestID 3ead49f6f48ac22b81e178d948c16578
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -281,8 +281,6 @@ v16 = {
                   "plural": false,
                   "selections": [
                     (v9/*: any*/),
-                    (v7/*: any*/),
-                    (v8/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -297,6 +295,8 @@ v16 = {
                       "name": "videoDuration",
                       "storageKey": null
                     },
+                    (v7/*: any*/),
+                    (v8/*: any*/),
                     (v10/*: any*/)
                   ],
                   "storageKey": null
@@ -671,7 +671,7 @@ return {
     ]
   },
   "params": {
-    "id": "d9d45cc561ba4139a0023558637e586c",
+    "id": "3ead49f6f48ac22b81e178d948c16578",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

@@ -14,7 +14,7 @@ import PageInfiniteScrollWrapper
 import FixedHeaderWrapper
   from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
 import { Flex, HStack } from '@chakra-ui/react'
-import LockedAccountTrigger from '../../home/Home/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import LockedAccountTrigger from '../../home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 

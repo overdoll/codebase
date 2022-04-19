@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a01f8d7e4a69d2c5b41ca3a2a0294b27>>
+ * @generated SignedSource<<e3d6f5f55d129e782214ca00444332bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type PostGalleryPublicDetailedFragment$data = {
   };
   readonly content: ReadonlyArray<{
     readonly resource: {
-      readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PostFullMediaFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
@@ -85,7 +85,7 @@ const node: ReaderFragment = {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "PostMediaFragment"
+              "name": "PostFullMediaFragment"
             }
           ],
           "storageKey": null
@@ -103,6 +103,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a208ed5c5e275f5cc09c39961044d200";
+(node as any).hash = "8fdf258d1bef10480b39f218cc7f8501";
 
 export default node;

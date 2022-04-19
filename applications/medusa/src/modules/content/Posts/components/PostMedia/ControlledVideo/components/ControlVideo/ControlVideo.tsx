@@ -20,6 +20,7 @@ interface Props {
   totalTime: number
   canSeek?: boolean | undefined
   canFullscreen?: boolean | undefined
+  canControl?: boolean | undefined
 }
 
 export default function ControlVideo ({
@@ -35,7 +36,8 @@ export default function ControlVideo ({
   time,
   totalTime,
   canSeek,
-  canFullscreen
+  canFullscreen,
+  canControl
 }: Props): JSX.Element {
   const onChangeVideo = (): void => {
     const video = videoRef.current
@@ -79,7 +81,7 @@ export default function ControlVideo ({
     <>
       {!hasError &&
         <>
-          <Fade unmountOnExit in={isOpen}>
+          <Fade unmountOnExit in={canControl === true ? false : isOpen}>
             <Stack
               align='center'
               bottom={0}

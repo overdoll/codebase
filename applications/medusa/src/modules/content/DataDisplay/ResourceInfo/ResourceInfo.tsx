@@ -4,18 +4,21 @@ import { useFragment } from 'react-relay'
 import type { ResourceInfoFragment$key } from '@//:artifacts/ResourceInfoFragment.graphql'
 import ResourceItem from '../ResourceItem/ResourceItem'
 import { Icon } from '../../PageLayout'
-import { ControlPlayButton, PictureIdentifier } from '@//:assets/icons'
+import { ControlPlayButton, PictureIdentifier, PremiumStar } from '@//:assets/icons'
 
 interface Props extends HTMLChakraProps<any> {
-  query: ResourceInfoFragment$key | null
+  query: ResourceInfoFragment$key
 }
 
 const Fragment = graphql`
-  fragment ResourceInfoFragment on Resource {
-    ...ResourceItemFragment
-    type
-    processed
-    videoDuration
+  fragment ResourceInfoFragment on PostContent {
+    isSupporterOnly
+    resource {
+      type
+      processed
+      videoDuration
+      ...ResourceItemFragment
+    }
   }
 `
 
@@ -24,29 +27,29 @@ export default function ResourceInfo ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  if (data == null || !data?.processed) {
+  if (data.resource == null || !data?.resource.processed) {
     return (
-      <ResourceItem h='100%' query={data} />
+      <ResourceItem h='100%' query={data.resource} />
     )
   }
 
   return (
     <Flex h='100%' position='relative'>
-      <ResourceItem h='100%' query={data} />
+      <ResourceItem h='100%' query={data.resource} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
         <Stack align='center' spacing={1}>
           <Box p={2} borderRadius='full' bg='dimmers.400' w={8} h={8}>
             <Icon
               fill='gray.00'
-              icon={data.type === 'VIDEO' ? ControlPlayButton : PictureIdentifier}
+              icon={data.isSupporterOnly ? PremiumStar : (data.resource.type === 'VIDEO' ? ControlPlayButton : PictureIdentifier)}
               w='100%'
               h='100%'
             />
           </Box>
-          {data.type === 'VIDEO' && (
+          {data.resource.type === 'VIDEO' && (
             <Box py={0} px={1} borderRadius='sm' bg='dimmers.400'>
               <Text color='gray.00' fontSize='xs'>
-                {(data.videoDuration / 1000).toFixed(0)}s
+                {(data.resource.videoDuration / 1000).toFixed(0)}s
               </Text>
             </Box>)}
         </Stack>

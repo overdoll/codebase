@@ -1,30 +1,25 @@
 import { graphql, useFragment } from 'react-relay'
 import { useContext } from 'react'
-import { PostMediaFragment$key } from '@//:artifacts/PostMediaFragment.graphql'
-import ImageSnippet from '../../../DataDisplay/ImageSnippet/ImageSnippet'
-import ControlledVideo from './ControlledVideo/ControlledVideo'
-import { PostVideoManagerContext } from '../../support/PostVideoManager/PostVideoManager'
-import { GlobalVideoManagerContext } from '../../support/GlobalVideoManager/GlobalVideoManager'
-
-export interface PostMediaProps {
-  index: number
-  reference: string
-}
+import { PostSimpleMediaFragment$key } from '@//:artifacts/PostSimpleMediaFragment.graphql'
+import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
+import ControlledVideo from '../ControlledVideo/ControlledVideo'
+import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
+import { GlobalVideoManagerContext } from '../../../support/GlobalVideoManager/GlobalVideoManager'
+import { PostMediaProps } from '../PostFullMedia/PostFullMedia'
 
 interface Props extends PostMediaProps {
-  query: PostMediaFragment$key
-
+  query: PostSimpleMediaFragment$key
 }
 
 const Fragment = graphql`
-  fragment PostMediaFragment on Resource {
+  fragment PostSimpleMediaFragment on Resource {
     type
     ...ImageSnippetFragment
     ...ControlledVideoFragment
   }
 `
 
-export default function PostMedia ({
+export default function PostSimpleMedia ({
   query,
   index,
   reference
@@ -32,8 +27,6 @@ export default function PostMedia ({
   const data = useFragment(Fragment, query)
 
   const {
-    changeVideoVolume,
-    changeVideoMuted,
     onVideoPlay,
     videoMuted,
     videoVolume
@@ -44,19 +37,20 @@ export default function PostMedia ({
   } = useContext(PostVideoManagerContext)
 
   if (data.type === 'IMAGE') {
-    return <ImageSnippet objectFit='contain' query={data} />
+    return <ImageSnippet objectFit='cover' query={data} />
   }
 
   if (data.type === 'VIDEO') {
     return (
       <ControlledVideo
+        controls={{
+          canControl: false
+        }}
         onPlay={(paused, target) => onVideoPlay(reference, paused, target)}
         onPause={(paused, target) => onVideoPlay(reference, paused, target)}
         onInitialize={(target) => onVideoInitialize(target, index)}
         volume={videoVolume}
         isMuted={videoMuted}
-        onMute={changeVideoMuted}
-        onVolumeChange={changeVideoVolume}
         query={data}
       />
     )

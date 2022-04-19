@@ -6,7 +6,6 @@ import LockedAccountModal from '../LockedAccountModal/LockedAccountModal'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { LockedAccountBannerQuery } from '@//:artifacts/LockedAccountBannerQuery.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 
 const Query = graphql`
   query LockedAccountBannerQuery {
@@ -31,42 +30,40 @@ export default function LockedAccountBanner (): JSX.Element | null {
   if (queryData?.viewer?.lock == null) return null
 
   return (
-    <PageWrapper>
-      <Box zIndex='docked' top={0} color='gray.900'>
-        <Alert
-          status='warning'
+    <Box zIndex='docked' top={0} color='gray.900'>
+      <Alert
+        status='warning'
+      >
+        <Flex
+          w='100%'
+          align='center'
+          justify='space-between'
         >
-          <Flex
-            w='100%'
-            align='center'
-            justify='space-between'
-          >
-            <HStack spacing={0} align='center'>
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>
-                  Your account is currently locked. Functionality is limited.
-                </Trans>
-              </AlertDescription>
-            </HStack>
-            <Button
-              size='sm'
-              colorScheme='orange'
-              variant='solid'
-              onClick={onToggle}
-            >
+          <HStack spacing={0} align='center'>
+            <AlertIcon />
+            <AlertDescription>
               <Trans>
-                View Details
+                Your account is currently locked. Functionality is limited.
               </Trans>
-            </Button>
-            <LockedAccountModal
-              queryRef={queryData.viewer}
-              isOpen={isOpen}
-              onClose={onClose}
-            />
-          </Flex>
-        </Alert>
-      </Box>
-    </PageWrapper>
+            </AlertDescription>
+          </HStack>
+          <Button
+            size='sm'
+            colorScheme='orange'
+            variant='solid'
+            onClick={onToggle}
+          >
+            <Trans>
+              View Details
+            </Trans>
+          </Button>
+          <LockedAccountModal
+            queryRef={queryData.viewer}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+        </Flex>
+      </Alert>
+    </Box>
   )
 }

@@ -1,4 +1,4 @@
-import Home from './Home/RootHome'
+import Home from './RootHome/RootHome'
 import HomeQuery from '@//:artifacts/HomeQuery.graphql'
 
 Home.getTranslationProps = async (ctx) => {

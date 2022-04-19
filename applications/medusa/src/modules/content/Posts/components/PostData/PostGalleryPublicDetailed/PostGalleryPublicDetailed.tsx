@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicDetailedFragment$key } from '@//:artifacts/PostGalleryPublicDetailedFragment.graphql'
-import PostMedia from '../../PostMedia/PostMedia'
+import PostFullMedia from '../../PostMedia/PostFullMedia/PostFullMedia'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 
 interface Props {
@@ -20,7 +20,7 @@ const Fragment = graphql`
     }
     content {
       resource {
-        ...PostMediaFragment
+        ...PostFullMediaFragment
       }
       ...PostSupporterContentFragment
     }
@@ -48,13 +48,13 @@ export default function PostGalleryPublicDetailed ({
           <SwiperSlide
             key={index}
           >
-            <Flex minH={400} bg='gray.800' w='100%' align='center' justify='center'>
+            <Flex minH={300} bg='gray.800' w='100%' align='center' justify='center'>
               <Stack spacing={1}>
                 <PostSupporterContent
                   clubQuery={data.club}
                   query={item}
                 >
-                  <PostMedia query={item.resource} index={index} reference={data.reference} />
+                  <PostFullMedia query={item.resource} index={index} reference={data.reference} />
                 </PostSupporterContent>
               </Stack>
             </Flex>

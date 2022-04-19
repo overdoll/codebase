@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75fcfb451f897a1337384406022ba1ac>>
+ * @generated SignedSource<<181dc4ee4f29b66cd3770b13ed240a32>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PostPreviewContentFragment$data = {
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
-    readonly resource: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
-    };
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   }>;
   readonly " $fragmentType": "PostPreviewContentFragment";
 };
@@ -47,20 +45,9 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
-          "alias": null,
           "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceInfoFragment"
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ResourceInfoFragment"
         }
       ],
       "storageKey": null
@@ -70,6 +57,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3ff4045c0252c3faae359b556b199d5a";
+(node as any).hash = "7aff7043fa334ff47841a6e00a39bbe7";
 
 export default node;

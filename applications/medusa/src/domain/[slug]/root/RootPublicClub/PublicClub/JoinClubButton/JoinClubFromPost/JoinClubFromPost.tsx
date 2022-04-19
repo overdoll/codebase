@@ -124,6 +124,7 @@ export default function JoinClubFromPost ({
 
   return (
     <BecomeMemberButton
+      isIcon
       clubQuery={clubData}
       viewerQuery={viewerData}
       {...rest}

@@ -2,8 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import type { ReviewPostFragment$key } from '@//:artifacts/ReviewPostFragment.graphql'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { Trans } from '@lingui/macro'
 
 interface Props {

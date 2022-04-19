@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b2eed10b3b2324be5a0f72784ec1fc06>>
+ * @generated SignedSource<<247c90504151517be9be1b1b1ce9f608>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,22 +11,22 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type PostMediaFragment$data = {
+export type PostFullMediaFragment$data = {
   readonly type: ResourceType;
   readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "ControlledVideoFragment">;
-  readonly " $fragmentType": "PostMediaFragment";
+  readonly " $fragmentType": "PostFullMediaFragment";
 };
-export type PostMediaFragment = PostMediaFragment$data;
-export type PostMediaFragment$key = {
-  readonly " $data"?: PostMediaFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
+export type PostFullMediaFragment = PostFullMediaFragment$data;
+export type PostFullMediaFragment$key = {
+  readonly " $data"?: PostFullMediaFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostFullMediaFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostMediaFragment",
+  "name": "PostFullMediaFragment",
   "selections": [
     {
       "alias": null,
@@ -50,6 +50,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b0147c91c2af72e8463bef3a4b7a814a";
+(node as any).hash = "2dd2a8ee47c58c0c14257fe47b59920f";
 
 export default node;

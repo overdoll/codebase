@@ -24,6 +24,10 @@ const GrantAction = graphql`
       account {
         id
         username
+        avatar {
+          ...ResourceIconFragment
+          ...ResourceItemFragment
+        }
       }
     }
   }

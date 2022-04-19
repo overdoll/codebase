@@ -24,14 +24,9 @@ interface Props {
 const Fragment = graphql`
   fragment DraggableContentFragment on PostContent {
     isSupporterOnly
+    ...ResourceInfoFragment
     resource {
       id
-      type
-      urls {
-        url
-        mimeType
-      }
-      ...ResourceInfoFragment
     }
   }
 `
@@ -71,7 +66,7 @@ export default function DraggableContent ({
             </Heading>
           </Flex>
           <Flex align='center' justify='center' w='38%'>
-            <ResourceInfo query={data.resource} />
+            <ResourceInfo query={data} />
           </Flex>
           <Flex align='center' justify='center' w='38%'>
             <Tooltip

@@ -13,12 +13,9 @@ import {
   PostMenu,
   PostVideoManagerContext
 } from '../../../../index'
-import PostCopyLinkButton
-  from '../../../PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
-import PostModerateButton
-  from '../../../PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import PostReportButton
-  from '../../../PostInteraction/PostMenu/PostReportButton/PostReportButton'
+import PostCopyLinkButton from '../../../PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
+import PostModerateButton from '../../../PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+import PostReportButton from '../../../PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostViewButton from '../../../PostInteraction/PostMenu/PostViewButton/PostViewButton'
 import JoinClubFromPost
   from '../../../../../../../domain/[slug]/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
@@ -67,7 +64,7 @@ export default function FullSimplePost ({
   } = useContext(PostVideoManagerContext)
 
   return (
-    <Stack h='100%' justify='space-between' spacing={1}>
+    <Stack h='100%' justify='space-between' spacing={2}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
         <JoinClubFromPost size='sm' clubQuery={data?.club} viewerQuery={viewerData} />

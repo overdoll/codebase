@@ -5,9 +5,8 @@ import type { HomeQuery as HomeQueryType } from '@//:artifacts/HomeQuery.graphql
 import HomeQuery from '@//:artifacts/HomeQuery.graphql'
 import Home from './Home/Home'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import PageInfiniteScrollWrapper
-  from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
 import { PageProps } from '@//:types/app'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRefs: {
@@ -22,15 +21,13 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   )
 
   return (
-    <>
-      <PageInfiniteScrollWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonPost />}>
-            <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageInfiniteScrollWrapper>
-    </>
+    <PageWrapper>
+      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+        <Suspense fallback={<SkeletonPost />}>
+          <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
+        </Suspense>
+      </QueryErrorBoundary>
+    </PageWrapper>
   )
 }
 

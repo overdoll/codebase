@@ -13,9 +13,7 @@ const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
     content {
       isSupporterOnly
-      resource {
-        ...ResourceInfoFragment
-      }
+      ...ResourceInfoFragment
     }
   }
 `
@@ -25,7 +23,7 @@ export default function PostPreviewContent ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const firstContent = data.content[0]?.resource
+  const firstContent = data.content[0]
 
   const hasMoreThanOne = data.content.length > 1
 

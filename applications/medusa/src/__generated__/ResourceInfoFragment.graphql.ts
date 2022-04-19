@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b7c5e688cc046c0ee9275621ec7d182>>
+ * @generated SignedSource<<15b1c902e8ebfb901123fcbd82221f3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,13 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceInfoFragment$data = {
-  readonly type: ResourceType;
-  readonly processed: boolean;
-  readonly videoDuration: number;
-  readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  readonly isSupporterOnly: boolean;
+  readonly resource: {
+    readonly type: ResourceType;
+    readonly processed: boolean;
+    readonly videoDuration: number;
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  };
   readonly " $fragmentType": "ResourceInfoFragment";
 };
 export type ResourceInfoFragment = ResourceInfoFragment$data;
@@ -31,36 +34,54 @@ const node: ReaderFragment = {
   "name": "ResourceInfoFragment",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceItemFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
+      "name": "isSupporterOnly",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "processed",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "videoDuration",
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "resource",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "processed",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "videoDuration",
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ResourceItemFragment"
+        }
+      ],
       "storageKey": null
     }
   ],
-  "type": "Resource",
+  "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "2801c80eb9b10535b43afbaba14132a9";
+(node as any).hash = "0aa2641408d2603069beff05c615939a";
 
 export default node;

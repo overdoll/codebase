@@ -34,9 +34,9 @@ export default function ManageActiveSubscriptionButton ({
         <MenuButton
           w='100%'
           size='lg'
-          colorScheme='green'
+          colorScheme='gray'
           as={Button}
-          rightIcon={<Icon icon={ArrowButtonDown} fill='green.900' w={3} h={3} />}
+          rightIcon={<Icon icon={ArrowButtonDown} fill='gray.100' w={4} h={4} />}
         >
           <Trans>
             Manage Subscription

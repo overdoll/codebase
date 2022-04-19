@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a02fd1db3a5742efd0f8716b572d3793>>
- * @relayHash 7fe9be1e44c45fa4118beadb91714af3
+ * @generated SignedSource<<4575a9dcc9ef3509db4fc9ad6a0530b7>>
+ * @relayHash aa3efe486a9983d34057107d6dc43d88
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7fe9be1e44c45fa4118beadb91714af3
+// @relayRequestID aa3efe486a9983d34057107d6dc43d88
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -225,8 +225,6 @@ v15 = [
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v8/*: any*/),
-                  (v9/*: any*/),
                   (v10/*: any*/),
                   {
                     "alias": null,
@@ -235,6 +233,8 @@ v15 = [
                     "name": "videoDuration",
                     "storageKey": null
                   },
+                  (v8/*: any*/),
+                  (v9/*: any*/),
                   (v11/*: any*/)
                 ],
                 "storageKey": null
@@ -790,7 +790,7 @@ return {
     ]
   },
   "params": {
-    "id": "7fe9be1e44c45fa4118beadb91714af3",
+    "id": "aa3efe486a9983d34057107d6dc43d88",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

@@ -18,12 +18,14 @@ interface TimedDisclosureProps {
   tapTimeout?: number
   hoverTimeout: number
   defaultIsOpen?: boolean
+  lockControl?: boolean
 }
 
 export default function useTimedDisclosure ({
   tapTimeout = 1500,
   hoverTimeout = 5000,
-  defaultIsOpen = false
+  defaultIsOpen = false,
+  lockControl = false
 }: TimedDisclosureProps): TimedDisclosure {
   const {
     isOpen,
@@ -34,19 +36,23 @@ export default function useTimedDisclosure ({
   const [hoverDelay, setHoverDelay] = useState<number | null>(hoverTimeout)
 
   const onMouseOut = (): void => {
+    if (lockControl) return
     onCloseAction()
   }
 
   const onMouseHold = (): void => {
+    if (lockControl) return
     setHoverDelay(null)
   }
 
   const onMouseOver = (): void => {
+    if (lockControl) return
     onOpenAction()
     setHoverDelay(hoverTimeout)
   }
 
   const onTap = (): void => {
+    if (lockControl) return
     if (isOpen) {
       onCloseAction()
       return
