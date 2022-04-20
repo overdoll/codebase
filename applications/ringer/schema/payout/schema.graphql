@@ -1,0 +1,385 @@
+enum PayoutMethod {
+  PAXUM
+}
+
+extend type Country {
+  """
+  Payout methods supported for this country.
+
+  If empty, this country does not support any sort of payout.
+  """
+  payoutMethods: [PayoutMethod!]!
+}
+
+interface IAccountPayoutMethod {
+  """
+  The ID linked to this payout method
+  """
+  id: ID!
+}
+
+type AccountPaxumPayoutMethod implements IAccountPayoutMethod {
+  """
+  The ID linked to this payout method.
+  """
+  id: ID!
+
+  """
+  The email linked to the paxum payout method.
+  """
+  email: String!
+}
+
+union AccountPayoutMethod = AccountPaxumPayoutMethod
+
+"""The status of the payout."""
+enum ClubPayoutStatus {
+  """
+  Payout is queued until the "deposit date". Payout is able to be cancelled while in this state.
+  """
+  QUEUED
+  """
+  The "deposit date" was reached. The payout can no longer be cancelled, and will start to perform the payout.
+  """
+  PROCESSING
+  """
+  The payout failed. A payout will try up to 3 times before this state is created.
+  """
+  FAILED
+  """
+  The payout was cancelled.
+  """
+  CANCELLED
+  """
+  The payout was successfully deposited in the target account.
+  """
+  DEPOSITED
+}
+
+type ClubPayoutEvent {
+  """An ID to uniquely identify this club payout event."""
+  id: ID!
+
+  """The error that occurred."""
+  error: String!
+
+  """When this event occurred."""
+  timestamp: Time!
+}
+
+"""
+A club payout item.
+
+Represents a payout that is going to be paid to a specific account.
+"""
+type ClubPayout implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payout."""
+  id: ID!
+
+  """A reference, used to look up this payout."""
+  reference: String!
+
+  """The status of the payout."""
+  status: ClubPayoutStatus!
+
+  """The currency this payout is in."""
+  currency: Currency!
+
+  """The amount this payout is created in."""
+  amount: Int!
+
+  """If a payout failed, an event will be created here."""
+  events: [ClubPayoutEvent!]!
+
+  """The club linked to this payout."""
+  club: Club!
+
+  """The account that is going to be paid out with this payout."""
+  payoutAccount: Account!
+
+  """When the deposit will actually attempt to occur."""
+  depositDate: Time!
+
+  """When this payout was created."""
+  createdAt: Time!
+}
+
+"""Edge of the the club payout."""
+type ClubPayoutEdge {
+  node: ClubPayout!
+  cursor: String!
+}
+
+"""Connection of the club payout."""
+type ClubPayoutConnection {
+  edges: [ClubPayoutEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Account {
+  """The account payout method linked to this account."""
+  payoutMethod: AccountPayoutMethod @goField(forceResolver: true)
+}
+
+"""
+A deposit request.
+
+Basically, when payouts are scheduled at the beginning of the month,
+a deposit request is created to tell us how much money we need our payout methods to have in order
+to process all of the payouts
+"""
+type DepositRequest implements Node @key(fields: "id") {
+  """An ID to uniquely identify this deposit request."""
+  id: ID!
+
+  """A reference, used to look up this deposit request."""
+  reference: String!
+
+  """The type of payout method this deposit request is created for."""
+  payoutMethod: PayoutMethod!
+
+  """The currency this deposit is in."""
+  currency: Currency!
+
+  """The base amount of the deposit."""
+  baseAmount: Int!
+
+  """
+  To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
+  accounts for this and ensures we always deliver the exact $ amount that the artist sees in their balance.
+  """
+  estimatedFeeAmount: Int!
+
+  """
+  The total amount that needs to be deposited.
+  """
+  totalAmount: Int!
+
+  """The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled."""
+  lastDateForDeposit: Time!
+
+  """When this deposit was created."""
+  createdAt: Time!
+
+  """All payouts linked to this deposit request."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+"""Edge of the the deposit request."""
+type DepositRequestEdge {
+  node: DepositRequest!
+  cursor: String!
+}
+
+"""Connection of the deposit request."""
+type DepositRequestConnection {
+  edges: [DepositRequestEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """All payouts that are scheduled or created for this club."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payout by reference."""
+  payout(reference: String!): ClubPayout
+
+  """All payouts made on the platform."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
+
+  """Look up a single deposit request by reference."""
+  depositRequest(reference: String!): DepositRequest
+
+  """All deposit requests on the platform."""
+  depositRequests(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): DepositRequestConnection!
+}
+
+"""Update account's payout method."""
+input SetPaxumAccountPayoutMethodInput {
+  """The paxum email to use for payouts."""
+  email: String!
+}
+
+"""Payload for updating the payout method."""
+type SetPaxumAccountPayoutMethodPayload {
+  """The updated account payout method."""
+  accountPayoutMethod: AccountPayoutMethod
+}
+
+"""Update the payout date for a specific payout ID."""
+input UpdateClubPayoutDepositDateInput {
+  """The payout to update."""
+  payoutId: ID!
+
+  """The new payout date."""
+  newDate: Time!
+}
+
+"""Payload for updating the payout deposit date."""
+type UpdateClubPayoutDepositDatePayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Cancel a specific payout."""
+input CancelClubPayoutInput {
+  """The payout to cancel."""
+  payoutId: ID!
+}
+
+"""Payload for cancelling the payout."""
+type CancelClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Retry a specific payout."""
+input RetryClubPayoutInput {
+  """The payout to retry."""
+  payoutId: ID!
+}
+
+"""Payload for retrying the payout."""
+type RetryClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Delete a specific account payout method."""
+input DeleteAccountPayoutMethodInput {
+  """The payout method to delete."""
+  payoutMethodId: ID!
+}
+
+"""Payload for deleting the account payout method."""
+type DeleteAccountPayoutMethodPayload {
+  """The deleted account payout method."""
+  deletedAccountPayoutMethodId: ID!
+}
+
+"""Initiate a payout for a specific club."""
+input InitiateClubPayoutInput {
+  """The club to initiate the payout for."""
+  clubId: ID!
+}
+
+"""Initiate a payout for a specific club."""
+type InitiateClubPayoutPayload {
+  """The club that the payout was initiated for."""
+  club: Club!
+}
+
+extend type Mutation {
+  """
+  Set the currently logged-in account's payout method to use Paxum e-wallet.
+  """
+  setPaxumAccountPayoutMethod(input: SetPaxumAccountPayoutMethodInput!): SetPaxumAccountPayoutMethodPayload
+
+  """
+  Delete the current payout method linked to the logged-in account.
+
+  If no payout method is set, payouts won't happen.
+  """
+  deleteAccountPayoutMethod(input: DeleteAccountPayoutMethodInput!): DeleteAccountPayoutMethodPayload
+
+  """
+  Update a payout's deposit date.
+
+  Can be used to either make the payout happen earlier or schedule it for the future.
+
+  Setting the time to be before the current time will make the payout happen instantly.
+
+  Staff+ only.
+  """
+  updateClubPayoutDepositDate(input: UpdateClubPayoutDepositDateInput!): UpdateClubPayoutDepositDatePayload
+
+  """
+  Cancel a specific club payout.
+
+  Staff+ only.
+  """
+  cancelClubPayout(input: CancelClubPayoutInput!): CancelClubPayoutPayload
+
+  """
+  Retry a specific club payout if it's failed.
+
+  Staff+ only.
+  """
+  retryClubPayout(input: RetryClubPayoutInput!): RetryClubPayoutPayload
+
+  """
+  Initiate a club payout for the specific club.
+
+  Note that only 1 payout can be created at a time, so this call will fail if there is a payout either "in progress" or "queued".
+
+  Staff+ only.
+  """
+  initiateClubPayout(input: InitiateClubPayoutInput!): InitiateClubPayoutPayload
+}

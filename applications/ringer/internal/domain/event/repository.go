@@ -12,5 +12,5 @@ type Repository interface {
 	CancelClubPayout(ctx context.Context, payoutId string) error
 	InitiateClubPayout(ctx context.Context, clubId string, depositDate *time.Time) error
 	RetryClubPayout(ctx context.Context, payoutId string) error
-	UpdateClubPayoutDate(ctx context.Context, pay *payout.ClubPayout, newDate *time.Time) error
+	UpdateClubPayoutDepositDate(ctx context.Context, pay *payout.ClubPayout, newDate time.Time) error
 }

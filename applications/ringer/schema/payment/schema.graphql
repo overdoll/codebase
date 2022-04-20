@@ -1,0 +1,196 @@
+enum ClubPaymentSource {
+  CLUB_SUPPORTER_SUBSCRIPTION
+}
+
+"""The status of a payment."""
+enum ClubPaymentStatus {
+  """
+  A payment is pending until settled (reached "settlement date").
+  """
+  PENDING
+  """
+  A payment is ready to be picked up as part of a payout.
+
+  Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
+  the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+  by the next scheduled payout.
+  """
+  READY
+  """
+  A payment was successfully deposited as part of a payout and is no longer needed.
+  """
+  COMPLETE
+}
+
+"""
+A club payment item.
+
+Represents a payment that is going to be made to a club.
+"""
+type ClubPayment implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payment."""
+  id: ID!
+
+  """A reference, used to look up this payment."""
+  reference: String!
+
+  """The source of the payment."""
+  source: ClubPaymentSource!
+
+  """The status of the payment."""
+  status: ClubPaymentStatus!
+
+  """The currency this payment was made in."""
+  currency: Currency!
+
+  """
+  The base amount this payment was originally made in.
+  """
+  baseAmount: Int!
+
+  """
+  The amount taken off with a platform fee.
+  """
+  platformFeeAmount: Int!
+
+  """
+  The final amount that will actually be paid to a club.
+  """
+  finalAmount: Int!
+
+  """
+  If this payment is a deduction, usually the source being a refund, chargeback or a void.
+  """
+  isDeduction: Boolean!
+
+  """If this payment is in "pending" status, this will be the date when the payment becomes "ready"."""
+  settlementDate: Date!
+
+  """The account transaction linked to this payment."""
+  accountTransaction: AccountTransaction!
+
+  """The club this payment is made to."""
+  destinationClub: Club!
+
+  """The account that made this payment."""
+  sourceAccount: Account!
+}
+
+"""Edge of the the club payment."""
+type ClubPaymentEdge {
+  node: ClubPayment!
+  cursor: String!
+}
+
+"""Connection of the club payment."""
+type ClubPaymentConnection {
+  edges: [ClubPaymentEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Platform fee for a specific club."""
+type ClubPlatformFee {
+  """An ID to uniquely identify this club platform fee."""
+  id: ID!
+
+  """The percent of the club platform fee."""
+  percent: Int!
+}
+
+extend type ClubPayout {
+  """All payments linked to this payout."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Club {
+  """This club's platform fee for each payment."""
+  platformFee: ClubPlatformFee!
+
+  """All payments made to this club."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payment by reference."""
+  payment(reference: String!): ClubPayment
+
+  """All payments made on the platform."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+"""Update the club's platform fee."""
+input UpdateClubPlatformFeeInput {
+  """The club to update."""
+  clubId: ID!
+
+  """The percent fee to take from every payment."""
+  percent: Int!
+}
+
+"""Payload for the new updated account details."""
+type UpdateClubPlatformFeePayload {
+  """The updated club platform fee."""
+  clubPlatformFee: ClubPlatformFee
+}
+
+extend type Mutation {
+  """
+  Update the club's platform fee.
+
+  Cannot be less than 20 or more than 30 percent.
+
+  Staff+ only.
+  """
+  updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload
+}

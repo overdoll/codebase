@@ -120,7 +120,7 @@ func (r EventTemporalRepository) RetryClubPayout(ctx context.Context, payoutId s
 	return nil
 }
 
-func (r EventTemporalRepository) UpdateClubPayoutDate(ctx context.Context, pay *payout.ClubPayout, newTime time.Time) error {
+func (r EventTemporalRepository) UpdateClubPayoutDepositDate(ctx context.Context, pay *payout.ClubPayout, newTime time.Time) error {
 
 	if err := r.client.SignalWorkflow(ctx, pay.TemporalWorkflowId(), "", workflows.UpdatePayoutDateSignal, newTime); err != nil {
 		return err

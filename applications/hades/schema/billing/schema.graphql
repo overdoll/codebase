@@ -570,15 +570,6 @@ type PaymentMethod {
   billingContact: BillingContact
 }
 
-enum Currency {
-  USD
-  CAD
-  AUD
-  JPY
-  GBP
-  EUR
-}
-
 enum CCBillDeclineError {
   GENERAL_SYSTEM_ERROR
   TRANSACTION_DECLINED

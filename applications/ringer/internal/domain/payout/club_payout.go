@@ -141,13 +141,13 @@ func (p *ClubPayout) CanRetry() error {
 	return nil
 }
 
-func (p *ClubPayout) CanUpdateDate(requester *principal.Principal) error {
+func (p *ClubPayout) CanUpdateDepositDate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
 	}
 
-	if p.status != Failed && p.status != Processing {
+	if p.status != Queued {
 		return errors.New("can only delay a queued payout")
 	}
 

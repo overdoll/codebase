@@ -32,3 +32,12 @@ type Translation {
   """The translation text."""
   text: String!
 }
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}

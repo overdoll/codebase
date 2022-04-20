@@ -1,0 +1,76 @@
+"""
+Details belonging to an account.
+"""
+type AccountDetails {
+  """An ID to uniquely identify this details instance."""
+  id: ID!
+
+  """The first name belonging to this account."""
+  firstName: String!
+
+  """The last name belonging to this account."""
+  lastName: String!
+
+  """The country this account belongs to."""
+  country: Country!
+}
+
+extend type Account {
+  """
+  Details belonging to this account.
+
+  If null, account details have not been filled out yet.
+
+  Account details are required to be filled out before setting a payout method.
+  """
+  details: AccountDetails @goField(forceResolver: true)
+}
+
+"""
+A country instance.
+"""
+type Country {
+  """An ID to uniquely identify this country."""
+  id: ID!
+
+  """The emoji representation of this country's flag."""
+  emoji: String!
+
+  """The full name of this country."""
+  name: String!
+
+  """The alpha3 code for this country."""
+  alpha3: String!
+}
+
+extend type Query {
+  """
+  Grab all available countries.
+  """
+  countries: [Country!]!
+}
+
+"""Update account details."""
+input UpdateAccountDetailsInput {
+  """The first name to set."""
+  firstName: String!
+
+  """The last name to set."""
+  lastName: String!
+
+  """The country ID to use."""
+  countryId: ID!
+}
+
+"""Payload for the new updated account details."""
+type UpdateAccountDetailsPayload {
+  """The updated account details."""
+  accountDetails: AccountDetails
+}
+
+extend type Mutation {
+  """
+  Update account details for the currently logged-in account.
+  """
+  updateAccountDetails(input: UpdateAccountDetailsInput!): UpdateAccountDetailsPayload
+}
