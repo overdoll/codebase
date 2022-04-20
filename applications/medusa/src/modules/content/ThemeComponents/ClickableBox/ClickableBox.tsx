@@ -15,7 +15,7 @@ const ClickableBox = forwardRef<any, Props>(({
     <Button
       ref={forwardRef}
       w='100%'
-      h='fill'
+      h='100%'
       size='sm'
       p={2}
       fontFamily='body'

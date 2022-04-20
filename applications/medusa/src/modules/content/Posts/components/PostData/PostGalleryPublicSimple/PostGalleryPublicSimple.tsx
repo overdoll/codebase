@@ -46,6 +46,7 @@ export default function PostGalleryPublicSimple ({
         <Swiper
           observer
           autoHeight
+          speed={100}
           onSwiper={(swiper) =>
             onInitialize(swiper)}
           onObserverUpdate={(swiper) => onInitialize(swiper)}

@@ -8,15 +8,10 @@ import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/S
 import useGeneralSearchArguments
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/support/useGeneralSearchArguments'
 import { PostOrderButton, PostSearchButton } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
-import PageFixedHeader from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/PageFixedHeader'
-import PageInfiniteScrollWrapper
-  from '@//:modules/content/PageLayout/Wrappers/PageInfiniteScrollWrapper/PageInfiniteScrollWrapper'
-import FixedHeaderWrapper
-  from '@//:modules/content/PageLayout/Wrappers/PageFixedHeader/FixedHeaderWrapper/FixedHeaderWrapper'
-import { Flex, HStack } from '@chakra-ui/react'
-import LockedAccountTrigger from '../../../common/components/LockedAccount/LockedAccountTrigger/LockedAccountTrigger'
+import { HStack, Stack } from '@chakra-ui/react'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRefs: {
@@ -39,27 +34,22 @@ const RootSearch: PageProps<Props> = (props: Props) => {
           Search :: overdoll.com
         </title>
       </Head>
-      <PageFixedHeader>
-        <FixedHeaderWrapper>
-          <Flex justify='space-between'>
+      <PageWrapper>
+        <Stack spacing={8}>
+          <HStack spacing={2} justify='space-between'>
             <PostOrderButton />
-            <HStack spacing={2}>
-              <LockedAccountTrigger />
-              <PostSearchButton routeTo='/search' />
-            </HStack>
-          </Flex>
-        </FixedHeaderWrapper>
-      </PageFixedHeader>
-      <PageInfiniteScrollWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({
-          sortBy: 'TOP'
-        })}
-        >
-          <Suspense fallback={<SkeletonPost />}>
-            <Search query={queryRef as PreloadedQuery<SearchQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageInfiniteScrollWrapper>
+            <PostSearchButton routeTo='/search' />
+          </HStack>
+          <QueryErrorBoundary loadQuery={() => loadQuery({
+            sortBy: 'TOP'
+          })}
+          >
+            <Suspense fallback={<SkeletonPost />}>
+              <Search query={queryRef as PreloadedQuery<SearchQueryType>} />
+            </Suspense>
+          </QueryErrorBoundary>
+        </Stack>
+      </PageWrapper>
     </>
   )
 }

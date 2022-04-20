@@ -13,7 +13,8 @@ export default function global (props): any {
     },
     '*::-webkit-scrollbar': {
       borderRadius: 'none',
-      width: 2
+      width: 2,
+      height: 2
     },
     '*::-webkit-scrollbar-thumb': {
       background: 'hsla(1,0%,75%,0.05)',

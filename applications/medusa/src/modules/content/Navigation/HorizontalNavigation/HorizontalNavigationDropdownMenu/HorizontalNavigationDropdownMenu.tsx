@@ -39,9 +39,9 @@ const HorizontalNavigationDropdownMenu = ({
 
   const {
     isOpen,
-    onToggle,
+    onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useHistoryDisclosure({ hash: 'menu' })
 
   // hacky way to have 2 different elements
   // on mobile, we use a modal div that pops up for better experience
@@ -60,7 +60,7 @@ const HorizontalNavigationDropdownMenu = ({
               icon={icon}
               isActive={isOpen}
               label={label}
-              onClick={onToggle}
+              onClick={onOpen}
             />
           </Box>
           <Modal

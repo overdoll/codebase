@@ -31,7 +31,8 @@ export default function RouterLoadingBar (): JSX.Element {
       style={{
         position: 'fixed',
         zIndex: 11,
-        width: '100%'
+        width: '100%',
+        top: 0
       }}
       in={isOpen}
     >

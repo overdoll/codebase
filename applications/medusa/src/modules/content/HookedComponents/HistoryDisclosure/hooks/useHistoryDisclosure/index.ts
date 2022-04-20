@@ -1,6 +1,6 @@
 import { useDisclosure, UseDisclosureProps, UseDisclosureReturn } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import Router, { useRouter } from 'next/router'
+import { useUpdateEffect } from 'usehooks-ts'
 
 /**
  * useDisclosure hook modified so that when it is opened
@@ -8,29 +8,46 @@ import { useEffect } from 'react'
  * when the back button is pressed its closed
  */
 
-interface HistoryDisclosureState {
-  hasModal?: boolean
+interface UseHistoryDisclosureProps extends UseDisclosureProps {
+  hash?: string | undefined
 }
 
-export default function useHistoryDisclosure (props: UseDisclosureProps = {}): UseDisclosureReturn {
+export default function useHistoryDisclosure (props: UseHistoryDisclosureProps = {}): UseDisclosureReturn {
+  const {
+    hash,
+    ...rest
+  } = props
+
+  const defineHash = hash == null ? 'modal' : hash
+
   const {
     isOpen,
     onOpen: onOpenAction,
     onClose: onCloseAction,
     onToggle: onToggleAction,
-    ...rest
-  } = useDisclosure(props)
+    ...restOfDisclosure
+  } = useDisclosure({
+    ...rest,
+    id: defineHash
+  })
 
   const router = useRouter()
 
   const onOpen = (): void => {
-    const currentLocation = router.asPath
-    void router.push(currentLocation)
     onOpenAction()
+    void Router.push({
+      pathname: router.pathname,
+      hash: defineHash,
+      query: router.query
+    }, undefined, { shallow: true })
   }
 
   const onClose = (): void => {
     onCloseAction()
+    const extractedHash = router.asPath.split('#')?.[1]
+    if (extractedHash?.includes(defineHash)) {
+      Router.back()
+    }
   }
 
   const onToggle = (): void => {
@@ -43,8 +60,8 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
 
   // When it detects that the user clicked the Back button and the modal
   // is still open, it will close the modal for the user
-  useEffect(() => {
-    return router.beforePopState((state) => {
+  useUpdateEffect(() => {
+    router.beforePopState(() => {
       if (isOpen) {
         onCloseAction()
       }
@@ -57,6 +74,6 @@ export default function useHistoryDisclosure (props: UseDisclosureProps = {}): U
     onOpen,
     onClose,
     onToggle,
-    ...rest
+    ...restOfDisclosure
   }
 }

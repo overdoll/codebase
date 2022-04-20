@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Box, Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox } from '../../../../../PageLayout'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
@@ -74,41 +74,43 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   }
 
   return (
-    <ClickableBox
-      ref={forwardRef}
-      ignoreTransition
-      onClick={onClick}
-      isDisabled={isDisabled}
-      borderRadius='md'
-      bg={isActive ? 'gray.900' : 'gray.800'}
-      p={2}
-      whiteSpace='break-spaces'
-    >
-      <Flex
-        p={1}
-        w={{
-          base: 24,
-          md: '100%'
-        }}
-        h={{
-          base: 24,
-          md: '100%'
-        }}
-        align='center'
-        justify={{
-          base: 'center',
-          md: 'flex-start'
-        }}
-        direction={{
-          base: 'column',
-          md: 'row'
-        }}
+    <Box>
+      <ClickableBox
+        ref={forwardRef}
+        ignoreTransition
+        onClick={onClick}
+        isDisabled={isDisabled}
+        borderRadius='md'
+        bg={isActive ? 'gray.900' : 'gray.800'}
+        p={2}
+        whiteSpace='break-spaces'
       >
-        <IconComponent />
-        <TextComponent />
-        {(icon == null) && children}
-      </Flex>
-    </ClickableBox>
+        <Flex
+          p={1}
+          w={{
+            base: 24,
+            md: '100%'
+          }}
+          h={{
+            base: 24,
+            md: '100%'
+          }}
+          align='center'
+          justify={{
+            base: 'center',
+            md: 'flex-start'
+          }}
+          direction={{
+            base: 'column',
+            md: 'row'
+          }}
+        >
+          <IconComponent />
+          <TextComponent />
+          {(icon == null) && children}
+        </Flex>
+      </ClickableBox>
+    </Box>
   )
 })
 

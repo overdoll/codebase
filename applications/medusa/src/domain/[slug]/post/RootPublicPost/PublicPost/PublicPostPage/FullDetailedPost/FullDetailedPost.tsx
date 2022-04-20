@@ -79,16 +79,14 @@ export default function FullDetailedPost ({
   } = useContext(PostVideoManagerContext)
 
   const ArchiveButton = (): JSX.Element => {
-    if (data.club.viewerIsOwner) {
-      if (data.state === 'ARCHIVED') {
+    switch (data.state) {
+      case 'ARCHIVED':
         return <PostUnArchiveButton query={data} />
-      }
-
-      if (data.state === 'PUBLISHED') {
+      case 'PUBLISHED':
         return <PostArchiveButton query={data} />
-      }
+      default:
+        return <></>
     }
-    return <PostReportButton query={data} viewerQuery={viewerData} />
   }
 
   return (
@@ -109,8 +107,10 @@ export default function FullDetailedPost ({
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
               {data.state === 'PUBLISHED' && <PostCopyLinkButton query={data} />}
-              <ArchiveButton />
               <PostModerateButton query={data} />
+              {data?.club?.viewerIsOwner
+                ? <ArchiveButton />
+                : <PostReportButton query={data} viewerQuery={viewerData} />}
             </PostMenu>)}
         />
       </Stack>

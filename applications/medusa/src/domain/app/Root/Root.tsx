@@ -15,6 +15,7 @@ interface Props {
     rootQuery: PreloadedQuery<RootQueryType>
   }
   children: ReactNode
+  isMobile: boolean
 }
 
 const Query = graphql`

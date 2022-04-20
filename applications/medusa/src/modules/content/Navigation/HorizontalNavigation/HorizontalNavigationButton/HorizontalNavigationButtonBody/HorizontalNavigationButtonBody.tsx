@@ -3,7 +3,7 @@ import { Icon } from '../../../../PageLayout'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import Button from '../../../../../form/Button/Button'
 import IconButton from '../../../../../form/IconButton/IconButton'
-import { ForwardRefProp } from '../../../../../../types/components'
+import { ForwardRefProp } from '@//:types/components'
 
 interface Props extends HTMLChakraProps<any>, ForwardRefProp {
   icon?: FunctionComponent<any>

@@ -84,14 +84,10 @@ export default function PostModerationQueue (props: Props): JSX.Element {
 
   const nextPage = (): void => {
     if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
-      console.log('load next')
       loadNext(
         1,
         {
           onComplete () {
-            console.log(
-              'loading complete'
-            )
             setCurrentIndex(x => x + 1)
           }
         }

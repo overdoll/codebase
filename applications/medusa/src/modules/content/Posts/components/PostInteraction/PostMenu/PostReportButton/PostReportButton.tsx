@@ -83,7 +83,7 @@ export default function PostReportButton ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useHistoryDisclosure({ hash: 'report' })
 
   const {
     loadQuery,

@@ -40,6 +40,7 @@ export default function PostGalleryPublicDetailed ({
     <Box>
       <Swiper
         observer
+        speed={100}
         onSwiper={(swiper) =>
           onInitialize(swiper)}
         onObserverUpdate={(swiper) => onInitialize(swiper)}

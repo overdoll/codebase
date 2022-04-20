@@ -80,8 +80,8 @@ export default function Home (props: Props): JSX.Element {
             viewerQuery={queryData.viewer}
           />
         </GlobalVideoManagerProvider>
-        <NewAccountModal query={queryData.viewer} />
       </Stack>
+      <NewAccountModal query={queryData.viewer} />
     </>
   )
 }
