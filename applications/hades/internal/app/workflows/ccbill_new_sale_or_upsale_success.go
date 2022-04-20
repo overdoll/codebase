@@ -3,6 +3,7 @@ package workflows
 import (
 	"fmt"
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -249,6 +250,10 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

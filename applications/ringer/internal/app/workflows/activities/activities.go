@@ -14,11 +14,11 @@ type Activities struct {
 	br  balance.Repository
 	pir payout.IndexRepository
 	par payout.Repository
-	or  paxum.Repository
+	pxr paxum.Repository
 	dr  details.Repository
 }
 
-func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par payout.Repository, pir payout.IndexRepository, br balance.Repository, dr details.Repository) *Activities {
+func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par payout.Repository, pir payout.IndexRepository, br balance.Repository, dr details.Repository, pxr paxum.Repository) *Activities {
 	return &Activities{
 		pr:  pr,
 		par: par,
@@ -26,5 +26,6 @@ func NewActivitiesHandler(pr payment.Repository, pi payment.IndexRepository, par
 		br:  br,
 		pir: pir,
 		dr:  dr,
+		pxr: pxr,
 	}
 }

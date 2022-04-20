@@ -5,5 +5,5 @@ import (
 )
 
 type Repository interface {
-	InitiatePayout(ctx context.Context, transfer *Transfer) error
+	TransferFunds(ctx context.Context, transfer *Transfer) (*string, error)
 }

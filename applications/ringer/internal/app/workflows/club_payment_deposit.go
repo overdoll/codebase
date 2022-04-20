@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
 	"overdoll/libraries/money"
@@ -99,6 +100,10 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

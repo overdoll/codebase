@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
 )
@@ -23,12 +24,9 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 		return err
 	}
 
-	processPayoutId := "ProcessClubPayout_" + input.PayoutId
-
-	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutQueued,
-		activities.MarkClubPayoutQueuedInput{
-			PayoutId:   input.PayoutId,
-			WorkflowId: processPayoutId,
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutProcessing,
+		activities.MarkClubPayoutProcessingInput{
+			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -36,7 +34,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	// spawn a child workflow to process the payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        processPayoutId,
+		WorkflowID:        "ProcessClubPayout_" + input.PayoutId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
@@ -47,6 +45,10 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

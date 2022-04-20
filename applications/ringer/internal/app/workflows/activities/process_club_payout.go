@@ -42,6 +42,7 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 	switch accountMethod.Method() {
 	case payout.Paxum:
 		transfer, err := paxum.NewTransfer(
+			clubPayout.Id(),
 			*accountMethod.PaxumEmail(),
 			accountDetails.FirstName(),
 			accountDetails.LastName(),
@@ -53,8 +54,14 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 			return nil, err
 		}
 
-		if err := h.or.InitiatePayout(ctx, transfer); err != nil {
+		errorCode, err := h.pxr.TransferFunds(ctx, transfer)
+		if err != nil {
 			return nil, err
+		}
+
+		// if an error code was sent back, return that to our processor
+		if errorCode != nil {
+			return &ProcessClubPayoutPayload{Success: false, Timestamp: time.Now(), Error: errorCode}, nil
 		}
 	}
 

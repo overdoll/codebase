@@ -4,6 +4,7 @@ import (
 	"errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -140,7 +141,11 @@ func (p *ClubPayout) CanRetry() error {
 	return nil
 }
 
-func (p *ClubPayout) CanDelay() error {
+func (p *ClubPayout) CanUpdateDate(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if p.status != Failed && p.status != Processing {
 		return errors.New("can only delay a queued payout")

@@ -3,6 +3,7 @@ package workflows
 import (
 	"errors"
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
 	"overdoll/libraries/support"
@@ -186,6 +187,10 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

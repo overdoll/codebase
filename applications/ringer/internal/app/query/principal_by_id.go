@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/ringer/internal/domain/event"
 
 	"overdoll/libraries/principal"
 )
@@ -10,7 +11,7 @@ type PrincipalByIdHandler struct {
 	eva EvaService
 }
 
-func NewPrincipalByIdHandler(eva EvaService) PrincipalByIdHandler {
+func NewPrincipalByIdHandler(eva EvaService, event event.Repository) PrincipalByIdHandler {
 	return PrincipalByIdHandler{eva: eva}
 }
 

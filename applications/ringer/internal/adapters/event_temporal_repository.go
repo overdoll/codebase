@@ -6,6 +6,8 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/ringer/internal/app/workflows"
 	"overdoll/applications/ringer/internal/domain/event"
+	"overdoll/applications/ringer/internal/domain/payout"
+	"time"
 )
 
 type EventTemporalRepository struct {
@@ -58,6 +60,69 @@ func (r EventTemporalRepository) ClubPaymentDeduction(ctx context.Context, reque
 	})
 
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, payoutId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "CancelClubPayout_" + payoutId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelClubPayout, workflows.CancelClubPayoutInput{PayoutId: payoutId})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) InitiateClubPayout(ctx context.Context, clubId string, depositDate *time.Time) error {
+
+	workflowId := "GenerateClubMonthlyPayout_Manual_" + clubId
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        workflowId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
+		ClubId:     clubId,
+		FutureTime: depositDate,
+		WorkflowId: workflowId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) RetryClubPayout(ctx context.Context, payoutId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "RetryClubPayout_" + payoutId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RetryClubPayout, workflows.RetryClubPayoutInput{PayoutId: payoutId})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) UpdateClubPayoutDate(ctx context.Context, pay *payout.ClubPayout, newTime time.Time) error {
+
+	if err := r.client.SignalWorkflow(ctx, pay.TemporalWorkflowId(), "", workflows.UpdatePayoutDateSignal, newTime); err != nil {
 		return err
 	}
 
