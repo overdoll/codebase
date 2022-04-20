@@ -11,7 +11,7 @@ type SearchClubPayments struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
 	ClubId    *string
-	Status    *string
+	Status    []string
 	PayoutId  *string
 }
 

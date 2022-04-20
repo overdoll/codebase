@@ -9,7 +9,7 @@ import (
 )
 
 type SetPaxumAccountPayoutMethod struct {
-	Requester  *principal.Principal
+	Principal  *principal.Principal
 	AccountId  string
 	PaxumEmail string
 }
@@ -25,7 +25,7 @@ func NewSetPaxumAccountPayoutMethodHandler(ir details.Repository, pr payout.Repo
 
 func (h SetPaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd SetPaxumAccountPayoutMethod) (*payout.AccountPayoutMethod, error) {
 
-	_, err := h.ir.GetAccountDetailsById(ctx, cmd.Requester, cmd.AccountId)
+	_, err := h.ir.GetAccountDetailsById(ctx, cmd.Principal, cmd.AccountId)
 
 	if err != nil {
 

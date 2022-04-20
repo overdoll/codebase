@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+var (
+	ErrClubPayoutNotFound = errors.New("club payout not found")
+)
+
 type ClubPayout struct {
 	*paging.Node
 

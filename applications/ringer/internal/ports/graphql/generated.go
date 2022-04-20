@@ -8,10 +8,12 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -38,6 +40,13 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Account() AccountResolver
+	Club() ClubResolver
+	ClubPayout() ClubPayoutResolver
+	DepositRequest() DepositRequestResolver
+	Entity() EntityResolver
+	Mutation() MutationResolver
+	Query() QueryResolver
 }
 
 type DirectiveRoot struct {
@@ -46,20 +55,169 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ID func(childComplexity int) int
+		Details      func(childComplexity int) int
+		ID           func(childComplexity int) int
+		PayoutMethod func(childComplexity int) int
+	}
+
+	AccountDetails struct {
+		Country   func(childComplexity int) int
+		FirstName func(childComplexity int) int
+		ID        func(childComplexity int) int
+		LastName  func(childComplexity int) int
+	}
+
+	AccountPaxumPayoutMethod struct {
+		Email func(childComplexity int) int
+		ID    func(childComplexity int) int
 	}
 
 	AccountTransaction struct {
 		ID func(childComplexity int) int
 	}
 
+	Balance struct {
+		Amount    func(childComplexity int) int
+		Currency  func(childComplexity int) int
+		ID        func(childComplexity int) int
+		UpdatedAt func(childComplexity int) int
+	}
+
+	CancelClubPayoutPayload struct {
+		ClubPayout func(childComplexity int) int
+	}
+
 	Club struct {
-		ID func(childComplexity int) int
+		Balance        func(childComplexity int) int
+		ID             func(childComplexity int) int
+		Payments       func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) int
+		Payouts        func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) int
+		PendingBalance func(childComplexity int) int
+		PlatformFee    func(childComplexity int) int
+	}
+
+	ClubPayment struct {
+		AccountTransaction func(childComplexity int) int
+		BaseAmount         func(childComplexity int) int
+		Currency           func(childComplexity int) int
+		DestinationClub    func(childComplexity int) int
+		FinalAmount        func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		IsDeduction        func(childComplexity int) int
+		PlatformFeeAmount  func(childComplexity int) int
+		Reference          func(childComplexity int) int
+		SettlementDate     func(childComplexity int) int
+		Source             func(childComplexity int) int
+		SourceAccount      func(childComplexity int) int
+		Status             func(childComplexity int) int
+	}
+
+	ClubPaymentConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	ClubPaymentEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	ClubPayout struct {
+		Amount        func(childComplexity int) int
+		Club          func(childComplexity int) int
+		CreatedAt     func(childComplexity int) int
+		Currency      func(childComplexity int) int
+		DepositDate   func(childComplexity int) int
+		Events        func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Payments      func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) int
+		PayoutAccount func(childComplexity int) int
+		Reference     func(childComplexity int) int
+		Status        func(childComplexity int) int
+	}
+
+	ClubPayoutConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	ClubPayoutEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	ClubPayoutEvent struct {
+		Error     func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Timestamp func(childComplexity int) int
+	}
+
+	ClubPlatformFee struct {
+		ID      func(childComplexity int) int
+		Percent func(childComplexity int) int
+	}
+
+	Country struct {
+		Alpha3        func(childComplexity int) int
+		Emoji         func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Name          func(childComplexity int) int
+		PayoutMethods func(childComplexity int) int
+	}
+
+	DeleteAccountPayoutMethodPayload struct {
+		DeletedAccountPayoutMethodID func(childComplexity int) int
+	}
+
+	DepositRequest struct {
+		BaseAmount         func(childComplexity int) int
+		CreatedAt          func(childComplexity int) int
+		Currency           func(childComplexity int) int
+		EstimatedFeeAmount func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		LastDateForDeposit func(childComplexity int) int
+		PayoutMethod       func(childComplexity int) int
+		Payouts            func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) int
+		Reference          func(childComplexity int) int
+		TotalAmount        func(childComplexity int) int
+	}
+
+	DepositRequestConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	DepositRequestEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
+	Entity struct {
+		FindAccountByID        func(childComplexity int, id relay.ID) int
+		FindClubByID           func(childComplexity int, id relay.ID) int
+		FindClubPaymentByID    func(childComplexity int, id relay.ID) int
+		FindClubPayoutByID     func(childComplexity int, id relay.ID) int
+		FindDepositRequestByID func(childComplexity int, id relay.ID) int
+	}
+
+	InitiateClubPayoutPayload struct {
+		Club func(childComplexity int) int
 	}
 
 	Language struct {
 		Locale func(childComplexity int) int
 		Name   func(childComplexity int) int
+	}
+
+	Mutation struct {
+		CancelClubPayout            func(childComplexity int, input types.CancelClubPayoutInput) int
+		DeleteAccountPayoutMethod   func(childComplexity int, input types.DeleteAccountPayoutMethodInput) int
+		InitiateClubPayout          func(childComplexity int, input types.InitiateClubPayoutInput) int
+		RetryClubPayout             func(childComplexity int, input types.RetryClubPayoutInput) int
+		SetPaxumAccountPayoutMethod func(childComplexity int, input types.SetPaxumAccountPayoutMethodInput) int
+		UpdateAccountDetails        func(childComplexity int, input types.UpdateAccountDetailsInput) int
+		UpdateClubPayoutDepositDate func(childComplexity int, input types.UpdateClubPayoutDepositDateInput) int
+		UpdateClubPlatformFee       func(childComplexity int, input types.UpdateClubPlatformFeeInput) int
 	}
 
 	PageInfo struct {
@@ -70,8 +228,23 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		Countries          func(childComplexity int) int
+		DepositRequest     func(childComplexity int, reference string) int
+		DepositRequests    func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Payment            func(childComplexity int, reference string) int
+		Payments           func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) int
+		Payout             func(childComplexity int, reference string) int
+		Payouts            func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
+	}
+
+	RetryClubPayoutPayload struct {
+		ClubPayout func(childComplexity int) int
+	}
+
+	SetPaxumAccountPayoutMethodPayload struct {
+		AccountPayoutMethod func(childComplexity int) int
 	}
 
 	Translation struct {
@@ -79,9 +252,65 @@ type ComplexityRoot struct {
 		Text     func(childComplexity int) int
 	}
 
+	UpdateAccountDetailsPayload struct {
+		AccountDetails func(childComplexity int) int
+	}
+
+	UpdateClubPayoutDepositDatePayload struct {
+		ClubPayout func(childComplexity int) int
+	}
+
+	UpdateClubPlatformFeePayload struct {
+		ClubPlatformFee func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
+}
+
+type AccountResolver interface {
+	Details(ctx context.Context, obj *types.Account) (*types.AccountDetails, error)
+	PayoutMethod(ctx context.Context, obj *types.Account) (types.AccountPayoutMethod, error)
+}
+type ClubResolver interface {
+	Balance(ctx context.Context, obj *types.Club) (*types.Balance, error)
+	PendingBalance(ctx context.Context, obj *types.Club) (*types.Balance, error)
+
+	Payments(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) (*types.ClubPaymentConnection, error)
+	Payouts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) (*types.ClubPayoutConnection, error)
+}
+type ClubPayoutResolver interface {
+	Payments(ctx context.Context, obj *types.ClubPayout, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) (*types.ClubPaymentConnection, error)
+}
+type DepositRequestResolver interface {
+	Payouts(ctx context.Context, obj *types.DepositRequest, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) (*types.ClubPayoutConnection, error)
+}
+type EntityResolver interface {
+	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
+	FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error)
+	FindClubPaymentByID(ctx context.Context, id relay.ID) (*types.ClubPayment, error)
+	FindClubPayoutByID(ctx context.Context, id relay.ID) (*types.ClubPayout, error)
+	FindDepositRequestByID(ctx context.Context, id relay.ID) (*types.DepositRequest, error)
+}
+type MutationResolver interface {
+	UpdateAccountDetails(ctx context.Context, input types.UpdateAccountDetailsInput) (*types.UpdateAccountDetailsPayload, error)
+	UpdateClubPlatformFee(ctx context.Context, input types.UpdateClubPlatformFeeInput) (*types.UpdateClubPlatformFeePayload, error)
+	SetPaxumAccountPayoutMethod(ctx context.Context, input types.SetPaxumAccountPayoutMethodInput) (*types.SetPaxumAccountPayoutMethodPayload, error)
+	DeleteAccountPayoutMethod(ctx context.Context, input types.DeleteAccountPayoutMethodInput) (*types.DeleteAccountPayoutMethodPayload, error)
+	UpdateClubPayoutDepositDate(ctx context.Context, input types.UpdateClubPayoutDepositDateInput) (*types.UpdateClubPayoutDepositDatePayload, error)
+	CancelClubPayout(ctx context.Context, input types.CancelClubPayoutInput) (*types.CancelClubPayoutPayload, error)
+	RetryClubPayout(ctx context.Context, input types.RetryClubPayoutInput) (*types.RetryClubPayoutPayload, error)
+	InitiateClubPayout(ctx context.Context, input types.InitiateClubPayoutInput) (*types.InitiateClubPayoutPayload, error)
+}
+type QueryResolver interface {
+	Countries(ctx context.Context) ([]*types.Country, error)
+	Payment(ctx context.Context, reference string) (*types.ClubPayment, error)
+	Payments(ctx context.Context, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) (*types.ClubPaymentConnection, error)
+	Payout(ctx context.Context, reference string) (*types.ClubPayout, error)
+	Payouts(ctx context.Context, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) (*types.ClubPayoutConnection, error)
+	DepositRequest(ctx context.Context, reference string) (*types.DepositRequest, error)
+	DepositRequests(ctx context.Context, after *string, before *string, first *int, last *int) (*types.DepositRequestConnection, error)
 }
 
 type executableSchema struct {
@@ -99,12 +328,68 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "Account.details":
+		if e.complexity.Account.Details == nil {
+			break
+		}
+
+		return e.complexity.Account.Details(childComplexity), true
+
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
 			break
 		}
 
 		return e.complexity.Account.ID(childComplexity), true
+
+	case "Account.payoutMethod":
+		if e.complexity.Account.PayoutMethod == nil {
+			break
+		}
+
+		return e.complexity.Account.PayoutMethod(childComplexity), true
+
+	case "AccountDetails.country":
+		if e.complexity.AccountDetails.Country == nil {
+			break
+		}
+
+		return e.complexity.AccountDetails.Country(childComplexity), true
+
+	case "AccountDetails.firstName":
+		if e.complexity.AccountDetails.FirstName == nil {
+			break
+		}
+
+		return e.complexity.AccountDetails.FirstName(childComplexity), true
+
+	case "AccountDetails.id":
+		if e.complexity.AccountDetails.ID == nil {
+			break
+		}
+
+		return e.complexity.AccountDetails.ID(childComplexity), true
+
+	case "AccountDetails.lastName":
+		if e.complexity.AccountDetails.LastName == nil {
+			break
+		}
+
+		return e.complexity.AccountDetails.LastName(childComplexity), true
+
+	case "AccountPaxumPayoutMethod.email":
+		if e.complexity.AccountPaxumPayoutMethod.Email == nil {
+			break
+		}
+
+		return e.complexity.AccountPaxumPayoutMethod.Email(childComplexity), true
+
+	case "AccountPaxumPayoutMethod.id":
+		if e.complexity.AccountPaxumPayoutMethod.ID == nil {
+			break
+		}
+
+		return e.complexity.AccountPaxumPayoutMethod.ID(childComplexity), true
 
 	case "AccountTransaction.id":
 		if e.complexity.AccountTransaction.ID == nil {
@@ -113,12 +398,568 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountTransaction.ID(childComplexity), true
 
+	case "Balance.amount":
+		if e.complexity.Balance.Amount == nil {
+			break
+		}
+
+		return e.complexity.Balance.Amount(childComplexity), true
+
+	case "Balance.currency":
+		if e.complexity.Balance.Currency == nil {
+			break
+		}
+
+		return e.complexity.Balance.Currency(childComplexity), true
+
+	case "Balance.id":
+		if e.complexity.Balance.ID == nil {
+			break
+		}
+
+		return e.complexity.Balance.ID(childComplexity), true
+
+	case "Balance.updatedAt":
+		if e.complexity.Balance.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Balance.UpdatedAt(childComplexity), true
+
+	case "CancelClubPayoutPayload.clubPayout":
+		if e.complexity.CancelClubPayoutPayload.ClubPayout == nil {
+			break
+		}
+
+		return e.complexity.CancelClubPayoutPayload.ClubPayout(childComplexity), true
+
+	case "Club.balance":
+		if e.complexity.Club.Balance == nil {
+			break
+		}
+
+		return e.complexity.Club.Balance(childComplexity), true
+
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
 			break
 		}
 
 		return e.complexity.Club.ID(childComplexity), true
+
+	case "Club.payments":
+		if e.complexity.Club.Payments == nil {
+			break
+		}
+
+		args, err := ec.field_Club_payments_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Club.Payments(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus)), true
+
+	case "Club.payouts":
+		if e.complexity.Club.Payouts == nil {
+			break
+		}
+
+		args, err := ec.field_Club_payouts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Club.Payouts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus)), true
+
+	case "Club.pendingBalance":
+		if e.complexity.Club.PendingBalance == nil {
+			break
+		}
+
+		return e.complexity.Club.PendingBalance(childComplexity), true
+
+	case "Club.platformFee":
+		if e.complexity.Club.PlatformFee == nil {
+			break
+		}
+
+		return e.complexity.Club.PlatformFee(childComplexity), true
+
+	case "ClubPayment.accountTransaction":
+		if e.complexity.ClubPayment.AccountTransaction == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.AccountTransaction(childComplexity), true
+
+	case "ClubPayment.baseAmount":
+		if e.complexity.ClubPayment.BaseAmount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.BaseAmount(childComplexity), true
+
+	case "ClubPayment.currency":
+		if e.complexity.ClubPayment.Currency == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.Currency(childComplexity), true
+
+	case "ClubPayment.destinationClub":
+		if e.complexity.ClubPayment.DestinationClub == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.DestinationClub(childComplexity), true
+
+	case "ClubPayment.finalAmount":
+		if e.complexity.ClubPayment.FinalAmount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.FinalAmount(childComplexity), true
+
+	case "ClubPayment.id":
+		if e.complexity.ClubPayment.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.ID(childComplexity), true
+
+	case "ClubPayment.isDeduction":
+		if e.complexity.ClubPayment.IsDeduction == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.IsDeduction(childComplexity), true
+
+	case "ClubPayment.platformFeeAmount":
+		if e.complexity.ClubPayment.PlatformFeeAmount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.PlatformFeeAmount(childComplexity), true
+
+	case "ClubPayment.reference":
+		if e.complexity.ClubPayment.Reference == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.Reference(childComplexity), true
+
+	case "ClubPayment.settlementDate":
+		if e.complexity.ClubPayment.SettlementDate == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.SettlementDate(childComplexity), true
+
+	case "ClubPayment.source":
+		if e.complexity.ClubPayment.Source == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.Source(childComplexity), true
+
+	case "ClubPayment.sourceAccount":
+		if e.complexity.ClubPayment.SourceAccount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.SourceAccount(childComplexity), true
+
+	case "ClubPayment.status":
+		if e.complexity.ClubPayment.Status == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.Status(childComplexity), true
+
+	case "ClubPaymentConnection.edges":
+		if e.complexity.ClubPaymentConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.ClubPaymentConnection.Edges(childComplexity), true
+
+	case "ClubPaymentConnection.pageInfo":
+		if e.complexity.ClubPaymentConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.ClubPaymentConnection.PageInfo(childComplexity), true
+
+	case "ClubPaymentEdge.cursor":
+		if e.complexity.ClubPaymentEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.ClubPaymentEdge.Cursor(childComplexity), true
+
+	case "ClubPaymentEdge.node":
+		if e.complexity.ClubPaymentEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.ClubPaymentEdge.Node(childComplexity), true
+
+	case "ClubPayout.amount":
+		if e.complexity.ClubPayout.Amount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Amount(childComplexity), true
+
+	case "ClubPayout.club":
+		if e.complexity.ClubPayout.Club == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Club(childComplexity), true
+
+	case "ClubPayout.createdAt":
+		if e.complexity.ClubPayout.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.CreatedAt(childComplexity), true
+
+	case "ClubPayout.currency":
+		if e.complexity.ClubPayout.Currency == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Currency(childComplexity), true
+
+	case "ClubPayout.depositDate":
+		if e.complexity.ClubPayout.DepositDate == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.DepositDate(childComplexity), true
+
+	case "ClubPayout.events":
+		if e.complexity.ClubPayout.Events == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Events(childComplexity), true
+
+	case "ClubPayout.id":
+		if e.complexity.ClubPayout.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.ID(childComplexity), true
+
+	case "ClubPayout.payments":
+		if e.complexity.ClubPayout.Payments == nil {
+			break
+		}
+
+		args, err := ec.field_ClubPayout_payments_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.ClubPayout.Payments(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus)), true
+
+	case "ClubPayout.payoutAccount":
+		if e.complexity.ClubPayout.PayoutAccount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.PayoutAccount(childComplexity), true
+
+	case "ClubPayout.reference":
+		if e.complexity.ClubPayout.Reference == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Reference(childComplexity), true
+
+	case "ClubPayout.status":
+		if e.complexity.ClubPayout.Status == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.Status(childComplexity), true
+
+	case "ClubPayoutConnection.edges":
+		if e.complexity.ClubPayoutConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutConnection.Edges(childComplexity), true
+
+	case "ClubPayoutConnection.pageInfo":
+		if e.complexity.ClubPayoutConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutConnection.PageInfo(childComplexity), true
+
+	case "ClubPayoutEdge.cursor":
+		if e.complexity.ClubPayoutEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEdge.Cursor(childComplexity), true
+
+	case "ClubPayoutEdge.node":
+		if e.complexity.ClubPayoutEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEdge.Node(childComplexity), true
+
+	case "ClubPayoutEvent.error":
+		if e.complexity.ClubPayoutEvent.Error == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEvent.Error(childComplexity), true
+
+	case "ClubPayoutEvent.id":
+		if e.complexity.ClubPayoutEvent.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEvent.ID(childComplexity), true
+
+	case "ClubPayoutEvent.timestamp":
+		if e.complexity.ClubPayoutEvent.Timestamp == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEvent.Timestamp(childComplexity), true
+
+	case "ClubPlatformFee.id":
+		if e.complexity.ClubPlatformFee.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubPlatformFee.ID(childComplexity), true
+
+	case "ClubPlatformFee.percent":
+		if e.complexity.ClubPlatformFee.Percent == nil {
+			break
+		}
+
+		return e.complexity.ClubPlatformFee.Percent(childComplexity), true
+
+	case "Country.alpha3":
+		if e.complexity.Country.Alpha3 == nil {
+			break
+		}
+
+		return e.complexity.Country.Alpha3(childComplexity), true
+
+	case "Country.emoji":
+		if e.complexity.Country.Emoji == nil {
+			break
+		}
+
+		return e.complexity.Country.Emoji(childComplexity), true
+
+	case "Country.id":
+		if e.complexity.Country.ID == nil {
+			break
+		}
+
+		return e.complexity.Country.ID(childComplexity), true
+
+	case "Country.name":
+		if e.complexity.Country.Name == nil {
+			break
+		}
+
+		return e.complexity.Country.Name(childComplexity), true
+
+	case "Country.payoutMethods":
+		if e.complexity.Country.PayoutMethods == nil {
+			break
+		}
+
+		return e.complexity.Country.PayoutMethods(childComplexity), true
+
+	case "DeleteAccountPayoutMethodPayload.deletedAccountPayoutMethodId":
+		if e.complexity.DeleteAccountPayoutMethodPayload.DeletedAccountPayoutMethodID == nil {
+			break
+		}
+
+		return e.complexity.DeleteAccountPayoutMethodPayload.DeletedAccountPayoutMethodID(childComplexity), true
+
+	case "DepositRequest.baseAmount":
+		if e.complexity.DepositRequest.BaseAmount == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.BaseAmount(childComplexity), true
+
+	case "DepositRequest.createdAt":
+		if e.complexity.DepositRequest.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.CreatedAt(childComplexity), true
+
+	case "DepositRequest.currency":
+		if e.complexity.DepositRequest.Currency == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.Currency(childComplexity), true
+
+	case "DepositRequest.estimatedFeeAmount":
+		if e.complexity.DepositRequest.EstimatedFeeAmount == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.EstimatedFeeAmount(childComplexity), true
+
+	case "DepositRequest.id":
+		if e.complexity.DepositRequest.ID == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.ID(childComplexity), true
+
+	case "DepositRequest.lastDateForDeposit":
+		if e.complexity.DepositRequest.LastDateForDeposit == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.LastDateForDeposit(childComplexity), true
+
+	case "DepositRequest.payoutMethod":
+		if e.complexity.DepositRequest.PayoutMethod == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.PayoutMethod(childComplexity), true
+
+	case "DepositRequest.payouts":
+		if e.complexity.DepositRequest.Payouts == nil {
+			break
+		}
+
+		args, err := ec.field_DepositRequest_payouts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.DepositRequest.Payouts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus)), true
+
+	case "DepositRequest.reference":
+		if e.complexity.DepositRequest.Reference == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.Reference(childComplexity), true
+
+	case "DepositRequest.totalAmount":
+		if e.complexity.DepositRequest.TotalAmount == nil {
+			break
+		}
+
+		return e.complexity.DepositRequest.TotalAmount(childComplexity), true
+
+	case "DepositRequestConnection.edges":
+		if e.complexity.DepositRequestConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.DepositRequestConnection.Edges(childComplexity), true
+
+	case "DepositRequestConnection.pageInfo":
+		if e.complexity.DepositRequestConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.DepositRequestConnection.PageInfo(childComplexity), true
+
+	case "DepositRequestEdge.cursor":
+		if e.complexity.DepositRequestEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.DepositRequestEdge.Cursor(childComplexity), true
+
+	case "DepositRequestEdge.node":
+		if e.complexity.DepositRequestEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.DepositRequestEdge.Node(childComplexity), true
+
+	case "Entity.findAccountByID":
+		if e.complexity.Entity.FindAccountByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findAccountByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindAccountByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubByID":
+		if e.complexity.Entity.FindClubByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubPaymentByID":
+		if e.complexity.Entity.FindClubPaymentByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubPaymentByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubPaymentByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubPayoutByID":
+		if e.complexity.Entity.FindClubPayoutByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubPayoutByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubPayoutByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findDepositRequestByID":
+		if e.complexity.Entity.FindDepositRequestByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findDepositRequestByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindDepositRequestByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "InitiateClubPayoutPayload.club":
+		if e.complexity.InitiateClubPayoutPayload.Club == nil {
+			break
+		}
+
+		return e.complexity.InitiateClubPayoutPayload.Club(childComplexity), true
 
 	case "Language.locale":
 		if e.complexity.Language.Locale == nil {
@@ -133,6 +974,102 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Language.Name(childComplexity), true
+
+	case "Mutation.cancelClubPayout":
+		if e.complexity.Mutation.CancelClubPayout == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_cancelClubPayout_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CancelClubPayout(childComplexity, args["input"].(types.CancelClubPayoutInput)), true
+
+	case "Mutation.deleteAccountPayoutMethod":
+		if e.complexity.Mutation.DeleteAccountPayoutMethod == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteAccountPayoutMethod_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteAccountPayoutMethod(childComplexity, args["input"].(types.DeleteAccountPayoutMethodInput)), true
+
+	case "Mutation.initiateClubPayout":
+		if e.complexity.Mutation.InitiateClubPayout == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_initiateClubPayout_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.InitiateClubPayout(childComplexity, args["input"].(types.InitiateClubPayoutInput)), true
+
+	case "Mutation.retryClubPayout":
+		if e.complexity.Mutation.RetryClubPayout == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_retryClubPayout_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RetryClubPayout(childComplexity, args["input"].(types.RetryClubPayoutInput)), true
+
+	case "Mutation.setPaxumAccountPayoutMethod":
+		if e.complexity.Mutation.SetPaxumAccountPayoutMethod == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setPaxumAccountPayoutMethod_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetPaxumAccountPayoutMethod(childComplexity, args["input"].(types.SetPaxumAccountPayoutMethodInput)), true
+
+	case "Mutation.updateAccountDetails":
+		if e.complexity.Mutation.UpdateAccountDetails == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAccountDetails_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAccountDetails(childComplexity, args["input"].(types.UpdateAccountDetailsInput)), true
+
+	case "Mutation.updateClubPayoutDepositDate":
+		if e.complexity.Mutation.UpdateClubPayoutDepositDate == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubPayoutDepositDate_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubPayoutDepositDate(childComplexity, args["input"].(types.UpdateClubPayoutDepositDateInput)), true
+
+	case "Mutation.updateClubPlatformFee":
+		if e.complexity.Mutation.UpdateClubPlatformFee == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubPlatformFee_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubPlatformFee(childComplexity, args["input"].(types.UpdateClubPlatformFeeInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -162,6 +1099,85 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PageInfo.StartCursor(childComplexity), true
 
+	case "Query.countries":
+		if e.complexity.Query.Countries == nil {
+			break
+		}
+
+		return e.complexity.Query.Countries(childComplexity), true
+
+	case "Query.depositRequest":
+		if e.complexity.Query.DepositRequest == nil {
+			break
+		}
+
+		args, err := ec.field_Query_depositRequest_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DepositRequest(childComplexity, args["reference"].(string)), true
+
+	case "Query.depositRequests":
+		if e.complexity.Query.DepositRequests == nil {
+			break
+		}
+
+		args, err := ec.field_Query_depositRequests_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DepositRequests(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "Query.payment":
+		if e.complexity.Query.Payment == nil {
+			break
+		}
+
+		args, err := ec.field_Query_payment_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Payment(childComplexity, args["reference"].(string)), true
+
+	case "Query.payments":
+		if e.complexity.Query.Payments == nil {
+			break
+		}
+
+		args, err := ec.field_Query_payments_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Payments(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus)), true
+
+	case "Query.payout":
+		if e.complexity.Query.Payout == nil {
+			break
+		}
+
+		args, err := ec.field_Query_payout_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Payout(childComplexity, args["reference"].(string)), true
+
+	case "Query.payouts":
+		if e.complexity.Query.Payouts == nil {
+			break
+		}
+
+		args, err := ec.field_Query_payouts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Payouts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus)), true
+
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
 			break
@@ -181,6 +1197,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "RetryClubPayoutPayload.clubPayout":
+		if e.complexity.RetryClubPayoutPayload.ClubPayout == nil {
+			break
+		}
+
+		return e.complexity.RetryClubPayoutPayload.ClubPayout(childComplexity), true
+
+	case "SetPaxumAccountPayoutMethodPayload.accountPayoutMethod":
+		if e.complexity.SetPaxumAccountPayoutMethodPayload.AccountPayoutMethod == nil {
+			break
+		}
+
+		return e.complexity.SetPaxumAccountPayoutMethodPayload.AccountPayoutMethod(childComplexity), true
+
 	case "Translation.language":
 		if e.complexity.Translation.Language == nil {
 			break
@@ -194,6 +1224,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Translation.Text(childComplexity), true
+
+	case "UpdateAccountDetailsPayload.accountDetails":
+		if e.complexity.UpdateAccountDetailsPayload.AccountDetails == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountDetailsPayload.AccountDetails(childComplexity), true
+
+	case "UpdateClubPayoutDepositDatePayload.clubPayout":
+		if e.complexity.UpdateClubPayoutDepositDatePayload.ClubPayout == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubPayoutDepositDatePayload.ClubPayout(childComplexity), true
+
+	case "UpdateClubPlatformFeePayload.clubPlatformFee":
+		if e.complexity.UpdateClubPlatformFeePayload.ClubPlatformFee == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubPlatformFeePayload.ClubPlatformFee(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -219,6 +1270,20 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 			}
 			first = false
 			data := ec._Query(ctx, rc.Operation.SelectionSet)
+			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
+	case ast.Mutation:
+		return func(ctx context.Context) *graphql.Response {
+			if !first {
+				return nil
+			}
+			first = false
+			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
 			var buf bytes.Buffer
 			data.MarshalGQL(&buf)
 
@@ -252,6 +1317,696 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/balance/schema.graphql", Input: `"""
+A balance item.
+
+Represents balance on a specific club.
+"""
+type Balance {
+  """An ID to uniquely identify this balance."""
+  id: ID!
+
+  """The amount on this balance."""
+  amount: Int!
+
+  """The currency the balance is in."""
+  currency: Currency!
+
+  """When the balance was last updated."""
+  updatedAt: Time!
+}
+
+extend type Club {
+  """The current balance of this club."""
+  balance: Balance! @goField(forceResolver: true)
+
+  """The current balance of this club, representing the pending amount instead of the real amount."""
+  pendingBalance: Balance! @goField(forceResolver: true)
+}
+`, BuiltIn: false},
+	{Name: "schema/details/schema.graphql", Input: `"""
+Details belonging to an account.
+"""
+type AccountDetails {
+  """An ID to uniquely identify this details instance."""
+  id: ID!
+
+  """The first name belonging to this account."""
+  firstName: String!
+
+  """The last name belonging to this account."""
+  lastName: String!
+
+  """The country this account belongs to."""
+  country: Country!
+}
+
+extend type Account {
+  """
+  Details belonging to this account.
+
+  If null, account details have not been filled out yet.
+
+  Account details are required to be filled out before setting a payout method.
+  """
+  details: AccountDetails @goField(forceResolver: true)
+}
+
+"""
+A country instance.
+"""
+type Country {
+  """An ID to uniquely identify this country."""
+  id: ID!
+
+  """The emoji representation of this country's flag."""
+  emoji: String!
+
+  """The full name of this country."""
+  name: String!
+
+  """The alpha3 code for this country."""
+  alpha3: String!
+}
+
+extend type Query {
+  """
+  Grab all available countries.
+  """
+  countries: [Country!]!
+}
+
+"""Update account details."""
+input UpdateAccountDetailsInput {
+  """The first name to set."""
+  firstName: String!
+
+  """The last name to set."""
+  lastName: String!
+
+  """The country ID to use."""
+  countryId: ID!
+}
+
+"""Payload for the new updated account details."""
+type UpdateAccountDetailsPayload {
+  """The updated account details."""
+  accountDetails: AccountDetails
+}
+
+extend type Mutation {
+  """
+  Update account details for the currently logged-in account.
+  """
+  updateAccountDetails(input: UpdateAccountDetailsInput!): UpdateAccountDetailsPayload
+}
+`, BuiltIn: false},
+	{Name: "schema/payment/schema.graphql", Input: `enum ClubPaymentSource {
+  CLUB_SUPPORTER_SUBSCRIPTION
+}
+
+"""The status of a payment."""
+enum ClubPaymentStatus {
+  """
+  A payment is pending until settled (reached "settlement date").
+  """
+  PENDING
+  """
+  A payment is ready to be picked up as part of a payout.
+
+  Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
+  the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+  by the next scheduled payout.
+  """
+  READY
+  """
+  A payment was successfully deposited as part of a payout and is no longer needed.
+  """
+  COMPLETE
+}
+
+"""
+A club payment item.
+
+Represents a payment that is going to be made to a club.
+"""
+type ClubPayment implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payment."""
+  id: ID!
+
+  """A reference, used to look up this payment."""
+  reference: String!
+
+  """The source of the payment."""
+  source: ClubPaymentSource!
+
+  """The status of the payment."""
+  status: ClubPaymentStatus!
+
+  """The currency this payment was made in."""
+  currency: Currency!
+
+  """
+  The base amount this payment was originally made in.
+  """
+  baseAmount: Int!
+
+  """
+  The amount taken off with a platform fee.
+  """
+  platformFeeAmount: Int!
+
+  """
+  The final amount that will actually be paid to a club.
+  """
+  finalAmount: Int!
+
+  """
+  If this payment is a deduction, usually the source being a refund, chargeback or a void.
+  """
+  isDeduction: Boolean!
+
+  """If this payment is in "pending" status, this will be the date when the payment becomes "ready"."""
+  settlementDate: Date!
+
+  """The account transaction linked to this payment."""
+  accountTransaction: AccountTransaction!
+
+  """The club this payment is made to."""
+  destinationClub: Club!
+
+  """The account that made this payment."""
+  sourceAccount: Account!
+}
+
+"""Edge of the the club payment."""
+type ClubPaymentEdge {
+  node: ClubPayment!
+  cursor: String!
+}
+
+"""Connection of the club payment."""
+type ClubPaymentConnection {
+  edges: [ClubPaymentEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Platform fee for a specific club."""
+type ClubPlatformFee {
+  """An ID to uniquely identify this club platform fee."""
+  id: ID!
+
+  """The percent of the club platform fee."""
+  percent: Int!
+}
+
+extend type ClubPayout {
+  """All payments linked to this payout."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Club {
+  """This club's platform fee for each payment."""
+  platformFee: ClubPlatformFee!
+
+  """All payments made to this club."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payment by reference."""
+  payment(reference: String!): ClubPayment
+
+  """All payments made on the platform."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+"""Update the club's platform fee."""
+input UpdateClubPlatformFeeInput {
+  """The club to update."""
+  clubId: ID!
+
+  """The percent fee to take from every payment."""
+  percent: Int!
+}
+
+"""Payload for the new updated account details."""
+type UpdateClubPlatformFeePayload {
+  """The updated club platform fee."""
+  clubPlatformFee: ClubPlatformFee
+}
+
+extend type Mutation {
+  """
+  Update the club's platform fee.
+
+  Cannot be less than 20 or more than 30 percent.
+
+  Staff+ only.
+  """
+  updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload
+}
+`, BuiltIn: false},
+	{Name: "schema/payout/schema.graphql", Input: `enum PayoutMethod {
+  PAXUM
+}
+
+extend type Country {
+  """
+  Payout methods supported for this country.
+
+  If empty, this country does not support any sort of payout.
+  """
+  payoutMethods: [PayoutMethod!]!
+}
+
+interface IAccountPayoutMethod {
+  """
+  The ID linked to this payout method
+  """
+  id: ID!
+}
+
+type AccountPaxumPayoutMethod implements IAccountPayoutMethod {
+  """
+  The ID linked to this payout method.
+  """
+  id: ID!
+
+  """
+  The email linked to the paxum payout method.
+  """
+  email: String!
+}
+
+union AccountPayoutMethod = AccountPaxumPayoutMethod
+
+"""The status of the payout."""
+enum ClubPayoutStatus {
+  """
+  Payout is queued until the "deposit date". Payout is able to be cancelled while in this state.
+  """
+  QUEUED
+  """
+  The "deposit date" was reached. The payout can no longer be cancelled, and will start to perform the payout.
+  """
+  PROCESSING
+  """
+  The payout failed. A payout will try up to 3 times before this state is created.
+  """
+  FAILED
+  """
+  The payout was cancelled.
+  """
+  CANCELLED
+  """
+  The payout was successfully deposited in the target account.
+  """
+  DEPOSITED
+}
+
+type ClubPayoutEvent {
+  """An ID to uniquely identify this club payout event."""
+  id: ID!
+
+  """The error that occurred."""
+  error: String!
+
+  """When this event occurred."""
+  timestamp: Time!
+}
+
+"""
+A club payout item.
+
+Represents a payout that is going to be paid to a specific account.
+"""
+type ClubPayout implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payout."""
+  id: ID!
+
+  """A reference, used to look up this payout."""
+  reference: String!
+
+  """The status of the payout."""
+  status: ClubPayoutStatus!
+
+  """The currency this payout is in."""
+  currency: Currency!
+
+  """The amount this payout is created in."""
+  amount: Int!
+
+  """If a payout failed, an event will be created here."""
+  events: [ClubPayoutEvent!]!
+
+  """The club linked to this payout."""
+  club: Club!
+
+  """The account that is going to be paid out with this payout."""
+  payoutAccount: Account!
+
+  """When the deposit will actually attempt to occur."""
+  depositDate: Time!
+
+  """When this payout was created."""
+  createdAt: Time!
+}
+
+"""Edge of the the club payout."""
+type ClubPayoutEdge {
+  node: ClubPayout!
+  cursor: String!
+}
+
+"""Connection of the club payout."""
+type ClubPayoutConnection {
+  edges: [ClubPayoutEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Account {
+  """The account payout method linked to this account."""
+  payoutMethod: AccountPayoutMethod @goField(forceResolver: true)
+}
+
+"""
+A deposit request.
+
+Basically, when payouts are scheduled at the beginning of the month,
+a deposit request is created to tell us how much money we need our payout methods to have in order
+to process all of the payouts
+"""
+type DepositRequest implements Node @key(fields: "id") {
+  """An ID to uniquely identify this deposit request."""
+  id: ID!
+
+  """A reference, used to look up this deposit request."""
+  reference: String!
+
+  """The type of payout method this deposit request is created for."""
+  payoutMethod: PayoutMethod!
+
+  """The currency this deposit is in."""
+  currency: Currency!
+
+  """The base amount of the deposit."""
+  baseAmount: Int!
+
+  """
+  To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
+  accounts for this and ensures we always deliver the exact $ amount that the artist sees in their balance.
+  """
+  estimatedFeeAmount: Int!
+
+  """
+  The total amount that needs to be deposited.
+  """
+  totalAmount: Int!
+
+  """The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled."""
+  lastDateForDeposit: Time!
+
+  """When this deposit was created."""
+  createdAt: Time!
+
+  """All payouts linked to this deposit request."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+"""Edge of the the deposit request."""
+type DepositRequestEdge {
+  node: DepositRequest!
+  cursor: String!
+}
+
+"""Connection of the deposit request."""
+type DepositRequestConnection {
+  edges: [DepositRequestEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """All payouts that are scheduled or created for this club."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payout by reference."""
+  payout(reference: String!): ClubPayout
+
+  """All payouts made on the platform."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
+
+  """Look up a single deposit request by reference."""
+  depositRequest(reference: String!): DepositRequest
+
+  """All deposit requests on the platform."""
+  depositRequests(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): DepositRequestConnection!
+}
+
+"""Update account's payout method."""
+input SetPaxumAccountPayoutMethodInput {
+  """The paxum email to use for payouts."""
+  email: String!
+}
+
+"""Payload for updating the payout method."""
+type SetPaxumAccountPayoutMethodPayload {
+  """The updated account payout method."""
+  accountPayoutMethod: AccountPayoutMethod
+}
+
+"""Update the payout date for a specific payout ID."""
+input UpdateClubPayoutDepositDateInput {
+  """The payout to update."""
+  payoutId: ID!
+
+  """The new payout date."""
+  newDate: Time!
+}
+
+"""Payload for updating the payout deposit date."""
+type UpdateClubPayoutDepositDatePayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Cancel a specific payout."""
+input CancelClubPayoutInput {
+  """The payout to cancel."""
+  payoutId: ID!
+}
+
+"""Payload for cancelling the payout."""
+type CancelClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Retry a specific payout."""
+input RetryClubPayoutInput {
+  """The payout to retry."""
+  payoutId: ID!
+}
+
+"""Payload for retrying the payout."""
+type RetryClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Delete a specific account payout method."""
+input DeleteAccountPayoutMethodInput {
+  """The payout method to delete."""
+  payoutMethodId: ID!
+}
+
+"""Payload for deleting the account payout method."""
+type DeleteAccountPayoutMethodPayload {
+  """The deleted account payout method."""
+  deletedAccountPayoutMethodId: ID!
+}
+
+"""Initiate a payout for a specific club."""
+input InitiateClubPayoutInput {
+  """The club to initiate the payout for."""
+  clubId: ID!
+
+  """Optionally set the deposit date."""
+  depositDate: Time
+}
+
+"""Initiate a payout for a specific club."""
+type InitiateClubPayoutPayload {
+  """The club that the payout was initiated for."""
+  club: Club!
+}
+
+extend type Mutation {
+  """
+  Set the currently logged-in account's payout method to use Paxum e-wallet.
+  """
+  setPaxumAccountPayoutMethod(input: SetPaxumAccountPayoutMethodInput!): SetPaxumAccountPayoutMethodPayload
+
+  """
+  Delete the current payout method linked to the logged-in account.
+
+  If no payout method is set, payouts won't happen.
+  """
+  deleteAccountPayoutMethod(input: DeleteAccountPayoutMethodInput!): DeleteAccountPayoutMethodPayload
+
+  """
+  Update a payout's deposit date.
+
+  Can be used to either make the payout happen earlier or schedule it for the future.
+
+  Setting the time to be before the current time will make the payout happen instantly.
+
+  Staff+ only.
+  """
+  updateClubPayoutDepositDate(input: UpdateClubPayoutDepositDateInput!): UpdateClubPayoutDepositDatePayload
+
+  """
+  Cancel a specific club payout.
+
+  Staff+ only.
+  """
+  cancelClubPayout(input: CancelClubPayoutInput!): CancelClubPayoutPayload
+
+  """
+  Retry a specific club payout if it's failed.
+
+  Staff+ only.
+  """
+  retryClubPayout(input: RetryClubPayoutInput!): RetryClubPayoutPayload
+
+  """
+  Initiate a club payout for the specific club.
+
+  Note that only 1 payout can be created at a time, so this call will fail if there is a payout either "in progress" or "queued".
+
+  Staff+ only.
+  """
+  initiateClubPayout(input: InitiateClubPayoutInput!): InitiateClubPayoutPayload
+}
+`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `extend type Club @key(fields: "id")  {
   id: ID! @external
 }
@@ -298,6 +2053,15 @@ type Translation {
   """The translation text."""
   text: String!
 }
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -321,7 +2085,17 @@ directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountTransaction | Club
+union _Entity = Account | AccountTransaction | Club | ClubPayment | ClubPayout | DepositRequest
+
+# fake type to build resolver interfaces for users to implement
+type Entity {
+		findAccountByID(id: ID!,): Account!
+	findClubByID(id: ID!,): Club!
+	findClubPaymentByID(id: ID!,): ClubPayment!
+	findClubPayoutByID(id: ID!,): ClubPayout!
+	findDepositRequestByID(id: ID!,): DepositRequest!
+
+}
 
 type _Service {
   sdl: String
@@ -354,6 +2128,405 @@ func (ec *executionContext) dir_entityResolver_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_ClubPayout_payments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPaymentStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPaymentStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Club_payments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPaymentStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPaymentStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Club_payouts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPayoutStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPayoutStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_DepositRequest_payouts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPayoutStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPayoutStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubPaymentByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubPayoutByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findDepositRequestByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_cancelClubPayout_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CancelClubPayoutInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCancelClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelClubPayoutInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteAccountPayoutMethod_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.DeleteAccountPayoutMethodInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteAccountPayoutMethodInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayoutMethodInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_initiateClubPayout_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.InitiateClubPayoutInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNInitiateClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐInitiateClubPayoutInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_retryClubPayout_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RetryClubPayoutInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRetryClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐRetryClubPayoutInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setPaxumAccountPayoutMethod_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.SetPaxumAccountPayoutMethodInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSetPaxumAccountPayoutMethodInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐSetPaxumAccountPayoutMethodInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateAccountDetails_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAccountDetailsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAccountDetailsInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountDetailsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateClubPayoutDepositDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubPayoutDepositDateInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubPayoutDepositDateInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPayoutDepositDateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateClubPlatformFee_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubPlatformFeeInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubPlatformFeeInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPlatformFeeInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -381,6 +2554,195 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_depositRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_depositRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_payment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_payments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPaymentStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPaymentStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_payout_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_payouts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.ClubPayoutStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOClubPayoutStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
 	return args, nil
 }
 
@@ -422,6 +2784,70 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _Account_details(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Details(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountDetails)
+	fc.Result = res
+	return ec.marshalOAccountDetails2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountDetails(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_payoutMethod(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().PayoutMethod(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(types.AccountPayoutMethod)
+	fc.Result = res
+	return ec.marshalOAccountPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountPayoutMethod(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_id(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -455,6 +2881,216 @@ func (ec *executionContext) _Account_id(ctx context.Context, field graphql.Colle
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountDetails_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountDetails_firstName(ctx context.Context, field graphql.CollectedField, obj *types.AccountDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FirstName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountDetails_lastName(ctx context.Context, field graphql.CollectedField, obj *types.AccountDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountDetails_country(ctx context.Context, field graphql.CollectedField, obj *types.AccountDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Country, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Country)
+	fc.Result = res
+	return ec.marshalNCountry2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCountry(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountPaxumPayoutMethod_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountPaxumPayoutMethod) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountPaxumPayoutMethod",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountPaxumPayoutMethod_email(ctx context.Context, field graphql.CollectedField, obj *types.AccountPaxumPayoutMethod) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountPaxumPayoutMethod",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransaction_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
@@ -492,6 +3128,367 @@ func (ec *executionContext) _AccountTransaction_id(ctx context.Context, field gr
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Balance_id(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Balance",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Balance_amount(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Balance",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Amount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Balance_currency(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Balance",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Currency, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.Currency)
+	fc.Result = res
+	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Balance_updatedAt(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Balance",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CancelClubPayoutPayload_clubPayout(ctx context.Context, field graphql.CollectedField, obj *types.CancelClubPayoutPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancelClubPayoutPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubPayout, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalOClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_balance(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().Balance(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Balance)
+	fc.Result = res
+	return ec.marshalNBalance2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐBalance(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_pendingBalance(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().PendingBalance(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Balance)
+	fc.Result = res
+	return ec.marshalNBalance2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐBalance(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_platformFee(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlatformFee, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPlatformFee)
+	fc.Result = res
+	return ec.marshalNClubPlatformFee2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_payments(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Club_payments_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().Payments(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPaymentConnection)
+	fc.Result = res
+	return ec.marshalNClubPaymentConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_payouts(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Club_payouts_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().Payouts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayoutConnection)
+	fc.Result = res
+	return ec.marshalNClubPayoutConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutConnection(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Club_id(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -525,6 +3522,2260 @@ func (ec *executionContext) _Club_id(ctx context.Context, field graphql.Collecte
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_reference(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_source(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Source, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.ClubPaymentSource)
+	fc.Result = res
+	return ec.marshalNClubPaymentSource2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentSource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_status(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.ClubPaymentStatus)
+	fc.Result = res
+	return ec.marshalNClubPaymentStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_currency(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Currency, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.Currency)
+	fc.Result = res
+	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_baseAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BaseAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_platformFeeAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlatformFeeAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_finalAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FinalAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_isDeduction(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsDeduction, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_settlementDate(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SettlementDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDate2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_accountTransaction(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountTransaction, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountTransaction)
+	fc.Result = res
+	return ec.marshalNAccountTransaction2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransaction(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_destinationClub(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DestinationClub, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayment_sourceAccount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SourceAccount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPaymentConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubPaymentConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPaymentConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubPaymentEdge)
+	fc.Result = res
+	return ec.marshalNClubPaymentEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPaymentConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubPaymentConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPaymentConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPaymentEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubPaymentEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPaymentEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayment)
+	fc.Result = res
+	return ec.marshalNClubPayment2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPaymentEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubPaymentEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPaymentEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_reference(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_status(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.ClubPayoutStatus)
+	fc.Result = res
+	return ec.marshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_currency(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Currency, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.Currency)
+	fc.Result = res
+	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_amount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Amount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_events(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Events, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubPayoutEvent)
+	fc.Result = res
+	return ec.marshalNClubPayoutEvent2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEventᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_club(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_payoutAccount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PayoutAccount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_depositDate(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DepositDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_payments(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_ClubPayout_payments_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.ClubPayout().Payments(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPaymentConnection)
+	fc.Result = res
+	return ec.marshalNClubPaymentConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubPayoutEdge)
+	fc.Result = res
+	return ec.marshalNClubPayoutEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalNClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutEvent_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEvent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutEvent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutEvent_error(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEvent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutEvent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayoutEvent_timestamp(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEvent) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayoutEvent",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Timestamp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPlatformFee_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubPlatformFee) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPlatformFee",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPlatformFee_percent(ctx context.Context, field graphql.CollectedField, obj *types.ClubPlatformFee) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPlatformFee",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Percent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Country_id(ctx context.Context, field graphql.CollectedField, obj *types.Country) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Country",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Country_emoji(ctx context.Context, field graphql.CollectedField, obj *types.Country) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Country",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Emoji, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Country_name(ctx context.Context, field graphql.CollectedField, obj *types.Country) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Country",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Country_alpha3(ctx context.Context, field graphql.CollectedField, obj *types.Country) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Country",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Alpha3, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Country_payoutMethods(ctx context.Context, field graphql.CollectedField, obj *types.Country) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Country",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PayoutMethods, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]types.PayoutMethod)
+	fc.Result = res
+	return ec.marshalNPayoutMethod2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethodᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteAccountPayoutMethodPayload_deletedAccountPayoutMethodId(ctx context.Context, field graphql.CollectedField, obj *types.DeleteAccountPayoutMethodPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteAccountPayoutMethodPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedAccountPayoutMethodID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_id(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_reference(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_payoutMethod(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PayoutMethod, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.PayoutMethod)
+	fc.Result = res
+	return ec.marshalNPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethod(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_currency(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Currency, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.Currency)
+	fc.Result = res
+	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_baseAmount(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BaseAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_estimatedFeeAmount(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EstimatedFeeAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_totalAmount(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_lastDateForDeposit(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastDateForDeposit, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequest_payouts(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_DepositRequest_payouts_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.DepositRequest().Payouts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayoutConnection)
+	fc.Result = res
+	return ec.marshalNClubPayoutConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequestConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequestConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequestConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.DepositRequestEdge)
+	fc.Result = res
+	return ec.marshalNDepositRequestEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequestConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequestConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequestConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequestEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequestEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequestEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.DepositRequest)
+	fc.Result = res
+	return ec.marshalNDepositRequest2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DepositRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequestEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DepositRequestEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findAccountByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindAccountByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubPaymentByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubPaymentByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubPaymentByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayment)
+	fc.Result = res
+	return ec.marshalNClubPayment2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubPayoutByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubPayoutByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubPayoutByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalNClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findDepositRequestByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findDepositRequestByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindDepositRequestByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.DepositRequest)
+	fc.Result = res
+	return ec.marshalNDepositRequest2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _InitiateClubPayoutPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.InitiateClubPayoutPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "InitiateClubPayoutPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
@@ -595,6 +5846,318 @@ func (ec *executionContext) _Language_name(ctx context.Context, field graphql.Co
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateAccountDetails(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateAccountDetails_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAccountDetails(rctx, args["input"].(types.UpdateAccountDetailsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAccountDetailsPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAccountDetailsPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountDetailsPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateClubPlatformFee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateClubPlatformFee_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubPlatformFee(rctx, args["input"].(types.UpdateClubPlatformFeeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubPlatformFeePayload)
+	fc.Result = res
+	return ec.marshalOUpdateClubPlatformFeePayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPlatformFeePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_setPaxumAccountPayoutMethod(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_setPaxumAccountPayoutMethod_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetPaxumAccountPayoutMethod(rctx, args["input"].(types.SetPaxumAccountPayoutMethodInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.SetPaxumAccountPayoutMethodPayload)
+	fc.Result = res
+	return ec.marshalOSetPaxumAccountPayoutMethodPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐSetPaxumAccountPayoutMethodPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteAccountPayoutMethod(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteAccountPayoutMethod_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccountPayoutMethod(rctx, args["input"].(types.DeleteAccountPayoutMethodInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.DeleteAccountPayoutMethodPayload)
+	fc.Result = res
+	return ec.marshalODeleteAccountPayoutMethodPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayoutMethodPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateClubPayoutDepositDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateClubPayoutDepositDate_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubPayoutDepositDate(rctx, args["input"].(types.UpdateClubPayoutDepositDateInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubPayoutDepositDatePayload)
+	fc.Result = res
+	return ec.marshalOUpdateClubPayoutDepositDatePayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPayoutDepositDatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_cancelClubPayout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_cancelClubPayout_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CancelClubPayout(rctx, args["input"].(types.CancelClubPayoutInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancelClubPayoutPayload)
+	fc.Result = res
+	return ec.marshalOCancelClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelClubPayoutPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_retryClubPayout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_retryClubPayout_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RetryClubPayout(rctx, args["input"].(types.RetryClubPayoutInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RetryClubPayoutPayload)
+	fc.Result = res
+	return ec.marshalORetryClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐRetryClubPayoutPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_initiateClubPayout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_initiateClubPayout_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().InitiateClubPayout(rctx, args["input"].(types.InitiateClubPayoutInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.InitiateClubPayoutPayload)
+	fc.Result = res
+	return ec.marshalOInitiateClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐInitiateClubPayoutPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
@@ -729,6 +6292,284 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_countries(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Countries(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Country)
+	fc.Result = res
+	return ec.marshalNCountry2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCountryᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_payment(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_payment_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Payment(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayment)
+	fc.Result = res
+	return ec.marshalOClubPayment2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_payments(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_payments_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Payments(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPaymentStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPaymentConnection)
+	fc.Result = res
+	return ec.marshalNClubPaymentConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_payout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_payout_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Payout(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalOClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_payouts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_payouts_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Payouts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.ClubPayoutStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayoutConnection)
+	fc.Result = res
+	return ec.marshalNClubPayoutConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_depositRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_depositRequest_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DepositRequest(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.DepositRequest)
+	fc.Result = res
+	return ec.marshalODepositRequest2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_depositRequests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_depositRequests_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DepositRequests(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.DepositRequestConnection)
+	fc.Result = res
+	return ec.marshalNDepositRequestConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -879,6 +6720,70 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _RetryClubPayoutPayload_clubPayout(ctx context.Context, field graphql.CollectedField, obj *types.RetryClubPayoutPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RetryClubPayoutPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubPayout, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalOClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SetPaxumAccountPayoutMethodPayload_accountPayoutMethod(ctx context.Context, field graphql.CollectedField, obj *types.SetPaxumAccountPayoutMethodPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SetPaxumAccountPayoutMethodPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountPayoutMethod, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(types.AccountPayoutMethod)
+	fc.Result = res
+	return ec.marshalOAccountPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountPayoutMethod(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -947,6 +6852,102 @@ func (ec *executionContext) _Translation_text(ctx context.Context, field graphql
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccountDetailsPayload_accountDetails(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountDetailsPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountDetailsPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountDetails, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountDetails)
+	fc.Result = res
+	return ec.marshalOAccountDetails2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountDetails(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateClubPayoutDepositDatePayload_clubPayout(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubPayoutDepositDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateClubPayoutDepositDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubPayout, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPayout)
+	fc.Result = res
+	return ec.marshalOClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateClubPlatformFeePayload_clubPlatformFee(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubPlatformFeePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateClubPlatformFeePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClubPlatformFee, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubPlatformFee)
+	fc.Result = res
+	return ec.marshalOClubPlatformFee2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -2167,14 +8168,291 @@ func (ec *executionContext) ___Type_specifiedByURL(ctx context.Context, field gr
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputCancelClubPayoutInput(ctx context.Context, obj interface{}) (types.CancelClubPayoutInput, error) {
+	var it types.CancelClubPayoutInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "payoutId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("payoutId"))
+			it.PayoutID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteAccountPayoutMethodInput(ctx context.Context, obj interface{}) (types.DeleteAccountPayoutMethodInput, error) {
+	var it types.DeleteAccountPayoutMethodInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "payoutMethodId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("payoutMethodId"))
+			it.PayoutMethodID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputInitiateClubPayoutInput(ctx context.Context, obj interface{}) (types.InitiateClubPayoutInput, error) {
+	var it types.InitiateClubPayoutInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "depositDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("depositDate"))
+			it.DepositDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRetryClubPayoutInput(ctx context.Context, obj interface{}) (types.RetryClubPayoutInput, error) {
+	var it types.RetryClubPayoutInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "payoutId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("payoutId"))
+			it.PayoutID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSetPaxumAccountPayoutMethodInput(ctx context.Context, obj interface{}) (types.SetPaxumAccountPayoutMethodInput, error) {
+	var it types.SetPaxumAccountPayoutMethodInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+			it.Email, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateAccountDetailsInput(ctx context.Context, obj interface{}) (types.UpdateAccountDetailsInput, error) {
+	var it types.UpdateAccountDetailsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "firstName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firstName"))
+			it.FirstName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "lastName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastName"))
+			it.LastName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "countryId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("countryId"))
+			it.CountryID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateClubPayoutDepositDateInput(ctx context.Context, obj interface{}) (types.UpdateClubPayoutDepositDateInput, error) {
+	var it types.UpdateClubPayoutDepositDateInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "payoutId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("payoutId"))
+			it.PayoutID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "newDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newDate"))
+			it.NewDate, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateClubPlatformFeeInput(ctx context.Context, obj interface{}) (types.UpdateClubPlatformFeeInput, error) {
+	var it types.UpdateClubPlatformFeeInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "percent":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("percent"))
+			it.Percent, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
+
+func (ec *executionContext) _AccountPayoutMethod(ctx context.Context, sel ast.SelectionSet, obj types.AccountPayoutMethod) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case types.AccountPaxumPayoutMethod:
+		return ec._AccountPaxumPayoutMethod(ctx, sel, &obj)
+	case *types.AccountPaxumPayoutMethod:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._AccountPaxumPayoutMethod(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
+func (ec *executionContext) _IAccountPayoutMethod(ctx context.Context, sel ast.SelectionSet, obj types.IAccountPayoutMethod) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case types.AccountPaxumPayoutMethod:
+		return ec._AccountPaxumPayoutMethod(ctx, sel, &obj)
+	case *types.AccountPaxumPayoutMethod:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._AccountPaxumPayoutMethod(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
 
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case types.ClubPayment:
+		return ec._ClubPayment(ctx, sel, &obj)
+	case *types.ClubPayment:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubPayment(ctx, sel, obj)
+	case types.ClubPayout:
+		return ec._ClubPayout(ctx, sel, &obj)
+	case *types.ClubPayout:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubPayout(ctx, sel, obj)
+	case types.DepositRequest:
+		return ec._DepositRequest(ctx, sel, &obj)
+	case *types.DepositRequest:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._DepositRequest(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -2205,6 +8483,27 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Club(ctx, sel, obj)
+	case types.ClubPayment:
+		return ec._ClubPayment(ctx, sel, &obj)
+	case *types.ClubPayment:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubPayment(ctx, sel, obj)
+	case types.ClubPayout:
+		return ec._ClubPayout(ctx, sel, &obj)
+	case *types.ClubPayout:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubPayout(ctx, sel, obj)
+	case types.DepositRequest:
+		return ec._DepositRequest(ctx, sel, &obj)
+	case *types.DepositRequest:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._DepositRequest(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -2224,9 +8523,145 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
+		case "details":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_details(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "payoutMethod":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_payoutMethod(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Account_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accountDetailsImplementors = []string{"AccountDetails"}
+
+func (ec *executionContext) _AccountDetails(ctx context.Context, sel ast.SelectionSet, obj *types.AccountDetails) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountDetailsImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountDetails")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountDetails_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "firstName":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountDetails_firstName(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "lastName":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountDetails_lastName(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "country":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountDetails_country(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accountPaxumPayoutMethodImplementors = []string{"AccountPaxumPayoutMethod", "IAccountPayoutMethod", "AccountPayoutMethod"}
+
+func (ec *executionContext) _AccountPaxumPayoutMethod(ctx context.Context, sel ast.SelectionSet, obj *types.AccountPaxumPayoutMethod) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountPaxumPayoutMethodImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountPaxumPayoutMethod")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountPaxumPayoutMethod_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "email":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountPaxumPayoutMethod_email(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -2276,6 +8711,95 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 	return out
 }
 
+var balanceImplementors = []string{"Balance"}
+
+func (ec *executionContext) _Balance(ctx context.Context, sel ast.SelectionSet, obj *types.Balance) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, balanceImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Balance")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Balance_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "amount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Balance_amount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "currency":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Balance_currency(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updatedAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Balance_updatedAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var cancelClubPayoutPayloadImplementors = []string{"CancelClubPayoutPayload"}
+
+func (ec *executionContext) _CancelClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CancelClubPayoutPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancelClubPayoutPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CancelClubPayoutPayload")
+		case "clubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancelClubPayoutPayload_clubPayout(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var clubImplementors = []string{"Club", "_Entity"}
 
 func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj *types.Club) graphql.Marshaler {
@@ -2286,9 +8810,1138 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Club")
+		case "balance":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_balance(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "pendingBalance":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_pendingBalance(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "platformFee":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Club_platformFee(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "payments":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_payments(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "payouts":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_payouts(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Club_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPaymentImplementors = []string{"ClubPayment", "Node", "_Entity"}
+
+func (ec *executionContext) _ClubPayment(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPayment) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPaymentImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPayment")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reference":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_reference(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "source":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_source(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_status(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "currency":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_currency(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "baseAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_baseAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "platformFeeAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_platformFeeAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "finalAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_finalAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isDeduction":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_isDeduction(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "settlementDate":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_settlementDate(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "accountTransaction":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_accountTransaction(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "destinationClub":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_destinationClub(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "sourceAccount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_sourceAccount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPaymentConnectionImplementors = []string{"ClubPaymentConnection"}
+
+func (ec *executionContext) _ClubPaymentConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPaymentConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPaymentConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPaymentConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPaymentConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPaymentConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPaymentEdgeImplementors = []string{"ClubPaymentEdge"}
+
+func (ec *executionContext) _ClubPaymentEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPaymentEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPaymentEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPaymentEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPaymentEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPaymentEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPayoutImplementors = []string{"ClubPayout", "Node", "_Entity"}
+
+func (ec *executionContext) _ClubPayout(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPayout) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPayoutImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPayout")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_reference(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "status":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_status(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "currency":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_currency(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "amount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_amount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "events":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_events(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "club":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_club(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "payoutAccount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_payoutAccount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "depositDate":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_depositDate(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "createdAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_createdAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "payments":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ClubPayout_payments(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPayoutConnectionImplementors = []string{"ClubPayoutConnection"}
+
+func (ec *executionContext) _ClubPayoutConnection(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPayoutConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPayoutConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPayoutConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPayoutEdgeImplementors = []string{"ClubPayoutEdge"}
+
+func (ec *executionContext) _ClubPayoutEdge(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPayoutEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPayoutEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPayoutEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPayoutEventImplementors = []string{"ClubPayoutEvent"}
+
+func (ec *executionContext) _ClubPayoutEvent(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPayoutEvent) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPayoutEventImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPayoutEvent")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutEvent_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "error":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutEvent_error(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "timestamp":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayoutEvent_timestamp(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubPlatformFeeImplementors = []string{"ClubPlatformFee"}
+
+func (ec *executionContext) _ClubPlatformFee(ctx context.Context, sel ast.SelectionSet, obj *types.ClubPlatformFee) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubPlatformFeeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubPlatformFee")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPlatformFee_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "percent":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPlatformFee_percent(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var countryImplementors = []string{"Country"}
+
+func (ec *executionContext) _Country(ctx context.Context, sel ast.SelectionSet, obj *types.Country) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, countryImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Country")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Country_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "emoji":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Country_emoji(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Country_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "alpha3":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Country_alpha3(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "payoutMethods":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Country_payoutMethods(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deleteAccountPayoutMethodPayloadImplementors = []string{"DeleteAccountPayoutMethodPayload"}
+
+func (ec *executionContext) _DeleteAccountPayoutMethodPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountPayoutMethodPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccountPayoutMethodPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteAccountPayoutMethodPayload")
+		case "deletedAccountPayoutMethodId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DeleteAccountPayoutMethodPayload_deletedAccountPayoutMethodId(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var depositRequestImplementors = []string{"DepositRequest", "Node", "_Entity"}
+
+func (ec *executionContext) _DepositRequest(ctx context.Context, sel ast.SelectionSet, obj *types.DepositRequest) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, depositRequestImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DepositRequest")
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_reference(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "payoutMethod":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_payoutMethod(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "currency":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_currency(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "baseAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_baseAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "estimatedFeeAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_estimatedFeeAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_totalAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "lastDateForDeposit":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_lastDateForDeposit(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "createdAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequest_createdAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "payouts":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._DepositRequest_payouts(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var depositRequestConnectionImplementors = []string{"DepositRequestConnection"}
+
+func (ec *executionContext) _DepositRequestConnection(ctx context.Context, sel ast.SelectionSet, obj *types.DepositRequestConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, depositRequestConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DepositRequestConnection")
+		case "edges":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequestConnection_edges(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequestConnection_pageInfo(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var depositRequestEdgeImplementors = []string{"DepositRequestEdge"}
+
+func (ec *executionContext) _DepositRequestEdge(ctx context.Context, sel ast.SelectionSet, obj *types.DepositRequestEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, depositRequestEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DepositRequestEdge")
+		case "node":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequestEdge_node(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cursor":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DepositRequestEdge_cursor(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var entityImplementors = []string{"Entity"}
+
+func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, entityImplementors)
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Entity",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
+			Object: field.Name,
+			Field:  field,
+		})
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Entity")
+		case "findAccountByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findAccountByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubPaymentByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubPaymentByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubPayoutByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubPayoutByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findDepositRequestByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findDepositRequestByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var initiateClubPayoutPayloadImplementors = []string{"InitiateClubPayoutPayload"}
+
+func (ec *executionContext) _InitiateClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, obj *types.InitiateClubPayoutPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, initiateClubPayoutPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("InitiateClubPayoutPayload")
+		case "club":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._InitiateClubPayoutPayload_club(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -2337,6 +9990,92 @@ func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mutationImplementors = []string{"Mutation"}
+
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mutationImplementors)
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Mutation",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
+			Object: field.Name,
+			Field:  field,
+		})
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Mutation")
+		case "updateAccountDetails":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAccountDetails(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateClubPlatformFee":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubPlatformFee(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "setPaxumAccountPayoutMethod":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setPaxumAccountPayoutMethod(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "deleteAccountPayoutMethod":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteAccountPayoutMethod(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateClubPayoutDepositDate":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubPayoutDepositDate(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "cancelClubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_cancelClubPayout(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "retryClubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_retryClubPayout(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "initiateClubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_initiateClubPayout(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2422,6 +10161,158 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "countries":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_countries(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "payment":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_payment(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "payments":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_payments(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "payout":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_payout(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "payouts":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_payouts(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "depositRequest":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_depositRequest(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "depositRequests":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_depositRequests(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "_entities":
 			field := field
 
@@ -2493,6 +10384,62 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var retryClubPayoutPayloadImplementors = []string{"RetryClubPayoutPayload"}
+
+func (ec *executionContext) _RetryClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RetryClubPayoutPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, retryClubPayoutPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RetryClubPayoutPayload")
+		case "clubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RetryClubPayoutPayload_clubPayout(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var setPaxumAccountPayoutMethodPayloadImplementors = []string{"SetPaxumAccountPayoutMethodPayload"}
+
+func (ec *executionContext) _SetPaxumAccountPayoutMethodPayload(ctx context.Context, sel ast.SelectionSet, obj *types.SetPaxumAccountPayoutMethodPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, setPaxumAccountPayoutMethodPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SetPaxumAccountPayoutMethodPayload")
+		case "accountPayoutMethod":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SetPaxumAccountPayoutMethodPayload_accountPayoutMethod(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var translationImplementors = []string{"Translation"}
 
 func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
@@ -2523,6 +10470,90 @@ func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateAccountDetailsPayloadImplementors = []string{"UpdateAccountDetailsPayload"}
+
+func (ec *executionContext) _UpdateAccountDetailsPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAccountDetailsPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccountDetailsPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAccountDetailsPayload")
+		case "accountDetails":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateAccountDetailsPayload_accountDetails(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateClubPayoutDepositDatePayloadImplementors = []string{"UpdateClubPayoutDepositDatePayload"}
+
+func (ec *executionContext) _UpdateClubPayoutDepositDatePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubPayoutDepositDatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubPayoutDepositDatePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubPayoutDepositDatePayload")
+		case "clubPayout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateClubPayoutDepositDatePayload_clubPayout(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateClubPlatformFeePayloadImplementors = []string{"UpdateClubPlatformFeePayload"}
+
+func (ec *executionContext) _UpdateClubPlatformFeePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubPlatformFeePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubPlatformFeePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubPlatformFeePayload")
+		case "clubPlatformFee":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._UpdateClubPlatformFeePayload_clubPlatformFee(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2985,6 +11016,30 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAccount2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx context.Context, sel ast.SelectionSet, v types.Account) graphql.Marshaler {
+	return ec._Account(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAccount2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx context.Context, sel ast.SelectionSet, v *types.Account) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Account(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNAccountTransaction2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransaction(ctx context.Context, sel ast.SelectionSet, v *types.AccountTransaction) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccountTransaction(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -2998,6 +11053,20 @@ func (ec *executionContext) marshalNBCP472string(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNBalance2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐBalance(ctx context.Context, sel ast.SelectionSet, v types.Balance) graphql.Marshaler {
+	return ec._Balance(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBalance2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐBalance(ctx context.Context, sel ast.SelectionSet, v *types.Balance) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Balance(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -3015,6 +11084,449 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCancelClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelClubPayoutInput(ctx context.Context, v interface{}) (types.CancelClubPayoutInput, error) {
+	res, err := ec.unmarshalInputCancelClubPayoutInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNClub2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v types.Club) graphql.Marshaler {
+	return ec._Club(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx context.Context, sel ast.SelectionSet, v *types.Club) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Club(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPayment2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx context.Context, sel ast.SelectionSet, v types.ClubPayment) graphql.Marshaler {
+	return ec._ClubPayment(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubPayment2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayment) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPayment(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPaymentConnection2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubPaymentConnection) graphql.Marshaler {
+	return ec._ClubPaymentConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubPaymentConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubPaymentConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPaymentConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPaymentEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubPaymentEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubPaymentEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubPaymentEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubPaymentEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPaymentEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNClubPaymentSource2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentSource(ctx context.Context, v interface{}) (types.ClubPaymentSource, error) {
+	var res types.ClubPaymentSource
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNClubPaymentSource2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentSource(ctx context.Context, sel ast.SelectionSet, v types.ClubPaymentSource) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNClubPaymentStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatus(ctx context.Context, v interface{}) (types.ClubPaymentStatus, error) {
+	var res types.ClubPaymentStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNClubPaymentStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatus(ctx context.Context, sel ast.SelectionSet, v types.ClubPaymentStatus) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) marshalNClubPayout2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx context.Context, sel ast.SelectionSet, v types.ClubPayout) graphql.Marshaler {
+	return ec._ClubPayout(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayout) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPayout(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPayoutConnection2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutConnection(ctx context.Context, sel ast.SelectionSet, v types.ClubPayoutConnection) graphql.Marshaler {
+	return ec._ClubPayoutConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubPayoutConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutConnection(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayoutConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPayoutConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPayoutEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubPayoutEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubPayoutEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubPayoutEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEdge(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayoutEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPayoutEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubPayoutEvent2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEventᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubPayoutEvent) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubPayoutEvent2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEvent(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubPayoutEvent2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutEvent(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayoutEvent) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPayoutEvent(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx context.Context, v interface{}) (types.ClubPayoutStatus, error) {
+	var res types.ClubPayoutStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx context.Context, sel ast.SelectionSet, v types.ClubPayoutStatus) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) marshalNClubPlatformFee2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx context.Context, sel ast.SelectionSet, v *types.ClubPlatformFee) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubPlatformFee(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCountry2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCountryᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Country) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCountry2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCountry(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCountry2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCountry(ctx context.Context, sel ast.SelectionSet, v *types.Country) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Country(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, v interface{}) (types.Currency, error) {
+	var res types.Currency
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, sel ast.SelectionSet, v types.Currency) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNDate2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql1.UnmarshalDate(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDate2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql1.MarshalDate(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNDeleteAccountPayoutMethodInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayoutMethodInput(ctx context.Context, v interface{}) (types.DeleteAccountPayoutMethodInput, error) {
+	res, err := ec.unmarshalInputDeleteAccountPayoutMethodInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDepositRequest2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx context.Context, sel ast.SelectionSet, v types.DepositRequest) graphql.Marshaler {
+	return ec._DepositRequest(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDepositRequest2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx context.Context, sel ast.SelectionSet, v *types.DepositRequest) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._DepositRequest(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNDepositRequestConnection2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestConnection(ctx context.Context, sel ast.SelectionSet, v types.DepositRequestConnection) graphql.Marshaler {
+	return ec._DepositRequestConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDepositRequestConnection2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestConnection(ctx context.Context, sel ast.SelectionSet, v *types.DepositRequestConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._DepositRequestConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNDepositRequestEdge2ᚕᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.DepositRequestEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNDepositRequestEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNDepositRequestEdge2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequestEdge(ctx context.Context, sel ast.SelectionSet, v *types.DepositRequestEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._DepositRequestEdge(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -3025,6 +11537,26 @@ func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐ
 	return v
 }
 
+func (ec *executionContext) unmarshalNInitiateClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐInitiateClubPayoutInput(ctx context.Context, v interface{}) (types.InitiateClubPayoutInput, error) {
+	res, err := ec.unmarshalInputInitiateClubPayoutInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3033,6 +11565,97 @@ func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋringer
 		return graphql.Null
 	}
 	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethod(ctx context.Context, v interface{}) (types.PayoutMethod, error) {
+	var res types.PayoutMethod
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethod(ctx context.Context, sel ast.SelectionSet, v types.PayoutMethod) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNPayoutMethod2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethodᚄ(ctx context.Context, v interface{}) ([]types.PayoutMethod, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]types.PayoutMethod, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethod(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNPayoutMethod2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethodᚄ(ctx context.Context, sel ast.SelectionSet, v []types.PayoutMethod) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐPayoutMethod(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) unmarshalNRetryClubPayoutInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐRetryClubPayoutInput(ctx context.Context, v interface{}) (types.RetryClubPayoutInput, error) {
+	res, err := ec.unmarshalInputRetryClubPayoutInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSetPaxumAccountPayoutMethodInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐSetPaxumAccountPayoutMethodInput(ctx context.Context, v interface{}) (types.SetPaxumAccountPayoutMethodInput, error) {
+	res, err := ec.unmarshalInputSetPaxumAccountPayoutMethodInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -3048,6 +11671,36 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql.MarshalTime(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateAccountDetailsInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountDetailsInput(ctx context.Context, v interface{}) (types.UpdateAccountDetailsInput, error) {
+	res, err := ec.unmarshalInputUpdateAccountDetailsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateClubPayoutDepositDateInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPayoutDepositDateInput(ctx context.Context, v interface{}) (types.UpdateClubPayoutDepositDateInput, error) {
+	res, err := ec.unmarshalInputUpdateClubPayoutDepositDateInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateClubPlatformFeeInput2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPlatformFeeInput(ctx context.Context, v interface{}) (types.UpdateClubPlatformFeeInput, error) {
+	res, err := ec.unmarshalInputUpdateClubPlatformFeeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -3413,6 +12066,20 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
+func (ec *executionContext) marshalOAccountDetails2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountDetails(ctx context.Context, sel ast.SelectionSet, v *types.AccountDetails) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AccountDetails(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAccountPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountPayoutMethod(ctx context.Context, sel ast.SelectionSet, v types.AccountPayoutMethod) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AccountPayoutMethod(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3439,6 +12106,219 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) marshalOCancelClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, v *types.CancelClubPayoutPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CancelClubPayoutPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOClubPayment2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayment(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayment) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClubPayment(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOClubPaymentStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatusᚄ(ctx context.Context, v interface{}) ([]types.ClubPaymentStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]types.ClubPaymentStatus, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNClubPaymentStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatus(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOClubPaymentStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatusᚄ(ctx context.Context, sel ast.SelectionSet, v []types.ClubPaymentStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubPaymentStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPaymentStatus(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOClubPayout2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayout(ctx context.Context, sel ast.SelectionSet, v *types.ClubPayout) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClubPayout(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOClubPayoutStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatusᚄ(ctx context.Context, v interface{}) ([]types.ClubPayoutStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]types.ClubPayoutStatus, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOClubPayoutStatus2ᚕoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatusᚄ(ctx context.Context, sel ast.SelectionSet, v []types.ClubPayoutStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOClubPlatformFee2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx context.Context, sel ast.SelectionSet, v *types.ClubPlatformFee) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ClubPlatformFee(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteAccountPayoutMethodPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayoutMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountPayoutMethodPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteAccountPayoutMethodPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODepositRequest2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐDepositRequest(ctx context.Context, sel ast.SelectionSet, v *types.DepositRequest) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DepositRequest(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOInitiateClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐInitiateClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, v *types.InitiateClubPayoutPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._InitiateClubPayoutPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalInt(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalInt(*v)
+	return res
+}
+
+func (ec *executionContext) marshalORetryClubPayoutPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐRetryClubPayoutPayload(ctx context.Context, sel ast.SelectionSet, v *types.RetryClubPayoutPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RetryClubPayoutPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSetPaxumAccountPayoutMethodPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐSetPaxumAccountPayoutMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.SetPaxumAccountPayoutMethodPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SetPaxumAccountPayoutMethodPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3463,6 +12343,43 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalTime(*v)
+	return res
+}
+
+func (ec *executionContext) marshalOUpdateAccountDetailsPayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountDetailsPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountDetailsPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAccountDetailsPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateClubPayoutDepositDatePayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPayoutDepositDatePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubPayoutDepositDatePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubPayoutDepositDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateClubPlatformFeePayload2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubPlatformFeePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubPlatformFeePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubPlatformFeePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

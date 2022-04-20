@@ -80,6 +80,106 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		}()
 
 		switch typeName {
+		case "Account":
+			resolverName, err := entityResolverNameForAccount(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "Account": %w`, err)
+			}
+			switch resolverName {
+
+			case "findAccountByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findAccountByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindAccountByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Account": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "Club":
+			resolverName, err := entityResolverNameForClub(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "Club": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Club": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "ClubPayment":
+			resolverName, err := entityResolverNameForClubPayment(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ClubPayment": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubPaymentByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubPaymentByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubPaymentByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubPayment": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "ClubPayout":
+			resolverName, err := entityResolverNameForClubPayout(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ClubPayout": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubPayoutByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubPayoutByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubPayoutByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubPayout": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "DepositRequest":
+			resolverName, err := entityResolverNameForDepositRequest(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "DepositRequest": %w`, err)
+			}
+			switch resolverName {
+
+			case "findDepositRequestByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findDepositRequestByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindDepositRequestByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "DepositRequest": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
 
 		}
 		return fmt.Errorf("%w: %s", ErrUnknownType, typeName)
@@ -147,4 +247,89 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		g.Wait()
 		return list
 	}
+}
+
+func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findAccountByID", nil
+	}
+	return "", fmt.Errorf("%w for Account", ErrTypeNotFound)
+}
+
+func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubByID", nil
+	}
+	return "", fmt.Errorf("%w for Club", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubPayment(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubPaymentByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubPayment", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubPayout(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubPayoutByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubPayout", ErrTypeNotFound)
+}
+
+func entityResolverNameForDepositRequest(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findDepositRequestByID", nil
+	}
+	return "", fmt.Errorf("%w for DepositRequest", ErrTypeNotFound)
 }

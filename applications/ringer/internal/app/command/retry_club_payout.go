@@ -21,17 +21,21 @@ func NewRetryClubPayoutHandler(par payout.Repository, event event.Repository) Re
 	return RetryClubPayoutHandler{par: par, event: event}
 }
 
-func (h RetryClubPayoutHandler) Handle(ctx context.Context, cmd RetryClubPayout) error {
+func (h RetryClubPayoutHandler) Handle(ctx context.Context, cmd RetryClubPayout) (*payout.ClubPayout, error) {
 
 	pay, err := h.par.GetClubPayoutById(ctx, cmd.Principal, cmd.PayoutId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := pay.CanRetry(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return h.event.RetryClubPayout(ctx, cmd.PayoutId)
+	if err := h.event.RetryClubPayout(ctx, cmd.PayoutId); err != nil {
+		return nil, err
+	}
+
+	return pay, nil
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateAccountDetails struct {
-	Requester          *principal.Principal
+	Principal          *principal.Principal
 	AccountId          string
 	FirstName          string
 	LastName           string
@@ -24,7 +24,7 @@ func NewUpdateAccountDetailsHandler(ir details.Repository) UpdateAccountDetailsH
 
 func (h UpdateAccountDetailsHandler) Handle(ctx context.Context, cmd UpdateAccountDetails) (*details.AccountDetails, error) {
 
-	id, err := h.ir.UpdateAccountDetails(ctx, cmd.Requester, cmd.AccountId, func(id *details.AccountDetails) error {
+	id, err := h.ir.UpdateAccountDetails(ctx, cmd.Principal, cmd.AccountId, func(id *details.AccountDetails) error {
 
 		if err := id.UpdateFirstName(cmd.FirstName); err != nil {
 			return err

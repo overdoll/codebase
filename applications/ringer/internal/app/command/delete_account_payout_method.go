@@ -7,7 +7,7 @@ import (
 )
 
 type DeleteAccountPayoutMethod struct {
-	Requester             *principal.Principal
+	Principal             *principal.Principal
 	AccountPayoutMethodId string
 }
 
@@ -21,13 +21,13 @@ func NewDeleteAccountPayoutMethodHandler(pr payout.Repository) DeleteAccountPayo
 
 func (h DeleteAccountPayoutMethodHandler) Handle(ctx context.Context, cmd DeleteAccountPayoutMethod) error {
 
-	pay, err := h.pr.GetAccountPayoutMethodById(ctx, cmd.Requester, cmd.AccountPayoutMethodId)
+	pay, err := h.pr.GetAccountPayoutMethodById(ctx, cmd.Principal, cmd.AccountPayoutMethodId)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.pr.DeleteAccountPayoutMethod(ctx, cmd.Requester, pay); err != nil {
+	if err := h.pr.DeleteAccountPayoutMethod(ctx, cmd.Principal, pay); err != nil {
 		return err
 	}
 

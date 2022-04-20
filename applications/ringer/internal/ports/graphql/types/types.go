@@ -3,14 +3,56 @@
 package types
 
 import (
+	"fmt"
+	"io"
 	"overdoll/libraries/graphql/relay"
+	"strconv"
+	"time"
 )
 
+type AccountPayoutMethod interface {
+	IsAccountPayoutMethod()
+}
+
+type IAccountPayoutMethod interface {
+	IsIAccountPayoutMethod()
+}
+
 type Account struct {
-	ID relay.ID `json:"id"`
+	// Details belonging to this account.
+	//
+	// If null, account details have not been filled out yet.
+	//
+	// Account details are required to be filled out before setting a payout method.
+	Details *AccountDetails `json:"details"`
+	// The account payout method linked to this account.
+	PayoutMethod AccountPayoutMethod `json:"payoutMethod"`
+	ID           relay.ID            `json:"id"`
 }
 
 func (Account) IsEntity() {}
+
+// Details belonging to an account.
+type AccountDetails struct {
+	// An ID to uniquely identify this details instance.
+	ID relay.ID `json:"id"`
+	// The first name belonging to this account.
+	FirstName string `json:"firstName"`
+	// The last name belonging to this account.
+	LastName string `json:"lastName"`
+	// The country this account belongs to.
+	Country *Country `json:"country"`
+}
+
+type AccountPaxumPayoutMethod struct {
+	// The ID linked to this payout method.
+	ID relay.ID `json:"id"`
+	// The email linked to the paxum payout method.
+	Email string `json:"email"`
+}
+
+func (AccountPaxumPayoutMethod) IsIAccountPayoutMethod() {}
+func (AccountPaxumPayoutMethod) IsAccountPayoutMethod()  {}
 
 type AccountTransaction struct {
 	ID relay.ID `json:"id"`
@@ -18,11 +60,240 @@ type AccountTransaction struct {
 
 func (AccountTransaction) IsEntity() {}
 
-type Club struct {
+// A balance item.
+//
+// Represents balance on a specific club.
+type Balance struct {
+	// An ID to uniquely identify this balance.
 	ID relay.ID `json:"id"`
+	// The amount on this balance.
+	Amount int `json:"amount"`
+	// The currency the balance is in.
+	Currency Currency `json:"currency"`
+	// When the balance was last updated.
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+// Cancel a specific payout.
+type CancelClubPayoutInput struct {
+	// The payout to cancel.
+	PayoutID relay.ID `json:"payoutId"`
+}
+
+// Payload for cancelling the payout.
+type CancelClubPayoutPayload struct {
+	// The updated club payout.
+	ClubPayout *ClubPayout `json:"clubPayout"`
+}
+
+type Club struct {
+	// The current balance of this club.
+	Balance *Balance `json:"balance"`
+	// The current balance of this club, representing the pending amount instead of the real amount.
+	PendingBalance *Balance `json:"pendingBalance"`
+	// This club's platform fee for each payment.
+	PlatformFee *ClubPlatformFee `json:"platformFee"`
+	// All payments made to this club.
+	Payments *ClubPaymentConnection `json:"payments"`
+	// All payouts that are scheduled or created for this club.
+	Payouts *ClubPayoutConnection `json:"payouts"`
+	ID      relay.ID              `json:"id"`
 }
 
 func (Club) IsEntity() {}
+
+// A club payment item.
+//
+// Represents a payment that is going to be made to a club.
+type ClubPayment struct {
+	// An ID to uniquely identify this club payment.
+	ID relay.ID `json:"id"`
+	// A reference, used to look up this payment.
+	Reference string `json:"reference"`
+	// The source of the payment.
+	Source ClubPaymentSource `json:"source"`
+	// The status of the payment.
+	Status ClubPaymentStatus `json:"status"`
+	// The currency this payment was made in.
+	Currency Currency `json:"currency"`
+	// The base amount this payment was originally made in.
+	BaseAmount int `json:"baseAmount"`
+	// The amount taken off with a platform fee.
+	PlatformFeeAmount int `json:"platformFeeAmount"`
+	// The final amount that will actually be paid to a club.
+	FinalAmount int `json:"finalAmount"`
+	// If this payment is a deduction, usually the source being a refund, chargeback or a void.
+	IsDeduction bool `json:"isDeduction"`
+	// If this payment is in "pending" status, this will be the date when the payment becomes "ready".
+	SettlementDate time.Time `json:"settlementDate"`
+	// The account transaction linked to this payment.
+	AccountTransaction *AccountTransaction `json:"accountTransaction"`
+	// The club this payment is made to.
+	DestinationClub *Club `json:"destinationClub"`
+	// The account that made this payment.
+	SourceAccount *Account `json:"sourceAccount"`
+}
+
+func (ClubPayment) IsNode()   {}
+func (ClubPayment) IsEntity() {}
+
+// Connection of the club payment.
+type ClubPaymentConnection struct {
+	Edges    []*ClubPaymentEdge `json:"edges"`
+	PageInfo *relay.PageInfo    `json:"pageInfo"`
+}
+
+// Edge of the the club payment.
+type ClubPaymentEdge struct {
+	Node   *ClubPayment `json:"node"`
+	Cursor string       `json:"cursor"`
+}
+
+// A club payout item.
+//
+// Represents a payout that is going to be paid to a specific account.
+type ClubPayout struct {
+	// An ID to uniquely identify this club payout.
+	ID relay.ID `json:"id"`
+	// A reference, used to look up this payout.
+	Reference string `json:"reference"`
+	// The status of the payout.
+	Status ClubPayoutStatus `json:"status"`
+	// The currency this payout is in.
+	Currency Currency `json:"currency"`
+	// The amount this payout is created in.
+	Amount int `json:"amount"`
+	// If a payout failed, an event will be created here.
+	Events []*ClubPayoutEvent `json:"events"`
+	// The club linked to this payout.
+	Club *Club `json:"club"`
+	// The account that is going to be paid out with this payout.
+	PayoutAccount *Account `json:"payoutAccount"`
+	// When the deposit will actually attempt to occur.
+	DepositDate time.Time `json:"depositDate"`
+	// When this payout was created.
+	CreatedAt time.Time `json:"createdAt"`
+	// All payments linked to this payout.
+	Payments *ClubPaymentConnection `json:"payments"`
+}
+
+func (ClubPayout) IsNode()   {}
+func (ClubPayout) IsEntity() {}
+
+// Connection of the club payout.
+type ClubPayoutConnection struct {
+	Edges    []*ClubPayoutEdge `json:"edges"`
+	PageInfo *relay.PageInfo   `json:"pageInfo"`
+}
+
+// Edge of the the club payout.
+type ClubPayoutEdge struct {
+	Node   *ClubPayout `json:"node"`
+	Cursor string      `json:"cursor"`
+}
+
+type ClubPayoutEvent struct {
+	// An ID to uniquely identify this club payout event.
+	ID relay.ID `json:"id"`
+	// The error that occurred.
+	Error string `json:"error"`
+	// When this event occurred.
+	Timestamp time.Time `json:"timestamp"`
+}
+
+// Platform fee for a specific club.
+type ClubPlatformFee struct {
+	// An ID to uniquely identify this club platform fee.
+	ID relay.ID `json:"id"`
+	// The percent of the club platform fee.
+	Percent int `json:"percent"`
+}
+
+// A country instance.
+type Country struct {
+	// An ID to uniquely identify this country.
+	ID relay.ID `json:"id"`
+	// The emoji representation of this country's flag.
+	Emoji string `json:"emoji"`
+	// The full name of this country.
+	Name string `json:"name"`
+	// The alpha3 code for this country.
+	Alpha3 string `json:"alpha3"`
+	// Payout methods supported for this country.
+	//
+	// If empty, this country does not support any sort of payout.
+	PayoutMethods []PayoutMethod `json:"payoutMethods"`
+}
+
+// Delete a specific account payout method.
+type DeleteAccountPayoutMethodInput struct {
+	// The payout method to delete.
+	PayoutMethodID relay.ID `json:"payoutMethodId"`
+}
+
+// Payload for deleting the account payout method.
+type DeleteAccountPayoutMethodPayload struct {
+	// The deleted account payout method.
+	DeletedAccountPayoutMethodID relay.ID `json:"deletedAccountPayoutMethodId"`
+}
+
+// A deposit request.
+//
+// Basically, when payouts are scheduled at the beginning of the month,
+// a deposit request is created to tell us how much money we need our payout methods to have in order
+// to process all of the payouts
+type DepositRequest struct {
+	// An ID to uniquely identify this deposit request.
+	ID relay.ID `json:"id"`
+	// A reference, used to look up this deposit request.
+	Reference string `json:"reference"`
+	// The type of payout method this deposit request is created for.
+	PayoutMethod PayoutMethod `json:"payoutMethod"`
+	// The currency this deposit is in.
+	Currency Currency `json:"currency"`
+	// The base amount of the deposit.
+	BaseAmount int `json:"baseAmount"`
+	// To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
+	// accounts for this and ensures we always deliver the exact $ amount that the artist sees in their balance.
+	EstimatedFeeAmount int `json:"estimatedFeeAmount"`
+	// The total amount that needs to be deposited.
+	TotalAmount int `json:"totalAmount"`
+	// The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled.
+	LastDateForDeposit time.Time `json:"lastDateForDeposit"`
+	// When this deposit was created.
+	CreatedAt time.Time `json:"createdAt"`
+	// All payouts linked to this deposit request.
+	Payouts *ClubPayoutConnection `json:"payouts"`
+}
+
+func (DepositRequest) IsNode()   {}
+func (DepositRequest) IsEntity() {}
+
+// Connection of the deposit request.
+type DepositRequestConnection struct {
+	Edges    []*DepositRequestEdge `json:"edges"`
+	PageInfo *relay.PageInfo       `json:"pageInfo"`
+}
+
+// Edge of the the deposit request.
+type DepositRequestEdge struct {
+	Node   *DepositRequest `json:"node"`
+	Cursor string          `json:"cursor"`
+}
+
+// Initiate a payout for a specific club.
+type InitiateClubPayoutInput struct {
+	// The club to initiate the payout for.
+	ClubID relay.ID `json:"clubId"`
+	// Optionally set the deposit date.
+	DepositDate *time.Time `json:"depositDate"`
+}
+
+// Initiate a payout for a specific club.
+type InitiateClubPayoutPayload struct {
+	// The club that the payout was initiated for.
+	Club *Club `json:"club"`
+}
 
 type Language struct {
 	// BCP47 locale
@@ -31,9 +302,308 @@ type Language struct {
 	Name string `json:"name"`
 }
 
+// Retry a specific payout.
+type RetryClubPayoutInput struct {
+	// The payout to retry.
+	PayoutID relay.ID `json:"payoutId"`
+}
+
+// Payload for retrying the payout.
+type RetryClubPayoutPayload struct {
+	// The updated club payout.
+	ClubPayout *ClubPayout `json:"clubPayout"`
+}
+
+// Update account's payout method.
+type SetPaxumAccountPayoutMethodInput struct {
+	// The paxum email to use for payouts.
+	Email string `json:"email"`
+}
+
+// Payload for updating the payout method.
+type SetPaxumAccountPayoutMethodPayload struct {
+	// The updated account payout method.
+	AccountPayoutMethod AccountPayoutMethod `json:"accountPayoutMethod"`
+}
+
 type Translation struct {
 	// The language linked to this translation.
 	Language *Language `json:"language"`
 	// The translation text.
 	Text string `json:"text"`
+}
+
+// Update account details.
+type UpdateAccountDetailsInput struct {
+	// The first name to set.
+	FirstName string `json:"firstName"`
+	// The last name to set.
+	LastName string `json:"lastName"`
+	// The country ID to use.
+	CountryID relay.ID `json:"countryId"`
+}
+
+// Payload for the new updated account details.
+type UpdateAccountDetailsPayload struct {
+	// The updated account details.
+	AccountDetails *AccountDetails `json:"accountDetails"`
+}
+
+// Update the payout date for a specific payout ID.
+type UpdateClubPayoutDepositDateInput struct {
+	// The payout to update.
+	PayoutID relay.ID `json:"payoutId"`
+	// The new payout date.
+	NewDate time.Time `json:"newDate"`
+}
+
+// Payload for updating the payout deposit date.
+type UpdateClubPayoutDepositDatePayload struct {
+	// The updated club payout.
+	ClubPayout *ClubPayout `json:"clubPayout"`
+}
+
+// Update the club's platform fee.
+type UpdateClubPlatformFeeInput struct {
+	// The club to update.
+	ClubID relay.ID `json:"clubId"`
+	// The percent fee to take from every payment.
+	Percent int `json:"percent"`
+}
+
+// Payload for the new updated account details.
+type UpdateClubPlatformFeePayload struct {
+	// The updated club platform fee.
+	ClubPlatformFee *ClubPlatformFee `json:"clubPlatformFee"`
+}
+
+type ClubPaymentSource string
+
+const (
+	ClubPaymentSourceClubSupporterSubscription ClubPaymentSource = "CLUB_SUPPORTER_SUBSCRIPTION"
+)
+
+var AllClubPaymentSource = []ClubPaymentSource{
+	ClubPaymentSourceClubSupporterSubscription,
+}
+
+func (e ClubPaymentSource) IsValid() bool {
+	switch e {
+	case ClubPaymentSourceClubSupporterSubscription:
+		return true
+	}
+	return false
+}
+
+func (e ClubPaymentSource) String() string {
+	return string(e)
+}
+
+func (e *ClubPaymentSource) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubPaymentSource(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubPaymentSource", str)
+	}
+	return nil
+}
+
+func (e ClubPaymentSource) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The status of a payment.
+type ClubPaymentStatus string
+
+const (
+	// A payment is pending until settled (reached "settlement date").
+	ClubPaymentStatusPending ClubPaymentStatus = "PENDING"
+	// A payment is ready to be picked up as part of a payout.
+	//
+	// Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
+	// the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+	// by the next scheduled payout.
+	ClubPaymentStatusReady ClubPaymentStatus = "READY"
+	// A payment was successfully deposited as part of a payout and is no longer needed.
+	ClubPaymentStatusComplete ClubPaymentStatus = "COMPLETE"
+)
+
+var AllClubPaymentStatus = []ClubPaymentStatus{
+	ClubPaymentStatusPending,
+	ClubPaymentStatusReady,
+	ClubPaymentStatusComplete,
+}
+
+func (e ClubPaymentStatus) IsValid() bool {
+	switch e {
+	case ClubPaymentStatusPending, ClubPaymentStatusReady, ClubPaymentStatusComplete:
+		return true
+	}
+	return false
+}
+
+func (e ClubPaymentStatus) String() string {
+	return string(e)
+}
+
+func (e *ClubPaymentStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubPaymentStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubPaymentStatus", str)
+	}
+	return nil
+}
+
+func (e ClubPaymentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The status of the payout.
+type ClubPayoutStatus string
+
+const (
+	// Payout is queued until the "deposit date". Payout is able to be cancelled while in this state.
+	ClubPayoutStatusQueued ClubPayoutStatus = "QUEUED"
+	// The "deposit date" was reached. The payout can no longer be cancelled, and will start to perform the payout.
+	ClubPayoutStatusProcessing ClubPayoutStatus = "PROCESSING"
+	// The payout failed. A payout will try up to 3 times before this state is created.
+	ClubPayoutStatusFailed ClubPayoutStatus = "FAILED"
+	// The payout was cancelled.
+	ClubPayoutStatusCancelled ClubPayoutStatus = "CANCELLED"
+	// The payout was successfully deposited in the target account.
+	ClubPayoutStatusDeposited ClubPayoutStatus = "DEPOSITED"
+)
+
+var AllClubPayoutStatus = []ClubPayoutStatus{
+	ClubPayoutStatusQueued,
+	ClubPayoutStatusProcessing,
+	ClubPayoutStatusFailed,
+	ClubPayoutStatusCancelled,
+	ClubPayoutStatusDeposited,
+}
+
+func (e ClubPayoutStatus) IsValid() bool {
+	switch e {
+	case ClubPayoutStatusQueued, ClubPayoutStatusProcessing, ClubPayoutStatusFailed, ClubPayoutStatusCancelled, ClubPayoutStatusDeposited:
+		return true
+	}
+	return false
+}
+
+func (e ClubPayoutStatus) String() string {
+	return string(e)
+}
+
+func (e *ClubPayoutStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubPayoutStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubPayoutStatus", str)
+	}
+	return nil
+}
+
+func (e ClubPayoutStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Currency string
+
+const (
+	CurrencyUsd Currency = "USD"
+	CurrencyCad Currency = "CAD"
+	CurrencyAud Currency = "AUD"
+	CurrencyJpy Currency = "JPY"
+	CurrencyGbp Currency = "GBP"
+	CurrencyEur Currency = "EUR"
+)
+
+var AllCurrency = []Currency{
+	CurrencyUsd,
+	CurrencyCad,
+	CurrencyAud,
+	CurrencyJpy,
+	CurrencyGbp,
+	CurrencyEur,
+}
+
+func (e Currency) IsValid() bool {
+	switch e {
+	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
+		return true
+	}
+	return false
+}
+
+func (e Currency) String() string {
+	return string(e)
+}
+
+func (e *Currency) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Currency(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Currency", str)
+	}
+	return nil
+}
+
+func (e Currency) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type PayoutMethod string
+
+const (
+	PayoutMethodPaxum PayoutMethod = "PAXUM"
+)
+
+var AllPayoutMethod = []PayoutMethod{
+	PayoutMethodPaxum,
+}
+
+func (e PayoutMethod) IsValid() bool {
+	switch e {
+	case PayoutMethodPaxum:
+		return true
+	}
+	return false
+}
+
+func (e PayoutMethod) String() string {
+	return string(e)
+}
+
+func (e *PayoutMethod) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = PayoutMethod(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid PayoutMethod", str)
+	}
+	return nil
+}
+
+func (e PayoutMethod) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

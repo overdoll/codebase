@@ -213,8 +213,13 @@ func (r PayoutIndexElasticSearchRepository) SearchClubPayouts(ctx context.Contex
 		filterQueries = append(filterQueries, elastic.NewTermQuery("deposit_request_id", *filters.DepositRequestId()))
 	}
 
-	if filters.Status() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("status", filters.Status().String()))
+	var statuses []string
+	for _, status := range filters.Status() {
+		statuses = append(statuses, status.String())
+	}
+
+	if len(statuses) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("status", statuses...))
 	}
 
 	if filterQueries != nil {

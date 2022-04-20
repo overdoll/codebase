@@ -21,17 +21,21 @@ func NewCancelClubPayoutHandler(par payout.Repository, event event.Repository) C
 	return CancelClubPayoutHandler{par: par, event: event}
 }
 
-func (h CancelClubPayoutHandler) Handle(ctx context.Context, cmd CancelClubPayout) error {
+func (h CancelClubPayoutHandler) Handle(ctx context.Context, cmd CancelClubPayout) (*payout.ClubPayout, error) {
 
 	pay, err := h.par.GetClubPayoutById(ctx, cmd.Principal, cmd.PayoutId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := pay.CanCancel(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return h.event.CancelClubPayout(ctx, cmd.PayoutId)
+	if err := h.event.CancelClubPayout(ctx, cmd.PayoutId); err != nil {
+		return nil, err
+	}
+
+	return pay, nil
 }

@@ -328,6 +328,9 @@ type DeleteAccountPayoutMethodPayload {
 input InitiateClubPayoutInput {
   """The club to initiate the payout for."""
   clubId: ID!
+
+  """Optionally set the deposit date."""
+  depositDate: Time
 }
 
 """Initiate a payout for a specific club."""

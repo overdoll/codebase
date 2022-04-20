@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/applications/ringer/internal/app"
+	"overdoll/applications/ringer/internal/app/command"
 	ringer "overdoll/applications/ringer/proto"
 )
 
@@ -18,11 +19,47 @@ func NewGrpcServer(application *app.Application) *Server {
 }
 
 func (s Server) ClubPaymentDeposit(ctx context.Context, request *ringer.ClubPaymentDepositRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+
+	isClubSupporterSubscription := false
+
+	if request.Source == ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION {
+		isClubSupporterSubscription = true
+	}
+
+	if err := s.app.Commands.ClubPaymentDeposit.Handle(ctx, command.ClubPaymentDeposit{
+		AccountId:                   request.SourceAccountId,
+		ClubId:                      request.DestinationClubId,
+		AccountTransactionId:        request.AccountTransactionId,
+		Amount:                      request.Payment.Amount,
+		Currency:                    request.Payment.Currency,
+		Timestamp:                   request.Timestamp.AsTime(),
+		IsClubSupporterSubscription: isClubSupporterSubscription,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s Server) ClubPaymentDeduction(ctx context.Context, request *ringer.ClubPaymentDeductionRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+
+	isClubSupporterSubscription := false
+
+	if request.Source == ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION {
+		isClubSupporterSubscription = true
+	}
+
+	if err := s.app.Commands.ClubPaymentDeduction.Handle(ctx, command.ClubPaymentDeduction{
+		AccountId:                   request.SourceAccountId,
+		ClubId:                      request.DestinationClubId,
+		AccountTransactionId:        request.AccountTransactionId,
+		Amount:                      request.Payment.Amount,
+		Currency:                    request.Payment.Currency,
+		Timestamp:                   request.Timestamp.AsTime(),
+		IsClubSupporterSubscription: isClubSupporterSubscription,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
 }

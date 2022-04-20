@@ -198,6 +198,9 @@ func (r PaymentCassandraRepository) getClubPaymentById(ctx context.Context, paym
 		Query(clubPaymentsTable.Get()).
 		BindStruct(clubPayment{Id: paymentId}).
 		Get(&clubPay); err != nil {
+		if err == gocql.ErrNotFound {
+			return nil, payment.ErrClubPaymentNotFound
+		}
 		return nil, fmt.Errorf("failed to get club payment by id: %v", err)
 	}
 

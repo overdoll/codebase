@@ -2,13 +2,11 @@ package activities
 
 import (
 	"context"
-	"overdoll/libraries/money"
+	"overdoll/applications/ringer/internal/domain/payout"
 )
 
 type GetClubPayoutMethodsInput struct {
-	ClubId   string
-	Currency money.Currency
-	Amount   int64
+	ClubId string
 }
 
 type GetClubPayoutMethodsPayload struct {
@@ -20,22 +18,18 @@ func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayo
 	// TODO: get account ID of owner of club
 	accountId := ""
 
-	var payload *GetClubPayoutMethodsPayload
-
-	methods, err := h.par.GetAccountPayoutMethodsOperator(ctx, accountId)
+	method, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, accountId)
 
 	if err != nil {
+
+		if err == payout.ErrAccountPayoutMethodNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
-	for _, method := range methods {
-		if method.IsDefault() && method.Validate(input.Amount, input.Currency) {
-			payload = &GetClubPayoutMethodsPayload{
-				AccountPayoutMethodId: method.Id(),
-			}
-			break
-		}
-	}
-
-	return payload, nil
+	return &GetClubPayoutMethodsPayload{
+		AccountPayoutMethodId: method.AccountId(),
+	}, nil
 }

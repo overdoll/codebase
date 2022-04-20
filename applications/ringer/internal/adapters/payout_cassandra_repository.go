@@ -318,6 +318,9 @@ func (r PayoutCassandraRepository) GetClubPayoutByIdOperator(ctx context.Context
 			Id: payoutId,
 		}).
 		Get(&clubPay); err != nil {
+		if err == gocql.ErrNotFound {
+			return nil, payout.ErrClubPayoutNotFound
+		}
 
 		return nil, fmt.Errorf("failed to get club payout by id: %v", err)
 	}
