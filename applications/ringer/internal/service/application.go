@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/mocks"
 	"net/http"
 	"os"
 	"overdoll/applications/ringer/internal/adapters"
@@ -22,18 +23,40 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
-	ccbillClient := &http.Client{}
+	paxumClient := &http.Client{}
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStellaGrpc(stellaClient),
 			clients.NewTemporalClient(ctx),
-			ccbillClient,
+			paxumClient,
 		),
 		func() {
 			cleanup()
 			cleanup2()
 		}
+}
+
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+
+	bootstrap.NewBootstrap(ctx)
+
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+
+	temporalClient := &mocks.Client{}
+
+	return createApplication(ctx,
+			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
+			// this makes testing easier because we can get reproducible tests with each run
+			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
+			StellaServiceMock{},
+			temporalClient,
+			MockPaxumHttpClient{},
+		),
+		func() {
+			cleanup()
+		},
+		temporalClient
 }
 
 func createApplication(ctx context.Context, eva query.EvaService, stella query.StellaService, client client.Client, paxumClient adapters.PaxumHttpClient) app.Application {

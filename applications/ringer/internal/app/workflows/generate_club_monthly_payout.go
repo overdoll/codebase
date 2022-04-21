@@ -26,22 +26,6 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 	var a *activities.Activities
 
-	var payoutMethod *activities.GetClubPayoutMethodsPayload
-
-	// get payout method, if created
-	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutMethods,
-		activities.GetClubPayoutMethodsInput{
-			ClubId: input.ClubId,
-		},
-	).Get(ctx, payoutMethod); err != nil {
-		return err
-	}
-
-	// skip payout, we can't get any payout methods
-	if payoutMethod == nil {
-		return nil
-	}
-
 	var readyPayments *activities.GetReadyPaymentsForClubPayload
 
 	// create a pending deposit
@@ -63,6 +47,24 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	}
 
 	group := readyPayments.PaymentsGroup[0]
+
+	var payoutMethod *activities.GetClubPayoutMethodsPayload
+
+	// get payout method, if created
+	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutMethods,
+		activities.GetClubPayoutMethodsInput{
+			ClubId:   input.ClubId,
+			Amount:   group.TotalAmount,
+			Currency: group.Currency,
+		},
+	).Get(ctx, payoutMethod); err != nil {
+		return err
+	}
+
+	// skip payout, we can't get any payout methods
+	if payoutMethod == nil {
+		return nil
+	}
 
 	ts := workflow.Now(ctx)
 

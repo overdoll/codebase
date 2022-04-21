@@ -3,10 +3,13 @@ package activities
 import (
 	"context"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/money"
 )
 
 type GetClubPayoutMethodsInput struct {
-	ClubId string
+	ClubId   string
+	Amount   int64
+	Currency money.Currency
 }
 
 type GetClubPayoutMethodsPayload struct {
@@ -30,6 +33,13 @@ func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayo
 		}
 
 		return nil, err
+	}
+
+	// we need to validate that this payout method will work with this currency + amount
+	validated := method.Validate(input.Amount, input.Currency)
+
+	if !validated {
+		return nil, nil
 	}
 
 	return &GetClubPayoutMethodsPayload{
