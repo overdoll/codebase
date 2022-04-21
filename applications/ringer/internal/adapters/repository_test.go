@@ -8,7 +8,7 @@ import (
 )
 
 func seedConfiguration() bool {
-	config.Read("applications/hades")
+	config.Read("applications/ringer")
 
 	return true
 }

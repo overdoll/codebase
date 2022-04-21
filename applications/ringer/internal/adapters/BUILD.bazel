@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "adapters",
@@ -40,5 +40,20 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
+    ],
+)
+
+go_test(
+    name = "adapters_test",
+    srcs = [
+        "paxum_http_repository_test.go",
+        "repository_test.go",
+    ],
+    deps = [
+        ":adapters",
+        "//applications/ringer/internal/domain/paxum",
+        "//libraries/config",
+        "//libraries/money",
+        "@com_github_stretchr_testify//require",
     ],
 )

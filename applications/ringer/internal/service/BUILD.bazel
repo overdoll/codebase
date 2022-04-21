@@ -1,8 +1,11 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = ["application.go"],
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
     importpath = "overdoll/applications/ringer/internal/service",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
@@ -13,6 +16,46 @@ go_library(
         "//applications/ringer/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/principal",
+        "//libraries/testing_tools",
         "@io_temporal_go_sdk//client",
+        "@io_temporal_go_sdk//mocks",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "account_details_component_test.go",
+        "account_payout_method_component_test.go",
+        "club_payment_component_test.go",
+        "club_payout_component_test.go",
+        "club_platform_fee_component_test.go",
+        "component_test.go",
+    ],
+    deps = [
+        ":service",
+        "//applications/ringer/internal/adapters",
+        "//applications/ringer/internal/app/workflows",
+        "//applications/ringer/internal/domain/payout",
+        "//applications/ringer/internal/ports",
+        "//applications/ringer/internal/ports/graphql/types",
+        "//applications/ringer/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/config",
+        "//libraries/graphql/relay",
+        "//libraries/money",
+        "//libraries/passport",
+        "//libraries/testing_tools",
+        "//libraries/uuid",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//mock",
+        "@com_github_stretchr_testify//require",
+        "@io_temporal_go_sdk//mocks",
+        "@io_temporal_go_sdk//testsuite",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
 )

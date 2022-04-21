@@ -12,6 +12,7 @@ import (
 	"os"
 	"overdoll/applications/ringer/internal/adapters"
 	"overdoll/applications/ringer/internal/app/workflows"
+	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/applications/ringer/internal/ports"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
 	"overdoll/applications/ringer/internal/service"
@@ -30,8 +31,8 @@ const RingerHttpAddr = ":6556"
 
 const RingerGraphqlClientAddr = "http://:6556/api/graphql"
 
-const RingerGrpcAddr = "localhost:7778"
-const RingerGrpcClientAddr = "localhost:7778"
+const RingerGrpcAddr = "localhost:7278"
+const RingerGrpcClientAddr = "localhost:7278"
 
 var (
 	temporalClientMock *mocks.Client
@@ -72,6 +73,10 @@ func convertPayoutIdToRelayId(ruleId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ClubPayout{}, ruleId))))
 }
 
+func convertAccountIdToRelayId(ruleId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, ruleId))))
+}
+
 func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string) {
 	env := getWorkflowEnvironment(t)
 
@@ -91,11 +96,23 @@ func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAc
 	require.NoError(t, env.GetWorkflowError(), "payment seeded without errors")
 }
 
-func setupDepositRequests(t *testing.T) {
+func cleanupDepositRequests(t *testing.T) {
 	session := bootstrap.InitializeDatabaseSession()
 	err := session.Query("TRUNCATE deposit_requests", nil).ExecRelease()
 	require.NoError(t, err)
 	err = session.Query("TRUNCATE deposit_requests_by_month", nil).ExecRelease()
+	require.NoError(t, err)
+}
+
+func setupPayoutMethodForAccount(t *testing.T, accountId string) {
+	session := bootstrap.InitializeDatabaseSession()
+
+	adapter := adapters.NewPayoutCassandraRepository(session, service.StellaServiceMock{})
+
+	pay, err := payout.NewPaxumAccountPayoutMethod(accountId, "test-email@test.com")
+	require.NoError(t, err)
+
+	err = adapter.UpdateAccountPayoutMethod(context.Background(), pay)
 	require.NoError(t, err)
 }
 

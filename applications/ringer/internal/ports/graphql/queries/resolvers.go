@@ -18,8 +18,20 @@ type QueryResolver struct {
 }
 
 func (r QueryResolver) Countries(ctx context.Context) ([]*types.Country, error) {
-	//TODO implement me
-	panic("implement me")
+
+	results, err := r.App.Queries.Countries.Handle(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var countries []*types.Country
+
+	for _, c := range results {
+		countries = append(countries, types.MarshalCountryToGraphQL(ctx, c))
+	}
+
+	return countries, nil
 }
 
 func (r QueryResolver) Payment(ctx context.Context, reference string) (*types.ClubPayment, error) {

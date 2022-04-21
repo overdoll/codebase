@@ -78,6 +78,14 @@ func getClubPayment(t *testing.T, client *graphql.Client, paymentId string) Club
 	return pay
 }
 
+type Payments struct {
+	Payments *struct {
+		Edges []struct {
+			Node ClubPaymentModified
+		}
+	} `graphql:"payments(status: $status)"`
+}
+
 func TestClubPaymentDeposit(t *testing.T) {
 	t.Parallel()
 
@@ -154,6 +162,16 @@ func TestClubPaymentDeposit(t *testing.T) {
 	// transferred to the current balance
 	require.Equal(t, 70, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
+
+	var allPayments Payments
+
+	err = gClient.Query(context.Background(), &allPayments, map[string]interface{}{
+		"status": []types.ClubPaymentStatus{types.ClubPaymentStatusReady},
+	})
+
+	require.NoError(t, err)
+
+	require.GreaterOrEqual(t, len(allPayments.Payments.Edges), 1, "should have found in global payments query")
 }
 
 func TestClubPaymentDeduction(t *testing.T) {
@@ -191,7 +209,6 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	// here, we query the state before the payment is settled
 	env.RegisterDelayedCallback(func() {
-
 		// get payments for the club
 		payments := getPaymentsForClub(t, gClient, clubId)
 

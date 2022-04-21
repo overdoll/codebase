@@ -23,6 +23,7 @@ type GenerateRefundAmountForAccountTransaction struct {
 }
 
 func TestAccountTransactionRefund(t *testing.T) {
+	t.Parallel()
 
 	accountId := uuid.New().String()
 	ccbillSubscriptionId := uuid.New().String()
