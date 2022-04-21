@@ -19,7 +19,7 @@ func NewClubPendingBalanceByIdHandlerHandler(br balance.Repository) ClubPendingB
 	return ClubPendingBalanceByIdHandler{br: br}
 }
 
-func (h ClubPendingBalanceByIdHandler) Handle(ctx context.Context, query ClubBalanceById) (*balance.ClubBalance, error) {
+func (h ClubPendingBalanceByIdHandler) Handle(ctx context.Context, query ClubPendingBalanceById) (*balance.ClubBalance, error) {
 
 	result, err := h.br.GetPendingBalanceForClub(ctx, query.Principal, query.Id)
 

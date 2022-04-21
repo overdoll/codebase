@@ -81,6 +81,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			SearchClubPayouts:       query.NewSearchClubPayoutsHandler(payoutIndexRepo),
 			SearchClubPayments:      query.NewSearchClubPaymentsHandler(paymentIndexRepo),
 		},
-		Activities: activities.NewActivitiesHandler(paymentRepo, paymentIndexRepo, payoutRepo, payoutIndexRepo, balanceRepo, detailsRepo, paxumRepo),
+		Activities: activities.NewActivitiesHandler(paymentRepo, paymentIndexRepo, payoutRepo, payoutIndexRepo, balanceRepo, detailsRepo, paxumRepo, stella),
 	}
 }

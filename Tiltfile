@@ -177,6 +177,27 @@ applications = {
         ],
         "live_update": [],
     },
+    "ringer": {
+        "type": "go",
+        "directory": "ringer",
+        "image_reference": "ringer-image",
+        "image_target": "//applications/ringer/internal:local-image",
+        "binary_target": "//applications/ringer/internal:internal",
+        "binary_output": "applications/ringer/internal/internal_/internal",
+        "container_workdir": "/app/applications/ringer/internal/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/ringer/internal/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/ringer/internal:local-image",
+        "dependencies": [
+            "applications/ringer/.env",
+            "applications/ringer/config.toml",
+            "applications/ringer/database",
+        ],
+        "live_update": [
+            sync("applications/ringer/.env", "/app/applications/ringer/internal/local-image.binary.runfiles/overdoll/applications/ringer/.env"),
+            sync("applications/ringer/config.toml", "/app/applications/ringer/internal/local-image.binary.runfiles/overdoll/applications/ringer/config.toml"),
+            sync("applications/ringer/database", "/app/applications/ringer/internal/local-image.binary.runfiles/overdoll/applications/ringer/database"),
+        ],
+    },
 }
 
 # Build applications with our helper function

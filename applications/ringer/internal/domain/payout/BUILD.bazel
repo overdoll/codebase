@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "payout",
+    srcs = [
+        "account_payout_method.go",
+        "club_payout.go",
+        "club_payout_event.go",
+        "club_payouts_filters.go",
+        "country_with_method.go",
+        "deposit_request.go",
+        "method.go",
+        "paxum_supported_countries.go",
+        "repository.go",
+        "status.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/domain/payout",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//libraries/money",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/uuid",
+        "@com_github_biter777_countries//:countries",
+    ],
+)

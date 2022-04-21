@@ -31,7 +31,7 @@ func (r MutationResolver) UpdateAccountDetails(ctx context.Context, input types.
 		return nil, err
 	}
 
-	return &types.UpdateAccountDetailsPayload{AccountDetails: types.MarshalAccountDetailsToGraphQL(result)}, nil
+	return &types.UpdateAccountDetailsPayload{AccountDetails: types.MarshalAccountDetailsToGraphQL(ctx, result)}, nil
 }
 
 func (r MutationResolver) UpdateClubPlatformFee(ctx context.Context, input types.UpdateClubPlatformFeeInput) (*types.UpdateClubPlatformFeePayload, error) {
@@ -104,7 +104,7 @@ func (r MutationResolver) UpdateClubPayoutDepositDate(ctx context.Context, input
 		return nil, err
 	}
 
-	return &types.UpdateClubPayoutDepositDatePayload{ClubPayout: types.MarshalClubPayoutToGraphQL(result)}, nil
+	return &types.UpdateClubPayoutDepositDatePayload{ClubPayout: types.MarshalClubPayoutToGraphQL(ctx, result)}, nil
 }
 
 func (r MutationResolver) CancelClubPayout(ctx context.Context, input types.CancelClubPayoutInput) (*types.CancelClubPayoutPayload, error) {
@@ -122,7 +122,7 @@ func (r MutationResolver) CancelClubPayout(ctx context.Context, input types.Canc
 		return nil, err
 	}
 
-	return &types.CancelClubPayoutPayload{ClubPayout: types.MarshalClubPayoutToGraphQL(result)}, nil
+	return &types.CancelClubPayoutPayload{ClubPayout: types.MarshalClubPayoutToGraphQL(ctx, result)}, nil
 }
 
 func (r MutationResolver) RetryClubPayout(ctx context.Context, input types.RetryClubPayoutInput) (*types.RetryClubPayoutPayload, error) {
@@ -140,7 +140,7 @@ func (r MutationResolver) RetryClubPayout(ctx context.Context, input types.Retry
 		return nil, err
 	}
 
-	return &types.RetryClubPayoutPayload{ClubPayout: types.MarshalClubPayoutToGraphQL(result)}, nil
+	return &types.RetryClubPayoutPayload{ClubPayout: types.MarshalClubPayoutToGraphQL(ctx, result)}, nil
 }
 
 func (r MutationResolver) InitiateClubPayout(ctx context.Context, input types.InitiateClubPayoutInput) (*types.InitiateClubPayoutPayload, error) {

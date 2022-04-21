@@ -11,4 +11,5 @@ type EvaService interface {
 
 type StellaService interface {
 	CanAccountCreatePostUnderClub(ctx context.Context, accountId, clubId string) (bool, error)
+	GetClubById(ctx context.Context, clubId string) (*string, error)
 }

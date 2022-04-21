@@ -22,7 +22,7 @@ steps:
       - name: hades.integration
         paths:
           - ./applications/hades/internal/adapters/**/coverage.dat
-      - name: stella.component
+      - name: ringer.component
         paths:
           - ./applications/hades/internal/service/**/coverage.dat
     setup:

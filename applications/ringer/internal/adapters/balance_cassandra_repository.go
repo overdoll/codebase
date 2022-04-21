@@ -71,7 +71,7 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 		return nil, err
 	}
 
-	return balance.UnmarshalClubBalanceFromDatabase(clubBal.ClubId, clubBal.Amount, clubBal.Currency), nil
+	return balance.UnmarshalClubBalanceFromDatabase(clubBal.ClubId, clubBal.Amount, clubBal.Currency, clubBal.LastInsertId.Time()), nil
 }
 
 func (r BalanceCassandraRepository) GetPendingBalanceForClub(ctx context.Context, requester *principal.Principal, clubId string) (*balance.ClubBalance, error) {

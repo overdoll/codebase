@@ -1,4 +1,8 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+
+DEPENDENCIES = ["//applications/ringer/database:files"] + ["//applications/ringer:config.toml"]
 
 go_library(
     name = "internal_lib",
@@ -6,9 +10,9 @@ go_library(
     importpath = "overdoll/applications/ringer/internal",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/sting/internal/ports",
-        "//applications/sting/internal/service",
-        "//applications/sting/proto:v1_go_proto",
+        "//applications/ringer/internal/ports",
+        "//applications/ringer/internal/service",
+        "//applications/ringer/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/commands",
         "//libraries/config",
@@ -21,4 +25,39 @@ go_binary(
     name = "internal",
     embed = [":internal_lib"],
     visibility = ["//applications/ringer:__subpackages__"],
+)
+
+go_image(
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = ["//applications/ringer:.env"] + DEPENDENCIES,
+    embed = [":internal_lib"],
+    importpath = "overdoll/applications/ringer",
+)
+
+go_image(
+    name = "image",
+    base = "@go_base_image//image",
+    data = DEPENDENCIES,
+    embed = [":internal_lib"],
+    importpath = "overdoll/applications/ringer",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "ringer/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "ringer",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

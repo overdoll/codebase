@@ -153,6 +153,22 @@ func (p *ClubPayment) SettlementDate() time.Time {
 	return p.settlementDate
 }
 
+func (p *ClubPayment) IsReady() bool {
+	return p.status == Ready
+}
+
+func (p *ClubPayment) IsPending() bool {
+	return p.status == Pending
+}
+
+func (p *ClubPayment) IsComplete() bool {
+	return p.status == Complete
+}
+
+func (p *ClubPayment) IsClubSupporterSubscriptionSource() bool {
+	return p.source == ClubSupporterSubscription
+}
+
 func (p *ClubPayment) MakeReady() error {
 	p.status = Ready
 	return nil

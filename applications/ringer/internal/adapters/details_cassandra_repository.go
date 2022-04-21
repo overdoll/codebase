@@ -7,6 +7,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/details"
+	"overdoll/libraries/crypt"
 	"overdoll/libraries/principal"
 )
 
@@ -54,7 +55,25 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 		return nil, fmt.Errorf("failed to get account details: %v", err)
 	}
 
-	return details.UnmarshalAccountDetailsFromDatabase(accDetails.AccountId, accDetails.FirstName, accDetails.LastName, accDetails.CountryOfResidence), nil
+	decryptedFirstName, err := crypt.Decrypt(accDetails.FirstName)
+
+	if err != nil {
+		return nil, err
+	}
+
+	decryptedLastName, err := crypt.Decrypt(accDetails.LastName)
+
+	if err != nil {
+		return nil, err
+	}
+
+	decryptedCountry, err := crypt.Decrypt(accDetails.CountryOfResidence)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return details.UnmarshalAccountDetailsFromDatabase(accDetails.AccountId, decryptedFirstName, decryptedLastName, decryptedCountry), nil
 }
 
 func (r DetailsCassandraRepository) GetAccountDetailsById(ctx context.Context, requester *principal.Principal, accountId string) (*details.AccountDetails, error) {
@@ -84,13 +103,31 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 		return nil, err
 	}
 
+	encryptedFirstName, err := crypt.Encrypt(detail.FirstName())
+
+	if err != nil {
+		return nil, err
+	}
+
+	encryptedLastName, err := crypt.Encrypt(detail.LastName())
+
+	if err != nil {
+		return nil, err
+	}
+
+	encryptedCountry, err := crypt.Encrypt(detail.Country().Alpha3())
+
+	if err != nil {
+		return nil, err
+	}
+
 	if err := r.session.
 		Query(accountDetailsTable.Update()).
 		BindStruct(&accountDetails{
 			AccountId:          detail.AccountId(),
-			FirstName:          detail.FirstName(),
-			LastName:           detail.LastName(),
-			CountryOfResidence: detail.Country().Alpha3(),
+			FirstName:          encryptedFirstName,
+			LastName:           encryptedLastName,
+			CountryOfResidence: encryptedCountry,
 		}).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update account details: %v", err)

@@ -73,7 +73,7 @@ func (r QueryResolver) Payments(ctx context.Context, after *string, before *stri
 		return nil, err
 	}
 
-	return types.MarshalPaymentsConnectionToGraphQL(ctx, result), nil
+	return types.MarshalClubPaymentsToGraphQLConnection(ctx, result, cursor), nil
 }
 
 func (r QueryResolver) Payout(ctx context.Context, reference string) (*types.ClubPayout, error) {
@@ -127,7 +127,7 @@ func (r QueryResolver) Payouts(ctx context.Context, after *string, before *strin
 		return nil, err
 	}
 
-	return types.MarshalPaymentsConnectionToGraphQL(ctx, result), nil
+	return types.MarshalClubPayoutsToGraphQLConnection(ctx, result, cursor), nil
 }
 
 func (r QueryResolver) DepositRequest(ctx context.Context, reference string) (*types.DepositRequest, error) {
@@ -174,5 +174,5 @@ func (r QueryResolver) DepositRequests(ctx context.Context, after *string, befor
 		return nil, err
 	}
 
-	return types.MarshalDepositRequestsToGraphQLConnection(ctx, results), nil
+	return types.MarshalDepositRequestToGraphQLConnection(ctx, results, cursor), nil
 }

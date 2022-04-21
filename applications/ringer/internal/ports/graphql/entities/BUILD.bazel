@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "entities",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/ringer/internal/ports/graphql/entities",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//applications/ringer/internal/app",
+        "//applications/ringer/internal/app/query",
+        "//applications/ringer/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
+    ],
+)

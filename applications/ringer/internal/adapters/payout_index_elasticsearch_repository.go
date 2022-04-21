@@ -160,7 +160,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 		ClubId:                pay.ClubId(),
 		Currency:              pay.Currency().String(),
 		Amount:                pay.Amount(),
-		AccountPayoutMethodId: pay.AccountPayoutMethodId(),
+		AccountPayoutMethodId: pay.PayoutAccountId(),
 		DepositRequestId:      pay.DepositRequestId(),
 		Timestamp:             pay.Timestamp(),
 		Events:                events,

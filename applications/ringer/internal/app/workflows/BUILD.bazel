@@ -3,9 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
+        "cancel_club_payout.go",
         "club_payment_deduction.go",
         "club_payment_deposit.go",
+        "generate_club_monthly_payout.go",
         "options.go",
+        "process_club_payout.go",
+        "retry_club_payout.go",
     ],
     importpath = "overdoll/applications/ringer/internal/app/workflows",
     visibility = ["//applications/ringer:__subpackages__"],
@@ -14,6 +18,7 @@ go_library(
         "//applications/ringer/internal/domain/payment",
         "//libraries/money",
         "//libraries/support",
+        "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",
     ],

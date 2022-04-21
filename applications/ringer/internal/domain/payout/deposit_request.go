@@ -84,6 +84,10 @@ func (p *DepositRequest) Timestamp() time.Time {
 	return p.timestamp
 }
 
+func (p *DepositRequest) IsPaxum() bool {
+	return p.accountPayoutMethodKind == Paxum
+}
+
 func (p *DepositRequest) CanView(requester *principal.Principal) error {
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized

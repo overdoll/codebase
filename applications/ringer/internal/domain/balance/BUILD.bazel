@@ -1,15 +1,15 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "event",
+    name = "balance",
     srcs = [
-        "payment_request.go",
+        "club_balance.go",
         "repository.go",
     ],
-    importpath = "overdoll/applications/ringer/internal/domain/event",
+    importpath = "overdoll/applications/ringer/internal/domain/balance",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
-        "//applications/ringer/internal/domain/payout",
         "//libraries/money",
+        "//libraries/principal",
     ],
 )

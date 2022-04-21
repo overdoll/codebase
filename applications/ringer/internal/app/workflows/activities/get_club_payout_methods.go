@@ -15,10 +15,13 @@ type GetClubPayoutMethodsPayload struct {
 
 func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayoutMethodsInput) (*GetClubPayoutMethodsPayload, error) {
 
-	// TODO: get account ID of owner of club
-	accountId := ""
+	accId, err := h.stella.GetClubById(ctx, input.ClubId)
 
-	method, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, accountId)
+	if err != nil {
+		return nil, err
+	}
+
+	method, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, *accId)
 
 	if err != nil {
 

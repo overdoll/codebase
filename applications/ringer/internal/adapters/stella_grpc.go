@@ -23,3 +23,14 @@ func (s StellaGrpc) CanAccountCreatePostUnderClub(ctx context.Context, accountId
 
 	return res.Allowed, nil
 }
+
+func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*string, error) {
+
+	res, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res.Club.OwnerAccountId, nil
+}

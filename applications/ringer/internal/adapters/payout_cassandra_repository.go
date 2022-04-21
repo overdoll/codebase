@@ -164,7 +164,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 		ClubId:             pay.ClubId(),
 		Currency:           pay.Currency().String(),
 		Amount:             pay.Amount(),
-		PayoutAccountId:    pay.AccountPayoutMethodId(),
+		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
 		Timestamp:          pay.Timestamp(),
 		Events:             events,

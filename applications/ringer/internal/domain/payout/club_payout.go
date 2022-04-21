@@ -60,7 +60,7 @@ func (p *ClubPayout) Status() Status {
 	return p.status
 }
 
-func (p *ClubPayout) AccountPayoutMethodId() string {
+func (p *ClubPayout) PayoutAccountId() string {
 	return p.payoutAccountId
 }
 
@@ -94,6 +94,26 @@ func (p *ClubPayout) Timestamp() time.Time {
 
 func (p *ClubPayout) Events() []*ClubPayoutEvent {
 	return p.events
+}
+
+func (p *ClubPayout) IsQueued() bool {
+	return p.status == Queued
+}
+
+func (p *ClubPayout) IsProcessing() bool {
+	return p.status == Processing
+}
+
+func (p *ClubPayout) IsFailed() bool {
+	return p.status == Failed
+}
+
+func (p *ClubPayout) IsCancelled() bool {
+	return p.status == Cancelled
+}
+
+func (p *ClubPayout) IsDeposited() bool {
+	return p.status == Deposited
 }
 
 func (p *ClubPayout) MakeDeposited() error {

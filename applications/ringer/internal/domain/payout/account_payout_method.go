@@ -39,6 +39,10 @@ func (p *AccountPayoutMethod) PaxumEmail() *string {
 	return p.paxumEmail
 }
 
+func (p *AccountPayoutMethod) IsPaxum() bool {
+	return p.method == Paxum
+}
+
 func (p *AccountPayoutMethod) CanDelete(requester *principal.Principal) error {
 	return requester.BelongsToAccount(p.accountId)
 }
