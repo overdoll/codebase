@@ -29,6 +29,11 @@ const RegisterMutationGQL = graphql`
       account {
         id
         username
+        isModerator
+        isStaff
+        lock {
+          __typename
+        }
         avatar {
           ...ResourceIconFragment
           ...ResourceItemFragment

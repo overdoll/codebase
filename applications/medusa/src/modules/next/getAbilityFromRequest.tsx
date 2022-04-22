@@ -27,7 +27,7 @@ const customFetch = (req) => {
     } else {
       token = randomBytes(64).toString('hex')
       const encrypted = gcm.encrypt(token, process.env.SECURITY_SECRET)
-      headers.cookie[0] = headers.cookie[0] + 'od.security=' + encrypted
+      headers.cookie = headers.cookie + ';od.security=' + encrypted
     }
 
     headers['X-overdoll-Security'] = token

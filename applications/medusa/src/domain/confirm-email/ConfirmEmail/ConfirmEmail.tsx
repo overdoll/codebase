@@ -81,7 +81,7 @@ const ConfirmEmail: PageProps<{}> = (): JSX.Element => {
       >
         <Spinner
           mb={6}
-          thickness='4'
+          thickness='4px'
           size='xl'
           color='primary.500'
         />

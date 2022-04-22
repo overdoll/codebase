@@ -133,8 +133,9 @@ describe('Club - Become Supporter', () => {
     cy.findByText('Cancel Subscription').should('be.visible').click()
     cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
     clickOnButton('Cancel Subscription')
-    cy.findByText(newPaymentMethodClub).should('be.visible').click()
+    cy.findByText(newPaymentMethodClub).should('be.visible')
     cy.reload()
+    cy.findByText(newPaymentMethodClub).should('be.visible').click()
     cy.findByText(/Benefits expire in/iu).should('be.visible')
   })
 

@@ -8,6 +8,7 @@ import { BadgeCircle } from '@//:assets/icons'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import UAParser from 'ua-parser-js'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: CompleteFragment$key
@@ -17,11 +18,16 @@ const Fragment = graphql`
   fragment CompleteFragment on AuthenticationToken {
     userAgent
     sameDevice
+    accountStatus {
+      registered
+    }
   }
 `
 
 export default function Complete ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const router = useRouter()
 
   const cookieText = UAParser(
     data.userAgent
@@ -36,7 +42,7 @@ export default function Complete ({ query }: Props): JSX.Element {
   // TODO do a proper refresh (recall ability?) as another refresh is needed to see the nav bar correctly
   // TODO invalidate viewer here and replace to home (copy function from join support)
   const refresh = (): void => {
-    window.location.pathname = '/'
+    void router.push('/join')
   }
 
   return (

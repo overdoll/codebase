@@ -1,5 +1,4 @@
 import {
-  Box,
   ButtonProps,
   HStack,
   IconButton,
@@ -39,28 +38,26 @@ const Menu = ({
   const { i18n } = useLingui()
 
   return (
-    <Box>
-      <ChakraMenu autoSelect={false}>
-        <MenuButton
-          borderRadius='xl'
-          aria-label={i18n._(t`Open Menu`)}
-          as={IconButton}
-          {...rest}
-          icon={
-            <Icon
-              p={1}
-              icon={NavigationMenuHorizontal}
-              w='100%'
-              h='100%'
-              fill='gray.200'
-            />
-          }
-        />
-        <MenuList minW='230px' boxShadow='outline'>
-          {children}
-        </MenuList>
-      </ChakraMenu>
-    </Box>
+    <ChakraMenu autoSelect={false}>
+      <MenuButton
+        borderRadius='xl'
+        aria-label={i18n._(t`Open Menu`)}
+        as={IconButton}
+        {...rest}
+        icon={
+          <Icon
+            p={1}
+            icon={NavigationMenuHorizontal}
+            w='100%'
+            h='100%'
+            fill='gray.200'
+          />
+        }
+      />
+      <MenuList minW='230px' boxShadow='outline'>
+        {children}
+      </MenuList>
+    </ChakraMenu>
   )
 }
 

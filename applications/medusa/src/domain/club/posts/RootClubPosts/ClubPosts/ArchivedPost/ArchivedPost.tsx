@@ -2,8 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import type { ArchivedPostFragment$key } from '@//:artifacts/ArchivedPostFragment.graphql'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
@@ -36,7 +35,7 @@ export default function ArchivedPost ({
             ARCHIVED
           </Trans>
         </Badge>
-        <PostMenu size='xs'>
+        <PostMenu h={5} size='xs'>
           <PostUnArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

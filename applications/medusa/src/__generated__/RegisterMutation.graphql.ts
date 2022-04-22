@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3f11820c236687c3da8a8e96519bd27c>>
- * @relayHash e1aaa4dd0b9457561cabb12a34340954
+ * @generated SignedSource<<8149619a8069f795f072d60057cac6e9>>
+ * @relayHash 17094e716078ffe9c0080fc28f798bf2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e1aaa4dd0b9457561cabb12a34340954
+// @relayRequestID 17094e716078ffe9c0080fc28f798bf2
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,6 +28,11 @@ export type RegisterMutation$data = {
     readonly account: {
       readonly id: string;
       readonly username: string;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
+      readonly lock: {
+        readonly __typename: string;
+      } | null;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
@@ -80,6 +85,38 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "isModerator",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountLock",
+  "kind": "LinkedField",
+  "name": "lock",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 };
@@ -109,6 +146,9 @@ return {
             "selections": [
               (v3/*: any*/),
               (v4/*: any*/),
+              (v5/*: any*/),
+              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -165,6 +205,9 @@ return {
             "selections": [
               (v3/*: any*/),
               (v4/*: any*/),
+              (v5/*: any*/),
+              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -181,7 +224,7 @@ return {
                     "name": "urls",
                     "plural": true,
                     "selections": [
-                      (v5/*: any*/),
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -200,7 +243,7 @@ return {
                     "name": "videoThumbnail",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -231,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "e1aaa4dd0b9457561cabb12a34340954",
+    "id": "17094e716078ffe9c0080fc28f798bf2",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -240,6 +283,6 @@ return {
 };
 })();
 
-(node as any).hash = "0fe88424f5e82ce7edda4586667158d6";
+(node as any).hash = "748c30ee0cc6007bfca209a33d48068c";
 
 export default node;

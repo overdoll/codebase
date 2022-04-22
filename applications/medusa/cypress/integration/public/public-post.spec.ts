@@ -12,33 +12,21 @@ describe('Visit Public Post', () => {
   beforeEach(() => {
     cy.joinWithNewAccount(username, email)
     cy.visit('/TestClub/post/25WqmS7kgwotdDaxQDEa6I4CjuO')
-    cy.findByText(/Recommended Posts/iu).should('exist')
+    cy.findByText('Suggested Posts').should('exist')
   })
 
   it('like post', () => {
-    cy.get('button[aria-label="Like"]').should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Like"]').first().should('not.be.disabled').click({ force: true })
     // TODO test this correctly when liking is not broken
   })
 
-  it('click on paginator', () => {
-    cy.findByText(/Recommended Posts/iu).should('not.be.disabled').click({ force: true })
-    cy.get('button[aria-label="Open Search"]').should('be.visible')
-    cy.go('back')
-    cy.findByText(/Recommended Posts/iu).should('not.be.disabled')
-    cy.findByText(/Recommended Posts/iu).should('not.be.disabled').click({ force: true })
-    cy.get('button[aria-label="Open Search"]').should('be.visible')
-    clickOnButton('View Post')
-    cy.findByText(/Recommended Posts/iu).should('not.be.disabled')
-  })
-
   it('click on the post club', () => {
-    cy.findByText(club).should('not.be.disabled').click()
+    cy.findAllByText(club).first().should('not.be.disabled').click()
     cy.findByText(/Exclusive Posts/iu).should('be.visible')
   })
 
   it('report post', () => {
-    cy.get('button[aria-label="Open Menu"]').click({ force: true })
-    cy.findByText(/Report Post/iu).should('be.visible').click({ force: true })
+    cy.get('button[aria-label="Open Menu"]').first().click({ force: true }).parent().findByText(/Report Post/iu).should('be.visible').click({ force: true })
     cy.findByText(rule).should('not.be.disabled').click({ force: true })
     clickOnButton('Submit Report')
     cy.findByText(/Post report was submitted/iu).should('be.visible')

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cfd28d91da78ef46dd0ed1aba26cb22>>
+ * @generated SignedSource<<263f7979f3203c1cd188694abb6455df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type CompleteFragment$data = {
   readonly userAgent: string;
   readonly sameDevice: boolean;
+  readonly accountStatus: {
+    readonly registered: boolean;
+  } | null;
   readonly " $fragmentType": "CompleteFragment";
 };
 export type CompleteFragment = CompleteFragment$data;
@@ -40,12 +43,30 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "sameDevice",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "AuthenticationTokenAccountStatus",
+      "kind": "LinkedField",
+      "name": "accountStatus",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "registered",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 
-(node as any).hash = "1588224180e26efe54c8cf9bd1d95302";
+(node as any).hash = "a6efac7a80e179faad64636bbdb013f4";
 
 export default node;

@@ -5,8 +5,8 @@ describe('Visit Public Pages', () => {
     cy.visit('/')
   })
 
-  it('go to the clubs page', () => {
-    cy.visit('/clubs')
+  it('go to the clubs discover page', () => {
+    cy.visit('/clubs/discover')
     cy.findByPlaceholderText(/Search for a club by name/iu).should('exist')
     // TODO try joining a club as a not logged in user
   })

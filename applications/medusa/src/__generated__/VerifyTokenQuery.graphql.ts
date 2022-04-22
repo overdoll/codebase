@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<327e0d041e2aa703ec418a1a3065b1b4>>
- * @relayHash 696da5ea3fe10f5b62b2a2d7776d0f23
+ * @generated SignedSource<<982dbfff935892a9902e49699a19d87d>>
+ * @relayHash 52db7692944eed56f5af8dcb247dd756
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 696da5ea3fe10f5b62b2a2d7776d0f23
+// @relayRequestID 52db7692944eed56f5af8dcb247dd756
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -173,6 +173,24 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "registered",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
@@ -183,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "id": "696da5ea3fe10f5b62b2a2d7776d0f23",
+    "id": "52db7692944eed56f5af8dcb247dd756",
     "metadata": {},
     "name": "VerifyTokenQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import type { ReviewPostFragment$key } from '@//:artifacts/ReviewPostFragment.graphql'
-import { Badge, HStack, Stack } from '@chakra-ui/react'
+import { Badge, Box, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { Trans } from '@lingui/macro'
@@ -23,12 +23,13 @@ export default function ReviewPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='flex-start'>
+      <HStack h={5} spacing={3} justify='flex-start'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
           <Trans>
             Review
           </Trans>
         </Badge>
+        <Box h={5} />
       </HStack>
       <GridTile>
         <PostPreviewContent query={data} />

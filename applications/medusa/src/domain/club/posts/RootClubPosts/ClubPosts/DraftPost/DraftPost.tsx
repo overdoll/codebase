@@ -41,11 +41,14 @@ export default function DraftPost ({
             DRAFT
           </Trans>
         </Badge>
-        <PostMenu size='xs'>
+        <PostMenu h={5} size='xs'>
           <MenuLinkItem
             href={{
-              pathname: `/club/[slug]/create-post?post=${data.reference}`,
-              query: { slug: slug }
+              pathname: '/club/[slug]/create-post',
+              query: {
+                slug: slug,
+                post: data.reference
+              }
             }}
             text={(
               <Trans>

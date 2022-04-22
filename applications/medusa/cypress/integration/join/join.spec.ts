@@ -1,6 +1,8 @@
 import { generateEmailFromExistingUsername, generateUsernameAndEmail } from '../../support/generate'
 import { join } from '../../support/join_actions'
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 describe('Join', () => {
   it('check join on existing account', () => {
     const email = generateEmailFromExistingUsername('artist_verified')
@@ -8,8 +10,6 @@ describe('Join', () => {
     join(email)
 
     cy.url().should('include', '/')
-
-    cy.findByText(/Welcome back!/iu).should('exist')
   })
 
   it('check join on new random account', () => {

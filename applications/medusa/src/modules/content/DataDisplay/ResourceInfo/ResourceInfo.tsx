@@ -27,9 +27,9 @@ export default function ResourceInfo ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  if (data.resource == null || !data?.resource.processed) {
+  if (data?.resource == null || !data?.resource?.processed) {
     return (
-      <ResourceItem h='100%' query={data.resource} />
+      <ResourceItem h='100%' query={data?.resource} />
     )
   }
 

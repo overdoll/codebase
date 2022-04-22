@@ -36,7 +36,7 @@ export default function RemovedPost ({
             REMOVED
           </Trans>
         </Badge>
-        <PostMenu size='xs'>
+        <PostMenu h={5} size='xs'>
           <PostDeleteButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
