@@ -2,6 +2,7 @@ package payment
 
 import (
 	"errors"
+	"fmt"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"time"
@@ -44,10 +45,12 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 		return nil, err
 	}
 
+	fmt.Println(platformFee.Percent())
+
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
 
-	settlementDate := timestamp.Add(time.Hour * 24 * 14)
+	settlementDate := timestamp.Add(time.Minute)
 	existingId := existingPayment.id
 
 	return &ClubPayment{
@@ -73,7 +76,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatform
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
-	settlementDate := timestamp.Add(time.Hour * 24 * 14)
+	settlementDate := timestamp.Add(time.Minute)
 
 	return &ClubPayment{
 		id:                       id,
@@ -135,6 +138,24 @@ func (p *ClubPayment) FinalAmount() int64 {
 
 func (p *ClubPayment) IsDeduction() bool {
 	return p.isDeduction
+}
+
+func (p *ClubPayment) AddPayoutId(payoutId string) error {
+
+	found := false
+
+	for _, id := range p.clubPayoutIds {
+		if payoutId == id {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		p.clubPayoutIds = append(p.clubPayoutIds, payoutId)
+	}
+
+	return nil
 }
 
 func (p *ClubPayment) ClubPayoutIds() []string {

@@ -23,7 +23,7 @@ func NewTransfer(payoutId string, email, firstName, lastName string, amount int6
 		email:     email,
 		firstName: firstName,
 		lastName:  lastName,
-		amount:    float64(amount / 100),
+		amount:    float64(amount) / 100,
 	}, nil
 }
 

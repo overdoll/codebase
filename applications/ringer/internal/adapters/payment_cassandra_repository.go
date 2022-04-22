@@ -30,6 +30,7 @@ var clubPaymentsTable = table.New(table.Metadata{
 		"is_deduction",
 		"deduction_source_payment_id",
 		"timestamp",
+		"club_payout_ids",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -39,7 +40,7 @@ var clubPaymentsByTransactionTable = table.New(table.Metadata{
 	Name: "club_payments_by_transaction_id",
 	Columns: []string{
 		"account_transaction_id",
-		"payment_id",
+		"id",
 	},
 	PartKey: []string{"account_transaction_id"},
 	SortKey: []string{},
@@ -166,6 +167,7 @@ func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, pa
 		marshalled.Status,
 		marshalled.SettlementDate,
 		marshalled.SourceAccountId,
+		marshalled.AccountTransactionId,
 		marshalled.DestinationClubId,
 		marshalled.Currency,
 		marshalled.BaseAmount,
@@ -173,6 +175,7 @@ func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, pa
 		marshalled.FinalAmount,
 		marshalled.IsDeduction,
 		marshalled.DeductionSourcePaymentId,
+		marshalled.Timestamp,
 		marshalled.ClubPayoutIds,
 	)
 
@@ -207,8 +210,8 @@ func (r PaymentCassandraRepository) getClubPaymentById(ctx context.Context, paym
 	return payment.UnmarshalClubPaymentFromDatabase(
 		clubPay.Id,
 		clubPay.Source,
+		clubPay.Status,
 		clubPay.SourceAccountId,
-		clubPay.AccountTransactionId,
 		clubPay.AccountTransactionId,
 		clubPay.DestinationClubId,
 		clubPay.Currency,
@@ -275,9 +278,7 @@ func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Cont
 
 	return nil
 }
-
-func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
-
+func (r PaymentCassandraRepository) updateClubPayment(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error, columns []string) (*payment.ClubPayment, error) {
 	pay, err := r.GetClubPaymentByIdOperator(ctx, paymentId)
 
 	if err != nil {
@@ -295,13 +296,21 @@ func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context,
 	}
 
 	if err := r.session.
-		Query(clubPaymentsTable.Update("status")).
+		Query(clubPaymentsTable.Update(columns...)).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update club payment status: %v", err)
 	}
 
 	return pay, nil
+}
+
+func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
+	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"status"})
+}
+
+func (r PaymentCassandraRepository) UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
+	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"club_payout_ids"})
 }
 
 func (r PaymentCassandraRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {

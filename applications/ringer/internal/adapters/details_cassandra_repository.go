@@ -95,8 +95,13 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 
 	detail, err := r.GetAccountDetailsById(ctx, requester, accountId)
 
-	if err != nil {
+	if err != nil && err != details.ErrAccountDetailsNotFound {
 		return nil, err
+	}
+
+	// if details are not found we must use a new one as a stub
+	if err == details.ErrAccountDetailsNotFound {
+		detail = details.UnmarshalAccountDetailsFromDatabase(accountId, "", "", "USA")
 	}
 
 	if err = updateFn(detail); err != nil {
@@ -122,7 +127,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 	}
 
 	if err := r.session.
-		Query(accountDetailsTable.Update()).
+		Query(accountDetailsTable.Update("first_name", "last_name", "country_of_residence_iso3166_alpha3")).
 		BindStruct(&accountDetails{
 			AccountId:          detail.AccountId(),
 			FirstName:          encryptedFirstName,

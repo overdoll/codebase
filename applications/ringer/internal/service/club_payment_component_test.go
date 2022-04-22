@@ -112,6 +112,9 @@ func TestClubPaymentDeposit(t *testing.T) {
 	require.NoError(t, err)
 
 	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
+	// ensure it doesn't get stuck waiting for a cron
+	env.SetDetachedChildWait(false)
 
 	paymentId := ""
 
@@ -140,7 +143,7 @@ func TestClubPaymentDeposit(t *testing.T) {
 		balances := getClubBalances(t, gClient, clubId)
 		require.Equal(t, 70, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
 		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
-	}, time.Hour*24*30)
+	}, time.Minute)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
@@ -213,7 +216,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 		payments := getPaymentsForClub(t, gClient, clubId)
 
 		require.Len(t, payments.Entities, 1)
-		require.Len(t, payments.Entities[0].Club.Payments.Edges, 1, "has at least 1 payment")
+		require.Len(t, payments.Entities[0].Club.Payments.Edges, 2, "has 2 payments since we created an initial one")
 		targetPayment := payments.Entities[0].Club.Payments.Edges[0].Node
 
 		// check payment is in correct state
@@ -231,7 +234,8 @@ func TestClubPaymentDeduction(t *testing.T) {
 		balances := getClubBalances(t, gClient, clubId)
 		require.Equal(t, -35, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
 		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
-	}, time.Hour*24*30)
+		require.Equal(t, 700, balances.Entities[0].Club.Balance.Amount, "correct club balance of settled payment")
+	}, time.Minute)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
@@ -251,6 +255,6 @@ func TestClubPaymentDeduction(t *testing.T) {
 	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 
 	// transferred to the current balance
-	require.Equal(t, -35, balances.Entities[0].Club.Balance.Amount, "correct club balance")
+	require.Equal(t, 665, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
 }

@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS club_pending_balance
 
 CREATE TABLE IF NOT EXISTS club_platform_fee
 (
-    club_id     text,
-    fee_percent int,
+    club_id text,
+    percent int,
     primary key ( club_id ),
 );
 

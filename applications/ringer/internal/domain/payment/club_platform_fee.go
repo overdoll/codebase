@@ -2,6 +2,7 @@ package payment
 
 import (
 	"errors"
+	"math"
 )
 
 const (
@@ -23,12 +24,12 @@ func NewDefaultPlatformFee(clubId string) (*ClubPlatformFee, error) {
 func NewClubPlatformFeeFromAmountAndFinalAmount(clubId string, baseAmount int64, finalAmount int64) (*ClubPlatformFee, error) {
 	return &ClubPlatformFee{
 		clubId:  clubId,
-		percent: baseAmount / finalAmount * 100,
+		percent: int64(100 - math.Round(float64(finalAmount)/float64(baseAmount)*100)),
 	}, nil
 }
 
 func (p *ClubPlatformFee) CalculateFee(amount int64) int64 {
-	return p.percent / 100 * amount
+	return int64(math.Round(float64(p.percent) / 100 * float64(amount)))
 }
 
 func (p *ClubPlatformFee) CalculateAmountAfterFee(amount int64) int64 {

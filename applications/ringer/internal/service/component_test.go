@@ -65,6 +65,10 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 	return env
 }
 
+func convertCountryIdToRelayId(countryId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Country{}, countryId))))
+}
+
 func convertClubIdToRelayId(ruleId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, ruleId))))
 }
@@ -81,6 +85,9 @@ func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAc
 	env := getWorkflowEnvironment(t)
 
 	env.RegisterWorkflow(workflows.ClubPaymentDeposit)
+	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
+	// ensure it doesn't get stuck waiting for a cron
+	env.SetDetachedChildWait(false)
 
 	env.ExecuteWorkflow(workflows.ClubPaymentDeposit, workflows.ClubPaymentDepositInput{
 		AccountTransactionId:        accountTransactionId,

@@ -12,6 +12,7 @@ import (
 	"os"
 	"overdoll/applications/ringer/internal/domain/paxum"
 	"strconv"
+	"strings"
 )
 
 type PaxumHttpClient interface {
@@ -28,10 +29,10 @@ func NewPaxumHttpCassandraRepository(client PaxumHttpClient) PaxumHttpCassandraR
 }
 
 func addSandboxDataToRequest(q url.Values) url.Values {
-	if os.Getenv("PAXUM_SANDBOX") == "true" {
-		q.Add("sandbox", "ON")
-		q.Add("return", "00")
-	}
+	//if os.Getenv("PAXUM_SANDBOX") == "true" {
+	q.Add("sandbox", "ON")
+	q.Add("return", "00")
+	//}
 	return q
 }
 
@@ -42,12 +43,6 @@ type transferFundsResponse struct {
 }
 
 func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfer *paxum.Transfer) (*string, error) {
-
-	req, err := http.NewRequest("POST", "https://secure.paxum.com/payment/api/paymentAPI.php", nil)
-
-	if err != nil {
-		return nil, err
-	}
 
 	// add sandbox data if this is a sandbox request
 	q := addSandboxDataToRequest(url.Values{})
@@ -78,7 +73,13 @@ func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfe
 	// add our encryption key from Paxum
 	q.Add("key", hex.EncodeToString(payoutBuilder.Sum(nil)[:]))
 
-	req.PostForm = q
+	req, err := http.NewRequest("POST", "https://secure.paxum.com/payment/api/paymentAPI.php", strings.NewReader(q.Encode()))
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	if err != nil {
+		return nil, err
+	}
 
 	resp, err := r.client.Do(req)
 

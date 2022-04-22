@@ -276,7 +276,7 @@ type AccountResolver interface {
 type ClubResolver interface {
 	Balance(ctx context.Context, obj *types.Club) (*types.Balance, error)
 	PendingBalance(ctx context.Context, obj *types.Club) (*types.Balance, error)
-
+	PlatformFee(ctx context.Context, obj *types.Club) (*types.ClubPlatformFee, error)
 	Payments(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) (*types.ClubPaymentConnection, error)
 	Payouts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.ClubPayoutStatus) (*types.ClubPayoutConnection, error)
 }
@@ -1544,7 +1544,7 @@ extend type ClubPayout {
 
 extend type Club {
   """This club's platform fee for each payment."""
-  platformFee: ClubPlatformFee!
+  platformFee: ClubPlatformFee! @goField(forceResolver: true)
 
   """All payments made to this club."""
   payments(
@@ -3381,14 +3381,14 @@ func (ec *executionContext) _Club_platformFee(ctx context.Context, field graphql
 		Object:     "Club",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PlatformFee, nil
+		return ec.resolvers.Club().PlatformFee(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8851,15 +8851,25 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 
 			})
 		case "platformFee":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Club_platformFee(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_platformFee(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "payments":
 			field := field
 
@@ -11349,6 +11359,10 @@ func (ec *executionContext) unmarshalNClubPayoutStatus2overdollᚋapplications�
 
 func (ec *executionContext) marshalNClubPayoutStatus2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPayoutStatus(ctx context.Context, sel ast.SelectionSet, v types.ClubPayoutStatus) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNClubPlatformFee2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx context.Context, sel ast.SelectionSet, v types.ClubPlatformFee) graphql.Marshaler {
+	return ec._ClubPlatformFee(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNClubPlatformFee2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubPlatformFee(ctx context.Context, sel ast.SelectionSet, v *types.ClubPlatformFee) graphql.Marshaler {

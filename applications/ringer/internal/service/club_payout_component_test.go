@@ -145,7 +145,9 @@ type Payouts struct {
 
 type InitiateClubPayout struct {
 	InitiateClubPayout *struct {
-		Id relay.ID
+		Club struct {
+			Id relay.ID
+		}
 	} `graphql:"initiateClubPayout(input: $input)"`
 }
 
@@ -169,7 +171,7 @@ func TestClubPayout(t *testing.T) {
 
 	balances := getClubBalances(t, gClient, clubId)
 
-	require.Equal(t, balances.Entities[0].Club.Balance, 7000, "correct club balance")
+	require.Equal(t, 7000, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubMonthlyPayout, mock.Anything)
 

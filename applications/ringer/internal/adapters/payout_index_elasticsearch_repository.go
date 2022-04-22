@@ -43,9 +43,6 @@ const clubPayoutsIndex = `
 				"amount": {
 					"type": "integer"
 				},
-				"currency": {
-					"type": "keyword"
-				},
 				"payout_account_id": {
 					"type": "keyword"
 				},
@@ -53,7 +50,7 @@ const clubPayoutsIndex = `
 					"type": "keyword"
 				},
 				"timestamp": {
-					"type": "timestamp"
+					"type": "date"
 				},
 				"temporal_workflow_id": {
 					"type": "keyword"

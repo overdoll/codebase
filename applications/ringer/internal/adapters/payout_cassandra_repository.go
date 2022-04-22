@@ -224,7 +224,7 @@ func (r PayoutCassandraRepository) GetAccountPayoutMethodById(ctx context.Contex
 
 func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*payout.AccountPayoutMethod, error) {
 
-	var accountPayout *accountPayoutMethod
+	var accountPayout accountPayoutMethod
 
 	if err := r.session.Query(accountPayoutMethodTable.Get()).
 		Consistency(gocql.LocalQuorum).
@@ -414,10 +414,16 @@ func (r PayoutCassandraRepository) UpdateClubPayoutEvents(ctx context.Context, p
 
 func (r PayoutCassandraRepository) CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error {
 
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	var lock clubLockedPayout
+
 	if err := r.session.Query(clubLockedPayoutTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubLockedPayout{ClubId: clubId}).
-		Get(nil); err != nil {
+		Get(&lock); err != nil {
 		// can initiate - no lock found
 		if err == gocql.ErrNotFound {
 			return nil

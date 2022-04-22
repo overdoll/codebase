@@ -121,7 +121,7 @@ extend type ClubPayout {
 
 extend type Club {
   """This club's platform fee for each payment."""
-  platformFee: ClubPlatformFee!
+  platformFee: ClubPlatformFee! @goField(forceResolver: true)
 
   """All payments made to this club."""
   payments(

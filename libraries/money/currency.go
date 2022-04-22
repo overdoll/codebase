@@ -3,7 +3,7 @@ package money
 import "errors"
 
 type Currency struct {
-	slug string
+	Slug string `json:"slug"`
 }
 
 var (
@@ -17,22 +17,22 @@ var (
 )
 
 func (r Currency) String() string {
-	return r.slug
+	return r.Slug
 }
 
 func CurrencyFromString(s string) (Currency, error) {
 	switch s {
-	case USD.slug:
+	case USD.Slug:
 		return USD, nil
-	case CAD.slug:
+	case CAD.Slug:
 		return CAD, nil
-	case AUD.slug:
+	case AUD.Slug:
 		return AUD, nil
-	case JPY.slug:
+	case JPY.Slug:
 		return JPY, nil
-	case GBP.slug:
+	case GBP.Slug:
 		return GBP, nil
-	case EUR.slug:
+	case EUR.Slug:
 		return EUR, nil
 	}
 

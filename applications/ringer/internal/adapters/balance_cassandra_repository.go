@@ -96,8 +96,8 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 	return payment.UnmarshalClubPaymentFromDatabase(
 		clubPay.Id,
 		clubPay.Source,
+		clubPay.Status,
 		clubPay.SourceAccountId,
-		clubPay.AccountTransactionId,
 		clubPay.AccountTransactionId,
 		clubPay.DestinationClubId,
 		clubPay.Currency,
@@ -118,37 +118,38 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecremen
 
 	// basically here, we try to get the club balance
 	// if we can't find it, we create a new one, using a unique insert on purpose
-	if err := r.session.
+	err := r.session.
 		Query(table.Get()).
 		BindStruct(clubBalance{ClubId: clubId}).
-		Get(&b); err != nil {
+		Get(&b)
 
-		if err == gocql.ErrNotFound {
+	if err != nil && err != gocql.ErrNotFound {
+		return fmt.Errorf("failed to get club balance: %v", err)
+	}
 
-			b = clubBalance{
-				ClubId:       clubId,
-				Currency:     currency.String(),
-				Amount:       0,
-				LastInsertId: gocql.TimeUUID(),
-			}
+	if err == gocql.ErrNotFound {
 
-			applied, err := table.InsertBuilder().
-				Unique().
-				Query(r.session).
-				SerialConsistency(gocql.Serial).
-				BindStruct(b).
-				ExecCAS()
-
-			if err != nil {
-				return fmt.Errorf("failed to create club balance: %v", err)
-			}
-
-			if !applied {
-				return fmt.Errorf("failed to insert unique club balance: %v", err)
-			}
+		b = clubBalance{
+			ClubId:       clubId,
+			Currency:     currency.String(),
+			Amount:       0,
+			LastInsertId: gocql.TimeUUID(),
 		}
 
-		return fmt.Errorf("failed to get club balance: %v", err)
+		applied, err := table.InsertBuilder().
+			Unique().
+			Query(r.session).
+			SerialConsistency(gocql.Serial).
+			BindStruct(b).
+			ExecCAS()
+
+		if err != nil {
+			return fmt.Errorf("failed to create club balance: %v", err)
+		}
+
+		if !applied {
+			return fmt.Errorf("failed to insert unique club balance: %v", err)
+		}
 	}
 
 	finalBalance := b.Amount

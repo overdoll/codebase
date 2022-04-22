@@ -28,12 +28,15 @@ go_library(
 go_test(
     name = "service_test",
     srcs = [
-        "account_details_component_test.go",
-        "account_payout_method_component_test.go",
+        "account_details_and_payout_method_component_test.go",
         "club_payment_component_test.go",
         "club_payout_component_test.go",
         "club_platform_fee_component_test.go",
         "component_test.go",
+        "countries_component_test.go",
+    ],
+    data = [
+        "//applications/ringer:config.toml",
     ],
     deps = [
         ":service",

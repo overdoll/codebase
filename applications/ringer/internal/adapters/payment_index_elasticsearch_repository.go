@@ -43,6 +43,9 @@ const clubPaymentsIndex = `
 				"destination_club_id": {
 					"type": "keyword"
 				},
+				"account_transaction_id": {
+					"type": "keyword"
+				},
 				"currency": {
 					"type": "keyword"
 				},
@@ -56,7 +59,7 @@ const clubPaymentsIndex = `
 					"type": "integer"
 				},
 				"is_deduction": {
-					"type": "bool"
+					"type": "boolean"
 				},
 				"deduction_source_payment_id": {
 					"type": "keyword"

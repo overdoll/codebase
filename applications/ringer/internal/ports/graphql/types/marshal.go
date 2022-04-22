@@ -89,7 +89,7 @@ func MarshalClubPaymentToGraphQL(ctx context.Context, result *payment.ClubPaymen
 	}
 
 	if result.IsComplete() {
-		sts = ClubPaymentStatusReady
+		sts = ClubPaymentStatusComplete
 	}
 
 	return &ClubPayment{

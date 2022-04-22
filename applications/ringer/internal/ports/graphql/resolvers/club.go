@@ -15,6 +15,24 @@ type ClubResolver struct {
 	App *app.Application
 }
 
+func (r ClubResolver) PlatformFee(ctx context.Context, obj *types.Club) (*types.ClubPlatformFee, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Queries.PlatformFeeByClubId.Handle(ctx, query.PlatformFeeByClubId{
+		Principal: principal.FromContext(ctx),
+		ClubId:    obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalClubPlatformFeeToGraphQL(ctx, result), nil
+}
+
 func (r ClubResolver) Balance(ctx context.Context, obj *types.Club) (*types.Balance, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

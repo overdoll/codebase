@@ -49,6 +49,7 @@ go_test(
         "paxum_http_repository_test.go",
         "repository_test.go",
     ],
+    data = ["//applications/ringer:config.toml"],
     deps = [
         ":adapters",
         "//applications/ringer/internal/domain/paxum",

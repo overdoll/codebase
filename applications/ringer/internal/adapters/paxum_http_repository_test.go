@@ -2,6 +2,7 @@ package adapters_test
 
 import (
 	"context"
+	"fmt"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
@@ -24,14 +25,16 @@ func Test_TransferFunds_Sandbox(t *testing.T) {
 		"test-email@test.com",
 		"somename",
 		"somesurname",
-		50,
+		100,
 		money.USD,
 	)
 	require.NoError(t, err, "no error creating a transfer")
 
 	res, err := repository.TransferFunds(context.Background(), newTransfer)
 	require.NoError(t, err, "no error transferring funds in sandbox env")
-
+	if res != nil {
+		fmt.Println(*res)
+	}
 	require.Nil(t, res, "no error response")
 }
 

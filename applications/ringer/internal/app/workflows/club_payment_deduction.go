@@ -55,12 +55,12 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 	// get payment details to be used in the next workflows
 	if err := workflow.ExecuteActivity(ctx, a.GetClubPaymentDetails,
 		paymentId,
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, &pendingPayment); err != nil {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubBalance,
-		activities.SubtractFromBalanceInput{
+	if err := workflow.ExecuteActivity(ctx, a.SubtractFromClubPendingBalance,
+		activities.SubtractFromClubPendingBalanceInput{
 			ClubId:   input.DestinationClubId,
 			Currency: pendingPayment.Currency,
 			Amount:   pendingPayment.FinalAmount,

@@ -114,6 +114,16 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
+	// append these payments to the payout
+	if err := workflow.ExecuteActivity(ctx, a.AppendClubPaymentsToPayout,
+		activities.AppendClubPaymentsToPayoutInput{
+			PayoutId:   *payoutId,
+			PaymentIds: group.PaymentIds,
+		},
+	).Get(ctx, createPayload); err != nil {
+		return err
+	}
+
 	// append to deposit request
 	if err := workflow.ExecuteActivity(ctx, a.AppendToDepositRequest,
 		activities.AppendToDepositRequestInput{
