@@ -2,16 +2,6 @@ import RootMultiFactorTotpSetup from './RootMultiFactorTotpSetup/RootMultiFactor
 import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
-RootMultiFactorTotpSetup.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootMultiFactorTotpSetup.getRelayPreloadProps = () => {
   return {
     queries: {

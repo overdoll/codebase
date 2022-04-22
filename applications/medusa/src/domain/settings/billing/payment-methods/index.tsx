@@ -2,16 +2,6 @@ import RootSavedPaymentMethodsSettings from './RootSavedPaymentMethodsSettings/R
 import SavedPaymentMethodsSettingsQuery from '@//:artifacts/SavedPaymentMethodsSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
-RootSavedPaymentMethodsSettings.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootSavedPaymentMethodsSettings.getRelayPreloadProps = () => {
   return {
     queries: {

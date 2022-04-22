@@ -53,6 +53,7 @@ export default function ClubHome ({ query }: Props): JSX.Element {
         <LargeClubHeader query={queryData?.club} />
         <StatisticNumber
           value={number}
+          colorScheme='teal'
           text={i18n._(t`Members`)}
           icon={ClubMembers}
         />

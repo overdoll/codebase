@@ -2,16 +2,6 @@ import RootSubscriptionsSettings from './RootSubscriptionsSettings/RootSubscript
 import SubscriptionsSettingsQuery from '@//:artifacts/SubscriptionsSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
-RootSubscriptionsSettings.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootSubscriptionsSettings.getRelayPreloadProps = () => {
   return {
     queries: {

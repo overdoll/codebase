@@ -18,8 +18,9 @@ export default function NotFound ({ children }: Props): JSX.Element {
 
   return (
     <>
-      <Error statusCode={404} />
-      {children}
+      <Error statusCode={404}>
+        {children}
+      </Error>
     </>
   )
 }

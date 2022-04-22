@@ -2,16 +2,6 @@ import RootStaffViewCancellationReason from './RootStaffViewCancellationReason/R
 import StaffViewCancellationReasonQuery from '@//:artifacts/StaffViewCancellationReasonQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
-RootStaffViewCancellationReason.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootStaffViewCancellationReason.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

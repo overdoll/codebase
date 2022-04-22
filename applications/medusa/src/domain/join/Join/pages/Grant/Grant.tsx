@@ -111,7 +111,6 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         justify='center'
         direction='column'
       >
-        <Spinner color='teal.400' w={4} h={4} />
         <Spinner
           mb={6}
           thickness='4px'

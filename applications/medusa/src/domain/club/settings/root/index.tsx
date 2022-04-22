@@ -2,16 +2,6 @@ import RootClubSettings from './RootClubSettings/RootClubSettings'
 import ClubSettingsQuery from '@//:artifacts/ClubSettingsQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
 
-RootClubSettings.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootClubSettings.getRelayPreloadProps = (ctx) => {
   const { query: { slug } } = ctx
 

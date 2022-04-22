@@ -2,16 +2,6 @@ import RootStaffViewCharacter from './RootStaffViewCharacter/RootStaffViewCharac
 import StaffViewCharacterQuery from '@//:artifacts/StaffViewCharacterQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
-RootStaffViewCharacter.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootStaffViewCharacter.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

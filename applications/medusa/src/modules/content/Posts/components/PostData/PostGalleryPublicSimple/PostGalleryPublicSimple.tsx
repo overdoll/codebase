@@ -1,5 +1,5 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box, Flex, Stack } from '@chakra-ui/react'
+import { Box, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
@@ -45,7 +45,6 @@ export default function PostGalleryPublicSimple ({
       <Box>
         <Swiper
           observer
-          autoHeight
           speed={100}
           onSwiper={(swiper) =>
             onInitialize(swiper)}
@@ -64,7 +63,13 @@ export default function PostGalleryPublicSimple ({
                   }
                 }}
               >
-                <Flex bg='gray.800' w='100%' cursor='pointer' minH='50vh' align='center' justify='center'>
+                <Box
+                  bg='gray.800'
+                  w='100%'
+                  cursor='pointer'
+                  minH={300}
+                  maxH={800}
+                >
                   <PostSupporterContent
                     query={item}
                     clubQuery={data.club}
@@ -75,7 +80,7 @@ export default function PostGalleryPublicSimple ({
                       reference={data.reference}
                     />
                   </PostSupporterContent>
-                </Flex>
+                </Box>
               </Link>
             </SwiperSlide>
           )}

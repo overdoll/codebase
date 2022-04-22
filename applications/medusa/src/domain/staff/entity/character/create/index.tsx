@@ -2,16 +2,6 @@ import RootStaffCreateCharacter from './RootStaffCreateCharacter/RootStaffCreate
 import StaffCreateCharacterQuery from '@//:artifacts/StaffCreateCharacterQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
-RootStaffCreateCharacter.getTranslationProps = async (ctx) => {
-  const translation = await import(
-    `./__locale__/${ctx.locale as string}/index.js`
-  )
-
-  return {
-    ...translation.messages
-  }
-}
-
 RootStaffCreateCharacter.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

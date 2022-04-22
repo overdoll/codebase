@@ -125,12 +125,12 @@ export default function Register ({ queryRef }: Props): JSX.Element {
               onSubmit={onSubmit}
               loading={isInFlight}
             />
-            <Text color='gray.200' fontSize='lg'>
+            <Text color='gray.200' fontSize='md'>
               <Trans>
                 Creating an account on overdoll means you agree to follow our{' '}
                 <Link
                   color='gray.100'
-                  fontSize='lg'
+                  fontSize='md'
                   isExternal
                   href={COMMUNITY_GUIDELINES}
                 >Community Guidelines
@@ -138,18 +138,23 @@ export default function Register ({ queryRef }: Props): JSX.Element {
                 and understand our{' '}
                 <Link
                   color='gray.100'
-                  fontSize='lg'
+                  fontSize='md'
                   isExternal
                   href={TERMS_OF_SERVICE}
                 >Terms of Service
                 </Link>{' '} and {' '}
                 <Link
                   color='gray.100'
-                  fontSize='lg'
+                  fontSize='md'
                   isExternal
                   href={PRIVACY_POLICY}
                 >Privacy Policy
                 </Link>.
+              </Trans>
+            </Text>
+            <Text color='gray.200' fontSize='md'>
+              <Trans>
+                You must also be at least 18 years of age.
               </Trans>
             </Text>
           </Stack>
