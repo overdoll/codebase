@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
     accounting_currency          text,
 
     idempotency_key              text,
+    duplicate                    boolean,
 
     primary key ( ccbill_subscription_id )
 );
