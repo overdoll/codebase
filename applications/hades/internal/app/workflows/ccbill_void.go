@@ -83,7 +83,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			Currency:      currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
