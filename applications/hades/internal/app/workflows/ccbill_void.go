@@ -4,6 +4,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"strconv"
 )
 
 type CCBillVoidInput struct {
@@ -56,7 +57,19 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
+	currency := input.AccountingCurrency
+
+	if currency == "" {
+		currency = subscriptionDetails.Currency
+	}
+
+	amount := input.AccountingAmount
+
+	if amount == "" {
+		amount = strconv.Itoa(int(subscriptionDetails.Amount))
+	}
+
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(amount, currency)
 
 	if err != nil {
 		return err
