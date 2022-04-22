@@ -37,3 +37,6 @@ steps:
         OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
         FILES_BUCKET: sandbox-overdoll-files
         IS_CI: true
+        PAXUM_FROM_EMAIL: payer@domain.com
+        PAXUM_SANDBOX: "true"
+        PAXUM_SHARED_SECRET: "1234567890"
