@@ -1,14 +1,12 @@
 import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import VerticalNavigationButtonBody from './VerticalNavigationButtonBody/VerticalNavigationButtonBody'
+import { LinkProps } from 'next/link'
 
-interface Props {
+interface Props extends LinkProps {
   title: ReactNode
-  to: string
-  exact?: boolean
   icon?: FunctionComponent<any> | undefined
   colorScheme?: string
-  strict?: boolean
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
 }
@@ -16,12 +14,11 @@ interface Props {
 export default function VerticalNavigationButton ({
   title,
   icon,
-  exact = false,
-  strict = false,
-  to,
   colorScheme = 'gray',
   buttonType = 'secondary',
-  isExternal = false
+  isExternal = false,
+  href,
+  ...rest
 }: Props): JSX.Element {
   const ButtonProps = {
     title,
@@ -33,17 +30,14 @@ export default function VerticalNavigationButton ({
 
   return (
     <NavLink
-      exact={exact}
-      to={to}
-      strict={strict}
+      href={href}
+      {...rest}
     >
       {({
-        isActive,
-        isPending
+        isActiveBasePath
       }) => (
         <VerticalNavigationButtonBody
-          isActive={isActive}
-          isPending={isPending}
+          isActive={isActiveBasePath}
           {...ButtonProps}
         />
       )}

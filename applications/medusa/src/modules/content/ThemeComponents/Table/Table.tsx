@@ -2,6 +2,7 @@ import { Flex, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { LoadMoreProps } from '../../ContentSelection/LoadMore/LoadMore'
 import { LinkTile, LoadMore } from '../../ContentSelection'
+import { UrlObject } from 'url'
 
 interface TableRowBackgroundProps {
   children: ReactNode
@@ -23,7 +24,7 @@ interface TableProps {
 
 interface TableBodyLink {
   children: ReactNode
-  to: string
+  href: string | UrlObject
 }
 
 interface TableBodyBackground {
@@ -118,10 +119,10 @@ export function TableBodyColumnText ({
 
 export function TableBodyRowLink ({
   children,
-  to
+  href
 }: TableBodyLink): JSX.Element {
   return (
-    <LinkTile borderRadius='base' to={to}>
+    <LinkTile borderRadius='base' href={href}>
       <TableBodyRowBackground>
         {children}
       </TableBodyRowBackground>

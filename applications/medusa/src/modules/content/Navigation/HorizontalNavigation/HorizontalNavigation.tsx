@@ -5,6 +5,7 @@ import HorizontalNavigationLeft from './HorizontalNavigationLeft/HorizontalNavig
 import HorizontalNavigationRight from './HorizontalNavigationRight/HorizontalNavigationRight'
 import HorizontalNavigationButton from './HorizontalNavigationButton/HorizontalNavigationButton'
 import { RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
+import RouterLoadingBar from '../../../../domain/app/Root/RouterLoadingBar/RouterLoadingBar'
 
 interface Props {
   children: ReactNode
@@ -15,6 +16,7 @@ const HorizontalNavigation = ({
 }: Props): JSX.Element => {
   return (
     <>
+      <RouterLoadingBar />
       <RenderOnDesktop>
         <Flex
           align='center'

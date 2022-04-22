@@ -19,7 +19,6 @@ export default function SmallMenuItem ({
 }: Props): JSX.Element {
   return (
     <MenuItem
-      justify='center'
       onClick={onClick}
       isDisabled={isDisabled}
     >

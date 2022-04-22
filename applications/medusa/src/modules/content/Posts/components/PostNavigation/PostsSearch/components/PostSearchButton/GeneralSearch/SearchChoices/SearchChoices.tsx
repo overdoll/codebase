@@ -10,9 +10,10 @@ import SaveGeneralSearchButton from './SaveGeneralSearchButton/SaveGeneralSearch
 import { EmptyGeneralSearch } from '../../../../../../../../Placeholder'
 import { useQueryParams } from 'use-query-params'
 import { configMap } from '../../../../constants'
+import { UrlObject } from 'url'
 
 interface Props {
-  routeTo: string
+  routeTo: string | UrlObject
   onClose: () => void
 }
 

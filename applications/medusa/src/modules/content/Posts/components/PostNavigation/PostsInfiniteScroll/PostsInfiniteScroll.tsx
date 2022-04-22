@@ -1,17 +1,12 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
-import './css/scrollbar.min.css'
-import { Box, Spinner } from '@chakra-ui/react'
-import SwiperCore, { Mousewheel, Scrollbar, Virtual } from 'swiper'
+import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import { PostVideoManagerProvider } from '../../../index'
 import { ObserverManagerProvider } from '../../../support/ObserverManager/ObserverManager'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
-import { PostPlaceholder, SmallBackgroundBox } from '../../../../PageLayout'
-import { useState } from 'react'
+import { SmallBackgroundBox } from '../../../../PageLayout'
 import { Trans } from '@lingui/macro'
 
 interface Props {
@@ -43,84 +38,52 @@ export default function PostsInfiniteScroll ({
   viewerQuery,
   hasNext,
   loadNext,
-  isLoadingNext
+  isLoadingNext,
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  SwiperCore.use([Scrollbar, Mousewheel, Virtual])
-
-  const [swiper, setSwiper] = useState<SwiperCore | null>(null)
-
-  const onCompleteLoaded = (): void => {
-    if (swiper == null) return
-    swiper.updateSlides()
-  }
-
-  const onSlideChange = (swiper): void => {
-    const activeIndex = swiper.activeIndex as number
-    const currentLength = data?.edges.length
-
-    if (activeIndex + 3 >= currentLength && !isLoadingNext && hasNext) {
-      loadNext(10, { onComplete: onCompleteLoaded })
-    }
-  }
-
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <Box h='calc(100vh - 54px)'>
-        <Box pb={14} />
-        <SmallBackgroundBox>
-          <Trans>
-            No posts found
-          </Trans>
-        </SmallBackgroundBox>
-      </Box>
+      <SmallBackgroundBox>
+        <Trans>
+          We couldn't find any posts
+        </Trans>
+      </SmallBackgroundBox>
     )
   }
 
   return (
-    <Box>
-      <Swiper
-        onSwiper={(swiper) => setSwiper(swiper)}
-        onSlideChange={(swiper) => onSlideChange(swiper)}
-        scrollbar={{ hide: true }}
-        style={{ height: 'calc(100vh - 54px)' }}
-        mousewheel
-        slidesOffsetBefore={50}
-        slidesOffsetAfter={40}
-        virtual={{
-          cache: true,
-          addSlidesBefore: 12,
-          addSlidesAfter: 12
-        }}
-        slidesPerView={1.1}
-        freeModeSticky
-        freeMode
-        direction='vertical'
-      >
-        {data?.edges.map((item, index) =>
-          <SwiperSlide
-            key={index}
-            virtualIndex={index}
-          >
-            <Box py={3} px={1} h='100%'>
-              <ObserverManagerProvider>
-                <PostVideoManagerProvider>
-                  <FullSimplePost query={item.node} viewerQuery={viewerData} />
-                </PostVideoManagerProvider>
-              </ObserverManagerProvider>
-            </Box>
-          </SwiperSlide>)}
-        {hasNext && (
-          <SwiperSlide>
+    <Stack spacing={16}>
+      {data?.edges.map((item, index) =>
+        (
+          <Box key={index}>
+            <ObserverManagerProvider>
+              {({ isObserving }) => {
+                if (isObserving && index >= (data.edges.length - 2)) {
+                  if (!isLoadingNext && hasNext) {
+                    loadNext(9, {})
+                  }
+                }
+                return (
+                  <PostVideoManagerProvider>
+                    <FullSimplePost query={item.node} viewerQuery={viewerData} />
+                  </PostVideoManagerProvider>
+                )
+              }}
+            </ObserverManagerProvider>
+          </Box>))}
+      {hasNext &&
+        (
+          <>
             {isLoadingNext &&
-              <PostPlaceholder>
-                <Spinner size='lg' />
-              </PostPlaceholder>}
-          </SwiperSlide>)}
-      </Swiper>
-    </Box>
+              (
+                <Flex w='100%' justify='center'>
+                  <Spinner color='gray.100' size='sm' />
+                </Flex>)}
+          </>
+        )}
+    </Stack>
   )
 }

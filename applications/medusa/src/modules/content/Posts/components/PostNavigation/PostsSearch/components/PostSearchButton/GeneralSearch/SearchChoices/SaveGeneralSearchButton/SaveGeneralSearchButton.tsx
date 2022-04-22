@@ -1,23 +1,27 @@
 import { Button } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { encodeQueryParams } from 'serialize-query-params'
-import { useHistory } from '../../../../../../../../../../routing'
 import { stringify } from 'query-string'
 import { useQueryParams } from 'use-query-params'
 import { useChoiceContext } from '../../../../../../../../../HookedComponents/Choice'
 import { filterObjectByKeyValue } from '../../../../../support/filterObjectByKeyValue'
 import { configMap } from '../../../../../constants'
+import { UrlObject } from 'url'
+import { useRouter } from 'next/router'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
 
 interface Props {
   onClose: () => void
-  routeTo: string
+  routeTo: string | UrlObject
 }
 
 export default function SaveGeneralSearchButton ({
   onClose,
   routeTo
 }: Props): JSX.Element {
-  const history = useHistory()
+  const router = useRouter()
+
+  const { asPath } = router
 
   const { values } = useChoiceContext()
 
@@ -51,13 +55,15 @@ export default function SaveGeneralSearchButton ({
   }
 
   const onSaveSearch = (): void => {
-    if (history.location.pathname !== routeTo) {
+    const [, resolved] = resolveHref(router, routeTo, true)
+
+    if (asPath !== resolved) {
       const encodedQuery = encodeQueryParams(configMap,
         {
           ...setValues,
           sort: 'TOP'
         })
-      history.push(`${routeTo}?${stringify(encodedQuery)}`)
+      void router.push(`${resolved}?${stringify(encodedQuery)}`)
       onClose()
       return
     }

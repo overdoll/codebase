@@ -1,0 +1,159 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 12:04-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:79
+msgid "A recovery code can only contain numbers and letters"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:78
+msgid "A recovery code must be 8 characters long"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:113
+msgid "A recovery code was successfully used up to log you in"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:157
+msgid "An 8-character recovery code"
+msgstr ""
+
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:81
+msgid "Cancel"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:152
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:159
+msgid "Code"
+msgstr ""
+
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:95
+msgid "Confirm Cancel Join"
+msgstr ""
+
+#: src/domain/join/Join/pages/Join/JoinForm/JoinForm.tsx:72
+msgid "Continue"
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/Register.tsx:129
+msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand our <1>Terms of Service</1>  and  <2>Privacy Policy</2>."
+msgstr ""
+
+#: src/domain/join/Join/pages/Join/JoinForm/JoinForm.tsx:52
+msgid "Email"
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/RegisterForm/RegisterForm.tsx:56
+msgid "Enter a username"
+msgstr ""
+
+#: src/domain/join/Join/pages/Join/JoinForm/JoinForm.tsx:58
+msgid "Enter an email"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:141
+msgid "Enter the 6-digit code from your Authenticator app"
+msgstr ""
+
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:119
+msgid "Go back"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/MultiFactor.tsx:51
+msgid "I lost access to my device"
+msgstr ""
+
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:105
+msgid "If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the email will be invalidated. Are you sure?"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:142
+msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
+msgstr ""
+
+#: src/domain/join/Join/pages/Grant/Grant.tsx:127
+msgid "Logging in"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:77
+msgid "Please enter a recovery code"
+msgstr ""
+
+#: src/domain/join/Join/pages/Grant/Grant.tsx:135
+msgid "Please wait while we log you in..."
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/RegisterForm/RegisterForm.tsx:67
+msgid "Register"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:167
+msgid "Submit"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:174
+msgid "Submit Code"
+msgstr ""
+
+#: src/domain/join/Join/pages/Lobby/Lobby.tsx:74
+msgid "Tap on the link you received in your email inbox to continue"
+msgstr ""
+
+#: src/domain/join/Join/pages/Join/Join.tsx:125
+msgid "The login code has previously expired or is no longer valid. Try again?"
+msgstr ""
+
+#: src/domain/join/Join/pages/Grant/Grant.tsx:95
+msgid "There was an error logging you in"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:127
+msgid "There was an error submitting a recovery code"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:118
+msgid "There was an error submitting the authentication code"
+msgstr ""
+
+#: src/domain/join/Join/pages/Join/Join.tsx:97
+msgid "There was an error with joining"
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/Register.tsx:101
+msgid "There was an issue with registration."
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/RegisterForm/RegisterForm.tsx:51
+msgid "Username"
+msgstr ""
+
+#: src/domain/join/Join/pages/Grant/Grant.tsx:81
+msgid "Welcome back!"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:104
+msgid "Welcome back! Thanks for using two-factor to log in!"
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/Register.tsx:94
+msgid "Welcome to overdoll!"
+msgstr ""
+
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:131
+msgid "Yes, cancel"
+msgstr ""
+
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:150
+msgid "You can find this in the same app you used to set up two-factor authentication"
+msgstr ""

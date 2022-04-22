@@ -1,0 +1,90 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 12:04-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
+msgid "Account Locked"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:67
+msgid "Home"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
+msgid "I promise to be better and to follow the community guidelines more closely"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
+msgid "Locked for {remaining}"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:75
+msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountButton/LockedAccountButton.tsx:38
+msgid "Open Lock Info"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:82
+msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
+msgstr ""
+
+#: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75
+msgid "Set Up Your Profile"
+msgstr ""
+
+#: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:96
+msgid "Set up profile"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
+msgid "There was an error unlocking your account"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
+msgid "Unlock Account"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountBanner/LockedAccountBanner.tsx:58
+msgid "View Details"
+msgstr ""
+
+#: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:82
+msgid "Welcome to overdoll! We're so glad to have you here. On our platform, we strive to make sure you're served content you want to see. Take a few minutes to set up your curation profile to let us know what you like?"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
+msgid "You may unlock your account after agreeing to the community guidelines."
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:55
+msgid "You must agree to follow the community guidelines"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:107
+msgid "Your account has been locked and you'll have the ability to unlock it after"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:78
+msgid "Your account has been unlocked"
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountBanner/LockedAccountBanner.tsx:47
+msgid "Your account is currently locked. Functionality is limited."
+msgstr ""
+
+#: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
+msgid "{countdown}"
+msgstr ""

@@ -1,4 +1,5 @@
 const path = require('path')
+const relay = require('./relay.config.js')
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -30,7 +31,7 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: 'default-src https://fonts.gstatic.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com data: \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src \'self\' data:;frame-src \'none\' ;object-src \'none\' ;worker-src blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
+    value: 'default-src https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://sandbox-overdoll-resources.s3.amazonaws.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com data: \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src https://dcd9vpqfvvgum.cloudfront.net \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
   }
 ]
 
@@ -44,10 +45,17 @@ module.exports = {
       }
     ]
   },
-  experimental: {
-    externalDir: true
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en'
   },
-  reactStrictMode: true,
+  experimental: {
+    runtime: 'nodejs',
+    concurrentFeatures: true
+  },
+  serverRuntimeConfig: {
+    projectRoot: __dirname
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.md$/,
@@ -64,7 +72,9 @@ module.exports = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
       '@//:types': path.resolve(__dirname, 'src/types'),
-      '@//:assets': path.resolve(__dirname, 'src/assets')
+      '@//:assets': path.resolve(__dirname, 'src/assets'),
+      '@//:domain': path.resolve(__dirname, 'src/domain'),
+      '@//:common': path.resolve(__dirname, 'src/common')
     }
 
     return config

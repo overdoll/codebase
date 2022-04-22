@@ -10,6 +10,7 @@ import ControlVideo from './components/ControlVideo/ControlVideo'
 interface Controls {
   canSeek?: boolean
   canFullscreen?: boolean
+  canControl?: boolean
 }
 
 interface Props extends HTMLChakraProps<any> {
@@ -63,7 +64,8 @@ export default function ControlledVideo ({
     onTap
   } = useTimedDisclosure({
     tapTimeout: 500,
-    hoverTimeout: 3000
+    hoverTimeout: 3000,
+    lockControl: controls?.canControl === false
   })
 
   const onCanPlay = (): void => {
@@ -190,6 +192,7 @@ export default function ControlledVideo ({
         totalTime={totalTime}
         canSeek={controls?.canSeek}
         canFullscreen={controls?.canFullscreen}
+        canControl={controls?.canControl}
       />
     </Box>
   )

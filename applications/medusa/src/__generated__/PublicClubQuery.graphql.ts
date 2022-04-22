@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a02fd1db3a5742efd0f8716b572d3793>>
- * @relayHash 7fe9be1e44c45fa4118beadb91714af3
+ * @generated SignedSource<<8c46b04a9690cbd734a87a7c50426738>>
+ * @relayHash ad6fc55904bd68ca4f42e9c9ed578ede
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7fe9be1e44c45fa4118beadb91714af3
+// @relayRequestID ad6fc55904bd68ca4f42e9c9ed578ede
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ export type PublicClubQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubTopPostsFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment" | "ClubSuspendedStaffAlertFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "SupportClubButtonViewerFragment" | "LockedAccountBannerFragment">;
   } | null;
 };
 export type PublicClubQueryResponse = PublicClubQuery$data;
@@ -225,8 +225,6 @@ v15 = [
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v8/*: any*/),
-                  (v9/*: any*/),
                   (v10/*: any*/),
                   {
                     "alias": null,
@@ -235,6 +233,8 @@ v15 = [
                     "name": "videoDuration",
                     "storageKey": null
                   },
+                  (v8/*: any*/),
+                  (v9/*: any*/),
                   (v11/*: any*/)
                 ],
                 "storageKey": null
@@ -316,6 +316,13 @@ v18 = {
   "args": null,
   "kind": "ScalarField",
   "name": "currency",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "expires",
   "storageKey": null
 };
 return {
@@ -451,6 +458,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "SupportClubButtonViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LockedAccountBannerFragment"
           }
         ],
         "storageKey": null
@@ -668,13 +680,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
+              (v19/*: any*/)
             ],
             "storageKey": null
           }
@@ -783,6 +789,19 @@ return {
             "name": "isSecure",
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v14/*: any*/),
+              (v19/*: any*/)
+            ],
+            "storageKey": null
+          },
           (v11/*: any*/)
         ],
         "storageKey": null
@@ -790,7 +809,7 @@ return {
     ]
   },
   "params": {
-    "id": "7fe9be1e44c45fa4118beadb91714af3",
+    "id": "ad6fc55904bd68ca4f42e9c9ed578ede",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",
@@ -799,6 +818,6 @@ return {
 };
 })();
 
-(node as any).hash = "a9d136d8bc19c016ea0fcd9dfded61b0";
+(node as any).hash = "fdcd35bb77a33ac929b0784e754b720f";
 
 export default node;

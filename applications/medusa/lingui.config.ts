@@ -1,3 +1,285 @@
+const GeneralCatalogs = [
+  {
+    path: 'src/domain/app/__locale__/{locale}/index',
+    include: ['src/modules/', 'src/common/components/', 'src/domain/root/']
+  },
+  {
+    path: 'src/domain/join/__locale__/{locale}/index',
+    include: ['src/domain/join/']
+  },
+  {
+    path: 'src/domain/home/__locale__/{locale}/index',
+    include: ['src/domain/home/']
+  },
+  {
+    path: 'src/domain/verify-token/__locale__/{locale}/index',
+    include: ['src/domain/verify-token/']
+  },
+  {
+    path: 'src/domain/404/__locale__/{locale}/index',
+    include: ['src/domain/404/']
+  },
+  {
+    path: 'src/domain/500/__locale__/{locale}/index',
+    include: ['src/domain/500/']
+  },
+  {
+    path: 'src/domain/confirm-email/__locale__/{locale}/index',
+    include: ['src/domain/confirm-email/']
+  },
+  {
+    path: 'src/domain/help/__locale__/{locale}/index',
+    include: ['src/domain/help/']
+  },
+  {
+    path: 'src/domain/search/__locale__/{locale}/index',
+    include: ['src/domain/search/']
+  },
+  {
+    path: 'src/domain/logout/__locale__/{locale}/index',
+    include: ['src/domain/logout/']
+  },
+  {
+    path: 'src/domain/profile/__locale__/{locale}/index',
+    include: ['src/domain/profile/']
+  }
+]
+
+const SettingsCatalogs = [
+  {
+    path: 'src/domain/settings/profile/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/root/']
+  },
+  {
+    path: 'src/domain/settings/profile/username/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/username/']
+  },
+  {
+    path: 'src/domain/settings/profile/emails/__locale__/{locale}/index',
+    include: ['src/domain/settings/profile/emails/']
+  },
+  {
+    path: 'src/domain/settings/security/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/root/']
+  },
+  {
+    path: 'src/domain/settings/security/recovery-codes/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/recovery-codes/']
+  },
+  {
+    path: 'src/domain/settings/security/sessions/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/sessions/']
+  },
+  {
+    path: 'src/domain/settings/security/totp/__locale__/{locale}/index',
+    include: ['src/domain/settings/security/totp/']
+  },
+  {
+    path: 'src/domain/settings/billing/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/root/']
+  },
+  {
+    path: 'src/domain/settings/billing/payment-methods/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/payment-methods/']
+  },
+  {
+    path: 'src/domain/settings/billing/subscriptions/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/subscriptions/']
+  },
+  {
+    path: 'src/domain/settings/billing/subscription/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/subscription/']
+  },
+  {
+    path: 'src/domain/settings/billing/transactions/__locale__/{locale}/index',
+    include: ['src/domain/settings/billing/transactions/']
+  },
+  {
+    path: 'src/domain/settings/preferences/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/preferences/root/']
+  },
+  {
+    path: 'src/domain/settings/preferences/curation-profile/__locale__/{locale}/index',
+    include: ['src/domain/settings/preferences/curation-profile/']
+  },
+  {
+    path: 'src/domain/settings/moderation/__locale__/{locale}/index',
+    include: ['src/domain/settings/moderation/']
+  }
+]
+
+const ClubCatalog = [
+  {
+    path: 'src/domain/club/create-post/__locale__/{locale}/index',
+    include: ['src/domain/club/create-post/']
+  },
+  {
+    path: 'src/domain/club/home/__locale__/{locale}/index',
+    include: ['src/domain/club/home/']
+  },
+  {
+    path: 'src/domain/club/members/__locale__/{locale}/index',
+    include: ['src/domain/club/members/']
+  },
+  {
+    path: 'src/domain/club/posts/__locale__/{locale}/index',
+    include: ['src/domain/club/posts/']
+  },
+  {
+    path: 'src/domain/club/settings/root/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/root/']
+  },
+  {
+    path: 'src/domain/club/settings/aliases/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/aliases/']
+  },
+  {
+    path: 'src/domain/club/settings/name/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/name/']
+  },
+  {
+    path: 'src/domain/club/settings/thumbnail/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/thumbnail/']
+  }
+]
+
+const ClubsCatalog = [
+  {
+    path: 'src/domain/clubs/feed/__locale__/{locale}/index',
+    include: ['src/domain/clubs/feed/']
+  },
+  {
+    path: 'src/domain/clubs/discover/__locale__/{locale}/index',
+    include: ['src/domain/clubs/discover/']
+  },
+  {
+    path: 'src/domain/clubs/create-club/__locale__/{locale}/index',
+    include: ['src/domain/clubs/create-club/']
+  },
+  {
+    path: 'src/domain/[slug]/root/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/root/']
+  },
+  {
+    path: 'src/domain/[slug]/post/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/post/']
+  },
+  {
+    path: 'src/domain/[slug]/posts/__locale__/{locale}/index',
+    include: ['src/domain/[slug]/posts/']
+  }
+]
+
+const ModerationCatalog = [
+  {
+    path: 'src/domain/moderation/audit-logs/__locale__/{locale}/index',
+    include: ['src/domain/moderation/audit-logs/']
+  },
+  {
+    path: 'src/domain/moderation/post-queue/__locale__/{locale}/index',
+    include: ['src/domain/moderation/post-queue/']
+  },
+  {
+    path: 'src/domain/moderation/post-reports/__locale__/{locale}/index',
+    include: ['src/domain/moderation/post-reports/']
+  }
+]
+
+const StaffCatalog = [
+  {
+    path: 'src/domain/staff/account/__locale__/{locale}/index',
+    include: ['src/domain/staff/account/']
+  },
+  {
+    path: 'src/domain/staff/club/__locale__/{locale}/index',
+    include: ['src/domain/staff/club/']
+  },
+  {
+    path: 'src/domain/staff/post/__locale__/{locale}/index',
+    include: ['src/domain/staff/post/']
+  },
+  {
+    path: 'src/domain/staff/billing/subscription/__locale__/{locale}/index',
+    include: ['src/domain/staff/billing/subscription/']
+  },
+  {
+    path: 'src/domain/staff/billing/transaction/__locale__/{locale}/index',
+    include: ['src/domain/staff/billing/transaction/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/audience/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/audience/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/cancellation-reason/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/cancellation-reason/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/category/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/category/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/rule/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/rule/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/series/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/series/view/']
+  }
+]
+
 export default {
   locales: [
     'en'
@@ -13,14 +295,21 @@ export default {
     // 'cs'
   ],
   catalogs: [
-    {
-      path: 'src/client/domain/Root/__locale__/{locale}/index',
-      include: ['src/modules/', 'src/client/components/', 'src/client/domain/Root/']
-    },
-    {
-      path: 'src/client/domain/Join/__locale__/{locale}/index',
-      include: ['src/client/domain/Join/']
-    }, {
+    ...GeneralCatalogs,
+    ...SettingsCatalogs,
+    ...ClubCatalog,
+    ...ClubsCatalog,
+    ...ModerationCatalog,
+    ...StaffCatalog
+  ],
+  format: 'po',
+  fallbackLocales: {
+    default: 'en'
+  }
+}
+
+/*
+{
       path: 'src/client/domain/Logout/__locale__/{locale}/index',
       include: ['src/client/domain/Logout/']
     },
@@ -284,9 +573,4 @@ export default {
       path: 'src/client/domain/Staff/pages/StaffAccountTransaction/__locale__/{locale}/index',
       include: ['src/client/domain/Staff/pages/StaffAccountTransaction']
     }
-  ],
-  format: 'po',
-  fallbackLocales: {
-    default: 'en'
-  }
-}
+ */

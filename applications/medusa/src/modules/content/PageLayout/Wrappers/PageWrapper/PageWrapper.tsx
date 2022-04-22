@@ -9,7 +9,11 @@ export default function PageWrapper ({
   children
 }: Props): JSX.Element {
   return (
-    <Center mt={6}>
+    <Center mt={{
+      base: 2,
+      md: 6
+    }}
+    >
       <Box
         w={['full', 'sm', 'md', 'lg']}
         pl={[1, 0]}

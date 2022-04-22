@@ -8,12 +8,14 @@ interface Props extends HTMLChakraProps<any> {
   isLoading: boolean
   hasError: boolean
   onRetry: () => void
+  canControl?: boolean | undefined
 }
 
 export default function LoadingSpinner ({
   isLoading,
   hasError,
-  onRetry
+  onRetry,
+  canControl
 }: Props): JSX.Element {
   if (hasError) {
     return (
@@ -24,11 +26,13 @@ export default function LoadingSpinner ({
             Error Loading Video
           </Trans>
         </Heading>
-        <Button w='100%' onClick={onRetry} size='md' colorScheme='orange'>
-          <Trans>
-            Retry
-          </Trans>
-        </Button>
+        {canControl !== false && (
+          <Button w='100%' onClick={onRetry} size='md' colorScheme='orange'>
+            <Trans>
+              Retry
+            </Trans>
+          </Button>
+        )}
       </Stack>
     )
   }

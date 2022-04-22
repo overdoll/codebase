@@ -37,7 +37,7 @@ describe('Lock/Unlock Account', () => {
   it('login as locked and see that you cant unlock', () => {
     cy.joinWithExistingAccount(username)
     cy.visit('/')
-    cy.get('button[aria-label="Open Lock Info"]').should('not.be.disabled').click({ force: true })
+    clickOnButton('View Details')
     cy.findByText(/Locked for/iu).should('be.visible')
   })
 })

@@ -1,0 +1,34 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 23:06-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:39
+msgid "Complete Curation Profile"
+msgstr ""
+
+#: src/domain/settings/preferences/root/RootCurationSettings/RootCurationSettings.tsx:36
+msgid "Content Curation"
+msgstr ""
+
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:38
+msgid "Modify Curation Profile"
+msgstr ""
+
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:43
+msgid "Reconfigure your curation profile"
+msgstr ""
+
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:44
+msgid "Set up your curation profile"
+msgstr ""

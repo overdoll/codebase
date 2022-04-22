@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode, useTransition } from 'react'
 import { IconButton as ChakraButton, IconButtonProps } from '@chakra-ui/react'
 import useSSRDisable from '../../hooks/useSSRDisable'
-import { ForwardRefProp } from '@//:types/components'
+import { ForwardRefProp } from '../../../types/components'
 
 interface Props extends IconButtonProps, ForwardRefProp {
   children?: ReactNode
@@ -17,7 +17,7 @@ const IconButton = forwardRef<any, Props>(({
 }: Props, forwardRef) => {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 3000
+    timeoutMs: 700
   })
 
   const handleClick = (e): void => {

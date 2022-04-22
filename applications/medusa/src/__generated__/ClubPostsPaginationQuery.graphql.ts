@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e054c899d882ddfef5a87294df470b7f>>
- * @relayHash 39fe94df08c0d22695d194a10409c8fa
+ * @generated SignedSource<<0bcf9269f33d9ce0db17b1dbcef458bf>>
+ * @relayHash 3e874311795647d72cbdbb050c3ef829
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 39fe94df08c0d22695d194a10409c8fa
+// @relayRequestID 3e874311795647d72cbdbb050c3ef829
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -223,6 +223,20 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "processed",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "videoDuration",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
                                     "concreteType": "ResourceUrl",
                                     "kind": "LinkedField",
                                     "name": "urls",
@@ -249,20 +263,6 @@ return {
                                     "selections": [
                                       (v10/*: any*/)
                                     ],
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "processed",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "videoDuration",
                                     "storageKey": null
                                   },
                                   (v8/*: any*/)
@@ -363,7 +363,7 @@ return {
     ]
   },
   "params": {
-    "id": "39fe94df08c0d22695d194a10409c8fa",
+    "id": "3e874311795647d72cbdbb050c3ef829",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

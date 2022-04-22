@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 22:03-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootSecuritySettings.tsx:51
+msgid "Account Sessions"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootSecuritySettings.tsx:54
+msgid "Account login history"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/MultiFactorTotpSettings.tsx:28
+msgid "Authenticator App"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:151
+msgid "Cancel"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/MultiFactorTotpSettings.tsx:33
+msgid "Configure authenticator app"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:124
+msgid "Disable"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:163
+msgid "Disable Two-Factor"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:100
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:139
+msgid "Disable Two-Factor Authentication"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:144
+msgid "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RecoveryCodesSettings.tsx:30
+msgid "Generate recovery codes"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/MultiFactorTotpSettings.tsx:32
+msgid "Reconfigure authenticator app"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RecoveryCodesSettings.tsx:25
+msgid "Recovery Codes"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/MultiFactorTotpSettings/MultiFactorTotpSettings.tsx:36
+msgid "Recovery codes must be generated first"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootSecuritySettings.tsx:42
+msgid "Sessions"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/RootMultiFactorSettings.tsx:34
+msgid "Setting up two-factor authentication adds an extra layer of security in case your account is compromised."
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:78
+msgid "There was an error disabling two-factor authentication"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/RootMultiFactorSettings.tsx:29
+msgid "Two-factor Authentication"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:62
+msgid "Two-factor authentication has been disabled for your account"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/RecoveryCodesSettings/RecoveryCodesSettings.tsx:29
+msgid "View or regenerate recovery codes"
+msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:109
+msgid "Your account role prevents you from disabling two-factor authentication"
+msgstr ""

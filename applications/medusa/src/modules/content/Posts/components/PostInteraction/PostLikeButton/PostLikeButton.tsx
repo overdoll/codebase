@@ -1,6 +1,4 @@
 import { graphql, useFragment } from 'react-relay'
-import 'swiper/swiper.min.css'
-import 'swiper/components/navigation/navigation.min.css'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
 import { PostLikeButtonViewerFragment$key } from '@//:artifacts/PostLikeButtonViewerFragment.graphql'
 import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
@@ -12,8 +10,8 @@ import IconButton from '../../../../../form/IconButton/IconButton'
 import Can from '../../../../../authorization/Can'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import { useHistory } from '../../../../../routing'
 import encodeJoinRedirect from '../../../../../support/encodeJoinRedirect'
+import { useRouter } from 'next/router'
 
 interface Props extends ButtonProps {
   query: PostLikeButtonFragment$key
@@ -73,11 +71,17 @@ export default function PostLikeButton ({
   const [likePost, isLiking] = useMutation(LikeMutation)
   const [undoLike, isUnliking] = useMutation(UndoMutation)
 
-  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]/post/[reference]',
+    query: {
+      slug: data.club.slug,
+      reference: data.reference
+    }
+  })
 
   const { i18n } = useLingui()
 
-  const history = useHistory()
+  const router = useRouter()
 
   const hasLiked = data?.viewerLiked != null
 
@@ -149,7 +153,7 @@ export default function PostLikeButton ({
               h='100%'
               w='100%'
                    />)}
-            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => history.push(redirect)}
+            onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : () => void router.push(redirect)}
             {...rest}
           />
           <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>

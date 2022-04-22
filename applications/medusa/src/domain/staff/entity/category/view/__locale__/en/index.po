@@ -1,0 +1,73 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 17:29-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:126
+msgid "BCP 47 Locale Code"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/RootStaffViewCategory.tsx:41
+msgid "Back to search"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:29
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:98
+msgid "Category Thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:32
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:111
+msgid "Category Title"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:57
+msgid "Change Category Title"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:40
+msgid "Change Thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:116
+msgid "Enter a category title"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:93
+msgid "Error updating category title"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
+msgid "Locale"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
+msgid "Submit"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:74
+msgid "Successfully updated category thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:80
+msgid "There was an error updating the category thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:87
+msgid "Updated category title to {0} for {1}"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43
+msgid "View Translations"
+msgstr ""

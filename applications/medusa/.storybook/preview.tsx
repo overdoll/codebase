@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import darkTheme from './dark'
-import theme from '../src/client/theme'
+import theme from '../src/modules/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 
 export const parameters = {

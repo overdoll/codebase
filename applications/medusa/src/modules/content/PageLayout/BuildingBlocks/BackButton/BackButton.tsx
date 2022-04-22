@@ -3,14 +3,15 @@ import { ArrowButtonLeft } from '@//:assets/icons/navigation'
 import { ReactNode } from 'react'
 import LinkButton from '../../../ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '../../index'
+import { UrlObject } from 'url'
 
 interface Props {
-  to: string
+  href: string | UrlObject
   children: ReactNode
 }
 
 export default function BackButton ({
-  to,
+  href,
   children
 }: Props): JSX.Element {
   return (
@@ -20,7 +21,7 @@ export default function BackButton ({
         w='100%'
         size='md'
         variant='solid'
-        to={to}
+        href={href}
       >
         {children}
       </LinkButton>

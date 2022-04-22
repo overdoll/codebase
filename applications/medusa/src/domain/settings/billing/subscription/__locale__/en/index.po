@@ -1,0 +1,171 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-12 22:39-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:157
+msgid "A list with one or more subscriptions should appear. <0>Find the Subscription ID that correlates to the one listed here</0> and click on <1>Click here to update your payment information</1> to update your payment information."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:73
+msgid "ACTIVE"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:183
+msgid "After cancelling your subscription, you will no longer be billed. You will keep your benefits until {nextBillingDate}. After this date, they will expire."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:71
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:69
+msgid "As a supporter, you have access to all exclusive content from this club."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:67
+msgid "CANCELLED"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:97
+msgid "CCBill Support Center"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:154
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:168
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:215
+msgid "Cancel Subscription"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:85
+msgid "Cancelled on"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:66
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:64
+msgid "Club Benefits"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:77
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:133
+msgid "Email"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/RootAccountClubSupporterSubscriptionSettings.tsx:43
+msgid "Go back to My Subscriptions"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:118
+msgid "In the section where it asks <0>Enter 2 of the following pieces of information to run a search</0>, enter these two pieces of information and click <1>Search</1>"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:66
+msgid "In the section where it asks <0>Enter 2 of the following pieces of information to run a search</0>, enter this information and click <1>Search</1>"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:105
+msgid "In the section where it asks <0>Tell us how you purchased your subscription</0>, enter this information"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:45
+msgid "Info"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/ManageActiveSubscriptionButton.tsx:41
+msgid "Manage Subscription"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:42
+msgid "Manually Enter Information"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:92
+msgid "Navigate to the"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:91
+msgid "Next renewal on"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:58
+msgid "Open Generated Support Center Link"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:52
+msgid "Open the CCBill Support Center link using the button below"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:191
+msgid "Please tell us why you would like to cancel the subscription. We'll communicate this to the club so they can continue to improve their content."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:47
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:45
+msgid "Subscription Details"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:143
+msgid "Subscription ID"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:129
+msgid "Subscription was cancelled. You will no longer be billed when it expires."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:81
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:75
+msgid "Supporter since"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice.tsx:42
+msgid "The suspension is longer than 30 days."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:141
+msgid "There was an error cancelling your subscription."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice.tsx:38
+msgid "This club is currently suspended. You cannot access its exclusive content."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:52
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:66
+msgid "Update Payment Method"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions.tsx:37
+msgid "Use Generated Link"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings.tsx:56
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings.tsx:54
+msgid "View Club"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:61
+msgid "You can renew your benefits only after the subscription has fully expired from the club page."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:84
+msgid "Your payment method cannot be directly updated through our platform. To update your payment method, please follow the steps below to update it through our billing provider's website."
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:90
+msgid "{cancelledAt}"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:34
+msgid "{cancelledRemainingDays, plural, one {Benefits expire in # day} other {Benefits expire in # days}}"
+msgstr ""
+
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:54
+msgid "{cancelledRemainingDays, plural, one {Your benefits will expire in # day.} other {Your benefits will expire in # days.}}"
+msgstr ""

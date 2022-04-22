@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f89094a38c4423c86256154063f2684b>>
+ * @generated SignedSource<<89a6e70588f25da1c6eae6ac55f3c685>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,19 +9,13 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type DraggableContentFragment$data = {
   readonly isSupporterOnly: boolean;
   readonly resource: {
     readonly id: string;
-    readonly type: ResourceType;
-    readonly urls: ReadonlyArray<{
-      readonly url: string;
-      readonly mimeType: string;
-    }>;
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   readonly " $fragmentType": "DraggableContentFragment";
 };
 export type DraggableContentFragment = DraggableContentFragment$data;
@@ -44,6 +38,11 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ResourceInfoFragment"
+    },
+    {
       "alias": null,
       "args": null,
       "concreteType": "Resource",
@@ -57,43 +56,6 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "id",
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "mimeType",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceInfoFragment"
         }
       ],
       "storageKey": null
@@ -103,6 +65,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "05a04ede9b98d5d78d0d594f4a702470";
+(node as any).hash = "aa8f009a7988a10001dcaea8364fe14a";
 
 export default node;

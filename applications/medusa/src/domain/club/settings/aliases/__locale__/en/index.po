@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-13 16:39-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:70
+msgid "Add Club Link Alias"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:142
+msgid "Alias"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/RootAliasesClubSettings.tsx:43
+msgid "Back to club settings"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/RootAliasesClubSettings.tsx:49
+msgid "Club Link"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:61
+msgid "Default"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:117
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:128
+msgid "Enter a new club link"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:156
+msgid "Remove Alias"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:149
+msgid "Set Default"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:132
+msgid "Submit"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:95
+msgid "Successfully added the link alias {0}"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:103
+msgid "Successfully promoted the link alias {slug} to default"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:79
+msgid "Successfully removed the link alias {slug}. You can no longer use this link."
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:102
+msgid "There was an error adding a link alias"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:121
+msgid "There was an error promoting the link alias to default"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/ManageClubSlugAliases/ManageClubSlugAliases.tsx:85
+msgid "There was an error removing the link alias"
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:79
+msgid "You have added the maximum amount of aliases. You'll have to remove at least one alias to be able to add another."
+msgstr ""
+
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AddClubSlugAlias/AddClubSlugAlias.tsx:124
+msgid "overdoll.com/"
+msgstr ""

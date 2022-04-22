@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 interface Props {
   children: ReactNode
   disabled?: boolean
-  to: string
+  href: string
 }
 
 /**
@@ -12,7 +12,7 @@ interface Props {
 export default function ExternalLink ({
   children,
   disabled = false,
-  to
+  href
 }: Props): JSX.Element {
   if (disabled) {
     return (
@@ -26,7 +26,7 @@ export default function ExternalLink ({
     <a
       target='_blank'
       rel='noopener noreferrer'
-      href={to}
+      href={href}
     >
       {children}
     </a>

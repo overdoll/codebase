@@ -1,0 +1,104 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 17:29-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:124
+msgid "(Optional) Custom Duration"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:48
+msgid "Active"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:60
+msgid "Can be unsuspended"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:109
+msgid "Confirm Suspend Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
+msgid "Duration"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/StaffClubInfractions.tsx:33
+msgid "Infractions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/StaffClubInfractions.tsx:44
+msgid "Issue Infraction"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:71
+msgid "Issued"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:63
+msgid "No infractions found"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:67
+msgid "Owner"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:66
+msgid "Remove Suspension"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:76
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
+msgid "Rule"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:88
+msgid "Successfully issued infraction to club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:72
+msgid "Successfully suspended club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:51
+msgid "Successfully un-suspended club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:78
+msgid "Suspend Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:44
+msgid "Suspended"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:96
+msgid "Suspension Duration"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:94
+msgid "There was an error issuing an infraction"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:78
+msgid "There was an error suspending the club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:57
+msgid "There was an error un-suspending club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:72
+msgid "Un-Suspend Club"
+msgstr ""

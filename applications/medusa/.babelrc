@@ -1,19 +1,4 @@
 {
-  "env": {
-    "development": {
-      "plugins": [
-        [
-          "istanbul",
-          {
-            "exclude": [
-              "**/*.spec.js",
-              "**/*.stories.js"
-            ]
-          }
-        ]
-      ]
-    }
-  },
   "presets": [
     "@babel/preset-typescript",
     "@babel/preset-react",

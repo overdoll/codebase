@@ -83,7 +83,7 @@ export default function PostReportButton ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useHistoryDisclosure({ hash: 'report' })
 
   const {
     loadQuery,
@@ -102,7 +102,13 @@ export default function PostReportButton ({
 
   const notify = useToast()
 
-  const redirect = encodeJoinRedirect(`/${data.club.slug}/p/${data.reference}`)
+  const redirect = encodeJoinRedirect({
+    pathname: '/[slug]/post/[reference]',
+    query: {
+      slug: data.club.slug,
+      reference: data.reference
+    }
+  })
 
   const onSubmit = (): void => {
     const ruleId = Object.keys(values)[0]
@@ -136,7 +142,7 @@ export default function PostReportButton ({
       {viewerData == null
         ? (
           <MenuLinkItem
-            to={redirect}
+            href={redirect}
             text={<Trans>Report Post</Trans>}
             icon={FlagReport}
           />

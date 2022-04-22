@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicDetailedFragment$key } from '@//:artifacts/PostGalleryPublicDetailedFragment.graphql'
-import PostMedia from '../../PostMedia/PostMedia'
+import PostFullMedia from '../../PostMedia/PostFullMedia/PostFullMedia'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 
 interface Props {
@@ -21,7 +20,7 @@ const Fragment = graphql`
     }
     content {
       resource {
-        ...PostMediaFragment
+        ...PostFullMediaFragment
       }
       ...PostSupporterContentFragment
     }
@@ -41,6 +40,7 @@ export default function PostGalleryPublicDetailed ({
     <Box>
       <Swiper
         observer
+        speed={100}
         onSwiper={(swiper) =>
           onInitialize(swiper)}
         onObserverUpdate={(swiper) => onInitialize(swiper)}
@@ -49,13 +49,13 @@ export default function PostGalleryPublicDetailed ({
           <SwiperSlide
             key={index}
           >
-            <Flex minH={400} bg='gray.800' w='100%' align='center' justify='center'>
+            <Flex minH={300} bg='gray.800' w='100%' align='center' justify='center'>
               <Stack spacing={1}>
                 <PostSupporterContent
                   clubQuery={data.club}
                   query={item}
                 >
-                  <PostMedia query={item.resource} index={index} reference={data.reference} />
+                  <PostFullMedia query={item.resource} index={index} reference={data.reference} />
                 </PostSupporterContent>
               </Stack>
             </Flex>

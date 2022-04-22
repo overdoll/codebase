@@ -1,5 +1,5 @@
 import { Text, TextProps } from '@chakra-ui/react'
-import { ColorScheme } from '@//:types/components'
+import { ColorScheme } from '../../../../types/components'
 
 interface Props extends TextProps {
   children: string

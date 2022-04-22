@@ -1,0 +1,229 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-13 16:04-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:59
+msgid "Add some categories"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:68
+msgid "Add, arrange, or remove the files you're uploading. You can encourage your fans to become paid supporters by marking some content as supporter-only."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:70
+msgid "All characters must be of legal age"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:93
+msgid "Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any time."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:65
+msgid "As a reminder of the guidelines"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/ClubSuspended/ClubSuspended.tsx:11
+msgid "Club Suspended"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:77
+msgid "Creating your post..."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:111
+msgid "Drop your files to upload them"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:69
+msgid "Exit Creator"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:84
+msgid "Exit Post Creator"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:117
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
+msgid "Go back"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:35
+msgid "Make sure you like what you see before you submit the post."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:75
+msgid "Mark this content as Supporter Only"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:72
+msgid "Nothing extremely offensive, shocking, or illegal"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:85
+msgid "Post Content Processed"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:48
+msgid "Post Submitted"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:38
+msgid "Post again"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:65
+msgid "Posting {0} media"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:96
+msgid "Processing"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:73
+msgid "Processing Post Content"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/File/File.tsx:86
+msgid "Remove File"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:101
+msgid "Remove Upload"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:125
+msgid "Retry"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:30
+msgid "Review your selections"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:71
+msgid "Search for a category"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:65
+msgid "Search for a character by name"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:64
+msgid "Select the categories that would be most applicable to the content you have uploaded."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:58
+msgid "Select the character(s) that are the primary focus in your content."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:63
+msgid "Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We only show a person content they are interested in seeing."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
+msgid "Submit"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:22
+msgid "Submitted For Review"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:80
+msgid "Supporter Only"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:47
+msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:48
+msgid "There was an error creating a draft post"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:119
+msgid "There was an error processing your files"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:68
+msgid "There was an error saving the audience"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCategoryButton/UpdateCategoryButton.tsx:85
+msgid "There was an error saving the categories"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:87
+msgid "There was an error saving the characters"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:76
+msgid "There was an error submitting your post"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateContentButton/UpdateContentButton.tsx:96
+msgid "There was an error updating the post content"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:106
+msgid "This post was already submitted"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:94
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:144
+msgid "Upload Files"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:99
+msgid "Upload one or more files by dragging and dropping them or by tapping here"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:77
+msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:53
+msgid "Who is in your post?"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:42
+msgid "Who is the target audience?"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:24
+#: src/domain/club/create-post/CreatePost/components/RequiredPrompt/RequiredPrompt.tsx:30
+msgid "Why is this required"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:105
+msgid "Yes, exit"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/ClubSuspended/ClubSuspended.tsx:16
+msgid "You cannot post until your club is no longer suspended"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:71
+msgid "You own the rights to the content you upload"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeUploads.tsx:179
+msgid "You'll need to upload at least one file to continue"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:53
+msgid "Your post is now visible to the public"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:27
+msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."
+msgstr ""

@@ -130,7 +130,9 @@ module.exports = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
       '@//:assets': path.resolve(__dirname, 'src/assets'),
-      '@//:types': path.resolve(__dirname, 'src/types')
+      '@//:types': path.resolve(__dirname, 'src/types'),
+      '@//:domain': path.resolve(__dirname, 'src/domain'),
+      '@//:common': path.resolve(__dirname, 'src/common')
     }
 
     // if (!opts.env.dev) {

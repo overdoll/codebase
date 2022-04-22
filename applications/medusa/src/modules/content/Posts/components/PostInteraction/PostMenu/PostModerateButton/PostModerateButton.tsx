@@ -25,7 +25,10 @@ export default function PostModerateButton ({
   return (
     <Can I='staff' a='Post'>
       <MenuLinkItem
-        to={`/moderation/post/${data.reference}`}
+        href={{
+          pathname: '/staff/post/[reference]',
+          query: { reference: data.reference }
+        }}
         text={(
           <Trans>
             Moderate

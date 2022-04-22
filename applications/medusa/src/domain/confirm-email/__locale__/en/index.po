@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 10:37-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/confirm-email/ConfirmEmail/ConfirmEmail.tsx:93
+msgid "Confirming Email"
+msgstr ""
+
+#: src/domain/confirm-email/ConfirmEmail/ConfirmEmail.tsx:101
+msgid "Please wait while we confirm your email..."
+msgstr ""
+
+#: src/domain/confirm-email/ConfirmEmail/ConfirmEmail.tsx:49
+#: src/domain/confirm-email/ConfirmEmail/ConfirmEmail.tsx:58
+msgid "This confirmation link is either invalid or has expired"
+msgstr ""
+
+#: src/domain/confirm-email/ConfirmEmail/ConfirmEmail.tsx:52
+msgid "{0} was confirmed successfully"
+msgstr ""

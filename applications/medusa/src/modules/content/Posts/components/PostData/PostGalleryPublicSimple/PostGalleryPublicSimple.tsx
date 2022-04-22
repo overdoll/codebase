@@ -1,16 +1,12 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box, Flex, Stack } from '@chakra-ui/react'
+import { Box, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/swiper.min.css'
 import { useContext } from 'react'
 import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
-import PostMedia from '../../PostMedia/PostMedia'
-import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
-import { Trans } from '@lingui/macro'
-import { ArrowButtonRight } from '@//:assets/icons'
-import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
+import PostSimpleMedia from '../../PostMedia/PostSimpleMedia/PostSimpleMedia'
+import { Link } from '../../../../../routing'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key | null
@@ -22,7 +18,7 @@ const Fragment = graphql`
     reference
     content {
       resource {
-        ...PostMediaFragment
+        ...PostSimpleMediaFragment
       }
       ...PostSupporterContentFragment
     }
@@ -49,6 +45,7 @@ export default function PostGalleryPublicSimple ({
       <Box>
         <Swiper
           observer
+          speed={100}
           onSwiper={(swiper) =>
             onInitialize(swiper)}
           onObserverUpdate={(swiper) => onInitialize(swiper)}
@@ -57,34 +54,36 @@ export default function PostGalleryPublicSimple ({
             <SwiperSlide
               key={index}
             >
-              <Flex bg='gray.800' w='100%' h='72vh' align='center' justify='center'>
-                <Stack spacing={1}>
+              <Link
+                href={{
+                  pathname: '/[slug]/post/[reference]',
+                  query: {
+                    slug: data.club.slug,
+                    reference: data?.reference
+                  }
+                }}
+              >
+                <Box
+                  bg='gray.800'
+                  w='100%'
+                  cursor='pointer'
+                  minH={300}
+                  maxH={800}
+                >
                   <PostSupporterContent
                     query={item}
                     clubQuery={data.club}
                   >
-                    <PostMedia
+                    <PostSimpleMedia
                       query={item.resource}
                       index={index}
                       reference={data.reference}
                     />
                   </PostSupporterContent>
-                  <Flex px={1} justify='flex-end'>
-                    <LinkButton
-                      size='sm'
-                      variant='ghost'
-                      colorScheme='gray'
-                      rightIcon={<Icon w={2} h={2} icon={ArrowButtonRight} fill='inherit' />}
-                      to={`/${data.club.slug}/p/${data?.reference}`}
-                    >
-                      <Trans>
-                        View Post
-                      </Trans>
-                    </LinkButton>
-                  </Flex>
-                </Stack>
-              </Flex>
-            </SwiperSlide>)}
+                </Box>
+              </Link>
+            </SwiperSlide>
+          )}
         </Swiper>
       </Box>
     </Stack>

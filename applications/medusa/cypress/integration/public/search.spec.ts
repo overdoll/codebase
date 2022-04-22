@@ -16,14 +16,6 @@ describe('Use Search', () => {
     clickOnButton('Close')
     cy.findByPlaceholderText(/Search for characters/).should('not.exist')
 
-    // check history disclosure
-    cy.visit('/search')
-    cy.visit('/')
-    cy.get('button[aria-label="Open Search"]').click({ force: true })
-    cy.go('back')
-    cy.findByPlaceholderText(/Search for characters/).should('not.exist')
-    cy.url().should('not.include', 'search')
-
     // test adding all types of tags
     cy.get('button[aria-label="Open Search"]').click({ force: true })
     searchForTerm(/Search for characters/, category)

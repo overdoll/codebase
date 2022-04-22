@@ -1,5 +1,4 @@
 import {
-  Box,
   ButtonProps,
   HStack,
   IconButton,
@@ -13,65 +12,62 @@ import {
 import { t } from '@lingui/macro'
 import { NavigationMenuHorizontal } from '@//:assets/icons/navigation'
 import { Icon } from '../../PageLayout'
-import { FunctionComponent, ReactNode } from 'react'
+import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import { Link } from '../../../routing'
 import { useLingui } from '@lingui/react'
+import { UrlObject } from 'url'
 
 interface MenuProps extends ButtonProps {
   children: ReactNode
 }
 
-interface MenuItemProps {
+interface MenuItemProps extends ButtonProps {
   text: ReactNode
   colorScheme?: string | undefined
-  isLoading?: boolean | undefined
   icon: FunctionComponent<any>
-  onClick?: (() => void) | undefined
 }
 
 interface MenuLinkItemProps extends MenuItemProps {
-  to: string
+  href: string | UrlObject
 }
 
-export function Menu ({
+const Menu = ({
   children,
   ...rest
-}: MenuProps): JSX.Element {
+}: MenuProps): JSX.Element => {
   const { i18n } = useLingui()
 
   return (
-    <Box>
-      <ChakraMenu autoSelect={false}>
-        <MenuButton
-          borderRadius='xl'
-          aria-label={i18n._(t`Open Menu`)}
-          as={IconButton}
-          {...rest}
-          icon={
-            <Icon
-              p={1}
-              icon={NavigationMenuHorizontal}
-              w='100%'
-              h='100%'
-              fill='gray.200'
-            />
-          }
-        />
-        <MenuList minW='230px' boxShadow='outline'>
-          {children}
-        </MenuList>
-      </ChakraMenu>
-    </Box>
+    <ChakraMenu autoSelect={false}>
+      <MenuButton
+        borderRadius='xl'
+        aria-label={i18n._(t`Open Menu`)}
+        as={IconButton}
+        {...rest}
+        icon={
+          <Icon
+            p={1}
+            icon={NavigationMenuHorizontal}
+            w='100%'
+            h='100%'
+            fill='gray.200'
+          />
+        }
+      />
+      <MenuList minW='230px' boxShadow='outline'>
+        {children}
+      </MenuList>
+    </ChakraMenu>
   )
 }
 
-export function MenuItem ({
+const MenuItem = forwardRef<any, MenuItemProps>(({
   text,
   colorScheme,
   icon,
   isLoading,
-  onClick
-}: MenuItemProps): JSX.Element {
+  ...rest
+}: MenuItemProps, forwardRef): JSX.Element => {
   const color = colorScheme != null ? `${colorScheme}.400` : 'gray.100'
 
   const IconComponent = (): JSX.Element => {
@@ -97,7 +93,7 @@ export function MenuItem ({
   }
 
   return (
-    <ChakraMenuItem onClick={onClick} isDisabled={isLoading}>
+    <ChakraMenuItem ref={forwardRef} isDisabled={isLoading} {...rest}>
       <HStack spacing={3}>
         <IconComponent />
         <Text
@@ -109,17 +105,17 @@ export function MenuItem ({
       </HStack>
     </ChakraMenuItem>
   )
-}
+})
 
-export function MenuLinkItem ({
-  to,
+const MenuLinkItem = ({
+  href,
   ...rest
-}: MenuLinkItemProps): JSX.Element {
+}: MenuLinkItemProps): JSX.Element => {
   return (
-    <Link to={to}>
-      {({ isPending }) => (
-        <MenuItem isLoading={isPending} {...rest} />
-      )}
+    <Link href={href}>
+      <MenuItem {...rest} />
     </Link>
   )
 }
+
+export { MenuItem, MenuLinkItem, Menu }

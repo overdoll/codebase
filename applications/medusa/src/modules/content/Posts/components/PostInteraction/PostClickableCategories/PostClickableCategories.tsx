@@ -4,8 +4,8 @@ import type { PostClickableCategoriesFragment$key } from '@//:artifacts/PostClic
 import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
-import { useHistory } from '../../../../../routing'
 import { configMap } from '../../PostNavigation/PostsSearch/constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: PostClickableCategoriesFragment$key | null
@@ -26,7 +26,7 @@ const Fragment = graphql`
 export default function PostClickableCategories ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const history = useHistory()
+  const router = useRouter()
 
   const onClick = (node): void => {
     const encodedQuery = encodeQueryParams(configMap, {
@@ -34,7 +34,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
       sort: 'TOP'
     })
 
-    history.push(`/search?${stringify(encodedQuery)}`)
+    void router.push(`/search?${stringify(encodedQuery)}`)
   }
 
   return (

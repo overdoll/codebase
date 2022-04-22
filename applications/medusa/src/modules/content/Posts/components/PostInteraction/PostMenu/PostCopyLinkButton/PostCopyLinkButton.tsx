@@ -5,6 +5,8 @@ import { useFragment } from 'react-relay/hooks'
 import { MenuItem } from '../../../../../ThemeComponents/Menu/Menu'
 import { CopyLink } from '@//:assets/icons'
 import { useCopyToClipboardWrapper } from '../../../../../../hooks'
+import { useRouter } from 'next/router'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
 
 interface Props {
   query: PostCopyLinkButtonFragment$key
@@ -24,7 +26,17 @@ export default function PostCopyLinkButton ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com/${data.club.slug}/p/${data?.reference}` })
+  const router = useRouter()
+
+  const [, resolved] = resolveHref(router, {
+    pathname: '/[slug]/p/[reference]',
+    query: {
+      slug: data.club.slug,
+      reference: data.reference
+    }
+  }, true)
+
+  const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
     <MenuItem
