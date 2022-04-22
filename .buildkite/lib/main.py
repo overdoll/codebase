@@ -104,7 +104,10 @@ def execute_integration_tests_commands(configs):
 
 
 def execute_coverage_command(configs):
-    urllib.request.urlretrieve("https://uploader.codecov.io/latest/linux/codecov", "codecov")
+    opener = urllib.request.URLopener()
+    opener.addheader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0')
+    opener.retrieve("https://uploader.codecov.io/latest/linux/codecov", "codecov")
+
     st = os.stat('codecov')
     os.chmod('codecov', st.st_mode | stat.S_IEXEC)
 

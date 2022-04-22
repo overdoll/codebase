@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
 	"time"
@@ -56,7 +57,13 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			UpdateClubMemberTotalCountInput{
 				ClubId: input.ClubId,
 			},
-		).GetChildWorkflowExecution().Get(ctx, nil); err != nil {
+		).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil {
+			// ignore already started errors
+			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+				return nil
+			}
 			return err
 		}
 	}

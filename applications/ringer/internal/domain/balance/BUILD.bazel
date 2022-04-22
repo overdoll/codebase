@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "balance",
+    srcs = [
+        "club_balance.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/domain/balance",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//libraries/money",
+        "//libraries/principal",
+    ],
+)

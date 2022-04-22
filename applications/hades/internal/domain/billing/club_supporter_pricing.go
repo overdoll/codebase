@@ -5,6 +5,7 @@ import (
 	"golang.org/x/text/language"
 	"math"
 	"overdoll/libraries/location"
+	"overdoll/libraries/money"
 )
 
 const (
@@ -12,13 +13,13 @@ const (
 )
 
 var (
-	clubSupporterPricingRatios = map[Currency]float64{
-		USD: 1,
-		CAD: 1.45,
-		AUD: 1.55,
-		JPY: 129.40,
-		GBP: 0.90,
-		EUR: 1.10,
+	clubSupporterPricingRatios = map[money.Currency]float64{
+		money.USD: 1,
+		money.CAD: 1.45,
+		money.AUD: 1.55,
+		money.JPY: 129.40,
+		money.GBP: 0.90,
+		money.EUR: 1.10,
 	}
 )
 
@@ -44,10 +45,10 @@ func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Pric
 	curr, ok := currency.FromRegion(region)
 
 	if !ok {
-		return UnmarshalPricingFromDatabase(USD, getRoundedPriceInInteger(clubSupporterPricingRatios[USD]*clubSupporterBasePrice)), nil
+		return UnmarshalPricingFromDatabase(money.USD, getRoundedPriceInInteger(clubSupporterPricingRatios[money.USD]*clubSupporterBasePrice)), nil
 	}
 
-	newCurrency, err := CurrencyFromString(curr.String())
+	newCurrency, err := money.CurrencyFromString(curr.String())
 
 	if err != nil {
 		return nil, err
@@ -56,7 +57,7 @@ func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Pric
 	return UnmarshalPricingFromDatabase(newCurrency, getRoundedPriceInInteger(clubSupporterPricingRatios[newCurrency]*clubSupporterBasePrice)), nil
 }
 
-func GetClubSupporterPricingForCurrency(currency Currency) (*Price, error) {
+func GetClubSupporterPricingForCurrency(currency money.Currency) (*Price, error) {
 	return UnmarshalPricingFromDatabase(currency, getRoundedPriceInInteger(clubSupporterPricingRatios[currency]*clubSupporterBasePrice)), nil
 }
 

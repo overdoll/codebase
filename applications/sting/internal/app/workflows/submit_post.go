@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"time"
 
 	"go.temporal.io/sdk/workflow"
@@ -70,6 +71,10 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		).
 			GetChildWorkflowExecution().
 			Get(ctx, nil); err != nil {
+			// ignore already started errors
+			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+				return nil
+			}
 			return err
 		}
 	}

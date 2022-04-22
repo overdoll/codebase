@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/ringer/proto/v1_go_proto_/overdoll/applications/ringer/proto/ringer.pb.go

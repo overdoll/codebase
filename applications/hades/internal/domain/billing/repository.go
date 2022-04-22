@@ -3,6 +3,7 @@ package billing
 import (
 	"context"
 	"overdoll/libraries/location"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -62,6 +63,6 @@ type FileRepository interface {
 
 type PricingRepository interface {
 	GetClubSupporterPricingForLocation(ctx context.Context, location *location.Location, clubId string) (*Price, error)
-	GetClubSupporterPricingForCurrency(ctx context.Context, currency Currency, clubId string) (*Price, error)
+	GetClubSupporterPricingForCurrency(ctx context.Context, currency money.Currency, clubId string) (*Price, error)
 	GetClubSupporterAllPricing(ctx context.Context, clubId string) ([]*Price, error)
 }

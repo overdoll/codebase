@@ -1,0 +1,8 @@
+image:
+  repository: ringer-image
+
+nameOverride: "ringer"
+
+service: true
+http: true
+grpc: true

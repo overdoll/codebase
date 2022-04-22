@@ -24,6 +24,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
+	ringerClient, cleanup4 := clients.NewRingerClient(ctx, os.Getenv("RINGER_SERVICE"))
 
 	ccbillClient := &http.Client{}
 
@@ -31,6 +32,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStellaGrpc(stellaClient),
 			adapters.NewCarrierGrpc(carrierClient),
+			adapters.NewRingerGrpc(ringerClient),
 			ccbillClient,
 			clients.NewTemporalClient(ctx),
 		),
@@ -38,6 +40,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 			cleanup()
 			cleanup2()
 			cleanup3()
+			cleanup4()
 		}
 }
 
@@ -55,6 +58,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			StellaServiceMock{},
 			CarrierServiceMock{},
+			RingerServiceMock{},
 			MockCCBillHttpClient{},
 			temporalClient,
 		),
@@ -64,7 +68,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 		temporalClient
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -117,6 +121,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			AccountTransactionsPaymentCount:    query.NewAccountTransactionsPaymentCountHandler(billingIndexRepo),
 			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingIndexRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, billingIndexRepo, billingFileRepo, ccbillRepo, stella, carrier),
+		Activities: activities.NewActivitiesHandler(billingRepo, billingIndexRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
 }

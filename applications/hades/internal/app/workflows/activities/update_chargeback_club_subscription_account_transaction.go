@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 	"time"
 )
 
@@ -18,7 +19,7 @@ type UpdateChargebackClubSubscriptionAccountTransactionRecordInput struct {
 
 func (h *Activities) UpdateChargebackClubSubscriptionAccountTransaction(ctx context.Context, input UpdateChargebackClubSubscriptionAccountTransactionRecordInput) error {
 
-	cr, err := billing.CurrencyFromString(input.Currency)
+	cr, err := money.CurrencyFromString(input.Currency)
 
 	if err != nil {
 		return err

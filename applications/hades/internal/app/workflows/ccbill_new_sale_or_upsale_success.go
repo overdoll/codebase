@@ -3,6 +3,7 @@ package workflows
 import (
 	"fmt"
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -249,6 +250,30 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
+		return err
+	}
+
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse amount: %s", err)
+	}
+
+	// send a payment
+	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
+		activities.NewClubSupporterSubscriptionPaymentDepositInput{
+			AccountId:     details.AccountInitiator.AccountId,
+			ClubId:        details.CcbillClubSupporter.ClubId,
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Amount:        accountingAmount,
+			Currency:      input.AccountingCurrency,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

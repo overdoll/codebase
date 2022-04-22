@@ -3,6 +3,7 @@ package billing
 import (
 	"errors"
 	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -32,7 +33,7 @@ type AccountClubSupporterSubscription struct {
 	expiredAt   *time.Time
 
 	billingAmount   int64
-	billingCurrency Currency
+	billingCurrency money.Currency
 
 	paymentMethod *PaymentMethod
 
@@ -48,7 +49,7 @@ type AccountClubSupporterSubscription struct {
 
 func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
 
-	currenc, err := CurrencyFromString(currency)
+	currenc, err := money.CurrencyFromString(currency)
 
 	if err != nil {
 		return nil, err
@@ -120,7 +121,7 @@ func (c *AccountClubSupporterSubscription) BillingAmount() int64 {
 	return c.billingAmount
 }
 
-func (c *AccountClubSupporterSubscription) BillingCurrency() Currency {
+func (c *AccountClubSupporterSubscription) BillingCurrency() money.Currency {
 	return c.billingCurrency
 }
 
@@ -238,7 +239,7 @@ func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId
 	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
 ) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
-	cr, _ := CurrencyFromString(billingCurrency)
+	cr, _ := money.CurrencyFromString(billingCurrency)
 	return &AccountClubSupporterSubscription{
 		id:                          id,
 		accountId:                   accountId,

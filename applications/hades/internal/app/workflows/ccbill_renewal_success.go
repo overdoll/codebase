@@ -90,5 +90,25 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
+	// send a payment
+	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
+		activities.NewClubSupporterSubscriptionPaymentDepositInput{
+			AccountId:     subscriptionDetails.AccountId,
+			ClubId:        subscriptionDetails.ClubId,
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Amount:        accountingAmount,
+			Currency:      input.AccountingCurrency,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

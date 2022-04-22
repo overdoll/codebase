@@ -39,6 +39,11 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	// ignore duplicate subscription
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {
@@ -71,6 +76,26 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			TransactionId:  input.TransactionId,
 			Currency:       input.Currency,
 			Amount:         amount,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
+	// send a payment
+	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
+		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
+			AccountId:     subscriptionDetails.AccountId,
+			ClubId:        subscriptionDetails.ClubId,
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Amount:        accountingAmount,
+			Currency:      input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

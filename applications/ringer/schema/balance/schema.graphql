@@ -1,0 +1,26 @@
+"""
+A balance item.
+
+Represents balance on a specific club.
+"""
+type Balance {
+  """An ID to uniquely identify this balance."""
+  id: ID!
+
+  """The amount on this balance."""
+  amount: Int!
+
+  """The currency the balance is in."""
+  currency: Currency!
+
+  """When the balance was last updated."""
+  updatedAt: Time!
+}
+
+extend type Club {
+  """The current balance of this club."""
+  balance: Balance! @goField(forceResolver: true)
+
+  """The current balance of this club, representing the pending amount instead of the real amount."""
+  pendingBalance: Balance! @goField(forceResolver: true)
+}

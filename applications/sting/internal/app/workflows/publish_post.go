@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
@@ -40,6 +41,10 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

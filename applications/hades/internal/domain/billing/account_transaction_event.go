@@ -1,12 +1,15 @@
 package billing
 
-import "time"
+import (
+	"overdoll/libraries/money"
+	"time"
+)
 
 type AccountTransactionEvent struct {
 	id        string
 	timestamp time.Time
 	amount    int64
-	currency  Currency
+	currency  money.Currency
 	reason    string
 }
 
@@ -18,7 +21,7 @@ func (e *AccountTransactionEvent) Amount() int64 {
 	return e.amount
 }
 
-func (e *AccountTransactionEvent) Currency() Currency {
+func (e *AccountTransactionEvent) Currency() money.Currency {
 	return e.currency
 }
 
@@ -31,7 +34,8 @@ func (e *AccountTransactionEvent) Reason() string {
 }
 
 func UnmarshalAccountTransactionEventFromDatabase(id string, timestamp time.Time, amount int64, currency string, reason string) *AccountTransactionEvent {
-	cr, _ := CurrencyFromString(currency)
+	cr, _ := money.CurrencyFromString(currency)
+
 	return &AccountTransactionEvent{
 		id:        id,
 		timestamp: timestamp,

@@ -9,6 +9,7 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
+	github.com/biter777/countries v1.3.4
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/corona10/goimagehash v1.0.3

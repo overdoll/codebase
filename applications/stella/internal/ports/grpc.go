@@ -54,8 +54,9 @@ func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequ
 
 	return &stella.GetClubByIdResponse{
 		Club: &stella.Club{
-			Slug: clb.Slug(),
-			Name: clb.Name().TranslateDefault(""),
+			Slug:           clb.Slug(),
+			Name:           clb.Name().TranslateDefault(""),
+			OwnerAccountId: clb.OwnerAccountId(),
 		},
 	}, nil
 }

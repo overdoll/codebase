@@ -7,7 +7,6 @@ import (
 	"overdoll/libraries/config"
 )
 
-// create buckets before running tests
 func seedConfiguration() bool {
 	config.Read("applications/hades")
 

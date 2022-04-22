@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/location"
+	"overdoll/libraries/money"
 )
 
 type BillingPricingRepository struct {
@@ -21,6 +22,6 @@ func (r BillingPricingRepository) GetClubSupporterAllPricing(ctx context.Context
 	return billing.GetClubSupporterAllPricingDetails()
 }
 
-func (r BillingPricingRepository) GetClubSupporterPricingForCurrency(ctx context.Context, currency billing.Currency, clubId string) (*billing.Price, error) {
+func (r BillingPricingRepository) GetClubSupporterPricingForCurrency(ctx context.Context, currency money.Currency, clubId string) (*billing.Price, error) {
 	return billing.GetClubSupporterPricingForCurrency(currency)
 }

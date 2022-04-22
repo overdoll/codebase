@@ -29,6 +29,7 @@ go_library(
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/event",
         "//libraries/location",
+        "//libraries/money",
         "//libraries/passport",
         "//libraries/principal",
     ],

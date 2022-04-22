@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
@@ -604,22 +605,22 @@ func MarshalAccountTransactionToGraphQLConnection(ctx context.Context, results [
 	return conn
 }
 
-func MarshalCurrencyToGraphQL(ctx context.Context, result billing.Currency) Currency {
+func MarshalCurrencyToGraphQL(ctx context.Context, result money.Currency) Currency {
 
 	var currency Currency
 
 	switch result {
-	case billing.USD:
+	case money.USD:
 		currency = CurrencyUsd
-	case billing.CAD:
+	case money.CAD:
 		currency = CurrencyCad
-	case billing.AUD:
+	case money.AUD:
 		currency = CurrencyAud
-	case billing.JPY:
+	case money.JPY:
 		currency = CurrencyJpy
-	case billing.GBP:
+	case money.GBP:
 		currency = CurrencyGbp
-	case billing.EUR:
+	case money.EUR:
 		currency = CurrencyEur
 	}
 
