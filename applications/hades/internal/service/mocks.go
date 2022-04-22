@@ -130,11 +130,9 @@ func (c CarrierServiceMock) NewClubSupporterSubscription(ctx context.Context, su
 type RingerServiceMock struct{}
 
 func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
