@@ -2,7 +2,6 @@ package payment
 
 import (
 	"errors"
-	"fmt"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"time"
@@ -44,8 +43,6 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(platformFee.Percent())
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)

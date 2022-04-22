@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
@@ -12,6 +13,7 @@ import (
 	"os"
 	"overdoll/applications/ringer/internal/adapters"
 	"overdoll/applications/ringer/internal/app/workflows"
+	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/applications/ringer/internal/ports"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
@@ -86,7 +88,8 @@ func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAc
 
 	env.RegisterWorkflow(workflows.ClubPaymentDeposit)
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
-	// ensure it doesn't get stuck waiting for a cron
+	// mock out this generate club monthly payout workflow
+	env.OnWorkflow(workflows.GenerateClubMonthlyPayout, mock.Anything, mock.Anything).Return(nil)
 	env.SetDetachedChildWait(false)
 
 	env.ExecuteWorkflow(workflows.ClubPaymentDeposit, workflows.ClubPaymentDepositInput{
@@ -113,6 +116,15 @@ func cleanupDepositRequests(t *testing.T) {
 
 func setupPayoutMethodForAccount(t *testing.T, accountId string) {
 	session := bootstrap.InitializeDatabaseSession()
+
+	detailsRepo := adapters.NewDetailsCassandraRepository(session)
+	_, err := detailsRepo.UpdateAccountDetails(context.Background(), testing_tools.NewStaffPrincipal(accountId), accountId, func(id *details.AccountDetails) error {
+		id.UpdateFirstName("test")
+		id.UpdateLastName("test")
+		id.UpdateCountry("USA")
+		return nil
+	})
+	require.NoError(t, err)
 
 	adapter := adapters.NewPayoutCassandraRepository(session, service.StellaServiceMock{})
 
@@ -199,6 +211,7 @@ func startService() bool {
 }
 
 func TestMain(m *testing.M) {
+
 	if !startService() {
 		os.Exit(1)
 	}

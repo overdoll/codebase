@@ -64,7 +64,8 @@ func (p *AccountPayoutMethod) Validate(amount int64, currency money.Currency) bo
 	}
 
 	// check threshold - at least $100 in ready payments
-	if amount < 10000 {
+	// TODO: remove temporary field here after testing is done
+	if amount < 5 {
 		return false
 	}
 

@@ -12,6 +12,7 @@ type AppendClubPaymentsToPayoutInput struct {
 
 func (h *Activities) AppendClubPaymentsToPayout(ctx context.Context, input AppendClubPaymentsToPayoutInput) error {
 
+	// first, update the payments and index them
 	for _, paymentId := range input.PaymentIds {
 
 		pay, err := h.pr.UpdateClubPaymentPayoutId(ctx, paymentId, func(pay *payment.ClubPayment) error {
@@ -25,6 +26,10 @@ func (h *Activities) AppendClubPaymentsToPayout(ctx context.Context, input Appen
 		if err := h.pi.IndexClubPayment(ctx, pay); err != nil {
 			return err
 		}
+	}
+
+	if err := h.pr.AddClubPaymentsToPayout(ctx, input.PayoutId, input.PaymentIds); err != nil {
+		return err
 	}
 
 	return nil

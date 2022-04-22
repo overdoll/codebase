@@ -147,7 +147,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocumen
 		IsDeduction:              pay.IsDeduction(),
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
 		Timestamp:                pay.Timestamp(),
-		ClubPayoutIds:            nil,
+		ClubPayoutIds:            pay.ClubPayoutIds(),
 	}, nil
 }
 
@@ -186,7 +186,7 @@ func (r PaymentIndexElasticSearchRepository) SearchClubPayments(ctx context.Cont
 	}
 
 	if filters.PayoutId() != nil {
-		filterQueries = append(filterQueries, elastic.NewTermQuery("club_payout_ids", *filters.PayoutId()))
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_payout_ids", *filters.PayoutId()))
 	}
 
 	var statuses []string

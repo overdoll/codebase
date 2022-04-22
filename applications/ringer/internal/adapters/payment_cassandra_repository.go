@@ -51,6 +51,7 @@ var clubReadyPaymentsTable = table.New(table.Metadata{
 	Columns: []string{
 		"club_id",
 		"payment_id",
+		"currency",
 		"is_deduction",
 		"final_amount",
 	},
@@ -268,7 +269,7 @@ func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Cont
 		stmt, _ := clubPaymentsTable.Update("status")
 		batch.Query(stmt,
 			id,
-			payment.Complete,
+			payment.Complete.String(),
 		)
 	}
 
@@ -321,6 +322,7 @@ func (r PaymentCassandraRepository) AddClubPaymentToClubReadyList(ctx context.Co
 			map[string]interface{}{
 				"club_id":      payment.DestinationClubId(),
 				"payment_id":   payment.Id(),
+				"currency":     payment.Currency().String(),
 				"is_deduction": payment.IsDeduction(),
 				"final_amount": payment.FinalAmount(),
 			},
@@ -357,8 +359,9 @@ func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Contex
 		if err := scanner.Scan(
 			&pay.DestinationClubId,
 			&pay.Id,
-			&pay.IsDeduction,
+			&pay.Currency,
 			&pay.FinalAmount,
+			&pay.IsDeduction,
 		); err != nil {
 			return err
 		}
@@ -374,6 +377,26 @@ func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Contex
 
 	if err := scanner.Err(); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (r PaymentCassandraRepository) AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := clubPaymentsByPayoutTable.Insert()
+
+	for _, id := range paymentIds {
+		batch.Query(stmt,
+			payoutId,
+			id,
+		)
+	}
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to create new club payment: %v", err)
 	}
 
 	return nil

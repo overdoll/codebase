@@ -9,7 +9,6 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
-	"time"
 )
 
 func MarshalClubPaymentsToGraphQLConnection(ctx context.Context, results []*payment.ClubPayment, cursor *paging.Cursor) *ClubPaymentConnection {
@@ -215,8 +214,8 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 		PayoutAccount: &Account{
 			ID: relay.NewID(Account{}, result.PayoutAccountId()),
 		},
-		DepositDate: time.Time{},
-		CreatedAt:   time.Time{},
+		DepositDate: result.DepositDate(),
+		CreatedAt:   result.Timestamp(),
 	}
 }
 

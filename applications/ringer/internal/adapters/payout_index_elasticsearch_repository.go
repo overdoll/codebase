@@ -80,17 +80,17 @@ type clubPayoutEventDocument struct {
 }
 
 type clubPayoutDocument struct {
-	Id                    string                    `json:"id"`
-	Status                string                    `json:"status"`
-	DepositDate           time.Time                 `json:"deposit_date"`
-	ClubId                string                    `json:"club_id"`
-	Currency              string                    `json:"currency"`
-	Amount                int64                     `json:"total_amount"`
-	AccountPayoutMethodId string                    `json:"account_payout_method_id"`
-	DepositRequestId      string                    `json:"deposit_request_id"`
-	Timestamp             time.Time                 `json:"timestamp"`
-	Events                []clubPayoutEventDocument `json:"events"`
-	TemporalWorkflowId    string                    `json:"temporal_workflow_id"`
+	Id                 string                    `json:"id"`
+	Status             string                    `json:"status"`
+	DepositDate        time.Time                 `json:"deposit_date"`
+	ClubId             string                    `json:"club_id"`
+	Currency           string                    `json:"currency"`
+	Amount             int64                     `json:"amount"`
+	PayoutAccountId    string                    `json:"payout_account_id"`
+	DepositRequestId   string                    `json:"deposit_request_id"`
+	Timestamp          time.Time                 `json:"timestamp"`
+	Events             []clubPayoutEventDocument `json:"events"`
+	TemporalWorkflowId string                    `json:"temporal_workflow_id"`
 }
 
 const ClubPayoutsIndexName = "club_payouts"
@@ -126,7 +126,7 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 		doc.Currency,
 		doc.Amount,
 		doc.DepositDate,
-		doc.AccountPayoutMethodId,
+		doc.PayoutAccountId,
 		doc.DepositRequestId,
 		doc.Timestamp,
 		events,
@@ -151,17 +151,17 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 	}
 
 	return &clubPayoutDocument{
-		Id:                    pay.Id(),
-		Status:                pay.Status().String(),
-		DepositDate:           pay.DepositDate(),
-		ClubId:                pay.ClubId(),
-		Currency:              pay.Currency().String(),
-		Amount:                pay.Amount(),
-		AccountPayoutMethodId: pay.PayoutAccountId(),
-		DepositRequestId:      pay.DepositRequestId(),
-		Timestamp:             pay.Timestamp(),
-		Events:                events,
-		TemporalWorkflowId:    pay.TemporalWorkflowId(),
+		Id:                 pay.Id(),
+		Status:             pay.Status().String(),
+		DepositDate:        pay.DepositDate(),
+		ClubId:             pay.ClubId(),
+		Currency:           pay.Currency().String(),
+		Amount:             pay.Amount(),
+		PayoutAccountId:    pay.PayoutAccountId(),
+		DepositRequestId:   pay.DepositRequestId(),
+		Timestamp:          pay.Timestamp(),
+		Events:             events,
+		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
 }
 
@@ -281,17 +281,17 @@ func (r PayoutIndexElasticSearchRepository) IndexAllClubPayouts(ctx context.Cont
 			}
 
 			doc := clubPayoutDocument{
-				Id:                    pay.Id,
-				Status:                pay.Status,
-				DepositDate:           pay.DepositDate,
-				ClubId:                pay.ClubId,
-				Currency:              pay.Currency,
-				Amount:                pay.Amount,
-				AccountPayoutMethodId: pay.PayoutAccountId,
-				DepositRequestId:      pay.DepositRequestId,
-				Timestamp:             pay.Timestamp,
-				Events:                nil,
-				TemporalWorkflowId:    pay.TemporalWorkflowId,
+				Id:                 pay.Id,
+				Status:             pay.Status,
+				DepositDate:        pay.DepositDate,
+				ClubId:             pay.ClubId,
+				Currency:           pay.Currency,
+				Amount:             pay.Amount,
+				PayoutAccountId:    pay.PayoutAccountId,
+				DepositRequestId:   pay.DepositRequestId,
+				Timestamp:          pay.Timestamp,
+				Events:             events,
+				TemporalWorkflowId: pay.TemporalWorkflowId,
 			}
 
 			_, err := r.client.

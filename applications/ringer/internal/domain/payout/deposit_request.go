@@ -29,16 +29,18 @@ type DepositRequest struct {
 func NewDepositRequest(id string, kind Method, lastDateForDeposit time.Time, currency money.Currency, timestamp time.Time) (*DepositRequest, error) {
 
 	estimatedFeeAmount := 0
+	totalAmount := 0
 
-	if kind == Paxum {
+	if kind == Paxum && currency == money.USD {
 		// initial $50 fee to transfer money into our paxum wallet for outgoing payments
-		estimatedFeeAmount = 50
+		estimatedFeeAmount = 5000
+		totalAmount = 5000
 	}
 
 	return &DepositRequest{
 		id:                      id,
 		lastDateForDeposit:      lastDateForDeposit,
-		totalAmount:             0,
+		totalAmount:             int64(totalAmount),
 		baseAmount:              0,
 		estimatedFeeAmount:      int64(estimatedFeeAmount),
 		currency:                currency,
@@ -120,7 +122,7 @@ func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount int64, cu
 		p.baseAmount += amount
 		// paxum has a fee of $1 for p2p transfers
 		p.estimatedFeeAmount += 100
-		p.totalAmount += amount
+		p.totalAmount += amount + 100
 	}
 
 	return nil

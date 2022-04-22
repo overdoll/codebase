@@ -26,7 +26,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			activities.ProcessClubPayoutInput{
 				PayoutId: input.PayoutId,
 			},
-		).Get(ctx, payload); err != nil {
+		).Get(ctx, &payload); err != nil {
 			return err
 		}
 
@@ -77,7 +77,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 		activities.MarkClubPayoutDepositedInput{
 			PayoutId: input.PayoutId,
 		},
-	).Get(ctx, deposit); err != nil {
+	).Get(ctx, &deposit); err != nil {
 		return err
 	}
 

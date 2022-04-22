@@ -113,7 +113,7 @@ var depositRequestsByMonthTable = table.New(table.Metadata{
 	Name:    "deposit_requests_by_month",
 	Columns: depositRequestsColumns,
 	PartKey: []string{"bucket"},
-	SortKey: []string{"club_id"},
+	SortKey: []string{"id"},
 })
 
 type depositRequests struct {
@@ -245,16 +245,18 @@ func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx contex
 
 func (r PayoutCassandraRepository) CreateClubPayout(ctx context.Context, payout *payout.ClubPayout) error {
 
-	var lockedPay *clubLockedPayout
+	var lockedPay clubLockedPayout
 
-	if err := r.session.Query(clubLockedPayoutTable.Get()).
+	err := r.session.Query(clubLockedPayoutTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubLockedPayout{ClubId: payout.ClubId()}).
-		Get(&lockedPay); err != nil && err != gocql.ErrNotFound {
+		Get(&lockedPay)
+
+	if err != nil && err != gocql.ErrNotFound {
 		return fmt.Errorf("failed to get club locked payout: %v", err)
 	}
 
-	if lockedPay != nil {
+	if err == nil {
 		if lockedPay.PayoutId != payout.Id() {
 			return errors.New("payout locked - must first wait for current to complete")
 		}
@@ -310,7 +312,7 @@ func (r PayoutCassandraRepository) GetClubPayoutById(ctx context.Context, reques
 
 func (r PayoutCassandraRepository) GetClubPayoutByIdOperator(ctx context.Context, payoutId string) (*payout.ClubPayout, error) {
 
-	var clubPay *clubPayout
+	var clubPay clubPayout
 
 	if err := r.session.Query(clubPayoutsTable.Get()).
 		Consistency(gocql.LocalQuorum).

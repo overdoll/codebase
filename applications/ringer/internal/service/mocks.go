@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"overdoll/applications/ringer/internal/adapters"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -58,9 +59,17 @@ var failureList []string
 // Do is the mock client's `Do` func
 func (m MockPaxumHttpClient) Do(req *http.Request) (*http.Response, error) {
 
-	var body string
+	newBody, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return nil, err
+	}
+	formValues, err := url.ParseQuery(string(newBody))
 
-	targetKey := req.Form.Get("reference")
+	if err != nil {
+		return nil, err
+	}
+
+	targetKey := formValues.Get("reference")
 
 	// in tests, if we suffix an ID with _failure, we can simulate an error from a payout provider
 	isFailure := strings.HasSuffix(targetKey, "_failure")
@@ -84,11 +93,13 @@ func (m MockPaxumHttpClient) Do(req *http.Request) (*http.Response, error) {
 		if found {
 			shouldFail = false
 		} else {
-			failureList = append(failureList, req.Form.Get("reference"))
+			failureList = append(failureList, formValues.Get("reference"))
 		}
 	}
 
-	switch req.Form.Get("method") {
+	var body string
+
+	switch formValues.Get("method") {
 	case "transferFunds":
 		if shouldFail {
 			body = "<?xml version=\"1.0\"?>\n<Response>\n    <Environment>PRODUCTION</Environment>\n\t<Method>transferFunds</Method>\n\t<ResponseCode>11</ResponseCode>\n\t<ResponseDescription>Approved or Completed Successfully</ResponseDescription >\n\t<Fee>0.00</Fee>\n\t<TransactionId>23646236</TransactionId>\n</Response>"

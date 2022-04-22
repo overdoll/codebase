@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/ringer/internal/app/workflows"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/money"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -53,7 +52,7 @@ func getPayoutsForClub(t *testing.T, client *graphql.Client, clubId string) Club
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error grabbing club payouts")
 
 	return pays
 }
@@ -77,14 +76,14 @@ func getClubPayout(t *testing.T, client *graphql.Client, paymentId string) ClubP
 
 type PayoutPayments struct {
 	Entities []struct {
-		Payout struct {
+		ClubPayout struct {
 			ID       string
 			Payments *struct {
 				Edges []struct {
 					Node ClubPaymentModified
 				}
 			} `graphql:"payments()"`
-		} `graphql:"... on Payout"`
+		} `graphql:"... on ClubPayout"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -97,7 +96,7 @@ func getPaymentsForPayout(t *testing.T, client *graphql.Client, payoutId string)
 	err := client.Query(context.Background(), &pays, map[string]interface{}{
 		"representations": []_Any{
 			{
-				"__typename": "Payout",
+				"__typename": "ClubPayout",
 				"id":         string(convertPayoutIdToRelayId(payoutId)),
 			},
 		},
@@ -111,7 +110,7 @@ func getPaymentsForPayout(t *testing.T, client *graphql.Client, payoutId string)
 type DepositRequestModified struct {
 	Id                 relay.ID
 	Reference          string
-	Currency           money.Currency
+	Currency           types.Currency
 	BaseAmount         int
 	EstimatedFeeAmount int
 	PayoutMethod       types.PayoutMethod
@@ -154,10 +153,7 @@ type InitiateClubPayout struct {
 func TestClubPayout(t *testing.T) {
 	t.Parallel()
 
-	// truncate deposit requests table to ensure we can run the same test over and over again
-	cleanupDepositRequests(t)
-
-	seedAmount := 10
+	seedAmount := 15
 	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -171,7 +167,7 @@ func TestClubPayout(t *testing.T) {
 
 	balances := getClubBalances(t, gClient, clubId)
 
-	require.Equal(t, 7000, balances.Entities[0].Club.Balance.Amount, "correct club balance")
+	require.Equal(t, 10500, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubMonthlyPayout, mock.Anything)
 
@@ -187,8 +183,10 @@ func TestClubPayout(t *testing.T) {
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
-
+	env.RegisterWorkflow(workflows.ProcessClubPayout)
 	payoutId := ""
+
+	ranCallback := false
 
 	// callback to wait until the real deposit will happen
 	env.RegisterDelayedCallback(func() {
@@ -201,25 +199,27 @@ func TestClubPayout(t *testing.T) {
 
 		// check payment is in correct state
 		require.Equal(t, types.ClubPayoutStatusQueued, targetPayout.Status, "payout is queued")
-		require.Equal(t, 7000, targetPayout.Amount, "correct base amount")
+		require.Equal(t, 10500, targetPayout.Amount, "correct base amount")
 		require.Equal(t, types.CurrencyUsd, targetPayout.Currency, "correct currency")
 
 		payoutId = targetPayout.Reference
 
 		pays := getPaymentsForPayout(t, gClient, payoutId)
 
-		require.Len(t, pays.Entities[0].Payout.Payments.Edges, 10, "should have found 10 payments linked to this payout")
+		require.Len(t, pays.Entities[0].ClubPayout.Payments.Edges, 10, "should have found 10 payments linked to this payout")
 
-		for _, p := range pays.Entities[0].Payout.Payments.Edges {
+		for _, p := range pays.Entities[0].ClubPayout.Payments.Edges {
 			require.Equal(t, types.ClubPaymentStatusReady, p.Node.Status, "payments should be in the ready stage")
 		}
-
-	}, time.Hour*24*30)
+		ranCallback = true
+	}, time.Minute)
 
 	// generate the payout
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
 	require.NoError(t, env.GetWorkflowError(), "payout seeded without errors")
+
+	require.True(t, ranCallback, "callback should have been called")
 
 	// query the state after the payment has been settled
 	payout := getClubPayout(t, gClient, payoutId)
@@ -263,9 +263,9 @@ func TestClubPayout(t *testing.T) {
 
 	// check that all the payments linked to the payouts are now "completed"
 	pays := getPaymentsForPayout(t, gClient, payoutId)
-	require.Len(t, pays.Entities[0].Payout.Payments.Edges, 10, "should have found 10 payments linked to this payout")
+	require.Len(t, pays.Entities[0].ClubPayout.Payments.Edges, 10, "should have found 10 payments linked to this payout")
 
-	for _, p := range pays.Entities[0].Payout.Payments.Edges {
+	for _, p := range pays.Entities[0].ClubPayout.Payments.Edges {
 		require.Equal(t, types.ClubPaymentStatusComplete, p.Node.Status, "payment should now be in the complete stage")
 	}
 
@@ -283,9 +283,9 @@ func TestClubPayout(t *testing.T) {
 func validateDepositRequest(t *testing.T, depositRequest DepositRequestModified) {
 	require.Equal(t, types.PayoutMethodPaxum, depositRequest.PayoutMethod, "correct payout method as paxum")
 	require.Equal(t, types.CurrencyUsd, depositRequest.Currency, "correct currency")
-	require.Equal(t, 7000, depositRequest.BaseAmount, "correct base amount for deposit request")
-	require.Equal(t, 51, depositRequest.EstimatedFeeAmount, "correct estimated fee amount for deposit request")
-	require.Equal(t, 7051, depositRequest.TotalAmount, "correct total amount")
+	require.Equal(t, 10500, depositRequest.BaseAmount, "correct base amount for deposit request")
+	require.Equal(t, 5100, depositRequest.EstimatedFeeAmount, "correct estimated fee amount for deposit request")
+	require.Equal(t, 15600, depositRequest.TotalAmount, "correct total amount")
 	require.Len(t, depositRequest.Payouts.Edges, 1, "should have 1 payout")
 }
 
@@ -314,6 +314,7 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
+	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
 	// generate the payout
 	env.ExecuteWorkflow(workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
@@ -380,6 +381,7 @@ func TestClubPayout_cancel(t *testing.T) {
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
+	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
 	env.RegisterDelayedCallback(func() {
 		payments := getPayoutsForClub(t, gClient, clubId)
@@ -412,7 +414,7 @@ func TestClubPayout_cancel(t *testing.T) {
 		require.True(t, env.IsWorkflowCompleted(), "cancel workflow succeeded")
 		require.NoError(t, env.GetWorkflowError(), "cancel workflow succeeded without errors")
 
-	}, time.Hour*24*30)
+	}, time.Minute)
 
 	// generate the payout
 	env.ExecuteWorkflow(workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
@@ -454,6 +456,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
+	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
 	newTime := time.Now().Add(time.Hour * 1)
 
@@ -486,7 +489,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 		})
 
 		require.NoError(t, err, "no error retrying a payout")
-	}, time.Hour*24*30)
+	}, time.Minute)
 
 	// generate the payout
 	env.ExecuteWorkflow(workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{

@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS club_ready_payments
 (
     club_id      text,
     payment_id   text,
+    currency     text,
     is_deduction boolean,
     final_amount bigint,
     primary key ( club_id, payment_id ),

@@ -33,7 +33,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		activities.GetReadyPaymentsForClubInput{
 			ClubId: input.ClubId,
 		},
-	).Get(ctx, readyPayments); err != nil {
+	).Get(ctx, &readyPayments); err != nil {
 		return err
 	}
 
@@ -57,7 +57,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			Amount:   group.TotalAmount,
 			Currency: group.Currency,
 		},
-	).Get(ctx, payoutMethod); err != nil {
+	).Get(ctx, &payoutMethod); err != nil {
 		return err
 	}
 
@@ -84,7 +84,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
 			Timestamp:             ts,
 		},
-	).Get(ctx, depositPayload); err != nil {
+	).Get(ctx, &depositPayload); err != nil {
 		return err
 	}
 
@@ -110,7 +110,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			DepositDate:           input.FutureTime,
 			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
 		},
-	).Get(ctx, createPayload); err != nil {
+	).Get(ctx, &createPayload); err != nil {
 		return err
 	}
 
@@ -120,7 +120,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			PayoutId:   *payoutId,
 			PaymentIds: group.PaymentIds,
 		},
-	).Get(ctx, createPayload); err != nil {
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
@@ -128,11 +128,11 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	if err := workflow.ExecuteActivity(ctx, a.AppendToDepositRequest,
 		activities.AppendToDepositRequestInput{
 			PayoutId:  *payoutId,
-			DepositId: *depositId,
+			DepositId: depositPayload.DepositRequestId,
 			Amount:    group.TotalAmount,
 			Currency:  group.Currency,
 		},
-	).Get(ctx, depositPayload); err != nil {
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

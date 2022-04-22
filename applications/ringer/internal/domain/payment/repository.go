@@ -20,6 +20,7 @@ type Repository interface {
 	AddClubPaymentToClubReadyList(ctx context.Context, payment *ClubPayment) error
 	ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error
 	ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error
+	AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error
 	UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error
 }
 
