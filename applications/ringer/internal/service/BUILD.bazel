@@ -42,6 +42,7 @@ go_test(
         ":service",
         "//applications/ringer/internal/adapters",
         "//applications/ringer/internal/app/workflows",
+        "//applications/ringer/internal/domain/details",
         "//applications/ringer/internal/domain/payout",
         "//applications/ringer/internal/ports",
         "//applications/ringer/internal/ports/graphql/types",

@@ -114,7 +114,7 @@ func cleanupDepositRequests(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func setupPayoutMethodForAccount(t *testing.T, accountId string) {
+func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	session := bootstrap.InitializeDatabaseSession()
 
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
@@ -128,7 +128,7 @@ func setupPayoutMethodForAccount(t *testing.T, accountId string) {
 
 	adapter := adapters.NewPayoutCassandraRepository(session, service.StellaServiceMock{})
 
-	pay, err := payout.NewPaxumAccountPayoutMethod(accountId, "test-email@test.com")
+	pay, err := payout.NewPaxumAccountPayoutMethod(accountId, email)
 	require.NoError(t, err)
 
 	err = adapter.UpdateAccountPayoutMethod(context.Background(), pay)

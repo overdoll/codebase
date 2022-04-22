@@ -268,8 +268,8 @@ func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Cont
 	for _, id := range paymentIds {
 		stmt, _ := clubPaymentsTable.Update("status")
 		batch.Query(stmt,
-			id,
 			payment.Complete.String(),
+			id,
 		)
 	}
 
@@ -279,6 +279,27 @@ func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Cont
 
 	return nil
 }
+
+func (r PaymentCassandraRepository) RemoveClubPaymentsFromClubReadyList(ctx context.Context, clubId string, paymentIds []string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// batch update all payments
+	for _, id := range paymentIds {
+		stmt, _ := clubReadyPaymentsTable.Delete()
+		batch.Query(stmt,
+			clubId,
+			id,
+		)
+	}
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to remove club payments from ready list: %v", err)
+	}
+
+	return nil
+}
+
 func (r PaymentCassandraRepository) updateClubPayment(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error, columns []string) (*payment.ClubPayment, error) {
 	pay, err := r.GetClubPaymentByIdOperator(ctx, paymentId)
 

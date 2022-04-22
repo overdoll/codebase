@@ -18,6 +18,7 @@ type Repository interface {
 	UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *ClubPayment) error) (*ClubPayment, error)
 	UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *ClubPlatformFee) error) (*ClubPlatformFee, error)
 	AddClubPaymentToClubReadyList(ctx context.Context, payment *ClubPayment) error
+	RemoveClubPaymentsFromClubReadyList(ctx context.Context, clubId string, paymentIds []string) error
 	ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error
 	ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error
 	AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error

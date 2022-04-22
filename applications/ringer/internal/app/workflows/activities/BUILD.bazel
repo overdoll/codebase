@@ -7,6 +7,7 @@ go_library(
         "add_failure_to_club_payout.go",
         "add_to_club_balance.go",
         "add_to_club_pending_balance.go",
+        "append_club_payments_to_payout.go",
         "append_to_deposit_request.go",
         "create_payout_for_club.go",
         "create_pending_club_payment_deduction.go",

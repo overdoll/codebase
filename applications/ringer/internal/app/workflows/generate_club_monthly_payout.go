@@ -167,8 +167,11 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 		if !timerFired {
 			// schedule an activity to update settlement date for the payout
-			if err := workflow.ExecuteActivity(timerCtx, a.UpdateClubPayoutDepositDate,
-				activities.UpdateClubPayoutDepositDateInput{DepositDate: *input.FutureTime},
+			if err := workflow.ExecuteActivity(ctx, a.UpdateClubPayoutDepositDate,
+				activities.UpdateClubPayoutDepositDateInput{
+					PayoutId:    *payoutId,
+					DepositDate: *input.FutureTime,
+				},
 			).Get(ctx, nil); err != nil {
 				return err
 			}

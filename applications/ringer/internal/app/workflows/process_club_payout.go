@@ -17,7 +17,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 	successfulPayout := false
 
 	const NumberOfAttempts = 3
-	for i := 1; i < NumberOfAttempts; i++ {
+	for i := 0; i < NumberOfAttempts; i++ {
 
 		var payload *activities.ProcessClubPayoutPayload
 

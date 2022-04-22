@@ -12,7 +12,6 @@ import (
 	"overdoll/applications/ringer/internal/adapters"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
-	"strings"
 )
 
 type EvaServiceMock struct {
@@ -54,7 +53,7 @@ type MockPaxumHttpClient struct {
 	DoFunc func(req *http.Request) (*http.Response, error)
 }
 
-var failureList []string
+var failureMap = make(map[string]int)
 
 // Do is the mock client's `Do` func
 func (m MockPaxumHttpClient) Do(req *http.Request) (*http.Response, error) {
@@ -69,11 +68,12 @@ func (m MockPaxumHttpClient) Do(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 
-	targetKey := formValues.Get("reference")
+	targetKey := formValues.Get("toEmail")
 
-	// in tests, if we suffix an ID with _failure, we can simulate an error from a payout provider
-	isFailure := strings.HasSuffix(targetKey, "_failure")
+	// in tests, if the target email is exactly this, we can simulate an error from a payout provider
+	isFailure := targetKey == "test-failure@test.com"
 	shouldFail := false
+	failureAmount := 0
 
 	// basically here, the first time this method is called with a _failure ID, it will fail, and be added to a list
 	// the next time the failure occurs with the same ID, it won't fail
@@ -83,17 +83,20 @@ func (m MockPaxumHttpClient) Do(req *http.Request) (*http.Response, error) {
 		found := false
 		shouldFail = true
 
-		for _, id := range failureList {
-			if id == targetKey {
+		for key, id := range failureMap {
+			if key == targetKey {
 				found = true
+				failureAmount = id
 				break
 			}
 		}
 
-		if found {
+		if found && failureAmount >= 3 {
 			shouldFail = false
+		} else if found {
+			failureMap[targetKey] = failureMap[targetKey] + 1
 		} else {
-			failureList = append(failureList, formValues.Get("reference"))
+			failureMap[targetKey] = 1
 		}
 	}
 

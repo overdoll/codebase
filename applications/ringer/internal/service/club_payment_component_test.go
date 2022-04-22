@@ -143,7 +143,7 @@ func TestClubPaymentDeposit(t *testing.T) {
 		balances := getClubBalances(t, gClient, clubId)
 		require.Equal(t, 70, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
 		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
-	}, time.Minute)
+	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
@@ -235,7 +235,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 		require.Equal(t, -35, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
 		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 		require.Equal(t, 700, balances.Entities[0].Club.Balance.Amount, "correct club balance of settled payment")
-	}, time.Minute)
+	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")

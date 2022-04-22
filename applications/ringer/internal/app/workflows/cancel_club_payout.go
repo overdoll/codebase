@@ -16,7 +16,7 @@ func CancelClubPayout(ctx workflow.Context, input CancelClubPayoutInput) error {
 	var payoutDetails *activities.GetClubPayoutDetailsPayload
 
 	// get payout ID
-	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutDetails, input.PayoutId).Get(ctx, payoutDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutDetails, input.PayoutId).Get(ctx, &payoutDetails); err != nil {
 		return err
 	}
 

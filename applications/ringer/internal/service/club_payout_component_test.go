@@ -159,7 +159,7 @@ func TestClubPayout(t *testing.T) {
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId)
+	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
 	for i := 0; i < seedAmount; i++ {
 		seedPayment(t, uuid.New().String(), clubId, accountId)
@@ -265,9 +265,17 @@ func TestClubPayout(t *testing.T) {
 	pays := getPaymentsForPayout(t, gClient, payoutId)
 	require.Len(t, pays.Entities[0].ClubPayout.Payments.Edges, 10, "should have found 10 payments linked to this payout")
 
+	lastPaymentId := ""
+
 	for _, p := range pays.Entities[0].ClubPayout.Payments.Edges {
 		require.Equal(t, types.ClubPaymentStatusComplete, p.Node.Status, "payment should now be in the complete stage")
+		lastPaymentId = p.Node.Reference
 	}
+
+	// check that at least 1 of the payments are in complete status
+	getPayment := getClubPayment(t, gClient, lastPaymentId)
+	require.NotNil(t, getPayment.ClubPayment, "found payment with ID")
+	require.Equal(t, types.ClubPaymentStatusComplete, getPayment.ClubPayment.Status, "complete status of payment")
 
 	var allPayouts Payouts
 
@@ -283,15 +291,17 @@ func TestClubPayout(t *testing.T) {
 func validateDepositRequest(t *testing.T, depositRequest DepositRequestModified) {
 	require.Equal(t, types.PayoutMethodPaxum, depositRequest.PayoutMethod, "correct payout method as paxum")
 	require.Equal(t, types.CurrencyUsd, depositRequest.Currency, "correct currency")
-	require.Equal(t, 10500, depositRequest.BaseAmount, "correct base amount for deposit request")
-	require.Equal(t, 5100, depositRequest.EstimatedFeeAmount, "correct estimated fee amount for deposit request")
-	require.Equal(t, 15600, depositRequest.TotalAmount, "correct total amount")
-	require.Len(t, depositRequest.Payouts.Edges, 1, "should have 1 payout")
+	require.GreaterOrEqual(t, depositRequest.BaseAmount, 10500, "correct base amount for deposit request")
+	require.GreaterOrEqual(t, depositRequest.EstimatedFeeAmount, 5100, "correct estimated fee amount for deposit request")
+	require.GreaterOrEqual(t, depositRequest.TotalAmount, 15600, "correct total amount")
+	require.GreaterOrEqual(t, len(depositRequest.Payouts.Edges), 1, "should have 1 or more payout")
 }
 
 type RetryClubPayout struct {
 	RetryClubPayout *struct {
-		Id relay.ID
+		ClubPayout *struct {
+			Id relay.ID
+		}
 	} `graphql:"retryClubPayout(input: $input)"`
 }
 
@@ -300,12 +310,12 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	t.Parallel()
 
 	seedAmount := 10
-	clubId := uuid.New().String() + "_failure"
+	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId)
+	setupPayoutMethodForAccount(t, accountId, "test-failure@test.com")
 
 	for i := 0; i < seedAmount; i++ {
 		seedPayment(t, uuid.New().String(), clubId, accountId)
@@ -338,6 +348,8 @@ func TestClubPayout_simulate_error(t *testing.T) {
 
 	var retry RetryClubPayout
 
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RetryClubPayout, mock.Anything)
+
 	// retry our payout. it should now succeed because of the way we set up our mocks
 	err := gClient.Mutate(context.Background(), &retry, map[string]interface{}{
 		"input": types.RetryClubPayoutInput{
@@ -346,6 +358,12 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error retrying a payout")
+
+	env = getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ProcessClubPayout)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted(), "retry workflow succeeded")
+	require.NoError(t, env.GetWorkflowError(), "retry workflow succeeded without errors")
 
 	payments = getPayoutsForClub(t, gClient, clubId)
 
@@ -359,7 +377,9 @@ func TestClubPayout_simulate_error(t *testing.T) {
 
 type CancelClubPayout struct {
 	CancelClubPayout *struct {
-		Id relay.ID
+		ClubPayout *struct {
+			Id relay.ID
+		}
 	} `graphql:"cancelClubPayout(input: $input)"`
 }
 
@@ -367,12 +387,12 @@ func TestClubPayout_cancel(t *testing.T) {
 	t.Parallel()
 
 	seedAmount := 10
-	clubId := uuid.New().String() + "_failure"
+	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId)
+	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
 	for i := 0; i < seedAmount; i++ {
 		seedPayment(t, uuid.New().String(), clubId, accountId)
@@ -411,8 +431,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 		// run the actual cancel workflow - this should prevent the monthly payout workflow from continuing
 		workflowExecution.FindAndExecuteWorkflow(t, newEnd)
-		require.True(t, env.IsWorkflowCompleted(), "cancel workflow succeeded")
-		require.NoError(t, env.GetWorkflowError(), "cancel workflow succeeded without errors")
+		require.True(t, newEnd.IsWorkflowCompleted(), "cancel workflow succeeded")
+		require.NoError(t, newEnd.GetWorkflowError(), "cancel workflow succeeded without errors")
 
 	}, time.Minute)
 
@@ -424,7 +444,7 @@ func TestClubPayout_cancel(t *testing.T) {
 	})
 
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
-	require.NoError(t, env.GetWorkflowError(), "payout seeded without errors")
+	require.Error(t, env.GetWorkflowError(), "payout had a cancel error")
 
 	// check actual status of payouts
 	payments := getPayoutsForClub(t, gClient, clubId)
@@ -435,19 +455,22 @@ func TestClubPayout_cancel(t *testing.T) {
 
 type UpdateClubPayoutDepositDate struct {
 	UpdateClubPayoutDepositDate *struct {
-		Id relay.ID
+		ClubPayout *struct {
+			Id relay.ID
+		}
 	} `graphql:"updateClubPayoutDepositDate(input: $input)"`
 }
 
 func TestClubPayout_update_deposit_date(t *testing.T) {
+	t.Parallel()
 
 	seedAmount := 10
 	accountId := uuid.New().String()
-	clubId := uuid.New().String() + "_failure"
+	clubId := accountId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId)
+	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
 	for i := 0; i < seedAmount; i++ {
 		seedPayment(t, uuid.New().String(), clubId, accountId)
@@ -469,7 +492,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 		payoutRelayId := payments.Entities[0].Club.Payouts.Edges[0].Node.Id
 		payoutId = payments.Entities[0].Club.Payouts.Edges[0].Node.Reference
 
-		temporalClientMock.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.UpdatePayoutDateSignal, newTime).
+		temporalClientMock.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.UpdatePayoutDateSignal, mock.Anything).
 			Run(
 				func(args mock.Arguments) {
 					env.SignalWorkflow(workflows.UpdatePayoutDateSignal, newTime)
@@ -505,5 +528,5 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	payments := getPayoutsForClub(t, gClient, clubId)
 	require.Len(t, payments.Entities[0].Club.Payouts.Edges, 1, "should have 1 payout")
 	targetPayout := payments.Entities[0].Club.Payouts.Edges[0].Node
-	require.Equal(t, newTime, targetPayout.DepositDate, "payout updated deposit date")
+	require.Equal(t, newTime.Format(time.RFC822), targetPayout.DepositDate.Format(time.RFC822), "payout updated deposit date")
 }
