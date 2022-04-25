@@ -128,6 +128,14 @@ def go_repositories():
         version = "v0.1.0",
     )
     go_repository(
+        name = "com_github_biter777_countries",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/biter777/countries",
+        sum = "h1:/wXFeLPAbdl7YvrpJT3p7GGftJTz6uUmOmha2P/DX9A=",
+        version = "v1.3.4",
+    )
+
+    go_repository(
         name = "com_github_bitly_go_hostpool",
         build_file_proto_mode = "disable",
         importpath = "github.com/bitly/go-hostpool",
@@ -1072,8 +1080,8 @@ def go_repositories():
         name = "com_github_matryer_moq",
         build_file_proto_mode = "disable",
         importpath = "github.com/matryer/moq",
-        sum = "h1:RtpiPUM8L7ZSCbSwK+QcZH/E9tgqAkFjKQxsRs25b4w=",
-        version = "v0.2.7",
+        sum = "h1:Q06vEqnBYjjfx5KKgHfYRKE/lvlRu+Nj+xodG4YdHnU=",
+        version = "v0.2.3",
     )
     go_repository(
         name = "com_github_mattn_go_colorable",
@@ -1744,8 +1752,8 @@ def go_repositories():
         name = "com_github_urfave_cli_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/urfave/cli/v2",
-        sum = "h1:m2pxjjDFgDxSPtO8WSdbndj17Wu2y8vOT86wE/tjr+I=",
-        version = "v2.4.0",
+        sum = "h1:qph92Y649prgesehzOrQjdWyxFOp/QVM+6imKHad91M=",
+        version = "v2.3.0",
     )
 
     go_repository(

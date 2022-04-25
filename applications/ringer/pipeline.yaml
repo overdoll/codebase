@@ -1,0 +1,50 @@
+steps:
+  build:
+    targets:
+      - //applications/ringer/internal:internal
+
+  unit_test:
+    coverage:
+      - name: ringer.unit
+        paths:
+          - ./applications/ringer/**/coverage.dat
+    targets:
+      - //applications/ringer/internal/app/...
+      - //applications/ringer/internal/domain/...
+      - //applications/ringer/internal/ports/...
+
+  push_image:
+    targets:
+      - //applications/ringer/internal:publish-testing
+
+  integration_test:
+    coverage:
+      - name: ringer.integration
+        paths:
+          - ./applications/ringer/internal/adapters/**/coverage.dat
+      - name: ringer.component
+        paths:
+          - ./applications/ringer/internal/service/**/coverage.dat
+    setup:
+      dockerfile:
+        - ./applications/ringer/docker-compose.ci.yaml
+    network_dependencies:
+      - host: ringer
+        port: 8000
+    targets:
+      - //applications/ringer/internal/adapters/...
+      - //applications/ringer/internal/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/ringer/docker-compose.ci.yaml
+        - ./applications/ringer/docker-compose.ci.e2e.yaml
+    network_dependencies:
+      - host: ringer
+        port: 8000
+        priority: 0
+
+  publish_image:
+    targets:
+      - //applications/ringer/internal:publish

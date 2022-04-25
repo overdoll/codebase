@@ -13,6 +13,11 @@ type StellaService interface {
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
 }
 
+type RingerService interface {
+	NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
+	NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
+}
+
 type EvaService interface {
 	LocationFromIp(ctx context.Context, ip string) (*location.Location, error)
 }

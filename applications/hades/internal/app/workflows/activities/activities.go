@@ -13,9 +13,10 @@ type Activities struct {
 	ccbill  ccbill.Repository
 	stella  command.StellaService
 	carrier command.CarrierService
+	ringer  command.RingerService
 }
 
-func NewActivitiesHandler(billing billing.Repository, bi billing.IndexRepository, fr billing.FileRepository, ccbill ccbill.Repository, stella command.StellaService, carrier command.CarrierService) *Activities {
+func NewActivitiesHandler(billing billing.Repository, bi billing.IndexRepository, fr billing.FileRepository, ccbill ccbill.Repository, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService) *Activities {
 	return &Activities{
 		billing: billing,
 		stella:  stella,
@@ -23,5 +24,6 @@ func NewActivitiesHandler(billing billing.Repository, bi billing.IndexRepository
 		bi:      bi,
 		ccbill:  ccbill,
 		carrier: carrier,
+		ringer:  ringer,
 	}
 }

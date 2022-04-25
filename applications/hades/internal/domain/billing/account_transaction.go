@@ -2,6 +2,7 @@ package billing
 
 import (
 	"errors"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
@@ -27,7 +28,7 @@ type AccountTransaction struct {
 	paymentMethod *PaymentMethod
 
 	amount   int64
-	currency Currency
+	currency money.Currency
 
 	billedAtDate    time.Time
 	nextBillingDate time.Time
@@ -42,7 +43,7 @@ type AccountTransaction struct {
 }
 
 func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
-	cr, err := CurrencyFromString(currency)
+	cr, err := money.CurrencyFromString(currency)
 
 	if err != nil {
 		return nil, err
@@ -65,7 +66,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 }
 
 func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
-	cr, err := CurrencyFromString(currency)
+	cr, err := money.CurrencyFromString(currency)
 
 	if err != nil {
 		return nil, err
@@ -115,7 +116,7 @@ func (c *AccountTransaction) Amount() int64 {
 	return c.amount
 }
 
-func (c *AccountTransaction) Currency() Currency {
+func (c *AccountTransaction) Currency() money.Currency {
 	return c.currency
 }
 
@@ -147,7 +148,7 @@ func (c *AccountTransaction) CCBillTransactionId() *string {
 	return c.ccbillTransactionId
 }
 
-func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, currency Currency, reason string) error {
+func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, currency money.Currency, reason string) error {
 	c.transaction = Refund
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        uuid.New().String(),
@@ -159,7 +160,7 @@ func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, cur
 	return nil
 }
 
-func (c *AccountTransaction) MakeChargeback(timestamp time.Time, amount int64, currency Currency, reason string) error {
+func (c *AccountTransaction) MakeChargeback(timestamp time.Time, amount int64, currency money.Currency, reason string) error {
 	c.transaction = Chargeback
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        uuid.New().String(),
@@ -251,7 +252,7 @@ func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.P
 
 func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, ccbillTransactionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string, events []*AccountTransactionEvent) *AccountTransaction {
 	tr, _ := TransactionFromString(transaction)
-	cr, _ := CurrencyFromString(currency)
+	cr, _ := money.CurrencyFromString(currency)
 
 	return &AccountTransaction{
 		accountId:                   accountId,

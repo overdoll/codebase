@@ -7,6 +7,9 @@ import (
 type GetCCBillSubscriptionDetailsPayload struct {
 	ClubId    string
 	AccountId string
+	Duplicate bool
+	Currency  string
+	Amount    int64
 }
 
 func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSubscriptionId string) (*GetCCBillSubscriptionDetailsPayload, error) {
@@ -20,5 +23,8 @@ func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSub
 	return &GetCCBillSubscriptionDetailsPayload{
 		ClubId:    details.ClubId(),
 		AccountId: details.AccountId(),
+		Duplicate: details.Duplicate(),
+		Currency:  details.AccountingCurrency().String(),
+		Amount:    details.AccountingInitialPrice(),
 	}, nil
 }

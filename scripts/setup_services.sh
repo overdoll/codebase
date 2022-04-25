@@ -25,3 +25,6 @@ sh setup/sting.sh
 
 sh cleanup/hades.sh
 sh setup/hades.sh
+
+sh cleanup/ringer.sh
+sh setup/ringer.sh

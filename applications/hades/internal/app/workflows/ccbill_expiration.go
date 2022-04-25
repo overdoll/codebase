@@ -26,6 +26,11 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 		return err
 	}
 
+	// ignore duplicate subscription
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {

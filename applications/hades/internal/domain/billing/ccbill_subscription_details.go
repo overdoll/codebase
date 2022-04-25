@@ -2,6 +2,7 @@ package billing
 
 import (
 	"errors"
+	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -17,6 +18,8 @@ type CCBillSubscriptionDetails struct {
 	accountId string
 	clubId    string
 
+	duplicate bool
+
 	paymentMethod *PaymentMethod
 
 	ccbillSubscriptionId string
@@ -25,15 +28,15 @@ type CCBillSubscriptionDetails struct {
 
 	subscriptionInitialPrice   int64
 	subscriptionRecurringPrice int64
-	subscriptionCurrency       Currency
+	subscriptionCurrency       money.Currency
 
 	billedInitialPrice   int64
 	billedRecurringPrice int64
-	billedCurrency       Currency
+	billedCurrency       money.Currency
 
 	accountingInitialPrice   int64
 	accountingRecurringPrice int64
-	accountingCurrency       Currency
+	accountingCurrency       money.Currency
 
 	updatedAt time.Time
 }
@@ -42,13 +45,13 @@ func NewCCBillSubscriptionDetails(accountId, clubId, ccbillSubscriptionId string
 	subscriptionInitialPrice, subscriptionRecurringPrice int64, subscriptionCurrency string,
 	billedInitialPrice, billedRecurringPrice int64, billedCurrency string,
 	accountingInitialPrice, accountingRecurringPrice int64, accountingCurrency string,
-	idempotencyKey string) (*CCBillSubscriptionDetails, error) {
+	idempotencyKey string, duplicate bool) (*CCBillSubscriptionDetails, error) {
 
-	crsub, _ := CurrencyFromString(subscriptionCurrency)
+	crsub, _ := money.CurrencyFromString(subscriptionCurrency)
 
-	crbilled, _ := CurrencyFromString(billedCurrency)
+	crbilled, _ := money.CurrencyFromString(billedCurrency)
 
-	craccounting, _ := CurrencyFromString(accountingCurrency)
+	craccounting, _ := money.CurrencyFromString(accountingCurrency)
 
 	return &CCBillSubscriptionDetails{
 		accountId: accountId,
@@ -70,6 +73,7 @@ func NewCCBillSubscriptionDetails(accountId, clubId, ccbillSubscriptionId string
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		idempotencyKey:       idempotencyKey,
 		updatedAt:            time.Now(),
+		duplicate:            duplicate,
 	}, nil
 }
 
@@ -79,6 +83,10 @@ func (c *CCBillSubscriptionDetails) AccountId() string {
 
 func (c *CCBillSubscriptionDetails) ClubId() string {
 	return c.clubId
+}
+
+func (c *CCBillSubscriptionDetails) Duplicate() bool {
+	return c.duplicate
 }
 
 func (c *CCBillSubscriptionDetails) UpdatedAt() time.Time {
@@ -101,7 +109,7 @@ func (c *CCBillSubscriptionDetails) SubscriptionRecurringPrice() int64 {
 	return c.subscriptionRecurringPrice
 }
 
-func (c *CCBillSubscriptionDetails) SubscriptionCurrency() Currency {
+func (c *CCBillSubscriptionDetails) SubscriptionCurrency() money.Currency {
 	return c.subscriptionCurrency
 }
 
@@ -113,7 +121,7 @@ func (c *CCBillSubscriptionDetails) BilledRecurringPrice() int64 {
 	return c.billedRecurringPrice
 }
 
-func (c *CCBillSubscriptionDetails) BilledCurrency() Currency {
+func (c *CCBillSubscriptionDetails) BilledCurrency() money.Currency {
 	return c.billedCurrency
 }
 
@@ -125,7 +133,7 @@ func (c *CCBillSubscriptionDetails) AccountingRecurringPrice() int64 {
 	return c.accountingRecurringPrice
 }
 
-func (c *CCBillSubscriptionDetails) AccountingCurrency() Currency {
+func (c *CCBillSubscriptionDetails) AccountingCurrency() money.Currency {
 	return c.accountingCurrency
 }
 
@@ -150,13 +158,13 @@ func (c *CCBillSubscriptionDetails) CanView(requester *principal.Principal) erro
 func UnmarshalCCBillSubscriptionDetailsFromDatabase(accountId, clubId, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time,
 	subscriptionInitialPrice, subscriptionRecurringPrice int64, subscriptionCurrency string,
 	billedInitialPrice, billedRecurringPrice int64, billedCurrency string,
-	accountingInitialPrice, accountingRecurringPrice int64, accountingCurrency string, idempotencyKey string) *CCBillSubscriptionDetails {
+	accountingInitialPrice, accountingRecurringPrice int64, accountingCurrency string, idempotencyKey string, duplicate bool) *CCBillSubscriptionDetails {
 
-	crsub, _ := CurrencyFromString(subscriptionCurrency)
+	crsub, _ := money.CurrencyFromString(subscriptionCurrency)
 
-	crbilled, _ := CurrencyFromString(billedCurrency)
+	crbilled, _ := money.CurrencyFromString(billedCurrency)
 
-	craccounting, _ := CurrencyFromString(accountingCurrency)
+	craccounting, _ := money.CurrencyFromString(accountingCurrency)
 
 	return &CCBillSubscriptionDetails{
 		accountId:                  accountId,
@@ -176,5 +184,7 @@ func UnmarshalCCBillSubscriptionDetailsFromDatabase(accountId, clubId, ccbillSub
 		ccbillSubscriptionId:     ccbillSubscriptionId,
 		updatedAt:                updatedAt,
 		idempotencyKey:           idempotencyKey,
+
+		duplicate: duplicate,
 	}
 }

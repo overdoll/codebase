@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "command",
+    srcs = [
+        "cancel_club_payout.go",
+        "club_payment_deduction.go",
+        "club_payment_deposit.go",
+        "delete_account_payout_method.go",
+        "index_all_club_payments.go",
+        "index_all_club_payouts.go",
+        "initiate_club_payout.go",
+        "retry_club_payout.go",
+        "set_paxum_account_payout_method.go",
+        "update_account_details.go",
+        "update_club_payout_deposit_date.go",
+        "update_club_platform_fee.go",
+    ],
+    importpath = "overdoll/applications/ringer/internal/app/command",
+    visibility = ["//applications/ringer:__subpackages__"],
+    deps = [
+        "//applications/ringer/internal/domain/details",
+        "//applications/ringer/internal/domain/event",
+        "//applications/ringer/internal/domain/payment",
+        "//applications/ringer/internal/domain/payout",
+        "//libraries/money",
+        "//libraries/principal",
+    ],
+)

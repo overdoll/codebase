@@ -126,3 +126,13 @@ func (c CarrierServiceMock) ClubSupporterSubscriptionCancelled(ctx context.Conte
 func (c CarrierServiceMock) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
 	return nil
 }
+
+type RingerServiceMock struct{}
+
+func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
+	return nil
+}
+
+func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
+	return nil
+}

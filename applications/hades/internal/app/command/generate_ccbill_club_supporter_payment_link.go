@@ -5,6 +5,7 @@ import (
 	"errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
@@ -51,7 +52,7 @@ func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context,
 		return nil, errors.New("existing subscription found")
 	}
 
-	curr, err := billing.CurrencyFromString(cmd.Currency)
+	curr, err := money.CurrencyFromString(cmd.Currency)
 
 	if err != nil {
 		return nil, err

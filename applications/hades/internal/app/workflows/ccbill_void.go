@@ -4,6 +4,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"strconv"
 )
 
 type CCBillVoidInput struct {
@@ -34,6 +35,11 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
+	// ignore duplicate subscription
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -46,6 +52,38 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Reason:        input.Reason,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	currency := input.AccountingCurrency
+
+	if currency == "" {
+		currency = subscriptionDetails.Currency
+	}
+
+	amount := input.AccountingAmount
+
+	if amount == "" {
+		amount = strconv.Itoa(int(subscriptionDetails.Amount))
+	}
+
+	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(amount, currency)
+
+	if err != nil {
+		return err
+	}
+
+	// send a payment indicating a deduction for this club
+	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
+		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
+			AccountId:     subscriptionDetails.AccountId,
+			ClubId:        subscriptionDetails.ClubId,
+			TransactionId: input.TransactionId,
+			Timestamp:     timestamp,
+			Amount:        accountingAmount,
+			Currency:      currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
