@@ -105,6 +105,18 @@ const SettingsCatalogs = [
   {
     path: 'src/domain/settings/moderation/__locale__/{locale}/index',
     include: ['src/domain/settings/moderation/']
+  },
+  {
+    path: 'src/domain/settings/payouts/root/__locale__/{locale}/index',
+    include: ['src/domain/settings/payouts/root/']
+  },
+  {
+    path: 'src/domain/settings/payouts/details/__locale__/{locale}/index',
+    include: ['src/domain/settings/payouts/details/']
+  },
+  {
+    path: 'src/domain/settings/payouts/method/__locale__/{locale}/index',
+    include: ['src/domain/settings/payouts/method/']
   }
 ]
 

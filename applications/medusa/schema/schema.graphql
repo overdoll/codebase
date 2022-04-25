@@ -106,6 +106,15 @@ type Account implements Node {
   curationProfile: CurationProfile!
 
   """
+  Details belonging to this account.
+  
+  If null, account details have not been filled out yet.
+  
+  Account details are required to be filled out before setting a payout method.
+  """
+  details: AccountDetails
+
+  """
   Emails for account (multiple emails per account)
   
   Only queryable if the currently logged-in account belongs to the requested account
@@ -185,6 +194,9 @@ type Account implements Node {
   Has TOTP been configured? Recovery codes must be generated before configuring
   """
   multiFactorTotpConfigured: Boolean!
+
+  """The account payout method linked to this account."""
+  payoutMethod: AccountPayoutMethod
 
   """
   Post Audit Logs linked to this account
@@ -546,6 +558,21 @@ enum AccountClubSupporterSubscriptionStatus {
   EXPIRED
 }
 
+"""Details belonging to an account."""
+type AccountDetails {
+  """The country this account belongs to."""
+  country: Country!
+
+  """The first name belonging to this account."""
+  firstName: String!
+
+  """An ID to uniquely identify this details instance."""
+  id: ID!
+
+  """The last name belonging to this account."""
+  lastName: String!
+}
+
 """Email belonging to a specific account"""
 type AccountEmail implements Node {
   """
@@ -658,6 +685,16 @@ type AccountMultiFactorRecoveryCode {
   """The multi factor recovery code"""
   code: String!
 }
+
+type AccountPaxumPayoutMethod implements IAccountPayoutMethod {
+  """The email linked to the paxum payout method."""
+  email: String!
+
+  """The ID linked to this payout method."""
+  id: ID!
+}
+
+union AccountPayoutMethod = AccountPaxumPayoutMethod
 
 type AccountSavedPaymentMethod {
   """The account linked to this saved payment method."""
@@ -1094,6 +1131,25 @@ type AuthenticationTokenAccountStatus {
 """Localization formatted in BCP47."""
 scalar BCP47
 
+"""
+A balance item.
+
+Represents balance on a specific club.
+"""
+type Balance {
+  """The amount on this balance."""
+  amount: Int!
+
+  """The currency the balance is in."""
+  currency: Currency!
+
+  """An ID to uniquely identify this balance."""
+  id: ID!
+
+  """When the balance was last updated."""
+  updatedAt: Time!
+}
+
 """Become club supporter with saved payment method."""
 input BecomeClubSupporterWithAccountSavedPaymentMethodInput {
   """The chosen club ID."""
@@ -1279,6 +1335,18 @@ input CancelAccountClubSupporterSubscriptionInput {
 type CancelAccountClubSupporterSubscriptionPayload {
   """The new subscription."""
   clubSupporterSubscription: AccountClubSupporterSubscription
+}
+
+"""Cancel a specific payout."""
+input CancelClubPayoutInput {
+  """The payout to cancel."""
+  payoutId: ID!
+}
+
+"""Payload for cancelling the payout."""
+type CancelClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
 }
 
 """Cancellation reason."""
@@ -1504,6 +1572,9 @@ enum CharactersSort {
 }
 
 type Club implements Node {
+  """The current balance of this club."""
+  balance: Balance!
+
   """An ID pointing to this club."""
   id: ID!
 
@@ -1556,6 +1627,54 @@ type Club implements Node {
 
   """The account that owns this club."""
   owner: Account!
+
+  """All payments made to this club."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection!
+
+  """All payouts that are scheduled or created for this club."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
+
+  """
+  The current balance of this club, representing the pending amount instead of the real amount.
+  """
+  pendingBalance: Balance!
+
+  """This club's platform fee for each payment."""
+  platformFee: ClubPlatformFee!
 
   """Posts belonging to this club"""
   posts(
@@ -1715,6 +1834,205 @@ enum ClubMembersSort {
   NEWEST
 }
 
+"""
+A club payment item.
+
+Represents a payment that is going to be made to a club.
+"""
+type ClubPayment implements Node {
+  """The account transaction linked to this payment."""
+  accountTransaction: AccountTransaction!
+
+  """The base amount this payment was originally made in."""
+  baseAmount: Int!
+
+  """The currency this payment was made in."""
+  currency: Currency!
+
+  """The club this payment is made to."""
+  destinationClub: Club!
+
+  """The final amount that will actually be paid to a club."""
+  finalAmount: Int!
+
+  """An ID to uniquely identify this club payment."""
+  id: ID!
+
+  """
+  If this payment is a deduction, usually the source being a refund, chargeback or a void.
+  """
+  isDeduction: Boolean!
+
+  """The amount taken off with a platform fee."""
+  platformFeeAmount: Int!
+
+  """A reference, used to look up this payment."""
+  reference: String!
+
+  """
+  If this payment is in "pending" status, this will be the date when the payment becomes "ready".
+  """
+  settlementDate: Date!
+
+  """The source of the payment."""
+  source: ClubPaymentSource!
+
+  """The account that made this payment."""
+  sourceAccount: Account!
+
+  """The status of the payment."""
+  status: ClubPaymentStatus!
+}
+
+"""Connection of the club payment."""
+type ClubPaymentConnection {
+  edges: [ClubPaymentEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the the club payment."""
+type ClubPaymentEdge {
+  cursor: String!
+  node: ClubPayment!
+}
+
+enum ClubPaymentSource {
+  CLUB_SUPPORTER_SUBSCRIPTION
+}
+
+"""The status of a payment."""
+enum ClubPaymentStatus {
+  """
+  A payment was successfully deposited as part of a payout and is no longer needed.
+  """
+  COMPLETE
+
+  """A payment is pending until settled (reached "settlement date")."""
+  PENDING
+
+  """
+  A payment is ready to be picked up as part of a payout.
+  
+  Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
+  the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+  by the next scheduled payout.
+  """
+  READY
+}
+
+"""
+A club payout item.
+
+Represents a payout that is going to be paid to a specific account.
+"""
+type ClubPayout implements Node {
+  """The amount this payout is created in."""
+  amount: Int!
+
+  """The club linked to this payout."""
+  club: Club!
+
+  """When this payout was created."""
+  createdAt: Time!
+
+  """The currency this payout is in."""
+  currency: Currency!
+
+  """When the deposit will actually attempt to occur."""
+  depositDate: Time!
+
+  """If a payout failed, an event will be created here."""
+  events: [ClubPayoutEvent!]!
+
+  """An ID to uniquely identify this club payout."""
+  id: ID!
+
+  """All payments linked to this payout."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection!
+
+  """The account that is going to be paid out with this payout."""
+  payoutAccount: Account!
+
+  """A reference, used to look up this payout."""
+  reference: String!
+
+  """The status of the payout."""
+  status: ClubPayoutStatus!
+}
+
+"""Connection of the club payout."""
+type ClubPayoutConnection {
+  edges: [ClubPayoutEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the the club payout."""
+type ClubPayoutEdge {
+  cursor: String!
+  node: ClubPayout!
+}
+
+type ClubPayoutEvent {
+  """The error that occurred."""
+  error: String!
+
+  """An ID to uniquely identify this club payout event."""
+  id: ID!
+
+  """When this event occurred."""
+  timestamp: Time!
+}
+
+"""The status of the payout."""
+enum ClubPayoutStatus {
+  """The payout was cancelled."""
+  CANCELLED
+
+  """The payout was successfully deposited in the target account."""
+  DEPOSITED
+
+  """
+  The payout failed. A payout will try up to 3 times before this state is created.
+  """
+  FAILED
+
+  """
+  The "deposit date" was reached. The payout can no longer be cancelled, and will start to perform the payout.
+  """
+  PROCESSING
+
+  """
+  Payout is queued until the "deposit date". Payout is able to be cancelled while in this state.
+  """
+  QUEUED
+}
+
+"""Platform fee for a specific club."""
+type ClubPlatformFee {
+  """An ID to uniquely identify this club platform fee."""
+  id: ID!
+
+  """The percent of the club platform fee."""
+  percent: Int!
+}
+
 """The club slug alias"""
 type ClubSlugAlias {
   """The slug alias"""
@@ -1754,6 +2072,28 @@ type ConfirmAccountEmailPayload {
 enum ConfirmAccountEmailValidation {
   EMAIL_TAKEN
   TOKEN_EXPIRED
+}
+
+"""A country instance."""
+type Country {
+  """The alpha3 code for this country."""
+  alpha3: String!
+
+  """The emoji representation of this country's flag."""
+  emoji: String!
+
+  """An ID to uniquely identify this country."""
+  id: ID!
+
+  """The full name of this country."""
+  name: String!
+
+  """
+  Payout methods supported for this country.
+  
+  If empty, this country does not support any sort of payout.
+  """
+  payoutMethods: [PayoutMethod!]!
 }
 
 """Payload for creating an account with authentication token"""
@@ -2050,6 +2390,18 @@ type DeleteAccountEmailPayload {
   accountEmailId: ID!
 }
 
+"""Delete a specific account payout method."""
+input DeleteAccountPayoutMethodInput {
+  """The payout method to delete."""
+  payoutMethodId: ID!
+}
+
+"""Payload for deleting the account payout method."""
+type DeleteAccountPayoutMethodPayload {
+  """The deleted account payout method."""
+  deletedAccountPayoutMethodId: ID!
+}
+
 """Delete an account saved payment method input."""
 input DeleteAccountSavedPaymentMethodInput {
   """The chosen saved payment method id."""
@@ -2072,6 +2424,79 @@ input DeletePostInput {
 type DeletePostPayload {
   """The deleted post."""
   postId: ID
+}
+
+"""
+A deposit request.
+
+Basically, when payouts are scheduled at the beginning of the month,
+a deposit request is created to tell us how much money we need our payout methods to have in order
+to process all of the payouts
+"""
+type DepositRequest implements Node {
+  """The base amount of the deposit."""
+  baseAmount: Int!
+
+  """When this deposit was created."""
+  createdAt: Time!
+
+  """The currency this deposit is in."""
+  currency: Currency!
+
+  """
+  To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
+  accounts for this and ensures we always deliver the exact $ amount that the artist sees in their balance.
+  """
+  estimatedFeeAmount: Int!
+
+  """An ID to uniquely identify this deposit request."""
+  id: ID!
+
+  """
+  The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled.
+  """
+  lastDateForDeposit: Time!
+
+  """The type of payout method this deposit request is created for."""
+  payoutMethod: PayoutMethod!
+
+  """All payouts linked to this deposit request."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
+
+  """A reference, used to look up this deposit request."""
+  reference: String!
+
+  """The total amount that needs to be deposited."""
+  totalAmount: Int!
+}
+
+"""Connection of the deposit request."""
+type DepositRequestConnection {
+  edges: [DepositRequestEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the the deposit request."""
+type DepositRequestEdge {
+  cursor: String!
+  node: DepositRequest!
 }
 
 """Payload for disabling account multi factor"""
@@ -2393,6 +2818,26 @@ interface IAccountClubSupporterSubscription {
   updatedAt: Time!
 }
 
+interface IAccountPayoutMethod {
+  """The ID linked to this payout method"""
+  id: ID!
+}
+
+"""Initiate a payout for a specific club."""
+input InitiateClubPayoutInput {
+  """The club to initiate the payout for."""
+  clubId: ID!
+
+  """Optionally set the deposit date."""
+  depositDate: Time
+}
+
+"""Initiate a payout for a specific club."""
+type InitiateClubPayoutPayload {
+  """The club that the payout was initiated for."""
+  club: Club!
+}
+
 """Issue a club infraction."""
 input IssueClubInfractionInput {
   """The club to issue the infraction to."""
@@ -2571,6 +3016,13 @@ type Mutation {
   """Cancel a club supporter subscription"""
   cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload
 
+  """
+  Cancel a specific club payout.
+  
+  Staff+ only.
+  """
+  cancelClubPayout(input: CancelClubPayoutInput!): CancelClubPayoutPayload
+
   """Confirm account email, so it may be used"""
   confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
 
@@ -2605,6 +3057,13 @@ type Mutation {
   Delete account email - email must belong to account and cannot be the primary email
   """
   deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
+
+  """
+  Delete the current payout method linked to the logged-in account.
+  
+  If no payout method is set, payouts won't happen.
+  """
+  deleteAccountPayoutMethod(input: DeleteAccountPayoutMethodInput!): DeleteAccountPayoutMethodPayload
 
   """Delete an account saved payment method"""
   deleteAccountSavedPaymentMethod(input: DeleteAccountSavedPaymentMethodInput!): DeleteAccountSavedPaymentMethodPayload
@@ -2694,6 +3153,15 @@ type Mutation {
   """
   grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
+  """
+  Initiate a club payout for the specific club.
+  
+  Note that only 1 payout can be created at a time, so this call will fail if there is a payout either "in progress" or "queued".
+  
+  Staff+ only.
+  """
+  initiateClubPayout(input: InitiateClubPayoutInput!): InitiateClubPayoutPayload
+
   """Issue a club infraction."""
   issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
 
@@ -2762,6 +3230,13 @@ type Mutation {
   """Report a specific post"""
   reportPost(input: ReportPostInput!): ReportPostPayload
 
+  """
+  Retry a specific club payout if it's failed.
+  
+  Staff+ only.
+  """
+  retryClubPayout(input: RetryClubPayoutInput!): RetryClubPayoutPayload
+
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload
 
@@ -2780,6 +3255,11 @@ type Mutation {
   Creating accounts and completing authentication flows will not be possible once it's revoked
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
+
+  """
+  Set the currently logged-in account's payout method to use Paxum e-wallet.
+  """
+  setPaxumAccountPayoutMethod(input: SetPaxumAccountPayoutMethodInput!): SetPaxumAccountPayoutMethodPayload
 
   """Submit a post."""
   submitPost(input: SubmitPostInput!): SubmitPostPayload
@@ -2810,6 +3290,9 @@ type Mutation {
   Can be unlocked by staff+ regardless if time is past.
   """
   unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """Update account details for the currently logged-in account."""
+  updateAccountDetails(input: UpdateAccountDetailsInput!): UpdateAccountDetailsPayload
 
   """
   Update the account email status to primary
@@ -2861,6 +3344,26 @@ type Mutation {
 
   """Update the club's name (english-only for now)"""
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """
+  Update a payout's deposit date.
+  
+  Can be used to either make the payout happen earlier or schedule it for the future.
+  
+  Setting the time to be before the current time will make the payout happen instantly.
+  
+  Staff+ only.
+  """
+  updateClubPayoutDepositDate(input: UpdateClubPayoutDepositDateInput!): UpdateClubPayoutDepositDatePayload
+
+  """
+  Update the club's platform fee.
+  
+  Cannot be less than 20 or more than 30 percent.
+  
+  Staff+ only.
+  """
+  updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload
 
   """Update the club thumbnail"""
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
@@ -2939,6 +3442,10 @@ type PaymentMethod {
 
   """Card linked to this payment method."""
   card: Card!
+}
+
+enum PayoutMethod {
+  PAXUM
 }
 
 type Post implements Node {
@@ -3424,6 +3931,29 @@ type Query {
     sortBy: ClubsSort! = POPULAR
   ): ClubConnection!
 
+  """Grab all available countries."""
+  countries: [Country!]!
+
+  """Look up a single deposit request by reference."""
+  depositRequest(reference: String!): DepositRequest
+
+  """All deposit requests on the platform."""
+  depositRequests(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): DepositRequestConnection!
+
   """
   The current language that is set
   
@@ -3438,6 +3968,52 @@ type Query {
 
   """Fetch a node by the ID"""
   node(id: ID!): Node
+
+  """Look up a single payment by reference."""
+  payment(reference: String!): ClubPayment
+
+  """All payments made on the platform."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection!
+
+  """Look up a single payout by reference."""
+  payout(reference: String!): ClubPayout
+
+  """All payouts made on the platform."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
 
   """Look up a single post"""
   post(
@@ -3781,6 +4357,18 @@ type ResourceUrl {
   url: URI!
 }
 
+"""Retry a specific payout."""
+input RetryClubPayoutInput {
+  """The payout to retry."""
+  payoutId: ID!
+}
+
+"""Payload for retrying the payout."""
+type RetryClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
 """Payload for revoking the current viewer"""
 type RevokeAccountAccessPayload {
   """The account that was revoked"""
@@ -3961,6 +4549,18 @@ enum SeriesSort {
   TOP
 }
 
+"""Update account's payout method."""
+input SetPaxumAccountPayoutMethodInput {
+  """The paxum email to use for payouts."""
+  email: String!
+}
+
+"""Payload for updating the payout method."""
+type SetPaxumAccountPayoutMethodPayload {
+  """The updated account payout method."""
+  accountPayoutMethod: AccountPayoutMethod
+}
+
 """Publish post."""
 input SubmitPostInput {
   """The post to publish"""
@@ -4060,6 +4660,24 @@ input UnlockAccountInput {
 type UnlockAccountPayload {
   """Account that was unlocked"""
   account: Account
+}
+
+"""Update account details."""
+input UpdateAccountDetailsInput {
+  """The country ID to use."""
+  countryId: ID!
+
+  """The first name to set."""
+  firstName: String!
+
+  """The last name to set."""
+  lastName: String!
+}
+
+"""Payload for the new updated account details."""
+type UpdateAccountDetailsPayload {
+  """The updated account details."""
+  accountDetails: AccountDetails
 }
 
 """Input for updating the account status to primary"""
@@ -4292,6 +4910,36 @@ input UpdateClubNameInput {
 type UpdateClubNamePayload {
   """The club after update"""
   club: Club
+}
+
+"""Update the payout date for a specific payout ID."""
+input UpdateClubPayoutDepositDateInput {
+  """The new payout date."""
+  newDate: Time!
+
+  """The payout to update."""
+  payoutId: ID!
+}
+
+"""Payload for updating the payout deposit date."""
+type UpdateClubPayoutDepositDatePayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Update the club's platform fee."""
+input UpdateClubPlatformFeeInput {
+  """The club to update."""
+  clubId: ID!
+
+  """The percent fee to take from every payment."""
+  percent: Int!
+}
+
+"""Payload for the new updated account details."""
+type UpdateClubPlatformFeePayload {
+  """The updated club platform fee."""
+  clubPlatformFee: ClubPlatformFee
 }
 
 """Update club thumbnail."""

@@ -6,6 +6,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:66
+msgid "Create Account"
+msgstr ""
+
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:55
+msgid "Create an account to join clubs and curate a personalized clubs feed!"
+msgstr ""
 
 #: src/domain/clubs/discover/RootDiscoverClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:68
 msgid "No clubs found"
@@ -13,4 +27,8 @@ msgstr ""
 
 #: src/domain/clubs/discover/RootDiscoverClubs/SearchSuggestedClubs/SearchSuggestedClubs.tsx:29
 msgid "Search for a club by name"
+msgstr ""
+
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:81
+msgid "Start by joining some clubs and we'll create a personalized feed for you!"
 msgstr ""
