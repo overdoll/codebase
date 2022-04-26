@@ -1,3 +1,6 @@
+import gcm from '../utilities/gcm'
+import { randomBytes } from 'crypto'
+
 export const clientFetch = (securityToken) => {
   return async (data) => await fetch(
     '/api/graphql',
@@ -18,7 +21,8 @@ export const serverFetch = (req, res) => {
   return async (data) => {
     const headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
+      cookie: ''
     }
 
     Object.entries(
@@ -26,6 +30,20 @@ export const serverFetch = (req, res) => {
     ).forEach(([key, value]) => {
       headers[key] = value
     })
+
+    const existingSecurity = req.cookies['od.security']
+
+    let token: string
+
+    if (existingSecurity != null) {
+      token = gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET)
+    } else {
+      token = randomBytes(64).toString('hex')
+      const encrypted = gcm.encrypt(token, process.env.SECURITY_SECRET)
+      headers.cookie = headers.cookie + ';od.security=' + encrypted
+    }
+
+    headers['X-overdoll-Security'] = token
 
     const response = await fetch(
       process.env.SERVER_GRAPHQL_ENDPOINT as string,
@@ -40,7 +58,7 @@ export const serverFetch = (req, res) => {
 
     const responseSetCookie = response.headers.get('set-cookie')
 
-    if (responseSetCookie != null) {
+    if (responseSetCookie != null && res != null) {
       responseSetCookie
         .split(',')
         .forEach((setCookie) => {

@@ -259,7 +259,7 @@ func MarshalDepositRequestToGraphQL(ctx context.Context, result *payout.DepositR
 		ID:                 relay.NewID(DepositRequest{}, result.Id()),
 		Reference:          result.Id(),
 		PayoutMethod:       method,
-		Currency:           MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		Currency:           graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BaseAmount:         int(result.BaseAmount()),
 		EstimatedFeeAmount: int(result.EstimatedFeeAmount()),
 		TotalAmount:        int(result.TotalAmount()),

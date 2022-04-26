@@ -1,7 +1,5 @@
 import { Network, QueryResponseCache } from 'relay-runtime'
 
-import { registerLoader } from './moduleLoader'
-
 const ONE_MINUTE_IN_MS = 60 * 1000
 
 export function createNetwork (fetchFnOverride) {
@@ -33,22 +31,10 @@ export function createNetwork (fetchFnOverride) {
   }
 
   async function fetchFn (...args) {
-    const response = await fetchResponse(...args)
-
-    if (Array.isArray(response.extensions?.modules)) {
-      registerModuleLoaders(response.extensions.modules)
-    }
-
-    return response
+    return await fetchResponse(...args)
   }
 
   const network = Network.create(fetchFn)
   network.responseCache = responseCache
   return network
-}
-
-function registerModuleLoaders (modules) {
-  modules.forEach((module) => {
-    registerLoader(module, async () => await import(`../../__generated__/${module}`))
-  })
 }

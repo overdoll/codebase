@@ -1,28 +1,18 @@
 import { Environment, RecordSource, Store } from 'relay-runtime'
-import moduleLoader from './moduleLoader'
 import { createNetwork } from './network'
-
-const IS_SERVER = typeof window === typeof undefined
+import CanUseDOM from '../operations/CanUseDOM'
 
 const CLIENT_DEBUG = true
 const SERVER_DEBUG = false
 
-const createEnvironment = (fetchFnOverride) => {
-  // Operation loader is reponsible for loading JS modules/components
-  // for data-processing and rendering
-  const operationLoader = {
-    get: (name) => moduleLoader(name).get(),
-    load: (name) => moduleLoader(name).load()
-  }
-
+const createEnvironment = (fetchFnOverride): Environment => {
   const network = createNetwork(fetchFnOverride)
   const environment = new Environment({
     network,
-    store: new Store(new RecordSource(), { operationLoader }),
-    operationLoader,
-    isServer: IS_SERVER,
+    store: new Store(new RecordSource(), {}),
+    isServer: CanUseDOM,
     log (event) {
-      if ((IS_SERVER && SERVER_DEBUG) || (!IS_SERVER && CLIENT_DEBUG)) {
+      if ((!CanUseDOM && SERVER_DEBUG) || (CanUseDOM && CLIENT_DEBUG)) {
         console.debug('[relay environment event]', event)
       }
     }

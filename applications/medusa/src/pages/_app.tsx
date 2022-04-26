@@ -8,7 +8,7 @@ import NextApp from 'next/app'
 import Root from '../domain/app'
 import 'swiper/css'
 import 'swiper/css/scrollbar'
-import setupSecurityToken from '@//:modules/next/security'
+import getSecurityTokenFromCookie from '@//:modules/next/getSecurityTokenFromCookie'
 import createCache from '@emotion/cache'
 import NextQueryParamProvider from '@//:modules/next/NextQueryParamProvider'
 import { CookiesProvider } from 'react-cookie'
@@ -20,12 +20,10 @@ import { CustomAppProps, GetRelayPreloadPropsReturn, RequestProps } from '@//:ty
 import dateFnsLocale from 'date-fns/locale/en-US'
 import { ReactRelayContainer } from '@//:modules/relay/container'
 import fetchQuery from '@//:modules/relay/fetchQuery'
-import { clientFetch, serverFetch } from '@//:modules/relay/fetch'
+import { clientFetch, serverFetch } from '@//:modules/next/fetch'
 import { createEnvironment } from '@//:modules/relay/environment'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import { HydrateProvider } from '@//:modules/hydrate'
-
-const IS_SERVER = typeof window === typeof undefined
 
 let securityTokenCache = ''
 
@@ -36,7 +34,7 @@ const App = ({
   securityToken,
   environment
 }: CustomAppProps): JSX.Element => {
-  if (!IS_SERVER) {
+  if (CanUseDOM) {
     securityTokenCache = securityToken
   }
   // For initial request and transitions to pages that export `getServerSideProps`,
@@ -113,8 +111,8 @@ App.getInitialProps = async function (app) {
     app.ctx.locale = 'en'
   }
 
-  if (IS_SERVER) {
-    securityToken = setupSecurityToken(app.ctx)
+  if (!CanUseDOM) {
+    securityToken = getSecurityTokenFromCookie(app.ctx)
     fetchFn = serverFetch(app.ctx.req, app.ctx.res)
     environment = createEnvironment(fetchFn)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
