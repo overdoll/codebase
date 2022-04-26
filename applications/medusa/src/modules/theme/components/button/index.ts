@@ -333,7 +333,7 @@ const sizes = {
     fontSize: 'sm',
     px: 3,
     borderRadius: 'semi',
-    fontWeight: 'normal'
+    fontWeight: 'semibold'
   },
   xs: {
     h: 6,

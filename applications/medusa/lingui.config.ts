@@ -138,6 +138,18 @@ const ClubCatalog = [
     include: ['src/domain/club/posts/']
   },
   {
+    path: 'src/domain/club/revenue/root/__locale__/{locale}/index',
+    include: ['src/domain/club/revenue/root/']
+  },
+  {
+    path: 'src/domain/club/revenue/payments/__locale__/{locale}/index',
+    include: ['src/domain/club/revenue/payments/']
+  },
+  {
+    path: 'src/domain/club/revenue/payout/__locale__/{locale}/index',
+    include: ['src/domain/club/revenue/payout/']
+  },
+  {
     path: 'src/domain/club/settings/root/__locale__/{locale}/index',
     include: ['src/domain/club/settings/root/']
   },

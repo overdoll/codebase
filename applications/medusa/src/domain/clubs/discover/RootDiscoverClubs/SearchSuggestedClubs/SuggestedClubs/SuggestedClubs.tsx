@@ -1,13 +1,12 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { useLazyLoadQuery } from 'react-relay/hooks'
-import { Trans } from '@lingui/macro'
 import { Box } from '@chakra-ui/react'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import { EmptyBoundary } from '@//:modules/content/Placeholder'
-import JoinClubFromTile from '../../../../../[slug]/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
+import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
+import JoinClubFromTile
+  from '../../../../../[slug]/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -64,9 +63,7 @@ export default function SuggestedClubs ({
     <>
       <EmptyBoundary
         fallback={
-          <SmallBackgroundBox>
-            <Trans>No clubs found</Trans>
-          </SmallBackgroundBox>
+          <EmptyClubs />
         }
         condition={data.clubs.edges.length < 1}
       >

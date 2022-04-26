@@ -36,16 +36,16 @@ const flexProps = {
   px: 3,
   align: 'center',
   w: '100%',
-  justify: 'space-between'
+  justify: 'space-between',
 }
 
 export default function SelectClubs ({
-  searchArguments
+  searchArguments,
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SelectClubsQuery>(
     Query,
     searchArguments.variables,
-    searchArguments.options
+    searchArguments.options,
   )
 
   if (queryData.club == null || queryData.viewer == null) {
