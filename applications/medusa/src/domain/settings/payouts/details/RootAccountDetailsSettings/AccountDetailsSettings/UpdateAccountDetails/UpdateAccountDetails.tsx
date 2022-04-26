@@ -1,5 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UpdateAccountDetailsFragment$key } from '@//:artifacts/UpdateAccountDetailsFragment.graphql'
+import type { UpdateAccountDetailsMutation } from '@//:artifacts/UpdateAccountDetailsMutation.graphql'
 import { Stack } from '@chakra-ui/react'
 import {
   Form,
@@ -56,6 +57,7 @@ const Mutation = graphql`
           id
           name
           emoji
+          payoutMethods
         }
       }
     }
@@ -65,7 +67,7 @@ const Mutation = graphql`
 export default function UpdateAccountDetails ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [commit, isInFlight] = useMutation(Mutation)
+  const [commit, isInFlight] = useMutation<UpdateAccountDetailsMutation>(Mutation)
 
   const schema = Joi.object({
     countryId: GenericTagId(),
@@ -104,6 +106,13 @@ export default function UpdateAccountDetails ({ query }: Props): JSX.Element {
           status: 'error',
           title: t`There was an error updating your account details`
         })
+      },
+      updater: (store) => {
+        const viewer = store.getRoot().getLinkedRecord('viewer')
+        if (viewer != null) {
+          const payload = store.getRootField('updateAccountDetails').getLinkedRecord('accountDetails')
+          viewer.setLinkedRecord(payload, 'details')
+        }
       }
     })
   }
@@ -159,7 +168,7 @@ export default function UpdateAccountDetails ({ query }: Props): JSX.Element {
             </Trans>
           </InputHeader>
           <InputBody>
-            <CountryInput />
+            <CountryInput variant='solid' />
           </InputBody>
           <InputFooter />
         </FormInput>

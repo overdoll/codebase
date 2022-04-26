@@ -4,7 +4,7 @@ import type {
   PayoutMethodSettingsQuery as PayoutMethodSettingsQueryType
 } from '@//:artifacts/PayoutMethodSettingsQuery.graphql'
 import PayoutMethodSettingsQuery from '@//:artifacts/PayoutMethodSettingsQuery.graphql'
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import PayoutMethodSettings from './PayoutMethodSettings/PayoutMethodSettings'
@@ -39,16 +39,6 @@ const RootPayoutMethodSettings: PageProps<Props> = (props: Props) => {
             Back to Payouts Settings
           </Trans>
         </BackButton>
-        <PageSectionWrap>
-          <PageSectionTitle>
-            <Trans>
-              Payout Method
-            </Trans>
-          </PageSectionTitle>
-          <PageSectionDescription>
-            Select a payout method that works best for you.
-          </PageSectionDescription>
-        </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
             <PayoutMethodSettings query={queryRef as PreloadedQuery<PayoutMethodSettingsQueryType>} />

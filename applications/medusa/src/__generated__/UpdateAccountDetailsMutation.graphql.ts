@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<286d65c61b9900983b9ce63feab03370>>
- * @relayHash 2cf6efdfb1d7452132948d2adf541905
+ * @generated SignedSource<<21a3543fde9286d8c7156dedbc533010>>
+ * @relayHash e393fc31df6535db2a0d9c2e10764c98
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2cf6efdfb1d7452132948d2adf541905
+// @relayRequestID e393fc31df6535db2a0d9c2e10764c98
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+export type PayoutMethod = "PAXUM" | "%future added value";
 export type UpdateAccountDetailsInput = {
   countryId: string;
   firstName: string;
@@ -31,6 +32,7 @@ export type UpdateAccountDetailsMutation$data = {
         readonly id: string;
         readonly name: string;
         readonly emoji: string;
+        readonly payoutMethods: ReadonlyArray<PayoutMethod>;
       };
     } | null;
   } | null;
@@ -116,6 +118,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "emoji",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "payoutMethods",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -145,7 +154,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "2cf6efdfb1d7452132948d2adf541905",
+    "id": "e393fc31df6535db2a0d9c2e10764c98",
     "metadata": {},
     "name": "UpdateAccountDetailsMutation",
     "operationKind": "mutation",
@@ -154,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0c8cad5a0a32240d52c28bf26929646";
+(node as any).hash = "64e63bb13c0db49e2841ce66b4871047";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e81025805bd928ed7f130a2cd37ed203>>
- * @relayHash 9343b10e35a53bef9b881dbda4bef88c
+ * @generated SignedSource<<cc2e0df1b554120f07214588d69ac169>>
+ * @relayHash bdb3c15f83326969860a6f5976dfb9d0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9343b10e35a53bef9b881dbda4bef88c
+// @relayRequestID bdb3c15f83326969860a6f5976dfb9d0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type PayoutMethod = "PAXUM" | "%future added value";
 export type PayoutMethodSettingsQuery$variables = {};
 export type PayoutMethodSettingsQueryVariables = PayoutMethodSettingsQuery$variables;
@@ -19,10 +20,12 @@ export type PayoutMethodSettingsQuery$data = {
   readonly viewer: {
     readonly payoutMethod: {
       readonly __typename: string;
+      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;
     } | null;
     readonly details: {
       readonly country: {
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
+        readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment" | "PayoutCountryNotSupportedFragment">;
       };
     } | null;
   };
@@ -80,7 +83,12 @@ return {
               "name": "payoutMethod",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                (v0/*: any*/),
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PayoutMethodDeleteFragment"
+                }
               ],
               "storageKey": null
             },
@@ -100,7 +108,17 @@ return {
                   "name": "country",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/)
+                    (v1/*: any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "PayoutMethodSetupFlowFragment"
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "PayoutCountryNotSupportedFragment"
+                    }
                   ],
                   "storageKey": null
                 }
@@ -141,9 +159,20 @@ return {
             "selections": [
               (v0/*: any*/),
               {
+                "kind": "TypeDiscriminator",
+                "abstractKey": "__isAccountPayoutMethod"
+              },
+              {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v2/*: any*/)
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "email",
+                    "storageKey": null
+                  }
                 ],
                 "type": "AccountPaxumPayoutMethod",
                 "abstractKey": null
@@ -168,6 +197,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  },
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -183,7 +219,7 @@ return {
     ]
   },
   "params": {
-    "id": "9343b10e35a53bef9b881dbda4bef88c",
+    "id": "bdb3c15f83326969860a6f5976dfb9d0",
     "metadata": {},
     "name": "PayoutMethodSettingsQuery",
     "operationKind": "query",
@@ -192,7 +228,7 @@ return {
 };
 })();
 
-(node as any).hash = "1df5214f2d269b82cda3a006e0265f95";
+(node as any).hash = "8a9e6f04333b6305f4f1bdefcf5d4144";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

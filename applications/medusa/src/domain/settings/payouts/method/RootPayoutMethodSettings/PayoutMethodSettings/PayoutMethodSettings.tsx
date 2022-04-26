@@ -1,6 +1,9 @@
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { PayoutMethodSettingsQuery } from '@//:artifacts/PayoutMethodSettingsQuery.graphql'
+import PayoutMethodSetupFlow from './PayoutMethodSetupFlow/PayoutMethodSetupFlow'
+import PayoutCountryNotSupported from './PayoutCountryNotSupported/PayoutCountryNotSupported'
+import PayoutMethodDelete from './PayoutMethodDelete/PayoutMethodDelete'
 
 interface Props {
   query: PreloadedQuery<PayoutMethodSettingsQuery>
@@ -11,10 +14,13 @@ const Query = graphql`
     viewer @required(action: THROW) {
       payoutMethod {
         __typename
+        ...PayoutMethodDeleteFragment
       }
       details {
         country {
           payoutMethods
+          ...PayoutMethodSetupFlowFragment
+          ...PayoutCountryNotSupportedFragment
         }
       }
     }
@@ -28,18 +34,24 @@ export default function PayoutMethodSettings (props: Props): JSX.Element {
   )
 
   if (data?.viewer?.details?.country == null) {
-    return <>setup account details first</>
+    return (
+      <>setup account details first</>
+    )
   }
 
   if (data.viewer.payoutMethod != null) {
-    return <>show payout method and can delete</>
+    return (
+      <PayoutMethodDelete query={data.viewer.payoutMethod} />
+    )
   }
 
-  if (data.viewer.details.country.payoutMethods.length < 0) {
-    return <>country not supported</>
+  if (data.viewer.details.country.payoutMethods.length < 1) {
+    return (
+      <PayoutCountryNotSupported query={data.viewer.details.country} />
+    )
   }
 
   return (
-    <>setup payout method flow</>
+    <PayoutMethodSetupFlow query={data.viewer.details.country} />
   )
 }

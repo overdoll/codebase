@@ -29,19 +29,31 @@ export default function PayoutMethod ({ query }: Props): JSX.Element {
   switch (data.__typename) {
     case 'AccountPaxumPayoutMethod':
       return (
-        <Stack spacing={1}>
-          <Icon icon={PaxumLogo} w={8} h={4} fill='gray.00' />
-          <HStack spacing={2}>
-            <Heading fontSize='sm' color='gray.100'>
-              <Trans>
+        <HStack align='flex-start' justify='space-between'>
+          <Stack spacing={1}>
+            <HStack>
+              <Heading fontSize='sm' color='gray.100'>
+                <Trans>
+                  Payout Method
+                </Trans>
+              </Heading>
+              <Heading fontSize='sm' color='gray.200'>
                 Paxum
-              </Trans>
-            </Heading>
-            <Heading fontSize='sm' color='gray.200'>
-              {data.email}
-            </Heading>
-          </HStack>
-        </Stack>
+              </Heading>
+            </HStack>
+            <HStack>
+              <Heading fontSize='sm' color='gray.100'>
+                <Trans>
+                  Email
+                </Trans>
+              </Heading>
+              <Heading fontSize='sm' color='gray.200'>
+                {data.email}
+              </Heading>
+            </HStack>
+          </Stack>
+          <Icon icon={PaxumLogo} h={4} />
+        </HStack>
       )
     default:
       return <></>

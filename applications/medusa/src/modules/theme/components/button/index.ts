@@ -332,7 +332,7 @@ const sizes = {
     minW: 8,
     fontSize: 'sm',
     px: 3,
-    borderRadius: 'md',
+    borderRadius: 'semi',
     fontWeight: 'normal'
   },
   xs: {
