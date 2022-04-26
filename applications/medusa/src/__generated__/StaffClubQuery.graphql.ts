@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3d4f4b74ccf05cd91647fec03010efb3>>
- * @relayHash dc5705f297645120b27a5dce3f2e5c5c
+ * @generated SignedSource<<eb4452637331cec3cf848e7e65315373>>
+ * @relayHash d804c36c3755aabb15c4388bd8dd74e1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dc5705f297645120b27a5dce3f2e5c5c
+// @relayRequestID d804c36c3755aabb15c4388bd8dd74e1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,10 +20,7 @@ export type StaffClubQueryVariables = StaffClubQuery$variables;
 export type StaffClubQuery$data = {
   readonly club: {
     readonly __typename: string;
-    readonly owner: {
-      readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "ProfileStaffButtonFragment">;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "StaffClubStatusFragment" | "StaffClubInfractionsFragment" | "ClubPageButtonFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "StaffClubStatusFragment" | "StaffClubInfractionsFragment" | "ClubPageButtonFragment" | "StaffClubOwnerFragment" | "StaffClubPayoutsFragment" | "StaffClubPaymentsFragment">;
   } | null;
 };
 export type StaffClubQueryResponse = StaffClubQuery$data;
@@ -58,17 +55,24 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -77,7 +81,7 @@ v5 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      (v3/*: any*/),
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -96,7 +100,7 @@ v5 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v3/*: any*/)
+      (v4/*: any*/)
     ],
     "storageKey": null
   },
@@ -107,9 +111,9 @@ v5 = [
     "name": "type",
     "storageKey": null
   },
-  (v4/*: any*/)
+  (v5/*: any*/)
 ],
-v6 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -153,30 +157,19 @@ return {
             "name": "ClubPageButtonFragment"
           },
           {
-            "alias": null,
             "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "owner",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "LargeAccountHeaderFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ProfilePageButtonFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ProfileStaffButtonFragment"
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "StaffClubOwnerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffClubPayoutsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffClubPaymentsFragment"
           }
         ],
         "storageKey": null
@@ -200,13 +193,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -214,7 +201,7 @@ return {
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -236,10 +223,10 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "ClubInfractionHistoryConnection",
             "kind": "LinkedField",
             "name": "infractionHistory",
@@ -261,7 +248,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -291,7 +278,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -339,7 +326,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubInfractionHistory_infractionHistory",
@@ -375,10 +362,87 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
-              (v4/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": null,
+                "kind": "LinkedField",
+                "name": "payoutMethod",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "kind": "TypeDiscriminator",
+                    "abstractKey": "__isAccountPayoutMethod"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v5/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "email",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "AccountPaxumPayoutMethod",
+                    "abstractKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountDetails",
+                "kind": "LinkedField",
+                "name": "details",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "firstName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "lastName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Country",
+                    "kind": "LinkedField",
+                    "name": "country",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "emoji",
+                        "storageKey": null
+                      },
+                      (v5/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v5/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v5/*: any*/)
             ],
             "storageKey": null
           }
@@ -388,7 +452,7 @@ return {
     ]
   },
   "params": {
-    "id": "dc5705f297645120b27a5dce3f2e5c5c",
+    "id": "d804c36c3755aabb15c4388bd8dd74e1",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",
@@ -397,6 +461,6 @@ return {
 };
 })();
 
-(node as any).hash = "da21ffe85515e51bc681cbbbb9427ef1";
+(node as any).hash = "8c2760adf6df3dd21711ccbd970b6e3e";
 
 export default node;

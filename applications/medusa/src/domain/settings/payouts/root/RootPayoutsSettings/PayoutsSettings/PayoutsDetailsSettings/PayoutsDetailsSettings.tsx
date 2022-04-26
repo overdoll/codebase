@@ -1,9 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PayoutsDetailsSettingsFragment$key } from '@//:artifacts/PayoutsDetailsSettingsFragment.graphql'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { LargeBackgroundBox, PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
 import { PayoutDetails } from '@//:assets/icons'
+import AccountDetails from './AccountDetails/AccountDetails'
 
 interface Props {
   query: PayoutsDetailsSettingsFragment$key
@@ -13,12 +14,7 @@ const Fragment = graphql`
   fragment PayoutsDetailsSettingsFragment on Account {
     details {
       id
-      firstName
-      lastName
-      country {
-        name
-        emoji
-      }
+      ...AccountDetailsFragment
     }
   }
 `
@@ -49,38 +45,7 @@ export default function PayoutsDetailsSettings ({ query }: Props): JSX.Element {
                 Your Payout Details
               </Trans>
             </Heading>
-            <Stack spacing={1}>
-              <HStack spacing={2}>
-                <Heading fontSize='sm' color='gray.100'>
-                  <Trans>
-                    First Name
-                  </Trans>
-                </Heading>
-                <Heading fontSize='sm' color='gray.200'>
-                  {data.details.firstName}
-                </Heading>
-              </HStack>
-              <HStack spacing={2}>
-                <Heading fontSize='sm' color='gray.100'>
-                  <Trans>
-                    Last Name
-                  </Trans>
-                </Heading>
-                <Heading fontSize='sm' color='gray.200'>
-                  {data.details.lastName}
-                </Heading>
-              </HStack>
-              <HStack spacing={2}>
-                <Heading fontSize='sm' color='gray.100'>
-                  <Trans>
-                    Country
-                  </Trans>
-                </Heading>
-                <Heading fontSize='sm' color='gray.200'>
-                  {data.details.country.emoji} {data.details.country.name}
-                </Heading>
-              </HStack>
-            </Stack>
+            <AccountDetails query={data.details} />
           </Stack>
         </LargeBackgroundBox>
       )}

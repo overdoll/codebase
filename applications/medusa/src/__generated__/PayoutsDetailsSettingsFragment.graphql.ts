@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b47d27fa1074b04e880e1fd96fa6f4d9>>
+ * @generated SignedSource<<e22c9cd8b676dc54825ff5cf80c3da54>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,12 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PayoutsDetailsSettingsFragment$data = {
   readonly details: {
     readonly id: string;
-    readonly firstName: string;
-    readonly lastName: string;
-    readonly country: {
-      readonly name: string;
-      readonly emoji: string;
-    };
+    readonly " $fragmentSpreads": FragmentRefs<"AccountDetailsFragment">;
   } | null;
   readonly " $fragmentType": "PayoutsDetailsSettingsFragment";
 };
@@ -50,43 +45,9 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
-          "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "firstName",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "lastName",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Country",
-          "kind": "LinkedField",
-          "name": "country",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "name",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "emoji",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "AccountDetailsFragment"
         }
       ],
       "storageKey": null
@@ -96,6 +57,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f11144b5cc8a61fb4eb079044b0491ee";
+(node as any).hash = "afff0faa79e95ef48d941da282648930";
 
 export default node;
