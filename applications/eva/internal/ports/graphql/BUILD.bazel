@@ -16,6 +16,7 @@ go_library(
         "//applications/eva/internal/ports/graphql/queries",
         "//applications/eva/internal/ports/graphql/resolvers",
         "//applications/eva/internal/ports/graphql/types",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/introspection",

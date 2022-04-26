@@ -8,7 +8,7 @@ import NextApp from 'next/app'
 import Root from '../domain/app'
 import 'swiper/css'
 import 'swiper/css/scrollbar'
-import getSecurityTokenFromCookie from '@//:modules/next/getSecurityTokenFromCookie'
+import getOrCreateSecurityToken from '@//:modules/next/getOrCreateSecurityToken'
 import createCache from '@emotion/cache'
 import NextQueryParamProvider from '@//:modules/next/NextQueryParamProvider'
 import { CookiesProvider } from 'react-cookie'
@@ -19,7 +19,7 @@ import { initializeLocaleData } from '@//:modules/locale'
 import { CustomAppProps, CustomPageAppProps, GetRelayPreloadPropsReturn, RequestProps } from '@//:types/app'
 import dateFnsLocale from 'date-fns/locale/en-US'
 import { ReactRelayContainer } from '@//:modules/relay/container'
-import { clientFetch, serverFetch } from '@//:modules/next/fetch'
+import { clientFetch, serverFetch } from '@//:modules/next/relayGQLFetch'
 import { createEnvironment } from '@//:modules/relay/environment'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import { HydrateProvider } from '@//:modules/hydrate'
@@ -121,7 +121,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   }
 
   if (!CanUseDOM) {
-    securityToken = getSecurityTokenFromCookie(app.ctx)
+    securityToken = getOrCreateSecurityToken(app.ctx)
     fetchFn = serverFetch(app.ctx.req, app.ctx.res)
     environment = createEnvironment(fetchFn, null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)

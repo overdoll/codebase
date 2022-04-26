@@ -12,6 +12,7 @@ describe('Settings - Add Email', () => {
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {
     cy.visit('/settings/profile')
+    cy.waitUntil(() => cy.findByRole('button', { name: /Manage Emails/iu }).should('not.be.disabled'))
     cy.findByText('Manage Emails').should('be.visible').click()
     cy.url().should('include', '/settings/profile/emails')
 

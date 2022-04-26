@@ -58,7 +58,6 @@ export default function SuspenseImage (props: Props): JSX.Element {
   if (!isHydrated) {
     return (
       <Img
-        src={props.src}
         {...props}
       />
     )

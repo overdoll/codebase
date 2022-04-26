@@ -14,6 +14,14 @@ import (
 	"overdoll/libraries/router"
 )
 
+type GraphQLErrorResponse struct {
+	Errors []struct {
+		Message   string   `json:"message"`
+		Path      []string `json:"path"`
+		Locations []string `json:"locations"`
+	} `json:"errors"`
+}
+
 // Custom middleware that will ensure our security cookie + header is present
 // Essentially, this is CSRF protection
 func secureRequest() gin.HandlerFunc {
@@ -22,11 +30,15 @@ func secureRequest() gin.HandlerFunc {
 		ck, err := c.Request.Cookie("od.security")
 
 		if err != nil && err == http.ErrNoCookie {
-			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
 				{
-					"message":   "missing security cookie",
-					"path":      []string{},
-					"locations": []string{},
+					Message:   "missing security cookie",
+					Path:      []string{},
+					Locations: []string{},
 				},
 			}})
 			return
@@ -35,11 +47,15 @@ func secureRequest() gin.HandlerFunc {
 		securityHeader := c.Request.Header.Get("X-overdoll-Security")
 
 		if securityHeader == "" {
-			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
 				{
-					"message":   "missing security header",
-					"path":      []string{},
-					"locations": []string{},
+					Message:   "missing security header",
+					Path:      []string{},
+					Locations: []string{},
 				},
 			}})
 			return
@@ -48,22 +64,30 @@ func secureRequest() gin.HandlerFunc {
 		decrypted, err := crypt.DecryptWithCustomPassphrase(ck.Value, os.Getenv("SECURITY_SECRET"))
 
 		if err != nil {
-			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
 				{
-					"message":   "invalid security cookie",
-					"path":      []string{},
-					"locations": []string{},
+					Message:   "invalid security cookie",
+					Path:      []string{},
+					Locations: []string{},
 				},
 			}})
 			return
 		}
 
 		if subtle.ConstantTimeCompare([]byte(decrypted), []byte(c.Request.Header.Get("X-overdoll-Security"))) != 1 {
-			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
 				{
-					"message":   "security header and cookie mismatch",
-					"path":      []string{},
-					"locations": []string{},
+					Message:   "security header and cookie mismatch",
+					Path:      []string{},
+					Locations: []string{},
 				},
 			}})
 			return

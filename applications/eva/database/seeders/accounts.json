@@ -6,8 +6,7 @@
     "roles": [
       "moderator"
     ],
-    "verified": true,
-    "language": "en"
+    "verified": true
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
@@ -16,31 +15,27 @@
     "roles": [
       "staff"
     ],
-    "verified": true,
-    "language": "en"
+    "verified": true
   },
   {
     "id": "1q7MIqqnkzew33q4elXuN1Ri27d",
     "username": "artist_unverified",
     "email": "i2fhz.artist_unverified@inbox.testmail.app",
     "roles": [],
-    "verified": false,
-    "language": "en"
+    "verified": false
   },
   {
     "id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
     "username": "artist_verified",
     "email": "i2fhz.artist_verified@inbox.testmail.app",
     "roles": [],
-    "verified": true,
-    "language": "en"
+    "verified": true
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
     "username": "testaccountforstuff",
     "email": "i2fhz.test-account@inbox.testmail.app",
     "roles": [],
-    "multi_factor_enabled": true,
-    "language": "en"
+    "multi_factor_enabled": true
   }
 ]

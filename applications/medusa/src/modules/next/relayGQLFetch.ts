@@ -20,7 +20,9 @@ export const clientFetch = (securityToken) => {
   }
 }
 
-export const serverFetch = (req, res) => {
+// used for fetching inside of Next.js middleware
+// note that we have to manually assign security cookies incase they are not present
+export const serverMiddlewareFetch = (req) => {
   return async (data) => {
     const headers = {
       'Content-Type': 'application/json',
@@ -28,9 +30,7 @@ export const serverFetch = (req, res) => {
       cookie: ''
     }
 
-    Object.entries(
-      req.headers ?? {}
-    ).forEach(([key, value]) => {
+    req.headers.forEach((value, key) => {
       headers[key] = value
     })
 
@@ -43,10 +43,41 @@ export const serverFetch = (req, res) => {
     } else {
       token = randomBytes(64).toString('hex')
       const encrypted = gcm.encrypt(token, process.env.SECURITY_SECRET)
-      headers.cookie = headers.cookie + ';od.security=' + encrypted
+
+      if (headers.cookie === '') {
+        headers.cookie = `od.security=${encrypted}`
+      } else {
+        headers.cookie = `${headers.cookie}';od.security=${encrypted}`
+      }
     }
 
     headers['X-overdoll-Security'] = token
+
+    const response = await fetch(
+      process.env.SERVER_GRAPHQL_ENDPOINT as string,
+      {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(data)
+      }
+    )
+
+    return await response.json()
+  }
+}
+
+export const serverFetch = (req, res) => {
+  return async (data) => {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+
+    Object.entries(
+      req.headers ?? {}
+    ).forEach(([key, value]) => {
+      headers[key] = value
+    })
 
     const response = await fetch(
       process.env.SERVER_GRAPHQL_ENDPOINT as string,

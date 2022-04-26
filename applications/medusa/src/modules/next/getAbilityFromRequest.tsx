@@ -2,12 +2,12 @@ import { NextRequest } from 'next/server'
 import RootQuery from '@//:artifacts/RootQuery.graphql'
 import { AppAbility } from '../authorization/types'
 import defineAbility from '../authorization/defineAbility'
-import { serverFetch } from './fetch'
+import { serverMiddlewareFetch } from './relayGQLFetch'
 import { createEnvironment } from '../relay/environment'
 import { GraphQLResponseWithData } from 'relay-runtime/lib/network/RelayNetworkTypes'
 
 const getAbilityFromRequest = async (request: NextRequest): Promise<AppAbility> => {
-  const environment = createEnvironment(serverFetch(request, null), null)
+  const environment = createEnvironment(serverMiddlewareFetch(request), null)
   const data = await environment
     .getNetwork()
     .execute(RootQuery.params, {}, {})
