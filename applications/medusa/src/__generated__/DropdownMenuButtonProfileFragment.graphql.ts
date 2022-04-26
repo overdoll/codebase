@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7228c7c5ab033d65094ffa6cdbd6a2f1>>
+ * @generated SignedSource<<ab036987dfde268018ca70b180dd724e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DropdownMenuButtonProfileFragment$data = {
+  readonly id: string;
   readonly username: string;
   readonly avatar: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
@@ -29,6 +30,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "DropdownMenuButtonProfileFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -57,6 +65,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "360aba14d2fa06a5c672bf759e028e4b";
+(node as any).hash = "1704688479f739fdaa741c842fd0d05d";
 
 export default node;

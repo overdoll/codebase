@@ -5,11 +5,11 @@ import CanUseDOM from '../operations/CanUseDOM'
 const CLIENT_DEBUG = true
 const SERVER_DEBUG = false
 
-const createEnvironment = (fetchFnOverride): Environment => {
+const createEnvironment = (fetchFnOverride, existingStore: any): Environment => {
   const network = createNetwork(fetchFnOverride)
   const environment = new Environment({
     network,
-    store: new Store(new RecordSource(), {}),
+    store: new Store(new RecordSource(existingStore), {}),
     isServer: CanUseDOM,
     log (event) {
       if ((!CanUseDOM && SERVER_DEBUG) || (CanUseDOM && CLIENT_DEBUG)) {
@@ -18,6 +18,7 @@ const createEnvironment = (fetchFnOverride): Environment => {
     }
   })
 
+  // @ts-expect-error
   environment.getNetwork().responseCache = network.responseCache
 
   return environment

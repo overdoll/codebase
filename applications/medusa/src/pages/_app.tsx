@@ -16,27 +16,31 @@ import { FlashProvider } from '@//:modules/flash'
 import Cookies from 'universal-cookie'
 import { useRouter } from 'next/router'
 import { initializeLocaleData } from '@//:modules/locale'
-import { CustomAppProps, GetRelayPreloadPropsReturn, RequestProps } from '@//:types/app'
+import { CustomAppProps, CustomPageAppProps, GetRelayPreloadPropsReturn, RequestProps } from '@//:types/app'
 import dateFnsLocale from 'date-fns/locale/en-US'
 import { ReactRelayContainer } from '@//:modules/relay/container'
-import fetchQuery from '@//:modules/relay/fetchQuery'
 import { clientFetch, serverFetch } from '@//:modules/next/fetch'
 import { createEnvironment } from '@//:modules/relay/environment'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import { HydrateProvider } from '@//:modules/hydrate'
+import prepass from 'react-ssr-prepass'
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 let securityTokenCache = ''
+let globalRelayEnvironment
 
-const App = ({
+const MyApp = ({
   Component,
   pageProps,
   requestProps,
   securityToken,
-  environment
-}: CustomAppProps): JSX.Element => {
+  environment,
+  relayStore
+}: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
   }
+
   // For initial request and transitions to pages that export `getServerSideProps`,
   // `RelayApp.getInitialProps` isn't invoked on the client and props are sent over the wire.
   // So we always create an environment (or use a previously created and cached one) on the client.
@@ -66,7 +70,11 @@ const App = ({
     key: 'od'
   }), [])
 
-  environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache)) : environment, [])
+  environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache), relayStore) : environment, [])
+
+  if (CanUseDOM) {
+    globalRelayEnvironment = environment
+  }
 
   return (
     <HydrateProvider>
@@ -96,16 +104,17 @@ const App = ({
   )
 }
 
-export default App
-
 const componentsToLoad = [Root]
 
-App.getInitialProps = async function (app) {
+MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
+  const initialProps = await NextApp.getInitialProps(app)
+
   componentsToLoad.push(app.Component)
 
   let securityToken
   let fetchFn
   let environment
+  let relayStore
 
   if (app.ctx.locale == null) {
     app.ctx.locale = 'en'
@@ -114,15 +123,19 @@ App.getInitialProps = async function (app) {
   if (!CanUseDOM) {
     securityToken = getSecurityTokenFromCookie(app.ctx)
     fetchFn = serverFetch(app.ctx.req, app.ctx.res)
-    environment = createEnvironment(fetchFn)
+    environment = createEnvironment(fetchFn, null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {
     securityToken = securityTokenCache
     fetchFn = clientFetch(securityToken)
+    environment = globalRelayEnvironment
     app.ctx.cookies = new Cookies()
   }
 
-  const requestProps: RequestProps = {}
+  const requestProps: RequestProps = {
+    preloadedQueryResults: {}
+  }
+
   let queries: GetRelayPreloadPropsReturn = {}
 
   for (let i = 0; i < componentsToLoad.length; i++) {
@@ -142,27 +155,50 @@ App.getInitialProps = async function (app) {
         variables
       }]) => {
         return await new Promise((resolve) => {
-          fetchQuery(fetchFn)(params, variables).then(response => {
-            resolve([
-              name,
-              {
-                params,
-                variables,
-                response
-              }
-            ])
-          })
+          environment
+            .getNetwork()
+            .execute(params, variables, { fetchPolicy: 'store-or-network' })
+            .toPromise()
+            .then(response => {
+              resolve([
+                name,
+                {
+                  params,
+                  variables,
+                  response
+                }
+              ])
+            })
         })
       })
     )
   )
 
-  const rest = await NextApp.getInitialProps(app)
-
-  return {
-    ...rest,
+  const props: CustomAppProps = {
+    ...initialProps,
     requestProps,
     securityToken,
-    environment
+    environment,
+    relayStore
   }
+
+  // do a prepass to collect all queries and wait for them to complete
+  // TODO: when Next.js supports suspense with data fetching, we can get rid of this
+  if (!CanUseDOM) {
+    await prepass(
+      <RouterContext.Provider
+        value={
+          app.router
+        }
+      >
+        <MyApp {...props} {...app} Component={app.Component} />
+      </RouterContext.Provider>
+    )
+
+    props.relayStore = environment.getStore().getSource()
+  }
+
+  return props
 }
+
+export default MyApp

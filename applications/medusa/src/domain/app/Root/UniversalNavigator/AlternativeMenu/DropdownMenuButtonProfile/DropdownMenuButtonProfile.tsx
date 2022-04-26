@@ -12,6 +12,7 @@ interface Props {
 
 const DropdownMenuButtonProfileGQL = graphql`
   fragment DropdownMenuButtonProfileFragment on Account {
+    id
     username
     avatar {
       ...ResourceIconFragment
@@ -35,6 +36,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
           align='center'
         >
           <ResourceIcon
+            seed={data?.id}
             w='60px'
             pointerEvents='none'
             h='60px'
@@ -63,6 +65,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
       <RenderOnMobile>
         <Flex direction='column' align='center'>
           <ResourceIcon
+            seed={data?.id}
             w={8}
             h={8}
             query={data?.avatar}

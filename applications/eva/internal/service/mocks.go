@@ -24,7 +24,7 @@ func (c CarrierServiceMock) ConfirmAccountEmail(ctx context.Context, accountId, 
 	return c.util.SendEmail(ctx, confirmEmailPrefix, email, map[string]interface{}{"id": id, "secret": secret})
 }
 
-func (c CarrierServiceMock) NewLoginToken(ctx context.Context, email, token, secret, language string) error {
+func (c CarrierServiceMock) NewLoginToken(ctx context.Context, email, token, secret string) error {
 	return c.util.SendEmail(ctx, tokenEmailPrefix, email, map[string]interface{}{"token": token, "secret": secret})
 }
 

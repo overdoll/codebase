@@ -1,12 +1,20 @@
 import { RelayEnvironmentProvider, useRelayEnvironment } from 'react-relay'
 import { Suspense, useMemo } from 'react'
 import ErrorBoundary from '../operations/ErrorBoundary'
+import { IEnvironment } from 'relay-runtime'
+import { RequestProps } from '@//:types/app'
+
+interface ReactRelayContainerProps {
+  requestProps: RequestProps
+  children: any
+  environment: IEnvironment
+}
 
 export function ReactRelayContainer ({
   requestProps,
   environment,
   children
-}): any {
+}: ReactRelayContainerProps): JSX.Element {
   return (
     <RelayEnvironmentProvider environment={environment}>
       <ErrorBoundary>
@@ -20,10 +28,15 @@ export function ReactRelayContainer ({
   )
 }
 
+interface HydrateProps {
+  requestProps: RequestProps
+  children: any
+}
+
 function Hydrate ({
   requestProps,
   children
-}): any {
+}: HydrateProps): any {
   const environment = useRelayEnvironment()
 
   return children(
@@ -31,6 +44,7 @@ function Hydrate ({
       if (requestProps == null) {
         return requestProps
       }
+
       const {
         preloadedQueryResults,
         ...otherProps
@@ -49,9 +63,9 @@ function Hydrate ({
         )) {
         environment
           .getNetwork()
+          // @ts-expect-error
           .responseCache
           .set(params.id, variables, response)
-        // TODO: create using a function exported from react-relay package
         queryRefs[queryName] = {
           environment,
           fetchKey: params.id,

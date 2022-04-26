@@ -7,7 +7,6 @@ import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import { Helmet } from 'react-helmet-async'
 import Head from 'next/head'
 
 interface Props {
@@ -17,6 +16,7 @@ interface Props {
 const Query = graphql`
   query ProfileQuery($username: String!) @preloadable {
     account(username: $username) {
+      id
       username
       avatar {
         ...ResourceIconFragment
@@ -53,7 +53,12 @@ export default function Profile (props: Props): JSX.Element {
           >
             <Flex h='100%' w='100%' align='center' justify='center' position='relative'>
               <Stack align='center' p={4} spacing={2}>
-                <ResourceIcon w={16} h={16} query={queryData?.account?.avatar} />
+                <ResourceIcon
+                  seed={queryData?.account?.id}
+                  w={16}
+                  h={16}
+                  query={queryData?.account?.avatar}
+                />
                 <Heading color='gray.00' fontSize='4xl'>
                   {queryData?.account?.username}
                 </Heading>

@@ -11,6 +11,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubTileOverlayFragment on Club {
+    id
     name
     thumbnail {
       ...ResourceIconFragment
@@ -42,7 +43,7 @@ export default function ClubTileOverlay ({
     >
       <Stack w='100%' spacing={4} h='100%' align='center' justify='center'>
         <Stack w='100%' align='center' justify='center' spacing={2}>
-          <ResourceIcon h={12} w={12} query={data.thumbnail} />
+          <ResourceIcon seed={data.id} h={12} w={12} query={data.thumbnail} />
           <Heading textAlign='center' color='gray.00' fontSize='md'>
             {data.name}
           </Heading>

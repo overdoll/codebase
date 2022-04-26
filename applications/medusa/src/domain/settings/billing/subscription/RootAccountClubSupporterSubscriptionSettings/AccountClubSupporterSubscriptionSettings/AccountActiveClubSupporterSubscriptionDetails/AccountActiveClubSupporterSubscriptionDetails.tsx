@@ -21,6 +21,7 @@ const Fragment = graphql`
     supporterSince
     nextBillingDate
     club {
+      id
       name
       slug
       thumbnail {
@@ -59,7 +60,12 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
     <Stack w='100%' spacing={2}>
       <HStack spacing={2} justify='space-between'>
         <HStack align='center' spacing={3}>
-          <ResourceIcon h={10} w={10} query={data?.club.thumbnail} />
+          <ResourceIcon
+            seed={data?.club.id}
+            h={10}
+            w={10}
+            query={data?.club.thumbnail}
+          />
           <Heading
             isTruncated
             fontSize='2xl'

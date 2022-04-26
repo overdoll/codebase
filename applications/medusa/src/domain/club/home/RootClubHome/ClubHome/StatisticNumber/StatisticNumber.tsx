@@ -1,6 +1,8 @@
 import { Box, Flex, Heading, HStack } from '@chakra-ui/react'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 import { Icon } from '@//:modules/content/PageLayout'
+import { Random } from '@//:modules/utilities/random'
+import hash from '@//:modules/utilities/hash'
 
 interface Props {
   value: string
@@ -15,6 +17,8 @@ export default function StatisticNumber ({
   colorScheme,
   icon
 }: Props): JSX.Element {
+  const memoized = useMemo(() => new Random(hash(text)), [text])
+
   const colors = [
     'purple',
     'orange',
@@ -23,7 +27,7 @@ export default function StatisticNumber ({
     'primary'
   ]
 
-  const randomColor = colors[Math.floor(Math.random() * 5)]
+  const randomColor = colors[memoized.nextInt32([0, 4])]
 
   const currentColor: string = colorScheme == null ? randomColor : colorScheme
 

@@ -12,6 +12,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ChangeCategoryThumbnailFragment on Category {
+    id
     thumbnail {
       ...ResourceIconFragment
     }
@@ -33,7 +34,7 @@ export default function ChangeCategoryThumbnail ({ query }: Props): JSX.Element 
       </PageSectionWrap>
       <Stack spacing={2}>
         <Flex w='100%' align='center' justify='center'>
-          <ResourceIcon w={16} h={16} query={data.thumbnail} />
+          <ResourceIcon seed={data.id} w={16} h={16} query={data.thumbnail} />
         </Flex>
         <Collapse>
           <CollapseButton>

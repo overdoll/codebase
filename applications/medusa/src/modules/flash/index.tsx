@@ -1,6 +1,4 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
-import CanUseDOM from '../operations/CanUseDOM'
-import SafeJSONParse from '../operations/SafeJSONParse'
 
 interface Flash {
   flash: (key: string, value: string) => void
@@ -22,11 +20,6 @@ interface Props {
 
 const FlashContext = createContext<Flash | undefined>(undefined)
 
-// On the client, we will attempt to read the flash store from the document
-const initialState = SafeJSONParse(
-  (CanUseDOM && document.getElementById('flash-store')?.textContent) ?? '{}'
-)
-
 // FlashProvider is a universal "flash" provider that works on both the client and the server.
 // On the server, an "override" function should be passed (from connect-flash), which will use the session store as storage
 // On the client, no override function should be passed, which will result in the client using the state as storage
@@ -34,7 +27,7 @@ function FlashProvider ({
   override,
   children
 }: Props): JSX.Element {
-  const [flashState, editFlashState] = useState(initialState)
+  const [flashState, editFlashState] = useState({})
 
   // Flash will add the value to the state or the override
   const flash = (key: string, value: string): void => {

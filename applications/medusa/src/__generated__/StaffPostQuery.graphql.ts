@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8362685440ec51cf135b22935b904c64>>
- * @relayHash 46799f74ab0ae1af041b2795ec5e930b
+ * @generated SignedSource<<cdfda9f9dd19083152086b0106fff32e>>
+ * @relayHash bf2ca9e6d145663ac17871995c9b7947
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 46799f74ab0ae1af041b2795ec5e930b
+// @relayRequestID bf2ca9e6d145663ac17871995c9b7947
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -78,10 +78,17 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -89,7 +96,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -100,22 +107,15 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
 v9 = [
-  (v6/*: any*/),
+  (v7/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -124,12 +124,12 @@ v9 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v5/*: any*/)
+      (v6/*: any*/)
     ],
     "storageKey": null
   },
-  (v7/*: any*/),
-  (v8/*: any*/)
+  (v8/*: any*/),
+  (v5/*: any*/)
 ],
 v10 = {
   "alias": null,
@@ -146,7 +146,7 @@ v11 = [
     "name": "title",
     "storageKey": null
   },
-  (v8/*: any*/)
+  (v5/*: any*/)
 ];
 return {
   "fragment": {
@@ -270,6 +270,7 @@ return {
             "name": "contributor",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -286,8 +287,7 @@ return {
                 "plural": false,
                 "selections": (v9/*: any*/),
                 "storageKey": null
-              },
-              (v8/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -299,6 +299,7 @@ return {
             "name": "club",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               (v10/*: any*/),
               {
                 "alias": null,
@@ -316,12 +317,11 @@ return {
                 "kind": "ScalarField",
                 "name": "slug",
                 "storageKey": null
-              },
-              (v8/*: any*/)
+              }
             ],
             "storageKey": null
           },
-          (v8/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -338,9 +338,9 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
+                  (v8/*: any*/),
                   (v7/*: any*/),
-                  (v6/*: any*/),
-                  (v8/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -358,7 +358,7 @@ return {
                 "name": "isSupporterOnly",
                 "storageKey": null
               },
-              (v8/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -391,7 +391,7 @@ return {
                 "selections": (v11/*: any*/),
                 "storageKey": null
               },
-              (v8/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -411,7 +411,7 @@ return {
     ]
   },
   "params": {
-    "id": "46799f74ab0ae1af041b2795ec5e930b",
+    "id": "bf2ca9e6d145663ac17871995c9b7947",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

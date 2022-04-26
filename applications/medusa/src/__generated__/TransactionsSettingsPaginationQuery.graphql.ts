@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d2f7bc6c9545fa7b55406198309b1567>>
- * @relayHash d1db2bdba3761ddaeb9a572340318c3c
+ * @generated SignedSource<<ab2283ac8874f7d2a48fe087e01ad643>>
+ * @relayHash 3dd904f77517486a3d5dfd56fc322018
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d1db2bdba3761ddaeb9a572340318c3c
+// @relayRequestID 3dd904f77517486a3d5dfd56fc322018
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -206,6 +206,7 @@ return {
                                     "name": "club",
                                     "plural": false,
                                     "selections": [
+                                      (v4/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -256,8 +257,7 @@ return {
                                           (v4/*: any*/)
                                         ],
                                         "storageKey": null
-                                      },
-                                      (v4/*: any*/)
+                                      }
                                     ],
                                     "storageKey": null
                                   }
@@ -381,7 +381,7 @@ return {
     ]
   },
   "params": {
-    "id": "d1db2bdba3761ddaeb9a572340318c3c",
+    "id": "3dd904f77517486a3d5dfd56fc322018",
     "metadata": {},
     "name": "TransactionsSettingsPaginationQuery",
     "operationKind": "query",

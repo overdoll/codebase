@@ -8,6 +8,7 @@ import { Link } from '../../../../../routing'
 const Fragment = graphql`
   fragment PostHeaderClubFragment on Post {
     club {
+      id
       name
       slug
       thumbnail {
@@ -32,6 +33,7 @@ export default function PostHeaderClub ({ query }: Props): JSX.Element {
             h={8}
             w={8}
             mr={3}
+            seed={data?.club?.id}
             query={data?.club?.thumbnail as ResourceIconFragment$key}
           />
           <Heading color='gray.00' fontSize='lg'>

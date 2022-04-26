@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<da18f34b7290f6c676efac480dbeda9c>>
- * @relayHash eadaaabd3f34e02784eb39b5b2206110
+ * @generated SignedSource<<938937700ff5d0df0a8988dc551e93a0>>
+ * @relayHash 3c7324645521b6315d1175c865fc2a2d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eadaaabd3f34e02784eb39b5b2206110
+// @relayRequestID 3c7324645521b6315d1175c865fc2a2d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -330,10 +330,10 @@ return {
                             "name": "categories",
                             "plural": true,
                             "selections": [
+                              (v4/*: any*/),
                               (v8/*: any*/),
                               (v11/*: any*/),
-                              (v10/*: any*/),
-                              (v4/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -345,6 +345,7 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -361,8 +362,7 @@ return {
                               },
                               (v9/*: any*/),
                               (v8/*: any*/),
-                              (v10/*: any*/),
-                              (v4/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -439,7 +439,7 @@ return {
     ]
   },
   "params": {
-    "id": "eadaaabd3f34e02784eb39b5b2206110",
+    "id": "3c7324645521b6315d1175c865fc2a2d",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

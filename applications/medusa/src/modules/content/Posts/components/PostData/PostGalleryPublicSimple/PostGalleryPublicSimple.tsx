@@ -64,9 +64,9 @@ export default function PostGalleryPublicSimple ({
                 }}
               >
                 <Box
-                  bg='gray.800'
-                  w='100%'
-                  cursor='pointer'
+                  bg="gray.800"
+                  w="100%"
+                  cursor="pointer"
                   minH={300}
                   maxH={800}
                 >

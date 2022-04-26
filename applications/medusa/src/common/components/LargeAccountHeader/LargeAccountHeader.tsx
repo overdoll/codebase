@@ -10,6 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment LargeAccountHeaderFragment on Account {
+    id
     username
     avatar {
       ...ResourceIconFragment
@@ -22,7 +23,13 @@ export default function LargeAccountHeader ({ query }: Props): JSX.Element {
 
   return (
     <Flex h={16} align='center'>
-      <ResourceIcon mr={4} h={14} w={14} query={data?.avatar} />
+      <ResourceIcon
+        seed={data.id}
+        mr={4}
+        h={14}
+        w={14}
+        query={data?.avatar}
+      />
       <Heading
         isTruncated
         fontSize='3xl'

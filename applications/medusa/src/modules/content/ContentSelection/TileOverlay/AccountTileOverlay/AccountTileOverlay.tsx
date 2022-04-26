@@ -11,6 +11,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment AccountTileOverlayFragment on Account {
+    id
     avatar {
       ...ResourceIconFragment
       ...ResourceItemFragment
@@ -30,7 +31,7 @@ export default function AccountTileOverlay ({
     }
     >
       <Flex direction='column' align='center' justify='center'>
-        <ResourceIcon mb={2} query={data.avatar} />
+        <ResourceIcon seed={data.id} mb={2} query={data.avatar} />
         <Text fontSize='md' color='gray.00'>
           {data.username}
         </Text>

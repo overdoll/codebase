@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4ebd749b36e0271b042ac206096ce23>>
+ * @generated SignedSource<<44e5e0d2ffff81acd8d689fd18331966>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type ExpiredAccountClubSupporterSubscriptionPreviewFragment$data = {
   readonly supporterSince: any;
   readonly expiredAt: any;
   readonly club: {
+    readonly id: string;
     readonly name: string;
     readonly slug: string;
     readonly thumbnail: {
@@ -61,6 +62,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "name",
           "storageKey": null
         },
@@ -100,6 +108,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0214ef65e49e169556292bee026f3891";
+(node as any).hash = "63631acde9113066c5320af8ff977ccb";
 
 export default node;

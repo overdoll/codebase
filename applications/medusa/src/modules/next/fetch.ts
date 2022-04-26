@@ -2,19 +2,22 @@ import gcm from '../utilities/gcm'
 import { randomBytes } from 'crypto'
 
 export const clientFetch = (securityToken) => {
-  return async (data) => await fetch(
-    '/api/graphql',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-overdoll-Security': securityToken
-      },
-      body: JSON.stringify(data)
-    }
-  )
-    .then(async response => await response.json())
+  return async (data) => {
+    const response = await fetch(
+      '/api/graphql',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-overdoll-Security': securityToken
+        },
+        body: JSON.stringify(data)
+      }
+    )
+
+    return await response.json()
+  }
 }
 
 export const serverFetch = (req, res) => {

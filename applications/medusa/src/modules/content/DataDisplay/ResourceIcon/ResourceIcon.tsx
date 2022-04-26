@@ -9,6 +9,7 @@ import VideoSnippet from '../VideoSnippet/VideoSnippet'
 interface Props extends HTMLChakraProps<any> {
   query: ResourceIconFragment$key | null | undefined
   showBorder?: boolean
+  seed: string | undefined
 }
 
 const Fragment = graphql`
@@ -22,6 +23,7 @@ const Fragment = graphql`
 export default function ResourceIcon ({
   query,
   showBorder = false,
+  seed,
   ...rest
 }: Props): JSX.Element {
   if (query === undefined) return <></>
@@ -31,7 +33,7 @@ export default function ResourceIcon ({
   if (data == null) {
     return (
       <Flex flexShrink={0} bg='gray.500' w={8} h={8} borderRadius='25%' {...rest}>
-        <RandomIcon />
+        <RandomIcon seed={seed} />
       </Flex>
     )
   }

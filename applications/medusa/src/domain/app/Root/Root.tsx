@@ -23,9 +23,6 @@ const Query = graphql`
       ...AccountAuthorizerFragment
       ...UniversalNavigatorFragment
     }
-    language {
-      locale
-    }
   }
 `
 

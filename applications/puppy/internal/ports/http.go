@@ -2,7 +2,7 @@ package ports
 
 import (
 	"context"
-	"fmt"
+	"crypto/subtle"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httputil"
@@ -22,27 +22,50 @@ func secureRequest() gin.HandlerFunc {
 		ck, err := c.Request.Cookie("od.security")
 
 		if err != nil && err == http.ErrNoCookie {
-			c.AbortWithStatusJSON(401, gin.H{"error": "missing security cookie"})
+			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+				{
+					"message":   "missing security cookie",
+					"path":      []string{},
+					"locations": []string{},
+				},
+			}})
 			return
 		}
 
 		securityHeader := c.Request.Header.Get("X-overdoll-Security")
 
 		if securityHeader == "" {
-			c.AbortWithStatusJSON(401, gin.H{"error": "missing security header"})
+			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+				{
+					"message":   "missing security header",
+					"path":      []string{},
+					"locations": []string{},
+				},
+			}})
 			return
 		}
 
 		decrypted, err := crypt.DecryptWithCustomPassphrase(ck.Value, os.Getenv("SECURITY_SECRET"))
 
 		if err != nil {
-			fmt.Println(err)
-			c.AbortWithStatusJSON(401, gin.H{"error": "invalid security cookie"})
+			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+				{
+					"message":   "invalid security cookie",
+					"path":      []string{},
+					"locations": []string{},
+				},
+			}})
 			return
 		}
 
-		if decrypted != c.Request.Header.Get("X-overdoll-Security") {
-			c.AbortWithStatusJSON(401, gin.H{"error": "security header and cookie mismatch"})
+		if subtle.ConstantTimeCompare([]byte(decrypted), []byte(c.Request.Header.Get("X-overdoll-Security"))) != 1 {
+			c.AbortWithStatusJSON(400, map[string][]map[string]interface{}{"errors": {
+				{
+					"message":   "security header and cookie mismatch",
+					"path":      []string{},
+					"locations": []string{},
+				},
+			}})
 			return
 		}
 

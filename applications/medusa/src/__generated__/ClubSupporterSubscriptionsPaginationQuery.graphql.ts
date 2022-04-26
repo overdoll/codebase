@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3f8ff47118cb17c33d39e571b0683cbc>>
- * @relayHash 4cbae15824ae7340afa6465acb19e729
+ * @generated SignedSource<<151791ba58e45cce0beee2cc301ad58f>>
+ * @relayHash 5f20b54c2619f660d0188c91c141e8e8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4cbae15824ae7340afa6465acb19e729
+// @relayRequestID 5f20b54c2619f660d0188c91c141e8e8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -292,6 +292,7 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
+                                  (v5/*: any*/),
                                   (v10/*: any*/),
                                   (v11/*: any*/),
                                   (v13/*: any*/),
@@ -312,8 +313,7 @@ return {
                                       }
                                     ],
                                     "storageKey": null
-                                  },
-                                  (v5/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -342,10 +342,10 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
+                                  (v5/*: any*/),
                                   (v10/*: any*/),
                                   (v11/*: any*/),
-                                  (v13/*: any*/),
-                                  (v5/*: any*/)
+                                  (v13/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -430,7 +430,7 @@ return {
     ]
   },
   "params": {
-    "id": "4cbae15824ae7340afa6465acb19e729",
+    "id": "5f20b54c2619f660d0188c91c141e8e8",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

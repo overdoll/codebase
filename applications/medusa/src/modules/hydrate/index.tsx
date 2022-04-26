@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useContext, useEffect, useState, useTransition } from 'react'
+import { createContext, useContext, useEffect, useState, useTransition } from 'react'
 
 interface Props {
-  children: ReactNode
+  children: JSX.Element
 }
 
 const HydrateContext = createContext<boolean>(false)
