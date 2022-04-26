@@ -37,7 +37,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	instance, err := account.NewAccount(cmd.Passport.Language(), uuid.New().String(), cmd.Username, em)
+	instance, err := account.NewAccount(uuid.New().String(), cmd.Username, em)
 
 	if err != nil {
 		return nil, err

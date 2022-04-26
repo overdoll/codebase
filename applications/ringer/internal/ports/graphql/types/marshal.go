@@ -6,8 +6,8 @@ import (
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 )
 
@@ -96,7 +96,7 @@ func MarshalClubPaymentToGraphQL(ctx context.Context, result *payment.ClubPaymen
 		Reference:          result.Id(),
 		Source:             src,
 		Status:             sts,
-		Currency:           MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		Currency:           graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BaseAmount:         int(result.BaseAmount()),
 		PlatformFeeAmount:  int(result.PlatformFeeAmount()),
 		FinalAmount:        int(result.FinalAmount()),
@@ -205,7 +205,7 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 		ID:        relay.NewID(ClubPayout{}, result.Id()),
 		Reference: result.Id(),
 		Status:    stat,
-		Currency:  MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		Currency:  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		Amount:    int(result.Amount()),
 		Events:    clubEvents,
 		Club: &Club{
@@ -217,28 +217,6 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 		DepositDate: result.DepositDate(),
 		CreatedAt:   result.Timestamp(),
 	}
-}
-
-func MarshalCurrencyToGraphQL(ctx context.Context, result money.Currency) Currency {
-
-	var currency Currency
-
-	switch result {
-	case money.USD:
-		currency = CurrencyUsd
-	case money.CAD:
-		currency = CurrencyCad
-	case money.AUD:
-		currency = CurrencyAud
-	case money.JPY:
-		currency = CurrencyJpy
-	case money.GBP:
-		currency = CurrencyGbp
-	case money.EUR:
-		currency = CurrencyEur
-	}
-
-	return currency
 }
 
 func MarshalAccountDetailsToGraphQL(ctx context.Context, result *details.AccountDetails) *AccountDetails {
@@ -367,7 +345,7 @@ func MarshalClubBalanceToGraphQL(ctx context.Context, result *balance.ClubBalanc
 	return &Balance{
 		ID:        relay.NewID(Balance{}, result.ClubId()),
 		Amount:    int(result.Amount()),
-		Currency:  MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		Currency:  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		UpdatedAt: result.UpdatedAt(),
 	}
 }

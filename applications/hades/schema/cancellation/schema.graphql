@@ -7,7 +7,7 @@ type CancellationReason implements Node @key(fields: "id") {
   reference: String!
 
   """The title for this reason."""
-  title: String!
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!

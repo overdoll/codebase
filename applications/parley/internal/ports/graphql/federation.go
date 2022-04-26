@@ -12,6 +12,11 @@ import (
 	"github.com/99designs/gqlgen/plugin/federation/fedruntime"
 )
 
+var (
+	ErrUnknownType  = errors.New("unknown type")
+	ErrTypeNotFound = errors.New("type not found")
+)
+
 func (ec *executionContext) __resolve__service(ctx context.Context) (fedruntime.Service, error) {
 	if ec.DisableIntrospection {
 		return fedruntime.Service{}, errors.New("federated introspection disabled")
@@ -33,7 +38,39 @@ func (ec *executionContext) __resolve__service(ctx context.Context) (fedruntime.
 
 func (ec *executionContext) __resolve_entities(ctx context.Context, representations []map[string]interface{}) []fedruntime.Entity {
 	list := make([]fedruntime.Entity, len(representations))
-	resolveEntity := func(ctx context.Context, i int, rep map[string]interface{}) (err error) {
+
+	repsMap := map[string]struct {
+		i []int
+		r []map[string]interface{}
+	}{}
+
+	// We group entities by typename so that we can parallelize their resolution.
+	// This is particularly helpful when there are entity groups in multi mode.
+	buildRepresentationGroups := func(reps []map[string]interface{}) {
+		for i, rep := range reps {
+			typeName, ok := rep["__typename"].(string)
+			if !ok {
+				// If there is no __typename, we just skip the representation;
+				// we just won't be resolving these unknown types.
+				ec.Error(ctx, errors.New("__typename must be an existing string"))
+				continue
+			}
+
+			_r := repsMap[typeName]
+			_r.i = append(_r.i, i)
+			_r.r = append(_r.r, rep)
+			repsMap[typeName] = _r
+		}
+	}
+
+	isMulti := func(typeName string) bool {
+		switch typeName {
+		default:
+			return false
+		}
+	}
+
+	resolveEntity := func(ctx context.Context, typeName string, rep map[string]interface{}, idx []int, i int) (err error) {
 		// we need to do our own panic handling, because we may be called in a
 		// goroutine, where the usual panic handling can't catch us
 		defer func() {
@@ -42,146 +79,331 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			}
 		}()
 
-		typeName, ok := rep["__typename"].(string)
-		if !ok {
-			return errors.New("__typename must be an existing string")
-		}
 		switch typeName {
-
 		case "Account":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForAccount(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "Account": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindAccountByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findAccountByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findAccountByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindAccountByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Account": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "Club":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForClub(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "Club": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindClubByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findClubByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Club": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "ClubInfractionHistory":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForClubInfractionHistory(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "ClubInfractionHistory": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindClubInfractionHistoryByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findClubInfractionHistoryByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubInfractionHistoryByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubInfractionHistoryByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubInfractionHistory": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "Post":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForPost(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "Post": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindPostByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findPostByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findPostByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindPostByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Post": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "PostAuditLog":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForPostAuditLog(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "PostAuditLog": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindPostAuditLogByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findPostAuditLogByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findPostAuditLogByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindPostAuditLogByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "PostAuditLog": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "PostReport":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForPostReport(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "PostReport": %w`, err)
 			}
+			switch resolverName {
 
-			entity, err := ec.resolvers.Entity().FindPostReportByID(ctx,
-				id0)
-			if err != nil {
-				return err
+			case "findPostReportByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findPostReportByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindPostReportByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "PostReport": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
-
-			list[i] = entity
-			return nil
-
 		case "Rule":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			resolverName, err := entityResolverNameForRule(ctx, rep)
 			if err != nil {
-				return errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+				return fmt.Errorf(`finding resolver for Entity "Rule": %w`, err)
+			}
+			switch resolverName {
+
+			case "findRuleByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findRuleByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindRuleByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Rule": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
 			}
 
-			entity, err := ec.resolvers.Entity().FindRuleByID(ctx,
-				id0)
-			if err != nil {
-				return err
-			}
+		}
+		return fmt.Errorf("%w: %s", ErrUnknownType, typeName)
+	}
 
-			list[i] = entity
-			return nil
+	resolveManyEntities := func(ctx context.Context, typeName string, reps []map[string]interface{}, idx []int) (err error) {
+		// we need to do our own panic handling, because we may be called in a
+		// goroutine, where the usual panic handling can't catch us
+		defer func() {
+			if r := recover(); r != nil {
+				err = ec.Recover(ctx, r)
+			}
+		}()
+
+		switch typeName {
 
 		default:
 			return errors.New("unknown type: " + typeName)
 		}
 	}
 
-	// if there are multiple entities to resolve, parallelize (similar to
-	// graphql.FieldSet.Dispatch)
-	switch len(representations) {
+	resolveEntityGroup := func(typeName string, reps []map[string]interface{}, idx []int) {
+		if isMulti(typeName) {
+			err := resolveManyEntities(ctx, typeName, reps, idx)
+			if err != nil {
+				ec.Error(ctx, err)
+			}
+		} else {
+			// if there are multiple entities to resolve, parallelize (similar to
+			// graphql.FieldSet.Dispatch)
+			var e sync.WaitGroup
+			e.Add(len(reps))
+			for i, rep := range reps {
+				i, rep := i, rep
+				go func(i int, rep map[string]interface{}) {
+					err := resolveEntity(ctx, typeName, rep, idx, i)
+					if err != nil {
+						ec.Error(ctx, err)
+					}
+					e.Done()
+				}(i, rep)
+			}
+			e.Wait()
+		}
+	}
+	buildRepresentationGroups(representations)
+
+	switch len(repsMap) {
 	case 0:
 		return list
 	case 1:
-		err := resolveEntity(ctx, 0, representations[0])
-		if err != nil {
-			ec.Error(ctx, err)
+		for typeName, reps := range repsMap {
+			resolveEntityGroup(typeName, reps.r, reps.i)
 		}
 		return list
 	default:
 		var g sync.WaitGroup
-		g.Add(len(representations))
-		for i, rep := range representations {
-			go func(i int, rep map[string]interface{}) {
-				err := resolveEntity(ctx, i, rep)
-				if err != nil {
-					ec.Error(ctx, err)
-				}
+		g.Add(len(repsMap))
+		for typeName, reps := range repsMap {
+			go func(typeName string, reps []map[string]interface{}, idx []int) {
+				resolveEntityGroup(typeName, reps, idx)
 				g.Done()
-			}(i, rep)
+			}(typeName, reps.r, reps.i)
 		}
 		g.Wait()
 		return list
 	}
+}
+
+func entityResolverNameForAccount(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findAccountByID", nil
+	}
+	return "", fmt.Errorf("%w for Account", ErrTypeNotFound)
+}
+
+func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubByID", nil
+	}
+	return "", fmt.Errorf("%w for Club", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubInfractionHistory(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubInfractionHistoryByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubInfractionHistory", ErrTypeNotFound)
+}
+
+func entityResolverNameForPost(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findPostByID", nil
+	}
+	return "", fmt.Errorf("%w for Post", ErrTypeNotFound)
+}
+
+func entityResolverNameForPostAuditLog(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findPostAuditLogByID", nil
+	}
+	return "", fmt.Errorf("%w for PostAuditLog", ErrTypeNotFound)
+}
+
+func entityResolverNameForPostReport(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findPostReportByID", nil
+	}
+	return "", fmt.Errorf("%w for PostReport", ErrTypeNotFound)
+}
+
+func entityResolverNameForRule(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findRuleByID", nil
+	}
+	return "", fmt.Errorf("%w for Rule", ErrTypeNotFound)
 }

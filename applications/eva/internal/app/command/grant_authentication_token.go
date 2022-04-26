@@ -48,7 +48,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret(), cmd.Passport.Language().Locale()); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret()); err != nil {
 		return nil, errors.Wrap(err, "failed to send login token email")
 	}
 

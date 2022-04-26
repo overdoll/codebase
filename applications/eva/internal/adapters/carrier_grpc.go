@@ -26,13 +26,12 @@ func (s CarrierGrpc) ConfirmAccountEmail(ctx context.Context, accountId, email, 
 	return err
 }
 
-func (s CarrierGrpc) NewLoginToken(ctx context.Context, email, token, secret, language string) error {
+func (s CarrierGrpc) NewLoginToken(ctx context.Context, email, token, secret string) error {
 
 	_, err := s.client.NewLoginToken(ctx, &carrier.NewLoginTokenRequest{
-		Email:    email,
-		Token:    token,
-		Secret:   secret,
-		Language: language,
+		Email:  email,
+		Token:  token,
+		Secret: secret,
 	})
 
 	return err

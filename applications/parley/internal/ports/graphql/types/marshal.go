@@ -7,9 +7,9 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 func MarshalPostAuditLogToGraphQL(ctx context.Context, result *post_audit_log.PostAuditLog) *PostAuditLog {
@@ -285,11 +285,11 @@ func MarshalModeratorSettingsToGraphQL(result *moderator.Moderator) *ModeratorSe
 
 func MarshalRuleToGraphQL(ctx context.Context, result *rule.Rule) *Rule {
 
-	var titleTranslations []*Translation
+	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &Translation{
-			Language: &Language{
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -297,11 +297,11 @@ func MarshalRuleToGraphQL(ctx context.Context, result *rule.Rule) *Rule {
 		})
 	}
 
-	var descriptionTranslations []*Translation
+	var descriptionTranslations []*graphql.Translation
 
 	for _, val := range result.Description().Translations() {
-		descriptionTranslations = append(descriptionTranslations, &Translation{
-			Language: &Language{
+		descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -312,9 +312,7 @@ func MarshalRuleToGraphQL(ctx context.Context, result *rule.Rule) *Rule {
 	return &Rule{
 		ID:                      relay.NewID(Rule{}, result.ID()),
 		Reference:               result.ID(),
-		Title:                   result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		TitleTranslations:       titleTranslations,
-		Description:             result.Description().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		DescriptionTranslations: descriptionTranslations,
 		Deprecated:              result.Deprecated(),
 		Infraction:              result.Infraction(),

@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/parley/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
@@ -48,6 +49,7 @@ type ResolverRoot interface {
 	PostAuditLog() PostAuditLogResolver
 	PostReport() PostReportResolver
 	Query() QueryResolver
+	Rule() RuleResolver
 }
 
 type DirectiveRoot struct {
@@ -238,12 +240,12 @@ type ComplexityRoot struct {
 
 	Rule struct {
 		Deprecated              func(childComplexity int) int
-		Description             func(childComplexity int) int
+		Description             func(childComplexity int, locale *string) int
 		DescriptionTranslations func(childComplexity int) int
 		ID                      func(childComplexity int) int
 		Infraction              func(childComplexity int) int
 		Reference               func(childComplexity int) int
-		Title                   func(childComplexity int) int
+		Title                   func(childComplexity int, locale *string) int
 		TitleTranslations       func(childComplexity int) int
 	}
 
@@ -334,6 +336,11 @@ type QueryResolver interface {
 	Rule(ctx context.Context, reference string) (*types.Rule, error)
 	Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error)
 	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error)
+}
+type RuleResolver interface {
+	Title(ctx context.Context, obj *types.Rule, locale *string) (string, error)
+
+	Description(ctx context.Context, obj *types.Rule, locale *string) (string, error)
 }
 
 type executableSchema struct {
@@ -1145,7 +1152,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Rule.Description(childComplexity), true
+		args, err := ec.field_Rule_description_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Rule.Description(childComplexity, args["locale"].(*string)), true
 
 	case "Rule.descriptionTranslations":
 		if e.complexity.Rule.DescriptionTranslations == nil {
@@ -1180,7 +1192,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Rule.Title(childComplexity), true
+		args, err := ec.field_Rule_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Rule.Title(childComplexity, args["locale"].(*string)), true
 
 	case "Rule.titleTranslations":
 		if e.complexity.Rule.TitleTranslations == nil {
@@ -1812,14 +1829,22 @@ type Rule implements Node @key(fields: "id") {
   """Reference of the rule. Should be used for single lookups."""
   reference: String!
 
-  """The title for this rule."""
-  title: String!
+  """
+  The title for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
 
-  """The description for this rule."""
-  description: String!
+  """
+  The description for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this description."""
   descriptionTranslations: [Translation!]!
@@ -2011,6 +2036,8 @@ extend type Club @key(fields: "id") {
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
+scalar Date
+
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
 
@@ -2041,6 +2068,15 @@ type Translation {
   """The translation text."""
   text: String!
 }
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -2059,8 +2095,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
-directive @extends on OBJECT
+directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -2811,18 +2847,33 @@ func (ec *executionContext) field_Query_rules_args(ctx context.Context, rawArgs 
 	return args, nil
 }
 
-func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Rule_description_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *bool
-	if tmp, ok := rawArgs["includeDeprecated"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
-		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["includeDeprecated"] = arg0
+	args["locale"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Rule_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
 	return args, nil
 }
 
@@ -3902,7 +3953,7 @@ func (ec *executionContext) _IssueClubInfractionPayload_clubInfractionHistory(ct
 	return ec.marshalOClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3937,7 +3988,7 @@ func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.
 	return ec.marshalNBCP472string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6317,14 +6368,21 @@ func (ec *executionContext) _Rule_title(ctx context.Context, field graphql.Colle
 		Object:     "Rule",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Rule_title_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
+		return ec.resolvers.Rule().Title(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6371,9 +6429,9 @@ func (ec *executionContext) _Rule_titleTranslations(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Rule_description(ctx context.Context, field graphql.CollectedField, obj *types.Rule) (ret graphql.Marshaler) {
@@ -6387,14 +6445,21 @@ func (ec *executionContext) _Rule_description(ctx context.Context, field graphql
 		Object:     "Rule",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Rule_description_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return ec.resolvers.Rule().Description(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6441,9 +6506,9 @@ func (ec *executionContext) _Rule_descriptionTranslations(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Rule_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.Rule) (ret graphql.Marshaler) {
@@ -6656,7 +6721,7 @@ func (ec *executionContext) _RuleEdge_cursor(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6686,12 +6751,12 @@ func (ec *executionContext) _Translation_language(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Language)
+	res := resTmp.(*graphql1.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6932,14 +6997,14 @@ func (ec *executionContext) ___Directive_description(ctx context.Context, field 
 		Object:     "__Directive",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6948,9 +7013,9 @@ func (ec *executionContext) ___Directive_description(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_locations(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -7104,14 +7169,14 @@ func (ec *executionContext) ___EnumValue_description(ctx context.Context, field 
 		Object:     "__EnumValue",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7120,9 +7185,9 @@ func (ec *executionContext) ___EnumValue_description(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___EnumValue_isDeprecated(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
@@ -7238,14 +7303,14 @@ func (ec *executionContext) ___Field_description(ctx context.Context, field grap
 		Object:     "__Field",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7254,9 +7319,9 @@ func (ec *executionContext) ___Field_description(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {
@@ -7275,13 +7340,6 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field___Field_args_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -7449,14 +7507,14 @@ func (ec *executionContext) ___InputValue_description(ctx context.Context, field
 		Object:     "__InputValue",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7465,9 +7523,9 @@ func (ec *executionContext) ___InputValue_description(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___InputValue_type(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {
@@ -7524,6 +7582,38 @@ func (ec *executionContext) ___InputValue_defaultValue(ctx context.Context, fiel
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.DefaultValue, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) ___Schema_description(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Schema",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7800,9 +7890,9 @@ func (ec *executionContext) ___Type_description(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_fields(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -8009,6 +8099,38 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	res := resTmp.(*introspection.Type)
 	fc.Result = res
 	return ec.marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) ___Type_specifiedByURL(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Type",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SpecifiedByURL(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 // endregion **************************** field.gotpl *****************************
@@ -9167,7 +9289,7 @@ func (ec *executionContext) _IssueClubInfractionPayload(ctx context.Context, sel
 
 var languageImplementors = []string{"Language"}
 
-func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Language) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -10315,7 +10437,7 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "reference":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10325,18 +10447,28 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "title":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Rule_title(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Rule_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		case "titleTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Rule_titleTranslations(ctx, field, obj)
@@ -10345,18 +10477,28 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "description":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Rule_description(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Rule_description(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		case "descriptionTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Rule_descriptionTranslations(ctx, field, obj)
@@ -10365,7 +10507,7 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "deprecated":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10375,7 +10517,7 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "infraction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10385,7 +10527,7 @@ func (ec *executionContext) _Rule(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -10482,7 +10624,7 @@ func (ec *executionContext) _RuleEdge(ctx context.Context, sel ast.SelectionSet,
 
 var translationImplementors = []string{"Translation"}
 
-func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Translation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -10924,6 +11066,13 @@ func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Schema")
+		case "description":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "types":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec.___Schema_types(ctx, field, obj)
@@ -11051,6 +11200,13 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 		case "ofType":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec.___Type_ofType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "specifiedByURL":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_specifiedByURL(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11250,7 +11406,7 @@ func (ec *executionContext) unmarshalNIssueClubInfractionInput2overdollᚋapplic
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *graphql1.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -11687,7 +11843,7 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -11711,7 +11867,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx, sel, v[i])
+			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11731,7 +11887,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *graphql1.Translation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -11785,11 +11941,7 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -11941,11 +12093,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -12153,13 +12301,30 @@ func (ec *executionContext) marshalOApprovePostPayload2ᚖoverdollᚋapplication
 	return ec._ApprovePostPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOBCP472ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalString(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOBCP472ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(*v)
+	return res
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	return graphql.MarshalBoolean(v)
+	res := graphql.MarshalBoolean(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -12174,7 +12339,8 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalBoolean(*v)
+	res := graphql.MarshalBoolean(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOClubInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.ClubInfractionHistory) graphql.Marshaler {
@@ -12203,7 +12369,8 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalInt(*v)
+	res := graphql.MarshalInt(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOIssueClubInfractionPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐIssueClubInfractionPayload(ctx context.Context, sel ast.SelectionSet, v *types.IssueClubInfractionPayload) graphql.Marshaler {
@@ -12275,7 +12442,8 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	return graphql.MarshalString(v)
+	res := graphql.MarshalString(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
@@ -12290,7 +12458,8 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalString(*v)
+	res := graphql.MarshalString(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
@@ -12305,7 +12474,8 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalTime(*v)
+	res := graphql.MarshalTime(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOUpdateRuleDeprecatedPayload2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateRuleDeprecatedPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateRuleDeprecatedPayload) graphql.Marshaler {

@@ -4,11 +4,11 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
-import NoScript from './NoScript/NoScript'
 import ErrorBoundary from '@//:modules/operations/ErrorBoundary'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import NoScript from './NoScript/NoScript'
 
 interface Props {
   queryRefs: {

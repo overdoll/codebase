@@ -10,8 +10,7 @@ message Account {
   bool verified = 4;
   string email = 5;
   bool locked = 6;
-  string language = 7;
-  bool secure = 8;
+  bool secure = 7;
 }
 
 message GetAccountRequest {

@@ -1,29 +1,13 @@
-import { Environment, Network, RecordSource, Store } from 'relay-runtime'
-
-import fetchQuery from './fetchQuery'
+import { Environment, RecordSource, Store } from 'relay-runtime'
 import moduleLoader from './moduleLoader'
+import { createNetwork } from './network'
 
 const IS_SERVER = typeof window === typeof undefined
-
-let environment
-
-export function getEnvironment (fetchFn) {
-  // Always create a new environment on the server
-  if (IS_SERVER) {
-    return createEnvironment(fetchFn)
-  }
-
-  if (environment == null) {
-    environment = createEnvironment(fetchFn)
-  }
-
-  return environment
-}
 
 const CLIENT_DEBUG = true
 const SERVER_DEBUG = false
 
-const createEnvironment = (fetchFn) => {
+const createEnvironment = (fetchFnOverride) => {
   // Operation loader is reponsible for loading JS modules/components
   // for data-processing and rendering
   const operationLoader = {
@@ -31,9 +15,9 @@ const createEnvironment = (fetchFn) => {
     load: (name) => moduleLoader(name).load()
   }
 
-  return new Environment({
-    // Create a network layer from the fetch function
-    network: Network.create(fetchQuery(fetchFn)),
+  const network = createNetwork(fetchFnOverride)
+  const environment = new Environment({
+    network,
     store: new Store(new RecordSource(), { operationLoader }),
     operationLoader,
     isServer: IS_SERVER,
@@ -43,4 +27,12 @@ const createEnvironment = (fetchFn) => {
       }
     }
   })
+
+  environment.getNetwork().responseCache = network.responseCache
+
+  return environment
+}
+
+export {
+  createEnvironment
 }

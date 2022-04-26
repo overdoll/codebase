@@ -8,8 +8,12 @@ type Audience implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A title for this audience."""
-  title: String!
+  """
+  A title for this audience.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """If this audience is standard or not."""
   standard: Boolean!

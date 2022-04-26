@@ -32,7 +32,6 @@
       {
         "runtime": "automatic"
       }
-    ],
-    "@loadable/babel-plugin"
+    ]
   ]
 }

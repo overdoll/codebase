@@ -15,7 +15,7 @@ import { PreloadFetchPolicy } from 'react-relay/relay-hooks/EntryPointTypes'
 import { BaseContext, NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils'
 import { ComponentType } from 'react'
 import Cookies from 'universal-cookie'
-import { NextResponse, NextRequest, NextFetchEvent } from 'next/server'
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 
 interface CustomPreloadedQuery {
   kind: 'PreloadedQuery' | 'SerializedPreloadedQuery'
@@ -71,7 +71,6 @@ interface PageContext extends NextPageContext {
 
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<P> & {
   getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
-  getTranslationProps?: (context: C) => Promise<TranslationProps>
   getLayout?: (page: JSX.Element) => JSX.Element
 }
 

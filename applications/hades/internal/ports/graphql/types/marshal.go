@@ -6,9 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results []*cancellation.Reason, cursor *paging.Cursor) *CancellationReasonConnection {
@@ -72,11 +70,11 @@ func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results 
 
 func MarshalCancellationReasonToGraphQL(ctx context.Context, result *cancellation.Reason) *CancellationReason {
 
-	var titleTranslations []*Translation
+	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &Translation{
-			Language: &Language{
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -87,7 +85,6 @@ func MarshalCancellationReasonToGraphQL(ctx context.Context, result *cancellatio
 	return &CancellationReason{
 		ID:                relay.NewID(CancellationReason{}, result.ID()),
 		Reference:         result.ID(),
-		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), result.ID()),
 		TitleTranslations: titleTranslations,
 		Deprecated:        result.Deprecated(),
 	}
@@ -221,7 +218,7 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 				ID: relay.NewID(Club{}, result.ClubId()),
 			},
 			BillingAmount:      int(result.BillingAmount()),
-			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			BillingCurrency:    graphql.MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
 			SupporterSince:     result.SupporterSince(),
 			LastBillingDate:    result.LastBillingDate(),
 			NextBillingDate:    result.NextBillingDate(),
@@ -243,7 +240,7 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 				ID: relay.NewID(Club{}, result.ClubId()),
 			},
 			BillingAmount:      int(result.BillingAmount()),
-			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			BillingCurrency:    graphql.MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
 			SupporterSince:     result.SupporterSince(),
 			CancelledAt:        *result.CancelledAt(),
 			EndDate:            result.NextBillingDate(),
@@ -266,7 +263,7 @@ func MarshalAccountClubSupporterSubscriptionToGraphQL(ctx context.Context, resul
 				ID: relay.NewID(Club{}, result.ClubId()),
 			},
 			BillingAmount:      int(result.BillingAmount()),
-			BillingCurrency:    MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
+			BillingCurrency:    graphql.MarshalCurrencyToGraphQL(ctx, result.BillingCurrency()),
 			SupporterSince:     result.SupporterSince(),
 			CcbillSubscription: ccbillSub,
 			UpdatedAt:          result.UpdatedAt(),
@@ -523,7 +520,7 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 		transactionEvents = append(transactionEvents, &AccountTransactionEvent{
 			ID:        relay.NewID(AccountTransactionEvent{}, event.Id()),
 			Amount:    int(event.Amount()),
-			Currency:  MarshalCurrencyToGraphQL(ctx, event.Currency()),
+			Currency:  graphql.MarshalCurrencyToGraphQL(ctx, event.Currency()),
 			Reason:    event.Reason(),
 			Timestamp: event.Timestamp(),
 		})
@@ -537,7 +534,7 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 		Type:                      tp,
 		Events:                    transactionEvents,
 		Amount:                    int(result.Amount()),
-		Currency:                  MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		Currency:                  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BilledAtDate:              result.BilledAtDate(),
 		NextBillingDate:           &date,
 		PaymentMethod:             MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
@@ -603,28 +600,6 @@ func MarshalAccountTransactionToGraphQLConnection(ctx context.Context, results [
 	}
 
 	return conn
-}
-
-func MarshalCurrencyToGraphQL(ctx context.Context, result money.Currency) Currency {
-
-	var currency Currency
-
-	switch result {
-	case money.USD:
-		currency = CurrencyUsd
-	case money.CAD:
-		currency = CurrencyCad
-	case money.AUD:
-		currency = CurrencyAud
-	case money.JPY:
-		currency = CurrencyJpy
-	case money.GBP:
-		currency = CurrencyGbp
-	case money.EUR:
-		currency = CurrencyEur
-	}
-
-	return currency
 }
 
 func MarshalCCBillDeclineCodeToGraphQL(ctx context.Context, code string) CCBillDeclineError {

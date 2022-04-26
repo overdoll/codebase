@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS accounts
     roles                list<text>,
     verified             boolean,
     avatar_resource_id   text,
-    language             text,
     locked               boolean,
     locked_until         timestamp,
     last_username_edit   timestamp,

@@ -1,29 +1,33 @@
 import NextDocument, { Head, Html, Main, NextScript } from 'next/document'
 import React from 'react'
 import createEmotionServer from '@emotion/server/create-instance'
-import { cache } from '@emotion/css'
+
+import createCache from '@emotion/cache'
 
 export default class Document extends NextDocument {
-  static async getInitialProps (ctx) {
+  static async getInitialProps (ctx): Promise<any> {
+    const {
+      extractCriticalToChunks
+    } = createEmotionServer(createCache({
+      key: 'od'
+    }))
+
     const initialProps = await NextDocument.getInitialProps(ctx)
 
-    const { extractCritical } = createEmotionServer(cache)
-    const {
-      ids,
-      css
-    } = extractCritical(initialProps.html)
+    // This is important. It prevents emotion to render invalid HTML.
+    const emotionStyles = extractCriticalToChunks(initialProps.html)
+    const emotionStyleTags = emotionStyles.styles.map((style) => (
+      <style
+        data-emotion={`${style.key} ${style.ids.join(' ')}`}
+        key={style.key}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: style.css }}
+      />
+    ))
 
     return {
       ...initialProps,
-      styles: (
-        <>
-          {initialProps.styles}
-          <style
-            data-emotion={`od ${ids.join(' ')}`}
-            dangerouslySetInnerHTML={{ __html: css }}
-          />
-        </>
-      )
+      styles: emotionStyleTags
     }
   }
 
@@ -38,6 +42,7 @@ export default class Document extends NextDocument {
             type='text/css'
           />
           <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400' rel='stylesheet' type='text/css' />
+          {(this.props as any).emotionStyleTags}
         </Head>
         <body>
           <Main />

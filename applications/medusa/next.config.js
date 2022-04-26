@@ -1,5 +1,4 @@
 const path = require('path')
-const relay = require('./relay.config.js')
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -57,11 +56,6 @@ module.exports = {
     projectRoot: __dirname
   },
   webpack: (config) => {
-    config.module.rules.push({
-      test: /\.md$/,
-      use: 'raw-loader'
-    })
-
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack']

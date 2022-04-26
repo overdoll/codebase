@@ -10,16 +10,5 @@ module.exports = {
       '@//:domain': path.resolve(__dirname, 'src/domain'),
       '@//:common': path.resolve(__dirname, 'src/common')
     }
-  },
-  optimization: {
-    runtimeChunk: 'single'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.md$/,
-        use: 'raw-loader'
-      }
-    ]
   }
 }

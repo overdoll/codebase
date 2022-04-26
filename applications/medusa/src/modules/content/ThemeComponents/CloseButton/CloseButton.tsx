@@ -3,7 +3,7 @@ import { CloseButtonProps } from '@chakra-ui/react'
 import IconButton from '../../../form/IconButton/IconButton'
 import { Icon } from '../../PageLayout'
 import { RemoveCross } from '@//:assets/icons'
-import { ForwardRefProp } from '../../../../types/components'
+import { ForwardRefProp } from '@//:types/components'
 
 type Props = CloseButtonProps & ForwardRefProp
 

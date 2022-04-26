@@ -3228,9 +3228,9 @@ func (ec *executionContext) _Balance_currency(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Balance_updatedAt(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
@@ -3694,9 +3694,9 @@ func (ec *executionContext) _ClubPayment_currency(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClubPayment_baseAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
@@ -4254,9 +4254,9 @@ func (ec *executionContext) _ClubPayout_currency(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ClubPayout_amount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
@@ -5171,9 +5171,9 @@ func (ec *executionContext) _DepositRequest_currency(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _DepositRequest_baseAmount(ctx context.Context, field graphql.CollectedField, obj *types.DepositRequest) (ret graphql.Marshaler) {
@@ -5778,7 +5778,7 @@ func (ec *executionContext) _InitiateClubPayoutPayload_club(ctx context.Context,
 	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5813,7 +5813,7 @@ func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.
 	return ec.marshalNBCP472string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6784,7 +6784,7 @@ func (ec *executionContext) _SetPaxumAccountPayoutMethodPayload_accountPayoutMet
 	return ec.marshalOAccountPayoutMethod2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountPayoutMethod(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6814,12 +6814,12 @@ func (ec *executionContext) _Translation_language(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Language)
+	res := resTmp.(*graphql1.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9972,7 +9972,7 @@ func (ec *executionContext) _InitiateClubPayoutPayload(ctx context.Context, sel 
 
 var languageImplementors = []string{"Language"}
 
-func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Language) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -10452,7 +10452,7 @@ func (ec *executionContext) _SetPaxumAccountPayoutMethodPayload(ctx context.Cont
 
 var translationImplementors = []string{"Translation"}
 
-func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Translation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -11429,13 +11429,13 @@ func (ec *executionContext) marshalNCountry2ᚖoverdollᚋapplicationsᚋringer�
 	return ec._Country(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, v interface{}) (types.Currency, error) {
-	var res types.Currency
+func (ec *executionContext) unmarshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx context.Context, v interface{}) (graphql1.Currency, error) {
+	var res graphql1.Currency
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCurrency2overdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, sel ast.SelectionSet, v types.Currency) graphql.Marshaler {
+func (ec *executionContext) marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx context.Context, sel ast.SelectionSet, v graphql1.Currency) graphql.Marshaler {
 	return v
 }
 
@@ -11571,7 +11571,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *graphql1.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")

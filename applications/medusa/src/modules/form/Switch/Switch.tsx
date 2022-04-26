@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode, useTransition } from 'react'
 import { Switch as ChakraSwitch, SwitchProps } from '@chakra-ui/react'
-import useSSRDisable from '../../hooks/useSSRDisable'
+import { useHydrate } from '../../hydrate'
 
 interface Props extends SwitchProps {
   children?: ReactNode
@@ -23,9 +23,9 @@ const Switch = forwardRef<any, Props>(({
     })
   }
 
-  const disableOverride = useSSRDisable()
+  const isHydrated = useHydrate()
 
-  const fullDisable = (disableOverride) || (isDisabled ?? isPending)
+  const fullDisable = (!isHydrated) || (isDisabled ?? isPending)
 
   return (
     <ChakraSwitch
