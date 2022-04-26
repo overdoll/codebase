@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PayoutsMethodSettingsFragment$key } from '@//:artifacts/PayoutsMethodSettingsFragment.graphql'
-import { Stack } from '@chakra-ui/react'
+import { Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
-import { PayoutMethod } from '@//:assets/icons'
-import DisplayPayoutMethod
-  from '../../../../method/RootPayoutMethodSettings/PayoutMethodSettings/DisplayPayoutMethod/DisplayPayoutMethod'
+import { LargeBackgroundBox, PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
+import PayoutMethod from '../../../../method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethod/PayoutMethod'
+import { PayoutMethod as PayoutMethodIcon } from '@//:assets/icons'
 
 interface Props {
   query: PayoutsMethodSettingsFragment$key
@@ -13,9 +12,9 @@ interface Props {
 
 const Fragment = graphql`
   fragment PayoutsMethodSettingsFragment on Account {
-    ...DisplayPayoutMethodFragment
     payoutMethod {
       __typename
+      ...PayoutMethodFragment
     }
     details {
       id
@@ -28,11 +27,8 @@ export default function PayoutsMethodSettings ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      {data.payoutMethod != null && (
-        <DisplayPayoutMethod query={data} />
-      )}
       <PagePanelWrap isDisabled={data.details?.id == null} href='/settings/payouts/method'>
-        <PagePanelIcon icon={PayoutMethod} colorScheme='green' />
+        <PagePanelIcon icon={PayoutMethodIcon} colorScheme='green' />
         <PagePanelText
           title={
             <Trans>Payout Method</Trans>
@@ -46,6 +42,18 @@ export default function PayoutsMethodSettings ({ query }: Props): JSX.Element {
           )}
         />
       </PagePanelWrap>
+      {data.payoutMethod != null && (
+        <LargeBackgroundBox>
+          <Stack spacing={2}>
+            <Heading fontSize='lg' color='gray.00'>
+              <Trans>
+                Your Payout Method
+              </Trans>
+            </Heading>
+            <PayoutMethod query={data.payoutMethod} />
+          </Stack>
+        </LargeBackgroundBox>
+      )}
     </Stack>
   )
 }

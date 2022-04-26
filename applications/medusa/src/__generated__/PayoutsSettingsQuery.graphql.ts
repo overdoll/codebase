@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<80033fcdbcff1304c9c91897fd0594c8>>
- * @relayHash 62990ef2f2511e677065591cba8c3e9d
+ * @generated SignedSource<<c304240a1d296668fe3f56597fb4302c>>
+ * @relayHash 7c9da92389b741336ca535454386170e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 62990ef2f2511e677065591cba8c3e9d
+// @relayRequestID 7c9da92389b741336ca535454386170e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -181,7 +181,7 @@ return {
     ]
   },
   "params": {
-    "id": "62990ef2f2511e677065591cba8c3e9d",
+    "id": "7c9da92389b741336ca535454386170e",
     "metadata": {},
     "name": "PayoutsSettingsQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<809cd20a98a34a9b3d2a069369c02e9e>>
+ * @generated SignedSource<<d384b2c627cb489a23f07591b311c41b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,11 +13,11 @@ import { FragmentRefs } from "relay-runtime";
 export type PayoutsMethodSettingsFragment$data = {
   readonly payoutMethod: {
     readonly __typename: string;
+    readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment">;
   } | null;
   readonly details: {
     readonly id: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"DisplayPayoutMethodFragment">;
   readonly " $fragmentType": "PayoutsMethodSettingsFragment";
 };
 export type PayoutsMethodSettingsFragment = PayoutsMethodSettingsFragment$data;
@@ -33,11 +33,6 @@ const node: ReaderFragment = {
   "name": "PayoutsMethodSettingsFragment",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "DisplayPayoutMethodFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "concreteType": null,
@@ -51,6 +46,11 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "__typename",
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PayoutMethodFragment"
         }
       ],
       "storageKey": null
@@ -78,6 +78,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "649908455e2a42217eb462ef11c06153";
+(node as any).hash = "53de7cc8e2d7c8f160ee5f766e96f111";
 
 export default node;

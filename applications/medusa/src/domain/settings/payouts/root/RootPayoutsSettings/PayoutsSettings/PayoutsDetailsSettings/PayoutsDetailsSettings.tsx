@@ -28,6 +28,19 @@ export default function PayoutsDetailsSettings ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
+      <PagePanelWrap href='/settings/payouts/details'>
+        <PagePanelIcon icon={PayoutDetails} colorScheme='purple' />
+        <PagePanelText
+          title={
+            <Trans>Payout Details</Trans>
+          }
+          description={(
+            data.details?.id == null
+              ? <Trans>Enter your payout details</Trans>
+              : <Trans>Update your payout details</Trans>
+          )}
+        />
+      </PagePanelWrap>
       {data.details != null && (
         <LargeBackgroundBox>
           <Stack spacing={2}>
@@ -71,19 +84,6 @@ export default function PayoutsDetailsSettings ({ query }: Props): JSX.Element {
           </Stack>
         </LargeBackgroundBox>
       )}
-      <PagePanelWrap href='/settings/payouts/details'>
-        <PagePanelIcon icon={PayoutDetails} colorScheme='purple' />
-        <PagePanelText
-          title={
-            <Trans>Payout Details</Trans>
-          }
-          description={(
-            data.details?.id == null
-              ? <Trans>Enter your payout details</Trans>
-              : <Trans>Update your payout details</Trans>
-          )}
-        />
-      </PagePanelWrap>
     </Stack>
   )
 }

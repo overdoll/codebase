@@ -4,7 +4,7 @@ import Button from '@//:modules/form/Button/Button'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { PayoutMethodDeleteMutation } from '@//:artifacts/PayoutMethodDeleteMutation.graphql'
-import PayoutMethod from '../DisplayPayoutMethod/PayoutMethod/PayoutMethod'
+import PayoutMethod from '../PayoutMethod/PayoutMethod'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {

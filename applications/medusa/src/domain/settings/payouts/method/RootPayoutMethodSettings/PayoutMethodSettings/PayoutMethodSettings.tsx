@@ -4,6 +4,8 @@ import type { PayoutMethodSettingsQuery } from '@//:artifacts/PayoutMethodSettin
 import PayoutMethodSetupFlow from './PayoutMethodSetupFlow/PayoutMethodSetupFlow'
 import PayoutCountryNotSupported from './PayoutCountryNotSupported/PayoutCountryNotSupported'
 import PayoutMethodDelete from './PayoutMethodDelete/PayoutMethodDelete'
+import { Stack, Text } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<PayoutMethodSettingsQuery>
@@ -35,7 +37,13 @@ export default function PayoutMethodSettings (props: Props): JSX.Element {
 
   if (data?.viewer?.details?.country == null) {
     return (
-      <>setup account details first</>
+      <Stack spacing={2}>
+        <Text textAlign='center' fontSize='md' color='gray.100'>
+          <Trans>
+            Please set up payout details before accessing this section
+          </Trans>
+        </Text>
+      </Stack>
     )
   }
 
