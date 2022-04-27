@@ -2,7 +2,7 @@
   "baseUrl": "https://ci.overdoll.dev",
   "env": {
     "codeCoverage": {
-      "url": "/__coverage__"
+      "url": "/api/coverage"
     }
   },
   "projectId": "svdd6z",
