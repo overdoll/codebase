@@ -159,24 +159,27 @@ next(
         "--bazel_run_from_execroot",
         "build",
     ],
+    chdir = "$(RULEDIR)",
     data = [
         "copy_static_files",
     ] + _RUNTIME_DEPS + _BUILD_DEPS,
-    chdir = "$(RULEDIR)",
 )
 
 nodejs_image(
     name = "medusa-production-image",
     args = [
         "start",
-        "./applications/medusa"
+        "./applications/medusa",
     ],
+    data = glob(["public/**/*"]) + [
+        "next.config.js",
+        ":bundle",
+    ] + _RUNTIME_DEPS,
+    entry_point = "@npm//:node_modules/next/dist/bin/next",
     env = {
         "NODE_ENV": "production",
-        "PORT": "8000"
+        "PORT": "8000",
     },
-    data = glob(["public/**/*"]) + ["next.config.js", ":bundle"] + _RUNTIME_DEPS,
-    entry_point = "@npm//:node_modules/next/dist/bin/next",
     templated_args = [
         "--bazel_patch_module_resolver",
     ],

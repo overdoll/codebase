@@ -9,6 +9,7 @@ import (
 	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -82,7 +83,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 699, event.Amount, "correct amount")
-	require.Equal(t, types.CurrencyUsd, event.Currency, "correct currency")
+	require.Equal(t, graphql1.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", event.Reason, "correct reason")
 
 	sDec, _ := base64.StdEncoding.DecodeString(event.ID.GetID())

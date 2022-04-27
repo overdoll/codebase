@@ -49,6 +49,7 @@ go_test(
         "//applications/ringer/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
         "//libraries/money",
         "//libraries/passport",

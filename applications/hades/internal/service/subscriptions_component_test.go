@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"testing"
 	"time"
@@ -25,7 +26,7 @@ type AccountActiveClubSupporterSubscriptions struct {
 							LastBillingDate    string
 							NextBillingDate    string
 							BillingAmount      int
-							BillingCurrency    types.Currency
+							BillingCurrency    graphql1.Currency
 							PaymentMethod      types.PaymentMethod
 							CcbillSubscription types.CCBillSubscription
 							BillingError       *struct {
@@ -79,7 +80,7 @@ type AccountTransactions struct {
 						Events            []*types.AccountTransactionEvent
 						Timestamp         time.Time
 						Amount            int
-						Currency          types.Currency
+						Currency          graphql1.Currency
 						BilledAtDate      string
 						NextBillingDate   string
 						PaymentMethod     types.PaymentMethod
@@ -161,15 +162,15 @@ type CCBillSubscriptionDetailsCustom struct {
 
 	SubscriptionInitialPrice   int
 	SubscriptionRecurringPrice int
-	SubscriptionCurrency       types.Currency
+	SubscriptionCurrency       graphql1.Currency
 
 	BilledInitialPrice   int
 	BilledRecurringPrice int
-	BilledCurrency       types.Currency
+	BilledCurrency       graphql1.Currency
 
 	AccountingInitialPrice   int
 	AccountingRecurringPrice int
-	AccountingCurrency       types.Currency
+	AccountingCurrency       graphql1.Currency
 
 	IsRecurring       bool
 	TimesRebilled     int
