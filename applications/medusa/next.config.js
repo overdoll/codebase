@@ -38,9 +38,11 @@ let withBundleAnalyzer = (data) => {
   return data
 }
 
-withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true'
-})
+if (process.env.ANALYZE === 'true') {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true'
+  })
+}
 
 module.exports = withBundleAnalyzer({
   async headers () {
@@ -52,6 +54,9 @@ module.exports = withBundleAnalyzer({
       }
     ]
   },
+  distDir: 'build',
+  generateEtags: false,
+  poweredByHeader: false,
   i18n: {
     locales: ['en'],
     defaultLocale: 'en'

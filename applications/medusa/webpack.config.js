@@ -1,5 +1,5 @@
 const path = require('path')
-
+// NOTE: this webpack config is for editor integration only! please edit the webpack configuration inside of next.config.js!
 module.exports = {
   resolve: {
     alias: {
@@ -12,3 +12,4 @@ module.exports = {
     }
   }
 }
+// NOTE: this webpack config is for editor integration only! please edit the webpack configuration inside of next.config.js!

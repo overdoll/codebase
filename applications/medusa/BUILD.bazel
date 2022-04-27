@@ -20,10 +20,20 @@ _SRC = glob(
     ],
     exclude = _EXCLUDE,
 ) + [
-    "razzle.config.js",
-    "package.json",
-    "locales.config.js",
+    "next.config.js",
+    "next-env.d.ts",
+    "lingui.config.ts",
 ]
+
+copy_to_bin(
+    name = "copy_static_files",
+    srcs = _SRC,
+)
+
+copy_to_bin(
+    name = "copy_server_static_files",
+    srcs = ["next.config.js"],
+)
 
 _BUILD_DEPS = [
     "@npm//@babel/polyfill",
@@ -53,12 +63,12 @@ _BUILD_DEPS = [
 ]
 
 _RUNTIME_DEPS = [
+    "@npm//@types/node",
     "@npm//react",
     "@npm//react-dom",
     "@npm//react-relay",
     "@npm//relay-runtime",
     "@npm//react-ssr-prepass",
-    "@npm//helmet",
     "@npm//@emotion/react",
     "@npm//@emotion/cache",
     "@npm//@emotion/server",
@@ -101,7 +111,6 @@ _RUNTIME_DEPS = [
 TEST_DEPS = [
     "jest.setup.ts",
     "jest.config.js",
-    "chdir.js",
 ] + glob(
     [
         "src/__generated__/*",
@@ -125,65 +134,50 @@ filegroup(
     data = _RUNTIME_DEPS,
 )
 
-copy_to_bin(
-    name = "copy_static_files",
-    srcs = _SRC,
-)
-
-write_file(
-    name = "write_chdir_script",
-    out = "chdir.js",
-    content = ["process.chdir(__dirname)"],
-)
-
 jest_test(
     name = "unit",
     srcs = glob(
         [
-            "src/client/**/*",
+            "src/domain/**/*",
             "src/modules/**/*",
+            "src/common/**/*",
         ],
     ),
     jest_config = "jest.config.js",
     deps = TEST_DEPS,
+    chdir = "$(RULEDIR)",
+    args = [
+        "--bazel_run_from_execroot",
+    ],
 )
 
 next(
     name = "bundle",
     outs = [
-        ".next",
+        "build",
     ],
     args = [
-        "--node_options=--require=./$(location chdir.js)",
+        "--bazel_run_from_execroot",
         "build",
-        "--noninteractive",
     ],
     data = [
         "copy_static_files",
-        "chdir.js",
     ] + _RUNTIME_DEPS + _BUILD_DEPS,
-)
-
-nodejs_binary(
-    name = "medusa-production",
-    data = [
-        "chdir.js",
-        ":bundle",
-    ] + _RUNTIME_DEPS,
-    entry_point = "build/server.js",
-    templated_args = [
-        "--bazel_patch_module_resolver",
-        "--node_options=--require=./$(rootpath chdir.js)",
-    ],
+    chdir = "$(RULEDIR)",
 )
 
 nodejs_image(
     name = "medusa-production-image",
-    binary = ":medusa-production",
+    args = [
+        "start",
+        "./applications/medusa"
+    ],
     env = {
         "NODE_ENV": "production",
         "PORT": "8000"
     },
+    data = glob(["public/**/*"]) + ["next.config.js", ":bundle"] + _RUNTIME_DEPS,
+    entry_point = "@npm//:node_modules/next/dist/bin/next",
     templated_args = [
         "--bazel_patch_module_resolver",
     ],
