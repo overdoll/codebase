@@ -30,9 +30,10 @@ copy_to_bin(
     srcs = _SRC,
 )
 
-copy_to_bin(
-    name = "copy_server_static_files",
-    srcs = ["next.config.js"],
+write_file(
+    name = "write_chdir_script",
+    out = "chdir.js",
+    content = ["process.chdir(__dirname)"],
 )
 
 _BUILD_DEPS = [
@@ -111,6 +112,7 @@ _RUNTIME_DEPS = [
 TEST_DEPS = [
     "jest.setup.ts",
     "jest.config.js",
+    "chdir.js",
 ] + glob(
     [
         "src/__generated__/*",
@@ -119,6 +121,7 @@ TEST_DEPS = [
     exclude = _EXCLUDE,
 ) + _BUILD_DEPS + _RUNTIME_DEPS + [
     "@npm//ts-jest",
+    "@npm//jest",
     "@npm//@testing-library/react",
     "@npm//babel-jest",
     "@npm//relay-test-utils",
@@ -145,10 +148,6 @@ jest_test(
     ),
     jest_config = "jest.config.js",
     deps = TEST_DEPS,
-    chdir = "$(RULEDIR)",
-    args = [
-        "--bazel_run_from_execroot",
-    ],
 )
 
 next(
