@@ -8,7 +8,6 @@ import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper 
 import SessionsSettings from './SessionsSettings/SessionsSettings'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
-import { Helmet } from 'react-helmet-async'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import { PageProps } from '@//:types/app'
 import Head from 'next/head'

@@ -30,3 +30,5 @@ models:
     model: overdoll/libraries/graphql.URI
   Date:
     model: overdoll/libraries/graphql.Date
+  Currency:
+    model: overdoll/libraries/graphql.Currency

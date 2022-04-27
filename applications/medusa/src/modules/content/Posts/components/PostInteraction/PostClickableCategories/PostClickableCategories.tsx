@@ -14,6 +14,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCategoriesFragment on Post {
     categories {
+      id
       slug
       title
       thumbnail {
@@ -43,7 +44,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
         <WrapItem key={index}>
           <ClickableBox onClick={() => onClick(item)} variant='ghost' bg='transparent' borderRadius='xl' p={0}>
             <Flex align='center' borderRadius='inherit' bg='gray.800' px={2} py={2}>
-              <ResourceIcon mr={2} query={item.thumbnail} />
+              <ResourceIcon seed={item.id} mr={2} query={item.thumbnail} />
               <Text fontWeight='semibold' color='gray.00' fontSize='xl'>{item.title}</Text>
             </Flex>
           </ClickableBox>

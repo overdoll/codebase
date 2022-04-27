@@ -3,8 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "graphql",
     srcs = [
+        "currency.go",
         "dataloader.go",
         "date.go",
+        "locale.go",
         "new.go",
         "preloads.go",
         "uri.go",
@@ -12,6 +14,7 @@ go_library(
     importpath = "overdoll/libraries/graphql",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/money",
         "//libraries/support",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",

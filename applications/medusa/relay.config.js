@@ -2,7 +2,7 @@ const { resolve } = require('path')
 
 module.exports = {
   schema: resolve(__dirname, 'schema/schema.graphql'),
-  schemaExtensions: ['./src/modules/schema'],
+  schemaExtensions: [resolve(__dirname, 'schema/extensions')],
   src: resolve(__dirname, 'src'),
   language: 'typescript',
   excludes: ['**/.next/**', '**/node_modules/**', '**/schema/**'],

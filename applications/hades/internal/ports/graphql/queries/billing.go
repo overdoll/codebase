@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -99,13 +100,13 @@ func (r QueryResolver) CcbillSubscriptionDetails(ctx context.Context, ccbillSubs
 		},
 		SubscriptionInitialPrice:   int(result.SubscriptionInitialPrice()),
 		SubscriptionRecurringPrice: int(result.SubscriptionRecurringPrice()),
-		SubscriptionCurrency:       types.MarshalCurrencyToGraphQL(ctx, result.SubscriptionCurrency()),
+		SubscriptionCurrency:       graphql.MarshalCurrencyToGraphQL(ctx, result.SubscriptionCurrency()),
 		BilledInitialPrice:         int(result.BilledInitialPrice()),
 		BilledRecurringPrice:       int(result.BilledRecurringPrice()),
-		BilledCurrency:             types.MarshalCurrencyToGraphQL(ctx, result.BilledCurrency()),
+		BilledCurrency:             graphql.MarshalCurrencyToGraphQL(ctx, result.BilledCurrency()),
 		AccountingInitialPrice:     int(result.AccountingInitialPrice()),
 		AccountingRecurringPrice:   int(result.AccountingRecurringPrice()),
-		AccountingCurrency:         types.MarshalCurrencyToGraphQL(ctx, result.AccountingCurrency()),
+		AccountingCurrency:         graphql.MarshalCurrencyToGraphQL(ctx, result.AccountingCurrency()),
 		IsRecurring:                ccbillResult.RecurringSubscription(),
 		TimesRebilled:              ccbillResult.TimesRebilled(),
 		ChargebacksIssued:          ccbillResult.ChargebacksIssued(),

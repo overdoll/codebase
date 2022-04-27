@@ -11,6 +11,7 @@ interface Props {
 
 const QuickAccessButtonProfileGQL = graphql`
   fragment QuickAccessButtonProfileFragment on Account {
+    id
     username
     avatar {
       ...ResourceIconFragment
@@ -39,6 +40,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
         justify='center'
       >
         <ResourceIcon
+          seed={data?.id}
           h='38px'
           w='38px'
           query={data?.avatar}

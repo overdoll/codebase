@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -14,6 +15,10 @@ import (
 
 type CharacterResolver struct {
 	App *app.Application
+}
+
+func (r CharacterResolver) Name(ctx context.Context, obj *types.Character, locale *string) (string, error) {
+	return graphql.GetTranslationFromTranslationsAndLanguage(obj.NameTranslations, locale)
 }
 
 func (r CharacterResolver) Thumbnail(ctx context.Context, obj *types.Character) (*types.Resource, error) {

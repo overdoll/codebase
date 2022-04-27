@@ -1,5 +1,4 @@
 const path = require('path')
-const relay = require('./relay.config.js')
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -35,7 +34,17 @@ const securityHeaders = [
   }
 ]
 
-module.exports = {
+let withBundleAnalyzer = (data) => {
+  return data
+}
+
+if (process.env.ANALYZE === 'true') {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true'
+  })
+}
+
+module.exports = withBundleAnalyzer({
   async headers () {
     return [
       {
@@ -45,6 +54,9 @@ module.exports = {
       }
     ]
   },
+  distDir: 'build',
+  generateEtags: false,
+  poweredByHeader: false,
   i18n: {
     locales: ['en'],
     defaultLocale: 'en'
@@ -56,16 +68,24 @@ module.exports = {
   serverRuntimeConfig: {
     projectRoot: __dirname
   },
+  typescript: {
+    // ignore build errors because we already check for it as part of our pipeline
+    // also Next.js only shows 1 error at a time which is really annoying
+    ignoreBuildErrors: true
+  },
+  eslint: {
+    // ignore build errors because we already check for it as part of our pipeline
+    // also Next.js only shows 1 error at a time which is really annoying
+    ignoreDuringBuilds: true
+  },
   webpack: (config) => {
-    config.module.rules.push({
-      test: /\.md$/,
-      use: 'raw-loader'
-    })
-
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack']
     })
+
+    // don't polyfill crypto package
+    config.resolve.alias.crypto = false
 
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -79,4 +99,4 @@ module.exports = {
 
     return config
   }
-}
+})

@@ -22,8 +22,8 @@ func (a *memoryPassportStore) UpdateDeviceLanguageEvent(ctx context.Context, res
 	return nil
 }
 
-func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, language string, error error) {
-	return a.pocket.passport.DeviceID(), a.pocket.passport.IP(), a.pocket.passport.UserAgent(), a.pocket.passport.Language().Locale(), nil
+func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error) {
+	return a.pocket.passport.DeviceID(), a.pocket.passport.IP(), a.pocket.passport.UserAgent(), nil
 }
 
 func (a *memoryPassportStore) ResponseEvent(ctx context.Context, res *http.Response) error {

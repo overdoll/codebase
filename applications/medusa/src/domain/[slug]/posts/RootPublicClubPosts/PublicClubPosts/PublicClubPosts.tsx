@@ -2,9 +2,9 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicClubPostsQuery } from '@//:artifacts/PublicClubPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
+import PostsInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
-import { Helmet } from 'react-helmet-async'
 import Head from 'next/head'
 
 interface Props {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d192c08602018617f9cbff8048ee10a>>
+ * @generated SignedSource<<13dae2d195e6c868a2b9c031421dcf38>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ChangeCategoryThumbnailFragment$data = {
+  readonly id: string;
   readonly thumbnail: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
   } | null;
@@ -29,6 +30,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ChangeCategoryThumbnailFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -55,6 +63,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0e32ff2ca2db18f771a6d556f50e9772";
+(node as any).hash = "8eabe2f63fea38bd78055313effc9728";
 
 export default node;

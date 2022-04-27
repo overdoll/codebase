@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -56,11 +57,13 @@ type Audience struct {
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Title string `json:"title"`
 	// If this audience is standard or not.
 	Standard bool `json:"standard"`
 	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -99,9 +102,11 @@ type Category struct {
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this category.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -140,9 +145,11 @@ type Character struct {
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this character.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Name string `json:"name"`
 	// All translations for this name.
-	NameTranslations []*Translation `json:"nameTranslations"`
+	NameTranslations []*graphql1.Translation `json:"nameTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -304,13 +311,6 @@ type DeletePostPayload struct {
 	PostID *relay.ID `json:"postId"`
 }
 
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
-}
-
 // Like a post.
 type LikePostInput struct {
 	// The post ID that you want to like
@@ -422,9 +422,11 @@ type Series struct {
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this series.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
@@ -456,13 +458,6 @@ type SubmitPostInput struct {
 type SubmitPostPayload struct {
 	// The post after being submitted
 	Post *Post `json:"post"`
-}
-
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
 }
 
 // Un-Archive post.
@@ -1053,6 +1048,55 @@ func (e *CreateSeriesValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CreateSeriesValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Currency string
+
+const (
+	CurrencyUsd Currency = "USD"
+	CurrencyCad Currency = "CAD"
+	CurrencyAud Currency = "AUD"
+	CurrencyJpy Currency = "JPY"
+	CurrencyGbp Currency = "GBP"
+	CurrencyEur Currency = "EUR"
+)
+
+var AllCurrency = []Currency{
+	CurrencyUsd,
+	CurrencyCad,
+	CurrencyAud,
+	CurrencyJpy,
+	CurrencyGbp,
+	CurrencyEur,
+}
+
+func (e Currency) IsValid() bool {
+	switch e {
+	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
+		return true
+	}
+	return false
+}
+
+func (e Currency) String() string {
+	return string(e)
+}
+
+func (e *Currency) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Currency(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Currency", str)
+	}
+	return nil
+}
+
+func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

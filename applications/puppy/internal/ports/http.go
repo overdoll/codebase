@@ -2,7 +2,7 @@ package ports
 
 import (
 	"context"
-	"fmt"
+	"crypto/subtle"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httputil"
@@ -14,6 +14,14 @@ import (
 	"overdoll/libraries/router"
 )
 
+type GraphQLErrorResponse struct {
+	Errors []struct {
+		Message   string   `json:"message"`
+		Path      []string `json:"path"`
+		Locations []string `json:"locations"`
+	} `json:"errors"`
+}
+
 // Custom middleware that will ensure our security cookie + header is present
 // Essentially, this is CSRF protection
 func secureRequest() gin.HandlerFunc {
@@ -22,27 +30,66 @@ func secureRequest() gin.HandlerFunc {
 		ck, err := c.Request.Cookie("od.security")
 
 		if err != nil && err == http.ErrNoCookie {
-			c.AbortWithStatusJSON(401, gin.H{"error": "missing security cookie"})
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
+				{
+					Message:   "missing security cookie",
+					Path:      []string{},
+					Locations: []string{},
+				},
+			}})
 			return
 		}
 
 		securityHeader := c.Request.Header.Get("X-overdoll-Security")
 
 		if securityHeader == "" {
-			c.AbortWithStatusJSON(401, gin.H{"error": "missing security header"})
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
+				{
+					Message:   "missing security header",
+					Path:      []string{},
+					Locations: []string{},
+				},
+			}})
 			return
 		}
 
 		decrypted, err := crypt.DecryptWithCustomPassphrase(ck.Value, os.Getenv("SECURITY_SECRET"))
 
 		if err != nil {
-			fmt.Println(err)
-			c.AbortWithStatusJSON(401, gin.H{"error": "invalid security cookie"})
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
+				{
+					Message:   "invalid security cookie",
+					Path:      []string{},
+					Locations: []string{},
+				},
+			}})
 			return
 		}
 
-		if decrypted != c.Request.Header.Get("X-overdoll-Security") {
-			c.AbortWithStatusJSON(401, gin.H{"error": "security header and cookie mismatch"})
+		if subtle.ConstantTimeCompare([]byte(decrypted), []byte(c.Request.Header.Get("X-overdoll-Security"))) != 1 {
+			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
+				Message   string   `json:"message"`
+				Path      []string `json:"path"`
+				Locations []string `json:"locations"`
+			}{
+				{
+					Message:   "security header and cookie mismatch",
+					Path:      []string{},
+					Locations: []string{},
+				},
+			}})
 			return
 		}
 

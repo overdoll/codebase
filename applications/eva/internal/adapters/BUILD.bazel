@@ -46,7 +46,6 @@ go_test(
         "//applications/eva/internal/domain/account",
         "//libraries/bootstrap",
         "//libraries/config",
-        "//libraries/localization",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
         "@com_github_stretchr_testify//assert",

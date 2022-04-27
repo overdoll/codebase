@@ -283,16 +283,6 @@ const StaffCatalog = [
 export default {
   locales: [
     'en'
-    // 'ru',
-    // 'es',
-    // 'fr',
-    // 'it',
-    // 'pt',
-    // 'ko',
-    // 'de',
-    // 'ja',
-    // 'zh',
-    // 'cs'
   ],
   catalogs: [
     ...GeneralCatalogs,

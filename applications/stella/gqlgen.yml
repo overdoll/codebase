@@ -28,3 +28,7 @@ models:
     model: overdoll/libraries/graphql/relay.PageInfo
   URI:
     model: overdoll/libraries/graphql.URI
+  Translation:
+    model: overdoll/libraries/graphql.Translation
+  Language:
+    model: overdoll/libraries/graphql.Language

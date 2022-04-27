@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	hades "overdoll/applications/hades/proto"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -124,7 +125,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, graphql1.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
 	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
 
@@ -155,15 +156,15 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.Equal(t, 699, ccbillSubscriptionDetails.SubscriptionInitialPrice, "s: correct initial price")
 	require.Equal(t, 699, ccbillSubscriptionDetails.SubscriptionRecurringPrice, "s: correct recurring price")
-	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.SubscriptionCurrency, "s: correct usd currency")
+	require.Equal(t, graphql1.CurrencyUsd, ccbillSubscriptionDetails.SubscriptionCurrency, "s: correct usd currency")
 
 	require.Equal(t, 699, ccbillSubscriptionDetails.BilledInitialPrice, "b: correct initial price")
 	require.Equal(t, 699, ccbillSubscriptionDetails.BilledRecurringPrice, "b: correct recurring price")
-	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.BilledCurrency, "b: correct usd currency")
+	require.Equal(t, graphql1.CurrencyUsd, ccbillSubscriptionDetails.BilledCurrency, "b: correct usd currency")
 
 	require.Equal(t, 699, ccbillSubscriptionDetails.AccountingInitialPrice, "a: correct initial price")
 	require.Equal(t, 699, ccbillSubscriptionDetails.AccountingRecurringPrice, "a: correct recurring price")
-	require.Equal(t, types.CurrencyUsd, ccbillSubscriptionDetails.AccountingCurrency, "a: correct usd currency")
+	require.Equal(t, graphql1.CurrencyUsd, ccbillSubscriptionDetails.AccountingCurrency, "a: correct usd currency")
 
 	accountTransactions := getAccountTransactions(t, gqlClient, accountId)
 
@@ -178,7 +179,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
-	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
+	require.Equal(t, graphql1.CurrencyUsd, transaction.Currency, "correct currency")
 	require.Equal(t, "2022-03-28", transaction.NextBillingDate, "correct next billing date")
 	require.Equal(t, "2022-02-26", transaction.BilledAtDate, "correct billing date")
 	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")

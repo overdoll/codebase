@@ -21,6 +21,7 @@ const Fragment = graphql`
     supporterSince
     expiredAt
     club {
+      id
       name
       slug
       thumbnail {
@@ -57,7 +58,12 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
         <HStack spacing={2} justify='space-between'>
           <LinkTile href={`/${data.club.slug}`}>
             <HStack spacing={3}>
-              <ResourceIcon h={10} w={10} query={data?.club.thumbnail} />
+              <ResourceIcon
+                seed={data?.club.id}
+                h={10}
+                w={10}
+                query={data?.club.thumbnail}
+              />
               <Heading
                 whiteSpace='nowrap'
                 textOverflow='ellipsis'

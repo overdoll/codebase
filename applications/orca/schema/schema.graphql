@@ -187,21 +187,15 @@ type Account implements Node
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean! @join__field(graph: EVA)
 
-  """Whether or not this account is secure."""
+  """
+  Whether or not this account is secure.
+  
+  At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
+  """
   isSecure: Boolean! @join__field(graph: EVA)
 
   """Whether or not this account is a staff member"""
   isStaff: Boolean! @join__field(graph: EVA)
-
-  """
-  The language of the account.
-  
-  Note: this is the language that will be used to determine which emails should be sent where.
-  
-  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
-  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
-  """
-  language: Language! @join__field(graph: EVA)
 
   """The details of the account lock"""
   lock: AccountLock @join__field(graph: EVA)
@@ -1084,8 +1078,12 @@ type Audience implements Node
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
 
-  """A title for this audience."""
-  title: String! @join__field(graph: STING)
+  """
+  A title for this audience.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @join__field(graph: STING)
 
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: STING)
@@ -1412,7 +1410,7 @@ type CancellationReason implements Node
   reference: String! @join__field(graph: HADES)
 
   """The title for this reason."""
-  title: String! @join__field(graph: HADES)
+  title(locale: BCP47): String! @join__field(graph: HADES)
 
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: HADES)
@@ -1511,8 +1509,12 @@ type Category implements Node
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
 
-  """A title for this category."""
-  title: String! @join__field(graph: STING)
+  """
+  A title for this category.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @join__field(graph: STING)
 
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: STING)
@@ -1552,8 +1554,12 @@ type Character implements Node
   """An ID pointing to this character."""
   id: ID! @join__field(graph: STING)
 
-  """A name for this character."""
-  name: String! @join__field(graph: STING)
+  """
+  A name for this character.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  name(locale: BCP47): String! @join__field(graph: STING)
 
   """All translations for this name."""
   nameTranslations: [Translation!]! @join__field(graph: STING)
@@ -3381,13 +3387,6 @@ type Mutation {
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload @join__field(graph: EVA)
 
   """
-  Update the language of the account.
-  
-  Note: that this is only a value, and in order to see anything in the browser, you should use the "UpdateLanguage" mutation.
-  """
-  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload @join__field(graph: EVA)
-
-  """
   Update the account username
   
   Will retain the old username
@@ -3455,9 +3454,6 @@ type Mutation {
 
   """Update the date of birth for the curation profile"""
   updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload @join__field(graph: STING)
-
-  """Update the current language."""
-  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload @join__field(graph: EVA)
 
   """Update a post in draft status - audience"""
   updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload @join__field(graph: STING)
@@ -4047,15 +4043,10 @@ type Query {
   ): DepositRequestConnection! @join__field(graph: RINGER)
 
   """
-  The current language that is set
+  List of all available languages
   
-  Note: this is only temporary, per-browser language
-  
-  For a permanent language on an account level, see "Language" as part of viewer
+  Should be used as a reference for back-end queries when requesting a specific language or adding a new language to a backend list
   """
-  language: Language! @join__field(graph: EVA)
-
-  """List of all available languages"""
   languages: [Language!]! @join__field(graph: EVA)
 
   """Fetch a node by the ID"""
@@ -4534,8 +4525,12 @@ type Rule implements Node
   """If this rule is deprecated."""
   deprecated: Boolean! @join__field(graph: PARLEY)
 
-  """The description for this rule."""
-  description: String! @join__field(graph: PARLEY)
+  """
+  The description for this rule.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @join__field(graph: PARLEY)
 
   """All translations for this description."""
   descriptionTranslations: [Translation!]! @join__field(graph: PARLEY)
@@ -4551,8 +4546,12 @@ type Rule implements Node
   """Reference of the rule. Should be used for single lookups."""
   reference: String! @join__field(graph: PARLEY)
 
-  """The title for this rule."""
-  title: String! @join__field(graph: PARLEY)
+  """
+  The title for this rule.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @join__field(graph: PARLEY)
 
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: PARLEY)
@@ -4618,8 +4617,12 @@ type Series implements Node
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
 
-  """A title for this series."""
-  title: String! @join__field(graph: STING)
+  """
+  A title for this series.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @join__field(graph: STING)
 
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: STING)
@@ -4797,21 +4800,6 @@ type UpdateAccountEmailStatusToPrimaryPayload {
 
   """The account email that was updated to 'confirmed' status"""
   updatedAccountEmail: AccountEmail
-}
-
-"""Input for updating the account language"""
-input UpdateAccountLanguageInput {
-  """The locale to update the language to"""
-  locale: BCP47!
-}
-
-"""Payload of the account language update"""
-type UpdateAccountLanguagePayload {
-  """The account that has the updated language"""
-  Account: Account
-
-  """The new language that is now set"""
-  language: Language
 }
 
 """Input for updating an account's username"""
@@ -5104,18 +5092,6 @@ input UpdateCurationProfileDateOfBirthInput {
 type UpdateCurationProfileDateOfBirthPayload {
   """The updated profile."""
   curationProfile: CurationProfile
-}
-
-"""Input for updating the current language"""
-input UpdateLanguageInput {
-  """The locale to update the language to"""
-  locale: BCP47!
-}
-
-"""Payload of the language update"""
-type UpdateLanguagePayload {
-  """The new language that is now set"""
-  language: Language
 }
 
 """Update post audience."""

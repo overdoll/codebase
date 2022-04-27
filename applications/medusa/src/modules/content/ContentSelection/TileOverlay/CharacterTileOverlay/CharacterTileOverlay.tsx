@@ -12,6 +12,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment CharacterTileOverlayFragment on Character {
+    id
     name
     series {
       title
@@ -31,6 +32,7 @@ export default function CharacterTileOverlay ({
   return (
     <TileOverlay backdrop={
       <ResourceItem
+        seed={data.id}
         query={data.thumbnail}
       />
     }

@@ -12,15 +12,15 @@ const pathnameRegex = /[^?#]+/u
 function NextQueryParamProvider ({
   children,
   ...rest
-}: Props) {
+}: Props): JSX.Element {
   const router = useRouter()
   const match = router.asPath.match(pathnameRegex)
   const pathname = (match != null) ? match[0] : router.asPath
 
-  const location = useMemo(() => {
+  const location: Location = useMemo(() => {
     if (typeof window !== 'undefined') {
       // For SSG, no query parameters are available on the server side,
-      // since they can't be known at build time. Therefore to avoid
+      // since they can't be known at build time. Therefore, to avoid
       // markup mismatches, we need a two-part render in this case that
       // patches the client with the updated query parameters lazily.
       // Note that for SSR `router.isReady` will be `true` immediately
@@ -28,12 +28,14 @@ function NextQueryParamProvider ({
       if (router.isReady) {
         return window.location
       } else {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         return { search: '' } as Location
       }
     } else {
       // On the server side we only need a subset of the available
       // properties of `Location`. The other ones are only necessary
       // for interactive features on the client.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return { search: router.asPath.replace(pathnameRegex, '') } as Location
     }
   }, [router.asPath, router.isReady])
@@ -44,7 +46,7 @@ function NextQueryParamProvider ({
         hash,
         search
       }: Location) {
-        routeFn(
+        void routeFn(
           {
             pathname: router.pathname,
             search,

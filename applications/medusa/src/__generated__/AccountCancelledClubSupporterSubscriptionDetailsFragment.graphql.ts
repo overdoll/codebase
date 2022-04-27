@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9d1bd44a74899780d2a7b2a24d6c926>>
+ * @generated SignedSource<<efee6982e2c7df8666d251a54fe73b54>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type AccountCancelledClubSupporterSubscriptionDetailsFragment$data = {
   readonly supporterSince: any;
   readonly cancelledAt: any;
   readonly club: {
+    readonly id: string;
     readonly name: string;
     readonly slug: string;
     readonly thumbnail: {
@@ -60,6 +61,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "name",
           "storageKey": null
         },
@@ -94,6 +102,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c4015224cf32b19a3cb15310a73b6efb";
+(node as any).hash = "ba73557d04908adcd32268c2c44c2060";
 
 export default node;

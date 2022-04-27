@@ -6,14 +6,22 @@ type Rule implements Node @key(fields: "id") {
   """Reference of the rule. Should be used for single lookups."""
   reference: String!
 
-  """The title for this rule."""
-  title: String!
+  """
+  The title for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
 
-  """The description for this rule."""
-  description: String!
+  """
+  The description for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this description."""
   descriptionTranslations: [Translation!]!

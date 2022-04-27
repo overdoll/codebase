@@ -8,8 +8,12 @@ type Character implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A name for this character."""
-  name: String!
+  """
+  A name for this character.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  name(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this name."""
   nameTranslations: [Translation!]!

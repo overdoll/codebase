@@ -2,7 +2,6 @@ package account
 
 import (
 	"errors"
-	"overdoll/libraries/localization"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -20,7 +19,6 @@ type Account struct {
 	roles            []Role
 	verified         bool
 	avatarResourceId *string
-	language         *localization.Language
 
 	locked      bool
 	lockedUntil *time.Time
@@ -41,7 +39,7 @@ var (
 	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locale string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
 
 	var newRoles []Role
 
@@ -59,13 +57,12 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		avatarResourceId:   avatar,
 		lockedUntil:        lockedUntil,
 		locked:             locked,
-		language:           localization.NewLanguageWithFallback(locale),
 		multiFactorEnabled: multiFactorEnabled,
 		lastUsernameEdit:   lastUsernameEdit,
 	}
 }
 
-func NewAccount(lang *localization.Language, id, username, email string) (*Account, error) {
+func NewAccount(id, username, email string) (*Account, error) {
 
 	if err := validateUsername(username); err != nil {
 		return nil, err
@@ -74,7 +71,6 @@ func NewAccount(lang *localization.Language, id, username, email string) (*Accou
 	return &Account{
 		id:               id,
 		username:         username,
-		language:         lang,
 		email:            email,
 		lastUsernameEdit: time.Now().Add(time.Duration(-(24 * 30 * 2)) * time.Hour),
 	}, nil
@@ -90,10 +86,6 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
-}
-
-func (a *Account) Language() *localization.Language {
-	return a.language
 }
 
 func (a *Account) Verified() bool {
@@ -233,19 +225,6 @@ func (a *Account) RolesAsString() []string {
 	}
 
 	return n
-}
-
-func (a *Account) UpdateLanguage(locale string) error {
-
-	l, err := localization.NewLanguage(locale)
-
-	if err != nil {
-		return err
-	}
-
-	a.language = l
-
-	return nil
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {

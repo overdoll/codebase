@@ -1,5 +1,5 @@
 const path = require('path')
-
+// NOTE: this webpack config is for editor integration only! please edit the webpack configuration inside of next.config.js!
 module.exports = {
   resolve: {
     alias: {
@@ -10,16 +10,6 @@ module.exports = {
       '@//:domain': path.resolve(__dirname, 'src/domain'),
       '@//:common': path.resolve(__dirname, 'src/common')
     }
-  },
-  optimization: {
-    runtimeChunk: 'single'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.md$/,
-        use: 'raw-loader'
-      }
-    ]
   }
 }
+// NOTE: this webpack config is for editor integration only! please edit the webpack configuration inside of next.config.js!

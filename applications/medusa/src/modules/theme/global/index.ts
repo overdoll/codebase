@@ -1,5 +1,8 @@
 export default function global (props): any {
   return {
+    html: {
+      bg: 'gray.900'
+    },
     body: {
       fontFamily: 'body',
       color: 'gray.100',

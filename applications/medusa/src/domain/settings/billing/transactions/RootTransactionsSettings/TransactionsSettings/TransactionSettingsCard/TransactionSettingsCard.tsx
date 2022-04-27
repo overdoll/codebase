@@ -25,6 +25,7 @@ const Fragment = graphql`
     clubSupporterSubscription {
       ... on IAccountClubSupporterSubscription {
         club {
+          id
           name
           thumbnail {
             ...ResourceIconFragment
@@ -60,7 +61,12 @@ export default function TransactionSettingsCard ({
   return (
     <Stack spacing={2}>
       <HStack spacing={2}>
-        <ResourceIcon h={9} w={9} query={data?.clubSupporterSubscription?.club?.thumbnail} />
+        <ResourceIcon
+          seed={data?.clubSupporterSubscription?.club?.id}
+          h={9}
+          w={9}
+          query={data?.clubSupporterSubscription?.club?.thumbnail}
+        />
         <Heading
           isTruncated
           fontSize='lg'

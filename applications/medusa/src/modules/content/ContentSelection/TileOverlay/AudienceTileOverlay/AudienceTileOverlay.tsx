@@ -10,6 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment AudienceTileOverlayFragment on Audience {
+    id
     title
     thumbnail {
       ...ResourceItemFragment
@@ -27,6 +28,7 @@ export default function AudienceTileOverlay ({
       maxH={58}
       backdrop={
         <ResourceItem
+          seed={data.id}
           query={data.thumbnail}
         />
       }

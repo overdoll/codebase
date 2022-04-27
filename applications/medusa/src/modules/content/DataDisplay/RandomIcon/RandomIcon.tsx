@@ -5,8 +5,19 @@ import {
 } from '@//:assets/icons/interface'
 import { useConst } from '@chakra-ui/react'
 import { Icon } from '../../PageLayout'
+import { useMemo } from 'react'
+import { Random } from '../../../utilities/random'
+import hash from '../../../utilities/hash'
 
-export default function RandomIcon (): JSX.Element {
+interface Props {
+  seed: string | undefined
+}
+
+const defaultSeed = 'DETERMINISTIC_SEED'
+
+export default function RandomIcon ({ seed }: Props): JSX.Element {
+  const memoized = useMemo(() => new Random(hash(seed ?? defaultSeed)), [seed])
+
   const icons = [
     PlaceholderResourceRabbit,
     PlaceholderResourceSkull,
@@ -22,16 +33,13 @@ export default function RandomIcon (): JSX.Element {
     'primary.400'
   ]
 
-  // take mod of a number (from id) (3 mod id) and then use that as the number
-  // for selecting the random icon
-
   const randomValues = useConst({
-    icons: Math.random() * 3,
-    colors: Math.random() * 6
+    icons: memoized.nextInt32([0, 2]),
+    colors: memoized.nextInt32([0, 5])
   })
 
-  const randomIcon = icons[Math.floor(randomValues.icons)]
-  const randomColor = colors[Math.floor(randomValues.colors)]
+  const randomIcon = icons[randomValues.icons]
+  const randomColor = colors[randomValues.colors]
 
   return (
     <Icon icon={randomIcon} fill={randomColor} w='100%' h='100%' p={2} />

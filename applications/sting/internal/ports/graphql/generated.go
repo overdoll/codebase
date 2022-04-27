@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
@@ -79,7 +80,7 @@ type ComplexityRoot struct {
 		Slug              func(childComplexity int) int
 		Standard          func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		Title             func(childComplexity int) int
+		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
 		TotalPosts        func(childComplexity int) int
@@ -106,7 +107,7 @@ type ComplexityRoot struct {
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		Title             func(childComplexity int) int
+		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
 		TotalPosts        func(childComplexity int) int
@@ -130,7 +131,7 @@ type ComplexityRoot struct {
 
 	Character struct {
 		ID               func(childComplexity int) int
-		Name             func(childComplexity int) int
+		Name             func(childComplexity int, locale *string) int
 		NameTranslations func(childComplexity int) int
 		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Series           func(childComplexity int) int
@@ -328,7 +329,7 @@ type ComplexityRoot struct {
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		Title             func(childComplexity int) int
+		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
 		TotalPosts        func(childComplexity int) int
@@ -445,6 +446,7 @@ type AccountResolver interface {
 }
 type AudienceResolver interface {
 	Thumbnail(ctx context.Context, obj *types.Audience) (*types.Resource, error)
+	Title(ctx context.Context, obj *types.Audience, locale *string) (string, error)
 
 	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
@@ -453,6 +455,7 @@ type AudienceCurationProfileResolver interface {
 }
 type CategoryResolver interface {
 	Thumbnail(ctx context.Context, obj *types.Category) (*types.Resource, error)
+	Title(ctx context.Context, obj *types.Category, locale *string) (string, error)
 
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
@@ -461,6 +464,7 @@ type CategoryCurationProfileResolver interface {
 }
 type CharacterResolver interface {
 	Thumbnail(ctx context.Context, obj *types.Character) (*types.Resource, error)
+	Name(ctx context.Context, obj *types.Character, locale *string) (string, error)
 
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
@@ -532,6 +536,7 @@ type QueryResolver interface {
 }
 type SeriesResolver interface {
 	Thumbnail(ctx context.Context, obj *types.Series) (*types.Resource, error)
+	Title(ctx context.Context, obj *types.Series, locale *string) (string, error)
 
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
@@ -648,7 +653,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Audience.Title(childComplexity), true
+		args, err := ec.field_Audience_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Audience.Title(childComplexity, args["locale"].(*string)), true
 
 	case "Audience.titleTranslations":
 		if e.complexity.Audience.TitleTranslations == nil {
@@ -758,7 +768,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Category.Title(childComplexity), true
+		args, err := ec.field_Category_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Category.Title(childComplexity, args["locale"].(*string)), true
 
 	case "Category.titleTranslations":
 		if e.complexity.Category.TitleTranslations == nil {
@@ -842,7 +857,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Character.Name(childComplexity), true
+		args, err := ec.field_Character_name_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Character.Name(childComplexity, args["locale"].(*string)), true
 
 	case "Character.nameTranslations":
 		if e.complexity.Character.NameTranslations == nil {
@@ -1973,7 +1993,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Series.Title(childComplexity), true
+		args, err := ec.field_Series_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Series.Title(childComplexity, args["locale"].(*string)), true
 
 	case "Series.titleTranslations":
 		if e.complexity.Series.TitleTranslations == nil {
@@ -2266,8 +2291,12 @@ var sources = []*ast.Source{
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A title for this audience."""
-  title: String!
+  """
+  A title for this audience.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """If this audience is standard or not."""
   standard: Boolean!
@@ -2459,8 +2488,12 @@ extend type Mutation {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A title for this category."""
-  title: String!
+  """
+  A title for this category.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -2626,8 +2659,12 @@ type Mutation {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A name for this character."""
-  name: String!
+  """
+  A name for this character.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  name(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this name."""
   nameTranslations: [Translation!]!
@@ -3621,8 +3658,12 @@ extend type Club @key(fields: "id")  {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A title for this series."""
-  title: String!
+  """
+  A title for this series.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -3810,6 +3851,15 @@ type Translation {
 
   """The translation text."""
   text: String!
+}
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
@@ -4123,6 +4173,21 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 	return args, nil
 }
 
+func (ec *executionContext) field_Audience_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4216,6 +4281,36 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["sortBy"] = arg9
+	return args, nil
+}
+
+func (ec *executionContext) field_Category_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Character_name_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
 	return args, nil
 }
 
@@ -5665,6 +5760,21 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Series_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -6034,14 +6144,21 @@ func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.C
 		Object:     "Audience",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Audience_title_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
+		return ec.resolvers.Audience().Title(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6123,9 +6240,9 @@ func (ec *executionContext) _Audience_titleTranslations(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -6598,14 +6715,21 @@ func (ec *executionContext) _Category_title(ctx context.Context, field graphql.C
 		Object:     "Category",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Category_title_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
+		return ec.resolvers.Category().Title(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6652,9 +6776,9 @@ func (ec *executionContext) _Category_titleTranslations(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -7127,14 +7251,21 @@ func (ec *executionContext) _Character_name(ctx context.Context, field graphql.C
 		Object:     "Character",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Character_name_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return ec.resolvers.Character().Name(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7181,9 +7312,9 @@ func (ec *executionContext) _Character_nameTranslations(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -8483,7 +8614,7 @@ func (ec *executionContext) _Entity_findSeriesByID(ctx context.Context, field gr
 	return ec.marshalNSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8518,7 +8649,7 @@ func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.
 	return ec.marshalNBCP472string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11607,14 +11738,21 @@ func (ec *executionContext) _Series_title(ctx context.Context, field graphql.Col
 		Object:     "Series",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Series_title_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
+		return ec.resolvers.Series().Title(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11661,9 +11799,9 @@ func (ec *executionContext) _Series_titleTranslations(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -11950,7 +12088,7 @@ func (ec *executionContext) _SubmitPostPayload_post(ctx context.Context, field g
 	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11980,12 +12118,12 @@ func (ec *executionContext) _Translation_language(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Language)
+	res := resTmp.(*graphql1.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -15134,15 +15272,25 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 
 			})
 		case "title":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Audience_title(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Audience_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "standard":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Audience_standard(ctx, field, obj)
@@ -15405,15 +15553,25 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 
 			})
 		case "title":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Category_title(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Category_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "titleTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Category_titleTranslations(ctx, field, obj)
@@ -15666,15 +15824,25 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 
 			})
 		case "name":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Character_name(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Character_name(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "nameTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Character_nameTranslations(ctx, field, obj)
@@ -16410,7 +16578,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 
 var languageImplementors = []string{"Language"}
 
-func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Language) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -17623,15 +17791,25 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 
 			})
 		case "title":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Series_title(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Series_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
+			})
 		case "titleTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Series_titleTranslations(ctx, field, obj)
@@ -17805,7 +17983,7 @@ func (ec *executionContext) _SubmitPostPayload(ctx context.Context, sel ast.Sele
 
 var translationImplementors = []string{"Translation"}
 
-func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Translation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -19462,7 +19640,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *graphql1.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -19841,7 +20019,7 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -19865,7 +20043,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx, sel, v[i])
+			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -19885,7 +20063,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *graphql1.Translation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -20372,6 +20550,22 @@ func (ec *executionContext) marshalOAudience2ᚖoverdollᚋapplicationsᚋsting�
 		return graphql.Null
 	}
 	return ec._Audience(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOBCP472ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalString(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOBCP472ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

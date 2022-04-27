@@ -38,7 +38,7 @@ export default function PostsInfiniteScroll ({
   viewerQuery,
   hasNext,
   loadNext,
-  isLoadingNext,
+  isLoadingNext
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 

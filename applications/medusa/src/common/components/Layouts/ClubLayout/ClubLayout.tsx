@@ -4,7 +4,6 @@ import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigatio
 import { BirdHouse, ContentBrushPen, FileMultiple, SettingCog, SettingHammer, UserHuman } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
-import { Helmet } from 'react-helmet-async'
 import { Box, Skeleton } from '@chakra-ui/react'
 import QueryErrorBoundary from '../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectClubs from './SelectClubs/SelectClubs'

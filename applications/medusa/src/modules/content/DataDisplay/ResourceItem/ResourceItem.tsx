@@ -10,6 +10,7 @@ interface Props extends HTMLChakraProps<any> {
   query: ResourceItemFragment$key | null
   h?: string | undefined
   w?: string | undefined
+  seed: string | undefined
 }
 
 const Fragment = graphql`
@@ -23,6 +24,7 @@ const Fragment = graphql`
 
 export default function ResourceItem ({
   query,
+  seed,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -30,7 +32,7 @@ export default function ResourceItem ({
   if (data == null) {
     return (
       <Flex bg='gray.800' h='100%' w='100%' direction='column' justify='center' align='center' {...rest}>
-        <RandomPattern />
+        <RandomPattern seed={seed} />
       </Flex>
     )
   }

@@ -10,6 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment LargeClubHeaderFragment on Club {
+    id
     name
     thumbnail {
       ...ResourceIconFragment
@@ -22,7 +23,13 @@ export default function LargeClubHeader ({ query }: Props): JSX.Element {
 
   return (
     <Flex h={16} align='center'>
-      <ResourceIcon mr={4} h={14} w={14} query={data?.thumbnail} />
+      <ResourceIcon
+        seed={data?.id}
+        mr={4}
+        h={14}
+        w={14}
+        query={data?.thumbnail}
+      />
       <Heading
         whiteSpace='nowrap'
         textOverflow='ellipsis'

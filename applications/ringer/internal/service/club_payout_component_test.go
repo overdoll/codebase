@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/ringer/internal/app/workflows"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -18,7 +19,7 @@ type ClubPayoutModified struct {
 	Id          relay.ID
 	Reference   string
 	Status      types.ClubPayoutStatus
-	Currency    types.Currency
+	Currency    graphql1.Currency
 	Amount      int
 	Events      []types.ClubPayoutEvent
 	DepositDate time.Time
@@ -110,7 +111,7 @@ func getPaymentsForPayout(t *testing.T, client *graphql.Client, payoutId string)
 type DepositRequestModified struct {
 	Id                 relay.ID
 	Reference          string
-	Currency           types.Currency
+	Currency           graphql1.Currency
 	BaseAmount         int
 	EstimatedFeeAmount int
 	PayoutMethod       types.PayoutMethod
@@ -200,7 +201,7 @@ func TestClubPayout(t *testing.T) {
 		// check payment is in correct state
 		require.Equal(t, types.ClubPayoutStatusQueued, targetPayout.Status, "payout is queued")
 		require.Equal(t, 10500, targetPayout.Amount, "correct base amount")
-		require.Equal(t, types.CurrencyUsd, targetPayout.Currency, "correct currency")
+		require.Equal(t, graphql1.CurrencyUsd, targetPayout.Currency, "correct currency")
 
 		payoutId = targetPayout.Reference
 
@@ -290,7 +291,7 @@ func TestClubPayout(t *testing.T) {
 
 func validateDepositRequest(t *testing.T, depositRequest DepositRequestModified) {
 	require.Equal(t, types.PayoutMethodPaxum, depositRequest.PayoutMethod, "correct payout method as paxum")
-	require.Equal(t, types.CurrencyUsd, depositRequest.Currency, "correct currency")
+	require.Equal(t, graphql1.CurrencyUsd, depositRequest.Currency, "correct currency")
 	require.GreaterOrEqual(t, depositRequest.BaseAmount, 10500, "correct base amount for deposit request")
 	require.GreaterOrEqual(t, depositRequest.EstimatedFeeAmount, 5100, "correct estimated fee amount for deposit request")
 	require.GreaterOrEqual(t, depositRequest.TotalAmount, 15600, "correct total amount")

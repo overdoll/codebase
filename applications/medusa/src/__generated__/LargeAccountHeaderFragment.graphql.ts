@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae47288eb01f2481e293a9af30ff7f1d>>
+ * @generated SignedSource<<a1854ece3cae87dc7c8db06ff1556505>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LargeAccountHeaderFragment$data = {
+  readonly id: string;
   readonly username: string;
   readonly avatar: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
@@ -29,6 +30,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "LargeAccountHeaderFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -57,6 +65,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "87a776b6b96ca4883636090240e8fbcd";
+(node as any).hash = "6b2b33e8f600279e45594ddecf12fd03";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e1873b1e3e981dad550e55dd7a04a61>>
+ * @generated SignedSource<<46ba0ee4136f75221ce3e54bc2f2e818>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubTileOverlayFragment$data = {
+  readonly id: string;
   readonly name: string;
   readonly thumbnail: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
@@ -40,6 +41,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ClubTileOverlayFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -134,6 +142,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8e320799e009da4a30aad7f7d283f8a5";
+(node as any).hash = "f723b4b71736d036e5604084072c1627";
 
 export default node;

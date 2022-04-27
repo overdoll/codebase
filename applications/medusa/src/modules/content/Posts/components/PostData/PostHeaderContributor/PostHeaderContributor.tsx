@@ -7,6 +7,7 @@ import { Link } from '../../../../../routing'
 const Fragment = graphql`
   fragment PostHeaderContributorFragment on Post {
     contributor {
+      id
       username
       avatar {
         ...ResourceIconFragment
@@ -30,7 +31,11 @@ export default function PostHeaderContributor ({ query }: Props): JSX.Element {
     >
       <ClickableBox bg='transparent' p={0}>
         <Flex align='center'>
-          <ResourceIcon mr={3} query={data.contributor.avatar} />
+          <ResourceIcon
+            seed={data.contributor.id}
+            mr={3}
+            query={data.contributor.avatar}
+          />
           <Heading color='gray.00' fontSize='xl'>
             {data?.contributor?.username}
           </Heading>

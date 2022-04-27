@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3c0a74743dde6b03757e01831f6f7888>>
- * @relayHash a6952c1ada0ac5e5a7d281768224dde9
+ * @generated SignedSource<<b2c5f9ab65fc4d01df4764e9eab810d5>>
+ * @relayHash 4b8af19aba9f47c1f9b55fe05003a5f6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a6952c1ada0ac5e5a7d281768224dde9
+// @relayRequestID 4b8af19aba9f47c1f9b55fe05003a5f6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -210,7 +210,7 @@ return {
     ]
   },
   "params": {
-    "id": "a6952c1ada0ac5e5a7d281768224dde9",
+    "id": "4b8af19aba9f47c1f9b55fe05003a5f6",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",

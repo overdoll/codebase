@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -44,7 +45,7 @@ type AccountCancelledClubSupporterSubscriptions struct {
 							EndDate            string
 							CancelledAt        time.Time
 							BillingAmount      int
-							BillingCurrency    types.Currency
+							BillingCurrency    graphql.Currency
 							PaymentMethod      types.PaymentMethod
 							CcbillSubscription types.CCBillSubscription
 							CancellationReason types.CancellationReason

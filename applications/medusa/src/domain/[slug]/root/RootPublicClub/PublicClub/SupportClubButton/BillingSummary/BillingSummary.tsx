@@ -70,7 +70,7 @@ export default function BillingSummary ({
       <Box>
         <LargeBackgroundBox bg='gray.900'>
           <Center>
-            <Heading align='center' fontSize='2xl' color='gray.00'>
+            <Heading alignSelf='center' fontSize='2xl' color='gray.00'>
               {price} per month
             </Heading>
           </Center>

@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"overdoll/libraries/localization"
 	"sync"
 	"testing"
 
@@ -77,7 +76,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create another user, with the same username but different email
-	copyUsr, err := account.NewAccount(localization.NewLanguageWithFallback("en"), uuid.New().String(), usr.Username(), "test-email@test.com")
+	copyUsr, err := account.NewAccount(uuid.New().String(), usr.Username(), "test-email@test.com")
 
 	require.NoError(t, err)
 
@@ -103,7 +102,7 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	usr2 := newFakeAccount(t)
 
 	// Create another user, with the same email but different username
-	copyUsr, err := account.NewAccount(localization.NewLanguageWithFallback("en"), uuid.New().String(), usr2.Username(), usr.Email())
+	copyUsr, err := account.NewAccount(uuid.New().String(), usr2.Username(), usr.Email())
 
 	require.NoError(t, err)
 
@@ -178,7 +177,7 @@ func newFakeAccount(t *testing.T) *account.Account {
 
 	require.NoError(t, err)
 
-	usr, err := account.NewAccount(localization.NewLanguageWithFallback("en"), uuid.New().String(), fake.Username, fake.Email)
+	usr, err := account.NewAccount(uuid.New().String(), fake.Username, fake.Email)
 
 	require.NoError(t, err)
 

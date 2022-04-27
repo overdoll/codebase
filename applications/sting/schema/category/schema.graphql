@@ -8,8 +8,12 @@ type Category implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @goField(forceResolver: true)
 
-  """A title for this category."""
-  title: String!
+  """
+  A title for this category.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!

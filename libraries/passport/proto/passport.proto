@@ -45,10 +45,6 @@ message DeviceInfo {
 
   // User Agent of the device (can be parsed to grab the actual device information)
   string userAgent = 3;
-
-  // Language of the device. Note that this is the device language, which is different from the account's
-  // preferred language. However, this is usually updated when the account language is updated as well
-  string language = 4;
 }
 
 message Action {

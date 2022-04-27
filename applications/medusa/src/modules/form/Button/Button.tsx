@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode, useTransition } from 'react'
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
-import useSSRDisable from '../../hooks/useSSRDisable'
+import { useHydrate } from '../../hydrate'
 
 interface Props extends ButtonProps {
   children?: ReactNode
@@ -31,11 +31,11 @@ const Button = forwardRef<any, Props>(({
     })
   }
 
-  const disableOverride = useSSRDisable()
+  const isHydrated = useHydrate()
 
   // for type=submit (forms), we show a loading state
-  const fullDisable = (disableOverride) || (isDisabled)
-  const fullLoading = type === 'submit' ? (disableOverride || (isLoading ?? isPending)) : (isLoading ?? isPending)
+  const fullDisable = isDisabled
+  const fullLoading = type === 'submit' ? (!isHydrated || (isLoading ?? isPending)) : (isLoading ?? isPending)
 
   return (
     <ChakraButton

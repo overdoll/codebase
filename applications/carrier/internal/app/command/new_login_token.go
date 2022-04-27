@@ -39,7 +39,7 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("", cmd.Email, "")
+	recipient, err := mailing.NewRecipient("", cmd.Email)
 
 	if err != nil {
 		return err

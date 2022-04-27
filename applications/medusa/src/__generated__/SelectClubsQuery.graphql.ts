@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<74a11e0b22fb5b09033e3999cce54a0a>>
- * @relayHash d516f7cdfb139cc4ab65682a27afa393
+ * @generated SignedSource<<7e5e11611848f2daf845e1c9865b1ab3>>
+ * @relayHash 4ff7c44292c744da7655ded9f68afedc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d516f7cdfb139cc4ab65682a27afa393
+// @relayRequestID 4ff7c44292c744da7655ded9f68afedc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -147,6 +147,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -228,8 +229,7 @@ return {
               }
             ],
             "storageKey": null
-          },
-          (v4/*: any*/)
+          }
         ],
         "storageKey": null
       },
@@ -237,7 +237,7 @@ return {
     ]
   },
   "params": {
-    "id": "d516f7cdfb139cc4ab65682a27afa393",
+    "id": "4ff7c44292c744da7655ded9f68afedc",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

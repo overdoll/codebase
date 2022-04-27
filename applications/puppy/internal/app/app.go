@@ -6,16 +6,14 @@ import (
 	"github.com/gorilla/securecookie"
 	"net/http"
 	"overdoll/applications/puppy/internal/domain/session"
-	"overdoll/libraries/localization"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/support"
 	"strings"
 )
 
 const (
-	sessionCookieName  = "od.session"
-	deviceCookieName   = "od.device"
-	languageCookieName = "od.language"
+	sessionCookieName = "od.session"
+	deviceCookieName  = "od.device"
 )
 
 type Application struct {
@@ -23,35 +21,22 @@ type Application struct {
 	Repository session.Repository
 }
 
-func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, string, error) {
+func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, error) {
 	userAgent := strings.Join(req.Header["User-Agent"], ",")
 
 	ip := support.GetIPFromRequest(req)
 	deviceId := ""
-	language := ""
 
 	c, err := req.Cookie(deviceCookieName)
 
 	if err == nil {
 		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil {
-			return "", "", "", "", err
+			return "", "", "", err
 		}
 	}
 
 	if err != nil && err != http.ErrNoCookie {
-		return "", "", "", "", err
-	}
-
-	c, err = req.Cookie(languageCookieName)
-
-	if err == nil {
-		if err := a.Cookie.Decode(languageCookieName, c.Value, &language); err != nil {
-			return "", "", "", "", err
-		}
-	}
-
-	if err != nil && err != http.ErrNoCookie {
-		return "", "", "", "", err
+		return "", "", "", err
 	}
 
 	// no device ID - generate a new one (will be saved at the end of the request)
@@ -59,35 +44,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 		deviceId = uuid.New().String()
 	}
 
-	// no language set - read accept-language header
-	if language == "" {
-		accept := req.Header.Get("Accept-Language")
-		language = localization.NewLanguageWithFallback(accept).Locale()
-	}
-
-	return deviceId, ip, userAgent, language, nil
-}
-
-func (a *Application) UpdateDeviceLanguageEvent(ctx context.Context, res *http.Response, language string) error {
-
-	encoded, err := a.Cookie.Encode(languageCookieName, language)
-
-	if err != nil {
-		return err
-	}
-
-	ck := http.Cookie{
-		Name:     languageCookieName,
-		Value:    encoded,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
-	}
-
-	res.Header.Add("Set-Cookie", ck.String())
-
-	return nil
+	return deviceId, ip, userAgent, nil
 }
 
 func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, string, error) {

@@ -55,7 +55,7 @@ type AccountActiveClubSupporterSubscription struct {
 	// The billing amount.
 	BillingAmount int `json:"billingAmount"`
 	// The currency.
-	BillingCurrency Currency `json:"billingCurrency"`
+	BillingCurrency graphql1.Currency `json:"billingCurrency"`
 	// When the account first became a supporter.
 	SupporterSince time.Time `json:"supporterSince"`
 	// The last billing date for this subscription.
@@ -91,7 +91,7 @@ type AccountCancelledClubSupporterSubscription struct {
 	// The billing amount.
 	BillingAmount int `json:"billingAmount"`
 	// The currency.
-	BillingCurrency Currency `json:"billingCurrency"`
+	BillingCurrency graphql1.Currency `json:"billingCurrency"`
 	// When the account first became a supporter.
 	SupporterSince time.Time `json:"supporterSince"`
 	// When this subscription was cancelled.
@@ -154,7 +154,7 @@ type AccountExpiredClubSupporterSubscription struct {
 	// The billing amount.
 	BillingAmount int `json:"billingAmount"`
 	// The currency.
-	BillingCurrency Currency `json:"billingCurrency"`
+	BillingCurrency graphql1.Currency `json:"billingCurrency"`
 	// When the account first became a supporter.
 	SupporterSince time.Time `json:"supporterSince"`
 	// The ccbill subscription.
@@ -226,7 +226,7 @@ type AccountTransaction struct {
 	// A positive integer representing the currency in the smallest currency unit.
 	Amount int `json:"amount"`
 	// The currency voided in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// When the billing occurred.
 	BilledAtDate time.Time `json:"billedAtDate"`
 	// The next billing date for this transaction, if its a subscription.
@@ -262,7 +262,7 @@ type AccountTransactionEvent struct {
 	// The amount.
 	Amount int `json:"amount"`
 	// The currency.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// The reason for this event.
 	Reason string `json:"reason"`
 	// When this event occurred.
@@ -274,7 +274,7 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodInput struct {
 	// The chosen club ID.
 	ClubID relay.ID `json:"clubId"`
 	// The chosen currency.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// The chosen saved payment method.
 	SavedPaymentMethodID relay.ID `json:"savedPaymentMethodId"`
 }
@@ -330,17 +330,17 @@ type CCBillSubscriptionDetails struct {
 	// The account linked to this ccbill subscription.
 	Account *Account `json:"account"`
 	// Subscription details.
-	SubscriptionInitialPrice   int      `json:"subscriptionInitialPrice"`
-	SubscriptionRecurringPrice int      `json:"subscriptionRecurringPrice"`
-	SubscriptionCurrency       Currency `json:"subscriptionCurrency"`
+	SubscriptionInitialPrice   int               `json:"subscriptionInitialPrice"`
+	SubscriptionRecurringPrice int               `json:"subscriptionRecurringPrice"`
+	SubscriptionCurrency       graphql1.Currency `json:"subscriptionCurrency"`
 	// Billed details.
-	BilledInitialPrice   int      `json:"billedInitialPrice"`
-	BilledRecurringPrice int      `json:"billedRecurringPrice"`
-	BilledCurrency       Currency `json:"billedCurrency"`
+	BilledInitialPrice   int               `json:"billedInitialPrice"`
+	BilledRecurringPrice int               `json:"billedRecurringPrice"`
+	BilledCurrency       graphql1.Currency `json:"billedCurrency"`
 	// Accounting details.
-	AccountingInitialPrice   int      `json:"accountingInitialPrice"`
-	AccountingRecurringPrice int      `json:"accountingRecurringPrice"`
-	AccountingCurrency       Currency `json:"accountingCurrency"`
+	AccountingInitialPrice   int               `json:"accountingInitialPrice"`
+	AccountingRecurringPrice int               `json:"accountingRecurringPrice"`
+	AccountingCurrency       graphql1.Currency `json:"accountingCurrency"`
 	// Whether or not this is recurring, or a one-time charge.
 	IsRecurring bool `json:"isRecurring"`
 	// The amount of rebills that occurred.
@@ -409,7 +409,7 @@ type CancellationReason struct {
 	// The title for this reason.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
 	// If this reason is deprecated.
 	Deprecated bool `json:"deprecated"`
 }
@@ -518,7 +518,7 @@ type GenerateCCBillClubSupporterPaymentLinkInput struct {
 	// The chosen club ID.
 	ClubID relay.ID `json:"clubId"`
 	// The chosen currency.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// Whether or not we want to save the payment details for later.
 	SavePaymentDetailsForLater bool `json:"savePaymentDetailsForLater"`
 }
@@ -567,13 +567,6 @@ type GenerateRefundAmountForAccountTransactionPayload struct {
 	RefundAmount *RefundAmount `json:"refundAmount"`
 }
 
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
-}
-
 // Type describing a localized pricing point.
 type LocalizedPricingPoint struct {
 	// Price for your current location + currency.
@@ -599,7 +592,7 @@ type Price struct {
 	// A positive integer representing the currency in the smallest currency unit.
 	Amount int `json:"amount"`
 	// The currency the amount is represented in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 }
 
 // Refund an account transaction.
@@ -629,14 +622,7 @@ type RefundAmount struct {
 	// A positive integer representing the currency in the smallest currency unit.
 	MaximumAmount int `json:"maximumAmount"`
 	// The currency.
-	Currency Currency `json:"currency"`
-}
-
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
+	Currency graphql1.Currency `json:"currency"`
 }
 
 // Update reason.
@@ -900,54 +886,5 @@ func (e *CardType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CardType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type Currency string
-
-const (
-	CurrencyUsd Currency = "USD"
-	CurrencyCad Currency = "CAD"
-	CurrencyAud Currency = "AUD"
-	CurrencyJpy Currency = "JPY"
-	CurrencyGbp Currency = "GBP"
-	CurrencyEur Currency = "EUR"
-)
-
-var AllCurrency = []Currency{
-	CurrencyUsd,
-	CurrencyCad,
-	CurrencyAud,
-	CurrencyJpy,
-	CurrencyGbp,
-	CurrencyEur,
-}
-
-func (e Currency) IsValid() bool {
-	switch e {
-	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
-		return true
-	}
-	return false
-}
-
-func (e Currency) String() string {
-	return string(e)
-}
-
-func (e *Currency) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = Currency(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Currency", str)
-	}
-	return nil
-}
-
-func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

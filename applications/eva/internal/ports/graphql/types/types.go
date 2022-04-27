@@ -24,16 +24,11 @@ type Account struct {
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
 	// Whether or not this account is secure.
+	//
+	// At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
 	IsSecure bool `json:"isSecure"`
 	// The details of the account lock
 	Lock *AccountLock `json:"lock"`
-	// The language of the account.
-	//
-	// Note: this is the language that will be used to determine which emails should be sent where.
-	//
-	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
-	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
-	Language *Language `json:"language"`
 	// Sessions linked to this account
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -350,13 +345,6 @@ type GrantAuthenticationTokenPayload struct {
 	Validation *GrantAuthenticationTokenValidation `json:"validation"`
 }
 
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
-}
-
 // Represents a physical location.
 type Location struct {
 	// City
@@ -464,13 +452,6 @@ type RevokeAuthenticationTokenPayload struct {
 	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
 
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
-}
-
 // Input for unlocking an account
 type UnlockAccountInput struct {
 	// The account to unlock.
@@ -497,20 +478,6 @@ type UpdateAccountEmailStatusToPrimaryPayload struct {
 	UpdatedAccountEmail *AccountEmail `json:"updatedAccountEmail"`
 }
 
-// Input for updating the account language
-type UpdateAccountLanguageInput struct {
-	// The locale to update the language to
-	Locale string `json:"locale"`
-}
-
-// Payload of the account language update
-type UpdateAccountLanguagePayload struct {
-	// The new language that is now set
-	Language *Language `json:"language"`
-	// The account that has the updated language
-	Account *Account `json:"Account"`
-}
-
 // Input for updating an account's username
 type UpdateAccountUsernameInput struct {
 	// The username that the account should be updated to
@@ -523,18 +490,6 @@ type UpdateAccountUsernamePayload struct {
 	Validation *UpdateAccountUsernameValidation `json:"validation"`
 	// The account that was modified
 	Account *Account `json:"account"`
-}
-
-// Input for updating the current language
-type UpdateLanguageInput struct {
-	// The locale to update the language to
-	Locale string `json:"locale"`
-}
-
-// Payload of the language update
-type UpdateLanguagePayload struct {
-	// The new language that is now set
-	Language *Language `json:"language"`
 }
 
 // Input for verifying authentication token
@@ -760,6 +715,55 @@ func (e *CreateAccountWithAuthenticationTokenValidation) UnmarshalGQL(v interfac
 }
 
 func (e CreateAccountWithAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Currency string
+
+const (
+	CurrencyUsd Currency = "USD"
+	CurrencyCad Currency = "CAD"
+	CurrencyAud Currency = "AUD"
+	CurrencyJpy Currency = "JPY"
+	CurrencyGbp Currency = "GBP"
+	CurrencyEur Currency = "EUR"
+)
+
+var AllCurrency = []Currency{
+	CurrencyUsd,
+	CurrencyCad,
+	CurrencyAud,
+	CurrencyJpy,
+	CurrencyGbp,
+	CurrencyEur,
+}
+
+func (e Currency) IsValid() bool {
+	switch e {
+	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
+		return true
+	}
+	return false
+}
+
+func (e Currency) String() string {
+	return string(e)
+}
+
+func (e *Currency) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Currency(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Currency", str)
+	}
+	return nil
+}
+
+func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

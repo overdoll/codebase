@@ -143,7 +143,7 @@ func (r *MutationResolver) GenerateRefundAmountForAccountTransaction(ctx context
 		RefundAmount: &types.RefundAmount{
 			ProratedAmount: int(result.ProratedAmount()),
 			MaximumAmount:  int(result.MaxAmount()),
-			Currency:       types.MarshalCurrencyToGraphQL(ctx, result.Currency()),
+			Currency:       graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		},
 	}, nil
 }

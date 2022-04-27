@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode, useTransition } from 'react'
 import { IconButton as ChakraButton, IconButtonProps } from '@chakra-ui/react'
-import useSSRDisable from '../../hooks/useSSRDisable'
-import { ForwardRefProp } from '../../../types/components'
+import { ForwardRefProp } from '@//:types/components'
+import { useHydrate } from '../../hydrate'
 
 interface Props extends IconButtonProps, ForwardRefProp {
   children?: ReactNode
@@ -26,11 +26,11 @@ const IconButton = forwardRef<any, Props>(({
     })
   }
 
-  const disableOverride = useSSRDisable()
+  const isHydrated = useHydrate()
 
-  // for type=submit (forms), we show a loading state
-  const fullDisable = (disableOverride) || (isDisabled ?? isLoading)
-  const fullLoading = type === 'submit' ? (disableOverride ?? isLoading ?? isPending) : (isLoading ?? isPending)
+  const fullDisable = (isDisabled ?? isLoading)
+  // for type=submit (forms), we show a loading state, or else it will bug out
+  const fullLoading = type === 'submit' ? (!isHydrated ?? isLoading ?? isPending) : (isLoading ?? isPending)
 
   return (
     <ChakraButton

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3d4f4b74ccf05cd91647fec03010efb3>>
- * @relayHash dc5705f297645120b27a5dce3f2e5c5c
+ * @generated SignedSource<<72bab8749214277d1e4992eab6c551d6>>
+ * @relayHash bc56bad2fc0e5f44afaf773cb814511e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dc5705f297645120b27a5dce3f2e5c5c
+// @relayRequestID bc56bad2fc0e5f44afaf773cb814511e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -58,14 +58,14 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 },
 v5 = [
@@ -77,7 +77,7 @@ v5 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      (v3/*: any*/),
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -96,7 +96,7 @@ v5 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v3/*: any*/)
+      (v4/*: any*/)
     ],
     "storageKey": null
   },
@@ -107,7 +107,7 @@ v5 = [
     "name": "type",
     "storageKey": null
   },
-  (v4/*: any*/)
+  (v3/*: any*/)
 ],
 v6 = [
   {
@@ -200,6 +200,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -236,7 +237,6 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
           {
             "alias": null,
             "args": (v6/*: any*/),
@@ -261,7 +261,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -291,7 +291,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -361,6 +361,7 @@ return {
             "name": "owner",
             "plural": false,
             "selections": [
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -377,8 +378,7 @@ return {
                 "plural": false,
                 "selections": (v5/*: any*/),
                 "storageKey": null
-              },
-              (v4/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -388,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "dc5705f297645120b27a5dce3f2e5c5c",
+    "id": "bc56bad2fc0e5f44afaf773cb814511e",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

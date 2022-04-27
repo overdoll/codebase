@@ -9,6 +9,7 @@ import (
 	"os"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -35,7 +36,7 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 	err := gqlClient.Mutate(context.Background(), &generateCCBillClubSupporterPayment, map[string]interface{}{
 		"input": types.GenerateCCBillClubSupporterPaymentLinkInput{
 			ClubID:                     convertClubIdIdToRelayId(clubId),
-			Currency:                   types.CurrencyUsd,
+			Currency:                   graphql.CurrencyUsd,
 			SavePaymentDetailsForLater: false,
 		},
 	})

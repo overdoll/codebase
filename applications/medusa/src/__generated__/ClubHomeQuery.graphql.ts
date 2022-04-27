@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d4cbc861f26af1d246da586ec61408be>>
- * @relayHash b3e9b0fcb7f55b5f4f2a1ff6025bdf95
+ * @generated SignedSource<<f258bc8a19531fd77db19def578bb3c4>>
+ * @relayHash b729e795a87abcba7416e54dd224713d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3e9b0fcb7f55b5f4f2a1ff6025bdf95
+// @relayRequestID b729e795a87abcba7416e54dd224713d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -71,14 +71,14 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -128,6 +128,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -144,7 +145,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -163,7 +164,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/)
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -174,18 +175,17 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
-          },
-          (v6/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "b3e9b0fcb7f55b5f4f2a1ff6025bdf95",
+    "id": "b729e795a87abcba7416e54dd224713d",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

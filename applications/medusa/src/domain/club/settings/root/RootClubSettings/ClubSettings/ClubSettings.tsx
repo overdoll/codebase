@@ -14,6 +14,7 @@ interface Props {
 const Query = graphql`
   query ClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
+      id
       slug
       name
       thumbnail {
@@ -74,6 +75,7 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
       }}
       >
         <ResourceIcon
+          seed={queryData.club.id}
           h={10}
           w={10}
           borderRadius='md'

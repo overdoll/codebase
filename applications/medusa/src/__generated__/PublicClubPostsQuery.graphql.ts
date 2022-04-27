@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1a35f0481b42b331810395d62e7085a5>>
- * @relayHash a349ae3c45ab66b451fdecedfecf0e65
+ * @generated SignedSource<<da32b472871121bf557f6f404cd5591d>>
+ * @relayHash f515e5ff2a546bc5ac2d715b0b0438e0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a349ae3c45ab66b451fdecedfecf0e65
+// @relayRequestID f515e5ff2a546bc5ac2d715b0b0438e0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -402,10 +402,10 @@ return {
                         "name": "categories",
                         "plural": true,
                         "selections": [
+                          (v11/*: any*/),
                           (v7/*: any*/),
                           (v16/*: any*/),
-                          (v15/*: any*/),
-                          (v11/*: any*/)
+                          (v15/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -417,6 +417,7 @@ return {
                         "name": "characters",
                         "plural": true,
                         "selections": [
+                          (v11/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -433,8 +434,7 @@ return {
                           },
                           (v8/*: any*/),
                           (v7/*: any*/),
-                          (v15/*: any*/),
-                          (v11/*: any*/)
+                          (v15/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -540,7 +540,7 @@ return {
     ]
   },
   "params": {
-    "id": "a349ae3c45ab66b451fdecedfecf0e65",
+    "id": "f515e5ff2a546bc5ac2d715b0b0438e0",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",
