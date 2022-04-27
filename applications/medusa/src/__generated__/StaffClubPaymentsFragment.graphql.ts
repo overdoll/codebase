@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31f4493f8cdeadd38394357c7dc87f36>>
+ * @generated SignedSource<<d27284406669d7c2817f779a56b54c4e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubPaymentsFragment$data = {
-  readonly id: string;
+  readonly platformFee: {
+    readonly percent: number;
+  };
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPlatformFeeFormFragment">;
   readonly " $fragmentType": "StaffClubPaymentsFragment";
 };
 export type StaffClubPaymentsFragment = StaffClubPaymentsFragment$data;
@@ -29,15 +32,31 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
+      "concreteType": "ClubPlatformFee",
+      "kind": "LinkedField",
+      "name": "platformFee",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "percent",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UpdateClubPlatformFeeFormFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "58ffca69d7915345d86a69a80271d45b";
+(node as any).hash = "2cf56292819a440072e450e5e420aa9b";
 
 export default node;

@@ -6,6 +6,7 @@ import ClubFullBalance from './ClubFullBalance/ClubFullBalance'
 import ClubPayoutsList from './ClubPayoutsList/ClubPayoutsList'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import ClubPayoutMethodAlert from '../../../../home/RootClubHome/ClubHome/ClubPayoutMethodAlert/ClubPayoutMethodAlert'
 
 interface Props {
   query: PreloadedQuery<ClubRevenueQuery>
@@ -18,6 +19,7 @@ const Query = graphql`
       viewerIsOwner
       ...ClubFullBalanceFragment
       ...ClubPayoutsListFragment
+      ...ClubPayoutMethodAlertFragment
     }
   }
 `
@@ -37,21 +39,26 @@ export default function ClubRevenue ({ query }: Props): JSX.Element {
   }
 
   return (
-    <Stack spacing={8}>
-      <ClubFullBalance query={queryData.club} />
-      <ClubPayoutsList query={queryData.club} />
-      <Box>
-        <PageSectionWrap>
-          <PageSectionTitle>
-            <Trans>
-              Help
-            </Trans>
-          </PageSectionTitle>
-        </PageSectionWrap>
-        <Stack spacing={2}>
-          <></>
-        </Stack>
+    <>
+      <Box mb={2}>
+        <ClubPayoutMethodAlert query={queryData.club} />
       </Box>
-    </Stack>
+      <Stack spacing={8}>
+        <ClubFullBalance query={queryData.club} />
+        <ClubPayoutsList query={queryData.club} />
+        <Box>
+          <PageSectionWrap>
+            <PageSectionTitle>
+              <Trans>
+                Help
+              </Trans>
+            </PageSectionTitle>
+          </PageSectionWrap>
+          <Stack spacing={2}>
+            <></>
+          </Stack>
+        </Box>
+      </Stack>
+    </>
   )
 }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<eb4452637331cec3cf848e7e65315373>>
- * @relayHash d804c36c3755aabb15c4388bd8dd74e1
+ * @generated SignedSource<<b0bb2465cf541b3c1374f3e0097476ae>>
+ * @relayHash fab6e20ba25840567e59d4fe768f077d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d804c36c3755aabb15c4388bd8dd74e1
+// @relayRequestID fab6e20ba25840567e59d4fe768f077d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -118,6 +118,59 @@ v7 = [
     "kind": "Literal",
     "name": "first",
     "value": 3
+  }
+],
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PageInfo",
+  "kind": "LinkedField",
+  "name": "pageInfo",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endCursor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasNextPage",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "amount",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "currency",
+  "storageKey": null
+},
+v12 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
   }
 ];
 return {
@@ -286,41 +339,11 @@ return {
                     ],
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cursor",
-                    "storageKey": null
-                  }
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PageInfo",
-                "kind": "LinkedField",
-                "name": "pageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "endCursor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasNextPage",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
+              (v9/*: any*/)
             ],
             "storageKey": "infractionHistory(first:3)"
           },
@@ -445,6 +468,108 @@ return {
               (v5/*: any*/)
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubPlatformFee",
+            "kind": "LinkedField",
+            "name": "platformFee",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "percent",
+                "storageKey": null
+              },
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Balance",
+            "kind": "LinkedField",
+            "name": "balance",
+            "plural": false,
+            "selections": [
+              (v10/*: any*/),
+              (v11/*: any*/),
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "concreteType": "ClubPayoutConnection",
+            "kind": "LinkedField",
+            "name": "payouts",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubPayoutEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubPayout",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "status",
+                        "storageKey": null
+                      },
+                      (v10/*: any*/),
+                      (v11/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "depositDate",
+                        "storageKey": null
+                      },
+                      (v5/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v8/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v9/*: any*/)
+            ],
+            "storageKey": "payouts(first:5)"
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "StaffClubPayouts_payouts",
+            "kind": "LinkedHandle",
+            "name": "payouts"
           }
         ],
         "storageKey": null
@@ -452,7 +577,7 @@ return {
     ]
   },
   "params": {
-    "id": "d804c36c3755aabb15c4388bd8dd74e1",
+    "id": "fab6e20ba25840567e59d4fe768f077d",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<435b2ac61f4f4d4f7bf56b9ee559a9a1>>
- * @relayHash 69d0bab1e74a205b62c9edc0d6060a50
+ * @generated SignedSource<<5f8f5d863d40115c8fca43603f9e5683>>
+ * @relayHash 2125d459d12cbce194d50066b65956c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69d0bab1e74a205b62c9edc0d6060a50
+// @relayRequestID 2125d459d12cbce194d50066b65956c2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type ClubRevenueQuery$data = {
   readonly club: {
     readonly __typename: string;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment">;
   } | null;
 };
 export type ClubRevenueQueryResponse = ClubRevenueQuery$data;
@@ -118,6 +118,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPayoutsListFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubPayoutMethodAlertFragment"
           }
         ],
         "storageKey": null
@@ -261,14 +266,46 @@ return {
             "kind": "LinkedHandle",
             "name": "payouts"
           },
-          (v6/*: any*/)
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": null,
+                "kind": "LinkedField",
+                "name": "payoutMethod",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v6/*: any*/)
+                    ],
+                    "type": "AccountPaxumPayoutMethod",
+                    "abstractKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v6/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "69d0bab1e74a205b62c9edc0d6060a50",
+    "id": "2125d459d12cbce194d50066b65956c2",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",
@@ -277,6 +314,6 @@ return {
 };
 })();
 
-(node as any).hash = "2fede9213821b4e01c795ad6b9364b13";
+(node as any).hash = "f45ec4586ffe0fd1d8661f669ce0565c";
 
 export default node;

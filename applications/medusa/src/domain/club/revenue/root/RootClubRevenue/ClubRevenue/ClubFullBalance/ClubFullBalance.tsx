@@ -38,9 +38,7 @@ export default function ClubFullBalance ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <LargeBackgroundBox>
-        <ClubBalance query={data} />
-      </LargeBackgroundBox>
+      <ClubBalance query={data} />
       <LargeBackgroundBox>
         <HStack justify='space-between'>
           <HStack align='center' spacing={2}>
