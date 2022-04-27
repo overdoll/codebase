@@ -18,7 +18,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 	token := uuid.New().String()
 	secret := uuid.New().String()
 
-	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Language: "en", Token: token, Secret: secret})
+	_, err := client.NewLoginToken(context.Background(), &carrier.NewLoginTokenRequest{Email: email, Token: token, Secret: secret})
 
 	require.NoError(t, err, "no error for sending login token email")
 
