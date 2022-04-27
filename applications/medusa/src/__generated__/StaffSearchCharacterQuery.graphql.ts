@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<53c5d06a6976cdf13dfac7d0870c7313>>
- * @relayHash a23047b19833a093e1314eb51f884219
+ * @generated SignedSource<<89d17212c08cd7d9e0e76dd4c708e8d9>>
+ * @relayHash 7ac648166a48c779b0a46003f761bbdc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a23047b19833a093e1314eb51f884219
+// @relayRequestID 7ac648166a48c779b0a46003f761bbdc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -134,6 +134,7 @@ return {
                     ],
                     "storageKey": null
                   },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -198,7 +199,6 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -261,7 +261,7 @@ return {
     ]
   },
   "params": {
-    "id": "a23047b19833a093e1314eb51f884219",
+    "id": "7ac648166a48c779b0a46003f761bbdc",
     "metadata": {},
     "name": "StaffSearchCharacterQuery",
     "operationKind": "query",

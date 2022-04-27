@@ -29,8 +29,8 @@ export default function MainMenuButtonClubs (): JSX.Element {
     return (
       <HorizontalNavigation.Button
         exact
-        colorScheme="primary"
-        href="/clubs/discover"
+        colorScheme='primary'
+        href='/clubs/discover'
         icon={ClubPeopleGroup}
         label={i18n._(t`Discover Clubs`)}
       />
@@ -40,8 +40,8 @@ export default function MainMenuButtonClubs (): JSX.Element {
   return (
     <HorizontalNavigation.Button
       exact
-      colorScheme="primary"
-      href="/clubs/feed"
+      colorScheme='primary'
+      href='/clubs/feed'
       icon={ClubPeopleGroup}
       label={i18n._(t`Clubs Feed`)}
     />

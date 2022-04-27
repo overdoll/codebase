@@ -1,5 +1,4 @@
 import gcm from '../utilities/gcm'
-import { randomBytes } from 'crypto'
 
 export const clientFetch = (securityToken) => {
   return async (data) => {
@@ -39,10 +38,10 @@ export const serverMiddlewareFetch = (req) => {
     let token: string
 
     if (existingSecurity != null) {
-      token = gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET)
+      token = await gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET, true)
     } else {
-      token = randomBytes(64).toString('hex')
-      const encrypted = gcm.encrypt(token, process.env.SECURITY_SECRET)
+      token = crypto.getRandomValues(new Uint8Array(64)).toString()
+      const encrypted = await gcm.encrypt(token, process.env.SECURITY_SECRET, true)
 
       if (headers.cookie === '') {
         headers.cookie = `od.security=${encrypted}`

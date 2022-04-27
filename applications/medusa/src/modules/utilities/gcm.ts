@@ -1,48 +1,46 @@
-// https://gist.github.com/AndiDittrich/4629e7db04819244e843
-// SPDX-License-Identifier: MPL-2.0
+// encrypt/decrypt functions - implemented with subtle
 
-// AES Encryption/Decryption with AES-256-GCM using random Initialization Vector + Salt
-// ----------------------------------------------------------------------------------------
-// the encrypted datablock is base64 encoded for easy data exchange.
-// if you have the option to store data binary save consider to remove the encoding to reduce storage size
-// ----------------------------------------------------------------------------------------
-// format of encrypted data - used by this example. not an official format
-//
-// +--------------------+-----------------------+----------------+----------------+
-// | SALT               | Initialization Vector | Auth Tag       | Payload        |
-// | Used to derive key | AES GCM XOR Init      | Data Integrity | Encrypted Data |
-// | 64 Bytes, random   | 16 Bytes, random      | 16 Bytes       | (N-96) Bytes   |
-// +--------------------+-----------------------+----------------+----------------+
-//
-// ----------------------------------------------------------------------------------------
-// Input/Output Vars
-//
-// MASTERKEY: the key used for encryption/decryption.
-//            it has to be cryptographic safe - this means randomBytes or derived by pbkdf2 (for example)
-// TEXT:      data (utf8 string) which should be encoded. modify the code to use Buffer for binary data!
-// ENCDATA:   encrypted data as base64 string (format mentioned on top)
-
-// load the build-in crypto functions
-import _crypto from 'crypto'
-
-// encrypt/decrypt functions
 export default {
 
   /**
    * Encrypts text by given key
    * @returns String encrypted text, base64 encoded
    * @param text
-   * @param masterkey
+   * @param masterKey
+   * @param native
    */
-  encrypt: (text, masterkey): string => {
-    // random initialization vector
-    const iv = _crypto.randomBytes(12)
+  encrypt: async (text, masterKey, native = false): Promise<string> => {
+    let cryptLib
 
-    // AES 256 GCM Mode
-    const cipher = _crypto.createCipheriv('aes-256-gcm', masterkey, iv)
+    if (native) {
+      cryptLib = crypto
+    } else {
+      cryptLib = require('crypto').webcrypto
+    }
 
-    // generate output
-    return Buffer.concat([iv, cipher.update(text), cipher.final(), cipher.getAuthTag()]).toString(
+    const iv = cryptLib.getRandomValues(new Uint8Array(12))
+
+    const pwUtf8 = new TextEncoder().encode(masterKey)
+
+    const key = await cryptLib.subtle.importKey('raw', pwUtf8, 'AES-GCM', false, ['encrypt', 'decrypt'])
+
+    const textUtf8 = new TextEncoder().encode(text)
+    const encrypted = await cryptLib.subtle.encrypt(
+      {
+        name: 'AES-GCM',
+        iv: iv
+      },
+      key,
+      textUtf8
+    )
+
+    const buf = Buffer.alloc(encrypted.byteLength)
+    const view = new Uint8Array(encrypted)
+    for (let i = 0; i < buf.length; ++i) {
+      buf[i] = view[i]
+    }
+
+    return Buffer.concat([iv, buf]).toString(
       'hex'
     )
   },
@@ -51,11 +49,20 @@ export default {
    * Decrypts text by given key
    * @returns String decrypted (original) text
    * @param input
-   * @param masterkey
+   * @param masterKey
+   * @param native
    */
-  decrypt: (input, masterkey): string => {
-    // base64 decoding
+  decrypt: async (input, masterKey, native = false): Promise<string> => {
+    let cryptLib
+
+    if (native) {
+      cryptLib = crypto
+    } else {
+      cryptLib = require('crypto').webcrypto
+    }
+
     const inputBuffer = Buffer.from(input, 'hex')
+
     const iv = Buffer.allocUnsafe(12)
     const tag = Buffer.allocUnsafe(16)
     const data = Buffer.alloc(inputBuffer.length - 28, 0)
@@ -64,11 +71,19 @@ export default {
     inputBuffer.copy(tag, 0, inputBuffer.length - 16)
     inputBuffer.copy(data, 0, 12)
 
-    // AES 256 GCM Mode
-    const decipher = _crypto.createDecipheriv('aes-256-gcm', masterkey, iv)
-    decipher.setAuthTag(tag)
+    const pwUtf8 = new TextEncoder().encode(masterKey)
 
-    // encrypt the given text
-    return decipher.update(data, undefined, 'utf8') + decipher.final('utf8')
+    const key = await cryptLib.subtle.importKey('raw', pwUtf8, 'AES-GCM', false, ['encrypt', 'decrypt'])
+
+    const decrypted = await cryptLib.subtle.decrypt(
+      {
+        name: 'AES-GCM',
+        iv: iv
+      },
+      key,
+      Buffer.concat([data, tag])
+    )
+
+    return new TextDecoder('utf8').decode(decrypted)
   }
 }

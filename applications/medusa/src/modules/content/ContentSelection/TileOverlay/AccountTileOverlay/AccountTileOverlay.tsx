@@ -27,7 +27,7 @@ export default function AccountTileOverlay ({
 
   return (
     <TileOverlay backdrop={
-      <ResourceItem query={null} />
+      <ResourceItem seed={data.id} query={null} />
     }
     >
       <Flex direction='column' align='center' justify='center'>

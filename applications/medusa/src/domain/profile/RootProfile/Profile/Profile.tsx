@@ -48,6 +48,7 @@ export default function Profile (props: Props): JSX.Element {
           <TileOverlay
             backdrop={(
               <ResourceItem
+                seed={queryData.account.id}
                 query={null}
               />)}
           >

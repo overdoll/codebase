@@ -12,11 +12,11 @@ interface Props {
 
 const Fragment = graphql`
   fragment CategoryTileOverlayFragment on Category {
+    id
     title
     thumbnail {
       ...ResourceItemFragment
     }
-
   }
 `
 
@@ -29,6 +29,7 @@ export default function CategoryTileOverlay ({
     <TileOverlay backdrop={
       <ResourceItem
         h='100%'
+        seed={data.id}
         query={data.thumbnail}
       />
     }

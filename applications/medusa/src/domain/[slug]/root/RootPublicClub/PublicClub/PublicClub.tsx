@@ -28,6 +28,7 @@ interface Props {
 const Query = graphql`
   query PublicClubQuery($slug: String!) {
     club(slug: $slug) {
+      id
       name
       slug
       membersCount
@@ -87,6 +88,7 @@ export default function PublicClub (props: Props): JSX.Element {
           <TileOverlay
             backdrop={(
               <ResourceItem
+                seed={queryData?.club?.id}
                 query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
               />)}
           >

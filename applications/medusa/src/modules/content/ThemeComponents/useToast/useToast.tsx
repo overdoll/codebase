@@ -1,7 +1,7 @@
 import {
   Flex,
   RenderProps,
-  ToastPositionWithLogical,
+  ToastPosition,
   useBreakpointValue,
   useToast as useChakraToast,
   UseToastOptions
@@ -15,7 +15,7 @@ type UseToastInput = UseToastOptions
 type ToastAlertProps = RenderProps & UseToastOptions
 
 export default function useToast (options: UseToastInput = {}): (options: UseToastInput) => void {
-  const position = useBreakpointValue<ToastPositionWithLogical>({
+  const position = useBreakpointValue<ToastPosition>({
     base: 'top',
     md: 'bottom'
   })

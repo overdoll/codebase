@@ -6,6 +6,7 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   uppy: Uppy
   onSelect?: () => void
@@ -107,7 +108,7 @@ export default function DragOverFileInput ({
         {hasText &&
           <>
             <Icon m={4} w={10} h={10} icon={FileUpload} fill='green.500' />
-            <Heading ml={16} mr={16} color='green.500' fontSize='sm' align='center'>
+            <Heading ml={16} mr={16} color='green.500' fontSize='sm' alignContent='center'>
               <Trans>
                 Drop your files to upload them
               </Trans>

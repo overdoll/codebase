@@ -2,10 +2,10 @@ import gcm from '../utilities/gcm'
 import { randomBytes } from 'crypto'
 import { serialize } from 'cookie'
 
-export default function getOrCreateSecurityToken ({
+export default async function getOrCreateSecurityToken ({
   req: request,
   res: response
-}): string {
+}): Promise<string> {
   const secret = request.cookies['od.security']
 
   let token
@@ -14,7 +14,7 @@ export default function getOrCreateSecurityToken ({
   if (secret == null) {
     const rnd = randomBytes(64).toString('hex')
 
-    const encrypted = gcm.encrypt(rnd, process.env.SECURITY_SECRET)
+    const encrypted = await gcm.encrypt(rnd, process.env.SECURITY_SECRET)
 
     const data = serialize('od.security', encrypted, {
       httpOnly: true,
@@ -40,7 +40,7 @@ export default function getOrCreateSecurityToken ({
 
     token = rnd
   } else {
-    token = gcm.decrypt(secret, process.env.SECURITY_SECRET)
+    token = await gcm.decrypt(secret, process.env.SECURITY_SECRET)
   }
 
   request.headers['X-overdoll-Security'] = token

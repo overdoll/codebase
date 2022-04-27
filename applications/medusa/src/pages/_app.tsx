@@ -25,6 +25,7 @@ import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import { HydrateProvider } from '@//:modules/hydrate'
 import prepass from 'react-ssr-prepass'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 let securityTokenCache = ''
 let globalRelayEnvironment
@@ -67,7 +68,7 @@ const MyApp = ({
   const getLayout = Component.getLayout ?? ((page) => page)
 
   const emotionCache = useMemo(() => createCache({
-    key: 'od'
+    key: EMOTION_CACHE_KEY
   }), [])
 
   environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache), relayStore) : environment, [])
@@ -112,7 +113,6 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   componentsToLoad.push(app.Component)
 
   let securityToken
-  let fetchFn
   let environment
   let relayStore
 
@@ -121,13 +121,14 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   }
 
   if (!CanUseDOM) {
-    securityToken = getOrCreateSecurityToken(app.ctx)
-    fetchFn = serverFetch(app.ctx.req, app.ctx.res)
-    environment = createEnvironment(fetchFn, null)
+    if (app.ctx.req != null) {
+      securityToken = await getOrCreateSecurityToken(app.ctx)
+    }
+
+    environment = createEnvironment(serverFetch(app.ctx.req, app.ctx.res), null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {
     securityToken = securityTokenCache
-    fetchFn = clientFetch(securityToken)
     environment = globalRelayEnvironment
     app.ctx.cookies = new Cookies()
   }
