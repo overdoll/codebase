@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useTransition } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 interface Props {
   children: JSX.Element
@@ -10,8 +10,6 @@ export function HydrateProvider ({
   children
 }: Props): JSX.Element {
   const [isHydrated, setHydrated] = useState(false)
-
-  const [, startTransition] = useTransition()
 
   useEffect(() => {
     setHydrated(true)
