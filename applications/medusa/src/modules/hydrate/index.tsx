@@ -14,9 +14,7 @@ export function HydrateProvider ({
   const [, startTransition] = useTransition()
 
   useEffect(() => {
-    startTransition(() => {
-      setHydrated(true)
-    })
+    setHydrated(true)
   }, [])
 
   return (

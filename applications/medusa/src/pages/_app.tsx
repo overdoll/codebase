@@ -1,9 +1,9 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { CacheProvider } from '@emotion/react'
 import theme from '../modules/theme'
-import { useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { I18nProvider } from '@lingui/react'
-import { setupI18n } from '@lingui/core'
+import { i18n as i18nGlobal, setupI18n } from '@lingui/core'
 import NextApp from 'next/app'
 import Root from '../domain/app'
 import 'swiper/css'
@@ -26,6 +26,7 @@ import { HydrateProvider } from '@//:modules/hydrate'
 import prepass from 'react-ssr-prepass'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
+import Head from 'next/head'
 
 let securityTokenCache = ''
 let globalRelayEnvironment
@@ -51,7 +52,7 @@ const MyApp = ({
 
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   const i18n = useMemo(() => {
-    const targetI18n = setupI18n()
+    const targetI18n = CanUseDOM ? i18nGlobal : setupI18n()
     initializeLocaleData(locale, targetI18n)
     return targetI18n
   }, [])
@@ -78,30 +79,35 @@ const MyApp = ({
   }
 
   return (
-    <HydrateProvider>
-      <NextQueryParamProvider>
-        <CacheProvider value={emotionCache}>
-          <I18nProvider i18n={i18n}>
-            <ChakraProvider theme={theme}>
-              <FlashProvider>
-                <CookiesProvider>
-                  <ReactRelayContainer
-                    environment={environment}
-                    requestProps={requestProps}
-                  >
-                    {(requestProps) => (
-                      <Root {...requestProps} {...pageProps}>
-                        {getLayout(<Component {...requestProps} {...pageProps} />)}
-                      </Root>
-                    )}
-                  </ReactRelayContainer>
-                </CookiesProvider>
-              </FlashProvider>
-            </ChakraProvider>
-          </I18nProvider>
-        </CacheProvider>
-      </NextQueryParamProvider>
-    </HydrateProvider>
+    <>
+      <Head>
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+      <HydrateProvider>
+        <NextQueryParamProvider>
+          <CacheProvider value={emotionCache}>
+            <I18nProvider i18n={i18n}>
+              <ChakraProvider theme={theme}>
+                <FlashProvider>
+                  <CookiesProvider>
+                    <ReactRelayContainer
+                      environment={environment}
+                      requestProps={requestProps}
+                    >
+                      {(requestProps) => (
+                        <Root {...requestProps} {...pageProps}>
+                          {getLayout(<Component {...requestProps} {...pageProps} />)}
+                        </Root>
+                      )}
+                    </ReactRelayContainer>
+                  </CookiesProvider>
+                </FlashProvider>
+              </ChakraProvider>
+            </I18nProvider>
+          </CacheProvider>
+        </NextQueryParamProvider>
+      </HydrateProvider>
+    </>
   )
 }
 
