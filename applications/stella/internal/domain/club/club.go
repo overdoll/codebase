@@ -47,6 +47,10 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		return nil, principal.ErrLocked
 	}
 
+	if !requester.IsStaff() && !requester.IsArtist() {
+		return nil, errors.New("must be artist or staff in order to create a club")
+	}
+
 	res, err := IsAccountClubsLimitReached(requester, requester.AccountId(), currentClubCount)
 
 	if err != nil {

@@ -3,9 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/sting/internal/app/query"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -56,11 +54,10 @@ type posts struct {
 
 type PostsCassandraRepository struct {
 	session gocqlx.Session
-	stella  query.StellaService
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, stella query.StellaService) PostsCassandraRepository {
-	return PostsCassandraRepository{session: session, stella: stella}
+func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
+	return PostsCassandraRepository{session: session}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -95,7 +92,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts, requester *principal.Principal, supportedClubIds []string) (*post.Post, error) {
+func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
 	likes, err := r.getLikesForPost(ctx, postPending.Id)
 
@@ -119,22 +116,10 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.CategoryIds,
 		postPending.CreatedAt,
 		postPending.PostedAt,
-		requester,
-		supportedClubIds,
 	), nil
 }
 
 func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
-
-	validClub, err := r.stella.CanAccountCreatePostUnderClub(ctx, pending.ClubId(), pending.ContributorId())
-
-	if err != nil {
-		return errors.Wrap(err, "failed to get account permissions for posting")
-	}
-
-	if !validClub {
-		return errors.New("bad club given")
-	}
 
 	pst, err := marshalPostToDatabase(pending)
 
@@ -186,19 +171,8 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
 	}
 
-	var supportedClubIds []string
-	var err error
-
-	if requester != nil {
-		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	for _, b := range postsModels {
-		p, err := r.unmarshalPost(ctx, *b, requester, supportedClubIds)
+		p, err := r.unmarshalPost(ctx, *b)
 		if err != nil {
 			return nil, err
 		}
@@ -236,7 +210,11 @@ func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id st
 		return nil, err
 	}
 
-	return r.unmarshalPost(ctx, *postPending, nil, nil)
+	return r.unmarshalPost(ctx, *postPending)
+}
+
+func (r PostsCassandraRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
+	return nil, nil
 }
 
 func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
@@ -247,40 +225,20 @@ func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *pr
 		return nil, err
 	}
 
-	var supportedClubIds []string
-
-	if requester != nil {
-		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	pst, err := r.unmarshalPost(ctx, *postPending, requester, supportedClubIds)
+	pst, err := r.unmarshalPost(ctx, *postPending)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := pst.CanView(requester); err != nil {
-		return nil, err
-	}
-
-	var accountId string
-
-	if requester != nil {
-		accountId = requester.AccountId()
-	}
-
-	// a simple permission check for posts
-	allowed, err := r.stella.CanAccountViewPostUnderClub(ctx, pst.ClubId(), accountId)
+	suspendedClubIds, err := r.getSuspendedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if !allowed {
-		return nil, post.ErrNotFound
+	if err := pst.CanView(suspendedClubIds, requester); err != nil {
+		return nil, err
 	}
 
 	return pst, err
@@ -328,14 +286,8 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, err
 	}
 
-	validClub, err := r.stella.CanAccountCreatePostUnderClub(ctx, currentPost.ClubId(), requester.AccountId())
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get account permissions for posting")
-	}
-
-	if !validClub {
-		return nil, errors.New("bad club given")
+	if err := currentPost.CanUpdate(requester); err != nil {
+		return nil, err
 	}
 
 	err = updateFn(currentPost)

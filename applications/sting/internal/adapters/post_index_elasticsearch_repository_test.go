@@ -54,8 +54,6 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				nil,
 				time.Now(),
 				&postTime,
-				nil,
-				[]string{},
 			)
 
 		// create the new post
@@ -162,11 +160,11 @@ func newPostIndexRepository(t *testing.T) adapters.PostsIndexElasticSearchReposi
 	session := bootstrap.InitializeDatabaseSession()
 	client := bootstrap.InitializeElasticSearchSession()
 
-	return adapters.NewPostsIndexElasticSearchRepository(client, session, StellaServiceMock{})
+	return adapters.NewPostsIndexElasticSearchRepository(client, session)
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
 	session := bootstrap.InitializeDatabaseSession()
 
-	return adapters.NewPostsCassandraRepository(session, StellaServiceMock{})
+	return adapters.NewPostsCassandraRepository(session)
 }

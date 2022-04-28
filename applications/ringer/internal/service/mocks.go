@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"overdoll/applications/ringer/internal/adapters"
+	"overdoll/applications/ringer/internal/domain/club"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
 )
@@ -41,12 +42,14 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
-func (s StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, accountId, clubId string) (bool, error) {
-	return true, nil
+func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
-func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*string, error) {
-	return &clubId, nil
+func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 type MockPaxumHttpClient struct {

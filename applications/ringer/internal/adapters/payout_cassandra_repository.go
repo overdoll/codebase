@@ -135,8 +135,8 @@ type PayoutCassandraRepository struct {
 	stella  query.StellaService
 }
 
-func NewPayoutCassandraRepository(session gocqlx.Session, stella query.StellaService) PayoutCassandraRepository {
-	return PayoutCassandraRepository{session: session, stella: stella}
+func NewPayoutCassandraRepository(session gocqlx.Session) PayoutCassandraRepository {
+	return PayoutCassandraRepository{session: session}
 }
 
 func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*clubPayout, error) {
@@ -303,7 +303,7 @@ func (r PayoutCassandraRepository) GetClubPayoutById(ctx context.Context, reques
 		return nil, err
 	}
 
-	if err := canViewSensitive(ctx, r.stella, requester, pay.ClubId()); err != nil {
+	if err := canViewSensitive(ctx, requester, pay.ClubId()); err != nil {
 		return nil, err
 	}
 

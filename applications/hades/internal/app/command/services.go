@@ -3,12 +3,13 @@ package command
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/club"
 	"overdoll/libraries/location"
 	"time"
 )
 
 type StellaService interface {
-	CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error)
+	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
 }

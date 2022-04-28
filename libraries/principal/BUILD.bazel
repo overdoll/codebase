@@ -4,6 +4,7 @@ go_library(
     name = "principal",
     srcs = [
         "context.go",
+        "extensions.go",
         "http_middleware.go",
         "principal.go",
     ],

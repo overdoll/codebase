@@ -95,8 +95,8 @@ type clubPayoutDocument struct {
 
 const ClubPayoutsIndexName = "club_payouts"
 
-func NewPayoutIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session, stella query.StellaService) PayoutIndexElasticSearchRepository {
-	return PayoutIndexElasticSearchRepository{client: client, session: session, stella: stella}
+func NewPayoutIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PayoutIndexElasticSearchRepository {
+	return PayoutIndexElasticSearchRepository{client: client, session: session}
 }
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
@@ -186,7 +186,7 @@ func (r PayoutIndexElasticSearchRepository) SearchClubPayouts(ctx context.Contex
 	}
 
 	if filters.ClubId() != nil {
-		if err := canViewSensitive(ctx, r.stella, requester, *filters.ClubId()); err != nil {
+		if err := canViewSensitive(ctx, requester, *filters.ClubId()); err != nil {
 			return nil, err
 		}
 	}

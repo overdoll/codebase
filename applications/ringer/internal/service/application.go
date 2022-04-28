@@ -66,10 +66,10 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	paymentRepo := adapters.NewPaymentCassandraRepository(session, stella)
-	paymentIndexRepo := adapters.NewPaymentIndexElasticSearchRepository(esClient, session, stella)
-	payoutRepo := adapters.NewPayoutCassandraRepository(session, stella)
-	payoutIndexRepo := adapters.NewPayoutIndexElasticSearchRepository(esClient, session, stella)
+	paymentRepo := adapters.NewPaymentCassandraRepository(session)
+	paymentIndexRepo := adapters.NewPaymentIndexElasticSearchRepository(esClient, session)
+	payoutRepo := adapters.NewPayoutCassandraRepository(session)
+	payoutIndexRepo := adapters.NewPayoutIndexElasticSearchRepository(esClient, session)
 	balanceRepo := adapters.NewBalanceCassandraRepository(session, stella)
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
 	paxumRepo := adapters.NewPaxumHttpCassandraRepository(paxumClient)
@@ -90,7 +90,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			IndexAllClubPayments:        command.NewIndexAllClubPaymentsHandler(paymentIndexRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:           query.NewPrincipalByIdHandler(eva, eventRepo),
+			PrincipalById:           query.NewPrincipalByIdHandler(eva, stella),
 			AccountDetailsById:      query.NewAccountDetailsByIdHandler(detailsRepo),
 			AccountPayoutMethodById: query.NewAccountPayoutMethodsByIdHandler(payoutRepo),
 			ClubBalanceById:         query.NewClubBalanceByIdHandlerHandler(balanceRepo),

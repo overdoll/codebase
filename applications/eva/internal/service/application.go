@@ -76,8 +76,10 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
+			RevokeAccountArtistRole:    command.NewRevokeAccountArtistRoleHandler(accountRepo),
 			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
 			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
+			AssignAccountArtistRole:    command.NewAssignAccountArtistRoleHandler(accountRepo),
 
 			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, locationRepo),
 			TouchAccountSessionOperator:  command.NewTouchAccountSessionOperatorHandler(sessionRepo),

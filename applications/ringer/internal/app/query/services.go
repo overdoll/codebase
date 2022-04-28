@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/ringer/internal/domain/club"
 	"overdoll/libraries/principal"
 )
 
@@ -10,6 +11,6 @@ type EvaService interface {
 }
 
 type StellaService interface {
-	CanAccountCreatePostUnderClub(ctx context.Context, accountId, clubId string) (bool, error)
-	GetClubById(ctx context.Context, clubId string) (*string, error)
+	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
+	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 }

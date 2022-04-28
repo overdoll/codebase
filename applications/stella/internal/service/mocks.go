@@ -24,7 +24,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return testing_tools.NewDefaultPrincipal(s), nil
+				return testing_tools.NewArtistPrincipal(s), nil
 			}
 		}
 

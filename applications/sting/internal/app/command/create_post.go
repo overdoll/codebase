@@ -12,17 +12,24 @@ type CreatePost struct {
 }
 
 type CreatePostHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	pr     post.Repository
+	pi     post.IndexRepository
+	stella StellaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pi: pi}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi, stella: stella}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	pendingPost, err := post.NewPost(cmd.Principal, cmd.ClubId)
+	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pendingPost, err := post.NewPost(cmd.Principal, club)
 
 	if err != nil {
 		return nil, err

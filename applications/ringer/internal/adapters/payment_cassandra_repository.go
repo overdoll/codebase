@@ -6,7 +6,6 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
@@ -104,11 +103,10 @@ type clubPlatformFee struct {
 
 type PaymentCassandraRepository struct {
 	session gocqlx.Session
-	stella  query.StellaService
 }
 
-func NewPaymentCassandraRepository(session gocqlx.Session, stella query.StellaService) PaymentCassandraRepository {
-	return PaymentCassandraRepository{session: session, stella: stella}
+func NewPaymentCassandraRepository(session gocqlx.Session) PaymentCassandraRepository {
+	return PaymentCassandraRepository{session: session}
 }
 
 func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*clubPayment, error) {
@@ -131,20 +129,14 @@ func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*c
 	}, nil
 }
 
-func canViewSensitive(ctx context.Context, stella query.StellaService, requester *principal.Principal, clubId string) error {
+func canViewSensitive(ctx context.Context, requester *principal.Principal, clubId string) error {
 
 	if requester.IsStaff() {
 		return nil
 	}
 
-	canView, err := stella.CanAccountCreatePostUnderClub(ctx, requester.AccountId(), clubId)
-
-	if err != nil {
+	if err := requester.CheckClubOwner(clubId); err != nil {
 		return err
-	}
-
-	if !canView {
-		return principal.ErrNotAuthorized
 	}
 
 	return nil
@@ -235,7 +227,7 @@ func (r PaymentCassandraRepository) GetClubPaymentById(ctx context.Context, requ
 		return nil, err
 	}
 
-	if err := canViewSensitive(ctx, r.stella, requester, pay.DestinationClubId()); err != nil {
+	if err := canViewSensitive(ctx, requester, pay.DestinationClubId()); err != nil {
 		return nil, err
 	}
 
@@ -525,7 +517,7 @@ func (r PaymentCassandraRepository) GetPlatformFeeForClub(ctx context.Context, r
 		return nil, err
 	}
 
-	if err := canViewSensitive(ctx, r.stella, requester, clubId); err != nil {
+	if err := canViewSensitive(ctx, requester, clubId); err != nil {
 		return nil, err
 	}
 

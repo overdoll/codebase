@@ -8,7 +8,7 @@ import (
 
 type Repository interface {
 	GetPostByIdOperator(ctx context.Context, postId string) (*Post, error)
-	GetPostById(ctx context.Context, requester *principal.Principal, postId string) (*Post, error)
+	GetPostById(ctx context.Context, requester *principal.Principal, id string) (*Post, error)
 	GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
 

@@ -13,11 +13,12 @@ type PostById struct {
 }
 
 type PostByIdHandler struct {
-	pr post.Repository
+	pr     post.Repository
+	stella StellaService
 }
 
-func NewPostByIdHandler(pr post.Repository) PostByIdHandler {
-	return PostByIdHandler{pr: pr}
+func NewPostByIdHandler(pr post.Repository, stella StellaService) PostByIdHandler {
+	return PostByIdHandler{pr: pr, stella: stella}
 }
 
 func (h PostByIdHandler) Handle(ctx context.Context, query PostById) (*post.Post, error) {

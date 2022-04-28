@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "club",
     srcs = [
+        "account_club_digest.go",
         "club.go",
         "club_filters.go",
         "club_filters_sorting.go",

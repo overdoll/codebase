@@ -4,6 +4,7 @@ go_library(
     name = "command",
     srcs = [
         "add_account_email.go",
+        "assign_account_artist_role.go",
         "assign_account_moderator_role.go",
         "assign_account_staff_role.go",
         "confirm_account_email.go",
@@ -18,6 +19,7 @@ go_library(
         "grant_account_access_with_authentication_token.go",
         "grant_authentication_token.go",
         "lock_account.go",
+        "revoke_account_artist_role.go",
         "revoke_account_moderator_role.go",
         "revoke_account_session.go",
         "revoke_account_session_operator.go",

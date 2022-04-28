@@ -13,21 +13,6 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
-
-	md, err := s.client.CanAccountCreatePostUnderClub(ctx, &stella.CanAccountCreatePostUnderClubRequest{ClubId: clubId, AccountId: accountId})
-
-	if err != nil {
-		return false, err
-	}
-
-	if md == nil {
-		return false, nil
-	}
-
-	return md.Allowed, nil
-}
-
 func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) error {
 
 	_, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})

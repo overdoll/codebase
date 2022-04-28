@@ -2,6 +2,7 @@ package post
 
 import (
 	"errors"
+	"overdoll/applications/sting/internal/domain/club"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -43,16 +44,20 @@ type Post struct {
 	likes int
 }
 
-func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
+func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	id := uuid.New()
 
 	if requester.IsLocked() {
 		return nil, principal.ErrLocked
 	}
 
+	if err := requester.CheckClubOwner(club.OwnerAccountId()); err != nil {
+		return nil, err
+	}
+
 	return &Post{
 		id:                  id.String(),
-		clubId:              clubId,
+		clubId:              club.Id(),
 		state:               Draft,
 		supporterOnlyStatus: None,
 		contributorId:       requester.AccountId(),
@@ -60,29 +65,18 @@ func NewPost(requester *principal.Principal, clubId string) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time, requester *principal.Principal, supportedClubIds []string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
-
-	requesterIsSupporter := false
-
-	for _, requesterClubId := range supportedClubIds {
-		if clubId == requesterClubId {
-			requesterIsSupporter = true
-			break
-		}
-	}
 
 	var content []*Content
 
 	for _, resourceId := range contentResourceIds {
 		content = append(content, &Content{
-			resourceId:           resourceId,
-			resourceIdHidden:     contentSupporterOnlyResourceIds[resourceId],
-			isSupporterOnly:      contentSupporterOnly[resourceId],
-			canViewSupporterOnly: requesterIsSupporter,
-			requester:            requester,
+			resourceId:       resourceId,
+			resourceIdHidden: contentSupporterOnlyResourceIds[resourceId],
+			isSupporterOnly:  contentSupporterOnly[resourceId],
 		})
 	}
 
@@ -489,8 +483,8 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {
 
-	if err := requester.BelongsToAccount(requester.AccountId()); err != nil {
-		return err
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
+		return requester.BelongsToAccount(requester.AccountId())
 	}
 
 	if requester.IsLocked() {
@@ -504,7 +498,7 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func (p *Post) CanView(requester *principal.Principal) error {
+func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal) error {
 
 	if !p.IsPublished() {
 
@@ -516,7 +510,41 @@ func (p *Post) CanView(requester *principal.Principal) error {
 			return nil
 		}
 
-		return requester.BelongsToAccount(requester.AccountId())
+		if err := requester.CheckClubOwner(p.clubId); err != nil {
+			return requester.BelongsToAccount(requester.AccountId())
+		}
+
+		return nil
+	}
+
+	found := false
+
+	for _, id := range suspendedClubIds {
+		if id == p.clubId {
+			found = true
+			break
+		}
+	}
+
+	// if club is suspended, return not found
+	if found {
+
+		// check for staff or moderator
+		if requester.IsStaff() || requester.IsModerator() {
+			return nil
+		}
+
+		// not owner, return not found
+		if err := requester.CheckClubOwner(p.clubId); err != nil {
+
+			if err := requester.BelongsToAccount(requester.AccountId()); err != nil {
+				return ErrNotFound
+			}
+
+			return nil
+		}
+
+		return nil
 	}
 
 	return nil

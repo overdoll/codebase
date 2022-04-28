@@ -118,3 +118,10 @@ CREATE TABLE IF NOT EXISTS curation_profile
     category_ids_skipped  boolean,
     primary key ( account_id )
 );
+
+CREATE TABLE IF NOT EXISTS suspended_clubs
+(
+    bucket  int,
+    club_id text,
+    primary key ( bucket, club_id )
+);

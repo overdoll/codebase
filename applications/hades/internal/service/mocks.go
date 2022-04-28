@@ -54,20 +54,12 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 
 type StellaServiceMock struct{}
 
-func (s StellaServiceMock) CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error) {
-	return true, nil
-}
-
 func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
 	return nil
 }
 
 func (s StellaServiceMock) RemoveClubSupporter(ctx context.Context, clubId, accountId string) error {
 	return nil
-}
-
-func (s StellaServiceMock) CanAccountViewClub(ctx context.Context, clubId, accountId string) (bool, error) {
-	return true, nil
 }
 
 type MockCCBillHttpClient struct {

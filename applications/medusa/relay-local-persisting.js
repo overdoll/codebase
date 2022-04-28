@@ -57,7 +57,7 @@ async function requestListener (req, res) {
         throw new Error('Expected to have `text` parameter in the POST.')
       }
       const id = queryMap.saveQuery(text)
-      push.pushSingleQuery(id, text)
+      await push.pushSingleQuery(id, text)
       res.end(JSON.stringify({ id: id }))
     } catch (e) {
       console.error(e)

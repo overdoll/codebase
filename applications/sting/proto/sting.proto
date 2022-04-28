@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package applications.grpc.sting.v1;
 
+import "google/protobuf/empty.proto";
+
 message PostRequest {
   string id = 1;
 }
@@ -12,10 +14,20 @@ message Post {
   string clubId = 1;
 }
 
+message AddSuspendedClubRequest {
+  string clubId = 1;
+}
+
+message RemoveSuspendedClubRequest {
+  string clubId = 1;
+}
+
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
   rpc PublishPost(PostRequest) returns (UpdatePostResponse);
   rpc RemovePost(PostRequest) returns (UpdatePostResponse);
   rpc RejectPost(PostRequest) returns (UpdatePostResponse);
   rpc DiscardPost(PostRequest) returns (UpdatePostResponse);
+  rpc AddSuspendedClub(AddSuspendedClubRequest) returns (google.protobuf.Empty);
+  rpc RemoveSuspendedClub(RemoveSuspendedClubRequest) returns (google.protobuf.Empty);
 }

@@ -182,11 +182,15 @@ func (a *Account) isPrivileged() bool {
 }
 
 func (a *Account) IsStaff() bool {
-	return a.hasRoles([]string{"staff"})
+	return a.hasRoles([]string{Staff.String()})
 }
 
 func (a *Account) IsModerator() bool {
-	return (a.hasRoles([]string{"moderator"}) || a.IsStaff()) && !a.IsLocked()
+	return (a.hasRoles([]string{Moderator.String()}) || a.IsStaff()) && !a.IsLocked()
+}
+
+func (a *Account) IsArtist() bool {
+	return (a.hasRoles([]string{Artist.String()}) || a.IsStaff()) && !a.IsLocked()
 }
 
 func (a *Account) hasRoles(roles []string) bool {
@@ -304,6 +308,21 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 	return nil
 }
 
+func (a *Account) AssignArtistRole(requester *principal.Principal) error {
+
+	if err := a.assignRoleCheck(requester); err != nil {
+		return err
+	}
+
+	if a.IsStaff() {
+		return nil
+	}
+
+	a.roles = append(a.roles, Artist)
+
+	return nil
+}
+
 func (a *Account) AssignStaffRole(requester *principal.Principal) error {
 
 	if err := a.assignRoleCheck(requester); err != nil {
@@ -361,6 +380,23 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 	}
 
 	if err := a.removeRole(Staff); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *Account) RevokeArtistRole(requester *principal.Principal) error {
+
+	if err := a.revokeRoleCheck(requester); err != nil {
+		return err
+	}
+
+	if !a.IsStaff() {
+		return ErrAccountNoRole
+	}
+
+	if err := a.removeRole(Artist); err != nil {
 		return err
 	}
 
