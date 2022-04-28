@@ -14,11 +14,10 @@ type UnSuspendClub struct {
 
 type UnSuspendClubHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewUnSuspendClubHandler(cr club.Repository, ci club.IndexRepository) UnSuspendClubHandler {
-	return UnSuspendClubHandler{cr: cr, ci: ci}
+func NewUnSuspendClubHandler(cr club.Repository) UnSuspendClubHandler {
+	return UnSuspendClubHandler{cr: cr}
 }
 
 func (h UnSuspendClubHandler) Handle(ctx context.Context, cmd UnSuspendClub) (*club.Club, error) {
@@ -28,10 +27,6 @@ func (h UnSuspendClubHandler) Handle(ctx context.Context, cmd UnSuspendClub) (*c
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

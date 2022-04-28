@@ -81,7 +81,7 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 	require.Len(t, results, 2, "should have found the last 2 club members")
 }
 
-func newClubRepository(t *testing.T) adapters.ClubCassandraRepository {
+func newClubRepository(t *testing.T) adapters.ClubCassandraElasticsearchRepository {
 	session := bootstrap.InitializeDatabaseSession()
-	return adapters.NewClubCassandraRepository(session)
+	return adapters.NewClubCassandraElasticsearchRepository(session)
 }

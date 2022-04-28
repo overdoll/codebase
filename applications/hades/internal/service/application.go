@@ -75,12 +75,11 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	awsSession := bootstrap.InitializeAWSSession()
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
-	billingRepo := adapters.NewBillingCassandraRepository(session)
+	billingRepo := adapters.NewBillingCassandraRepository(session, esClient)
 	pricingRepo := adapters.NewBillingPricingRepository()
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	cancelRepo := adapters.NewCancellationCassandraRepository(session)
-	billingIndexRepo := adapters.NewBillingIndexElasticSearchRepository(esClient, session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -99,7 +98,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			GenerateClubSupporterRefundReceiptFromAccountTransactionHistory:  command.NewGenerateClubSupporterRefundReceiptFromAccountTransaction(billingRepo, billingFileRepo),
 			ExtendAccountClubSupporterSubscription:                           command.NewExtendAccountClubSupporterSubscription(billingRepo, ccbillRepo),
 			GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory: command.NewGenerateClubSupporterPaymentReceiptFromAccountTransaction(billingRepo, billingFileRepo),
-			IndexAllAccountTransactions:                                      command.NewIndexAllAccountTransactionsHandler(billingIndexRepo),
+			DeleteAndRecreateAccountTransactionsIndex:                        command.NewDeleteAndRecreateAccountTransactionsIndexHandler(billingRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                                     query.NewPrincipalByIdHandler(eva),
@@ -115,12 +114,12 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CCBillTransactionDetails:                          query.NewCCBillTransactionDetailsHandler(),
 
 			AccountTransactionById:             query.NewAccountTransactionByIdHandler(billingRepo),
-			SearchAccountTransactions:          query.NewSearchAccountTransactionsHandler(billingIndexRepo),
-			AccountTransactionsChargebackCount: query.NewAccountTransactionsChargebackCountHandler(billingIndexRepo),
-			AccountTransactionsRefundCount:     query.NewAccountTransactionsRefundCountHandler(billingIndexRepo),
-			AccountTransactionsPaymentCount:    query.NewAccountTransactionsPaymentCountHandler(billingIndexRepo),
-			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingIndexRepo),
+			SearchAccountTransactions:          query.NewSearchAccountTransactionsHandler(billingRepo),
+			AccountTransactionsChargebackCount: query.NewAccountTransactionsChargebackCountHandler(billingRepo),
+			AccountTransactionsRefundCount:     query.NewAccountTransactionsRefundCountHandler(billingRepo),
+			AccountTransactionsPaymentCount:    query.NewAccountTransactionsPaymentCountHandler(billingRepo),
+			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, billingIndexRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
 }

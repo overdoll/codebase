@@ -14,7 +14,7 @@ type UpdateVoidClubSubscriptionAccountTransactionInput struct {
 
 func (h *Activities) UpdateVoidClubSubscriptionAccountTransaction(ctx context.Context, input UpdateRefundClubSubscriptionAccountTransactionInput) error {
 
-	transaction, err := h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
+	_, err := h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
 		return transaction.MakeVoid(input.Timestamp, input.Reason)
 	})
 
@@ -22,5 +22,5 @@ func (h *Activities) UpdateVoidClubSubscriptionAccountTransaction(ctx context.Co
 		return err
 	}
 
-	return h.bi.IndexAccountTransaction(ctx, transaction)
+	return nil
 }

@@ -6,19 +6,12 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 	"time"
 )
-
-type PayoutIndexElasticSearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-	stella  query.StellaService
-}
 
 const clubPayoutsIndex = `
 {
@@ -95,10 +88,6 @@ type clubPayoutDocument struct {
 
 const ClubPayoutsIndexName = "club_payouts"
 
-func NewPayoutIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PayoutIndexElasticSearchRepository {
-	return PayoutIndexElasticSearchRepository{client: client, session: session}
-}
-
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
 
 	var doc clubPayoutDocument
@@ -165,7 +154,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 	}, nil
 }
 
-func (r PayoutIndexElasticSearchRepository) SearchClubPayouts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payout.ClubPayoutsFilters) ([]*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payout.ClubPayoutsFilters) ([]*payout.ClubPayout, error) {
 
 	builder := r.client.Search().
 		Index(ClubPayoutsIndexName)
@@ -247,7 +236,7 @@ func (r PayoutIndexElasticSearchRepository) SearchClubPayouts(ctx context.Contex
 	return pays, nil
 }
 
-func (r PayoutIndexElasticSearchRepository) IndexAllClubPayouts(ctx context.Context) error {
+func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -316,7 +305,7 @@ func (r PayoutIndexElasticSearchRepository) IndexAllClubPayouts(ctx context.Cont
 	return nil
 }
 
-func (r PayoutIndexElasticSearchRepository) DeleteClubPayoutsIndex(ctx context.Context) error {
+func (r PayoutCassandraElasticsearchRepository) deleteClubPayoutsIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(ClubPayoutsIndexName).Do(ctx)
 
@@ -338,7 +327,7 @@ func (r PayoutIndexElasticSearchRepository) DeleteClubPayoutsIndex(ctx context.C
 	return nil
 }
 
-func (r PayoutIndexElasticSearchRepository) IndexClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
+func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
 
 	pst, err := marshalClubPayoutToDocument(pay)
 
@@ -358,4 +347,13 @@ func (r PayoutIndexElasticSearchRepository) IndexClubPayout(ctx context.Context,
 	}
 
 	return nil
+}
+
+func (r PayoutCassandraElasticsearchRepository) DeleteAndRecreateClubPayoutsIndex(ctx context.Context) error {
+
+	if err := r.deleteClubPayoutsIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllClubPayouts(ctx)
 }

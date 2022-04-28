@@ -6,19 +6,12 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 	"time"
 )
-
-type PaymentIndexElasticSearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-	stella  query.StellaService
-}
 
 const clubPaymentsIndex = `
 {
@@ -94,10 +87,6 @@ type clubPaymentDocument struct {
 
 const ClubPaymentsIndexName = "club_payments"
 
-func NewPaymentIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PaymentIndexElasticSearchRepository {
-	return PaymentIndexElasticSearchRepository{client: client, session: session}
-}
-
 func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment, error) {
 
 	var doc clubPaymentDocument
@@ -151,7 +140,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocumen
 	}, nil
 }
 
-func (r PaymentIndexElasticSearchRepository) SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payment.ClubPaymentsFilters) ([]*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payment.ClubPaymentsFilters) ([]*payment.ClubPayment, error) {
 
 	builder := r.client.Search().
 		Index(ClubPaymentsIndexName)
@@ -226,7 +215,7 @@ func (r PaymentIndexElasticSearchRepository) SearchClubPayments(ctx context.Cont
 	return pays, nil
 }
 
-func (r PaymentIndexElasticSearchRepository) IndexAllClubPayments(ctx context.Context) error {
+func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -282,7 +271,7 @@ func (r PaymentIndexElasticSearchRepository) IndexAllClubPayments(ctx context.Co
 	return nil
 }
 
-func (r PaymentIndexElasticSearchRepository) DeleteClubPaymentsIndex(ctx context.Context) error {
+func (r PaymentCassandraElasticsearchRepository) deleteClubPaymentsIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(ClubPaymentsIndexName).Do(ctx)
 
@@ -304,7 +293,7 @@ func (r PaymentIndexElasticSearchRepository) DeleteClubPaymentsIndex(ctx context
 	return nil
 }
 
-func (r PaymentIndexElasticSearchRepository) IndexClubPayment(ctx context.Context, pay *payment.ClubPayment) error {
+func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Context, pay *payment.ClubPayment) error {
 
 	pst, err := marshalClubPaymentToDocument(pay)
 
@@ -326,7 +315,7 @@ func (r PaymentIndexElasticSearchRepository) IndexClubPayment(ctx context.Contex
 	return nil
 }
 
-func (r PaymentIndexElasticSearchRepository) UpdateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
+func (r PaymentCassandraElasticsearchRepository) updateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 
 	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
 		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
@@ -338,4 +327,13 @@ func (r PaymentIndexElasticSearchRepository) UpdateIndexClubPaymentsCompleted(ct
 	}
 
 	return nil
+}
+
+func (r PaymentCassandraElasticsearchRepository) DeleteAndRecreateClubPaymentsIndex(ctx context.Context) error {
+
+	if err := r.deleteClubPaymentsIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllClubPayments(ctx)
 }

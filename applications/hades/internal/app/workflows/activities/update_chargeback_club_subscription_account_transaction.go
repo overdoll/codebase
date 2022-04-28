@@ -25,7 +25,7 @@ func (h *Activities) UpdateChargebackClubSubscriptionAccountTransaction(ctx cont
 		return err
 	}
 
-	transaction, err := h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
+	_, err = h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
 		return transaction.MakeChargeback(input.Timestamp, input.Amount, cr, input.Reason)
 	})
 
@@ -33,5 +33,5 @@ func (h *Activities) UpdateChargebackClubSubscriptionAccountTransaction(ctx cont
 		return err
 	}
 
-	return h.bi.IndexAccountTransaction(ctx, transaction)
+	return nil
 }

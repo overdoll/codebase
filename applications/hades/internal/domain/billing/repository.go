@@ -44,14 +44,10 @@ type Repository interface {
 	GetCCBillSubscriptionDetailsByIdOperator(ctx context.Context, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
 	CreateCCBillSubscriptionDetailsOperator(ctx context.Context, subscription *CCBillSubscriptionDetails) error
 	UpdateCCBillSubscriptionDetailsPaymentMethodOperator(ctx context.Context, ccbillSubscriptionId string, updateFn func(subscription *CCBillSubscriptionDetails) error) (*CCBillSubscriptionDetails, error)
-}
 
-type IndexRepository interface {
 	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
 	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
-	IndexAllAccountTransactions(ctx context.Context) error
-	DeleteAccountTransactionsIndex(ctx context.Context) error
-	IndexAccountTransaction(ctx context.Context, accountTransaction *AccountTransaction) error
+	DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error
 }
 
 type FileRepository interface {

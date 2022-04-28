@@ -23,7 +23,6 @@ type Repository interface {
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 
 	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
-	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
 
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, member *Member) error
@@ -39,12 +38,7 @@ type Repository interface {
 	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)
 
 	GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*Member, error)
-}
 
-type IndexRepository interface {
-	IndexAllClubs(ctx context.Context) error
-	IndexClub(ctx context.Context, club *Club) error
-	DeleteClubsIndex(ctx context.Context) error
-	SuspendedClubs(ctx context.Context) ([]*Club, error)
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
+	DeleteAndRecreateClubsIndex(ctx context.Context) error
 }

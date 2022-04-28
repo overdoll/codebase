@@ -5,19 +5,14 @@ import (
 	"overdoll/applications/ringer/internal/domain/payout"
 )
 
-type IndexAllClubPayoutsHandler struct {
-	pr payout.IndexRepository
+type DeleteAndRecreateClubPayoutsIndexHandler struct {
+	pr payout.Repository
 }
 
-func NewIndexAllClubPayoutsHandler(pr payout.IndexRepository) IndexAllClubPayoutsHandler {
-	return IndexAllClubPayoutsHandler{pr: pr}
+func NewDeleteAndRecreateClubPayoutsIndexHandler(pr payout.Repository) DeleteAndRecreateClubPayoutsIndexHandler {
+	return DeleteAndRecreateClubPayoutsIndexHandler{pr: pr}
 }
 
-func (h IndexAllClubPayoutsHandler) Handle(ctx context.Context) error {
-
-	if err := h.pr.DeleteClubPayoutsIndex(ctx); err != nil {
-		return err
-	}
-
-	return h.pr.IndexAllClubPayouts(ctx)
+func (h DeleteAndRecreateClubPayoutsIndexHandler) Handle(ctx context.Context) error {
+	return h.pr.DeleteAndRecreateClubPayoutsIndex(ctx)
 }

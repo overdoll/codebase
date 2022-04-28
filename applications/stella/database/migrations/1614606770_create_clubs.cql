@@ -14,15 +14,16 @@ CREATE TABLE IF NOT EXISTS account_supported_clubs
 
 CREATE TABLE IF NOT EXISTS clubs
 (
-    id                    text,
-    slug                  text,
-    slug_aliases          set<text>,
-    name                  map<text, text>,
-    suspended             boolean,
-    suspended_until       timestamp,
-    members_count         int,
-    thumbnail_resource_id text,
-    owner_account_id      text,
+    id                           text,
+    slug                         text,
+    slug_aliases                 set<text>,
+    name                         map<text, text>,
+    suspended                    boolean,
+    suspended_until              timestamp,
+    members_count                int,
+    members_count_last_update_id timeuuid,
+    thumbnail_resource_id        text,
+    owner_account_id             text,
     primary key ( id )
 );
 

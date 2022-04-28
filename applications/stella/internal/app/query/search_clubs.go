@@ -19,10 +19,10 @@ type SearchClubs struct {
 }
 
 type SearchClubsHandler struct {
-	cr club.IndexRepository
+	cr club.Repository
 }
 
-func NewSearchClubsHandler(cr club.IndexRepository) SearchClubsHandler {
+func NewSearchClubsHandler(cr club.Repository) SearchClubsHandler {
 	return SearchClubsHandler{cr: cr}
 }
 

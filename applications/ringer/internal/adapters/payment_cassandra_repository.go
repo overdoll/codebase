@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/payment"
@@ -101,12 +102,13 @@ type clubPlatformFee struct {
 	Percent int64  `db:"percent"`
 }
 
-type PaymentCassandraRepository struct {
+type PaymentCassandraElasticsearchRepository struct {
 	session gocqlx.Session
+	client  *elastic.Client
 }
 
-func NewPaymentCassandraRepository(session gocqlx.Session) PaymentCassandraRepository {
-	return PaymentCassandraRepository{session: session}
+func NewPaymentCassandraRepository(session gocqlx.Session, client *elastic.Client) PaymentCassandraElasticsearchRepository {
+	return PaymentCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*clubPayment, error) {
@@ -142,7 +144,7 @@ func canViewSensitive(ctx context.Context, requester *principal.Principal, clubI
 	return nil
 }
 
-func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, payment *payment.ClubPayment) error {
+func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx context.Context, payment *payment.ClubPayment) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -183,10 +185,14 @@ func (r PaymentCassandraRepository) CreateNewClubPayment(ctx context.Context, pa
 		return fmt.Errorf("failed to create new club payment: %v", err)
 	}
 
+	if err := r.indexClubPayment(ctx, payment); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PaymentCassandraRepository) getClubPaymentById(ctx context.Context, paymentId string) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.Context, paymentId string) (*payment.ClubPayment, error) {
 
 	var clubPay clubPayment
 
@@ -219,7 +225,7 @@ func (r PaymentCassandraRepository) getClubPaymentById(ctx context.Context, paym
 	), nil
 }
 
-func (r PaymentCassandraRepository) GetClubPaymentById(ctx context.Context, requester *principal.Principal, paymentId string) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) GetClubPaymentById(ctx context.Context, requester *principal.Principal, paymentId string) (*payment.ClubPayment, error) {
 
 	pay, err := r.getClubPaymentById(ctx, paymentId)
 
@@ -234,11 +240,11 @@ func (r PaymentCassandraRepository) GetClubPaymentById(ctx context.Context, requ
 	return pay, nil
 }
 
-func (r PaymentCassandraRepository) GetClubPaymentByIdOperator(ctx context.Context, paymentId string) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) GetClubPaymentByIdOperator(ctx context.Context, paymentId string) (*payment.ClubPayment, error) {
 	return r.getClubPaymentById(ctx, paymentId)
 }
 
-func (r PaymentCassandraRepository) GetClubPaymentByAccountTransactionId(ctx context.Context, accountTransactionId string) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) GetClubPaymentByAccountTransactionId(ctx context.Context, accountTransactionId string) (*payment.ClubPayment, error) {
 
 	var clubPay clubPayment
 
@@ -252,7 +258,7 @@ func (r PaymentCassandraRepository) GetClubPaymentByAccountTransactionId(ctx con
 	return r.getClubPaymentById(ctx, clubPay.Id)
 }
 
-func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
+func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -269,10 +275,14 @@ func (r PaymentCassandraRepository) UpdateClubPaymentsCompleted(ctx context.Cont
 		return fmt.Errorf("failed to update club payments completed: %v", err)
 	}
 
+	if err := r.updateIndexClubPaymentsCompleted(ctx, paymentIds); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PaymentCassandraRepository) RemoveClubPaymentsFromClubReadyList(ctx context.Context, clubId string, paymentIds []string) error {
+func (r PaymentCassandraElasticsearchRepository) RemoveClubPaymentsFromClubReadyList(ctx context.Context, clubId string, paymentIds []string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -292,7 +302,7 @@ func (r PaymentCassandraRepository) RemoveClubPaymentsFromClubReadyList(ctx cont
 	return nil
 }
 
-func (r PaymentCassandraRepository) updateClubPayment(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error, columns []string) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) updateClubPayment(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error, columns []string) (*payment.ClubPayment, error) {
 	pay, err := r.GetClubPaymentByIdOperator(ctx, paymentId)
 
 	if err != nil {
@@ -316,18 +326,22 @@ func (r PaymentCassandraRepository) updateClubPayment(ctx context.Context, payme
 		return nil, fmt.Errorf("failed to update club payment status: %v", err)
 	}
 
+	if err := r.indexClubPayment(ctx, pay); err != nil {
+		return nil, err
+	}
+
 	return pay, nil
 }
 
-func (r PaymentCassandraRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
 	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"status"})
 }
 
-func (r PaymentCassandraRepository) UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
+func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
 	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"club_payout_ids"})
 }
 
-func (r PaymentCassandraRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {
+func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {
 
 	if err := r.session.
 		Query(clubReadyPaymentsTable.Insert()).
@@ -347,7 +361,7 @@ func (r PaymentCassandraRepository) AddClubPaymentToClubReadyList(ctx context.Co
 	return nil
 }
 
-func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error {
+func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error {
 
 	var page []byte
 
@@ -395,7 +409,7 @@ func (r PaymentCassandraRepository) ScanClubReadyPaymentsList(ctx context.Contex
 	return nil
 }
 
-func (r PaymentCassandraRepository) AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error {
+func (r PaymentCassandraElasticsearchRepository) AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -415,7 +429,7 @@ func (r PaymentCassandraRepository) AddClubPaymentsToPayout(ctx context.Context,
 	return nil
 }
 
-func (r PaymentCassandraRepository) ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error {
+func (r PaymentCassandraElasticsearchRepository) ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error {
 
 	var page []byte
 
@@ -461,7 +475,7 @@ func (r PaymentCassandraRepository) ScanClubPaymentsListForPayout(ctx context.Co
 	return nil
 }
 
-func (r PaymentCassandraRepository) UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *payment.ClubPlatformFee) error) (*payment.ClubPlatformFee, error) {
+func (r PaymentCassandraElasticsearchRepository) UpdateClubPlatformFee(ctx context.Context, requester *principal.Principal, clubId string, updateFn func(fee *payment.ClubPlatformFee) error) (*payment.ClubPlatformFee, error) {
 
 	pay, err := r.GetPlatformFeeForClub(ctx, requester, clubId)
 
@@ -486,7 +500,7 @@ func (r PaymentCassandraRepository) UpdateClubPlatformFee(ctx context.Context, r
 	return pay, nil
 }
 
-func (r PaymentCassandraRepository) getPlatformFeeForClub(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
+func (r PaymentCassandraElasticsearchRepository) getPlatformFeeForClub(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
 
 	var platformFee clubPlatformFee
 
@@ -505,11 +519,11 @@ func (r PaymentCassandraRepository) getPlatformFeeForClub(ctx context.Context, c
 	return payment.UnmarshalClubPlatformFeeFromDatabase(platformFee.ClubId, platformFee.Percent), nil
 }
 
-func (r PaymentCassandraRepository) GetPlatformFeeForClubOperator(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
+func (r PaymentCassandraElasticsearchRepository) GetPlatformFeeForClubOperator(ctx context.Context, clubId string) (*payment.ClubPlatformFee, error) {
 	return r.getPlatformFeeForClub(ctx, clubId)
 }
 
-func (r PaymentCassandraRepository) GetPlatformFeeForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubPlatformFee, error) {
+func (r PaymentCassandraElasticsearchRepository) GetPlatformFeeForClub(ctx context.Context, requester *principal.Principal, clubId string) (*payment.ClubPlatformFee, error) {
 
 	fee, err := r.getPlatformFeeForClub(ctx, clubId)
 

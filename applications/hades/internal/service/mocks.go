@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/club"
 	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -53,6 +54,10 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 }
 
 type StellaServiceMock struct{}
+
+func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, ""), nil
+}
 
 func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
 	return nil

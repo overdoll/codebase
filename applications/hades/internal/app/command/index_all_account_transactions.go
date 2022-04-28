@@ -5,19 +5,14 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 )
 
-type IndexAllAccountTransactionsHandler struct {
-	bi billing.IndexRepository
+type DeleteAndRecreateAccountTransactionsIndexHandler struct {
+	bi billing.Repository
 }
 
-func NewIndexAllAccountTransactionsHandler(bi billing.IndexRepository) IndexAllAccountTransactionsHandler {
-	return IndexAllAccountTransactionsHandler{bi: bi}
+func NewDeleteAndRecreateAccountTransactionsIndexHandler(bi billing.Repository) DeleteAndRecreateAccountTransactionsIndexHandler {
+	return DeleteAndRecreateAccountTransactionsIndexHandler{bi: bi}
 }
 
-func (h IndexAllAccountTransactionsHandler) Handle(ctx context.Context) error {
-
-	if err := h.bi.DeleteAccountTransactionsIndex(ctx); err != nil {
-		return err
-	}
-
-	return h.bi.IndexAllAccountTransactions(ctx)
+func (h DeleteAndRecreateAccountTransactionsIndexHandler) Handle(ctx context.Context) error {
+	return h.bi.DeleteAndRecreateAccountTransactionsIndex(ctx)
 }

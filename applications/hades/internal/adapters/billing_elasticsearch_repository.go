@@ -13,11 +13,6 @@ import (
 	"time"
 )
 
-type BillingIndexElasticSearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-}
-
 type accountTransactionEventDocument struct {
 	Id        string    `json:"id"`
 	Timestamp time.Time `json:"timestamp"`
@@ -117,10 +112,6 @@ const accountTransactionIndex = `
 
 const AccountTransactionsIndexName = "account_transactions"
 
-func NewBillingIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) BillingIndexElasticSearchRepository {
-	return BillingIndexElasticSearchRepository{client: client, session: session}
-}
-
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
 
 	var doc accountTransactionDocument
@@ -210,7 +201,7 @@ func marshalAccountTransactionToDocument(transaction *billing.AccountTransaction
 	}, nil
 }
 
-func (r BillingIndexElasticSearchRepository) GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []billing.Transaction) (*int64, error) {
+func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []billing.Transaction) (*int64, error) {
 
 	builder := r.client.Count().
 		Index(AccountTransactionsIndexName)
@@ -240,7 +231,7 @@ func (r BillingIndexElasticSearchRepository) GetAccountTransactionsCount(ctx con
 	return &response, nil
 }
 
-func (r BillingIndexElasticSearchRepository) SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransaction, error) {
+func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransaction, error) {
 
 	builder := r.client.Search().
 		Index(AccountTransactionsIndexName)
@@ -297,7 +288,7 @@ func (r BillingIndexElasticSearchRepository) SearchAccountTransactions(ctx conte
 	return transactions, nil
 }
 
-func (r BillingIndexElasticSearchRepository) IndexAllAccountTransactions(ctx context.Context) error {
+func (r BillingCassandraElasticsearchRepository) indexAllAccountTransactions(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -372,7 +363,7 @@ func (r BillingIndexElasticSearchRepository) IndexAllAccountTransactions(ctx con
 	return nil
 }
 
-func (r BillingIndexElasticSearchRepository) DeleteAccountTransactionsIndex(ctx context.Context) error {
+func (r BillingCassandraElasticsearchRepository) deleteAccountTransactionsIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(AccountTransactionsIndexName).Do(ctx)
 
@@ -394,7 +385,16 @@ func (r BillingIndexElasticSearchRepository) DeleteAccountTransactionsIndex(ctx 
 	return nil
 }
 
-func (r BillingIndexElasticSearchRepository) IndexAccountTransaction(ctx context.Context, transaction *billing.AccountTransaction) error {
+func (r BillingCassandraElasticsearchRepository) DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error {
+
+	if err := r.deleteAccountTransactionsIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllAccountTransactions(ctx)
+}
+
+func (r BillingCassandraElasticsearchRepository) indexAccountTransaction(ctx context.Context, transaction *billing.AccountTransaction) error {
 
 	pst, err := marshalAccountTransactionToDocument(transaction)
 

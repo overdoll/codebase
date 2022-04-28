@@ -16,12 +16,11 @@ type UpdateClubThumbnail struct {
 
 type UpdateClubThumbnailHandler struct {
 	cr     club.Repository
-	ci     club.IndexRepository
 	loader LoaderService
 }
 
-func NewUpdateClubThumbnailHandler(cr club.Repository, ci club.IndexRepository, loader LoaderService) UpdateClubThumbnailHandler {
-	return UpdateClubThumbnailHandler{cr: cr, ci: ci, loader: loader}
+func NewUpdateClubThumbnailHandler(cr club.Repository, loader LoaderService) UpdateClubThumbnailHandler {
+	return UpdateClubThumbnailHandler{cr: cr, loader: loader}
 }
 
 func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubThumbnail) (*club.Club, error) {
@@ -39,10 +38,6 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

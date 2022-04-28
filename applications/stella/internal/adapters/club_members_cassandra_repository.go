@@ -131,7 +131,7 @@ type clubMembersPartition struct {
 	MaxMembersCount   int        `db:"max_members_count"`
 }
 
-func (r ClubCassandraRepository) addClubPartitions(ctx context.Context, clubId string) error {
+func (r ClubCassandraElasticsearchRepository) addClubPartitions(ctx context.Context, clubId string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -150,7 +150,7 @@ func (r ClubCassandraRepository) addClubPartitions(ctx context.Context, clubId s
 	return nil
 }
 
-func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) (gocql.UUID, error) {
+func (r ClubCassandraElasticsearchRepository) addInitialClubPartitionInsertsToBatch(ctx context.Context, batch *gocql.Batch, clubId string) (gocql.UUID, error) {
 
 	stmt, _ := clubMembersPartitionsTable.Insert()
 
@@ -175,7 +175,7 @@ func (r ClubCassandraRepository) addInitialClubPartitionInsertsToBatch(ctx conte
 	return firstPartition, nil
 }
 
-func (r ClubCassandraRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, partition gocql.UUID) error {
+func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, partition gocql.UUID) error {
 
 	stmt, _ := clubMembersTable.Insert()
 
@@ -196,7 +196,7 @@ func (r ClubCassandraRepository) addInitialClubMemberToBatch(ctx context.Context
 	return nil
 }
 
-func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Context, clubId string, bucket gocql.UUID, fresh bool) error {
+func (r ClubCassandraElasticsearchRepository) updateClubMembersPartitionCount(ctx context.Context, clubId string, bucket gocql.UUID, fresh bool) error {
 
 	// first, grab the partition to get the last timestamp count
 	var partition clubMembersPartition
@@ -298,7 +298,7 @@ func (r ClubCassandraRepository) updateClubMembersPartitionCount(ctx context.Con
 	return nil
 }
 
-func (r ClubCassandraRepository) getNextClosestEmptyClubMembersPartition(ctx context.Context, clubId string) (*clubMembersPartition, error) {
+func (r ClubCassandraElasticsearchRepository) getNextClosestEmptyClubMembersPartition(ctx context.Context, clubId string) (*clubMembersPartition, error) {
 
 	var partitions []clubMembersPartition
 
@@ -334,7 +334,7 @@ func (r ClubCassandraRepository) getNextClosestEmptyClubMembersPartition(ctx con
 	return targetPartition, nil
 }
 
-func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, member *club.Member) error {
+func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Context, member *club.Member) error {
 
 	// get the next partition that is valid
 	partition, err := r.getNextClosestEmptyClubMembersPartition(ctx, member.ClubId())
@@ -361,7 +361,7 @@ func (r ClubCassandraRepository) CreateClubMember(ctx context.Context, member *c
 	return nil
 }
 
-func (r ClubCassandraRepository) getClubMemberById(ctx context.Context, clubId, accountId string) (*clubMember, error) {
+func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Context, clubId, accountId string) (*clubMember, error) {
 
 	var clubMem clubMember
 
@@ -381,7 +381,7 @@ func (r ClubCassandraRepository) getClubMemberById(ctx context.Context, clubId, 
 	return &clubMem, nil
 }
 
-func (r ClubCassandraRepository) deleteClubMemberById(ctx context.Context, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) deleteClubMemberById(ctx context.Context, clubId, accountId string) error {
 
 	if err := r.session.
 		Query(clubMembersTable.Delete()).
@@ -394,7 +394,7 @@ func (r ClubCassandraRepository) deleteClubMemberById(ctx context.Context, clubI
 	return nil
 }
 
-func (r ClubCassandraRepository) GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
 
@@ -405,7 +405,7 @@ func (r ClubCassandraRepository) GetClubMemberByIdOperator(ctx context.Context, 
 	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince), nil
 }
 
-func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
 
@@ -421,7 +421,7 @@ func (r ClubCassandraRepository) GetClubMemberById(ctx context.Context, requeste
 	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt.Time(), clb.IsSupporter, clb.SupporterSince), nil
 }
 
-func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
 
 	mclub, err := r.GetClubById(ctx, clubId)
 
@@ -457,7 +457,7 @@ func (r ClubCassandraRepository) DeleteClubMember(ctx context.Context, requester
 	return nil
 }
 
-func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) AddClubMemberToList(ctx context.Context, clubId, accountId string) error {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
 
@@ -484,7 +484,7 @@ func (r ClubCassandraRepository) AddClubMemberToList(ctx context.Context, clubId
 	return r.updateClubMembersPartitionCount(ctx, clb.ClubId, clb.Bucket, false)
 }
 
-func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context, clubId string) error {
+func (r ClubCassandraElasticsearchRepository) UpdateClubMembersTotalCount(ctx context.Context, clubId string) error {
 
 	// Grab the sum of all partitions counters
 	type clubMembersPartitionSum struct {
@@ -517,7 +517,7 @@ func (r ClubCassandraRepository) UpdateClubMembersTotalCount(ctx context.Context
 	return r.updateClubMemberCount(ctx, clubId, clubMembersPartitionSums.SumMembersCount)
 }
 
-func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*club.Member, error) {
 
 	var accountClubs []*clubMembersByAccount
 
@@ -541,7 +541,7 @@ func (r ClubCassandraRepository) GetAccountClubMembershipsOperator(ctx context.C
 	return members, nil
 }
 
-func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club.Member, error) {
 
 	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
 		return nil, err
@@ -577,7 +577,7 @@ func (r ClubCassandraRepository) GetAccountClubMemberships(ctx context.Context, 
 	return members, nil
 }
 
-func (r ClubCassandraRepository) GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
+func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
 
 	if err := club.CanViewAccountClubMemberships(requester, accountId); err != nil {
 		return 0, err
@@ -604,7 +604,7 @@ func (r ClubCassandraRepository) GetAccountClubMembershipsCount(ctx context.Cont
 	return clubMembersCount.Count, nil
 }
 
-func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
 
@@ -640,7 +640,7 @@ func (r ClubCassandraRepository) RemoveClubMemberFromlist(ctx context.Context, c
 	return r.deleteClubMemberById(ctx, clubId, accountId)
 }
 
-func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.Member, error) {
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -724,7 +724,7 @@ func (r ClubCassandraRepository) GetMembersForClub(ctx context.Context, requeste
 	return members, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *club.Member) error) (*club.Member, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *club.Member) error) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
 
@@ -777,7 +777,7 @@ func (r ClubCassandraRepository) UpdateClubMemberIsSupporter(ctx context.Context
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+func (r ClubCassandraElasticsearchRepository) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
 
 	var supportedClubs []*accountSupportedClubs
 

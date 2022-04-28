@@ -14,15 +14,11 @@ type AddFailureToClubPayoutInput struct {
 
 func (h *Activities) AddFailureToClubPayout(ctx context.Context, input AddFailureToClubPayoutInput) error {
 
-	pay, err := h.par.UpdateClubPayoutEvents(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	_, err := h.par.UpdateClubPayoutEvents(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.AddErrorEvent(input.Error, input.Timestamp)
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pir.IndexClubPayout(ctx, pay); err != nil {
 		return err
 	}
 

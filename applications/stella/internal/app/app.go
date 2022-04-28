@@ -13,7 +13,7 @@ type Application struct {
 }
 
 type Commands struct {
-	IndexAllClubs command.IndexAllClubsHandler
+	DeleteAndRecreateClubsIndex command.DeleteAndRecreateClubsIndexHandler
 
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
@@ -42,13 +42,6 @@ type Queries struct {
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
-
-	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
-	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
-	CanAccountBecomeClubSupporter query.CanAccountBecomeClubSupporterHandler
-	AccountSupportedClubs         query.AccountSupportedClubsHandler
-
-	SuspendedClubs query.SuspendedClubsHandler
 
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler

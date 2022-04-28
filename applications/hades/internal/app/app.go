@@ -17,7 +17,7 @@ type Commands struct {
 	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
-	IndexAllAccountTransactions command.IndexAllAccountTransactionsHandler
+	DeleteAndRecreateAccountTransactionsIndex command.DeleteAndRecreateAccountTransactionsIndexHandler
 
 	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
 	GenerateProratedRefundAmountForAccountTransaction                command.GenerateProratedRefundAmountForAccountTransactionHandler

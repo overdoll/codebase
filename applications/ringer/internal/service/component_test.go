@@ -126,7 +126,7 @@ func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	})
 	require.NoError(t, err)
 
-	adapter := adapters.NewPayoutCassandraRepository(session, service.StellaServiceMock{})
+	adapter := adapters.NewPayoutCassandraElasticsearchRepository(session, service.StellaServiceMock{})
 
 	pay, err := payout.NewPaxumAccountPayoutMethod(accountId, email)
 	require.NoError(t, err)

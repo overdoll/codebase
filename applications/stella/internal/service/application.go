@@ -60,37 +60,30 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 	session := bootstrap.InitializeDatabaseSession()
 
 	esClient := bootstrap.InitializeElasticSearchSession()
-
-	clubRepo := adapters.NewClubCassandraRepository(session)
-	clubIndexRepo := adapters.NewClubIndexElasticSearchRepository(esClient, session)
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{
-			IndexAllClubs:                 command.NewIndexAllClubsHandler(clubRepo, clubIndexRepo),
-			CreateClub:                    command.NewCreateClubHandler(clubRepo, clubIndexRepo),
-			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo, clubIndexRepo),
-			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo, clubIndexRepo),
-			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo, clubIndexRepo),
+			DeleteAndRecreateClubsIndex:   command.NewDeleteAndRecreateClubsIndex(clubRepo),
+			CreateClub:                    command.NewCreateClubHandler(clubRepo),
+			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
+			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo),
+			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo),
+			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo),
 			JoinClub:                      command.NewJoinClubHandler(clubRepo, eventRepo),
 			LeaveClub:                     command.NewLeaveClubHandler(clubRepo, eventRepo),
-			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, clubIndexRepo, loader),
-			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, clubIndexRepo),
-			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, clubIndexRepo),
-			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, clubIndexRepo),
+			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, loader),
+			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo),
+			SuspendClub:                   command.NewSuspendClubHandler(clubRepo),
+			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo),
 			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
 			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                  query.NewPrincipalByIdHandler(eva),
-			AccountSupportedClubs:          query.NewAccountSupportedClubsHandler(clubRepo),
-			CanAccountCreatePostUnderClub:  query.NewCanAccountCreatePostUnderClubHandler(clubRepo),
-			CanAccountViewPostUnderClub:    query.NewCanAccountViewPostUnderClubHandler(clubRepo, eva),
-			CanAccountBecomeClubSupporter:  query.NewCanAccountBecomeClubSupporterHandler(clubRepo, eva),
 			ClubsByIds:                     query.NewClubsByIdsHandler(clubRepo),
-			SearchClubs:                    query.NewSearchClubsHandler(clubIndexRepo),
-			SuspendedClubs:                 query.NewSuspendedClubsHandler(clubIndexRepo),
+			SearchClubs:                    query.NewSearchClubsHandler(clubRepo),
 			ClubBySlug:                     query.NewClubBySlugHandler(clubRepo),
 			ClubById:                       query.NewClubByIdHandler(clubRepo),
 			AccountClubsCount:              query.NewAccountClubsCountHandler(clubRepo),
@@ -103,6 +96,6 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			ClubMemberById:                 query.NewClubMemberByIdHandler(clubRepo),
 			AccountClubMembershipsOperator: query.NewAccountClubMembershipsOperatorHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(clubRepo, clubIndexRepo),
+		Activities: activities.NewActivitiesHandler(clubRepo),
 	}
 }

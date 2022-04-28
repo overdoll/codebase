@@ -16,11 +16,10 @@ type RemoveClubSlugAlias struct {
 
 type RemoveClubSlugAliasHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewRemoveClubSlugAliasHandler(cr club.Repository, ci club.IndexRepository) RemoveClubSlugAliasHandler {
-	return RemoveClubSlugAliasHandler{cr: cr, ci: ci}
+func NewRemoveClubSlugAliasHandler(cr club.Repository) RemoveClubSlugAliasHandler {
+	return RemoveClubSlugAliasHandler{cr: cr}
 }
 
 func (h RemoveClubSlugAliasHandler) Handle(ctx context.Context, cmd RemoveClubSlugAlias) (*club.Club, error) {
@@ -30,10 +29,6 @@ func (h RemoveClubSlugAliasHandler) Handle(ctx context.Context, cmd RemoveClubSl
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

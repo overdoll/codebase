@@ -79,3 +79,7 @@ func (s Server) RemoveClubSupporter(ctx context.Context, request *stella.RemoveC
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s Server) GetAccountClubDigest(ctx context.Context, request *stella.GetAccountClubDigestRequest) (*stella.GetAccountClubDigestResponse, error) {
+	return nil, nil
+}

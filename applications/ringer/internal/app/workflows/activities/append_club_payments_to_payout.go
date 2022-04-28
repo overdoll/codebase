@@ -15,7 +15,7 @@ func (h *Activities) AppendClubPaymentsToPayout(ctx context.Context, input Appen
 	// first, update the payments and index them
 	for _, paymentId := range input.PaymentIds {
 
-		pay, err := h.pr.UpdateClubPaymentPayoutId(ctx, paymentId, func(pay *payment.ClubPayment) error {
+		_, err := h.pr.UpdateClubPaymentPayoutId(ctx, paymentId, func(pay *payment.ClubPayment) error {
 			return pay.AddPayoutId(input.PayoutId)
 		})
 
@@ -23,9 +23,6 @@ func (h *Activities) AppendClubPaymentsToPayout(ctx context.Context, input Appen
 			return err
 		}
 
-		if err := h.pi.IndexClubPayment(ctx, pay); err != nil {
-			return err
-		}
 	}
 
 	if err := h.pr.AddClubPaymentsToPayout(ctx, input.PayoutId, input.PaymentIds); err != nil {

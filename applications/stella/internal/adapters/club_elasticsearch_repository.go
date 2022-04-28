@@ -74,15 +74,6 @@ const clubsIndex = `
 
 const ClubsIndexName = "clubs"
 
-type ClubIndexElasticSearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-}
-
-func NewClubIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) ClubIndexElasticSearchRepository {
-	return ClubIndexElasticSearchRepository{client: client, session: session}
-}
-
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
 	parse, err := uuid.Parse(cat.ID())
@@ -105,7 +96,7 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 	}, nil
 }
 
-func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *club.Club) error {
+func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, club *club.Club) error {
 
 	clb, err := marshalClubToDocument(club)
 
@@ -127,36 +118,7 @@ func (r ClubIndexElasticSearchRepository) IndexClub(ctx context.Context, club *c
 	return nil
 }
 
-func (r ClubIndexElasticSearchRepository) SuspendedClubs(ctx context.Context) ([]*club.Club, error) {
-
-	builder := r.client.Search().
-		Index(ClubsIndexName).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermQuery("suspended", true)))
-
-	response, err := builder.Pretty(true).Do(ctx)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed search suspended clubs: %v", err)
-	}
-
-	var brands []*club.Club
-
-	for _, hit := range response.Hits.Hits {
-
-		var bd clubDocument
-
-		if err := json.Unmarshal(hit.Source, &bd); err != nil {
-			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
-		}
-
-		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil)
-		brands = append(brands, newBrand)
-	}
-
-	return brands, nil
-}
-
-func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
 		Index(ClubsIndexName)
@@ -234,7 +196,7 @@ func (r ClubIndexElasticSearchRepository) SearchClubs(ctx context.Context, reque
 	return brands, nil
 }
 
-func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) error {
+func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -290,7 +252,15 @@ func (r ClubIndexElasticSearchRepository) IndexAllClubs(ctx context.Context) err
 	return nil
 }
 
-func (r ClubIndexElasticSearchRepository) DeleteClubsIndex(ctx context.Context) error {
+func (r ClubCassandraElasticsearchRepository) DeleteAndRecreateClubsIndex(ctx context.Context) error {
+	if err := r.deleteClubsIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllClubs(ctx)
+}
+
+func (r ClubCassandraElasticsearchRepository) deleteClubsIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(ClubsIndexName).Do(ctx)
 

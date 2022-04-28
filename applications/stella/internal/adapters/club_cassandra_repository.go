@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
@@ -32,15 +33,16 @@ var clubTable = table.New(table.Metadata{
 })
 
 type clubs struct {
-	Id                  string            `db:"id"`
-	Slug                string            `db:"slug"`
-	SlugAliases         []string          `db:"slug_aliases"`
-	Name                map[string]string `db:"name"`
-	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
-	MembersCount        int               `db:"members_count"`
-	OwnerAccountId      string            `db:"owner_account_id"`
-	Suspended           bool              `db:"suspended"`
-	SuspendedUntil      *time.Time        `db:"suspended_until"`
+	Id                       string            `db:"id"`
+	Slug                     string            `db:"slug"`
+	SlugAliases              []string          `db:"slug_aliases"`
+	Name                     map[string]string `db:"name"`
+	ThumbnailResourceId      *string           `db:"thumbnail_resource_id"`
+	MembersCount             int               `db:"members_count"`
+	MembersCountLastUpdateId gocql.UUID        `db:"members_count_last_update_id"`
+	OwnerAccountId           string            `db:"owner_account_id"`
+	Suspended                bool              `db:"suspended"`
+	SuspendedUntil           *time.Time        `db:"suspended_until"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -73,12 +75,13 @@ type accountClubs struct {
 	AccountId string `db:"account_id"`
 }
 
-type ClubCassandraRepository struct {
+type ClubCassandraElasticsearchRepository struct {
 	session gocqlx.Session
+	client  *elastic.Client
 }
 
-func NewClubCassandraRepository(session gocqlx.Session) ClubCassandraRepository {
-	return ClubCassandraRepository{session: session}
+func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client) ClubCassandraElasticsearchRepository {
+	return ClubCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
@@ -95,7 +98,7 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	}, nil
 }
 
-func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
 
 	var b clubSlugs
 
@@ -125,7 +128,7 @@ func (r ClubCassandraRepository) GetClubBySlug(ctx context.Context, requester *p
 	return result, nil
 }
 
-func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, brandId string) (*clubs, error) {
 
 	var b clubs
 
@@ -142,6 +145,17 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 		return nil, fmt.Errorf("failed to get club by id: %v", err)
 	}
 
+	return &b, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, brandId string) (*club.Club, error) {
+
+	b, err := r.getClubById(ctx, brandId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return club.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
@@ -155,7 +169,7 @@ func (r ClubCassandraRepository) GetClubById(ctx context.Context, brandId string
 	), nil
 }
 
-func (r ClubCassandraRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
 
 	var databaseClubs []clubs
 
@@ -188,7 +202,7 @@ func (r ClubCassandraRepository) GetClubsByIds(ctx context.Context, clubIds []st
 	return clbs, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)
 
@@ -229,10 +243,14 @@ func (r ClubCassandraRepository) UpdateClubSlug(ctx context.Context, clubId stri
 		return nil, fmt.Errorf("failed to update club slug: %v", err)
 	}
 
+	if err := r.indexClub(ctx, currentClub); err != nil {
+		return nil, err
+	}
+
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)
 
@@ -342,36 +360,63 @@ func (r ClubCassandraRepository) UpdateClubSlugAliases(ctx context.Context, club
 		return nil, fmt.Errorf("failed to remove club slug alias: %v", err)
 	}
 
+	if err := r.indexClub(ctx, currentClub); err != nil {
+		return nil, err
+	}
+
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"name"})
 }
 
-func (r ClubCassandraRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource_id"})
 }
 
-func (r ClubCassandraRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"suspended", "suspended_until"})
 
 }
 
-func (r ClubCassandraRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
+func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
 
-	if err := r.session.
-		Query(clubTable.Update("members_count")).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubs{Id: clubId, MembersCount: count}).
-		ExecRelease(); err != nil {
+	clb, err := r.getClubById(ctx, clubId)
+
+	if err != nil {
+		return err
+	}
+
+	ok, err := clubTable.UpdateBuilder("members_count", "members_count_last_update_id").
+		If(qb.EqLit("members_count_last_update_id", clb.MembersCountLastUpdateId.String())).
+		Query(r.session).
+		BindStruct(clubs{Id: clubId, MembersCount: count, MembersCountLastUpdateId: gocql.TimeUUID()}).
+		SerialConsistency(gocql.Serial).
+		ExecCAS()
+
+	if err != nil {
 		return fmt.Errorf("failed to update club member count: %v", err)
 	}
 
-	return nil
+	if !ok {
+		return fmt.Errorf("failed to update club member count")
+	}
+
+	return r.indexClub(ctx, club.UnmarshalClubFromDatabase(
+		clb.Id,
+		clb.Slug,
+		clb.SlugAliases,
+		clb.Name,
+		clb.ThumbnailResourceId,
+		clb.MembersCount,
+		clb.OwnerAccountId,
+		clb.Suspended,
+		clb.SuspendedUntil,
+	))
 }
 
-func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Context, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)
 
@@ -398,10 +443,14 @@ func (r ClubCassandraRepository) updateClubRequest(ctx context.Context, clubId s
 		return nil, fmt.Errorf("failed to update club: %v", err)
 	}
 
+	if err := r.indexClub(ctx, currentClub); err != nil {
+		return nil, err
+	}
+
 	return currentClub, nil
 }
 
-func (r ClubCassandraRepository) GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
+func (r ClubCassandraElasticsearchRepository) GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
 
 	if err := club.CanViewAccountClubs(requester, accountId); err != nil {
 		return 0, err
@@ -428,7 +477,7 @@ func (r ClubCassandraRepository) GetAccountClubsCount(ctx context.Context, reque
 	return clubsCount.Count, nil
 }
 
-func (r ClubCassandraRepository) CreateClub(ctx context.Context, club *club.Club) error {
+func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)
 
@@ -473,10 +522,14 @@ func (r ClubCassandraRepository) CreateClub(ctx context.Context, club *club.Club
 		return err
 	}
 
+	if err := r.indexClub(ctx, club); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubId, slug string) error {
+func (r ClubCassandraElasticsearchRepository) deleteUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	if err := r.session.
@@ -492,7 +545,7 @@ func (r ClubCassandraRepository) deleteUniqueClubSlug(ctx context.Context, clubI
 	return nil
 }
 
-func (r ClubCassandraRepository) createUniqueClubSlug(ctx context.Context, clubId, slug string) error {
+func (r ClubCassandraElasticsearchRepository) createUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := clubSlugTable.
