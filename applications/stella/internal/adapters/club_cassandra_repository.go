@@ -24,6 +24,7 @@ var clubTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource_id",
 		"members_count",
+		"members_count_last_update_id",
 		"owner_account_id",
 		"suspended",
 		"suspended_until",
@@ -86,15 +87,16 @@ func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *ela
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	return &clubs{
-		Id:                  cl.ID(),
-		Slug:                cl.Slug(),
-		SlugAliases:         cl.SlugAliases(),
-		Name:                localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResourceId: cl.ThumbnailResourceId(),
-		MembersCount:        cl.MembersCount(),
-		OwnerAccountId:      cl.OwnerAccountId(),
-		Suspended:           cl.Suspended(),
-		SuspendedUntil:      cl.SuspendedUntil(),
+		Id:                       cl.ID(),
+		Slug:                     cl.Slug(),
+		SlugAliases:              cl.SlugAliases(),
+		Name:                     localization.MarshalTranslationToDatabase(cl.Name()),
+		ThumbnailResourceId:      cl.ThumbnailResourceId(),
+		MembersCount:             cl.MembersCount(),
+		MembersCountLastUpdateId: gocql.TimeUUID(),
+		OwnerAccountId:           cl.OwnerAccountId(),
+		Suspended:                cl.Suspended(),
+		SuspendedUntil:           cl.SuspendedUntil(),
 	}, nil
 }
 
@@ -377,7 +379,6 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Co
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"suspended", "suspended_until"})
-
 }
 
 func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
@@ -500,7 +501,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil)
+	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil)
 
 	stmt, _ = accountClubsTable.Insert()
 

@@ -84,6 +84,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			PrincipalById:                  query.NewPrincipalByIdHandler(eva),
 			ClubsByIds:                     query.NewClubsByIdsHandler(clubRepo),
 			SearchClubs:                    query.NewSearchClubsHandler(clubRepo),
+			AccountClubDigest:              query.NewAccountClubDigestHandler(clubRepo),
 			ClubBySlug:                     query.NewClubBySlugHandler(clubRepo),
 			ClubById:                       query.NewClubByIdHandler(clubRepo),
 			AccountClubsCount:              query.NewAccountClubsCountHandler(clubRepo),

@@ -81,5 +81,18 @@ func (s Server) RemoveClubSupporter(ctx context.Context, request *stella.RemoveC
 }
 
 func (s Server) GetAccountClubDigest(ctx context.Context, request *stella.GetAccountClubDigestRequest) (*stella.GetAccountClubDigestResponse, error) {
-	return nil, nil
+
+	req, err := s.app.Queries.AccountClubDigest.Handle(ctx, query.AccountClubDigest{
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  req.SupportedClubIds(),
+		ClubMembershipIds: req.ClubMembershipIds(),
+		OwnerClubIds:      req.OwnerClubIds(),
+	}, nil
 }

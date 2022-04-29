@@ -37,8 +37,8 @@ type Repository interface {
 	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)
 	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)
 
-	GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*Member, error)
-
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
 	DeleteAndRecreateClubsIndex(ctx context.Context) error
+
+	GetAccountClubDigestById(ctx context.Context, accountId string) (*AccountClubDigest, error)
 }

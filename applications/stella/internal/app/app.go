@@ -43,6 +43,8 @@ type Queries struct {
 	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 
+	AccountClubDigest query.AccountClubDigestHandler
+
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler
 
