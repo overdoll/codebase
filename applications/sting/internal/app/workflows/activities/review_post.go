@@ -11,7 +11,7 @@ type ReviewPostInput struct {
 
 func (h *Activities) ReviewPost(ctx context.Context, input ReviewPostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.MakeReview()
 	})
 
@@ -20,5 +20,5 @@ func (h *Activities) ReviewPost(ctx context.Context, input ReviewPostInput) erro
 	}
 
 	// Update pending post index
-	return h.pi.IndexPost(ctx, pendingPost)
+	return nil
 }

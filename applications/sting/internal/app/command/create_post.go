@@ -13,12 +13,11 @@ type CreatePost struct {
 
 type CreatePostHandler struct {
 	pr     post.Repository
-	pi     post.IndexRepository
 	stella StellaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository, stella StellaService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pi: pi, stella: stella}
+func NewCreatePostHandler(pr post.Repository, stella StellaService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, stella: stella}
 }
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
@@ -37,11 +36,6 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 
 	// create a pending post in the database with all the data
 	if err := h.pr.CreatePost(ctx, pendingPost); err != nil {
-		return nil, err
-	}
-
-	// index the post
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

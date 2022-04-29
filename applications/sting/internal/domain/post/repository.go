@@ -76,50 +76,30 @@ type Repository interface {
 
 	UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
-}
-
-type IndexRepository interface {
-	IndexPost(ctx context.Context, postId *Post) error
-	IndexAllPosts(ctx context.Context) error
 
 	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
 	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
-
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
-	DeletePostIndex(ctx context.Context) error
-	DeletePost(ctx context.Context, postId string) error
-
 	RefreshPostIndex(ctx context.Context) error
+	DeleteAndRecreatePostIndex(ctx context.Context) error
 
-	IndexAllCharacters(ctx context.Context) error
-	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CharacterFilters) ([]*Character, error)
-	IndexCharacter(ctx context.Context, character *Character) error
-
+	DeleteAndRecreateCharactersIndex(ctx context.Context) error
 	GetTotalLikesForCharacterOperator(ctx context.Context, character *Character) (int, error)
 	GetTotalPostsForCharacterOperator(ctx context.Context, character *Character) (int, error)
 
-	IndexAllAudience(ctx context.Context) error
-	DeleteAudienceIndex(ctx context.Context) error
 	SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Audience, error)
-	IndexAudience(ctx context.Context, audience *Audience) error
-
+	DeleteAndRecreateAudienceIndex(ctx context.Context) error
 	GetTotalLikesForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 	GetTotalPostsForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 
-	IndexAllSeries(ctx context.Context) error
-	DeleteSeriesIndex(ctx context.Context) error
 	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
-	IndexSeries(ctx context.Context, series *Series) error
-
+	DeleteAndRecreateSeriesIndex(ctx context.Context) error
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
 
-	IndexAllCategories(ctx context.Context) error
-	IndexCategory(ctx context.Context, category *Category) error
-	DeleteCategoryIndex(ctx context.Context) error
 	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Category, error)
-
+	DeleteAndRecreateCategoriesIndex(ctx context.Context) error
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)
 	GetTotalPostsForCategoryOperator(ctx context.Context, category *Category) (int, error)
 }

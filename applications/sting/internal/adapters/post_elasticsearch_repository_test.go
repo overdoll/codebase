@@ -163,7 +163,7 @@ func newPostIndexRepository(t *testing.T) adapters.PostsIndexElasticSearchReposi
 	return adapters.NewPostsIndexElasticSearchRepository(client, session)
 }
 
-func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
+func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
 	session := bootstrap.InitializeDatabaseSession()
 
 	return adapters.NewPostsCassandraRepository(session)

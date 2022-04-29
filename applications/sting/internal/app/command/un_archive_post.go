@@ -14,13 +14,12 @@ type UnArchivePost struct {
 }
 
 type UnArchivePostHandler struct {
-	pi    post.IndexRepository
 	pr    post.Repository
 	event event.Repository
 }
 
-func NewUnArchivePostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) UnArchivePostHandler {
-	return UnArchivePostHandler{pr: pr, pi: pi, event: event}
+func NewUnArchivePostHandler(pr post.Repository, event event.Repository) UnArchivePostHandler {
+	return UnArchivePostHandler{pr: pr, event: event}
 }
 
 func (h UnArchivePostHandler) Handle(ctx context.Context, cmd UnArchivePost) (*post.Post, error) {

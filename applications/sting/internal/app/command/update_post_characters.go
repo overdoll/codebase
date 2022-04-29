@@ -16,11 +16,10 @@ type UpdatePostCharacters struct {
 
 type UpdatePostCharactersHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdatePostCharactersHandler(pr post.Repository, pi post.IndexRepository) UpdatePostCharactersHandler {
-	return UpdatePostCharactersHandler{pr: pr, pi: pi}
+func NewUpdatePostCharactersHandler(pr post.Repository) UpdatePostCharactersHandler {
+	return UpdatePostCharactersHandler{pr: pr}
 }
 
 func (h UpdatePostCharactersHandler) Handle(ctx context.Context, cmd UpdatePostCharacters) (*post.Post, error) {
@@ -37,11 +36,6 @@ func (h UpdatePostCharactersHandler) Handle(ctx context.Context, cmd UpdatePostC
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	// index the post
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

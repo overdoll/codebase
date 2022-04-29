@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"time"
 
@@ -52,12 +53,13 @@ type posts struct {
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
-type PostsCassandraRepository struct {
+type PostsCassandraElasticsearchRepository struct {
 	session gocqlx.Session
+	client  *elastic.Client
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
-	return PostsCassandraRepository{session: session}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -92,7 +94,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
 	likes, err := r.getLikesForPost(ctx, postPending.Id)
 
@@ -119,7 +121,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	), nil
 }
 
-func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
+func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
 	pst, err := marshalPostToDatabase(pending)
 
@@ -135,10 +137,14 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 		return fmt.Errorf("failed to create post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, pending); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
+func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, id string) error {
 
 	if err := r.session.
 		Query(postTable.Delete()).
@@ -148,10 +154,14 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 		return fmt.Errorf("failed to delete post: %v", err)
 	}
 
+	if err := r.deletePostIndexById(ctx, id); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
 
 	var postResults []*post.Post
 
@@ -182,7 +192,7 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 	return postResults, nil
 }
 
-func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*posts, error) {
+func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, id string) (*posts, error) {
 
 	var postPending posts
 
@@ -202,7 +212,7 @@ func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*
 	return &postPending, nil
 }
 
-func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
 
 	postPending, err := r.getPostById(ctx, id)
 
@@ -213,11 +223,11 @@ func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id st
 	return r.unmarshalPost(ctx, *postPending)
 }
 
-func (r PostsCassandraRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
 	return nil, nil
 }
 
-func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
 
 	postPending, err := r.getPostById(ctx, id)
 
@@ -244,7 +254,7 @@ func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *pr
 	return pst, err
 }
 
-func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
@@ -275,10 +285,14 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
 
 	currentPost, err := r.GetPostById(ctx, requester, id)
 
@@ -312,26 +326,30 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
 }
 
-func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids", "series_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
@@ -361,10 +379,14 @@ func (r PostsCassandraRepository) UpdatePostContentOperator(ctx context.Context,
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	pst, err := r.GetPostByIdOperator(ctx, id)
 

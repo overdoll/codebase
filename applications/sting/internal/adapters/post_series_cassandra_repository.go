@@ -62,7 +62,7 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
+func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
 
 	var b seriesSlug
 
@@ -82,7 +82,7 @@ func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester
 	return &b, nil
 }
 
-func (r PostsCassandraRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
 
 	var seriesSlugResults []seriesSlug
 
@@ -110,7 +110,7 @@ func (r PostsCassandraRepository) GetSeriesIdsFromSlugs(ctx context.Context, ser
 	return ids, nil
 }
 
-func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
 
 	seriesSlug, err := r.getSeriesBySlug(ctx, requester, slug)
 
@@ -121,11 +121,11 @@ func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester
 	return r.GetSingleSeriesById(ctx, requester, seriesSlug.SeriesId)
 }
 
-func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
 	return r.getSingleSeriesById(ctx, seriesId)
 }
 
-func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	var med series
 
@@ -152,7 +152,7 @@ func (r PostsCassandraRepository) getSingleSeriesById(ctx context.Context, serie
 	), nil
 }
 
-func (r PostsCassandraRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
 
 	var medias []*post.Series
 
@@ -186,7 +186,7 @@ func (r PostsCassandraRepository) GetSeriesByIds(ctx context.Context, requester 
 	return medias, nil
 }
 
-func (r PostsCassandraRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
+func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
 
 	ser, err := marshalSeriesToDatabase(series)
 
@@ -219,26 +219,30 @@ func (r PostsCassandraRepository) CreateSeries(ctx context.Context, requester *p
 		return err
 	}
 
+	if err := r.indexSeries(ctx, series); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
 	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource_id"})
 }
 
-func (r PostsCassandraRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
 	return r.updateSeries(ctx, id, updateFn, []string{"title"})
 }
 
-func (r PostsCassandraRepository) UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
 	return r.updateSeries(ctx, id, updateFn, []string{"total_posts"})
 }
 
-func (r PostsCassandraRepository) UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
 	return r.updateSeries(ctx, id, updateFn, []string{"total_likes"})
 }
 
-func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, updateFn func(series *post.Series) error, columns []string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context, id string, updateFn func(series *post.Series) error, columns []string) (*post.Series, error) {
 
 	series, err := r.getSingleSeriesById(ctx, id)
 
@@ -266,6 +270,10 @@ func (r PostsCassandraRepository) updateSeries(ctx context.Context, id string, u
 		BindStruct(pst).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update series: %v", err)
+	}
+
+	if err := r.indexSeries(ctx, series); err != nil {
+		return nil, err
 	}
 
 	return series, nil

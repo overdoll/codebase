@@ -15,11 +15,10 @@ type RemovePostContent struct {
 
 type RemovePostContentHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewRemovePostContentHandler(pr post.Repository, pi post.IndexRepository) RemovePostContentHandler {
-	return RemovePostContentHandler{pr: pr, pi: pi}
+func NewRemovePostContentHandler(pr post.Repository) RemovePostContentHandler {
+	return RemovePostContentHandler{pr: pr}
 }
 
 func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostContent) (*post.Post, error) {
@@ -29,10 +28,6 @@ func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostCont
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

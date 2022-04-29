@@ -95,15 +95,6 @@ const postIndex = `
 
 const PostIndexName = "posts"
 
-type PostsIndexElasticSearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-}
-
-func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PostsIndexElasticSearchRepository {
-	return PostsIndexElasticSearchRepository{client: client, session: session}
-}
-
 func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 
 	var pst postDocument
@@ -210,7 +201,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) RefreshPostIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) RefreshPostIndex(ctx context.Context) error {
 
 	_, err := r.client.
 		Refresh().
@@ -224,7 +215,7 @@ func (r PostsIndexElasticSearchRepository) RefreshPostIndex(ctx context.Context)
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
+func (r PostsCassandraElasticsearchRepository) indexPost(ctx context.Context, post *post.Post) error {
 
 	pst, err := marshalPostToDocument(post)
 
@@ -246,7 +237,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalLikesForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
 
 	response, err := r.client.Search().
 		Index(PostIndexName).
@@ -266,7 +257,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForCharacterOperator(ctx
 	return int(math.Round(*sm.Value)), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalPostsForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
 
 	count, err := r.client.Count().
 		Index(PostIndexName).
@@ -283,7 +274,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCharacterOperator(ctx
 	return int(count), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalLikesForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
 
 	response, err := r.client.Search().
 		Index(PostIndexName).
@@ -303,7 +294,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForAudienceOperator(ctx 
 	return int(math.Round(*sm.Value)), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalPostsForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
 
 	count, err := r.client.Count().
 		Index(PostIndexName).
@@ -320,7 +311,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForAudienceOperator(ctx 
 	return int(count), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalLikesForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
 
 	response, err := r.client.Search().
 		Index(PostIndexName).
@@ -340,7 +331,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForSeriesOperator(ctx co
 	return int(math.Round(*sm.Value)), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalPostsForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
 
 	count, err := r.client.Count().
 		Index(PostIndexName).
@@ -357,7 +348,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForSeriesOperator(ctx co
 	return int(count), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	response, err := r.client.Search().
 		Index(PostIndexName).
@@ -377,7 +368,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalLikesForCategoryOperator(ctx 
 	return int(math.Round(*sm.Value)), nil
 }
 
-func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	count, err := r.client.Count().
 		Index(PostIndexName).
@@ -394,11 +385,7 @@ func (r PostsIndexElasticSearchRepository) GetTotalPostsForCategoryOperator(ctx 
 	return int(count), nil
 }
 
-func (r PostsIndexElasticSearchRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
-	return nil, nil
-}
-
-func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)
@@ -454,7 +441,7 @@ func (r PostsIndexElasticSearchRepository) ClubMembersPostsFeed(ctx context.Cont
 	return posts, nil
 }
 
-func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)
@@ -534,7 +521,7 @@ func (r PostsIndexElasticSearchRepository) PostsFeed(ctx context.Context, reques
 	return posts, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)
@@ -643,7 +630,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	return posts, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -653,15 +640,13 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 		},
 	)
 
-	rep := NewPostsCassandraRepository(r.session)
-
 	err := scanner.RunIterator(ctx, postTable, func(iter *gocqlx.Iterx) error {
 
 		var p posts
 
 		for iter.StructScan(&p) {
 
-			likes, err := rep.getLikesForPost(ctx, p.Id)
+			likes, err := r.getLikesForPost(ctx, p.Id)
 
 			if err != nil {
 				return err
@@ -713,7 +698,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id string) error {
+func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.Context, id string) error {
 
 	if _, err := r.client.Delete().Index(PostIndexName).Id(id).Do(ctx); err != nil {
 		return fmt.Errorf("failed to delete post document: %v", err)
@@ -722,7 +707,7 @@ func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id st
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) deletePostIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(PostIndexName).Do(ctx)
 
@@ -742,4 +727,13 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) DeleteAndRecreatePostIndex(ctx context.Context) error {
+
+	if err := r.deletePostIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllPosts(ctx)
 }

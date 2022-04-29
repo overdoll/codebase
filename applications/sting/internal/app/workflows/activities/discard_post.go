@@ -12,7 +12,7 @@ type DiscardPostInput struct {
 
 func (h *Activities) DiscardPost(ctx context.Context, input DiscardPostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		// Delete all resources
 		if err := h.loader.DeleteResources(ctx, input.PostId, pending.AllContentResourceIds()); err != nil {
 			return err
@@ -22,11 +22,6 @@ func (h *Activities) DiscardPost(ctx context.Context, input DiscardPostInput) er
 	})
 
 	if err != nil {
-		return err
-	}
-
-	// delete document because it's been processed
-	if err := h.pi.DeletePost(ctx, pendingPost.ID()); err != nil {
 		return err
 	}
 

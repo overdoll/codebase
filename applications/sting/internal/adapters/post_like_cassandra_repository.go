@@ -42,7 +42,7 @@ type postLikeCounter struct {
 	Likes  int    `db:"likes"`
 }
 
-func (r PostsCassandraRepository) CreatePostLike(ctx context.Context, requester *principal.Principal, like *post.Like) error {
+func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Context, requester *principal.Principal, like *post.Like) error {
 
 	if err := r.session.
 		Query(postLikeTable.Insert()).
@@ -58,7 +58,7 @@ func (r PostsCassandraRepository) CreatePostLike(ctx context.Context, requester 
 	return nil
 }
 
-func (r PostsCassandraRepository) DeletePostLike(ctx context.Context, requester *principal.Principal, postLikes *post.Like) error {
+func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, requester *principal.Principal, postLikes *post.Like) error {
 
 	if err := r.session.
 		Query(postLikeTable.Delete()).
@@ -74,7 +74,7 @@ func (r PostsCassandraRepository) DeletePostLike(ctx context.Context, requester 
 	return nil
 }
 
-func (r PostsCassandraRepository) getLikesForPost(ctx context.Context, postId string) (int, error) {
+func (r PostsCassandraElasticsearchRepository) getLikesForPost(ctx context.Context, postId string) (int, error) {
 
 	var pstLikeCounter postLikeCounter
 
@@ -94,7 +94,7 @@ func (r PostsCassandraRepository) getLikesForPost(ctx context.Context, postId st
 	return pstLikeCounter.Likes, nil
 }
 
-func (r PostsCassandraRepository) updatePostLikes(ctx context.Context, postId string, increment bool) error {
+func (r PostsCassandraElasticsearchRepository) updatePostLikes(ctx context.Context, postId string, increment bool) error {
 
 	builder := postLikeCounterTable.
 		UpdateBuilder()
@@ -116,7 +116,7 @@ func (r PostsCassandraRepository) updatePostLikes(ctx context.Context, postId st
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*post.Like, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*post.Like, error) {
 
 	var pstLike postLike
 

@@ -79,7 +79,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexCategory(ctx context.Context, category *post.Category) error {
+func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
 	cat, err := marshalCategoryToDocument(category)
 
@@ -101,7 +101,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategory(ctx context.Context, ca
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
 		Index(CategoryIndexName).ErrorTrace(true)
@@ -180,7 +180,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	return cats, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) indexAllCategories(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -233,7 +233,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) deleteCategoryIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(CategoryIndexName).Do(ctx)
 
@@ -253,4 +253,13 @@ func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Conte
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateCategoriesIndex(ctx context.Context) error {
+
+	if err := r.deleteCategoryIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllCategories(ctx)
 }

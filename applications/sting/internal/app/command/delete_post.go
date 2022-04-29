@@ -14,13 +14,12 @@ type DeletePost struct {
 }
 
 type DeletePostHandler struct {
-	pi    post.IndexRepository
 	pr    post.Repository
 	event event.Repository
 }
 
-func NewDeletePostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) DeletePostHandler {
-	return DeletePostHandler{pr: pr, pi: pi, event: event}
+func NewDeletePostHandler(pr post.Repository, event event.Repository) DeletePostHandler {
+	return DeletePostHandler{pr: pr, event: event}
 }
 
 func (h DeletePostHandler) Handle(ctx context.Context, cmd DeletePost) error {

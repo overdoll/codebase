@@ -32,11 +32,11 @@ type Commands struct {
 	UpdatePostCharacters command.UpdatePostCharactersHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
 
-	IndexAllCategories command.IndexAllCategoriesHandler
-	IndexAllCharacters command.IndexAllCharactersHandler
-	IndexAllSeries     command.IndexAllSeriesHandler
-	IndexAllAudience   command.IndexAllAudienceHandler
-	IndexAllPosts      command.IndexAllPostsHandler
+	DeleteAndRecreateCategoriesIndex command.DeleteAndRecreateCategoriesIndexHandler
+	DeleteAndRecreateCharactersIndex command.DeleteAndRecreateCharactersIndexHandler
+	DeleteAndRecreateSeriesIndex     command.DeleteAndRecreateSeriesIndexHandler
+	DeleteAndRecreateAudienceIndex   command.DeleteAndRecreateAudienceIndexHandler
+	DeleteAndRecreatePostsIndex      command.DeleteAndRecreatePostsIndexHandler
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler

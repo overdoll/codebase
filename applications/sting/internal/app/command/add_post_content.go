@@ -16,12 +16,11 @@ type AddPostContent struct {
 
 type AddPostContentHandler struct {
 	pr     post.Repository
-	pi     post.IndexRepository
 	loader LoaderService
 }
 
-func NewAddPostContentHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) AddPostContentHandler {
-	return AddPostContentHandler{pr: pr, pi: pi, loader: loader}
+func NewAddPostContentHandler(pr post.Repository, loader LoaderService) AddPostContentHandler {
+	return AddPostContentHandler{pr: pr, loader: loader}
 }
 
 func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (*post.Post, error) {
@@ -39,10 +38,6 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

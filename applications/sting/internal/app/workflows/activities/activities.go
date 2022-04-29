@@ -6,12 +6,11 @@ import (
 
 type Activities struct {
 	pr post.Repository
-	pi post.IndexRepository
 
 	parley ParleyService
 	loader LoaderService
 }
 
-func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService, loader LoaderService) *Activities {
-	return &Activities{pr: pr, pi: pi, parley: parley, loader: loader}
+func NewActivitiesHandler(pr post.Repository, parley ParleyService, loader LoaderService) *Activities {
+	return &Activities{pr: pr, parley: parley, loader: loader}
 }

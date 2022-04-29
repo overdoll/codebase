@@ -16,11 +16,10 @@ type UpdateSeriesTitle struct {
 
 type UpdateSeriesTitleHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdateSeriesTitleHandler(pr post.Repository, pi post.IndexRepository) UpdateSeriesTitleHandler {
-	return UpdateSeriesTitleHandler{pr: pr, pi: pi}
+func NewUpdateSeriesTitleHandler(pr post.Repository) UpdateSeriesTitleHandler {
+	return UpdateSeriesTitleHandler{pr: pr}
 }
 
 func (h UpdateSeriesTitleHandler) Handle(ctx context.Context, cmd UpdateSeriesTitle) (*post.Series, error) {
@@ -30,10 +29,6 @@ func (h UpdateSeriesTitleHandler) Handle(ctx context.Context, cmd UpdateSeriesTi
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexSeries(ctx, ser); err != nil {
 		return nil, err
 	}
 

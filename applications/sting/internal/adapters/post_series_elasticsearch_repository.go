@@ -79,7 +79,7 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(SeriesIndexName)
@@ -158,7 +158,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 	return meds, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexSeries(ctx context.Context, series *post.Series) error {
+func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, series *post.Series) error {
 
 	ss, err := marshalSeriesToDocument(series)
 
@@ -189,7 +189,7 @@ func (r PostsIndexElasticSearchRepository) IndexSeries(ctx context.Context, seri
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) indexAllSeries(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -242,7 +242,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteSeriesIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) deleteSeriesIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(SeriesIndexName).Do(ctx)
 
@@ -262,4 +262,13 @@ func (r PostsIndexElasticSearchRepository) DeleteSeriesIndex(ctx context.Context
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateSeriesIndex(ctx context.Context) error {
+
+	if err := r.deleteSeriesIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllSeries(ctx)
 }

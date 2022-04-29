@@ -16,11 +16,10 @@ type CreateCharacter struct {
 
 type CreateCharacterHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewCreateCharacterHandler(pr post.Repository, pi post.IndexRepository) CreateCharacterHandler {
-	return CreateCharacterHandler{pr: pr, pi: pi}
+func NewCreateCharacterHandler(pr post.Repository) CreateCharacterHandler {
+	return CreateCharacterHandler{pr: pr}
 }
 
 func (h CreateCharacterHandler) Handle(ctx context.Context, cmd CreateCharacter) (*post.Character, error) {
@@ -38,10 +37,6 @@ func (h CreateCharacterHandler) Handle(ctx context.Context, cmd CreateCharacter)
 	}
 
 	if err := h.pr.CreateCharacter(ctx, cmd.Principal, char); err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexCharacter(ctx, char); err != nil {
 		return nil, err
 	}
 

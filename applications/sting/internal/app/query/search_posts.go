@@ -28,11 +28,10 @@ type SearchPosts struct {
 
 type SearchPostsHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewSearchPostsHandler(pr post.Repository, pi post.IndexRepository) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr, pi: pi}
+func NewSearchPostsHandler(pr post.Repository) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
@@ -96,7 +95,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		return nil, err
 	}
 
-	posts, err := h.pi.SearchPosts(ctx, query.Principal, query.Cursor, filters)
+	posts, err := h.pr.SearchPosts(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

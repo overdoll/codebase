@@ -91,7 +91,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexCharacter(ctx context.Context, character *post.Character) error {
+func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Context, character *post.Character) error {
 
 	char, err := marshalCharacterToDocument(character)
 
@@ -113,7 +113,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacter(ctx context.Context, c
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
 		Index(CharacterIndexName)
@@ -201,7 +201,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	return characters, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) indexAllCharacters(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -277,7 +277,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) deleteCharacterIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(CharacterIndexName).Do(ctx)
 
@@ -297,4 +297,13 @@ func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Cont
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateCharactersIndex(ctx context.Context) error {
+
+	if err := r.deleteCharacterIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllCharacters(ctx)
 }

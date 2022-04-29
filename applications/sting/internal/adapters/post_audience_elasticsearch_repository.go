@@ -90,7 +90,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
 		Index(AudienceIndexName)
@@ -162,7 +162,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 	return audiences, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAudience(ctx context.Context, audience *post.Audience) error {
+func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context, audience *post.Audience) error {
 
 	aud, err := marshalAudienceToDocument(audience)
 
@@ -184,7 +184,7 @@ func (r PostsIndexElasticSearchRepository) IndexAudience(ctx context.Context, au
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) indexAllAudience(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -238,7 +238,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) deleteAudienceIndex(ctx context.Context) error {
 
 	exists, err := r.client.IndexExists(AudienceIndexName).Do(ctx)
 
@@ -258,4 +258,13 @@ func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Conte
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateAudienceIndex(ctx context.Context) error {
+
+	if err := r.deleteAudienceIndex(ctx); err != nil {
+		return err
+	}
+
+	return r.indexAllAudience(ctx)
 }

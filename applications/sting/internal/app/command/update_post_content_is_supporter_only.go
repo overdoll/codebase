@@ -16,11 +16,10 @@ type UpdatePostContentIsSupporterOnly struct {
 
 type UpdatePostContentIsSupporterOnlyHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdatePostContentIsSupporterOnlyHandler(pr post.Repository, pi post.IndexRepository) UpdatePostContentIsSupporterOnlyHandler {
-	return UpdatePostContentIsSupporterOnlyHandler{pr: pr, pi: pi}
+func NewUpdatePostContentIsSupporterOnlyHandler(pr post.Repository) UpdatePostContentIsSupporterOnlyHandler {
+	return UpdatePostContentIsSupporterOnlyHandler{pr: pr}
 }
 
 func (h UpdatePostContentIsSupporterOnlyHandler) Handle(ctx context.Context, cmd UpdatePostContentIsSupporterOnly) (*post.Post, error) {
@@ -30,10 +29,6 @@ func (h UpdatePostContentIsSupporterOnlyHandler) Handle(ctx context.Context, cmd
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

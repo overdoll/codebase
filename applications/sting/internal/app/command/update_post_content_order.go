@@ -15,11 +15,10 @@ type UpdatePostContentOrder struct {
 
 type UpdatePostContentOrderHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdatePostContentOrderHandler(pr post.Repository, pi post.IndexRepository) UpdatePostContentOrderHandler {
-	return UpdatePostContentOrderHandler{pr: pr, pi: pi}
+func NewUpdatePostContentOrderHandler(pr post.Repository) UpdatePostContentOrderHandler {
+	return UpdatePostContentOrderHandler{pr: pr}
 }
 
 func (h UpdatePostContentOrderHandler) Handle(ctx context.Context, cmd UpdatePostContentOrder) (*post.Post, error) {
@@ -29,10 +28,6 @@ func (h UpdatePostContentOrderHandler) Handle(ctx context.Context, cmd UpdatePos
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

@@ -16,11 +16,10 @@ type UpdateCharacterName struct {
 
 type UpdateCharacterNameHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdateCharacterNameHandler(pr post.Repository, pi post.IndexRepository) UpdateCharacterNameHandler {
-	return UpdateCharacterNameHandler{pr: pr, pi: pi}
+func NewUpdateCharacterNameHandler(pr post.Repository) UpdateCharacterNameHandler {
+	return UpdateCharacterNameHandler{pr: pr}
 }
 
 func (h UpdateCharacterNameHandler) Handle(ctx context.Context, cmd UpdateCharacterName) (*post.Character, error) {
@@ -30,10 +29,6 @@ func (h UpdateCharacterNameHandler) Handle(ctx context.Context, cmd UpdateCharac
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexCharacter(ctx, char); err != nil {
 		return nil, err
 	}
 

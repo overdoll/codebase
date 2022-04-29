@@ -17,13 +17,12 @@ type SubmitPost struct {
 
 type SubmitPostHandler struct {
 	pr     post.Repository
-	pi     post.IndexRepository
 	event  event.Repository
 	loader LoaderService
 }
 
-func NewSubmitPostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository, loader LoaderService) SubmitPostHandler {
-	return SubmitPostHandler{pr: pr, pi: pi, event: event, loader: loader}
+func NewSubmitPostHandler(pr post.Repository, event event.Repository, loader LoaderService) SubmitPostHandler {
+	return SubmitPostHandler{pr: pr, event: event, loader: loader}
 }
 
 func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Post, error) {

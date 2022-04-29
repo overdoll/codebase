@@ -15,11 +15,10 @@ type SuggestedPostsForPost struct {
 
 type SuggestedPostsForPostHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewSuggestedPostsForPostHandler(pr post.Repository, pi post.IndexRepository) SuggestedPostsForPostHandler {
-	return SuggestedPostsForPostHandler{pi: pi, pr: pr}
+func NewSuggestedPostsForPostHandler(pr post.Repository) SuggestedPostsForPostHandler {
+	return SuggestedPostsForPostHandler{pr: pr}
 }
 
 func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query SuggestedPostsForPost) ([]*post.Post, error) {
@@ -36,7 +35,7 @@ func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query Suggeste
 		return nil, err
 	}
 
-	posts, err := h.pi.SearchPosts(ctx, query.Principal, query.Cursor, filters)
+	posts, err := h.pr.SearchPosts(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err
