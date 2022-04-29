@@ -8,8 +8,6 @@ message PostRequest {
   string id = 1;
 }
 
-message UpdatePostResponse {}
-
 message Post {
   string clubId = 1;
 }
@@ -24,10 +22,10 @@ message RemoveSuspendedClubRequest {
 
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
-  rpc PublishPost(PostRequest) returns (UpdatePostResponse);
-  rpc RemovePost(PostRequest) returns (UpdatePostResponse);
-  rpc RejectPost(PostRequest) returns (UpdatePostResponse);
-  rpc DiscardPost(PostRequest) returns (UpdatePostResponse);
+  rpc PublishPost(PostRequest) returns (google.protobuf.Empty);
+  rpc RemovePost(PostRequest) returns (google.protobuf.Empty);
+  rpc RejectPost(PostRequest) returns (google.protobuf.Empty);
+  rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
   rpc AddSuspendedClub(AddSuspendedClubRequest) returns (google.protobuf.Empty);
   rpc RemoveSuspendedClub(RemoveSuspendedClubRequest) returns (google.protobuf.Empty);
 }

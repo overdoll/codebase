@@ -34,14 +34,13 @@ message RemoveClubSupporterRequest {
 message SuspendClubRequest {
   string clubId = 1;
   int64 endTimeUnix = 2;
-  string initiatorAccountId = 3;
+  optional string initiatorAccountId = 3;
   SuspensionSource source = 4;
 }
 
 enum SuspensionSource {
-  AUTOMATED_LOW_REPUTATION_SCORE = 0;
-  POST_MODERATION_QUEUE = 1;
-  POST_REMOVAL = 2;
+  POST_MODERATION_QUEUE = 0;
+  POST_REMOVAL = 1;
 }
 
 message GetAccountClubDigestRequest {

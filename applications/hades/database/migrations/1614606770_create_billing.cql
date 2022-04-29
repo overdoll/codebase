@@ -168,3 +168,19 @@ CREATE TABLE IF NOT EXISTS receipt_files
 
     primary key ( id )
 );
+
+CREATE TABLE IF NOT EXISTS club_reputation
+(
+    club_id                                      text,
+
+    total_transactions_count                     bigint,
+    total_transactions_count_last_update_id      timeuuid,
+
+    chargeback_transactions_count                bigint,
+    chargeback_transactions_count_last_update_id timeuuid,
+
+    refund_transactions_count                    bigint,
+    refund_transactions_count_last_update_id     timeuuid,
+
+    primary key ( club_id )
+);

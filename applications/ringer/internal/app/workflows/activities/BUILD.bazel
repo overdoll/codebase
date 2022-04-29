@@ -33,6 +33,7 @@ go_library(
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
         "//applications/ringer/internal/domain/balance",
+        "//applications/ringer/internal/domain/club",
         "//applications/ringer/internal/domain/details",
         "//applications/ringer/internal/domain/paxum",
         "//applications/ringer/internal/domain/payment",

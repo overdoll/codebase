@@ -76,6 +76,42 @@ type accountClubs struct {
 	AccountId string `db:"account_id"`
 }
 
+//
+//CREATE TABLE IF NOT EXISTS club_suspension_log
+//(
+//club_id               text,
+//id                    text,
+//action_account_id     text,
+//is_suspension_removal boolean,
+//reason                text,
+//suspended_until       timestamp,
+//created_at            timestamp,
+//primary key ( club_id, id )
+//) WITH CLUSTERING ORDER BY (id ASC);
+
+var clubSuspensionLogTable = table.New(table.Metadata{
+	Name: "club_suspension_log",
+	Columns: []string{
+		"club_id",
+		"id",
+		"action_account_id",
+		"is_suspension_removal",
+		"reason",
+		"suspended_until",
+	},
+	PartKey: []string{"club_id"},
+	SortKey: []string{"id"},
+})
+
+type clubSuspensionLog struct {
+	ClubId              string     `db:"club_id"`
+	Id                  string     `db:"id"`
+	ActionAccountId     *string    `db:"action_account_id"`
+	IsSuspensionRemoval bool       `db:"is_suspension_removal"`
+	Reason              *string    `db:"reason"`
+	SuspendedUntil      *time.Time `db:"suspended_until"`
+}
+
 type ClubCassandraElasticsearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
@@ -98,6 +134,33 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		Suspended:                cl.Suspended(),
 		SuspendedUntil:           cl.SuspendedUntil(),
 	}, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx context.Context, suspensionLog *club.SuspensionLog) error {
+
+	var reason *string
+
+	if suspensionLog.SuspensionReason() != nil {
+		r := suspensionLog.SuspensionReason().String()
+		reason = &r
+	}
+
+	if err := r.session.
+		Query(clubSuspensionLogTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubSuspensionLog{
+			ClubId:              suspensionLog.ClubId(),
+			Id:                  suspensionLog.Id(),
+			ActionAccountId:     suspensionLog.AccountId(),
+			IsSuspensionRemoval: suspensionLog.IsSuspensionRemoval(),
+			Reason:              reason,
+			SuspendedUntil:      suspensionLog.SuspendedUntil(),
+		}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to create club suspension log: %v", err)
+	}
+
+	return nil
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {

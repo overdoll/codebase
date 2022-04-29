@@ -77,3 +77,14 @@ CREATE TABLE IF NOT EXISTS club_members_partitions
     max_members_count    int,
     primary key ( club_id, bucket )
 );
+
+CREATE TABLE IF NOT EXISTS club_suspension_log
+(
+    club_id               text,
+    id                    text,
+    action_account_id     text,
+    is_suspension_removal boolean,
+    reason                text,
+    suspended_until       timestamp,
+    primary key ( club_id, id )
+) WITH CLUSTERING ORDER BY (id ASC);

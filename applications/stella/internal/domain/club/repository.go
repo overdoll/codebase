@@ -40,5 +40,7 @@ type Repository interface {
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
 	DeleteAndRecreateClubsIndex(ctx context.Context) error
 
+	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
+
 	GetAccountClubDigestById(ctx context.Context, accountId string) (*AccountClubDigest, error)
 }

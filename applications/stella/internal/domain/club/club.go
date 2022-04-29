@@ -142,45 +142,44 @@ func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
 }
 
-func (m *Club) SuspendOperator(endTime time.Time) error {
-	m.suspended = true
-	m.suspendedUntil = &endTime
+func (m *Club) CanUnSuspend(requester *principal.Principal) error {
 
-	return nil
+	if !requester.IsStaff() {
+
+		if err := m.canUpdate(requester); err != nil {
+			return err
+		}
+
+		if !time.Now().After(*m.suspendedUntil) {
+			return errors.New("cannot un suspend yet")
+		}
+
+		return nil
+	}
+
+	return principal.ErrNotAuthorized
 }
 
-func (m *Club) Suspend(requester *principal.Principal, endTime time.Time) error {
+func (m *Club) CanSuspend(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
 	}
 
+	return nil
+}
+
+func (m *Club) Suspend(endTime time.Time) error {
+
 	m.suspended = true
 	m.suspendedUntil = &endTime
 
 	return nil
 }
 
-func (m *Club) UnSuspend(requester *principal.Principal) error {
-
-	if requester.IsStaff() {
-		m.suspended = false
-		m.suspendedUntil = nil
-		return nil
-	}
-
-	if err := m.canUpdate(requester); err != nil {
-		return err
-	}
-
-	if !m.suspended {
-		return nil
-	}
-
-	if !time.Now().After(*m.suspendedUntil) {
-		return errors.New("cannot un suspend yet")
-	}
-
+func (m *Club) UnSuspend() error {
+	m.suspended = false
+	m.suspendedUntil = nil
 	return nil
 }
 

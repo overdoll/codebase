@@ -39,3 +39,13 @@ type LoaderServiceMock struct{}
 func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
 	return resourceIds, nil
 }
+
+type StingServiceMock struct{}
+
+func (s StingServiceMock) AddSuspendedClub(ctx context.Context, clubId string) error {
+	return nil
+}
+
+func (s StingServiceMock) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+	return nil
+}

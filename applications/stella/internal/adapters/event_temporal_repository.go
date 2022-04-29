@@ -84,3 +84,39 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 
 	return nil
 }
+
+func (r EventTemporalRepository) SuspendClub(ctx context.Context, clubId string, accountId *string, endTime time.Time, reason string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "SuspendClub_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.SuspendClub, workflows.SuspendClubInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+		Reason:    reason,
+		EndTime:   endTime,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, clubId, accountId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "UnSuspendClub_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnSuspendClub, workflows.UnSuspendClubInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}

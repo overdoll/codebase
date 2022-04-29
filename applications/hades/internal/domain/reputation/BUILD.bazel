@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "reputation",
+    srcs = ["club_reputation.go"],
+    importpath = "overdoll/applications/hades/internal/domain/reputation",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = ["//libraries/paging"],
+)

@@ -15,6 +15,7 @@ go_library(
         "//applications/hades/internal/app/query",
         "//applications/hades/internal/app/workflows/activities",
         "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/club",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/location",

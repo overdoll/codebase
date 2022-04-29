@@ -26,6 +26,7 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
+        "//applications/sting/internal/domain/club",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",

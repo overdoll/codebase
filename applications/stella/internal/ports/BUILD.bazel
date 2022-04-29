@@ -15,7 +15,6 @@ go_library(
         "//applications/stella/internal/app/command",
         "//applications/stella/internal/app/query",
         "//applications/stella/internal/app/workflows",
-        "//applications/stella/internal/domain/club",
         "//applications/stella/internal/ports/graphql",
         "//applications/stella/internal/ports/graphql/dataloader",
         "//applications/stella/internal/service",
@@ -29,5 +28,6 @@ go_library(
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//worker",
+        "@org_golang_google_protobuf//types/known/emptypb",
     ],
 )

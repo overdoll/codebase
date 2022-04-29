@@ -23,14 +23,17 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
+	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewLoaderGrpc(loaderClient),
+			adapters.NewStingGrpc(stingClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
+			cleanup3()
 		}
 }
 
@@ -47,6 +50,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			LoaderServiceMock{},
+			StingServiceMock{},
 			temporalClient,
 		),
 		func() {
@@ -55,7 +59,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 		temporalClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -74,29 +78,28 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			JoinClub:                      command.NewJoinClubHandler(clubRepo, eventRepo),
 			LeaveClub:                     command.NewLeaveClubHandler(clubRepo, eventRepo),
 			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, loader),
-			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo),
-			SuspendClub:                   command.NewSuspendClubHandler(clubRepo),
-			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo),
+			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, eventRepo),
+			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, eventRepo),
+			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, eventRepo),
 			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
 			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:                  query.NewPrincipalByIdHandler(eva),
-			ClubsByIds:                     query.NewClubsByIdsHandler(clubRepo),
-			SearchClubs:                    query.NewSearchClubsHandler(clubRepo),
-			AccountClubDigest:              query.NewAccountClubDigestHandler(clubRepo),
-			ClubBySlug:                     query.NewClubBySlugHandler(clubRepo),
-			ClubById:                       query.NewClubByIdHandler(clubRepo),
-			AccountClubsCount:              query.NewAccountClubsCountHandler(clubRepo),
-			AccountClubsLimit:              query.NewAccountClubsLimitHandler(clubRepo),
-			ClubSlugAliasesLimit:           query.NewClubSlugAliasesLimitHandler(clubRepo),
-			AccountClubMemberships:         query.NewAccountClubMembershipsHandler(clubRepo),
-			AccountClubMembershipsLimit:    query.NewAccountClubMembershipsLimitHandler(clubRepo),
-			AccountClubMembershipsCount:    query.NewAccountClubMembershipsCountHandler(clubRepo),
-			ClubMembersByClub:              query.NewClubMembersByClubHandler(clubRepo),
-			ClubMemberById:                 query.NewClubMemberByIdHandler(clubRepo),
-			AccountClubMembershipsOperator: query.NewAccountClubMembershipsOperatorHandler(clubRepo),
+			PrincipalById:               query.NewPrincipalByIdHandler(eva),
+			ClubsByIds:                  query.NewClubsByIdsHandler(clubRepo),
+			SearchClubs:                 query.NewSearchClubsHandler(clubRepo),
+			AccountClubDigest:           query.NewAccountClubDigestHandler(clubRepo),
+			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
+			ClubById:                    query.NewClubByIdHandler(clubRepo),
+			AccountClubsCount:           query.NewAccountClubsCountHandler(clubRepo),
+			AccountClubsLimit:           query.NewAccountClubsLimitHandler(clubRepo),
+			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
+			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
+			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
+			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
+			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(clubRepo),
+		Activities: activities.NewActivitiesHandler(clubRepo, sting),
 	}
 }

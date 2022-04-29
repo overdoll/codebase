@@ -53,6 +53,21 @@ type posts struct {
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
+var suspendedClubsTable = table.New(table.Metadata{
+	Name: "suspended_clubs",
+	Columns: []string{
+		"bucket",
+		"club_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"club_id"},
+})
+
+type suspendedClubs struct {
+	Bucket int    `db:"bucket"`
+	ClubId string `db:"club_id"`
+}
+
 type PostsCassandraElasticsearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
@@ -224,7 +239,51 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 }
 
 func (r PostsCassandraElasticsearchRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
-	return nil, nil
+
+	var suspendedClub []*suspendedClubs
+
+	if err := qb.Select(suspendedClubsTable.Name()).
+		Where(qb.Eq("bucket")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&suspendedClubs{Bucket: 0}).
+		Select(&suspendedClub); err != nil {
+		return nil, fmt.Errorf("failed to get suspended clubs: %v", err)
+	}
+
+	var ids []string
+
+	for _, suspended := range suspendedClub {
+		ids = append(ids, suspended.ClubId)
+	}
+
+	return ids, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) AddSuspendedClub(ctx context.Context, clubId string) error {
+
+	if err := r.session.
+		Query(suspendedClubsTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&suspendedClubs{Bucket: 0, ClubId: clubId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to add suspended club: %v", err)
+	}
+
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+
+	if err := r.session.
+		Query(suspendedClubsTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&suspendedClubs{Bucket: 0, ClubId: clubId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete suspended club: %v", err)
+	}
+
+	return nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
