@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b0bb2465cf541b3c1374f3e0097476ae>>
- * @relayHash fab6e20ba25840567e59d4fe768f077d
+ * @generated SignedSource<<826b363b78652ff26d4c9986f74b392f>>
+ * @relayHash a2711168f948055ff5f18f95266ce2df
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fab6e20ba25840567e59d4fe768f077d
+// @relayRequestID a2711168f948055ff5f18f95266ce2df
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -172,7 +172,21 @@ v12 = [
     "name": "first",
     "value": 5
   }
-];
+],
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -526,20 +540,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "reference",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "status",
-                        "storageKey": null
-                      },
+                      (v13/*: any*/),
+                      (v14/*: any*/),
                       (v10/*: any*/),
                       (v11/*: any*/),
                       {
@@ -570,6 +572,69 @@ return {
             "key": "StaffClubPayouts_payouts",
             "kind": "LinkedHandle",
             "name": "payouts"
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "concreteType": "ClubPaymentConnection",
+            "kind": "LinkedField",
+            "name": "payments",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubPaymentEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubPayment",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v13/*: any*/),
+                      (v14/*: any*/),
+                      (v11/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "finalAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "settlementDate",
+                        "storageKey": null
+                      },
+                      (v5/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v8/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v9/*: any*/)
+            ],
+            "storageKey": "payments(first:5)"
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "StaffClubPayments_payments",
+            "kind": "LinkedHandle",
+            "name": "payments"
           }
         ],
         "storageKey": null
@@ -577,7 +642,7 @@ return {
     ]
   },
   "params": {
-    "id": "fab6e20ba25840567e59d4fe768f077d",
+    "id": "a2711168f948055ff5f18f95266ce2df",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

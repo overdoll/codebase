@@ -5,7 +5,9 @@ import { PayoutMethod } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import UpdateClubPlatformFeeForm from '../StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm'
-import { Stack } from '@chakra-ui/react'
+import { Box, Stack } from '@chakra-ui/react'
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import StaffClubPaymentsList from './StaffClubPaymentsList/StaffClubPaymentsList'
 
 interface Props {
   query: StaffClubPaymentsFragment$key
@@ -17,6 +19,7 @@ const Fragment = graphql`
       percent
     }
     ...UpdateClubPlatformFeeFormFragment
+    ...StaffClubPaymentsListFragment
   }
 `
 
@@ -46,6 +49,14 @@ export default function StaffClubPayments ({ query }: Props): JSX.Element {
           </CollapseBody>
         </Collapse>
       </Stack>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>Payments</Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <StaffClubPaymentsList query={data} />
+      </Box>
     </Stack>
   )
 }
