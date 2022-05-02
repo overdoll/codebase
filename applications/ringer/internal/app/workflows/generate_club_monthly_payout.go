@@ -193,13 +193,15 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	if err := workflow.ExecuteChildWorkflow(workflow.WithChildOptions(ctx, childWorkflowOptions), ProcessClubPayout,
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, ProcessClubPayout,
 		ProcessClubPayoutInput{
 			PayoutId: *payoutId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
+		Get(childCtx, nil); err != nil {
 		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil

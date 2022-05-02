@@ -33,15 +33,15 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-	if err := workflow.ExecuteChildWorkflow(ctx, UpdateTotalLikesForPostTags,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpdateTotalLikesForPostTags,
 		UpdateTotalLikesForPostTagsInput{
 			PostId: input.PostId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
+		Get(childCtx, nil); err != nil {
 		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil

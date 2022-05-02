@@ -14,6 +14,9 @@ type Repository interface {
 	UpdateAccount(ctx context.Context, accountId string, updateFn func(account *Account) error) (*Account, error)
 	UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(account *Account, emails []*Email) error) (*Account, *Email, error)
 
+	UpdateAccountDeleting(ctx context.Context, accountId string, updateFn func(account *Account) error) (*Account, error)
+	UpdateAccountDeleted(ctx context.Context, accountId string, updateFn func(account *Account) error) (*Account, error)
+
 	GetAccountByUsername(ctx context.Context, username string) (*Account, error)
 	UpdateAccountUsername(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(account *Account) error) (*Account, error)
 
@@ -21,6 +24,8 @@ type Repository interface {
 	GetAccountEmails(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Email, error)
 	GetAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) (*Email, error)
 	DeleteAccountEmail(ctx context.Context, requester *principal.Principal, accountId string, email string) error
+
+	DeleteAccountData(ctx context.Context, accountId string) error
 }
 
 type IndexRepository interface {

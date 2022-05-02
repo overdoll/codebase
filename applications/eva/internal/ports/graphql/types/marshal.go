@@ -35,6 +35,12 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		}
 	}
 
+	var accountDeleting *AccountDeleting
+
+	if result.ScheduledDeletionAt() != nil {
+		accountDeleting = &AccountDeleting{ScheduledDeletion: *result.ScheduledDeletionAt()}
+	}
+
 	return &Account{
 		ID:                      relay.NewID(Account{}, result.ID()),
 		Reference:               result.ID(),
@@ -47,6 +53,8 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		UsernameEditAvailableAt: result.UsernameEditAvailableAt(),
 		MultiFactorEnabled:      result.MultiFactorEnabled(),
 		CanDisableMultiFactor:   result.CanDisableMultiFactor(),
+		IsDeleted:               result.IsDeleted(),
+		Deleting:                accountDeleting,
 	}
 }
 
@@ -67,7 +75,7 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 		return nil
 	}
 
-	if result.IsLocked() {
+	if result.LockedUntil() != nil {
 		return &AccountLock{
 			Expires: *result.LockedUntil(),
 		}

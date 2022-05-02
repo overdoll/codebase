@@ -24,11 +24,12 @@ type Principal struct {
 	verified  bool
 	locked    bool
 	secure    bool
+	deleting  bool
 
 	clubExtension *ClubExtension
 }
 
-func NewPrincipal(accountId, email string, roles []string, verified, locked, secure bool) *Principal {
+func NewPrincipal(accountId, email string, roles []string, verified, locked, secure, deleting bool) *Principal {
 	return &Principal{
 		accountId: accountId,
 		email:     email,
@@ -36,6 +37,7 @@ func NewPrincipal(accountId, email string, roles []string, verified, locked, sec
 		verified:  verified,
 		locked:    locked,
 		secure:    secure,
+		deleting:  deleting,
 	}
 }
 
@@ -79,6 +81,10 @@ func (p *Principal) IsLocked() bool {
 
 func (p *Principal) IsSecure() bool {
 	return p.secure
+}
+
+func (p *Principal) IsDeleting() bool {
+	return p.deleting
 }
 
 func (p *Principal) IsStaff() bool {

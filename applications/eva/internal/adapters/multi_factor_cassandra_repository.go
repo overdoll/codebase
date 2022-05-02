@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"fmt"
-
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -151,7 +150,7 @@ func (r MultiFactorCassandraRepository) HasAccountRecoveryCodes(ctx context.Cont
 	return recoveryCodesCounts.Count > 0, nil
 }
 
-// RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
+// VerifyAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
 func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 
 	// get all recovery codes for this account
@@ -267,6 +266,25 @@ func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context
 		}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete MFA TOTP: %v", err)
+	}
+
+	return nil
+}
+
+func (r MultiFactorCassandraRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := accountMultiFactorRecoveryCodeTable.Delete()
+
+	batch.Query(stmt, accountId)
+
+	stmt, _ = accountMultiFactorTotpTable.Delete()
+
+	batch.Query(stmt, accountId)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete multi factor account data: %v", err)
 	}
 
 	return nil

@@ -19,7 +19,16 @@ type AccountPayoutMethod struct {
 	paxumEmail *string
 }
 
-func NewPaxumAccountPayoutMethod(accountId, email string) (*AccountPayoutMethod, error) {
+func NewPaxumAccountPayoutMethod(requester *principal.Principal, accountId, email string) (*AccountPayoutMethod, error) {
+
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return nil, err
+	}
+
+	if !requester.IsArtist() {
+		return nil, principal.ErrNotAuthorized
+	}
+
 	return &AccountPayoutMethod{
 		accountId:  accountId,
 		method:     Paxum,

@@ -27,6 +27,10 @@ var accountTable = table.New(table.Metadata{
 		"avatar_resource_id",
 		"locked",
 		"locked_until",
+		"is_deleting",
+		"scheduled_deletion_at",
+		"scheduled_deletion_workflow_id",
+		"is_deleted",
 		"last_username_edit",
 		"multi_factor_enabled",
 	},
@@ -35,16 +39,20 @@ var accountTable = table.New(table.Metadata{
 })
 
 type accounts struct {
-	Id                 string     `db:"id"`
-	Username           string     `db:"username"`
-	Email              string     `db:"email"`
-	Roles              []string   `db:"roles"`
-	Verified           bool       `db:"verified"`
-	AvatarResourceId   *string    `db:"avatar_resource_id"`
-	Locked             bool       `db:"locked"`
-	LockedUntil        *time.Time `db:"locked_until"`
-	LastUsernameEdit   time.Time  `db:"last_username_edit"`
-	MultiFactorEnabled bool       `db:"multi_factor_enabled"`
+	Id                          string     `db:"id"`
+	Username                    string     `db:"username"`
+	Email                       string     `db:"email"`
+	Roles                       []string   `db:"roles"`
+	Verified                    bool       `db:"verified"`
+	AvatarResourceId            *string    `db:"avatar_resource_id"`
+	Locked                      bool       `db:"locked"`
+	LockedUntil                 *time.Time `db:"locked_until"`
+	Deleting                    bool       `db:"deleting"`
+	ScheduledDeletionAt         *time.Time `db:"scheduled_deletion_at"`
+	ScheduledDeletionWorkflowId *string    `db:"scheduled_deletion_workflow_id"`
+	Deleted                     bool       `db:"deleted"`
+	LastUsernameEdit            time.Time  `db:"last_username_edit"`
+	MultiFactorEnabled          bool       `db:"multi_factor_enabled"`
 }
 
 var accountUsernameTable = table.New(table.Metadata{
@@ -104,21 +112,23 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session) AccountRepositor
 
 func marshalUserToDatabase(usr *account.Account) *accounts {
 	return &accounts{
-		Id:                 usr.ID(),
-		Email:              usr.Email(),
-		Username:           usr.Username(),
-		Roles:              usr.RolesAsString(),
-		AvatarResourceId:   usr.AvatarResourceId(),
-		Verified:           usr.Verified(),
-		LockedUntil:        usr.LockedUntil(),
-		Locked:             usr.IsLocked(),
-		MultiFactorEnabled: usr.MultiFactorEnabled(),
+		Id:                          usr.ID(),
+		Email:                       usr.Email(),
+		Username:                    usr.Username(),
+		Roles:                       usr.RolesAsString(),
+		AvatarResourceId:            usr.AvatarResourceId(),
+		Verified:                    usr.Verified(),
+		LockedUntil:                 usr.LockedUntil(),
+		Locked:                      usr.IsLocked(),
+		Deleting:                    usr.IsDeleting(),
+		Deleted:                     usr.IsDeleted(),
+		ScheduledDeletionAt:         usr.ScheduledDeletionAt(),
+		ScheduledDeletionWorkflowId: usr.ScheduledDeletionWorkflowId(),
+		MultiFactorEnabled:          usr.MultiFactorEnabled(),
 	}
 }
 
-// GetAccountById - Get user using the ID
-func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
-
+func (r AccountRepository) getAccountById(ctx context.Context, id string) (*accounts, error) {
 	var accountInstance accounts
 
 	if err := r.session.
@@ -136,6 +146,18 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		return nil, fmt.Errorf("failed to get account: %v", err)
 	}
 
+	return &accountInstance, nil
+}
+
+// GetAccountById - Get user using the ID
+func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
+
+	accountInstance, err := r.getAccountById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return account.UnmarshalAccountFromDatabase(
 		accountInstance.Id,
 		accountInstance.Username,
@@ -145,8 +167,12 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.AvatarResourceId,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
+		accountInstance.Deleting,
+		accountInstance.ScheduledDeletionAt,
+		accountInstance.ScheduledDeletionWorkflowId,
 		accountInstance.MultiFactorEnabled,
 		accountInstance.LastUsernameEdit,
+		accountInstance.Deleted,
 	), nil
 }
 
@@ -182,8 +208,12 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.AvatarResourceId,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
+			accountInstance.Deleting,
+			accountInstance.ScheduledDeletionAt,
+			accountInstance.ScheduledDeletionWorkflowId,
 			accountInstance.MultiFactorEnabled,
 			accountInstance.LastUsernameEdit,
+			accountInstance.Deleted,
 		))
 	}
 
@@ -375,8 +405,12 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		instance.RolesAsString(),
 		instance.Verified(),
 		instance.AvatarResourceId(),
-		instance.IsLocked(),
+		instance.Locked(),
 		instance.LockedUntil(),
+		instance.IsDeleting(),
+		instance.ScheduledDeletionAt(),
+		instance.ScheduledDeletionWorkflowId(),
+		instance.IsDeleted(),
 		instance.LastUsernameEdit(),
 		instance.MultiFactorEnabled(),
 	)
@@ -401,7 +435,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	return nil
 }
 
-func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
+func (r AccountRepository) updateAccount(ctx context.Context, id string, updateFn func(usr *account.Account) error, columns []string) (*account.Account, error) {
 
 	currentUser, err := r.GetAccountById(ctx, id)
 
@@ -418,14 +452,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 	if err := r.session.
 		Query(
 			accountTable.Update(
-				"username",
-				"email",
-				"roles",
-				"verified",
-				"locked_until",
-				"locked",
-				"avatar_resource_id",
-				"multi_factor_enabled",
+				columns...,
 			),
 		).
 		Consistency(gocql.LocalQuorum).
@@ -435,6 +462,81 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 	}
 
 	return currentUser, nil
+}
+
+func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
+	return r.updateAccount(ctx, id, updateFn, []string{
+		"username",
+		"email",
+		"roles",
+		"verified",
+		"locked_until",
+		"locked",
+		"avatar_resource_id",
+		"multi_factor_enabled",
+	})
+}
+
+func (r AccountRepository) UpdateAccountDeleting(ctx context.Context, accountId string, updateFn func(account *account.Account) error) (*account.Account, error) {
+	return r.updateAccount(ctx, accountId, updateFn, []string{
+		"deleting",
+		"scheduled_deletion_at",
+		"scheduled_deletion_workflow_id",
+	})
+}
+
+func (r AccountRepository) UpdateAccountDeleted(ctx context.Context, accountId string, updateFn func(account *account.Account) error) (*account.Account, error) {
+	return r.updateAccount(ctx, accountId, updateFn, []string{
+		"deleted",
+	})
+}
+
+func (r AccountRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	acc, err := r.getAccountById(ctx, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.deleteAccountEmail(ctx, accountId, acc.Email); err != nil {
+		return err
+	}
+
+	if err := r.deleteAccountUsername(ctx, accountId, acc.Username); err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(emailByAccountTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&emailByAccount{
+			AccountId: accountId,
+		}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete account emails: %v", err)
+	}
+
+	acc.Email = ""
+	acc.Username = ""
+	acc.AvatarResourceId = nil
+	acc.MultiFactorEnabled = false
+
+	if err := r.session.
+		Query(
+			accountTable.Update(
+				"email",
+				"username",
+				"avatar_resource_id",
+			),
+		).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(acc).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to update account: %v", err)
+	}
+
+	return nil
 }
 
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)

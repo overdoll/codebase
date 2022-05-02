@@ -261,15 +261,15 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		CronSchedule:          "0 0 1 * *",
 	}
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-	if err := workflow.ExecuteChildWorkflow(ctx, UpcomingSubscriptionReminderNotification,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpcomingSubscriptionReminderNotification,
 		UpcomingSubscriptionReminderNotificationInput{
 			AccountId: details.AccountInitiator.AccountId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
+		Get(childCtx, nil); err != nil {
 		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil

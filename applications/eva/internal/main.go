@@ -31,6 +31,10 @@ func init() {
 		Run: RunGrpc,
 	})
 	rootCmd.AddCommand(&cobra.Command{
+		Use: "worker",
+		Run: RunWorker,
+	})
+	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,
 	})
@@ -61,6 +65,19 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
+}
+
+func RunWorker(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, _ := service.NewApplication(ctx)
+
+	srv, cleanup := ports.NewWorker(&app)
+
+	defer cleanup()
+
+	bootstrap.InitializeWorkerServer(srv)
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {

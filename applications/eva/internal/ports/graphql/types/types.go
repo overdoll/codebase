@@ -27,8 +27,14 @@ type Account struct {
 	//
 	// At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
 	IsSecure bool `json:"isSecure"`
-	// The details of the account lock
+	// Whether or not this account is deleted.
+	//
+	// When an account is deleted, the username, email and any other data is blank.
+	IsDeleted bool `json:"isDeleted"`
+	// The details of the account lock.
 	Lock *AccountLock `json:"lock"`
+	// The details of a deleting state.
+	Deleting *AccountDeleting `json:"deleting"`
 	// Sessions linked to this account
 	//
 	// Only queryable if the currently logged-in account belongs to the requested account
@@ -57,6 +63,10 @@ type Account struct {
 
 func (Account) IsNode()   {}
 func (Account) IsEntity() {}
+
+type AccountDeleting struct {
+	ScheduledDeletion time.Time `json:"scheduledDeletion"`
+}
 
 // Email belonging to a specific account
 type AccountEmail struct {
@@ -198,6 +208,18 @@ type AuthenticationTokenAccountStatus struct {
 	MultiFactor *MultiFactor `json:"multiFactor"`
 }
 
+// Input for cancelling an account deletion.
+type CancelAccountDeletionInput struct {
+	// The account to cancel deletion.
+	AccountID relay.ID `json:"accountID"`
+}
+
+// Payload for cancelling an account deletion.
+type CancelAccountDeletionPayload struct {
+	// Account that was cancelled for deletion.
+	Account *Account `json:"account"`
+}
+
 // Input for confirming the account email
 type ConfirmAccountEmailInput struct {
 	// The ID that is sent for confirmation
@@ -244,6 +266,18 @@ type DeleteAccountEmailInput struct {
 type DeleteAccountEmailPayload struct {
 	// The ID of the account email that was removed
 	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Input for deleting an account.
+type DeleteAccountInput struct {
+	// The account to delete.
+	AccountID relay.ID `json:"accountID"`
+}
+
+// Payload for the delete account
+type DeleteAccountPayload struct {
+	// Account that was deleted
+	Account *Account `json:"account"`
 }
 
 // Payload for disabling account multi factor
@@ -715,55 +749,6 @@ func (e *CreateAccountWithAuthenticationTokenValidation) UnmarshalGQL(v interfac
 }
 
 func (e CreateAccountWithAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type Currency string
-
-const (
-	CurrencyUsd Currency = "USD"
-	CurrencyCad Currency = "CAD"
-	CurrencyAud Currency = "AUD"
-	CurrencyJpy Currency = "JPY"
-	CurrencyGbp Currency = "GBP"
-	CurrencyEur Currency = "EUR"
-)
-
-var AllCurrency = []Currency{
-	CurrencyUsd,
-	CurrencyCad,
-	CurrencyAud,
-	CurrencyJpy,
-	CurrencyGbp,
-	CurrencyEur,
-}
-
-func (e Currency) IsValid() bool {
-	switch e {
-	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
-		return true
-	}
-	return false
-}
-
-func (e Currency) String() string {
-	return string(e)
-}
-
-func (e *Currency) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = Currency(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Currency", str)
-	}
-	return nil
-}
-
-func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

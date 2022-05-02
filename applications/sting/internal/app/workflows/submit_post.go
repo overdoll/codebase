@@ -62,15 +62,15 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 
-		ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-		if err := workflow.ExecuteChildWorkflow(ctx, PublishPost,
+		if err := workflow.ExecuteChildWorkflow(childCtx, PublishPost,
 			PublishPostInput{
 				PostId: input.PostId,
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(ctx, nil); err != nil {
+			Get(childCtx, nil); err != nil {
 			// ignore already started errors
 			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 				return nil

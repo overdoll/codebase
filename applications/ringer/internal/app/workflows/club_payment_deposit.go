@@ -93,13 +93,15 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 		CronSchedule:          "0 0 1 * *",
 	}
 
-	if err := workflow.ExecuteChildWorkflow(workflow.WithChildOptions(ctx, childWorkflowOptions), GenerateClubMonthlyPayout,
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, GenerateClubMonthlyPayout,
 		GenerateClubMonthlyPayoutInput{
 			ClubId: input.DestinationClubId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
+		Get(childCtx, nil); err != nil {
 		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil

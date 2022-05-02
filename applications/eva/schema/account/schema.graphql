@@ -24,12 +24,26 @@ type Account implements Node @key(fields: "id") {
   """
   isSecure: Boolean!
 
-  """The details of the account lock"""
+  """
+  Whether or not this account is deleted.
+
+  When an account is deleted, the username, email and any other data is blank.
+  """
+  isDeleted: Boolean!
+
+  """The details of the account lock."""
   lock: AccountLock @goField(forceResolver: true)
+
+  """The details of a deleting state."""
+  deleting: AccountDeleting @goField(forceResolver: true)
 }
 
 type AccountLock {
   expires: Time!
+}
+
+type AccountDeleting {
+  scheduledDeletion: Time!
 }
 
 """Input for locking an account."""
@@ -39,6 +53,22 @@ input LockAccountInput {
 
   """When the lock should end."""
   endTime: Time!
+}
+
+"""Input for deleting an account."""
+input DeleteAccountInput {
+  """
+  The account to delete.
+  """
+  accountID: ID!
+}
+
+"""Input for cancelling an account deletion."""
+input CancelAccountDeletionInput {
+  """
+  The account to cancel deletion.
+  """
+  accountID: ID!
 }
 
 """Input for unlocking an account"""
@@ -56,6 +86,18 @@ type UnlockAccountPayload {
 """Payload for the locked account"""
 type LockAccountPayload {
   """Account that was locked"""
+  account: Account
+}
+
+"""Payload for the delete account"""
+type DeleteAccountPayload {
+  """Account that was deleted"""
+  account: Account
+}
+
+"""Payload for cancelling an account deletion."""
+type CancelAccountDeletionPayload {
+  """Account that was cancelled for deletion."""
   account: Account
 }
 
@@ -77,6 +119,20 @@ extend type Mutation {
   Lock an account for a specific duration.
   """
   lockAccount(input: LockAccountInput!): LockAccountPayload
+
+  """
+  Delete an account.
+
+  The deletion will be scheduled and deleted after 30 days.
+
+  During this time, the account will be locked. (isLocked will not be true, however, "deleting" will be available).
+  """
+  deleteAccount(input: DeleteAccountInput!): DeleteAccountPayload
+
+  """
+  Cancel an account deletion.
+  """
+  cancelAccountDeletion(input: CancelAccountDeletionInput!): CancelAccountDeletionPayload
 }
 
 extend type Query {

@@ -47,3 +47,41 @@ func GetEmailConfirmationTokenFromEmail(email string) (string, string, error) {
 
 	return res["id"].(string), res["secret"].(string), nil
 }
+
+type HadesServiceMock struct{}
+
+func (h HadesServiceMock) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+	return true, nil
+}
+
+func (h HadesServiceMock) DeleteAccountData(ctx context.Context, accountId string) error {
+	return nil
+}
+
+type StellaServiceMock struct{}
+
+func (s StellaServiceMock) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+	return true, nil
+}
+
+func (s StellaServiceMock) DeleteAccountData(ctx context.Context, accountId string) error {
+	return nil
+}
+
+type ParleyServiceMock struct{}
+
+func (p ParleyServiceMock) DeleteAccountData(ctx context.Context, accountId string) error {
+	return nil
+}
+
+type StingServiceMock struct{}
+
+func (s StingServiceMock) DeleteAccountData(ctx context.Context, accountId string) error {
+	return nil
+}
+
+type RingerServiceMock struct{}
+
+func (r RingerServiceMock) DeleteAccountData(ctx context.Context, accountId string) error {
+	return nil
+}

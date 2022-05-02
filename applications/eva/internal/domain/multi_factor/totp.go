@@ -146,6 +146,11 @@ func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
 }
 
 func CanCreateTOTPForAccount(requester *principal.Principal, accountId string) error {
+
+	if requester.IsDeleting() {
+		return principal.ErrNotAuthorized
+	}
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
 	}
@@ -154,6 +159,11 @@ func CanCreateTOTPForAccount(requester *principal.Principal, accountId string) e
 }
 
 func CanDeleteTOTPForAccount(requester *principal.Principal, accountId string) error {
+
+	if requester.IsDeleting() {
+		return principal.ErrNotAuthorized
+	}
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
 	}

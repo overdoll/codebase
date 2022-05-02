@@ -122,6 +122,23 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 	return obj.Lock, nil
 }
 
+func (r AccountResolver) Deleting(ctx context.Context, obj *types.Account) (*types.AccountDeleting, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if principal.FromContext(ctx).IsStaff() {
+		return obj.Deleting, nil
+	}
+
+	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+		return nil, err
+	}
+
+	return obj.Deleting, nil
+}
+
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

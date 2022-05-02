@@ -66,6 +66,11 @@ func GenerateRecoveryCodeSet() ([]*RecoveryCode, error) {
 }
 
 func CanCreateRecoveryCodesForAccount(requester *principal.Principal, accountId string) error {
+
+	if requester.IsDeleting() {
+		return principal.ErrNotAuthorized
+	}
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
 	}
