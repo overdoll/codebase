@@ -1,52 +1,22 @@
-import gcm from '../utilities/gcm'
-import { randomBytes } from 'crypto'
 import { NextRequest } from 'next/server'
-import fetchQuery from '../relay/fetchQuery'
 import RootQuery from '@//:artifacts/RootQuery.graphql'
 import { AppAbility } from '../authorization/types'
 import defineAbility from '../authorization/defineAbility'
-
-const customFetch = (req) => {
-  return async (data) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      cookie: []
-    }
-
-    req.headers.forEach((value, key) => {
-      headers[key] = value
-    })
-
-    const existingSecurity = req.cookies['od.security']
-
-    let token = ''
-
-    if (existingSecurity != null) {
-      token = gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET)
-    } else {
-      token = randomBytes(64).toString('hex')
-      const encrypted = gcm.encrypt(token, process.env.SECURITY_SECRET)
-      headers.cookie = headers.cookie + ';od.security=' + encrypted
-    }
-
-    headers['X-overdoll-Security'] = token
-
-    const response = await fetch(
-      process.env.SERVER_GRAPHQL_ENDPOINT as string,
-      {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data)
-      }
-    )
-
-    return await response.json()
-  }
-}
+import { serverMiddlewareFetch } from './relayGQLFetch'
+import { createEnvironment } from '../relay/environment'
+import { GraphQLResponseWithData } from 'relay-runtime/lib/network/RelayNetworkTypes'
 
 const getAbilityFromRequest = async (request: NextRequest): Promise<AppAbility> => {
-  const data = await fetchQuery(customFetch(request))(RootQuery.params, {})
+  const environment = createEnvironment(serverMiddlewareFetch(request), null)
+  const data = await environment
+    .getNetwork()
+    .execute(RootQuery.params, {}, {})
+    .toPromise() as GraphQLResponseWithData
+
+  // catch any network errors
+  if (Array.isArray(data?.errors)) {
+    throw new Error(JSON.stringify(data?.errors))
+  }
 
   const viewer = data?.data?.viewer
 

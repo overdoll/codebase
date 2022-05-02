@@ -5,10 +5,19 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"net/http"
 	"overdoll/libraries/passport"
 
 	"github.com/gin-gonic/gin"
 )
+
+type GraphQLErrorResponse struct {
+	Errors []struct {
+		Message   string   `json:"message"`
+		Path      []string `json:"path"`
+		Locations []string `json:"locations"`
+	} `json:"errors"`
+}
 
 type HttpServicePrincipalFunc interface {
 	PrincipalById(ctx context.Context, id string) (*Principal, error)
@@ -45,7 +54,7 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 			}
 
 			zap.S().Error("unable to get account ", zap.Error(err))
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "unable to resolve principal"})
 			return
 		}
 

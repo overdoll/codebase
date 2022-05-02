@@ -212,7 +212,8 @@ export default function CCBillDisplayTransaction ({
           </Heading>
           <Text textAlign='center' fontSize='md' color='gray.100'>
             <Trans>
-              We received your payment, but weren't able to issue your club benefits in a reasonable amount of time. Try
+              We received your payment, but weren't able to issue your club benefits in a reasonable amount of time.
+              Try
               refreshing the page or coming back in a few minutes and you should see your club benefits!
             </Trans>
           </Text>

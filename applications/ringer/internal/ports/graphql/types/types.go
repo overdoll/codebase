@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -69,7 +70,7 @@ type Balance struct {
 	// The amount on this balance.
 	Amount int `json:"amount"`
 	// The currency the balance is in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// When the balance was last updated.
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -115,7 +116,7 @@ type ClubPayment struct {
 	// The status of the payment.
 	Status ClubPaymentStatus `json:"status"`
 	// The currency this payment was made in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// The base amount this payment was originally made in.
 	BaseAmount int `json:"baseAmount"`
 	// The amount taken off with a platform fee.
@@ -160,7 +161,7 @@ type ClubPayout struct {
 	// The status of the payout.
 	Status ClubPayoutStatus `json:"status"`
 	// The currency this payout is in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// The amount this payout is created in.
 	Amount int `json:"amount"`
 	// If a payout failed, an event will be created here.
@@ -250,7 +251,7 @@ type DepositRequest struct {
 	// The type of payout method this deposit request is created for.
 	PayoutMethod PayoutMethod `json:"payoutMethod"`
 	// The currency this deposit is in.
-	Currency Currency `json:"currency"`
+	Currency graphql1.Currency `json:"currency"`
 	// The base amount of the deposit.
 	BaseAmount int `json:"baseAmount"`
 	// To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
@@ -295,13 +296,6 @@ type InitiateClubPayoutPayload struct {
 	Club *Club `json:"club"`
 }
 
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
-}
-
 // Retry a specific payout.
 type RetryClubPayoutInput struct {
 	// The payout to retry.
@@ -324,13 +318,6 @@ type SetPaxumAccountPayoutMethodInput struct {
 type SetPaxumAccountPayoutMethodPayload struct {
 	// The updated account payout method.
 	AccountPayoutMethod AccountPayoutMethod `json:"accountPayoutMethod"`
-}
-
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
 }
 
 // Update account details.
@@ -517,55 +504,6 @@ func (e *ClubPayoutStatus) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ClubPayoutStatus) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type Currency string
-
-const (
-	CurrencyUsd Currency = "USD"
-	CurrencyCad Currency = "CAD"
-	CurrencyAud Currency = "AUD"
-	CurrencyJpy Currency = "JPY"
-	CurrencyGbp Currency = "GBP"
-	CurrencyEur Currency = "EUR"
-)
-
-var AllCurrency = []Currency{
-	CurrencyUsd,
-	CurrencyCad,
-	CurrencyAud,
-	CurrencyJpy,
-	CurrencyGbp,
-	CurrencyEur,
-}
-
-func (e Currency) IsValid() bool {
-	switch e {
-	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
-		return true
-	}
-	return false
-}
-
-func (e Currency) String() string {
-	return string(e)
-}
-
-func (e *Currency) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = Currency(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid Currency", str)
-	}
-	return nil
-}
-
-func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

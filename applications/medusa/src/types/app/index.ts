@@ -1,4 +1,3 @@
-import { AppProps } from 'next/app'
 import {
   CacheConfig,
   DisposeFn,
@@ -8,14 +7,14 @@ import {
   RequestParameters,
   Variables
 } from 'relay-runtime'
-import { i18n, Messages } from '@lingui/core'
-import { SetupSecurityTokenReturn } from '@//:modules/next/security'
+import { Messages } from '@lingui/core'
 import { EnvironmentProviderOptions } from 'react-relay/hooks'
 import { PreloadFetchPolicy } from 'react-relay/relay-hooks/EntryPointTypes'
-import { BaseContext, NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils'
+import { AppInitialProps, BaseContext, NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils'
 import { ComponentType } from 'react'
 import Cookies from 'universal-cookie'
-import { NextResponse, NextRequest, NextFetchEvent } from 'next/server'
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { AppProps } from 'next/app'
 
 interface CustomPreloadedQuery {
   kind: 'PreloadedQuery' | 'SerializedPreloadedQuery'
@@ -34,26 +33,35 @@ interface CustomPreloadedQuery {
 
 export type TranslationProps = Messages & {}
 
-export type SecurityToken = SetupSecurityTokenReturn
-
 export type Queries = Record<string, CustomPreloadedQuery>
 
 export type ComponentProps = Partial<{
   queryRefs: Queries
 }>
 
-export type RequestProps = Partial<{
-  preloadedQueryResults: Record<string, CustomPreloadedQuery>
-}>
+export interface RequestProps {
+  preloadedQueryResults: {
+    [k: string]: {
+      params: any
+      variables: any
+      response: any
+    }
+  }
+}
 
-export interface CustomAppProps extends AppProps {
+export interface CustomAppProps extends AppInitialProps {
+  environment: IEnvironment
+  requestProps: RequestProps
+  securityToken: string
+  relayStore: any
+}
+
+export interface CustomPageAppProps extends AppProps {
   Component: PageProps<NextPageContext, any>
   environment: IEnvironment
-  i18n: typeof i18n
-  componentProps: ComponentProps
   requestProps: RequestProps
-  securityToken: SecurityToken
-  translationProps: TranslationProps
+  securityToken: string
+  relayStore: any
 }
 
 export type GetRelayPreloadPropsReturn = Partial<{
@@ -71,7 +79,6 @@ interface PageContext extends NextPageContext {
 
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<P> & {
   getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
-  getTranslationProps?: (context: C) => Promise<TranslationProps>
   getLayout?: (page: JSX.Element) => JSX.Element
 }
 

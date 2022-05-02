@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d2e55511e5100a8a5eeda4fe986f3dec>>
- * @relayHash 934a175e7ae865b13b55a0f269a47cbb
+ * @generated SignedSource<<0ca5209b9f06518568a5436e070ca079>>
+ * @relayHash 26a7bcf2f785616329430a7734f51e71
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 934a175e7ae865b13b55a0f269a47cbb
+// @relayRequestID 26a7bcf2f785616329430a7734f51e71
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -408,10 +408,10 @@ return {
                             "name": "categories",
                             "plural": true,
                             "selections": [
+                              (v12/*: any*/),
                               (v17/*: any*/),
                               (v20/*: any*/),
-                              (v19/*: any*/),
-                              (v12/*: any*/)
+                              (v19/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -423,6 +423,7 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
+                              (v12/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -439,8 +440,7 @@ return {
                               },
                               (v18/*: any*/),
                               (v17/*: any*/),
-                              (v19/*: any*/),
-                              (v12/*: any*/)
+                              (v19/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -523,7 +523,7 @@ return {
     ]
   },
   "params": {
-    "id": "934a175e7ae865b13b55a0f269a47cbb",
+    "id": "26a7bcf2f785616329430a7734f51e71",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

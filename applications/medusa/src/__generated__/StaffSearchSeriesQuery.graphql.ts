@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c54b777c92039a68c9a2a1421fd262d7>>
- * @relayHash 4161f676638f1ff523b3a1ad6b92dedb
+ * @generated SignedSource<<e5dd6aeb4917c6229b08461ab287ecee>>
+ * @relayHash df03a5dda5f16945ddc5d2577717574e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4161f676638f1ff523b3a1ad6b92dedb
+// @relayRequestID df03a5dda5f16945ddc5d2577717574e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -50,14 +50,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -113,6 +113,7 @@ return {
                     "name": "slug",
                     "storageKey": null
                   },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -143,7 +144,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          (v2/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -162,7 +163,7 @@ return {
                         "name": "videoThumbnail",
                         "plural": false,
                         "selections": [
-                          (v2/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -173,11 +174,10 @@ return {
                         "name": "processed",
                         "storageKey": null
                       },
-                      (v3/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -240,7 +240,7 @@ return {
     ]
   },
   "params": {
-    "id": "4161f676638f1ff523b3a1ad6b92dedb",
+    "id": "df03a5dda5f16945ddc5d2577717574e",
     "metadata": {},
     "name": "StaffSearchSeriesQuery",
     "operationKind": "query",

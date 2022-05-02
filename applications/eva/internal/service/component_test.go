@@ -9,7 +9,6 @@ import (
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/localization"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -166,7 +165,7 @@ func newTestAccount(t *testing.T) *account.Account {
 
 	require.NoError(t, err)
 
-	usr, err := account.NewAccount(localization.NewLanguageWithFallback("en"), uuid.New().String(), fake.Username, fake.Email)
+	usr, err := account.NewAccount(uuid.New().String(), fake.Username, fake.Email)
 
 	require.NoError(t, err)
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7481ede91f8b8064896a73a711117481>>
- * @relayHash 4b9b8959ecd6bab249466797bb0bdc5d
+ * @generated SignedSource<<309715ccd8b2c174e3a9a99493425c69>>
+ * @relayHash f89e9ca6d3c890ce67335e0cc5177fbc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4b9b8959ecd6bab249466797bb0bdc5d
+// @relayRequestID f89e9ca6d3c890ce67335e0cc5177fbc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -45,21 +45,21 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "url",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "type",
   "storageKey": null
 };
 return {
@@ -173,6 +173,7 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
+                                  (v2/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -196,7 +197,7 @@ return {
                                         "name": "urls",
                                         "plural": true,
                                         "selections": [
-                                          (v2/*: any*/),
+                                          (v3/*: any*/),
                                           {
                                             "alias": null,
                                             "args": null,
@@ -215,16 +216,15 @@ return {
                                         "name": "videoThumbnail",
                                         "plural": false,
                                         "selections": [
-                                          (v2/*: any*/)
+                                          (v3/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
-                                      (v3/*: any*/),
-                                      (v4/*: any*/)
+                                      (v4/*: any*/),
+                                      (v2/*: any*/)
                                     ],
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -235,7 +235,7 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v4/*: any*/)
+                              (v2/*: any*/)
                             ],
                             "type": "Node",
                             "abstractKey": "__isNode"
@@ -243,7 +243,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -260,7 +260,7 @@ return {
                             "name": "card",
                             "plural": false,
                             "selections": [
-                              (v3/*: any*/),
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -274,7 +274,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v4/*: any*/),
+                      (v2/*: any*/),
                       (v1/*: any*/)
                     ],
                     "storageKey": null
@@ -338,14 +338,14 @@ return {
             "kind": "LinkedHandle",
             "name": "transactions"
           },
-          (v4/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "4b9b8959ecd6bab249466797bb0bdc5d",
+    "id": "f89e9ca6d3c890ce67335e0cc5177fbc",
     "metadata": {},
     "name": "TransactionsSettingsQuery",
     "operationKind": "query",

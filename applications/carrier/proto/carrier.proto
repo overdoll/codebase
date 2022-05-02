@@ -54,7 +54,6 @@ message NewLoginTokenRequest {
   string email = 1;
   string token = 2;
   string secret = 3;
-  string language = 4;
 }
 
 message NewClubSupporterSubscriptionRequest {

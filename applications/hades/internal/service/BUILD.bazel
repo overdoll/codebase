@@ -63,6 +63,7 @@ go_test(
         "//applications/hades/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/testing_tools",

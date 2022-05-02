@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -60,7 +61,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "1 subscription exists")
 	subscription := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item
 
-	require.Equal(t, types.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, graphql.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
 	require.Equal(t, "2024-03-28", subscription.NextBillingDate, "correct next billing date")
 
@@ -75,7 +76,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
 	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
-	require.Equal(t, types.CurrencyUsd, transaction.Currency, "correct currency")
+	require.Equal(t, graphql.CurrencyUsd, transaction.Currency, "correct currency")
 
 	// check for the correct payment method
 	assertNewSaleSuccessCorrectPaymentMethodDetails(t, transaction.PaymentMethod)

@@ -2,23 +2,18 @@ package queries
 
 import (
 	"context"
-	"overdoll/libraries/passport"
-
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/localization"
 )
 
-func (r *QueryResolver) Languages(ctx context.Context) ([]*types.Language, error) {
+func (r *QueryResolver) Languages(ctx context.Context) ([]*graphql.Language, error) {
 
-	var langs []*types.Language
+	var langs []*graphql.Language
 
 	for _, l := range localization.SupportedLanguages {
 		langs = append(langs, types.MarshalLanguageToGraphQL(l))
 	}
 
 	return langs, nil
-}
-
-func (r *QueryResolver) Language(ctx context.Context) (*types.Language, error) {
-	return types.MarshalLanguageToGraphQL(passport.FromContext(ctx).Language()), nil
 }

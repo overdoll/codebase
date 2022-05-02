@@ -2,43 +2,20 @@ package service_test
 
 import (
 	"context"
+	graphql1 "overdoll/libraries/graphql"
 	"testing"
 
-	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/eva/internal/ports/graphql/types"
 )
 
-type Language struct {
-	Language types.Language `graphql:"language()"`
-}
-
 type Languages struct {
-	Languages []types.Language `graphql:"languages()"`
-}
-
-type UpdateLanguage struct {
-	UpdateLanguage types.UpdateLanguagePayload `graphql:"updateLanguage(input: $input)"`
-}
-
-func getLanguage(t *testing.T, client *graphql.Client) types.Language {
-	var language Language
-
-	err := client.Query(context.Background(), &language, nil)
-
-	require.NoError(t, err)
-
-	return language.Language
+	Languages []graphql1.Language `graphql:"languages()"`
 }
 
 func TestGetRandomLanguageAndSet(t *testing.T) {
 	t.Parallel()
 
 	client, _ := getHttpClient(t)
-
-	lang := getLanguage(t, client)
-
-	require.Equal(t, "en", lang.Locale)
 
 	var languages Languages
 
@@ -49,15 +26,5 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 	// pick 3rd language
 	pickedLanguage := languages.Languages[0]
 
-	var updateLanguage UpdateLanguage
-
-	err = client.Mutate(context.Background(), &updateLanguage, map[string]interface{}{
-		"input": types.UpdateLanguageInput{Locale: pickedLanguage.Locale},
-	})
-
-	require.NoError(t, err)
-
-	lang = getLanguage(t, client)
-
-	require.Equal(t, pickedLanguage.Locale, lang.Locale, "language should be set")
+	require.Equal(t, "en", pickedLanguage.Locale, "correct language")
 }

@@ -27,7 +27,6 @@ var accountTable = table.New(table.Metadata{
 		"avatar_resource_id",
 		"locked",
 		"locked_until",
-		"language",
 		"last_username_edit",
 		"multi_factor_enabled",
 	},
@@ -42,7 +41,6 @@ type accounts struct {
 	Roles              []string   `db:"roles"`
 	Verified           bool       `db:"verified"`
 	AvatarResourceId   *string    `db:"avatar_resource_id"`
-	Language           string     `db:"language"`
 	Locked             bool       `db:"locked"`
 	LockedUntil        *time.Time `db:"locked_until"`
 	LastUsernameEdit   time.Time  `db:"last_username_edit"`
@@ -114,7 +112,6 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		Verified:           usr.Verified(),
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
-		Language:           usr.Language().Locale(),
 		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
 }
@@ -146,7 +143,6 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.Roles,
 		accountInstance.Verified,
 		accountInstance.AvatarResourceId,
-		accountInstance.Language,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
 		accountInstance.MultiFactorEnabled,
@@ -184,7 +180,6 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.Roles,
 			accountInstance.Verified,
 			accountInstance.AvatarResourceId,
-			accountInstance.Language,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
 			accountInstance.MultiFactorEnabled,
@@ -382,7 +377,6 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		instance.AvatarResourceId(),
 		instance.IsLocked(),
 		instance.LockedUntil(),
-		instance.Language().Locale(),
 		instance.LastUsernameEdit(),
 		instance.MultiFactorEnabled(),
 	)
@@ -429,7 +423,6 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 				"roles",
 				"verified",
 				"locked_until",
-				"language",
 				"locked",
 				"avatar_resource_id",
 				"multi_factor_enabled",

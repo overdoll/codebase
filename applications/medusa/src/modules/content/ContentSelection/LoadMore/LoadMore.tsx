@@ -33,7 +33,7 @@ export default function LoadMore ({
               justify='center'
               align='center'
             >
-              <Heading align='center' color='gray.00' fontSize='sm'>
+              <Heading alignContent='center' color='gray.00' fontSize='sm'>
                 {text != null
                   ? text
                   : (

@@ -13,6 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCharactersFragment on Post {
     characters {
+      id
       ...ClickSeriesFragment
       ...ClickCharacterFragment
       thumbnail {
@@ -32,6 +33,7 @@ export default function PostClickableCharacters ({ query }: Props): JSX.Element 
           <SmallBackgroundBox p={2} borderRadius='lg'>
             <Flex align='center' borderRadius='inherit' bg='gray.800'>
               <ResourceIcon
+                seed={item.id}
                 w={10}
                 h={10}
                 mr={3}

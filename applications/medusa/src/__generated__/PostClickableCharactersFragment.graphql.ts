@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78eb49c4d5ce30557a2c2c9be8f01879>>
+ * @generated SignedSource<<1c299e5352196aa26f072c81959a8dd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostClickableCharactersFragment$data = {
   readonly characters: ReadonlyArray<{
+    readonly id: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
@@ -39,6 +40,13 @@ const node: ReaderFragment = {
       "name": "characters",
       "plural": true,
       "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         {
           "args": null,
           "kind": "FragmentSpread",
@@ -73,6 +81,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1f803202453986e13385fefdb39fe893";
+(node as any).hash = "b75efa8acb635c17757c30e622cd9195";
 
 export default node;

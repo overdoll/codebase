@@ -1,8 +1,18 @@
 import { OverlappingBubbles, OverlappingCircles, OverlappingPlus } from '@//:assets/icons/patterns'
 import IconPattern from '../../PageLayout/Flair/IconPattern/IconPattern'
-import { useConst } from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { Random } from '../../../utilities/random'
+import hash from '../../../utilities/hash'
 
-export default function RandomPattern (): JSX.Element {
+interface Props {
+  seed: string | undefined
+}
+
+const defaultSeed = 'DETERMINISTIC_SEED'
+
+export default function RandomPattern ({ seed }: Props): JSX.Element {
+  const memoized = useMemo(() => new Random(hash(seed ?? defaultSeed)), [seed])
+
   const icons = [
     {
       icon: OverlappingBubbles,
@@ -18,12 +28,9 @@ export default function RandomPattern (): JSX.Element {
     }
   ]
 
+  const randomIcon = icons[memoized.nextInt32([0, 2])]
+
   // TODO center it or position randomly so it doesnt look clipped on right/bottom edge
-
-  const randomValue = useConst(Math.random() * 3)
-
-  const randomIcon = icons[Math.floor(randomValue)]
-
   return (
     <IconPattern
       opacity='0.05'

@@ -161,21 +161,15 @@ type Account implements Node {
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
-  """Whether or not this account is secure."""
+  """
+  Whether or not this account is secure.
+  
+  At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
+  """
   isSecure: Boolean!
 
   """Whether or not this account is a staff member"""
   isStaff: Boolean!
-
-  """
-  The language of the account.
-  
-  Note: this is the language that will be used to determine which emails should be sent where.
-  
-  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
-  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
-  """
-  language: Language!
 
   """The details of the account lock"""
   lock: AccountLock
@@ -1036,8 +1030,12 @@ type Audience implements Node {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A title for this audience."""
-  title: String!
+  """
+  A title for this audience.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String!
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -1361,7 +1359,7 @@ type CancellationReason implements Node {
   reference: String!
 
   """The title for this reason."""
-  title: String!
+  title(locale: BCP47): String!
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -1457,8 +1455,12 @@ type Category implements Node {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A title for this category."""
-  title: String!
+  """
+  A title for this category.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String!
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -1495,8 +1497,12 @@ type Character implements Node {
   """An ID pointing to this character."""
   id: ID!
 
-  """A name for this character."""
-  name: String!
+  """
+  A name for this character.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  name(locale: BCP47): String!
 
   """All translations for this name."""
   nameTranslations: [Translation!]!
@@ -3302,13 +3308,6 @@ type Mutation {
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
 
   """
-  Update the language of the account.
-  
-  Note: that this is only a value, and in order to see anything in the browser, you should use the "UpdateLanguage" mutation.
-  """
-  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
-
-  """
   Update the account username
   
   Will retain the old username
@@ -3376,9 +3375,6 @@ type Mutation {
 
   """Update the date of birth for the curation profile"""
   updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
-
-  """Update the current language."""
-  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
 
   """Update a post in draft status - audience"""
   updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
@@ -3955,15 +3951,10 @@ type Query {
   ): DepositRequestConnection!
 
   """
-  The current language that is set
+  List of all available languages
   
-  Note: this is only temporary, per-browser language
-  
-  For a permanent language on an account level, see "Language" as part of viewer
+  Should be used as a reference for back-end queries when requesting a specific language or adding a new language to a backend list
   """
-  language: Language!
-
-  """List of all available languages"""
   languages: [Language!]!
 
   """Fetch a node by the ID"""
@@ -4433,8 +4424,12 @@ type Rule implements Node {
   """If this rule is deprecated."""
   deprecated: Boolean!
 
-  """The description for this rule."""
-  description: String!
+  """
+  The description for this rule.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String!
 
   """All translations for this description."""
   descriptionTranslations: [Translation!]!
@@ -4450,8 +4445,12 @@ type Rule implements Node {
   """Reference of the rule. Should be used for single lookups."""
   reference: String!
 
-  """The title for this rule."""
-  title: String!
+  """
+  The title for this rule.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String!
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -4514,8 +4513,12 @@ type Series implements Node {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A title for this series."""
-  title: String!
+  """
+  A title for this series.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String!
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -4693,21 +4696,6 @@ type UpdateAccountEmailStatusToPrimaryPayload {
 
   """The account email that was updated to 'confirmed' status"""
   updatedAccountEmail: AccountEmail
-}
-
-"""Input for updating the account language"""
-input UpdateAccountLanguageInput {
-  """The locale to update the language to"""
-  locale: BCP47!
-}
-
-"""Payload of the account language update"""
-type UpdateAccountLanguagePayload {
-  """The account that has the updated language"""
-  Account: Account
-
-  """The new language that is now set"""
-  language: Language
 }
 
 """Input for updating an account's username"""
@@ -5000,18 +4988,6 @@ input UpdateCurationProfileDateOfBirthInput {
 type UpdateCurationProfileDateOfBirthPayload {
   """The updated profile."""
   curationProfile: CurationProfile
-}
-
-"""Input for updating the current language"""
-input UpdateLanguageInput {
-  """The locale to update the language to"""
-  locale: BCP47!
-}
-
-"""Payload of the language update"""
-type UpdateLanguagePayload {
-  """The new language that is now set"""
-  language: Language
 }
 
 """Update post audience."""

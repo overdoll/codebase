@@ -63,7 +63,7 @@ export default function AuditCard ({ auditLog }: Props): JSX.Element {
                     </Box>
                   </Flex>
                 </GridItem>
-                <GridItem align='center' colSpan={1}>
+                <GridItem alignContent='center' colSpan={1}>
                   <Flex w='100%' h='100%' align='center' justify='flex-end'>
                     <Icon
                       icon={isExpanded ? ArrowButtonUp : ArrowButtonDown}

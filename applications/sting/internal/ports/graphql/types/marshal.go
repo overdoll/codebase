@@ -4,9 +4,9 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
@@ -152,11 +152,11 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*Translation
+	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &Translation{
-			Language: &Language{
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -166,7 +166,6 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	return &Audience{
 		ID:                relay.NewID(Audience{}, result.ID()),
-		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		TitleTranslations: titleTranslations,
 		Slug:              result.Slug(),
 		Thumbnail:         res,
@@ -183,11 +182,11 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*Translation
+	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &Translation{
-			Language: &Language{
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -198,7 +197,6 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 	return &Series{
 		ID:                relay.NewID(Series{}, result.ID()),
 		Slug:              result.Slug(),
-		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		TitleTranslations: titleTranslations,
 		Thumbnail:         res,
 		TotalLikes:        result.TotalLikes(),
@@ -213,11 +211,11 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
-	var titleTranslations []*Translation
+	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
-		titleTranslations = append(titleTranslations, &Translation{
-			Language: &Language{
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -229,7 +227,6 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		ID:                relay.NewID(Category{}, result.ID()),
 		Thumbnail:         res,
 		Slug:              result.Slug(),
-		Title:             result.Title().Translate(passport.FromContext(ctx).Language(), ""),
 		TitleTranslations: titleTranslations,
 		TotalLikes:        result.TotalLikes(),
 	}
@@ -243,11 +240,11 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
 	}
 
-	var nameTranslations []*Translation
+	var nameTranslations []*graphql.Translation
 
 	for _, val := range result.Name().Translations() {
-		nameTranslations = append(nameTranslations, &Translation{
-			Language: &Language{
+		nameTranslations = append(nameTranslations, &graphql.Translation{
+			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),
 			},
@@ -257,7 +254,6 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	return &Character{
 		ID:               relay.NewID(Character{}, result.ID()),
-		Name:             result.Name().Translate(passport.FromContext(ctx).Language(), ""),
 		Slug:             result.Slug(),
 		Thumbnail:        res,
 		NameTranslations: nameTranslations,

@@ -69,3 +69,9 @@ func (r *Resolver) PostReport() PostReportResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Rule() RuleResolver {
+	return &resolvers.RuleResolver{
+		App: r.app,
+	}
+}

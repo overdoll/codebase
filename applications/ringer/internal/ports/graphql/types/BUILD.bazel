@@ -13,8 +13,8 @@ go_library(
         "//applications/ringer/internal/domain/details",
         "//applications/ringer/internal/domain/payment",
         "//applications/ringer/internal/domain/payout",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
-        "//libraries/money",
         "//libraries/paging",
     ],
 )

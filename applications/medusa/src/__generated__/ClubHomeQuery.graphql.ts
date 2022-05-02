@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<8ac325fcb98d235593f7ec890e4506e2>>
  * @relayHash b48bab5efa7c32ff1ac8e379ba76ff72
+=======
+ * @generated SignedSource<<f258bc8a19531fd77db19def578bb3c4>>
+ * @relayHash b729e795a87abcba7416e54dd224713d
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID b48bab5efa7c32ff1ac8e379ba76ff72
+=======
+// @relayRequestID b729e795a87abcba7416e54dd224713d
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -71,14 +80,14 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -138,6 +147,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -154,7 +164,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -173,7 +183,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/)
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -184,9 +194,10 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
+<<<<<<< HEAD
           },
           {
             "alias": null,
@@ -253,13 +264,20 @@ return {
             "storageKey": null
           },
           (v6/*: any*/)
+=======
+          }
+>>>>>>> master
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "b48bab5efa7c32ff1ac8e379ba76ff72",
+=======
+    "id": "b729e795a87abcba7416e54dd224713d",
+>>>>>>> master
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

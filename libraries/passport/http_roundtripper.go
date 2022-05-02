@@ -16,15 +16,12 @@ type repository interface {
 	GetSessionDataFromRequest(req *http.Request) (sessionId string, accountId string, error error)
 
 	// GetDeviceDataFromRequest - grabs device data from request
-	GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, language string, error error)
+	GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error)
 
 	// For events, the current passport is stored in context, so it can be easily accessible
 
 	// RevokedAccountSessionEvent - runs when an account session should be revoked
 	RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error
-
-	// UpdateDeviceLanguageEvent - runs when the device's preferred language has been updated
-	UpdateDeviceLanguageEvent(ctx context.Context, res *http.Response, language string) error
 
 	// NewAccountSessionEvent - runs when a new account session should be created
 	NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error
@@ -53,18 +50,13 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 		return nil, err
 	}
 
-	deviceId, ip, userAgent, language, err := h.repository.GetDeviceDataFromRequest(req)
-
-	if err != nil {
-		return nil, err
-	}
+	deviceId, ip, userAgent, err := h.repository.GetDeviceDataFromRequest(req)
 
 	requestPassport, err := issuePassport(
 		sessionId,
 		deviceId,
 		ip,
 		userAgent,
-		language,
 		accountId,
 	)
 
@@ -110,12 +102,6 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 
 	if responsePassport.performedRevokedAccountAction() {
 		if err := h.repository.RevokedAccountSessionEvent(ctx, res, responsePassport.SessionID()); err != nil {
-			return nil, err
-		}
-	}
-
-	if responsePassport.performedDeviceLanguageUpdate() {
-		if err := h.repository.UpdateDeviceLanguageEvent(ctx, res, responsePassport.Language().Locale()); err != nil {
 			return nil, err
 		}
 	}

@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -127,13 +128,6 @@ type IssueClubInfractionInput struct {
 type IssueClubInfractionPayload struct {
 	// The new club infraction history item.
 	ClubInfractionHistory *ClubInfractionHistory `json:"clubInfractionHistory"`
-}
-
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
 }
 
 // General moderator settings.
@@ -318,13 +312,17 @@ type Rule struct {
 	// Reference of the rule. Should be used for single lookups.
 	Reference string `json:"reference"`
 	// The title for this rule.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Title string `json:"title"`
 	// All translations for this title.
-	TitleTranslations []*Translation `json:"titleTranslations"`
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
 	// The description for this rule.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
 	Description string `json:"description"`
 	// All translations for this description.
-	DescriptionTranslations []*Translation `json:"descriptionTranslations"`
+	DescriptionTranslations []*graphql1.Translation `json:"descriptionTranslations"`
 	// If this rule is deprecated.
 	Deprecated bool `json:"deprecated"`
 	// If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied.
@@ -344,13 +342,6 @@ type RuleConnection struct {
 type RuleEdge struct {
 	Node   *Rule  `json:"node"`
 	Cursor string `json:"cursor"`
-}
-
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
 }
 
 // Update post report reason.
@@ -457,6 +448,55 @@ func (e *ClubInfractionHistorySource) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ClubInfractionHistorySource) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Currency string
+
+const (
+	CurrencyUsd Currency = "USD"
+	CurrencyCad Currency = "CAD"
+	CurrencyAud Currency = "AUD"
+	CurrencyJpy Currency = "JPY"
+	CurrencyGbp Currency = "GBP"
+	CurrencyEur Currency = "EUR"
+)
+
+var AllCurrency = []Currency{
+	CurrencyUsd,
+	CurrencyCad,
+	CurrencyAud,
+	CurrencyJpy,
+	CurrencyGbp,
+	CurrencyEur,
+}
+
+func (e Currency) IsValid() bool {
+	switch e {
+	case CurrencyUsd, CurrencyCad, CurrencyAud, CurrencyJpy, CurrencyGbp, CurrencyEur:
+		return true
+	}
+	return false
+}
+
+func (e Currency) String() string {
+	return string(e)
+}
+
+func (e *Currency) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Currency(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Currency", str)
+	}
+	return nil
+}
+
+func (e Currency) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

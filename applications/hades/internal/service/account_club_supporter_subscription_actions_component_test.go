@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -62,7 +63,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	err := gqlClient.Mutate(context.Background(), &becomeSupporter, map[string]interface{}{
 		"input": types.BecomeClubSupporterWithAccountSavedPaymentMethodInput{
 			ClubID:               convertClubIdIdToRelayId(clubId),
-			Currency:             types.CurrencyUsd,
+			Currency:             graphql1.CurrencyUsd,
 			SavedPaymentMethodID: savedPaymentMethodId,
 		},
 	})

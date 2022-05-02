@@ -14,6 +14,7 @@ interface Props {
 const Query = graphql`
   query ThumbnailClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
+      id
       thumbnail {
         ...ResourceIconFragment
       }
@@ -35,7 +36,12 @@ export default function ThumbnailClubSettings ({ query }: Props): JSX.Element {
   return (
     <Stack spacing={4}>
       <Flex w='100%' align='center' justify='center'>
-        <ResourceIcon w={16} h={16} query={queryData.club.thumbnail} />
+        <ResourceIcon
+          seed={queryData.club.id}
+          w={16}
+          h={16}
+          query={queryData.club.thumbnail}
+        />
       </Flex>
       <Collapse>
         <CollapseButton size='md'>

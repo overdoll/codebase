@@ -28,7 +28,6 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*identifier.I
 					s,
 					"",
 					os.Getenv("TESTMAIL_NAMESPACE")+".carrier-"+s+"@inbox.testmail.app",
-					"en",
 				), nil
 			}
 		}

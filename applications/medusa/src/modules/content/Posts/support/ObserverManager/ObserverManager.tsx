@@ -2,6 +2,7 @@ import { createContext, useEffect, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../support/runIfFunction'
+import CanUseDOM from '../../../../operations/CanUseDOM'
 
 interface Context {
   isObserving: boolean
@@ -33,7 +34,11 @@ export function ObserverManagerProvider ({ children }: Props): JSX.Element {
     setObserving(entry.isIntersecting)
   }
 
-  const observer = new IntersectionObserver(observerCallback, observerOptions)
+  let observer: IntersectionObserver
+
+  if (CanUseDOM) {
+    observer = new IntersectionObserver(observerCallback, observerOptions)
+  }
 
   useEffect(() => {
     if (ref.current == null) return
@@ -43,7 +48,7 @@ export function ObserverManagerProvider ({ children }: Props): JSX.Element {
       if (ref.current == null) return
       observer.unobserve(ref.current)
     }
-  }, [ref, observer])
+  }, [ref])
 
   const contextValue = {
     isObserving: observing

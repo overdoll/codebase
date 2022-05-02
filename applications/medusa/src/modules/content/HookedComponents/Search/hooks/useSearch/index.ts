@@ -22,7 +22,7 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
   const queryState = {
     options: {
       fetchKey: 0,
-      fetchPolicy: 'network-only' as FetchPolicy
+      fetchPolicy: 'store-or-network' as FetchPolicy
     },
     variables: defaultValue
   }
@@ -38,7 +38,7 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
   const incrementFetchKey = (previous: number): UseSearchQueryOptions => ({
     options: {
       fetchKey: previous + 1,
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'store-or-network'
     }
   })
 

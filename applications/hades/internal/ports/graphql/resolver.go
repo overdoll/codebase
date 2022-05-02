@@ -74,3 +74,9 @@ func (r *Resolver) AccountTransaction() AccountTransactionResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) CancellationReason() CancellationReasonResolver {
+	return &resolvers.CancellationReasonResolver{
+		App: r.app,
+	}
+}

@@ -18,6 +18,9 @@
       }
     },
     {
+      "settings": {
+        "jest": { "version": 26 }
+      },
       "extends": [
         "plugin:jest/recommended",
         "plugin:testing-library/recommended",

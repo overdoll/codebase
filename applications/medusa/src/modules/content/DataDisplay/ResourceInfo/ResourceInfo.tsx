@@ -12,6 +12,7 @@ interface Props extends HTMLChakraProps<any> {
 
 const Fragment = graphql`
   fragment ResourceInfoFragment on PostContent {
+    id
     isSupporterOnly
     resource {
       type
@@ -29,13 +30,13 @@ export default function ResourceInfo ({
 
   if (data?.resource == null || !data?.resource?.processed) {
     return (
-      <ResourceItem h='100%' query={data?.resource} />
+      <ResourceItem seed={data.id} h='100%' query={data?.resource} />
     )
   }
 
   return (
     <Flex h='100%' position='relative'>
-      <ResourceItem h='100%' query={data.resource} />
+      <ResourceItem seed={data.id} h='100%' query={data.resource} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
         <Stack align='center' spacing={1}>
           <Box p={2} borderRadius='full' bg='dimmers.400' w={8} h={8}>

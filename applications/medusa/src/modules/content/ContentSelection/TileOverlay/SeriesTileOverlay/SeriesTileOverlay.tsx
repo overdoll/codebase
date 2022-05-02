@@ -12,6 +12,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment SeriesTileOverlayFragment on Series {
+    id
     title
     thumbnail {
       ...ResourceItemFragment
@@ -26,9 +27,11 @@ export default function SeriesTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={<ResourceItem
-      query={data.thumbnail}
-                           />}
+    <TileOverlay backdrop={(
+      <ResourceItem
+        query={data.thumbnail}
+        seed={data.id}
+      />)}
     >
       <Stack spacing={1}>
         <Icon w={4} h={4} icon={SeriesIdentifier} fill='gray.00' />

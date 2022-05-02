@@ -4,7 +4,7 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load(":jest.bzl", "jest_test")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 load("@npm//@lingui/cli:index.bzl", "lingui")
-load("@npm//razzle:index.bzl", "razzle")
+load("@npm//next:index.bzl", "next")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -20,10 +20,21 @@ _SRC = glob(
     ],
     exclude = _EXCLUDE,
 ) + [
-    "razzle.config.js",
-    "package.json",
-    "locales.config.js",
+    "next.config.js",
+    "next-env.d.ts",
+    "lingui.config.ts",
 ]
+
+copy_to_bin(
+    name = "copy_static_files",
+    srcs = _SRC,
+)
+
+write_file(
+    name = "write_chdir_script",
+    out = "chdir.js",
+    content = ["process.chdir(__dirname)"],
+)
 
 _BUILD_DEPS = [
     "@npm//@babel/polyfill",
@@ -40,26 +51,9 @@ _BUILD_DEPS = [
     "@npm//@babel/plugin-proposal-optional-chaining",
     "@npm//@babel/plugin-proposal-nullish-coalescing-operator",
     "@npm//@babel/plugin-syntax-top-level-await",
-    "@npm//webpack-dev-middleware",
-    "@npm//webpack-hot-middleware",
-    "@npm//webpack",
-    "@npm//css-loader",
-    "@npm//dotenv-webpack",
-    "@npm//html-loader",
-    "@npm//html-webpack-plugin",
-    "@npm//json-loader",
-    "@npm//file-loader",
-    "@npm//style-loader",
-    "@npm//url-loader",
     "@npm//babel-plugin-relay",
-    "@npm//@pmmmwh/react-refresh-webpack-plugin",
-    "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
-    "@npm//razzle",
     "@npm//@lingui/cli",
-    "@npm//@loadable/webpack-plugin",
-    "@npm//@loadable/babel-plugin",
-    "@npm//webpack-bundle-analyzer",
     "@npm//babel-plugin-istanbul",
     "@npm//babel-runtime",
     "@npm//@babel/preset-typescript",
@@ -70,19 +64,12 @@ _BUILD_DEPS = [
 ]
 
 _RUNTIME_DEPS = [
+    "@npm//@types/node",
     "@npm//react",
     "@npm//react-dom",
     "@npm//react-relay",
     "@npm//relay-runtime",
-    "@npm//express",
     "@npm//react-ssr-prepass",
-    "@npm//axios",
-    "@npm//serialize-javascript",
-    "@npm//@loadable/server",
-    "@npm//@loadable/component",
-    "@npm//helmet",
-    "@npm//cookie-parser",
-    "@npm//winston",
     "@npm//@emotion/react",
     "@npm//@emotion/cache",
     "@npm//@emotion/server",
@@ -99,17 +86,9 @@ _RUNTIME_DEPS = [
     "@npm//@chakra-ui/react",
     "@npm//@emotion/styled",
     "@npm//framer-motion",
-    "@npm//svgo",
-    "@npm//redis",
-    "@npm//express-session",
-    "@npm//connect-redis",
-    "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
-    "@npm//universal-cookie-express",
-    "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
     "@npm//joi",
-    "@npm//express-handlebars",
     "@npm//ua-parser-js",
     "@npm//swiper",
     "@npm//numbro",
@@ -121,14 +100,13 @@ _RUNTIME_DEPS = [
     "@npm//react-cookie",
     "@npm//universal-cookie",
     "@npm//path-to-regexp",
-    "@npm//history",
     "@npm//@lingui/react",
-    "@npm//graphql-playground-html",
     "@npm//url-slug",
     "@npm//usehooks-ts",
     "@npm//react-swipeable",
     "@npm//dinero.js",
     "@npm//@dinero.js/currencies",
+    "@npm//next",
 ]
 
 TEST_DEPS = [
@@ -143,6 +121,7 @@ TEST_DEPS = [
     exclude = _EXCLUDE,
 ) + _BUILD_DEPS + _RUNTIME_DEPS + [
     "@npm//ts-jest",
+    "@npm//jest",
     "@npm//@testing-library/react",
     "@npm//babel-jest",
     "@npm//relay-test-utils",
@@ -158,70 +137,48 @@ filegroup(
     data = _RUNTIME_DEPS,
 )
 
-copy_to_bin(
-    name = "copy_static_files",
-    srcs = _SRC,
-)
-
-write_file(
-    name = "write_chdir_script",
-    out = "chdir.js",
-    content = ["process.chdir(__dirname)"],
-)
-
 jest_test(
     name = "unit",
     srcs = glob(
         [
-            "src/client/**/*",
+            "src/domain/**/*",
             "src/modules/**/*",
+            "src/common/**/*",
         ],
     ),
     jest_config = "jest.config.js",
     deps = TEST_DEPS,
 )
 
-razzle(
+next(
     name = "bundle",
     outs = [
-        "build/assets.json",
-        "build/loadable-stats.json",
-        "build/public",
-        "build/server.js",
+        "build",
     ],
     args = [
-        "--node_options=--max-old-space-size=16000",
-        "--node_options=--require=./$(location chdir.js)",
+        "--bazel_run_from_execroot",
         "build",
-        "--noninteractive",
     ],
+    chdir = "$(RULEDIR)",
     data = [
         "copy_static_files",
-        "chdir.js",
     ] + _RUNTIME_DEPS + _BUILD_DEPS,
-)
-
-nodejs_binary(
-    name = "medusa-production",
-    data = [
-        "chdir.js",
-        ":bundle",
-    ] + glob([
-        "src/server/views/**",
-        "public/**/*",
-    ]) + _RUNTIME_DEPS,
-    entry_point = "build/server.js",
-    templated_args = [
-        "--bazel_patch_module_resolver",
-        "--node_options=--require=./$(rootpath chdir.js)",
-    ],
 )
 
 nodejs_image(
     name = "medusa-production-image",
-    binary = ":medusa-production",
+    args = [
+        "start",
+        "./applications/medusa",
+    ],
+    data = glob(["public/**/*"]) + [
+        "next.config.js",
+        ":bundle",
+    ] + _RUNTIME_DEPS,
+    entry_point = "@npm//:node_modules/next/dist/bin/next",
     env = {
         "NODE_ENV": "production",
+        "PORT": "8000",
     },
     templated_args = [
         "--bazel_patch_module_resolver",

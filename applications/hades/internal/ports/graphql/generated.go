@@ -46,6 +46,7 @@ type ResolverRoot interface {
 	AccountExpiredClubSupporterSubscription() AccountExpiredClubSupporterSubscriptionResolver
 	AccountTransaction() AccountTransactionResolver
 	CCBillTransactionDetails() CCBillTransactionDetailsResolver
+	CancellationReason() CancellationReasonResolver
 	Club() ClubResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
@@ -263,7 +264,7 @@ type ComplexityRoot struct {
 		Deprecated        func(childComplexity int) int
 		ID                func(childComplexity int) int
 		Reference         func(childComplexity int) int
-		Title             func(childComplexity int) int
+		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 	}
 
@@ -455,6 +456,9 @@ type AccountTransactionResolver interface {
 }
 type CCBillTransactionDetailsResolver interface {
 	LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (types.AccountClubSupporterSubscription, error)
+}
+type CancellationReasonResolver interface {
+	Title(ctx context.Context, obj *types.CancellationReason, locale *string) (string, error)
 }
 type ClubResolver interface {
 	SupporterSubscriptionPrice(ctx context.Context, obj *types.Club) (*types.LocalizedPricingPoint, error)
@@ -1519,7 +1523,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.CancellationReason.Title(childComplexity), true
+		args, err := ec.field_CancellationReason_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.CancellationReason.Title(childComplexity, args["locale"].(*string)), true
 
 	case "CancellationReason.titleTranslations":
 		if e.complexity.CancellationReason.TitleTranslations == nil {
@@ -2819,15 +2828,6 @@ type PaymentMethod {
   billingContact: BillingContact
 }
 
-enum Currency {
-  USD
-  CAD
-  AUD
-  JPY
-  GBP
-  EUR
-}
-
 enum CCBillDeclineError {
   GENERAL_SYSTEM_ERROR
   TRANSACTION_DECLINED
@@ -3260,7 +3260,7 @@ type CancellationReason implements Node @key(fields: "id") {
   reference: String!
 
   """The title for this reason."""
-  title: String!
+  title(locale: BCP47): String! @goField(forceResolver: true)
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
@@ -3412,6 +3412,15 @@ type Translation {
   """The translation text."""
   text: String!
 }
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -3430,8 +3439,8 @@ scalar _FieldSet
 directive @external on FIELD_DEFINITION
 directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
-directive @extends on OBJECT
+directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
@@ -3891,6 +3900,21 @@ func (ec *executionContext) field_Account_transactions_args(ctx context.Context,
 	return args, nil
 }
 
+func (ec *executionContext) field_CancellationReason_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Entity_findAccountActiveClubSupporterSubscriptionByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4329,21 +4353,6 @@ func (ec *executionContext) field_Query_ccbillTransactionDetails_args(ctx contex
 		}
 	}
 	args["token"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *bool
-	if tmp, ok := rawArgs["includeDeprecated"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
-		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["includeDeprecated"] = arg0
 	return args, nil
 }
 
@@ -4975,9 +4984,9 @@ func (ec *executionContext) _AccountActiveClubSupporterSubscription_billingCurre
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountActiveClubSupporterSubscription_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.AccountActiveClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -5466,9 +5475,9 @@ func (ec *executionContext) _AccountCancelledClubSupporterSubscription_billingCu
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountCancelledClubSupporterSubscription_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.AccountCancelledClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -6295,9 +6304,9 @@ func (ec *executionContext) _AccountExpiredClubSupporterSubscription_billingCurr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountExpiredClubSupporterSubscription_supporterSince(ctx context.Context, field graphql.CollectedField, obj *types.AccountExpiredClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -7018,9 +7027,9 @@ func (ec *executionContext) _AccountTransaction_currency(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransaction_billedAtDate(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
@@ -7464,9 +7473,9 @@ func (ec *executionContext) _AccountTransactionEvent_currency(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountTransactionEvent_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransactionEvent) (ret graphql.Marshaler) {
@@ -8298,9 +8307,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_subscriptionCurrency(ctx 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_billedInitialPrice(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8403,9 +8412,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_billedCurrency(ctx contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_accountingInitialPrice(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -8508,9 +8517,9 @@ func (ec *executionContext) _CCBillSubscriptionDetails_accountingCurrency(ctx co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CCBillSubscriptionDetails_isRecurring(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
@@ -9200,14 +9209,21 @@ func (ec *executionContext) _CancellationReason_title(ctx context.Context, field
 		Object:     "CancellationReason",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_CancellationReason_title_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
+		return ec.resolvers.CancellationReason().Title(rctx, obj, args["locale"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9254,9 +9270,9 @@ func (ec *executionContext) _CancellationReason_titleTranslations(ctx context.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Translation)
+	res := resTmp.([]*graphql1.Translation)
 	fc.Result = res
-	return ec.marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx, field.Selections, res)
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CancellationReason_deprecated(ctx context.Context, field graphql.CollectedField, obj *types.CancellationReason) (ret graphql.Marshaler) {
@@ -10480,7 +10496,7 @@ func (ec *executionContext) _GenerateRefundAmountForAccountTransactionPayload_re
 	return ec.marshalORefundAmount2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐRefundAmount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -10515,7 +10531,7 @@ func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.
 	return ec.marshalNBCP472string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+func (ec *executionContext) _Language_name(ctx context.Context, field graphql.CollectedField, obj *graphql1.Language) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11389,9 +11405,9 @@ func (ec *executionContext) _Price_currency(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_cancellationReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11911,12 +11927,12 @@ func (ec *executionContext) _RefundAmount_currency(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Currency)
+	res := resTmp.(graphql1.Currency)
 	fc.Result = res
-	return ec.marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, field.Selections, res)
+	return ec.marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -11946,12 +11962,12 @@ func (ec *executionContext) _Translation_language(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Language)
+	res := resTmp.(*graphql1.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *types.Translation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Translation_text(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -12128,14 +12144,14 @@ func (ec *executionContext) ___Directive_description(ctx context.Context, field 
 		Object:     "__Directive",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12144,9 +12160,9 @@ func (ec *executionContext) ___Directive_description(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_locations(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -12300,14 +12316,14 @@ func (ec *executionContext) ___EnumValue_description(ctx context.Context, field 
 		Object:     "__EnumValue",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12316,9 +12332,9 @@ func (ec *executionContext) ___EnumValue_description(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___EnumValue_isDeprecated(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {
@@ -12434,14 +12450,14 @@ func (ec *executionContext) ___Field_description(ctx context.Context, field grap
 		Object:     "__Field",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12450,9 +12466,9 @@ func (ec *executionContext) ___Field_description(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {
@@ -12471,13 +12487,6 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field___Field_args_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -12645,14 +12654,14 @@ func (ec *executionContext) ___InputValue_description(ctx context.Context, field
 		Object:     "__InputValue",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Description, nil
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12661,9 +12670,9 @@ func (ec *executionContext) ___InputValue_description(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___InputValue_type(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {
@@ -12720,6 +12729,38 @@ func (ec *executionContext) ___InputValue_defaultValue(ctx context.Context, fiel
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.DefaultValue, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) ___Schema_description(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Schema",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12996,9 +13037,9 @@ func (ec *executionContext) ___Type_description(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Type_fields(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
@@ -13207,6 +13248,38 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	return ec.marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) ___Type_specifiedByURL(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "__Type",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SpecifiedByURL(), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -13232,7 +13305,7 @@ func (ec *executionContext) unmarshalInputBecomeClubSupporterWithAccountSavedPay
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currency"))
-			it.Currency, err = ec.unmarshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, v)
+			it.Currency, err = ec.unmarshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13379,7 +13452,7 @@ func (ec *executionContext) unmarshalInputGenerateCCBillClubSupporterPaymentLink
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currency"))
-			it.Currency, err = ec.unmarshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx, v)
+			it.Currency, err = ec.unmarshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15660,7 +15733,7 @@ func (ec *executionContext) _CancellationReason(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "reference":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -15670,18 +15743,28 @@ func (ec *executionContext) _CancellationReason(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "title":
+			field := field
+
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CancellationReason_title(ctx, field, obj)
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CancellationReason_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		case "titleTranslations":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CancellationReason_titleTranslations(ctx, field, obj)
@@ -15690,7 +15773,7 @@ func (ec *executionContext) _CancellationReason(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "deprecated":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -15700,7 +15783,7 @@ func (ec *executionContext) _CancellationReason(ctx context.Context, sel ast.Sel
 			out.Values[i] = innerFunc(ctx)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -16452,7 +16535,7 @@ func (ec *executionContext) _GenerateRefundAmountForAccountTransactionPayload(ct
 
 var languageImplementors = []string{"Language"}
 
-func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Language) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -17084,7 +17167,7 @@ func (ec *executionContext) _RefundAmount(ctx context.Context, sel ast.Selection
 
 var translationImplementors = []string{"Translation"}
 
-func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *types.Translation) graphql.Marshaler {
+func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Translation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, translationImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -17470,6 +17553,13 @@ func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("__Schema")
+		case "description":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Schema_description(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "types":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec.___Schema_types(ctx, field, obj)
@@ -17597,6 +17687,13 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 		case "ofType":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec.___Type_ofType(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "specifiedByURL":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec.___Type_specifiedByURL(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -18155,13 +18252,13 @@ func (ec *executionContext) unmarshalNCreateCancellationReasonInput2overdollᚋa
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, v interface{}) (types.Currency, error) {
-	var res types.Currency
+func (ec *executionContext) unmarshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx context.Context, v interface{}) (graphql1.Currency, error) {
+	var res graphql1.Currency
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCurrency2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurrency(ctx context.Context, sel ast.SelectionSet, v types.Currency) graphql.Marshaler {
+func (ec *executionContext) marshalNCurrency2overdollᚋlibrariesᚋgraphqlᚐCurrency(ctx context.Context, sel ast.SelectionSet, v graphql1.Currency) graphql.Marshaler {
 	return v
 }
 
@@ -18327,7 +18424,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphqlᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *graphql1.Language) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -18460,7 +18557,7 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -18484,7 +18581,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx, sel, v[i])
+			ret[i] = ec.marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18504,7 +18601,7 @@ func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋapplicationsᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *types.Translation) graphql.Marshaler {
+func (ec *executionContext) marshalNTranslation2ᚖoverdollᚋlibrariesᚋgraphqlᚐTranslation(ctx context.Context, sel ast.SelectionSet, v *graphql1.Translation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -18558,11 +18655,7 @@ func (ec *executionContext) marshalN_Any2map(ctx context.Context, sel ast.Select
 func (ec *executionContext) unmarshalN_Any2ᚕmapᚄ(ctx context.Context, v interface{}) ([]map[string]interface{}, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]map[string]interface{}, len(vSlice))
@@ -18714,11 +18807,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]string, len(vSlice))
@@ -18925,11 +19014,7 @@ func (ec *executionContext) unmarshalOAccountClubSupporterSubscriptionStatus2ᚕ
 	}
 	var vSlice []interface{}
 	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
+		vSlice = graphql.CoerceList(v)
 	}
 	var err error
 	res := make([]types.AccountClubSupporterSubscriptionStatus, len(vSlice))
@@ -19013,6 +19098,22 @@ func (ec *executionContext) marshalOAccountTransactionType2ᚖoverdollᚋapplica
 	return v
 }
 
+func (ec *executionContext) unmarshalOBCP472ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalString(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOBCP472ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(*v)
+	return res
+}
+
 func (ec *executionContext) marshalOBecomeClubSupporterWithAccountSavedPaymentMethodPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐBecomeClubSupporterWithAccountSavedPaymentMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.BecomeClubSupporterWithAccountSavedPaymentMethodPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -19040,7 +19141,8 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 }
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
-	return graphql.MarshalBoolean(v)
+	res := graphql.MarshalBoolean(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOBoolean2ᚖbool(ctx context.Context, v interface{}) (*bool, error) {
@@ -19055,7 +19157,8 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalBoolean(*v)
+	res := graphql.MarshalBoolean(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOCCBillDeclineError2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCCBillDeclineError(ctx context.Context, v interface{}) (*types.CCBillDeclineError, error) {
@@ -19142,7 +19245,8 @@ func (ec *executionContext) marshalODate2ᚖtimeᚐTime(ctx context.Context, sel
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql1.MarshalDate(*v)
+	res := graphql1.MarshalDate(*v)
+	return res
 }
 
 func (ec *executionContext) marshalODeleteAccountSavedPaymentMethodPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountSavedPaymentMethodPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountSavedPaymentMethodPayload) graphql.Marshaler {
@@ -19192,7 +19296,8 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalInt(*v)
+	res := graphql.MarshalInt(*v)
+	return res
 }
 
 func (ec *executionContext) marshalORefundAccountTransactionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐRefundAccountTransactionPayload(ctx context.Context, sel ast.SelectionSet, v *types.RefundAccountTransactionPayload) graphql.Marshaler {
@@ -19215,7 +19320,8 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 }
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	return graphql.MarshalString(v)
+	res := graphql.MarshalString(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
@@ -19230,7 +19336,8 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalString(*v)
+	res := graphql.MarshalString(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
@@ -19245,7 +19352,8 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalTime(*v)
+	res := graphql.MarshalTime(*v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOURI2ᚖoverdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, v interface{}) (*graphql1.URI, error) {

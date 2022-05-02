@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3b1731f28203e90d83d8eb67cf30fcd6>>
- * @relayHash db7b9c3704c555cea9800f1838b889f5
+ * @generated SignedSource<<4dab937305f876e80c206da4cf6733da>>
+ * @relayHash 70fbb4d71c399b8255302f037eeb32cc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID db7b9c3704c555cea9800f1838b889f5
+// @relayRequestID 70fbb4d71c399b8255302f037eeb32cc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,6 +19,7 @@ export type ThumbnailClubSettingsQuery$variables = {
 export type ThumbnailClubSettingsQueryVariables = ThumbnailClubSettingsQuery$variables;
 export type ThumbnailClubSettingsQuery$data = {
   readonly club: {
+    readonly id: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
@@ -50,14 +51,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -75,6 +76,7 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -117,6 +119,7 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -133,7 +136,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -152,7 +155,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -163,18 +166,17 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v3/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
-          },
-          (v3/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "db7b9c3704c555cea9800f1838b889f5",
+    "id": "70fbb4d71c399b8255302f037eeb32cc",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",
@@ -183,6 +185,6 @@ return {
 };
 })();
 
-(node as any).hash = "909ac3e92c713b5c0b4d697241033214";
+(node as any).hash = "df6da13552dc36153af2b8d70f6d6c12";
 
 export default node;

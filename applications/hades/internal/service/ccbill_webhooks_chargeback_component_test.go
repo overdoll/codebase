@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -64,6 +65,6 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", event.Timestamp.String(), "correct timestamp")
 	require.Equal(t, 699, event.Amount, "correct amount")
-	require.Equal(t, types.CurrencyUsd, event.Currency, "correct currency")
+	require.Equal(t, graphql.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", event.Reason, "correct reason")
 }

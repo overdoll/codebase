@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/passport"
 )
 
@@ -28,14 +29,14 @@ func (r ClubResolver) SupporterSubscriptionPrice(ctx context.Context, obj *types
 	for _, res := range allResults {
 		results = append(results, &types.Price{
 			Amount:   int(res.Amount()),
-			Currency: types.MarshalCurrencyToGraphQL(ctx, res.Currency()),
+			Currency: graphql.MarshalCurrencyToGraphQL(ctx, res.Currency()),
 		})
 	}
 
 	return &types.LocalizedPricingPoint{
 		LocalizedPrice: &types.Price{
 			Amount:   int(localizedResult.Amount()),
-			Currency: types.MarshalCurrencyToGraphQL(ctx, localizedResult.Currency()),
+			Currency: graphql.MarshalCurrencyToGraphQL(ctx, localizedResult.Currency()),
 		},
 		Prices: results,
 	}, nil

@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
@@ -16,8 +17,8 @@ import (
 	"sort"
 )
 
-func MarshalLanguageToGraphQL(result *localization.Language) *Language {
-	return &Language{Locale: result.Locale(), Name: result.Name()}
+func MarshalLanguageToGraphQL(result *localization.Language) *graphql.Language {
+	return &graphql.Language{Locale: result.Locale(), Name: result.Name()}
 }
 
 func MarshalAccountToGraphQL(result *account.Account) *Account {
@@ -40,7 +41,6 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Avatar:                  accountAvatar,
 		Username:                result.Username(),
 		IsSecure:                result.IsSecure(),
-		Language:                MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:                 result.IsStaff(),
 		IsModerator:             result.IsModerator(),
 		Lock:                    MarshalAccountLockToGraphQL(result),

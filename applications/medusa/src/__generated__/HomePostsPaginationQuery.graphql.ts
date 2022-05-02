@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d4c2ce530f8fbf498ec9eabf414c1a1d>>
- * @relayHash 4e13e8d6257bd5e89bef2d86bb6b2265
+ * @generated SignedSource<<bf7d541243894c9a428e307a307427b9>>
+ * @relayHash fc97995418a104a7097a333de5678fe1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4e13e8d6257bd5e89bef2d86bb6b2265
+// @relayRequestID fc97995418a104a7097a333de5678fe1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -301,10 +301,10 @@ return {
                     "name": "categories",
                     "plural": true,
                     "selections": [
+                      (v5/*: any*/),
                       (v9/*: any*/),
                       (v12/*: any*/),
-                      (v11/*: any*/),
-                      (v5/*: any*/)
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -316,6 +316,7 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -332,8 +333,7 @@ return {
                       },
                       (v10/*: any*/),
                       (v9/*: any*/),
-                      (v11/*: any*/),
-                      (v5/*: any*/)
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -405,7 +405,7 @@ return {
     ]
   },
   "params": {
-    "id": "4e13e8d6257bd5e89bef2d86bb6b2265",
+    "id": "fc97995418a104a7097a333de5678fe1",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

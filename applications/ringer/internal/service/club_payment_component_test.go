@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/ringer/internal/app/workflows"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
 	ringer "overdoll/applications/ringer/proto"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -21,7 +22,7 @@ type ClubPaymentModified struct {
 	Reference         string
 	Source            types.ClubPaymentSource
 	Status            types.ClubPaymentStatus
-	Currency          types.Currency
+	Currency          graphql1.Currency
 	BaseAmount        int
 	PlatformFeeAmount int
 	FinalAmount       int
@@ -135,14 +136,14 @@ func TestClubPaymentDeposit(t *testing.T) {
 		require.Equal(t, 30, targetPayment.PlatformFeeAmount, "correct platform fee amount")
 		require.Equal(t, 70, targetPayment.FinalAmount, "correct final amount")
 		require.Equal(t, false, targetPayment.IsDeduction, "not a deduction")
-		require.Equal(t, types.CurrencyUsd, targetPayment.Currency, "correct currency")
+		require.Equal(t, graphql1.CurrencyUsd, targetPayment.Currency, "correct currency")
 
 		paymentId = targetPayment.Reference
 
 		// check the balance
 		balances := getClubBalances(t, gClient, clubId)
 		require.Equal(t, 70, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
-		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
+		require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
@@ -160,11 +161,11 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	// pending balance should have 0 now
 	require.Equal(t, 0, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
-	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
+	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 
 	// transferred to the current balance
 	require.Equal(t, 70, balances.Entities[0].Club.Balance.Amount, "correct club balance")
-	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
+	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
 
 	var allPayments Payments
 
@@ -226,14 +227,14 @@ func TestClubPaymentDeduction(t *testing.T) {
 		require.Equal(t, 15, targetPayment.PlatformFeeAmount, "correct platform fee amount")
 		require.Equal(t, 35, targetPayment.FinalAmount, "correct final amount")
 		require.Equal(t, true, targetPayment.IsDeduction, "is a deduction")
-		require.Equal(t, types.CurrencyUsd, targetPayment.Currency, "correct currency")
+		require.Equal(t, graphql1.CurrencyUsd, targetPayment.Currency, "correct currency")
 
 		paymentId = targetPayment.Reference
 
 		// check the balance
 		balances := getClubBalances(t, gClient, clubId)
 		require.Equal(t, -35, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
-		require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
+		require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 		require.Equal(t, 700, balances.Entities[0].Club.Balance.Amount, "correct club balance of settled payment")
 	}, time.Second)
 
@@ -252,9 +253,9 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	// pending balance should have 0 now
 	require.Equal(t, 0, balances.Entities[0].Club.PendingBalance.Amount, "correct club pending balance")
-	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
+	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.PendingBalance.Currency, "correct club pending balance currency")
 
 	// transferred to the current balance
 	require.Equal(t, 665, balances.Entities[0].Club.Balance.Amount, "correct club balance")
-	require.Equal(t, types.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
+	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
 }

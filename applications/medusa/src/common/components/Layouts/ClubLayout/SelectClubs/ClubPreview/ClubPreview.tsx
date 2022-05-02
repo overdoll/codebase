@@ -12,6 +12,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubPreviewFragment on Club {
+    id
     name
     slug
     thumbnail {
@@ -29,7 +30,11 @@ export default function ClubPreview ({
     <Flex
       align='center'
     >
-      <ResourceIcon mr={3} query={data?.thumbnail as ResourceIconFragment$key} />
+      <ResourceIcon
+        seed={data.id}
+        mr={3}
+        query={data?.thumbnail as ResourceIconFragment$key}
+      />
       <Box
         whiteSpace='nowrap'
         textOverflow='ellipsis'
