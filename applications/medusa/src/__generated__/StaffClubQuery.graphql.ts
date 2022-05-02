@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<826b363b78652ff26d4c9986f74b392f>>
- * @relayHash a2711168f948055ff5f18f95266ce2df
-=======
- * @generated SignedSource<<72bab8749214277d1e4992eab6c551d6>>
- * @relayHash bc56bad2fc0e5f44afaf773cb814511e
->>>>>>> master
+ * @generated SignedSource<<543dae394cd9812195f831c145e1def6>>
+ * @relayHash f8d102c64cdf2586d03d93e92ccd8b88
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID a2711168f948055ff5f18f95266ce2df
-=======
-// @relayRequestID bc56bad2fc0e5f44afaf773cb814511e
->>>>>>> master
+// @relayRequestID f8d102c64cdf2586d03d93e92ccd8b88
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -64,28 +55,21 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-<<<<<<< HEAD
-  "name": "name",
-=======
   "name": "id",
->>>>>>> master
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
-<<<<<<< HEAD
+  "name": "name",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-=======
->>>>>>> master
+  "name": "url",
   "storageKey": null
 },
 v6 = [
@@ -97,7 +81,7 @@ v6 = [
     "name": "urls",
     "plural": true,
     "selections": [
-      (v4/*: any*/),
+      (v5/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -116,7 +100,7 @@ v6 = [
     "name": "videoThumbnail",
     "plural": false,
     "selections": [
-      (v4/*: any*/)
+      (v5/*: any*/)
     ],
     "storageKey": null
   },
@@ -127,11 +111,7 @@ v6 = [
     "name": "type",
     "storageKey": null
   },
-<<<<<<< HEAD
-  (v5/*: any*/)
-=======
   (v3/*: any*/)
->>>>>>> master
 ],
 v7 = [
   {
@@ -281,16 +261,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
-<<<<<<< HEAD
-=======
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
->>>>>>> master
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -320,10 +291,6 @@ return {
             ],
             "storageKey": null
           },
-<<<<<<< HEAD
-          (v5/*: any*/),
-=======
->>>>>>> master
           {
             "alias": null,
             "args": (v7/*: any*/),
@@ -348,11 +315,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-<<<<<<< HEAD
-                      (v5/*: any*/),
-=======
                       (v3/*: any*/),
->>>>>>> master
                       {
                         "alias": null,
                         "args": null,
@@ -382,11 +345,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-<<<<<<< HEAD
-                          (v5/*: any*/)
-=======
                           (v3/*: any*/)
->>>>>>> master
                         ],
                         "storageKey": null
                       },
@@ -426,6 +385,7 @@ return {
             "name": "owner",
             "plural": false,
             "selections": [
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -459,7 +419,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v5/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -504,7 +464,7 @@ return {
                     "name": "country",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -512,15 +472,14 @@ return {
                         "name": "emoji",
                         "storageKey": null
                       },
-                      (v5/*: any*/)
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
-              },
-              (v5/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -539,7 +498,7 @@ return {
                 "name": "percent",
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -553,7 +512,7 @@ return {
             "selections": [
               (v10/*: any*/),
               (v11/*: any*/),
-              (v5/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -565,7 +524,6 @@ return {
             "name": "payouts",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -593,7 +551,7 @@ return {
                         "name": "depositDate",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v3/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -656,7 +614,7 @@ return {
                         "name": "settlementDate",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v3/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -664,12 +622,8 @@ return {
                   (v8/*: any*/)
                 ],
                 "storageKey": null
-<<<<<<< HEAD
               },
               (v9/*: any*/)
-=======
-              }
->>>>>>> master
             ],
             "storageKey": "payments(first:5)"
           },
@@ -688,11 +642,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "a2711168f948055ff5f18f95266ce2df",
-=======
-    "id": "bc56bad2fc0e5f44afaf773cb814511e",
->>>>>>> master
+    "id": "f8d102c64cdf2586d03d93e92ccd8b88",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

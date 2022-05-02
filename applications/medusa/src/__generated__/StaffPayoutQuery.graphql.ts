@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d14c139eaa3120faf107455e120d5e93>>
- * @relayHash 68da0474b2e4fcb274103c18742a4b23
+ * @generated SignedSource<<2f77fa017c301e0747ffb9e4c632922c>>
+ * @relayHash 07ad7d0cfa01bda503f7b20647dcffbd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 68da0474b2e4fcb274103c18742a4b23
+// @relayRequestID 07ad7d0cfa01bda503f7b20647dcffbd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -47,14 +47,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -139,6 +139,7 @@ return {
             "name": "payoutAccount",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -162,7 +163,7 @@ return {
                     "name": "urls",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -181,7 +182,7 @@ return {
                     "name": "videoThumbnail",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/)
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -192,22 +193,21 @@ return {
                     "name": "type",
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
-              },
-              (v3/*: any*/)
+              }
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "68da0474b2e4fcb274103c18742a4b23",
+    "id": "07ad7d0cfa01bda503f7b20647dcffbd",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

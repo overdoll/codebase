@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<8ac325fcb98d235593f7ec890e4506e2>>
- * @relayHash b48bab5efa7c32ff1ac8e379ba76ff72
-=======
- * @generated SignedSource<<f258bc8a19531fd77db19def578bb3c4>>
- * @relayHash b729e795a87abcba7416e54dd224713d
->>>>>>> master
+ * @generated SignedSource<<afa14cc4ad93577892d559f6b303fd29>>
+ * @relayHash 14fc2e92ce0c4bb66d7b63d0f56fb729
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID b48bab5efa7c32ff1ac8e379ba76ff72
-=======
-// @relayRequestID b729e795a87abcba7416e54dd224713d
->>>>>>> master
+// @relayRequestID 14fc2e92ce0c4bb66d7b63d0f56fb729
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -197,7 +188,6 @@ return {
               (v5/*: any*/)
             ],
             "storageKey": null
-<<<<<<< HEAD
           },
           {
             "alias": null,
@@ -221,7 +211,7 @@ return {
                 "name": "currency",
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -251,7 +241,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v6/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "type": "AccountPaxumPayoutMethod",
                     "abstractKey": null
@@ -259,25 +249,17 @@ return {
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
-          },
-          (v6/*: any*/)
-=======
           }
->>>>>>> master
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "b48bab5efa7c32ff1ac8e379ba76ff72",
-=======
-    "id": "b729e795a87abcba7416e54dd224713d",
->>>>>>> master
+    "id": "14fc2e92ce0c4bb66d7b63d0f56fb729",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
