@@ -1,5 +1,5 @@
 import { useDisclosure, UseDisclosureProps, UseDisclosureReturn } from '@chakra-ui/react'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useUpdateEffect } from 'usehooks-ts'
 
 /**
@@ -35,7 +35,7 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
 
   const onOpen = (): void => {
     onOpenAction()
-    void Router.push({
+    void router.push({
       pathname: router.pathname,
       hash: defineHash,
       query: router.query
@@ -46,7 +46,10 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
     onCloseAction()
     const extractedHash = router.asPath.split('#')?.[1]
     if (extractedHash?.includes(defineHash)) {
-      Router.back()
+      void router.replace({
+        pathname: router.pathname,
+        query: router.query
+      }, undefined, { shallow: true })
     }
   }
 

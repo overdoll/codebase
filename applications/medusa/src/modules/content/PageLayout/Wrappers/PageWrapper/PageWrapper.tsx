@@ -18,7 +18,10 @@ export default function PageWrapper ({
         w={['full', 'sm', 'md', 'lg']}
         pl={[1, 0]}
         pr={[1, 0]}
-        mb={6}
+        mb={{
+          base: 24,
+          md: 6
+        }}
         h='100%'
       >
         {children}

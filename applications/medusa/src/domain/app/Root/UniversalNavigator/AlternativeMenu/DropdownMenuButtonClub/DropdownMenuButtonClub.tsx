@@ -49,11 +49,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
       }}
       colorScheme='teal'
       icon={ClubPeopleGroup}
-      label={
-        <Trans>
-          {selectedClub.name}
-        </Trans>
-      }
+      label={selectedClub.name}
     />
   )
 }

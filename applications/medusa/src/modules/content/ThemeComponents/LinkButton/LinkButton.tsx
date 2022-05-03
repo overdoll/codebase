@@ -13,8 +13,8 @@ export default function LinkButton ({
   ...rest
 }: Props): JSX.Element {
   return (
-    <Link href={href}>
-      <Button {...rest}>
+    <Link passHref href={href}>
+      <Button as='a' {...rest}>
         {children}
       </Button>
     </Link>

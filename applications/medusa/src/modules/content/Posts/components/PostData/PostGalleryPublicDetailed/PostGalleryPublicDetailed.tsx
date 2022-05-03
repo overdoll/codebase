@@ -39,6 +39,8 @@ export default function PostGalleryPublicDetailed ({
   return (
     <Box>
       <Swiper
+        grabCursor
+        spaceBetween={20}
         observer
         speed={100}
         onSwiper={(swiper) =>

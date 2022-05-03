@@ -1,18 +1,15 @@
-import { Box, HTMLChakraProps, Tooltip } from '@chakra-ui/react'
+import { Box, ButtonProps, Tooltip } from '@chakra-ui/react'
 import { Icon } from '../../../../PageLayout'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import Button from '../../../../../form/Button/Button'
 import IconButton from '../../../../../form/IconButton/IconButton'
-import { ForwardRefProp } from '@//:types/components'
 
-interface Props extends HTMLChakraProps<any>, ForwardRefProp {
+interface Props extends ButtonProps {
   icon?: FunctionComponent<any>
   label: string
-  onClick?: () => void
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
-  as?: any
 }
 
 const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
@@ -22,7 +19,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   children,
   colorScheme = 'gray',
   isActive = false,
-  as
+  ...rest
 }: Props, forwardRef): JSX.Element => {
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
@@ -59,9 +56,9 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
     return (
       <ButtonWrapper>
         <Button
-          as={as}
           p={0}
           {...ButtonProps}
+          {...rest}
         >
           {children}
         </Button>
@@ -72,7 +69,6 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   return (
     <ButtonWrapper>
       <IconButton
-        as={as}
         aria-label={label}
         icon={<Icon
           icon={icon}
@@ -81,6 +77,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
           h='38px'
               />}
         {...ButtonProps}
+        {...rest}
       />
     </ButtonWrapper>
   )

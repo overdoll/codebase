@@ -12,6 +12,8 @@ import {
 } from '@//:modules/content/ThemeComponents/Table/Table'
 import { Trans } from '@lingui/macro'
 import StaffDepositRequestCard from './StaffDepositRequestCard/StaffDepositRequestCard'
+import { Stack } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: PreloadedQuery<StaffDepositRequestsQuery>
@@ -59,44 +61,58 @@ export default function StaffDepositRequests ({ query }: Props): JSX.Element {
   )
 
   return (
-    <Table>
-      <TableHeader>
-        <TableHeaderRow columns={5}>
-          <TableHeaderColumnText column={2}>
-            <Trans>
-              Total
-            </Trans>
-          </TableHeaderColumnText>
-          <TableHeaderColumnText column={1}>
-            <Trans>
-              Method
-            </Trans>
-          </TableHeaderColumnText>
-          <TableHeaderColumnText column={2}>
-            <Trans>
-              Due Date
-            </Trans>
-          </TableHeaderColumnText>
-        </TableHeaderRow>
-      </TableHeader>
-      <TableBody>
-        {data.depositRequests.edges.map((item, index) => (
-          <TableBodyRowLink
-            key={index}
-            href={{
-              pathname: '/staff/billing/deposit-requests/[reference]',
-              query: { reference: item.node.reference }
-            }}
-          >
-            <StaffDepositRequestCard query={item.node} />
-          </TableBodyRowLink>
-        ))}
-        <TableBodyRowLoadMore
-          hasNext={hasNext}
-          onLoadNext={() => loadNext(5)}
-          isLoadingNext={isLoadingNext}
-        />
-      </TableBody>
-    </Table>
+    <Stack spacing={2}>
+      <Alert colorScheme='teal' status='info'>
+        <AlertIcon />
+        <AlertDescription
+          align='center'
+          lineHeight={5}
+          fontSize='sm'
+        >
+          <Trans>
+            You should wait at least 2 days for a deposit request to have all payouts processed correctly.
+          </Trans>
+        </AlertDescription>
+      </Alert>
+      <Table>
+        <TableHeader>
+          <TableHeaderRow columns={5}>
+            <TableHeaderColumnText column={2}>
+              <Trans>
+                Total
+              </Trans>
+            </TableHeaderColumnText>
+            <TableHeaderColumnText column={1}>
+              <Trans>
+                Method
+              </Trans>
+            </TableHeaderColumnText>
+            <TableHeaderColumnText column={2}>
+              <Trans>
+                Due Date
+              </Trans>
+            </TableHeaderColumnText>
+          </TableHeaderRow>
+        </TableHeader>
+        <TableBody>
+          {data.depositRequests.edges.map((item, index) => (
+            <TableBodyRowLink
+              key={index}
+              href={{
+                pathname: '/staff/billing/deposit-requests/[reference]',
+                query: { reference: item.node.reference }
+              }}
+            >
+              <StaffDepositRequestCard query={item.node} />
+            </TableBodyRowLink>
+          ))}
+          <TableBodyRowLoadMore
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(5)}
+            isLoadingNext={isLoadingNext}
+          />
+        </TableBody>
+      </Table>
+    </Stack>
   )
 }

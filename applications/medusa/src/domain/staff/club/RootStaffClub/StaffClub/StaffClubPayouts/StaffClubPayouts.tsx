@@ -3,14 +3,14 @@ import { StaffClubPayoutsFragment$key } from '@//:artifacts/StaffClubPayoutsFrag
 import { Box, Stack } from '@chakra-ui/react'
 import ClubBalance
   from '../../../../../club/revenue/root/RootClubRevenue/ClubRevenue/ClubFullBalance/ClubBalance/ClubBalance'
-import { PayoutMethod } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import StatisticHeader from '../../../../../../common/components/StatisticHeader/StatisticHeader'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
-import UpdateClubPlatformFeeForm from './UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm'
 import InitiateClubPayoutForm from './InitiateClubPayoutForm/InitiateClubPayoutForm'
 import StaffClubPayoutsList from './StaffClubPayoutsList/StaffClubPayoutsList'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import displayPrice from '@//:modules/support/displayPrice'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   query: StaffClubPayoutsFragment$key
@@ -18,8 +18,9 @@ interface Props {
 
 const Fragment = graphql`
   fragment StaffClubPayoutsFragment on Club {
-    platformFee {
-      percent
+    pendingBalance {
+      currency
+      amount
     }
     ...ClubBalanceFragment
     ...UpdateClubPlatformFeeFormFragment
@@ -31,10 +32,24 @@ const Fragment = graphql`
 export default function StaffClubPayouts ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
+  const pendingBalance = displayPrice({
+    amount: data.pendingBalance.amount,
+    currency: data.pendingBalance.currency,
+    locale: locale
+  })
+
   return (
     <Stack spacing={8}>
       <Stack spacing={2}>
         <ClubBalance query={data} />
+        <SmallBackgroundBox>
+          <Trans>
+            Pending {pendingBalance}
+          </Trans>
+        </SmallBackgroundBox>
         <Collapse>
           <CollapseButton>
             <Trans>

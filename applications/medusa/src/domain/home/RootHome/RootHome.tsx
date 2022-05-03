@@ -7,6 +7,7 @@ import Home from './Home/Home'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import Head from 'next/head'
 
 interface Props {
   queryRefs: {
@@ -21,13 +22,18 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   )
 
   return (
-    <PageWrapper>
-      <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-        <Suspense fallback={<SkeletonPost />}>
-          <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
-        </Suspense>
-      </QueryErrorBoundary>
-    </PageWrapper>
+    <>
+      <Head>
+        <title>Find Your Club - overdoll.com</title>
+      </Head>
+      <PageWrapper>
+        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
+          <Suspense fallback={<SkeletonPost />}>
+            <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </PageWrapper>
+    </>
   )
 }
 

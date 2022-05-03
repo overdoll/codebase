@@ -1,16 +1,14 @@
-import { Heading, HStack } from '@chakra-ui/react'
+import { ButtonProps, Flex, Heading, HStack } from '@chakra-ui/react'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import { ShareExternalLink } from '@//:assets/icons/interface'
 import { ClickableBox, Icon } from '../../../../PageLayout'
 
-interface Props {
+interface Props extends Omit<ButtonProps, 'title'> {
   title: ReactNode
   icon?: FunctionComponent<any> | undefined
-  colorScheme?: string
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
   isActive: boolean
-  onClick?: (() => void) | undefined
 }
 
 const VerticalNavigationButtonBody = forwardRef<any, Props>(({
@@ -45,50 +43,54 @@ const VerticalNavigationButtonBody = forwardRef<any, Props>(({
   }
 
   return (
-    <ClickableBox
-      ref={forwardedRef}
-      h={10}
-      borderRadius='md'
-      _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'initial' }}
-      _active={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'transparent' }}
-      bg={isActive
-        ? 'gray.900'
-        : buttonType === 'primary'
-          ? `${colorScheme}.400`
-          : 'transparent'}
-      onClick={onClick}
-    >
-      <HStack
-        w='100%'
-        align='center'
-        justify='space-between'
-        spacing={4}
-        px={1}
+    <Flex h='100%' w='100%'>
+      <ClickableBox
+        ref={forwardedRef}
+        h={10}
+        borderRadius='md'
+        _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'initial' }}
+        _active={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'transparent' }}
+        bg={isActive
+          ? 'gray.900'
+          : buttonType === 'primary'
+            ? `${colorScheme}.400`
+            : 'transparent'}
+        onClick={onClick}
+        {...rest}
       >
-        <HStack spacing={3} align='center'>
-          <IconComponent />
-          <Heading
-            color={isActive
-              ? 'gray.00'
-              : buttonType === 'primary'
-                ? `${colorScheme}.900`
-                : 'gray.200'}
-            fontSize='md'
-            lineHeight={1}
-          >
-            {title}
-          </Heading>
+        <HStack
+          w='100%'
+          h='100%'
+          align='center'
+          justify='space-between'
+          spacing={4}
+          px={1}
+        >
+          <HStack spacing={3} align='center'>
+            <IconComponent />
+            <Heading
+              color={isActive
+                ? 'gray.00'
+                : buttonType === 'primary'
+                  ? `${colorScheme}.900`
+                  : 'gray.200'}
+              fontSize='md'
+              lineHeight={1}
+            >
+              {title}
+            </Heading>
+          </HStack>
+          {isExternal && (
+            <Icon
+              icon={ShareExternalLink}
+              w={4}
+              h={4}
+              fill={isActive ? 'gray.00' : 'gray.200'}
+            />
+          )}
         </HStack>
-        {isExternal && (
-          <Icon
-            icon={ShareExternalLink}
-            w={4}
-            h={4}
-            fill={isActive ? 'gray.00' : 'gray.200'}
-          />
-        )}
-      </HStack>
-    </ClickableBox>
+      </ClickableBox>
+    </Flex>
   )
 })
 

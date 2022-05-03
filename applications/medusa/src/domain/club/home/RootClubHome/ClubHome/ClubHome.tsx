@@ -5,12 +5,12 @@ import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
-import ClubBalance from '../../../revenue/root/RootClubRevenue/ClubRevenue/ClubFullBalance/ClubBalance/ClubBalance'
 import { ClubPeopleGroup } from '@//:assets/icons'
 import StatisticHeader from '../../../../../common/components/StatisticHeader/StatisticHeader'
-import ClubPayoutMethodAlert from './ClubPayoutMethodAlert/ClubPayoutMethodAlert'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import { useRouter } from 'next/router'
+import ClubBalanceHeader from './ClubBalanceHeader/ClubBalanceHeader'
+import ClubSupporterHeader from './ClubSupporterHeader/ClubSupporterHeader'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -23,8 +23,8 @@ const Query = graphql`
       membersCount
       viewerIsOwner
       ...LargeClubHeaderFragment
-      ...ClubBalanceFragment
-      ...ClubPayoutMethodAlertFragment
+      ...ClubBalanceHeaderFragment
+      ...ClubSupporterHeaderFragment
     }
   }
 `
@@ -72,16 +72,8 @@ export default function ClubHome ({ query }: Props): JSX.Element {
               {number}
             </StatisticHeader>
           </LinkTile>
-          <Stack spacing={2}>
-            <LinkTile href={{
-              pathname: '/club/[slug]/revenue',
-              query: { slug: slug as string }
-            }}
-            >
-              <ClubBalance query={queryData.club} />
-            </LinkTile>
-            <ClubPayoutMethodAlert query={queryData.club} />
-          </Stack>
+          <ClubSupporterHeader query={queryData.club} />
+          <ClubBalanceHeader query={queryData.club} />
         </Stack>
       </Stack>
     </>

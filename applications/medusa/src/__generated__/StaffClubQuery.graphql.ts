@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<543dae394cd9812195f831c145e1def6>>
- * @relayHash f8d102c64cdf2586d03d93e92ccd8b88
+ * @generated SignedSource<<a14de6232fafed083c93199d7123dde1>>
+ * @relayHash 098765da4dfca42a2cc0be3afdaa2e40
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f8d102c64cdf2586d03d93e92ccd8b88
+// @relayRequestID 098765da4dfca42a2cc0be3afdaa2e40
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -156,14 +156,14 @@ v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "amount",
+  "name": "currency",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "currency",
+  "name": "amount",
   "storageKey": null
 },
 v12 = [
@@ -486,18 +486,13 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "ClubPlatformFee",
+            "concreteType": "Balance",
             "kind": "LinkedField",
-            "name": "platformFee",
+            "name": "pendingBalance",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "percent",
-                "storageKey": null
-              },
+              (v10/*: any*/),
+              (v11/*: any*/),
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -510,8 +505,8 @@ return {
             "name": "balance",
             "plural": false,
             "selections": [
-              (v10/*: any*/),
               (v11/*: any*/),
+              (v10/*: any*/),
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -542,8 +537,8 @@ return {
                     "selections": [
                       (v13/*: any*/),
                       (v14/*: any*/),
-                      (v10/*: any*/),
                       (v11/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -575,6 +570,25 @@ return {
           },
           {
             "alias": null,
+            "args": null,
+            "concreteType": "ClubPlatformFee",
+            "kind": "LinkedField",
+            "name": "platformFee",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "percent",
+                "storageKey": null
+              },
+              (v3/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
             "args": (v12/*: any*/),
             "concreteType": "ClubPaymentConnection",
             "kind": "LinkedField",
@@ -599,7 +613,7 @@ return {
                     "selections": [
                       (v13/*: any*/),
                       (v14/*: any*/),
-                      (v11/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -642,7 +656,7 @@ return {
     ]
   },
   "params": {
-    "id": "f8d102c64cdf2586d03d93e92ccd8b88",
+    "id": "098765da4dfca42a2cc0be3afdaa2e40",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

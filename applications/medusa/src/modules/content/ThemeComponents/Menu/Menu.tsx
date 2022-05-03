@@ -32,8 +32,17 @@ interface MenuLinkItemProps extends MenuItemProps {
   href: string | UrlObject
 }
 
+const ICON_SIZES = {
+  xs: 3,
+  sm: 6,
+  md: 7,
+  lg: 8,
+  xl: 9
+}
+
 const Menu = ({
   children,
+  size = 'sm',
   ...rest
 }: MenuProps): JSX.Element => {
   const { i18n } = useLingui()
@@ -44,14 +53,14 @@ const Menu = ({
         <MenuButton
           borderRadius='xl'
           aria-label={i18n._(t`Open Menu`)}
+          size={size}
           as={IconButton}
           {...rest}
           icon={
             <Icon
-              p={1}
               icon={NavigationMenuHorizontal}
-              w='100%'
-              h='100%'
+              w={ICON_SIZES[size]}
+              h={ICON_SIZES[size]}
               fill='gray.200'
             />
           }

@@ -44,7 +44,9 @@ export default function PostGalleryPublicSimple ({
     <Stack spacing={1}>
       <Box>
         <Swiper
+          spaceBetween={20}
           observer
+          grabCursor
           speed={100}
           onSwiper={(swiper) =>
             onInitialize(swiper)}
@@ -62,8 +64,10 @@ export default function PostGalleryPublicSimple ({
                     reference: data?.reference
                   }
                 }}
+                passHref
               >
                 <Box
+                  as='a'
                   bg='gray.800'
                   w='100%'
                   cursor='pointer'

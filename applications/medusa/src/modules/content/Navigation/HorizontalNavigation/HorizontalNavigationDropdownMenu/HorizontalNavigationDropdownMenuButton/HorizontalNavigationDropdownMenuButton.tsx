@@ -62,6 +62,7 @@ const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({
 
   return (
     <NavLink
+      passHref
       href={href}
       {...rest}
     >
@@ -69,6 +70,7 @@ const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({
         isActiveBasePath
       }) => (
         <HorizontalNavigationDropdownMenuButtonBody
+          as='a'
           ref={forwardRef}
           isActive={isActiveBasePath}
           {...ButtonProps}

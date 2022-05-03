@@ -30,6 +30,7 @@ export default function VerticalNavigationButton ({
 
   return (
     <NavLink
+      passHref
       href={href}
       {...rest}
     >
@@ -37,6 +38,7 @@ export default function VerticalNavigationButton ({
         isActiveBasePath
       }) => (
         <VerticalNavigationButtonBody
+          as='a'
           isActive={isActiveBasePath}
           {...ButtonProps}
         />

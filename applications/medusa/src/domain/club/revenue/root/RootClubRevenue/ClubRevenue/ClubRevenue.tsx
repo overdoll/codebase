@@ -4,9 +4,17 @@ import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { Box, Stack } from '@chakra-ui/react'
 import ClubFullBalance from './ClubFullBalance/ClubFullBalance'
 import ClubPayoutsList from './ClubPayoutsList/ClubPayoutsList'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import {
+  PagePanelIcon,
+  PagePanelText,
+  PagePanelWrap,
+  PageSectionTitle,
+  PageSectionWrap
+} from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import ClubPayoutMethodAlert from '../../../../home/RootClubHome/ClubHome/ClubPayoutMethodAlert/ClubPayoutMethodAlert'
+import ClubPayoutMethodAlert from './ClubPayoutMethodAlert/ClubPayoutMethodAlert'
+import { CLUB_GUIDELINES, PAYOUTS_INFORMATION } from '@//:modules/constants/links'
+import { ClubPeopleGroup, PayoutMethod } from '@//:assets/icons'
 
 interface Props {
   query: PreloadedQuery<ClubRevenueQuery>
@@ -55,7 +63,28 @@ export default function ClubRevenue ({ query }: Props): JSX.Element {
             </PageSectionTitle>
           </PageSectionWrap>
           <Stack spacing={2}>
-            <></>
+            <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
+              <PagePanelIcon icon={ClubPeopleGroup} colorScheme='purple' />
+              <PagePanelText
+                title={
+                  <Trans>Club Guidelines</Trans>
+                }
+                description={(
+                  <Trans>Requirements for revenue collection</Trans>
+                )}
+              />
+            </PagePanelWrap>
+            <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
+              <PagePanelIcon icon={PayoutMethod} colorScheme='green' />
+              <PagePanelText
+                title={
+                  <Trans>Payouts Information</Trans>
+                }
+                description={(
+                  <Trans>Information about payouts</Trans>
+                )}
+              />
+            </PagePanelWrap>
           </Stack>
         </Box>
       </Stack>

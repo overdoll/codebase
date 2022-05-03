@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fcfbc5f9063a1d1c5b4937fcfe606c6>>
+ * @generated SignedSource<<538a621d50ad966dc768924385843b40>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,12 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubPayoutsFragment$data = {
-  readonly platformFee: {
-    readonly percent: number;
+  readonly pendingBalance: {
+    readonly currency: Currency;
+    readonly amount: number;
   };
   readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceFragment" | "UpdateClubPlatformFeeFormFragment" | "InitiateClubPayoutFormFragment" | "StaffClubPayoutsListFragment">;
   readonly " $fragmentType": "StaffClubPayoutsFragment";
@@ -32,16 +34,23 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ClubPlatformFee",
+      "concreteType": "Balance",
       "kind": "LinkedField",
-      "name": "platformFee",
+      "name": "pendingBalance",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "percent",
+          "name": "currency",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "amount",
           "storageKey": null
         }
       ],
@@ -72,6 +81,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "445a1de30731912ac010032ee4fbd9a9";
+(node as any).hash = "e818517f4ee58202fca0ddfc0693587a";
 
 export default node;

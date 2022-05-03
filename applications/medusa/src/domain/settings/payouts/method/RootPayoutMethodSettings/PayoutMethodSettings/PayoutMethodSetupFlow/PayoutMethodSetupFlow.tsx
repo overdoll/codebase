@@ -8,10 +8,15 @@ import {
   FlowBuilderHeader,
   FlowBuilderProgress
 } from '@//:modules/content/PageLayout'
-import { PayoutMethod, SearchBar } from '@//:assets/icons'
+import { PayoutMethod, SearchBar, WarningTriangle } from '@//:assets/icons'
 import { ChoiceProvider, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import ChoosePayoutMethod from './ChoosePayoutMethod/ChoosePayoutMethod'
 import SetupPayoutMethod from './SetupPayoutMethod/SetupPayoutMethod'
+import AgreementPayoutMethod from './AgreementPayoutMethod/AgreementPayoutMethod'
+import { useState } from 'react'
+import PayoutMethodFooter from './PayoutMethodFooter/PayoutMethodFooter'
+import UploadFlowFooter
+  from '../../../../../../club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UploadFlowFooter'
 
 interface Props {
   query: PayoutMethodSetupFlowFragment$key
@@ -28,14 +33,21 @@ export default function PayoutMethodSetupFlow ({ query }: Props): JSX.Element {
 
   const methods = useChoice<{}>({})
 
-  const steps = ['method', 'setup']
+  const [agree, setAgree] = useState(false)
+
+  const steps = ['agreement', 'method', 'setup']
 
   const components = {
+    agreement: <AgreementPayoutMethod agree={agree} setAgree={setAgree} />,
     method: <ChoosePayoutMethod query={data} />,
     setup: <SetupPayoutMethod />
   }
 
   const headers = {
+    agreement: {
+      title: 'Read Agreement',
+      icon: WarningTriangle
+    },
     method: {
       title: 'Select Payout Method',
       icon: PayoutMethod
@@ -64,8 +76,15 @@ export default function PayoutMethodSetupFlow ({ query }: Props): JSX.Element {
       </Stack>
       <ChoiceProvider {...methods}>
         <FlowBuilderBody />
+        <FlowBuilderFooter>
+          {({
+            currentStep,
+            isAtStart
+          }) => (
+            <PayoutMethodFooter isAtStart={isAtStart} step={currentStep} agree={agree} />
+          )}
+        </FlowBuilderFooter>
       </ChoiceProvider>
-      <FlowBuilderFooter isDisabled={Object.keys(methods.values).length < 1} />
     </FlowBuilder>
   )
 }

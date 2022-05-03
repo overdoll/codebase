@@ -30,8 +30,9 @@ const PagePanelWrap = forwardRef(({
   return (
     <Link
       href={href}
+      passHref
     >
-      <PagePanelBox ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
+      <PagePanelBox as='a' ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
         {children}
       </PagePanelBox>
     </Link>

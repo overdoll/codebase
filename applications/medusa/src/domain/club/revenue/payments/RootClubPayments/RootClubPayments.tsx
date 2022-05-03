@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import ClubPayments from './ClubPayments/ClubPayments'
 import { Trans } from '@lingui/macro'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
@@ -45,40 +45,26 @@ const RootClubPayments: PageProps<Props> = (props: Props) => {
             Back to Revenue
           </Trans>
         </BackButton>
-        <Stack spacing={8}>
-          <Box>
-            <PageSectionWrap>
-              <PageSectionTitle>
-                <Trans>
-                  Payments
-                </Trans>
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans>
-                  Your club's Payments are the detailed breakdown of the revenue and any deductions you generate through
-                  subscriptions.
-                </Trans>
-              </PageSectionDescription>
-            </PageSectionWrap>
-            <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
-              <Suspense fallback={<SkeletonRectangleGrid />}>
-                <ClubPayments query={queryRef as PreloadedQuery<ClubPaymentsQueryType>} />
-              </Suspense>
-            </QueryErrorBoundary>
-          </Box>
-          <Box>
-            <PageSectionWrap>
-              <PageSectionTitle>
-                <Trans>
-                  Help
-                </Trans>
-              </PageSectionTitle>
-            </PageSectionWrap>
-            <Stack spacing={2}>
-              <></>
-            </Stack>
-          </Box>
-        </Stack>
+        <Box>
+          <PageSectionWrap>
+            <PageSectionTitle>
+              <Trans>
+                Payments
+              </Trans>
+            </PageSectionTitle>
+            <PageSectionDescription>
+              <Trans>
+                Your club's Payments are the detailed breakdown of the revenue and any deductions you generate through
+                subscriptions.
+              </Trans>
+            </PageSectionDescription>
+          </PageSectionWrap>
+          <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
+            <Suspense fallback={<SkeletonRectangleGrid />}>
+              <ClubPayments query={queryRef as PreloadedQuery<ClubPaymentsQueryType>} />
+            </Suspense>
+          </QueryErrorBoundary>
+        </Box>
       </PageWrapper>
     </>
   )

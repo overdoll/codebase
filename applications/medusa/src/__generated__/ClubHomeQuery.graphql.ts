@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<afa14cc4ad93577892d559f6b303fd29>>
- * @relayHash 14fc2e92ce0c4bb66d7b63d0f56fb729
+ * @generated SignedSource<<b040ad14185703c96df05cafb07abcca>>
+ * @relayHash e3556bae816ab64f8e4237f8ffc61ca1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 14fc2e92ce0c4bb66d7b63d0f56fb729
+// @relayRequestID e3556bae816ab64f8e4237f8ffc61ca1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type ClubHomeQuery$data = {
     readonly name: string;
     readonly membersCount: number;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubBalanceFragment" | "ClubPayoutMethodAlertFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubBalanceHeaderFragment" | "ClubSupporterHeaderFragment">;
   } | null;
 };
 export type ClubHomeQueryResponse = ClubHomeQuery$data;
@@ -80,6 +80,13 @@ v6 = {
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -107,12 +114,12 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ClubBalanceFragment"
+            "name": "ClubBalanceHeaderFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ClubPayoutMethodAlertFragment"
+            "name": "ClubSupporterHeaderFragment"
           }
         ],
         "storageKey": null
@@ -192,6 +199,38 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": null,
+                "kind": "LinkedField",
+                "name": "payoutMethod",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v5/*: any*/)
+                    ],
+                    "type": "AccountPaxumPayoutMethod",
+                    "abstractKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Balance",
             "kind": "LinkedField",
             "name": "balance",
@@ -215,51 +254,14 @@ return {
             ],
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "owner",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": null,
-                "kind": "LinkedField",
-                "name": "payoutMethod",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      (v5/*: any*/)
-                    ],
-                    "type": "AccountPaxumPayoutMethod",
-                    "abstractKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              (v5/*: any*/)
-            ],
-            "storageKey": null
-          }
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "14fc2e92ce0c4bb66d7b63d0f56fb729",
+    "id": "e3556bae816ab64f8e4237f8ffc61ca1",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -268,7 +270,7 @@ return {
 };
 })();
 
-(node as any).hash = "76e6e6601db7c6f2ad5133ed7ece7a9e";
+(node as any).hash = "65ecbfc0e4115d8885dcc4f0e8074cde";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

@@ -13,8 +13,8 @@ export default function LinkTile ({
   ...rest
 }: Props): JSX.Element {
   return (
-    <Link href={href}>
-      <ClickableTile {...rest}>
+    <Link passHref href={href}>
+      <ClickableTile as='a' {...rest}>
         {children}
       </ClickableTile>
     </Link>
