@@ -34,11 +34,14 @@ type Repository interface {
 	UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *Member) error) (*Member, error)
 
 	GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
-	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)
-	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)
+
+	SearchClubMembers(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *MemberFilters) ([]*Member, error)
+
+	GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*SuspensionLog, error)
 
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
 	DeleteAndRecreateClubsIndex(ctx context.Context) error
+	DeleteAndRecreateClubMembersIndex(ctx context.Context) error
 
 	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
 

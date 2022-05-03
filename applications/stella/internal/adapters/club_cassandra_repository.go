@@ -10,6 +10,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"strings"
 	"time"
@@ -75,19 +76,6 @@ type accountClubs struct {
 	ClubId    string `db:"club_id"`
 	AccountId string `db:"account_id"`
 }
-
-//
-//CREATE TABLE IF NOT EXISTS club_suspension_log
-//(
-//club_id               text,
-//id                    text,
-//action_account_id     text,
-//is_suspension_removal boolean,
-//reason                text,
-//suspended_until       timestamp,
-//created_at            timestamp,
-//primary key ( club_id, id )
-//) WITH CLUSTERING ORDER BY (id ASC);
 
 var clubSuspensionLogTable = table.New(table.Metadata{
 	Name: "club_suspension_log",
@@ -161,6 +149,10 @@ func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx contex
 	}
 
 	return nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.SuspensionLog, error) {
+	return nil, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
@@ -555,12 +547,6 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	firstPartition, err := r.addInitialClubPartitionInsertsToBatch(ctx, batch, cla.Id)
-
-	if err != nil {
-		return err
-	}
-
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
@@ -571,7 +557,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	// create entry for account's clubs
 	batch.Query(stmt, cla.OwnerAccountId, cla.Id)
 
-	if err := r.addInitialClubMemberToBatch(ctx, batch, cla.Id, cla.OwnerAccountId, firstPartition); err != nil {
+	if err := r.addInitialClubMemberToBatch(ctx, batch, cla.Id, cla.OwnerAccountId, time.Now()); err != nil {
 		return err
 	}
 

@@ -40,7 +40,6 @@ type Queries struct {
 	ClubsByIds                  query.ClubsByIdsHandler
 	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
-	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 
 	AccountClubDigest query.AccountClubDigestHandler
@@ -48,9 +47,10 @@ type Queries struct {
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler
 
-	PrincipalById     query.PrincipalByIdHandler
-	ClubMemberById    query.ClubMemberByIdHandler
-	ClubMembersByClub query.ClubMembersByClubHandler
+	PrincipalById  query.PrincipalByIdHandler
+	ClubMemberById query.ClubMemberByIdHandler
 
-	AccountClubMembershipsOperator query.AccountClubMembershipsOperatorHandler
+	SearchClubMemberships query.SearchClubMembershipsHandler
+
+	ClubSuspensionLogs query.ClubSuspensionLogsHandler
 }

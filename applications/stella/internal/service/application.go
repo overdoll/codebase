@@ -94,11 +94,11 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			AccountClubsCount:           query.NewAccountClubsCountHandler(clubRepo),
 			AccountClubsLimit:           query.NewAccountClubsLimitHandler(clubRepo),
 			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
-			AccountClubMemberships:      query.NewAccountClubMembershipsHandler(clubRepo),
 			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
 			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
-			ClubMembersByClub:           query.NewClubMembersByClubHandler(clubRepo),
 			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
+			SearchClubMemberships:       query.NewSearchClubMembershipsHandler(clubRepo),
+			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
 		},
 		Activities: activities.NewActivitiesHandler(clubRepo, sting),
 	}

@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "carrier.go",
         "eva.go",
+        "hades.go",
         "loader.go",
         "parley.go",
         "ringer.go",

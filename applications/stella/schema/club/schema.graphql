@@ -31,6 +31,25 @@ type Club implements Node @key(fields: "id") {
   suspension: ClubSuspension
 
   """
+  Club Suspension Logs.
+
+  Can see who a club was suspended by, the reason and who unsuspended a particular club.
+  """
+  suspensionLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubSuspensionLogConnection! @goField(forceResolver: true)
+
+  """
   Whether or not the viewer is the owner of the club.
   """
   viewerIsOwner: Boolean!
@@ -54,6 +73,9 @@ type Club implements Node @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
 
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST
@@ -88,6 +110,66 @@ type ClubMemberEdge {
 
 type ClubMemberConnection {
   edges: [ClubMemberEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Reasons a club suspension was created."""
+enum ClubSuspensionReason {
+  """Suspension was issued from a post moderation queue."""
+  POST_MODERATION_QUEUE
+
+  """Suspension was issued from a post removal."""
+  POST_REMOVAL
+
+  """Suspension was issued manually."""
+  MANUAL
+}
+
+type ClubIssuedSuspensionLog {
+  """
+  The ID linked to this suspension log.
+  """
+  id: ID!
+
+  """
+  The account that created this suspension.
+
+  If nil, the suspension was created automatically
+  """
+  account: Account
+
+  """
+  The reason this suspension was issued.
+  """
+  reason: ClubSuspensionReason!
+
+  """
+  How long the club was suspended until.
+  """
+  suspendedUntil: Time!
+}
+
+type ClubRemovedSuspensionLog {
+  """
+  The ID linked to this suspension log.
+  """
+  id: ID!
+
+  """
+  The account that removed this suspension.
+  """
+  account: Account!
+}
+
+union ClubSuspensionLog = ClubIssuedSuspensionLog | ClubRemovedSuspensionLog
+
+type ClubSuspensionLogEdge {
+  cursor: String!
+  node: ClubSuspensionLog!
+}
+
+type ClubSuspensionLogConnection {
+  edges: [ClubSuspensionLogEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -445,6 +527,9 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
 
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST

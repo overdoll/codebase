@@ -198,7 +198,7 @@ func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amoun
 
 	sum := c.getTotalRefunded()
 
-	if sum+amount >= c.amount {
+	if sum+amount > c.amount {
 		return errors.New("over refund threshold")
 	}
 

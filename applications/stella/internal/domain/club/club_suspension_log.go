@@ -1,8 +1,13 @@
 package club
 
-import "time"
+import (
+	"overdoll/libraries/paging"
+	"time"
+)
 
 type SuspensionLog struct {
+	*paging.Node
+
 	id                  string
 	clubId              string
 	accountId           *string

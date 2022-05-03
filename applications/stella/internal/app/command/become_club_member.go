@@ -31,7 +31,7 @@ func (h JoinClubHandler) Handle(ctx context.Context, cmd JoinClub) (*club.Member
 	}
 
 	// get all account memberships
-	ships, err := h.cr.GetAccountClubMemberships(ctx, cmd.Principal, nil, cmd.Principal.AccountId())
+	ships, err := h.cr.GetAccountClubMembershipsCount(ctx, cmd.Principal, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err
