@@ -26,6 +26,8 @@ type Commands struct {
 
 	DeleteAndRecreateClubPaymentsIndex command.DeleteAndRecreateClubPaymentsIndexHandler
 	DeleteAndRecreateClubPayoutsIndex  command.DeleteAndRecreateClubPayoutsIndexHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {

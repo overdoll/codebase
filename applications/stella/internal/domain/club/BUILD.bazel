@@ -8,6 +8,8 @@ go_library(
         "club_filters.go",
         "club_filters_sorting.go",
         "club_member.go",
+        "club_members_filters.go",
+        "club_members_filters_sorting.go",
         "club_suspension_log.go",
         "repository.go",
         "suspension_reason.go",

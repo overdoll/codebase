@@ -14,5 +14,12 @@ func NewStingGrpc(client sting.StingClient) StingGrpc {
 }
 
 func (s StingGrpc) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	_, err := s.client.DeleteAccountData(ctx, &sting.DeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

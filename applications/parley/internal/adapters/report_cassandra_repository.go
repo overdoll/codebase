@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type postReport struct {
@@ -44,6 +45,19 @@ var postReportsByBucketTable = table.New(table.Metadata{
 		"rule_id",
 	},
 	PartKey: []string{"bucket"},
+	SortKey: []string{"id"},
+})
+
+var postReportsByAccountAndBucketTable = table.New(table.Metadata{
+	Name: "post_report_by_account_and_bucket",
+	Columns: []string{
+		"bucket",
+		"reporting_account_id",
+		"id",
+		"post_id",
+		"rule_id",
+	},
+	PartKey: []string{"bucket", "reporting_account_id"},
 	SortKey: []string{"id"},
 })
 
@@ -145,6 +159,16 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 		marshalledPostReport.Bucket,
 		marshalledPostReport.Id,
 		marshalledPostReport.ReportingAccountId,
+		marshalledPostReport.RuleId,
+	)
+
+	stmt, _ = postReportsByAccountAndBucketTable.Insert()
+
+	batch.Query(stmt,
+		marshalledPostReport.Bucket,
+		marshalledPostReport.ReportingAccountId,
+		marshalledPostReport.Id,
+		marshalledPostReport.PostId,
 		marshalledPostReport.RuleId,
 	)
 
@@ -289,4 +313,84 @@ func (r ReportCassandraRepository) GetPostReportForPostAndAccount(ctx context.Co
 	}
 
 	return rep, nil
+}
+
+func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(time.Now())
+	endingBucket := 0
+
+	// iterate through all buckets starting from x bucket until we have enough values
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+
+		info := map[string]interface{}{
+			"bucket":               bucketId,
+			"reporting_account_id": accountId,
+		}
+
+		builder := qb.Select(postReportsByAccountAndBucketTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("reporting_account_id"))
+
+		var results []*postReport
+
+		if err := builder.
+			Query(r.session).
+			BindMap(info).
+			Select(&results); err != nil {
+			return fmt.Errorf("failed to search post reports: %v", err)
+		}
+
+		if len(results) == 0 {
+			continue
+		}
+
+		// batch delete
+		batch := r.session.NewBatch(gocql.LoggedBatch)
+
+		for _, postRep := range results {
+
+			stmt, _ := postReportTable.Delete()
+
+			batch.Query(stmt,
+				postRep.Id,
+			)
+
+			stmt, _ = postReportByPostTable.Delete()
+
+			batch.Query(stmt,
+				postRep.PostId,
+				postRep.Bucket,
+				postRep.Id,
+			)
+
+			stmt, _ = postReportForAccountAndPostTable.Delete()
+
+			batch.Query(stmt,
+				postRep.PostId,
+				postRep.ReportingAccountId,
+			)
+
+			stmt, _ = postReportsByBucketTable.Delete()
+
+			batch.Query(stmt,
+				postRep.Bucket,
+				postRep.Id,
+			)
+
+			stmt, _ = postReportsByAccountAndBucketTable.Delete()
+
+			batch.Query(stmt,
+				postRep.Bucket,
+				postRep.ReportingAccountId,
+				postRep.Id,
+			)
+		}
+
+		if err := r.session.ExecuteBatch(batch); err != nil {
+			return fmt.Errorf("failed to delete report log: %v", err)
+		}
+
+	}
+
+	return nil
 }

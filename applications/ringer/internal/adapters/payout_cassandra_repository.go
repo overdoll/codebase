@@ -189,22 +189,31 @@ func (r PayoutCassandraElasticsearchRepository) UpdateAccountPayoutMethod(ctx co
 	return nil
 }
 
-func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *payout.AccountPayoutMethod) error {
+func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethodOperator(ctx context.Context, accountId string) error {
+	return r.deleteAccountPayoutMethod(ctx, accountId)
+}
 
-	if err := pay.CanDelete(requester); err != nil {
-		return err
-	}
+func (r PayoutCassandraElasticsearchRepository) deleteAccountPayoutMethod(ctx context.Context, payoutMethodId string) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Delete()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
-			AccountId: pay.AccountId(),
+			AccountId: payoutMethodId,
 		}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete account payout method: %v", err)
 	}
 
 	return nil
+}
+
+func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *payout.AccountPayoutMethod) error {
+
+	if err := pay.CanDelete(requester); err != nil {
+		return err
+	}
+
+	return r.deleteAccountPayoutMethod(ctx, pay.AccountId())
 }
 
 func (r PayoutCassandraElasticsearchRepository) GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountId string) (*payout.AccountPayoutMethod, error) {

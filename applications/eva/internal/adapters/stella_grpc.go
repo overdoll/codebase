@@ -14,9 +14,23 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 }
 
 func (s StellaGrpc) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
-	return false, nil
+
+	res, err := s.client.CanDeleteAccountData(ctx, &stella.CanDeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return false, err
+	}
+
+	return res.CanDelete, nil
 }
 
 func (s StellaGrpc) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	_, err := s.client.DeleteAccountData(ctx, &stella.DeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

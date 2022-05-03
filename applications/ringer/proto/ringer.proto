@@ -5,9 +5,15 @@ import "google/protobuf/timestamp.proto";
 
 package applications.grpc.ringer.v1;
 
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
 service Ringer {
   rpc ClubPaymentDeposit(ClubPaymentDepositRequest) returns (google.protobuf.Empty) {}
   rpc ClubPaymentDeduction(ClubPaymentDeductionRequest) returns (google.protobuf.Empty) {}
+
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }
 
 enum PaymentSource {

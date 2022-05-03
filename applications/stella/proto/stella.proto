@@ -41,6 +41,7 @@ message SuspendClubRequest {
 enum SuspensionSource {
   POST_MODERATION_QUEUE = 0;
   POST_REMOVAL = 1;
+  MANUAL = 2;
 }
 
 message GetAccountClubDigestRequest {
@@ -53,6 +54,18 @@ message GetAccountClubDigestResponse {
   repeated string ownerClubIds = 3;
 }
 
+message CanDeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message CanDeleteAccountDataResponse {
+  bool canDelete = 1;
+}
+
 service Stella {
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
   rpc GetAccountClubDigest(GetAccountClubDigestRequest) returns (GetAccountClubDigestResponse);
@@ -60,4 +73,7 @@ service Stella {
   rpc SuspendClub(SuspendClubRequest) returns (google.protobuf.Empty);
   rpc AddClubSupporter(AddClubSupporterRequest) returns (google.protobuf.Empty);
   rpc RemoveClubSupporter(RemoveClubSupporterRequest) returns (google.protobuf.Empty);
+
+  rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

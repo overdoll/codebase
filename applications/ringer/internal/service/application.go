@@ -86,6 +86,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			UpdateClubPlatformFee:              command.NewUpdateClubPlatformFeeHandler(paymentRepo),
 			DeleteAndRecreateClubPayoutsIndex:  command.NewDeleteAndRecreateClubPayoutsIndexHandler(payoutRepo),
 			DeleteAndRecreateClubPaymentsIndex: command.NewDeleteAndRecreateClubPaymentsIndexHandler(paymentRepo),
+			DeleteAccountData:                  command.NewDeleteAccountDataHandler(detailsRepo, payoutRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:           query.NewPrincipalByIdHandler(eva, stella),

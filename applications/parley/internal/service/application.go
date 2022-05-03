@@ -84,6 +84,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			UpdateRuleTitle:       command.NewUpdateRuleTitleHandler(ruleRepo),
 			UpdateRuleDescription: command.NewUpdateRuleDescriptionHandler(ruleRepo),
 
+			DeleteAccountData: command.NewDeleteAccountDataHandler(reportRepo),
+
 			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, eva, sting),
 
 			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, stella),

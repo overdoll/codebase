@@ -21,6 +21,7 @@ type Repository interface {
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
+	GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error)
 
 	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
 
@@ -46,4 +47,6 @@ type Repository interface {
 	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
 
 	GetAccountClubDigestById(ctx context.Context, accountId string) (*AccountClubDigest, error)
+
+	DeleteAccountData(ctx context.Context, accountId string) error
 }

@@ -112,3 +112,14 @@ func (s Server) RemoveSuspendedClub(ctx context.Context, request *sting.RemoveSu
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAccountDataRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.DeleteAccountData.Handle(ctx, command.DeleteAccountData{
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}

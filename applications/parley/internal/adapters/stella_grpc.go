@@ -24,9 +24,24 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) error {
 	return nil
 }
 
-func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64) error {
+func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64, isModerationQueue bool, isPostRemoval bool) error {
 
-	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime})
+	var reason stella.SuspensionSource
+
+	if isModerationQueue {
+		reason = stella.SuspensionSource_POST_MODERATION_QUEUE
+	}
+
+	if isPostRemoval {
+		reason = stella.SuspensionSource_POST_REMOVAL
+	}
+
+	// manual
+	if !isPostRemoval && !isModerationQueue {
+		reason = stella.SuspensionSource_MANUAL
+	}
+
+	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime, Source: reason})
 
 	if err != nil {
 		return err

@@ -123,6 +123,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CreateSeries:          command.NewCreateSeriesHandler(postRepo),
 			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
+
+			DeleteAccountData: command.NewDeleteAccountDataHandler(eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:    query.NewPrincipalByIdHandler(eva, stella),
@@ -155,6 +157,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, parley, loader),
+		Activities: activities.NewActivitiesHandler(postRepo, personalizationRepo, parley, loader),
 	}
 }

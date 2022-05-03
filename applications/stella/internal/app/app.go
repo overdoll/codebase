@@ -13,7 +13,8 @@ type Application struct {
 }
 
 type Commands struct {
-	DeleteAndRecreateClubsIndex command.DeleteAndRecreateClubsIndexHandler
+	DeleteAndRecreateClubsIndex       command.DeleteAndRecreateClubsIndexHandler
+	DeleteAndRecreateClubMembersIndex command.DeleteAndRecreateClubMembersIndexHandler
 
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
@@ -31,6 +32,8 @@ type Commands struct {
 	UnSuspendClub command.UnSuspendClubHandler
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {
@@ -52,5 +55,6 @@ type Queries struct {
 
 	SearchClubMemberships query.SearchClubMembershipsHandler
 
-	ClubSuspensionLogs query.ClubSuspensionLogsHandler
+	ClubSuspensionLogs   query.ClubSuspensionLogsHandler
+	CanDeleteAccountData query.CanDeleteAccountDataHandler
 }

@@ -13,5 +13,5 @@ type StingService interface {
 }
 
 type StellaService interface {
-	SuspendClub(ctx context.Context, clubId string, endTime int64) error
+	SuspendClub(ctx context.Context, clubId string, endTime int64, isModerationQueue bool, isPostRemoval bool) error
 }

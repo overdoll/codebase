@@ -38,6 +38,19 @@ func NewDetailsCassandraRepository(session gocqlx.Session) DetailsCassandraRepos
 	return DetailsCassandraRepository{session: session}
 }
 
+func (r DetailsCassandraRepository) DeleteAccountDetailsOperator(ctx context.Context, accountId string) error {
+
+	if err := r.session.
+		Query(accountDetailsTable.Delete()).
+		WithContext(ctx).
+		BindStruct(accountDetails{AccountId: accountId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete account details: %v", err)
+	}
+
+	return nil
+}
+
 func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Context, accountId string) (*details.AccountDetails, error) {
 
 	var accDetails accountDetails

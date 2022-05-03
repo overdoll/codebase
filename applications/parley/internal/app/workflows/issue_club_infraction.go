@@ -31,8 +31,10 @@ func IssueClubInfraction(ctx workflow.Context, input IssueClubInfractionInput) e
 
 	if err := workflow.ExecuteActivity(ctx, a.SuspendClub,
 		activities.SuspendClubInput{
-			ClubId:   input.ClubId,
-			Duration: clubSuspensionLength,
+			ClubId:            input.ClubId,
+			Duration:          clubSuspensionLength,
+			IsModerationQueue: false,
+			IsPostRemoval:     false,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

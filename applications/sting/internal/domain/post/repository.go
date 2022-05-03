@@ -105,4 +105,6 @@ type Repository interface {
 
 	AddSuspendedClub(ctx context.Context, clubId string) error
 	RemoveSuspendedClub(ctx context.Context, clubId string) error
+
+	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
 }

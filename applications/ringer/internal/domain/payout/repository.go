@@ -8,6 +8,7 @@ import (
 )
 
 type Repository interface {
+	DeleteAccountPayoutMethodOperator(ctx context.Context, accountId string) error
 	DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *AccountPayoutMethod) error
 	UpdateAccountPayoutMethod(ctx context.Context, pay *AccountPayoutMethod) error
 	GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*AccountPayoutMethod, error)

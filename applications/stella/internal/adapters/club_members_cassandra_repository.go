@@ -12,16 +12,6 @@ import (
 	"time"
 )
 
-const (
-	maxClubMembersPerPartition     = 10000
-	initialClubMembersPartitions   = 1
-	incrementClubMembersPartitions = 1
-)
-
-var (
-	ErrNoValidPartitionFound = errors.New("no valid partition to place club member into")
-)
-
 var accountSupportedClubsTable = table.New(table.Metadata{
 	Name: "account_supported_clubs",
 	Columns: []string{
@@ -139,6 +129,58 @@ func (r ClubCassandraElasticsearchRepository) deleteClubMemberById(ctx context.C
 		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to get club member by id: %v", err)
+	}
+
+	return nil
+}
+
+func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx context.Context, accountId string) error {
+
+	var clubMembers []clubMembersByAccount
+
+	if err := clubMembersByAccountTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubMembersByAccount{
+			MemberAccountId: accountId,
+		}).
+		Select(&clubMembers); err != nil {
+		return fmt.Errorf("failed to get account club members: %v", err)
+	}
+
+	if len(clubMembers) == 0 {
+		return nil
+	}
+
+	for _, member := range clubMembers {
+
+		clubId := member.ClubId
+
+		// delete from index
+		if err := r.deleteClubMemberIndexById(ctx, clubId, accountId); err != nil {
+			return err
+		}
+
+		// delete final tables
+		batch := r.session.NewBatch(gocql.LoggedBatch)
+
+		// delete from club members table
+		stmt, _ := clubMembersTable.Delete()
+
+		batch.Query(stmt, clubId, accountId)
+
+		// delete from club members by account
+		stmt, _ = clubMembersByAccountTable.Delete()
+		batch.Query(stmt, clubId, accountId)
+
+		// delete from supported clubs
+		stmt, _ = accountSupportedClubsTable.Delete()
+		batch.Query(stmt, accountId, clubId)
+
+		if err := r.session.ExecuteBatch(batch); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -313,7 +355,7 @@ func (r ClubCassandraElasticsearchRepository) RemoveClubMemberFromlist(ctx conte
 		return fmt.Errorf("failed to delete member from lists: %v", err)
 	}
 
-	if err := r.deleteClubMemberPostIndexById(ctx, clubId, accountId); err != nil {
+	if err := r.deleteClubMemberIndexById(ctx, clubId, accountId); err != nil {
 		return err
 	}
 

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
@@ -506,12 +507,7 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 	return currentClub, nil
 }
 
-func (r ClubCassandraElasticsearchRepository) GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
-
-	if err := club.CanViewAccountClubs(requester, accountId); err != nil {
-		return 0, err
-	}
-
+func (r ClubCassandraElasticsearchRepository) getAccountClubsCount(ctx context.Context, accountId string) (int, error) {
 	type accountClubsCount struct {
 		Count int `db:"count"`
 	}
@@ -531,6 +527,15 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubsCount(ctx context.C
 	}
 
 	return clubsCount.Count, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {
+
+	if err := club.CanViewAccountClubs(requester, accountId); err != nil {
+		return 0, err
+	}
+
+	return r.getAccountClubsCount(ctx, accountId)
 }
 
 func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
@@ -618,4 +623,23 @@ func (r ClubCassandraElasticsearchRepository) createUniqueClubSlug(ctx context.C
 	}
 
 	return nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error) {
+	return r.getAccountClubsCount(ctx, accountId)
+}
+
+func (r ClubCassandraElasticsearchRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	count, err := r.getAccountClubsCount(ctx, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if count != 0 {
+		return errors.New("cannot delete account data when account has a club")
+	}
+
+	return r.deleteAccountClubMemberships(ctx, accountId)
 }

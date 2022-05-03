@@ -6,6 +6,7 @@ go_library(
         "club_cassandra_repository.go",
         "club_elasticsearch_repository.go",
         "club_members_cassandra_repository.go",
+        "club_members_elasticsearch_repository.go",
         "eva_grpc.go",
         "event_temporal_repository.go",
         "loader_grpc.go",

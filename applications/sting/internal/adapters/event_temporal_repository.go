@@ -180,3 +180,21 @@ func (r EventTemporalRepository) RemovePostLike(ctx context.Context, postId, acc
 
 	return nil
 }
+
+func (r EventTemporalRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "DeleteAccountData_" + accountId,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{
+		AccountId: accountId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

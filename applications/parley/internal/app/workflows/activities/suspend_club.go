@@ -6,14 +6,15 @@ import (
 )
 
 type SuspendClubInput struct {
-	ClubId   string
-	Duration int64
+	ClubId            string
+	Duration          int64
+	IsPostRemoval     bool
+	IsModerationQueue bool
 }
 
 func (h *Activities) SuspendClub(ctx context.Context, input SuspendClubInput) error {
 
-	// post approved
-	if err := h.stella.SuspendClub(ctx, input.ClubId, input.Duration); err != nil {
+	if err := h.stella.SuspendClub(ctx, input.ClubId, input.Duration, input.IsModerationQueue, input.IsPostRemoval); err != nil {
 		return errors.Wrap(err, "failed to suspend club")
 	}
 

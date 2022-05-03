@@ -20,6 +20,10 @@ message RemoveSuspendedClubRequest {
   string clubId = 1;
 }
 
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
   rpc PublishPost(PostRequest) returns (google.protobuf.Empty);
@@ -28,4 +32,6 @@ service Sting {
   rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
   rpc AddSuspendedClub(AddSuspendedClubRequest) returns (google.protobuf.Empty);
   rpc RemoveSuspendedClub(RemoveSuspendedClubRequest) returns (google.protobuf.Empty);
+
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

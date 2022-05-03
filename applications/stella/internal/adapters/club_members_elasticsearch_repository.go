@@ -255,7 +255,7 @@ func (r ClubCassandraElasticsearchRepository) deleteClubMembersIndex(ctx context
 	return nil
 }
 
-func (r ClubCassandraElasticsearchRepository) deleteClubMemberPostIndexById(ctx context.Context, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) deleteClubMemberIndexById(ctx context.Context, clubId, accountId string) error {
 
 	if _, err := r.client.Delete().Index(ClubMembersIndexName).Id(clubId + "-" + accountId).Do(ctx); err != nil {
 		return fmt.Errorf("failed to delete club member document: %v", err)

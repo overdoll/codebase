@@ -64,7 +64,7 @@ func (t StingServiceMock) RemovePost(ctx context.Context, s string) error {
 type StellaServiceMock struct {
 }
 
-func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, endTime int64) error {
+func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, endTime int64, a, b bool) error {
 	return nil
 }
 

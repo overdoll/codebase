@@ -96,3 +96,27 @@ func (s Server) GetAccountClubDigest(ctx context.Context, request *stella.GetAcc
 		OwnerClubIds:      req.OwnerClubIds(),
 	}, nil
 }
+
+func (s Server) CanDeleteAccountData(ctx context.Context, request *stella.CanDeleteAccountDataRequest) (*stella.CanDeleteAccountDataResponse, error) {
+
+	req, err := s.app.Queries.CanDeleteAccountData.Handle(ctx, query.CanDeleteAccountData{
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stella.CanDeleteAccountDataResponse{CanDelete: req}, nil
+}
+
+func (s Server) DeleteAccountData(ctx context.Context, request *stella.DeleteAccountDataRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.DeleteAccountData.Handle(ctx, command.DeleteAccountData{
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}

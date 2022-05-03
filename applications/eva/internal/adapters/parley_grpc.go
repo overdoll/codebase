@@ -14,5 +14,12 @@ func NewParleyGrpc(client parley.ParleyClient) ParleyGrpc {
 }
 
 func (s ParleyGrpc) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	_, err := s.client.DeleteAccountData(ctx, &parley.DeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

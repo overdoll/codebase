@@ -7,6 +7,8 @@ go_library(
         "add_club_supporter.go",
         "become_club_member.go",
         "create_club.go",
+        "delete_account_data.go",
+        "delete_and_recreate_club_members_index.go",
         "delete_and_recreate_clubs_index.go",
         "promote_club_slug_alias_to_default.go",
         "remove_club_slug_alias.go",

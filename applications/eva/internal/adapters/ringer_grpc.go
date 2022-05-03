@@ -14,5 +14,12 @@ func NewRingerGrpc(client ringer.RingerClient) RingerGrpc {
 }
 
 func (s RingerGrpc) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	_, err := s.client.DeleteAccountData(ctx, &ringer.DeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

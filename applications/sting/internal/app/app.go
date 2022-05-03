@@ -64,6 +64,8 @@ type Commands struct {
 	CreateSeries          command.CreateSeriesHandler
 	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {
