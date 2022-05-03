@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbfd99bdc90be03cfd3ce4446c8a5e03>>
+ * @generated SignedSource<<d23fddba6aa20462e4a7baadffb15cc6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type ClubPayoutStatus = "CANCELLED" | "DEPOSITED" | "FAILED" | "PROCESSIN
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubPayoutCardFragment$data = {
+  readonly reference: string;
   readonly amount: number;
   readonly currency: Currency;
   readonly status: ClubPayoutStatus;
@@ -31,6 +32,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ClubPayoutCardFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -64,6 +72,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c5d4962852688b313f9854cda5dcf275";
+(node as any).hash = "9f9fef6a551e2950e7d46ac0130c0d85";
 
 export default node;

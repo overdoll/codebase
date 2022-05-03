@@ -69,7 +69,7 @@ export default function StaffClubPaymentsList ({ query }: Props): JSX.Element {
             </TableHeaderColumnText>
             <TableHeaderColumnText column={2}>
               <Trans>
-                Deposit Date
+                Settlement Date
               </Trans>
             </TableHeaderColumnText>
           </TableHeaderRow>

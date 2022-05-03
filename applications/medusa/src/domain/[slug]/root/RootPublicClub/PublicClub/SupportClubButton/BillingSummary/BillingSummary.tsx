@@ -83,7 +83,7 @@ export default function BillingSummary ({
         </Text>
         <Text fontSize='sm' color='gray.300'>
           <Trans>
-            We cannot offer refunds after you have subscribed to a club.
+            If requested, refunds may be considered on a case-by-case basis.
           </Trans>
         </Text>
       </Box>

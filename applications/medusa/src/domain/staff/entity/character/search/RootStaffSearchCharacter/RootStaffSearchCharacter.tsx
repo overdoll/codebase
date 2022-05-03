@@ -34,7 +34,7 @@ const RootStaffSearchCharacter: PageProps<{}> = () => {
         <Stack spacing={2}>
           <PageSectionTitle>
             <Trans>
-              Search Series
+              Search Characters
             </Trans>
           </PageSectionTitle>
           <SearchInput

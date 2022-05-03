@@ -9,7 +9,7 @@ import { dateFormatWithTime } from '@//:modules/constants/format'
 import displayPrice from '@//:modules/support/displayPrice'
 
 export const STATUS_COLORS = {
-  CANCELLED: 'gray',
+  CANCELLED: 'orange',
   DEPOSITED: 'green',
   FAILED: 'orange',
   PROCESSING: 'purple',

@@ -1,9 +1,10 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ClubPaymentsQuery } from '@//:artifacts/ClubPaymentsQuery.graphql'
 import { EmptyBoundary, EmptyPayments, NotFoundClub } from '@//:modules/content/Placeholder'
-import { Box, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
 import { usePaginationFragment } from 'react-relay'
+import ClubPaymentCard from './ClubPaymentCard/ClubPaymentCard'
 
 interface Props {
   query: PreloadedQuery<ClubPaymentsQuery>
@@ -30,7 +31,7 @@ const Fragment = graphql`
     @connection (key: "ClubPayments_payments") {
       edges {
         node {
-          id
+          ...ClubPaymentCardFragment
         }
       }
     }
@@ -66,7 +67,7 @@ export default function ClubPayments ({ query }: Props): JSX.Element {
       condition={data.payments.edges.length < 1}
     >
       <Stack spacing={2}>
-        {data.payments.edges.map((item, index) => <Box key={index}>{item.id}</Box>)}
+        {data.payments.edges.map((item, index) => <ClubPaymentCard key={index} query={item.node} />)}
         <LoadMoreStackTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(9)}

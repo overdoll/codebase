@@ -4,10 +4,10 @@ import { useLingui } from '@lingui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import {
   StaffGenerateRefundAmountForAccountTransactionInputMutation,
-  StaffGenerateRefundAmountForAccountTransactionInputMutation$data
+  StaffGenerateRefundAmountForAccountTransactionInputMutation$data,
 } from '@//:artifacts/StaffGenerateRefundAmountForAccountTransactionInputMutation.graphql'
 import {
-  StaffGenerateRefundAmountForAccountTransactionInputFragment$key
+  StaffGenerateRefundAmountForAccountTransactionInputFragment$key,
 } from '@//:artifacts/StaffGenerateRefundAmountForAccountTransactionInputFragment.graphql'
 import displayPrice from '@//:modules/support/displayPrice'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'

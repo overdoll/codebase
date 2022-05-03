@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5ff824953c732f75519cde98316e622>>
+ * @generated SignedSource<<41b43ff71a5ac7f714a1c2b573fa9794>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,9 +17,7 @@ export type StaffPayoutOptionsFragment$data = {
   readonly currency: Currency;
   readonly status: ClubPayoutStatus;
   readonly depositDate: any;
-  readonly payoutAccount: {
-    readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "ProfileStaffButtonFragment">;
-  };
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPayoutDepositDateFormFragment" | "StaffCancelClubPayoutButtonFragment" | "StaffRetryClubPayoutButtonFragment">;
   readonly " $fragmentType": "StaffPayoutOptionsFragment";
 };
 export type StaffPayoutOptionsFragment = StaffPayoutOptionsFragment$data;
@@ -63,36 +61,25 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Account",
-      "kind": "LinkedField",
-      "name": "payoutAccount",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "LargeAccountHeaderFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ProfilePageButtonFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ProfileStaffButtonFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "UpdateClubPayoutDepositDateFormFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffCancelClubPayoutButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffRetryClubPayoutButtonFragment"
     }
   ],
   "type": "ClubPayout",
   "abstractKey": null
 };
 
-(node as any).hash = "1b3fd07419fcbe71d2818a5cd627011b";
+(node as any).hash = "0bb57d1ba10b146a2e758b6ef00243f0";
 
 export default node;

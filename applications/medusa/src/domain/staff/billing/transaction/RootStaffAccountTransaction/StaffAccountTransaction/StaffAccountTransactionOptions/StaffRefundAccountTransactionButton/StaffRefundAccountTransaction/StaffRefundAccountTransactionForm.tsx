@@ -84,7 +84,14 @@ export default function StaffRefundAccountTransactionForm ({
           ...formValues
         }
       },
-      onCompleted () {
+      onCompleted (data) {
+        if (data.refundAccountTransaction == null) {
+          notify({
+            status: 'error',
+            title: t`There was an error issuing a refund for ${formValues.amount}`
+          })
+          return
+        }
         notify({
           status: 'success',
           title: t`Successfully refunded ${formValues.amount}`

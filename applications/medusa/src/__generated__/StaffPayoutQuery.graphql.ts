@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2f77fa017c301e0747ffb9e4c632922c>>
- * @relayHash 07ad7d0cfa01bda503f7b20647dcffbd
+ * @generated SignedSource<<2566fbc756e4cbd3670066f98725eb35>>
+ * @relayHash e959da579c8e33824d7d100848ff35ef
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 07ad7d0cfa01bda503f7b20647dcffbd
+// @relayRequestID e959da579c8e33824d7d100848ff35ef
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type StaffPayoutQuery$variables = {
 export type StaffPayoutQueryVariables = StaffPayoutQuery$variables;
 export type StaffPayoutQuery$data = {
   readonly payout: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutCardFragment" | "StaffPayoutOptionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutCardFragment" | "StaffPayoutOptionsFragment" | "StaffPayoutAccountFragment" | "StaffPayoutPaymentsListFragment" | "StaffPayoutEventsFragment" | "StaffPayoutClubFragment">;
   } | null;
 };
 export type StaffPayoutQueryResponse = StaffPayoutQuery$data;
@@ -47,16 +47,78 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "status",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "currency",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
-};
+},
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "urls",
+    "plural": true,
+    "selections": [
+      (v5/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ResourceUrl",
+    "kind": "LinkedField",
+    "name": "videoThumbnail",
+    "plural": false,
+    "selections": [
+      (v5/*: any*/)
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v4/*: any*/)
+],
+v7 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -81,6 +143,26 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "StaffPayoutOptionsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffPayoutAccountFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffPayoutPaymentsListFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffPayoutEventsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffPayoutClubFragment"
           }
         ],
         "storageKey": null
@@ -103,13 +185,7 @@ return {
         "name": "payout",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "status",
-            "storageKey": null
-          },
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -117,13 +193,7 @@ return {
             "name": "amount",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "currency",
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -131,6 +201,7 @@ return {
             "name": "depositDate",
             "storageKey": null
           },
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -139,7 +210,7 @@ return {
             "name": "payoutAccount",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -154,21 +225,65 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
+                "selections": (v6/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v7/*: any*/),
+            "concreteType": "ClubPaymentConnection",
+            "kind": "LinkedField",
+            "name": "payments",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubPaymentEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ResourceUrl",
+                    "concreteType": "ClubPayment",
                     "kind": "LinkedField",
-                    "name": "urls",
-                    "plural": true,
+                    "name": "node",
+                    "plural": false,
                     "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      (v2/*: any*/),
                       (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "mimeType",
+                        "name": "finalAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "settlementDate",
+                        "storageKey": null
+                      },
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
                         "storageKey": null
                       }
                     ],
@@ -177,37 +292,119 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "videoThumbnail",
-                    "plural": false,
-                    "selections": [
-                      (v3/*: any*/)
-                    ],
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "type",
+                    "name": "hasNextPage",
                     "storageKey": null
-                  },
-                  (v2/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
             ],
+            "storageKey": "payments(first:5)"
+          },
+          {
+            "alias": null,
+            "args": (v7/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "StaffPayoutPayments_payments",
+            "kind": "LinkedHandle",
+            "name": "payments"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubPayoutEvent",
+            "kind": "LinkedField",
+            "name": "events",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "error",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "timestamp",
+                "storageKey": null
+              },
+              (v4/*: any*/)
+            ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v4/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": (v6/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "slug",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "07ad7d0cfa01bda503f7b20647dcffbd",
+    "id": "e959da579c8e33824d7d100848ff35ef",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",
@@ -216,6 +413,6 @@ return {
 };
 })();
 
-(node as any).hash = "5731da874ec6f4824005d0b9b7d42e19";
+(node as any).hash = "ff4c1039d1fdb5eb61221b9f3d333d4a";
 
 export default node;

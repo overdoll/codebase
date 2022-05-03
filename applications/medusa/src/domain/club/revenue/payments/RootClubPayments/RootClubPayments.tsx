@@ -55,7 +55,8 @@ const RootClubPayments: PageProps<Props> = (props: Props) => {
               </PageSectionTitle>
               <PageSectionDescription>
                 <Trans>
-                  Your club's Payments are the detailed breakdown of the revenue you generate through subscriptions.
+                  Your club's Payments are the detailed breakdown of the revenue and any deductions you generate through
+                  subscriptions.
                 </Trans>
               </PageSectionDescription>
             </PageSectionWrap>

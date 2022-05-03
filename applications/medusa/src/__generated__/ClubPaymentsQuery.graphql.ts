@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<488f887a5bde852f3a0c36db34930d42>>
- * @relayHash 148925554106f12f44404c846e7b6ee3
+ * @generated SignedSource<<99f55b729a5af5509aa00b7b566688bc>>
+ * @relayHash 7dd288a6d97c5218b5ed54b4807bd467
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 148925554106f12f44404c846e7b6ee3
+// @relayRequestID 7dd288a6d97c5218b5ed54b4807bd467
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -142,6 +142,48 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "settlementDate",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "finalAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "currency",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "status",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isDeduction",
+                        "storageKey": null
+                      },
                       (v5/*: any*/),
                       (v2/*: any*/)
                     ],
@@ -201,7 +243,7 @@ return {
     ]
   },
   "params": {
-    "id": "148925554106f12f44404c846e7b6ee3",
+    "id": "7dd288a6d97c5218b5ed54b4807bd467",
     "metadata": {},
     "name": "ClubPaymentsQuery",
     "operationKind": "query",

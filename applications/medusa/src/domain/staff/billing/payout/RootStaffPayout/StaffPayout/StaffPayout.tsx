@@ -7,6 +7,10 @@ import { Trans } from '@lingui/macro'
 import StaffClubPayoutCard
   from '../../../../club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutCard/StaffClubPayoutCard'
 import StaffPayoutOptions from './StaffPayoutOptions/StaffPayoutOptions'
+import StaffPayoutAccount from './StaffPayoutAccount/StaffPayoutAccount'
+import StaffPayoutPaymentsList from './StaffPayoutPaymentsList/StaffPayoutPaymentsList'
+import StaffPayoutEvents from './StaffPayoutEvents/StaffPayoutEvents'
+import StaffPayoutClub from './StaffPayoutClub/StaffPayoutClub'
 
 interface Props {
   query: PreloadedQuery<StaffPayoutQuery>
@@ -17,6 +21,10 @@ const Query = graphql`
     payout(reference: $reference) {
       ...StaffClubPayoutCardFragment
       ...StaffPayoutOptionsFragment
+      ...StaffPayoutAccountFragment
+      ...StaffPayoutPaymentsListFragment
+      ...StaffPayoutEventsFragment
+      ...StaffPayoutClubFragment
     }
   }
 `
@@ -46,6 +54,16 @@ export default function StaffPayout ({ query }: Props): JSX.Element {
             </Tab>
             <Tab>
               <Trans>
+                Account
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
+                Club
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
                 Payments
               </Trans>
             </Tab>
@@ -61,10 +79,16 @@ export default function StaffPayout ({ query }: Props): JSX.Element {
             <StaffPayoutOptions query={queryData.payout} />
           </TabPanel>
           <TabPanel>
-            <></>
+            <StaffPayoutAccount query={queryData.payout} />
           </TabPanel>
           <TabPanel>
-            <></>
+            <StaffPayoutClub query={queryData.payout} />
+          </TabPanel>
+          <TabPanel>
+            <StaffPayoutPaymentsList query={queryData.payout} />
+          </TabPanel>
+          <TabPanel>
+            <StaffPayoutEvents query={queryData.payout} />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<17532f0b50032019af704f9afe8bbd19>>
- * @relayHash eed7c2a0fbc3e045c935ab8d44ddce39
+ * @generated SignedSource<<088723bb9f22157aebf09fec94691d9c>>
+ * @relayHash 75f6a112633146dcc6e1868e98a1ac8a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eed7c2a0fbc3e045c935ab8d44ddce39
+// @relayRequestID 75f6a112633146dcc6e1868e98a1ac8a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -155,6 +155,13 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
+                            "name": "reference",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
                             "name": "amount",
                             "storageKey": null
                           },
@@ -241,7 +248,7 @@ return {
     ]
   },
   "params": {
-    "id": "eed7c2a0fbc3e045c935ab8d44ddce39",
+    "id": "75f6a112633146dcc6e1868e98a1ac8a",
     "metadata": {},
     "name": "ClubPayoutsPaginationQuery",
     "operationKind": "query",
