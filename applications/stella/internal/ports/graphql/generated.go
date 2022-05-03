@@ -68,6 +68,7 @@ type ComplexityRoot struct {
 	}
 
 	Club struct {
+		CanSupport       func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Members          func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
 		MembersCount     func(childComplexity int) int
@@ -360,6 +361,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AddClubSlugAliasPayload.Validation(childComplexity), true
+
+	case "Club.canSupport":
+		if e.complexity.Club.CanSupport == nil {
+			break
+		}
+
+		return e.complexity.Club.CanSupport(childComplexity), true
 
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
@@ -1114,6 +1122,11 @@ var sources = []*ast.Source{
   Whether or not the viewer is the owner of the club.
   """
   viewerIsOwner: Boolean!
+
+  """
+  Whether or not you can become a supporter of this club.
+  """
+  canSupport: Boolean!
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
@@ -3005,6 +3018,41 @@ func (ec *executionContext) _Club_viewerIsOwner(ctx context.Context, field graph
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ViewerIsOwner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_canSupport(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CanSupport, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7329,6 +7377,16 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		case "viewerIsOwner":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Club_viewerIsOwner(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "canSupport":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Club_canSupport(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

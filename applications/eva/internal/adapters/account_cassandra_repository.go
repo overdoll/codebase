@@ -518,7 +518,7 @@ func (r AccountRepository) DeleteAccountData(ctx context.Context, accountId stri
 	}
 
 	acc.Email = ""
-	acc.Username = ""
+	acc.Username = "[deleted]"
 	acc.AvatarResourceId = nil
 	acc.MultiFactorEnabled = false
 

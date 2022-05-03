@@ -10,6 +10,7 @@ message Club {
   string name = 2;
   string ownerAccountId = 3;
   bool isSuspended = 4;
+  bool canSupport = 5;
 }
 
 message GetClubByIdRequest {

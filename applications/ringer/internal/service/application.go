@@ -103,6 +103,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			SearchClubPayouts:       query.NewSearchClubPayoutsHandler(payoutRepo),
 			SearchClubPayments:      query.NewSearchClubPaymentsHandler(paymentRepo),
 		},
-		Activities: activities.NewActivitiesHandler(paymentRepo, payoutRepo, balanceRepo, detailsRepo, paxumRepo, stella),
+		Activities: activities.NewActivitiesHandler(paymentRepo, payoutRepo, balanceRepo, detailsRepo, paxumRepo, stella, eva),
 	}
 }

@@ -25,8 +25,8 @@ func NewChargeByPreviousClubSupporterPaymentUrl(requester *principal.Principal, 
 		return nil, errors.New("account must be secure to use charge by previous id")
 	}
 
-	if club.IsSuspended() {
-		return nil, errors.New("club suspended, cannot subscribe")
+	if !club.CanSupport() {
+		return nil, errors.New("club cannot be supported at this time")
 	}
 
 	return &ChargeByPreviousClubSupporterPaymentUrl{

@@ -60,7 +60,16 @@ func (p *AccountPayoutMethod) CanView(requester *principal.Principal) error {
 	return requester.BelongsToAccount(p.accountId)
 }
 
-func (p *AccountPayoutMethod) Validate(amount int64, currency money.Currency) bool {
+func (p *AccountPayoutMethod) Validate(requester *principal.Principal, amount int64, currency money.Currency) bool {
+
+	if err := requester.BelongsToAccount(p.accountId); err != nil {
+		return false
+	}
+
+	// locked accounts cannot receive payouts
+	if requester.IsLocked() {
+		return false
+	}
 
 	// only opennode for now
 	if p.method != Paxum {

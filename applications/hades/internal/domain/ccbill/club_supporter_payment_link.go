@@ -24,8 +24,8 @@ type ClubSupporterPaymentLink struct {
 
 func NewClubSupporterPaymentLink(requester *principal.Principal, club *club.Club, savePaymentDetails bool, price *billing.Price) (*ClubSupporterPaymentLink, error) {
 
-	if club.IsSuspended() {
-		return nil, errors.New("cannot generate link for suspended club")
+	if !club.CanSupport() {
+		return nil, errors.New("club cannot be supported at this time")
 	}
 
 	return &ClubSupporterPaymentLink{

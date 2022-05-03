@@ -24,7 +24,7 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*club.Club,
 		return nil, err
 	}
 
-	return club.UnmarshalClubFromDatabase(clubId, md.Club.Slug, md.Club.Name, md.Club.IsSuspended, md.Club.OwnerAccountId), nil
+	return club.UnmarshalClubFromDatabase(clubId, md.Club.Slug, md.Club.Name, md.Club.IsSuspended, md.Club.CanSupport, md.Club.OwnerAccountId), nil
 }
 
 func (s StellaGrpc) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {

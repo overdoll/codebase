@@ -24,6 +24,12 @@ func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayo
 		return nil, err
 	}
 
+	acc, err := h.eva.GetAccount(ctx, clb.OwnerAccountId())
+
+	if err != nil {
+		return nil, err
+	}
+
 	method, err := h.par.GetAccountPayoutMethodByIdOperator(ctx, clb.OwnerAccountId())
 
 	if err != nil {
@@ -36,7 +42,7 @@ func (h *Activities) GetClubPayoutMethods(ctx context.Context, input GetClubPayo
 	}
 
 	// we need to validate that this payout method will work with this currency + amount
-	validated := method.Validate(input.Amount, input.Currency)
+	validated := method.Validate(acc, input.Amount, input.Currency)
 
 	if !validated {
 		return nil, nil

@@ -75,6 +75,8 @@ type Club struct {
 	SuspensionLogs *ClubSuspensionLogConnection `json:"suspensionLogs"`
 	// Whether or not the viewer is the owner of the club.
 	ViewerIsOwner bool `json:"viewerIsOwner"`
+	// Whether or not you can become a supporter of this club.
+	CanSupport bool `json:"canSupport"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.

@@ -54,6 +54,11 @@ type Club implements Node @key(fields: "id") {
   """
   viewerIsOwner: Boolean!
 
+  """
+  Whether or not you can become a supporter of this club.
+  """
+  canSupport: Boolean!
+
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 

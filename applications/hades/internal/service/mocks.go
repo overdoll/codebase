@@ -56,7 +56,7 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 type StellaServiceMock struct{}
 
 func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
-	return club.UnmarshalClubFromDatabase(clubId, "", "", false, ""), nil
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, true, ""), nil
 }
 
 func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {

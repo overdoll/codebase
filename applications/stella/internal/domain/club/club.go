@@ -35,6 +35,8 @@ type Club struct {
 	suspended      bool
 	suspendedUntil *time.Time
 
+	canSupport bool
+
 	newClubMembers []string
 
 	membersCount   int
@@ -158,6 +160,10 @@ func (m *Club) CanUnSuspend(requester *principal.Principal) error {
 	}
 
 	return principal.ErrNotAuthorized
+}
+
+func (m *Club) CanSupport() bool {
+	return !m.suspended
 }
 
 func (m *Club) CanSuspend(requester *principal.Principal) error {

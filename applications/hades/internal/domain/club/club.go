@@ -5,6 +5,7 @@ type Club struct {
 	slug           string
 	name           string
 	isSuspended    bool
+	canSupport     bool
 	ownerAccountId string
 }
 
@@ -24,16 +25,21 @@ func (c *Club) IsSuspended() bool {
 	return c.isSuspended
 }
 
+func (c *Club) CanSupport() bool {
+	return c.canSupport
+}
+
 func (c *Club) OwnerAccountId() string {
 	return c.ownerAccountId
 }
 
-func UnmarshalClubFromDatabase(id, slug, name string, isSuspended bool, ownerAccountId string) *Club {
+func UnmarshalClubFromDatabase(id, slug, name string, isSuspended, canSupport bool, ownerAccountId string) *Club {
 	return &Club{
 		id:             id,
 		slug:           slug,
 		name:           name,
 		isSuspended:    isSuspended,
+		canSupport:     canSupport,
 		ownerAccountId: ownerAccountId,
 	}
 }
