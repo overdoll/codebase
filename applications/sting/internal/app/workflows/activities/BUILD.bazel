@@ -7,8 +7,10 @@ go_library(
         "add_like_to_post.go",
         "archive_post.go",
         "create_pixelated_resources_for_supporter_only_content.go",
+        "delete_account_curation_profile.go",
         "delete_post.go",
         "discard_post.go",
+        "get_account_post_likes.go",
         "publish_post.go",
         "put_post_into_moderator_queue_or_publish.go",
         "remove_like_from_post.go",
@@ -22,5 +24,8 @@ go_library(
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],
-    deps = ["//applications/sting/internal/domain/post"],
+    deps = [
+        "//applications/sting/internal/domain/curation",
+        "//applications/sting/internal/domain/post",
+    ],
 )
