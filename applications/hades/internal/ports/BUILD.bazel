@@ -4,6 +4,7 @@ go_library(
     name = "ports",
     srcs = [
         "cli.go",
+        "grpc.go",
         "http.go",
         "worker.go",
     ],
@@ -11,10 +12,13 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/app",
+        "//applications/hades/internal/app/command",
+        "//applications/hades/internal/app/query",
         "//applications/hades/internal/app/workflows",
         "//applications/hades/internal/ports/ccbill",
         "//applications/hades/internal/ports/graphql",
         "//applications/hades/internal/service",
+        "//applications/hades/proto:v1_go_proto",
         "//libraries/clients",
         "//libraries/graphql",
         "//libraries/principal",
@@ -22,5 +26,6 @@ go_library(
         "@com_github_spf13_cobra//:cobra",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//worker",
+        "@org_golang_google_protobuf//types/known/emptypb",
     ],
 )

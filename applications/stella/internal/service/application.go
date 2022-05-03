@@ -24,16 +24,19 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
+	carrierClient, cleanup4 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewLoaderGrpc(loaderClient),
 			adapters.NewStingGrpc(stingClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
 			cleanup3()
+			cleanup4()
 		}
 }
 
@@ -51,6 +54,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
 			LoaderServiceMock{},
 			StingServiceMock{},
+			CarrierServiceMock{},
 			temporalClient,
 		),
 		func() {
@@ -59,7 +63,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 		temporalClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -85,6 +89,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			AddClubSupporter:                  command.NewAddClubSupporterHandler(eventRepo),
 			RemoveClubSupporter:               command.NewRemoveClubSupporterHandler(eventRepo),
 			DeleteAccountData:                 command.NewDeleteAccountDataHandler(clubRepo),
+			NewSupporterPost:                  command.NewNewSupporterPostHandler(eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:               query.NewPrincipalByIdHandler(eva),
@@ -103,6 +108,6 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(clubRepo, sting),
+		Activities: activities.NewActivitiesHandler(clubRepo, sting, carrier),
 	}
 }

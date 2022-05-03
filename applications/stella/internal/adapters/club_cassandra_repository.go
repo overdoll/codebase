@@ -30,22 +30,26 @@ var clubTable = table.New(table.Metadata{
 		"owner_account_id",
 		"suspended",
 		"suspended_until",
+		"next_supporter_post_time",
+		"has_created_supporter_only_post",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type clubs struct {
-	Id                       string            `db:"id"`
-	Slug                     string            `db:"slug"`
-	SlugAliases              []string          `db:"slug_aliases"`
-	Name                     map[string]string `db:"name"`
-	ThumbnailResourceId      *string           `db:"thumbnail_resource_id"`
-	MembersCount             int               `db:"members_count"`
-	MembersCountLastUpdateId gocql.UUID        `db:"members_count_last_update_id"`
-	OwnerAccountId           string            `db:"owner_account_id"`
-	Suspended                bool              `db:"suspended"`
-	SuspendedUntil           *time.Time        `db:"suspended_until"`
+	Id                          string            `db:"id"`
+	Slug                        string            `db:"slug"`
+	SlugAliases                 []string          `db:"slug_aliases"`
+	Name                        map[string]string `db:"name"`
+	ThumbnailResourceId         *string           `db:"thumbnail_resource_id"`
+	MembersCount                int               `db:"members_count"`
+	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
+	OwnerAccountId              string            `db:"owner_account_id"`
+	Suspended                   bool              `db:"suspended"`
+	SuspendedUntil              *time.Time        `db:"suspended_until"`
+	NextSupporterPostTime       *time.Time        `db:"next_supporter_post_time"`
+	HasCreatedSupporterOnlyPost bool              `db:"has_created_supporter_only_post"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -224,6 +228,8 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		b.OwnerAccountId,
 		b.Suspended,
 		b.SuspendedUntil,
+		b.NextSupporterPostTime,
+		b.HasCreatedSupporterOnlyPost,
 	), nil
 }
 
@@ -254,6 +260,8 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			b.OwnerAccountId,
 			b.Suspended,
 			b.SuspendedUntil,
+			b.NextSupporterPostTime,
+			b.HasCreatedSupporterOnlyPost,
 		))
 	}
 
@@ -437,6 +445,10 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx con
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"suspended", "suspended_until"})
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubNextSupporterPostTime(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"next_supporter_post_time", "has_created_supporter_only_post"})
+}
+
 func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
 
 	clb, err := r.getClubById(ctx, clubId)
@@ -470,6 +482,8 @@ func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.
 		clb.OwnerAccountId,
 		clb.Suspended,
 		clb.SuspendedUntil,
+		clb.NextSupporterPostTime,
+		clb.HasCreatedSupporterOnlyPost,
 	))
 }
 
@@ -555,7 +569,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil)
+	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil, cla.NextSupporterPostTime, cla.HasCreatedSupporterOnlyPost)
 
 	stmt, _ = accountClubsTable.Insert()
 

@@ -156,3 +156,72 @@ func (s Server) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, r
 
 	return &empty.Empty{}, nil
 }
+
+func (s Server) ClubSupporterRequiredPostReminder(ctx context.Context, request *carrier.ClubSupporterRequiredPostReminderRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.ClubSupporterRequiredPostReminder.Handle(ctx,
+		command.ClubSupporterRequiredPostReminder{
+			ClubId:            request.Club.Id,
+			ElapsedTimeMillis: request.TimePassed,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s Server) ClubSupporterNoPosts(ctx context.Context, request *carrier.ClubSupporterNoPostsRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.ClubSupporterNoPosts.Handle(ctx,
+		command.ClubSupporterNoPosts{
+			ClubId: request.Club.Id,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s Server) AccountDeletionBegin(ctx context.Context, request *carrier.AccountDeletionBeginRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AccountDeletionBegin.Handle(ctx,
+		command.AccountDeletionBegin{
+			AccountId:    request.Account.Id,
+			DeletionDate: request.DeletionDate.AsTime(),
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s Server) AccountDeletionReminder(ctx context.Context, request *carrier.AccountDeletionReminderRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AccountDeletionReminder.Handle(ctx,
+		command.AccountDeletionReminder{
+			AccountId:    request.Account.Id,
+			DeletionDate: request.DeletionDate.AsTime(),
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s Server) AccountDeleted(ctx context.Context, request *carrier.AccountDeletedRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AccountDeleted.Handle(ctx,
+		command.AccountDeleted{
+			Username: request.Username,
+			Email:    request.Email,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}

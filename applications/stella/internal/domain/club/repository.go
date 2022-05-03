@@ -19,6 +19,7 @@ type Repository interface {
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+	UpdateClubNextSupporterPostTime(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 	GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error)

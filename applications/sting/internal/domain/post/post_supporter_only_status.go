@@ -8,9 +8,9 @@ type SupporterOnlyStatus struct {
 
 var (
 	UnknownSupporterOnly = SupporterOnlyStatus{""}
-	Partial              = SupporterOnlyStatus{"partial"}
-	Full                 = SupporterOnlyStatus{"full"}
-	None                 = SupporterOnlyStatus{"none"}
+	Partial              = SupporterOnlyStatus{"PARTIAL"}
+	Full                 = SupporterOnlyStatus{"FULL"}
+	None                 = SupporterOnlyStatus{"NONE"}
 )
 
 func (r SupporterOnlyStatus) String() string {

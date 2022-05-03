@@ -34,30 +34,35 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 		return err
 	}
 
-	// if workflow is cancelled, we want to clean up by cancelling the account deletion
-	defer func() {
+	// send a notification that account deletion has begun
+	if err := workflow.ExecuteActivity(ctx, a.AccountDeletionBegin,
+		activities.AccountDeletionBeginInput{
+			AccountId:    input.AccountId,
+			DeletionDate: payload.DeletionDate,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
 
-		if !errors.Is(ctx.Err(), workflow.ErrCanceled) {
-			return
-		}
+	duration := payload.DeletionDate.Sub(workflow.Now(ctx))
 
-		if !input.CanCancel {
-			return
-		}
+	// halfway through, send a reminder
+	if err := workflow.Sleep(ctx, duration/2); err != nil {
+		return err
+	}
 
-		newCtx, _ := workflow.NewDisconnectedContext(ctx)
-		err := workflow.ExecuteActivity(newCtx, a.UpdateAccountCancelDeletion, activities.UpdateAccountCancelDeletionInput{
-			AccountId: input.AccountId,
-		}).Get(ctx, nil)
+	// reminder
+	if err := workflow.ExecuteActivity(ctx, a.AccountDeletionReminder,
+		activities.AccountDeletionReminderInput{
+			AccountId:    input.AccountId,
+			DeletionDate: payload.DeletionDate,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
 
-		if err != nil {
-			logger.Error("failed to cleanup cancel account deletion", "Error", err)
-			return
-		}
-	}()
-
-	// wait for deletion date
-	if err := workflow.Sleep(ctx, payload.DeletionDate.Sub(workflow.Now(ctx))); err != nil {
+	// wait for second half of duration
+	if err := workflow.Sleep(ctx, duration/2); err != nil {
 		return err
 	}
 
@@ -97,12 +102,19 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 		return err
 	}
 
+	// get data for the account, so we can send the final reminder
+	var accountDataPayload *activities.GetAccountDataPayload
+
+	if err := workflow.ExecuteActivity(ctx, a.GetAccountData, input.AccountId).Get(ctx, &accountDataPayload); err != nil {
+		return err
+	}
+
 	// mark account as "deleted"
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountDeleted,
 		activities.UpdateAccountDeletedInput{
 			AccountId: input.AccountId,
 		},
-	).Get(ctx, &payload); err != nil {
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
@@ -110,6 +122,38 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 	if err := workflow.ExecuteActivity(ctx, a.DeleteSessionData, input.AccountId).Get(ctx, nil); err != nil {
 		return err
 	}
+
+	// send the final notification that the account has been successfully deleted.
+	if err := workflow.ExecuteActivity(ctx, a.AccountDeleted,
+		activities.AccountDeletedInput{
+			Username: accountDataPayload.Username,
+			Email:    accountDataPayload.Email,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// if workflow is cancelled, we want to clean up by cancelling the account deletion
+	defer func() {
+
+		if !errors.Is(ctx.Err(), workflow.ErrCanceled) {
+			return
+		}
+
+		if !input.CanCancel {
+			return
+		}
+
+		newCtx, _ := workflow.NewDisconnectedContext(ctx)
+		err := workflow.ExecuteActivity(newCtx, a.UpdateAccountCancelDeletion, activities.UpdateAccountCancelDeletionInput{
+			AccountId: input.AccountId,
+		}).Get(ctx, nil)
+
+		if err != nil {
+			logger.Error("failed to cleanup cancel account deletion", "Error", err)
+			return
+		}
+	}()
 
 	return nil
 }

@@ -48,5 +48,14 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		return err
 	}
 
+	// if the post has supporter-only content, we send a notification to stella that a new premium post was created
+	if err := workflow.ExecuteActivity(ctx, a.CheckPostSupporterStatusAndSendNew,
+		activities.CheckPostSupporterStatusAndSendNewInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	return nil
 }

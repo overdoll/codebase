@@ -68,21 +68,22 @@ type ComplexityRoot struct {
 	}
 
 	Club struct {
-		CanSupport       func(childComplexity int) int
-		ID               func(childComplexity int) int
-		Members          func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
-		MembersCount     func(childComplexity int) int
-		Name             func(childComplexity int) int
-		Owner            func(childComplexity int) int
-		Reference        func(childComplexity int) int
-		Slug             func(childComplexity int) int
-		SlugAliases      func(childComplexity int) int
-		SlugAliasesLimit func(childComplexity int) int
-		Suspension       func(childComplexity int) int
-		SuspensionLogs   func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Thumbnail        func(childComplexity int, size *int) int
-		ViewerIsOwner    func(childComplexity int) int
-		ViewerMember     func(childComplexity int) int
+		CanSupport            func(childComplexity int) int
+		ID                    func(childComplexity int) int
+		Members               func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
+		MembersCount          func(childComplexity int) int
+		Name                  func(childComplexity int) int
+		NextSupporterPostTime func(childComplexity int) int
+		Owner                 func(childComplexity int) int
+		Reference             func(childComplexity int) int
+		Slug                  func(childComplexity int) int
+		SlugAliases           func(childComplexity int) int
+		SlugAliasesLimit      func(childComplexity int) int
+		Suspension            func(childComplexity int) int
+		SuspensionLogs        func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Thumbnail             func(childComplexity int, size *int) int
+		ViewerIsOwner         func(childComplexity int) int
+		ViewerMember          func(childComplexity int) int
 	}
 
 	ClubConnection struct {
@@ -401,6 +402,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.Name(childComplexity), true
+
+	case "Club.nextSupporterPostTime":
+		if e.complexity.Club.NextSupporterPostTime == nil {
+			break
+		}
+
+		return e.complexity.Club.NextSupporterPostTime(childComplexity), true
 
 	case "Club.owner":
 		if e.complexity.Club.Owner == nil {
@@ -1127,6 +1135,15 @@ var sources = []*ast.Source{
   Whether or not you can become a supporter of this club.
   """
   canSupport: Boolean!
+
+  """
+  When the owner of the club needs to post the next supporter post.
+
+  Usually 30 days after the next post.
+
+  Nil if no supporter-only posts have been created.
+  """
+  nextSupporterPostTime: Time
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
@@ -3067,6 +3084,38 @@ func (ec *executionContext) _Club_canSupport(ctx context.Context, field graphql.
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_nextSupporterPostTime(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NextSupporterPostTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_viewerMember(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -7394,6 +7443,13 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "nextSupporterPostTime":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Club_nextSupporterPostTime(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "viewerMember":
 			field := field
 

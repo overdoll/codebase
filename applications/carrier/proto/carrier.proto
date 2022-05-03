@@ -8,11 +8,43 @@ package applications.grpc.carrier.v1;
 service Carrier {
   rpc ConfirmAccountEmail(ConfirmAccountEmailRequest) returns (google.protobuf.Empty) {}
   rpc NewLoginToken(NewLoginTokenRequest) returns (google.protobuf.Empty) {}
+
   rpc NewClubSupporterSubscription(NewClubSupporterSubscriptionRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionCancelled(ClubSupporterSubscriptionCancelledRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionRefunded(ClubSupporterSubscriptionRefundedRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionPaymentFailure(ClubSupporterSubscriptionPaymentFailureRequest) returns (google.protobuf.Empty) {}
   rpc UpcomingClubSupporterSubscriptionRenewals(UpcomingClubSupporterSubscriptionRenewalsRequest) returns (google.protobuf.Empty) {}
+
+  rpc ClubSupporterRequiredPostReminder(ClubSupporterRequiredPostReminderRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSupporterNoPosts(ClubSupporterNoPostsRequest) returns (google.protobuf.Empty) {}
+
+  rpc AccountDeletionBegin(AccountDeletionBeginRequest) returns (google.protobuf.Empty) {}
+  rpc AccountDeletionReminder(AccountDeletionReminderRequest) returns (google.protobuf.Empty) {}
+  rpc AccountDeleted(AccountDeletedRequest) returns (google.protobuf.Empty) {}
+}
+
+message AccountDeletionReminderRequest {
+  Account account = 1;
+  google.protobuf.Timestamp deletionDate = 2;
+}
+
+message AccountDeletedRequest {
+  string email = 1;
+  string username = 2;
+}
+
+message AccountDeletionBeginRequest {
+  Account account = 1;
+  google.protobuf.Timestamp deletionDate = 2;
+}
+
+message ClubSupporterRequiredPostReminderRequest {
+  Club club = 1;
+  int64 timePassed = 2;
+}
+
+message ClubSupporterNoPostsRequest {
+  Club club = 1;
 }
 
 message Account {

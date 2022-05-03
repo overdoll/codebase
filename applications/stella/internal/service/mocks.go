@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
+	"time"
 )
 
 type EvaServiceMock struct {
@@ -47,5 +48,15 @@ func (s StingServiceMock) AddSuspendedClub(ctx context.Context, clubId string) e
 }
 
 func (s StingServiceMock) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+	return nil
+}
+
+type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) ClubSupporterRequiredPostReminder(ctx context.Context, clubId string, duration time.Duration) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterNoPosts(ctx context.Context, clubId string) error {
 	return nil
 }

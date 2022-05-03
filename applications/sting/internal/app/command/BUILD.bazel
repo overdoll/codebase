@@ -11,6 +11,7 @@ go_library(
         "create_character.go",
         "create_post.go",
         "create_series.go",
+        "delete_account_data.go",
         "delete_and_recreate_audience_index.go",
         "delete_and_recreate_categories_index.go",
         "delete_and_recreate_characters_index.go",

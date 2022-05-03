@@ -34,6 +34,8 @@ type Commands struct {
 	SuspendClubOperator command.SuspendClubOperatorHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
+
+	NewSupporterPost command.NewSupporterPostHandler
 }
 
 type Queries struct {

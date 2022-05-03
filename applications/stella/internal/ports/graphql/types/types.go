@@ -77,6 +77,12 @@ type Club struct {
 	ViewerIsOwner bool `json:"viewerIsOwner"`
 	// Whether or not you can become a supporter of this club.
 	CanSupport bool `json:"canSupport"`
+	// When the owner of the club needs to post the next supporter post.
+	//
+	// Usually 30 days after the next post.
+	//
+	// Nil if no supporter-only posts have been created.
+	NextSupporterPostTime *time.Time `json:"nextSupporterPostTime"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.

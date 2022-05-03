@@ -2,6 +2,8 @@ package adapters
 
 import (
 	"context"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
 
 	carrier "overdoll/applications/carrier/proto"
 )
@@ -23,7 +25,11 @@ func (s CarrierGrpc) ConfirmAccountEmail(ctx context.Context, accountId, email, 
 		Secret:  secret,
 	})
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s CarrierGrpc) NewLoginToken(ctx context.Context, email, token, secret string) error {
@@ -34,5 +40,42 @@ func (s CarrierGrpc) NewLoginToken(ctx context.Context, email, token, secret str
 		Secret: secret,
 	})
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s CarrierGrpc) AccountDeletionBegin(ctx context.Context, accountId string, deletionDate time.Time) error {
+
+	_, err := s.client.AccountDeletionBegin(ctx, &carrier.AccountDeletionBeginRequest{Account: &carrier.Account{Id: accountId}, DeletionDate: timestamppb.New(deletionDate)})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s CarrierGrpc) AccountDeletionReminder(ctx context.Context, accountId string, deletionDate time.Time) error {
+
+	_, err := s.client.AccountDeletionReminder(ctx, &carrier.AccountDeletionReminderRequest{Account: &carrier.Account{Id: accountId}, DeletionDate: timestamppb.New(deletionDate)})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s CarrierGrpc) AccountDeleted(ctx context.Context, username, email string) error {
+
+	_, err := s.client.AccountDeleted(ctx, &carrier.AccountDeletedRequest{Username: username, Email: email})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

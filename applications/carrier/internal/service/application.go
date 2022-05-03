@@ -61,6 +61,11 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			ClubSupporterSubscriptionPaymentFailure:   command.NewClubSupporterSubscriptionPaymentFailureHandler(mailingRepo, eva, stella),
 			ClubSupporterSubscriptionRefunded:         command.NewClubSupporterSubscriptionRefundedHandler(mailingRepo, eva, stella),
 			UpcomingClubSupporterSubscriptionRenewals: command.NewUpcomingClubSupporterSubscriptionRenewalsHandler(mailingRepo, eva, stella),
+			ClubSupporterNoPosts:                      command.NewClubSupporterNoPostsHandler(mailingRepo, eva, stella),
+			ClubSupporterRequiredPostReminder:         command.NewClubSupporterRequiredPostReminderHandler(mailingRepo, eva, stella),
+			AccountDeletionReminder:                   command.NewAccountDeletionReminderHandler(mailingRepo, eva),
+			AccountDeletionBegin:                      command.NewAccountDeletionBeginHandler(mailingRepo, eva),
+			AccountDeleted:                            command.NewAccountDeletedHandler(mailingRepo),
 		},
 		Queries: app.Queries{},
 	}

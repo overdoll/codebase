@@ -2,11 +2,16 @@ package command
 
 import (
 	"context"
+	"time"
 )
 
 type CarrierService interface {
 	ConfirmAccountEmail(ctx context.Context, accountId, email, id, secret string) error
 	NewLoginToken(ctx context.Context, email, token, secret string) error
+
+	AccountDeletionBegin(ctx context.Context, accountId string, deletionDate time.Time) error
+	AccountDeletionReminder(ctx context.Context, accountId string, deletionDate time.Time) error
+	AccountDeleted(ctx context.Context, username, email string) error
 }
 
 type HadesService interface {

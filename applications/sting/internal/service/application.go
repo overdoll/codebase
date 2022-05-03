@@ -157,6 +157,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, personalizationRepo, parley, loader),
+		Activities: activities.NewActivitiesHandler(postRepo, personalizationRepo, stella, parley, loader),
 	}
 }

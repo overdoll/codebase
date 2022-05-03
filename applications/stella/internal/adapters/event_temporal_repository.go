@@ -120,3 +120,19 @@ func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, clubId, acco
 
 	return nil
 }
+
+func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "NewSupporterPost_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.NewSupporterPost, workflows.NewSupporterPostInput{
+		ClubId: clubId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}

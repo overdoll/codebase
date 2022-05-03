@@ -122,3 +122,14 @@ func (s Server) DeleteAccountData(ctx context.Context, request *stella.DeleteAcc
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s Server) NewSupporterPost(ctx context.Context, request *stella.NewSupporterPostRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.NewSupporterPost.Handle(ctx, command.NewSupporterPost{
+		ClubId: request.ClubId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}

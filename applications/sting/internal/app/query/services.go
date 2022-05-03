@@ -13,4 +13,5 @@ type EvaService interface {
 type StellaService interface {
 	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
 	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
+	NewSupporterPost(ctx context.Context, clubId string) error
 }

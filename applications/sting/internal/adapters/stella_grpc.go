@@ -36,3 +36,14 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*club.Club,
 
 	return club.UnmarshalClubFromDatabase(clubId, md.Club.Slug, md.Club.Name, md.Club.IsSuspended, md.Club.OwnerAccountId), nil
 }
+
+func (s StellaGrpc) NewSupporterPost(ctx context.Context, clubId string) error {
+
+	_, err := s.client.NewSupporterPost(ctx, &stella.NewSupporterPostRequest{ClubId: clubId})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -6,6 +6,7 @@ go_library(
         "cancel_club_payout.go",
         "club_payment_deduction.go",
         "club_payment_deposit.go",
+        "delete_account_data.go",
         "delete_account_payout_method.go",
         "delete_and_recreate_club_payments_index.go",
         "delete_and_recreate_club_payouts_index.go",

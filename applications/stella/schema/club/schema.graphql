@@ -59,6 +59,15 @@ type Club implements Node @key(fields: "id") {
   """
   canSupport: Boolean!
 
+  """
+  When the owner of the club needs to post the next supporter post.
+
+  Usually 30 days after the next post.
+
+  Nil if no supporter-only posts have been created.
+  """
+  nextSupporterPostTime: Time
+
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 

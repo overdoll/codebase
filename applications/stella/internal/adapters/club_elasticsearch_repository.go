@@ -19,16 +19,18 @@ import (
 )
 
 type clubDocument struct {
-	Id                  string            `json:"id"`
-	Slug                string            `json:"slug"`
-	SlugAliases         []string          `json:"slug_aliases"`
-	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
-	Name                map[string]string `json:"name"`
-	CreatedAt           string            `json:"created_at"`
-	MembersCount        int               `json:"members_count"`
-	OwnerAccountId      string            `json:"owner_account_id"`
-	Suspended           bool              `json:"suspended"`
-	SuspendedUntil      *time.Time        `json:"suspended_until"`
+	Id                          string            `json:"id"`
+	Slug                        string            `json:"slug"`
+	SlugAliases                 []string          `json:"slug_aliases"`
+	ThumbnailResourceId         *string           `json:"thumbnail_resource_id"`
+	Name                        map[string]string `json:"name"`
+	CreatedAt                   string            `json:"created_at"`
+	MembersCount                int               `json:"members_count"`
+	OwnerAccountId              string            `json:"owner_account_id"`
+	Suspended                   bool              `json:"suspended"`
+	SuspendedUntil              *time.Time        `json:"suspended_until"`
+	NextSupporterPostTime       *time.Time        `json:"next_supporter_post_time"`
+	HasCreatedSupporterOnlyPost bool              `json:"has_created_supporter_only_post"`
 }
 
 const clubsIndexProperties = `
@@ -57,6 +59,12 @@ const clubsIndexProperties = `
 	},
     "suspended_until": {
 		"type": "date"
+	},
+    "next_supporter_post_time": {
+		"type": "date"
+	},
+    "has_created_supporter_only_post": {
+		"type": "boolean"
 	},
 	"created_at": {
 		"type": "date"
@@ -187,7 +195,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil)
+		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil, bd.NextSupporterPostTime, bd.HasCreatedSupporterOnlyPost)
 		newBrand.Node = paging.NewNode(hit.Sort)
 
 		brands = append(brands, newBrand)
@@ -219,15 +227,18 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context)
 			}
 
 			doc := clubDocument{
-				Id:                  m.Id,
-				Slug:                m.Slug,
-				SlugAliases:         m.SlugAliases,
-				ThumbnailResourceId: m.ThumbnailResourceId,
-				Name:                m.Name,
-				OwnerAccountId:      m.OwnerAccountId,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
-				Suspended:           m.Suspended,
-				SuspendedUntil:      m.SuspendedUntil,
+				Id:                          m.Id,
+				Slug:                        m.Slug,
+				SlugAliases:                 m.SlugAliases,
+				ThumbnailResourceId:         m.ThumbnailResourceId,
+				Name:                        m.Name,
+				OwnerAccountId:              m.OwnerAccountId,
+				CreatedAt:                   strconv.FormatInt(parse.Time().Unix(), 10),
+				MembersCount:                m.MembersCount,
+				Suspended:                   m.Suspended,
+				SuspendedUntil:              m.SuspendedUntil,
+				HasCreatedSupporterOnlyPost: m.HasCreatedSupporterOnlyPost,
+				NextSupporterPostTime:       m.NextSupporterPostTime,
 			}
 
 			_, err = r.client.
@@ -238,7 +249,7 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context)
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index brands: %v", err)
+				return fmt.Errorf("failed to index clubs: %v", err)
 			}
 		}
 

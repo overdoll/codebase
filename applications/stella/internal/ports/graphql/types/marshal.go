@@ -77,17 +77,18 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 	}
 
 	return &Club{
-		ID:            relay.NewID(Club{}, result.ID()),
-		Reference:     result.ID(),
-		Name:          result.Name().TranslateDefault(""),
-		Slug:          result.Slug(),
-		SlugAliases:   slugAliases,
-		CanSupport:    result.CanSupport(),
-		MembersCount:  result.MembersCount(),
-		Thumbnail:     res,
-		Owner:         &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-		Suspension:    suspension,
-		ViewerIsOwner: accountId == result.OwnerAccountId(),
+		ID:                    relay.NewID(Club{}, result.ID()),
+		Reference:             result.ID(),
+		Name:                  result.Name().TranslateDefault(""),
+		Slug:                  result.Slug(),
+		SlugAliases:           slugAliases,
+		NextSupporterPostTime: result.NextSupporterPostTime(),
+		CanSupport:            result.CanSupport(),
+		MembersCount:          result.MembersCount(),
+		Thumbnail:             res,
+		Owner:                 &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:            suspension,
+		ViewerIsOwner:         accountId == result.OwnerAccountId(),
 	}
 }
 

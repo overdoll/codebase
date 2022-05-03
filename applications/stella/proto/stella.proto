@@ -67,6 +67,10 @@ message CanDeleteAccountDataResponse {
   bool canDelete = 1;
 }
 
+message NewSupporterPostRequest {
+  string clubId = 1;
+}
+
 service Stella {
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
   rpc GetAccountClubDigest(GetAccountClubDigestRequest) returns (GetAccountClubDigestResponse);
@@ -77,4 +81,6 @@ service Stella {
 
   rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
   rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
+
+  rpc NewSupporterPost(NewSupporterPostRequest) returns (google.protobuf.Empty);
 }
