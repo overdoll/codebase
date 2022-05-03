@@ -83,5 +83,6 @@ func TestClubCassandraRepository_TestReadPartitions_cursor(t *testing.T) {
 
 func newClubRepository(t *testing.T) adapters.ClubCassandraElasticsearchRepository {
 	session := bootstrap.InitializeDatabaseSession()
-	return adapters.NewClubCassandraElasticsearchRepository(session)
+	esClient := bootstrap.InitializeElasticSearchSession()
+	return adapters.NewClubCassandraElasticsearchRepository(session, esClient)
 }

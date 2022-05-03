@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "delete_account_data.go",
+        "delete_session_data.go",
+        "hades_delete_account_data.go",
+        "parley_delete_account_data.go",
+        "ringer_delete_account_data.go",
+        "stella_delete_account_data.go",
+        "sting_delete_account_data.go",
+        "update_account_cancel_deletion.go",
+        "update_account_deleted.go",
+        "update_account_is_deleting.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/app/workflows/activities",
+    visibility = ["//applications/eva:__subpackages__"],
+    deps = [
+        "//applications/eva/internal/app/command",
+        "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/multi_factor",
+        "//applications/eva/internal/domain/session",
+    ],
+)

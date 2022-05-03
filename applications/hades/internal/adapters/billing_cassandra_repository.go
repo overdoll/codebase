@@ -891,6 +891,65 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 	return subscription, nil
 }
 
+func (r BillingCassandraElasticsearchRepository) HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, accountId string) (*bool, error) {
+
+	if requester != nil {
+		if err := billing.CanViewAccountClubSupporterSubscription(requester, accountId); err != nil {
+			return nil, err
+		}
+	}
+
+	type activeOrCancelledCount struct {
+		Count int `db:"count"`
+	}
+
+	var clubMemberCounter activeOrCancelledCount
+
+	if err := accountClubSupporterSubscriptionsByAccountTable.
+		SelectBuilder().
+		CountAll().
+		Where(qb.Eq("account_id"), qb.In("status")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindMap(map[string]interface{}{
+			"account_id": accountId,
+			"status":     []string{billing.Cancelled.String(), billing.Active.String()},
+		}).
+		Get(&clubMemberCounter); err != nil {
+		return nil, fmt.Errorf("failed to get has active or cancelled account club supporter subscriptions: %v", err)
+	}
+
+	value := clubMemberCounter.Count > 0
+
+	return &value, nil
+}
+
+func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+
+	hasActive, err := r.HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx, nil, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	if *hasActive {
+		return errors.New("cannot delete account data for account that has active or cancelled subscriptions")
+	}
+
+	// delete any saved payment methods
+	if err := accountSavedPaymentMethodTable.
+		DeleteBuilder().
+		Where(qb.Eq("account_id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountSavedPaymentMethod{AccountId: accountId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete saved payment methods for account: %v", err)
+	}
+
+	return nil
+}
+
 func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
 
 	var accountClubSupporting []*accountClubSupporterSubscription

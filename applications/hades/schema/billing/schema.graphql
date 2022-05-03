@@ -906,6 +906,13 @@ extend type Account {
     """The end date, optional (will search until end of time)."""
     to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
+
+  """
+  Whether or not this account has at least 1 active or cancelled club supporter subscription.
+
+  This should be false in order to delete the account.
+  """
+  hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean! @goField(forceResolver: true)
 }
 
 extend type Club {

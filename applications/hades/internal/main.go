@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc"
 	"os"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/service"
+	hades "overdoll/applications/hades/proto"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -47,6 +49,7 @@ func Run(cmd *cobra.Command, args []string) {
 		go RunWorker(cmd, args)
 	}
 
+	go RunGrpc(cmd, args)
 	RunHttp(cmd, args)
 }
 
@@ -61,6 +64,21 @@ func RunWorker(cmd *cobra.Command, args []string) {
 	defer cleanup()
 
 	bootstrap.InitializeWorkerServer(srv)
+}
+
+func RunGrpc(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, cleanup := service.NewApplication(ctx)
+
+	defer cleanup()
+
+	s := ports.NewGrpcServer(&app)
+
+	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
+		hades.RegisterHadesServer(server, s)
+	})
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {

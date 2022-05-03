@@ -11,6 +11,8 @@ import (
 type Repository interface {
 	SearchAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountClubSupporterSubscriptionFilters) ([]*AccountClubSupporterSubscription, error)
 	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
+	HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, accountId string) (*bool, error)
+
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
@@ -48,6 +50,8 @@ type Repository interface {
 	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
 	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error
+
+	DeleteAccountData(ctx context.Context, accountId string) error
 }
 
 type FileRepository interface {

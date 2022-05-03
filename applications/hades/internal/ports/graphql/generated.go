@@ -59,15 +59,16 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ClubSupporterSubscriptions        func(childComplexity int, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) int
-		ExpiredClubSupporterSubscriptions func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ID                                func(childComplexity int) int
-		SavedPaymentMethods               func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Transactions                      func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
-		TransactionsChargebackCount       func(childComplexity int) int
-		TransactionsPaymentCount          func(childComplexity int) int
-		TransactionsRefundCount           func(childComplexity int) int
-		TransactionsTotalCount            func(childComplexity int) int
+		ClubSupporterSubscriptions                            func(childComplexity int, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) int
+		ExpiredClubSupporterSubscriptions                     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		HasActiveOrCancelledAccountClubSupporterSubscriptions func(childComplexity int) int
+		ID                                                    func(childComplexity int) int
+		SavedPaymentMethods                                   func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Transactions                                          func(childComplexity int, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) int
+		TransactionsChargebackCount                           func(childComplexity int) int
+		TransactionsPaymentCount                              func(childComplexity int) int
+		TransactionsRefundCount                               func(childComplexity int) int
+		TransactionsTotalCount                                func(childComplexity int) int
 	}
 
 	AccountActiveClubSupporterSubscription struct {
@@ -437,6 +438,7 @@ type AccountResolver interface {
 	TransactionsRefundCount(ctx context.Context, obj *types.Account) (int, error)
 	TransactionsChargebackCount(ctx context.Context, obj *types.Account) (int, error)
 	Transactions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
+	HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, obj *types.Account) (bool, error)
 }
 type AccountActiveClubSupporterSubscriptionResolver interface {
 	Transactions(ctx context.Context, obj *types.AccountActiveClubSupporterSubscription, after *string, before *string, first *int, last *int, typeArg *types.AccountTransactionType, from *time.Time, to *time.Time) (*types.AccountTransactionConnection, error)
@@ -533,6 +535,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ExpiredClubSupporterSubscriptions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "Account.hasActiveOrCancelledAccountClubSupporterSubscriptions":
+		if e.complexity.Account.HasActiveOrCancelledAccountClubSupporterSubscriptions == nil {
+			break
+		}
+
+		return e.complexity.Account.HasActiveOrCancelledAccountClubSupporterSubscriptions(childComplexity), true
 
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
@@ -3164,6 +3173,8 @@ extend type Account {
     """The end date, optional (will search until end of time)."""
     to: Time
   ): AccountTransactionConnection! @goField(forceResolver: true)
+
+  hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean! @goField(forceResolver: true)
 }
 
 extend type Club {
@@ -4700,6 +4711,41 @@ func (ec *executionContext) _Account_transactions(ctx context.Context, field gra
 	res := resTmp.(*types.AccountTransactionConnection)
 	fc.Result = res
 	return ec.marshalNAccountTransactionConnection2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountTransactionConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_hasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().HasActiveOrCancelledAccountClubSupporterSubscriptions(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_id(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -13978,6 +14024,26 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_transactions(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "hasActiveOrCancelledAccountClubSupporterSubscriptions":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_hasActiveOrCancelledAccountClubSupporterSubscriptions(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

@@ -32,6 +32,8 @@ type Commands struct {
 	CreateCancellationReason           command.CreateCancellationReasonHandler
 	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
 	UpdateCancellationReasonTitle      command.UpdateCancellationReasonTitleHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {
@@ -56,4 +58,8 @@ type Queries struct {
 	AccountTransactionsChargebackCount query.AccountTransactionsChargebackCountHandler
 	AccountTransactionsPaymentCount    query.AccountTransactionsPaymentCountHandler
 	AccountTransactionsRefundCount     query.AccountTransactionsRefundCountHandler
+
+	HasActiveOrCancelledAccountClubSupporterSubscriptions query.HasActiveOrCancelledAccountClubSupporterSubscriptionsHandler
+
+	CanDeleteAccountData query.CanDeleteAccountDataHandler
 }

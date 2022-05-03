@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/passport"
 	"time"
 

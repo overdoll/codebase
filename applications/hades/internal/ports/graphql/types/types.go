@@ -35,8 +35,9 @@ type Account struct {
 	// Total amount of chargeback transactions.
 	TransactionsChargebackCount int `json:"transactionsChargebackCount"`
 	// Transactions for this account.
-	Transactions *AccountTransactionConnection `json:"transactions"`
-	ID           relay.ID                      `json:"id"`
+	Transactions                                          *AccountTransactionConnection `json:"transactions"`
+	HasActiveOrCancelledAccountClubSupporterSubscriptions bool                          `json:"hasActiveOrCancelledAccountClubSupporterSubscriptions"`
+	ID                                                    relay.ID                      `json:"id"`
 }
 
 func (Account) IsEntity() {}

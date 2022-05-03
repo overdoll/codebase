@@ -48,6 +48,11 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
+
+	if os.Getenv("DISABLE_WORKER") == "" {
+		go RunWorker(cmd, args)
+	}
+
 	go RunGrpc(cmd, args)
 	RunHttp(cmd, args)
 }

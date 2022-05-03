@@ -16,6 +16,28 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	result, err := r.App.Queries.HasActiveOrCancelledAccountClubSupporterSubscriptions.
+		Handle(
+			ctx,
+			query.HasActiveOrCancelledAccountClubSupporterSubscriptions{
+				Principal: principal.FromContext(ctx),
+				AccountId: obj.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return false, err
+	}
+
+	return *result, nil
+}
+
 func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) (*types.AccountClubSupporterSubscriptionConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

@@ -99,6 +99,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			ExtendAccountClubSupporterSubscription:                           command.NewExtendAccountClubSupporterSubscription(billingRepo, ccbillRepo),
 			GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory: command.NewGenerateClubSupporterPaymentReceiptFromAccountTransaction(billingRepo, billingFileRepo),
 			DeleteAndRecreateAccountTransactionsIndex:                        command.NewDeleteAndRecreateAccountTransactionsIndexHandler(billingRepo),
+			DeleteAccountData:                                                command.NewDeleteAccountDataHandler(billingRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                                     query.NewPrincipalByIdHandler(eva),
@@ -119,6 +120,9 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			AccountTransactionsRefundCount:     query.NewAccountTransactionsRefundCountHandler(billingRepo),
 			AccountTransactionsPaymentCount:    query.NewAccountTransactionsPaymentCountHandler(billingRepo),
 			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingRepo),
+
+			HasActiveOrCancelledAccountClubSupporterSubscriptions: query.NewHasActiveOrCancelledAccountClubSupporterSubscriptionsHandler(billingRepo),
+			CanDeleteAccountData: query.NewCanDeleteAccountDataHandler(billingRepo),
 		},
 		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
