@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cdfda9f9dd19083152086b0106fff32e>>
- * @relayHash bf2ca9e6d145663ac17871995c9b7947
+ * @generated SignedSource<<667bf912bde48464247c847713a0035c>>
+ * @relayHash 27950bcedd2b37db842ebbd540a62833
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bf2ca9e6d145663ac17871995c9b7947
+// @relayRequestID 27950bcedd2b37db842ebbd540a62833
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -110,35 +110,36 @@ v7 = {
 v8 = {
   "alias": null,
   "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v9 = [
+v10 = [
   (v7/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "videoThumbnail",
-    "plural": false,
-    "selections": [
-      (v6/*: any*/)
-    ],
-    "storageKey": null
-  },
   (v8/*: any*/),
+  (v9/*: any*/),
   (v5/*: any*/)
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v11 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -285,7 +286,7 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
-                "selections": (v9/*: any*/),
+                "selections": (v10/*: any*/),
                 "storageKey": null
               }
             ],
@@ -300,7 +301,7 @@ return {
             "plural": false,
             "selections": [
               (v5/*: any*/),
-              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -308,7 +309,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v9/*: any*/),
+                "selections": (v10/*: any*/),
                 "storageKey": null
               },
               {
@@ -321,7 +322,6 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -338,8 +338,9 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
+                  (v9/*: any*/),
                   (v7/*: any*/),
+                  (v8/*: any*/),
                   (v5/*: any*/)
                 ],
                 "storageKey": null
@@ -369,7 +370,7 @@ return {
             "kind": "LinkedField",
             "name": "audience",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": null
           },
           {
@@ -380,7 +381,7 @@ return {
             "name": "characters",
             "plural": true,
             "selections": [
-              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -388,7 +389,7 @@ return {
                 "kind": "LinkedField",
                 "name": "series",
                 "plural": false,
-                "selections": (v11/*: any*/),
+                "selections": (v12/*: any*/),
                 "storageKey": null
               },
               (v5/*: any*/)
@@ -402,16 +403,17 @@ return {
             "kind": "LinkedField",
             "name": "categories",
             "plural": true,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": null
-          }
+          },
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "bf2ca9e6d145663ac17871995c9b7947",
+    "id": "27950bcedd2b37db842ebbd540a62833",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

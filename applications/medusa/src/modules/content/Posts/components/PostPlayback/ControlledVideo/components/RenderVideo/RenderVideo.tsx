@@ -2,12 +2,11 @@ import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { RenderVideoFragment$key } from '@//:artifacts/RenderVideoFragment.graphql'
-import { MutableRefObject } from 'react'
+import { forwardRef } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   onClick?: () => void
   muted?: boolean
-  sendRef?: MutableRefObject<any>
   query: RenderVideoFragment$key
 }
 
@@ -17,15 +16,18 @@ const Fragment = graphql`
       url
       mimeType
     }
+    videoThumbnail {
+      url
+    }
   }
 `
 
-export default function RenderVideo ({
+const RenderVideo = forwardRef<any, Props>(({
   query,
   sendRef,
   muted = true,
   ...rest
-}: Props): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
 
   return (
@@ -33,11 +35,12 @@ export default function RenderVideo ({
       disablePictureInPicture
       controlsList='nodownload noremoteplayback noplaybackrate'
       as='video'
-      ref={sendRef}
+      ref={forwardRef}
       muted={muted}
       bg='gray.800'
       loop
       preload='auto'
+      poster={data?.videoThumbnail?.url}
       {...rest}
     >
       {data.urls.map((item, index) => (
@@ -49,4 +52,6 @@ export default function RenderVideo ({
       )}
     </Box>
   )
-}
+})
+
+export default RenderVideo

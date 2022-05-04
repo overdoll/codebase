@@ -3,7 +3,6 @@ import type { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
 import { graphql } from 'react-relay'
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { Heading, HStack, Stack, useUpdateEffect } from '@chakra-ui/react'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import SuggestedPosts from './SuggestedPosts/SuggestedPosts'
 import { useQueryParam } from 'use-query-params'
 import { useEffect } from 'react'
@@ -89,33 +88,31 @@ export default function PublicPost (props: Props): JSX.Element {
           {getCharacterNames()} by {queryData.post.club.name} :: overdoll.com/{queryData.post.club.slug}
         </title>
       </Head>
-      <PageWrapper>
-        <Stack spacing={4}>
-          <HStack spacing={2} justify='space-between'>
-            <Heading color='gray.00' fontSize='2xl'>
-              <Trans>
-                View Post
-              </Trans>
-            </Heading>
-            <PostSearchButton routeTo='/search' />
-          </HStack>
-          <Stack spacing={24}>
-            <GlobalVideoManagerProvider>
-              <PublicPostPage query={queryData.post} viewerQuery={queryData.viewer} />
-              <Stack spacing={4}>
-                <HStack spacing={2} justify='space-between'>
-                  <Heading color='gray.00' fontSize='2xl'>
-                    <Trans>
-                      Suggested Posts
-                    </Trans>
-                  </Heading>
-                </HStack>
-                <SuggestedPosts query={queryData.post} viewerQuery={queryData.viewer} />
-              </Stack>
-            </GlobalVideoManagerProvider>
-          </Stack>
+      <Stack spacing={4}>
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>
+              View Post
+            </Trans>
+          </Heading>
+          <PostSearchButton routeTo='/search' />
+        </HStack>
+        <Stack spacing={24}>
+          <GlobalVideoManagerProvider>
+            <PublicPostPage query={queryData.post} viewerQuery={queryData.viewer} />
+            <Stack spacing={4}>
+              <HStack spacing={2} justify='space-between'>
+                <Heading color='gray.00' fontSize='2xl'>
+                  <Trans>
+                    Suggested Posts
+                  </Trans>
+                </Heading>
+              </HStack>
+              <SuggestedPosts query={queryData.post} viewerQuery={queryData.viewer} />
+            </Stack>
+          </GlobalVideoManagerProvider>
         </Stack>
-      </PageWrapper>
+      </Stack>
     </>
   )
 }

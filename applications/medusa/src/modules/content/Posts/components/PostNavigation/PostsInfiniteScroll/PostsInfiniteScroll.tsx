@@ -1,19 +1,20 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
-import { PostVideoManagerProvider } from '../../../index'
-import { ObserverManagerProvider } from '../../../support/ObserverManager/ObserverManager'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
 import { SmallBackgroundBox } from '../../../../PageLayout'
 import { Trans } from '@lingui/macro'
+import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
+import { Fragment } from 'react'
+import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 
 interface Props {
   query: PostsInfiniteScrollFragment$key
   viewerQuery: PostsInfiniteScrollViewerFragment$key | null
   hasNext: boolean
-  loadNext: (number, options) => {}
+  loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
 }
 
@@ -54,36 +55,29 @@ export default function PostsInfiniteScroll ({
     )
   }
 
+  const SpinnerSection = (): JSX.Element => {
+    if (hasNext) {
+      return (
+        <Flex w='100%' justify='center'>
+          <Spinner color='gray.100' size='sm' />
+        </Flex>
+      )
+    }
+    return <></>
+  }
+
   return (
     <Stack spacing={16}>
       {data?.edges.map((item, index) =>
         (
-          <Box key={index}>
-            <ObserverManagerProvider>
-              {({ isObserving }) => {
-                if (isObserving && index >= (data.edges.length - 2)) {
-                  if (!isLoadingNext && hasNext) {
-                    loadNext(9, {})
-                  }
-                }
-                return (
-                  <PostVideoManagerProvider>
-                    <FullSimplePost query={item.node} viewerQuery={viewerData} />
-                  </PostVideoManagerProvider>
-                )
-              }}
-            </ObserverManagerProvider>
-          </Box>))}
-      {hasNext &&
-        (
-          <>
-            {isLoadingNext &&
-              (
-                <Flex w='100%' justify='center'>
-                  <Spinner color='gray.100' size='sm' />
-                </Flex>)}
-          </>
-        )}
+          <Fragment key={index}>
+            {hasNext && <LoadMoreObserver loadNext={loadNext} index={index} length={data.edges.length} />}
+            <Box key={index}>
+              <FullSimplePost query={item.node} viewerQuery={viewerData} />
+            </Box>
+          </Fragment>
+        ))}
+      <SpinnerSection />
     </Stack>
   )
 }

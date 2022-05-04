@@ -3,9 +3,8 @@ import type { UploadReviewStepFragment$key } from '@//:artifacts/UploadReviewSte
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
-import { GlobalVideoManagerProvider, PostVideoManagerProvider } from '@//:modules/content/Posts'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import { Stack } from '@chakra-ui/react'
 
 interface Props {
@@ -38,11 +37,7 @@ export default function UploadReviewStep ({
         </PageSectionDescription>
       </PageSectionWrap>
       <GlobalVideoManagerProvider>
-        <ObserverManagerProvider>
-          <PostVideoManagerProvider>
-            <PostReview query={data} />
-          </PostVideoManagerProvider>
-        </ObserverManagerProvider>
+        <PostReview query={data} />
       </GlobalVideoManagerProvider>
     </Stack>
   )

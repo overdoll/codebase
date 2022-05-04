@@ -1,24 +1,22 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { useContext } from 'react'
-import { PostVideoManagerContext } from '../../../support/PostVideoManager/PostVideoManager'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
-import PostSimpleMedia from '../../PostMedia/PostSimpleMedia/PostSimpleMedia'
 import { Link } from '../../../../../routing'
+import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
+import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 
 interface Props {
-  query: PostGalleryPublicSimpleFragment$key | null
+  query: PostGalleryPublicSimpleFragment$key
 }
 
 const Fragment = graphql`
   fragment PostGalleryPublicSimpleFragment on Post {
-    id
     reference
     content {
       resource {
-        ...PostSimpleMediaFragment
+        ...PostMediaFragment
       }
       ...PostSupporterContentFragment
     }
@@ -28,6 +26,7 @@ const Fragment = graphql`
     }
     ...PostClickableCategoriesFragment
     ...PostClickableCharactersFragment
+    ...PostSlideIndexFragment
   }
 `
 
@@ -36,41 +35,36 @@ export default function PostGalleryPublicSimple ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const {
-    onInitialize
-  } = useContext(PostVideoManagerContext)
-
   return (
-    <Stack spacing={1}>
-      <Box>
-        <Swiper
-          spaceBetween={20}
-          observer
-          grabCursor
-          speed={100}
-          onSwiper={(swiper) =>
-            onInitialize(swiper)}
-          onObserverUpdate={(swiper) => onInitialize(swiper)}
-        >
-          {data?.content.map((item, index) =>
-            <SwiperSlide
-              key={index}
+    <Box>
+      <Swiper
+        grabCursor
+        spaceBetween={20}
+        speed={100}
+      >
+        <PostSlideIndex query={data} />
+        {data?.content.map((item, index) =>
+          <SwiperSlide
+            key={index}
+          >
+            <Link
+              href={{
+                pathname: '/[slug]/post/[reference]',
+                query: {
+                  slug: data.club.slug,
+                  reference: data?.reference,
+                  ...(index > 0 && { slide: index })
+                }
+              }}
+              passHref
             >
-              <Link
-                href={{
-                  pathname: '/[slug]/post/[reference]',
-                  query: {
-                    slug: data.club.slug,
-                    reference: data?.reference
-                  }
-                }}
-                passHref
-              >
-                <Box
-                  as='a'
+              <Box as='a'>
+                <Flex
                   bg='gray.800'
                   w='100%'
                   cursor='pointer'
+                  align='center'
+                  justify='center'
                   minH={300}
                   maxH={800}
                 >
@@ -78,18 +72,14 @@ export default function PostGalleryPublicSimple ({
                     query={item}
                     clubQuery={data.club}
                   >
-                    <PostSimpleMedia
-                      query={item.resource}
-                      index={index}
-                      reference={data.reference}
-                    />
+                    <PostMedia controls={{ canControl: false }} query={item.resource} />
                   </PostSupporterContent>
-                </Box>
-              </Link>
-            </SwiperSlide>
-          )}
-        </Swiper>
-      </Box>
-    </Stack>
+                </Flex>
+              </Box>
+            </Link>
+          </SwiperSlide>
+        )}
+      </Swiper>
+    </Box>
   )
 }

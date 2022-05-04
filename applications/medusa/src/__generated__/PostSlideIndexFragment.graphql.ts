@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<719a64282926aa93efa2dee67dbe73fc>>
+ * @generated SignedSource<<e2f39fe2532e19d7736a99c62cd857bc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,32 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostIndexerFragment$data = {
+export type PostSlideIndexFragment$data = {
+  readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
   }>;
-  readonly " $fragmentType": "PostIndexerFragment";
+  readonly " $fragmentType": "PostSlideIndexFragment";
 };
-export type PostIndexerFragment = PostIndexerFragment$data;
-export type PostIndexerFragment$key = {
-  readonly " $data"?: PostIndexerFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PostIndexerFragment">;
+export type PostSlideIndexFragment = PostSlideIndexFragment$data;
+export type PostSlideIndexFragment$key = {
+  readonly " $data"?: PostSlideIndexFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PostIndexerFragment",
+  "name": "PostSlideIndexFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -51,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c73520286966af6a8e53b1998c0782d1";
+(node as any).hash = "b0eedacfc79453500fe1b19896f44154";
 
 export default node;

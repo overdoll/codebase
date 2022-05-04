@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
+import { createContext, ReactNode, useCallback, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
 interface Props {
@@ -10,11 +10,6 @@ interface Context {
   videoMuted: boolean
   changeVideoVolume: (e) => void
   changeVideoMuted: (e) => void
-  onVideoPlay: (identifier, paused, target) => void
-}
-
-interface SingleVideoState {
-  [identifier: string]: HTMLVideoElement
 }
 
 const defaultValue = {
@@ -23,8 +18,6 @@ const defaultValue = {
   changeVideoVolume: (e) => {
   },
   changeVideoMuted: (e) => {
-  },
-  onVideoPlay: (identifier, paused, target) => {
   }
 }
 
@@ -36,8 +29,6 @@ export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
   const [volume, setVolume] = useState(globalVideoVolume)
   const [muted, setMuted] = useState(defaultValue.videoMuted)
 
-  const [playing, setPlaying] = useState<SingleVideoState>({})
-
   const onChangeMuted = useCallback((isMuted) => {
     setMuted(isMuted)
   }, [])
@@ -46,6 +37,8 @@ export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
     setVolume(volume)
     setGlobalVideoVolume(volume)
   }, [])
+
+  /*
 
   const removeKeyFromObject = (key, object): SingleVideoState => {
     const newObject = {}
@@ -95,12 +88,13 @@ export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
     }
   }, [playing])
 
+   */
+
   const contextValue = {
     videoVolume: volume,
     videoMuted: muted,
     changeVideoVolume: (volume) => onChangeVolume(volume),
-    changeVideoMuted: (volume) => onChangeMuted(volume),
-    onVideoPlay: (identifier, paused, target) => onVideoPlay(identifier, paused, target)
+    changeVideoMuted: (volume) => onChangeMuted(volume)
   }
 
   return (

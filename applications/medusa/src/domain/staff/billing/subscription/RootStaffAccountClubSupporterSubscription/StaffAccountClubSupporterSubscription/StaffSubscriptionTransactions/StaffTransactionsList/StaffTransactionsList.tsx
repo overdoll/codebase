@@ -12,11 +12,12 @@ import {
 import { EmptyBoundary, EmptyTransactions } from '@//:modules/content/Placeholder'
 import { StaffTransactionsListFragment$key } from '@//:artifacts/StaffTransactionsListFragment.graphql'
 import StaffTransactionCard from './StaffTransactionCard/StaffTransactionCard'
+import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 
 interface Props {
   query: StaffTransactionsListFragment$key
   hasNext: boolean
-  loadNext: () => {}
+  loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
 }
 

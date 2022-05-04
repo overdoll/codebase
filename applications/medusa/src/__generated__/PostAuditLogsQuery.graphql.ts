@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7e6a62075f3fe4578d019be5066b8af6>>
- * @relayHash a0b159508e946c778c52de631fedea75
+ * @generated SignedSource<<b79a27543f6a4966ad3d1cd6b8ac4a48>>
+ * @relayHash d03c08c6d5ea44edf47931251d68e437
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a0b159508e946c778c52de631fedea75
+// @relayRequestID d03c08c6d5ea44edf47931251d68e437
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,6 +93,18 @@ v4 = {
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v3/*: any*/)
+  ],
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -211,19 +223,8 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v4/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "ResourceUrl",
-                                    "kind": "LinkedField",
-                                    "name": "videoThumbnail",
-                                    "plural": false,
-                                    "selections": [
-                                      (v3/*: any*/)
-                                    ],
-                                    "storageKey": null
-                                  },
                                   (v5/*: any*/),
+                                  (v6/*: any*/),
                                   (v2/*: any*/)
                                 ],
                                 "storageKey": null
@@ -232,13 +233,6 @@ return {
                             "storageKey": null
                           },
                           (v2/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "reference",
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
@@ -255,8 +249,9 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v5/*: any*/),
+                                  (v6/*: any*/),
                                   (v4/*: any*/),
+                                  (v5/*: any*/),
                                   (v2/*: any*/)
                                 ],
                                 "storageKey": null
@@ -277,6 +272,13 @@ return {
                               },
                               (v2/*: any*/)
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "reference",
                             "storageKey": null
                           }
                         ],
@@ -364,7 +366,7 @@ return {
     ]
   },
   "params": {
-    "id": "a0b159508e946c778c52de631fedea75",
+    "id": "d03c08c6d5ea44edf47931251d68e437",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

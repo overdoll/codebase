@@ -2,18 +2,19 @@ import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ControlledVideoFragment$key } from '@//:artifacts/ControlledVideoFragment.graphql'
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import useTimedDisclosure from './hooks/useTimedDisclosure/useTimedDisclosure'
 import RenderVideo from './components/RenderVideo/RenderVideo'
 import ControlVideo from './components/ControlVideo/ControlVideo'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Controls {
-  canSeek?: boolean
-  canFullscreen?: boolean
-  canControl?: boolean
+  canSeek?: boolean | undefined
+  canFullscreen?: boolean | undefined
+  canControl?: boolean | undefined
 }
 
-interface Props extends HTMLChakraProps<any> {
+export interface ControlledVideoProps extends HTMLChakraProps<any> {
   query: ControlledVideoFragment$key
   onPlay?: (paused: boolean, target?) => void
   onPause?: (paused: boolean, target?) => void
@@ -31,7 +32,7 @@ const Fragment = graphql`
   }
 `
 
-export default function ControlledVideo ({
+const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
   query,
   onPlay: onDefaultPlay,
   onPause: onDefaultPause,
@@ -42,7 +43,7 @@ export default function ControlledVideo ({
   isMuted: isDefaultMuted = true,
   controls,
   ...rest
-}: Props): JSX.Element {
+}: ControlledVideoProps, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
 
   const ref = useRef<HTMLVideoElement | null>(null)
@@ -150,6 +151,13 @@ export default function ControlledVideo ({
     onDefaultInitialize?.(ref.current)
   }, [ref.current])
 
+  // if outside values change, update in sync
+  useUpdateEffect(() => {
+    if (ref.current == null) return
+    ref.current.volume = defaultVolume
+    ref.current.muted = isDefaultMuted
+  }, [defaultVolume, isDefaultMuted, ref.current])
+
   return (
     <Box
       minW={60}
@@ -161,7 +169,7 @@ export default function ControlledVideo ({
     >
       <RenderVideo
         query={data}
-        sendRef={ref}
+        ref={ref}
         onClick={onTap}
         onCanPlay={onCanPlay}
         onCanPlayThrough={onCanPlay}
@@ -196,4 +204,6 @@ export default function ControlledVideo ({
       />
     </Box>
   )
-}
+})
+
+export default ControlledVideo
