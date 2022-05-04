@@ -136,3 +136,36 @@ func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId st
 
 	return nil
 }
+
+func (r EventTemporalRepository) TerminateClub(ctx context.Context, clubId, accountId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "TerminateClub_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.TerminateClub, workflows.TerminateClubInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, clubId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "UnTerminateClub_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnTerminateClub, workflows.UnTerminateClubInput{
+		ClubId: clubId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}

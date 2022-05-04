@@ -82,8 +82,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ArchivePost:   command.NewArchivePostHandler(postRepo, eventRepo),
 			UnArchivePost: command.NewUnArchivePostHandler(postRepo, eventRepo),
 
-			AddSuspendedClub:    command.NewAddSuspendedClubHandler(postRepo),
-			RemoveSuspendedClub: command.NewRemoveSuspendedClubHandler(postRepo),
+			AddTerminatedClub:    command.NewAddTerminatedClubHandler(postRepo),
+			RemoveTerminatedClub: command.NewRemoveTerminatedClubHandler(postRepo),
 
 			DeleteAndRecreatePostsIndex:      command.NewDeleteAndRecreatePostsIndexHandler(postRepo),
 			DeleteAndRecreateSeriesIndex:     command.NewDeleteAndRecreateSeriesIndexHandler(postRepo),

@@ -19,11 +19,11 @@ func NewCanDeleteAccountDataHandler(cr club.Repository) CanDeleteAccountDataHand
 
 func (h CanDeleteAccountDataHandler) Handle(ctx context.Context, query CanDeleteAccountData) (bool, error) {
 
-	results, err := h.cr.GetAccountClubsCountOperator(ctx, query.AccountId)
+	res, err := h.cr.HasNonTerminatedClubs(ctx, nil, query.AccountId)
 
 	if err != nil {
 		return false, err
 	}
 
-	return results == 0, nil
+	return !res, nil
 }

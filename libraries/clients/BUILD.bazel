@@ -18,6 +18,7 @@ go_library(
     deps = [
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/proto:v1_go_proto",
         "//applications/loader/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/ringer/proto:v1_go_proto",

@@ -12,11 +12,11 @@ message Post {
   string clubId = 1;
 }
 
-message AddSuspendedClubRequest {
+message AddTerminatedClubRequest {
   string clubId = 1;
 }
 
-message RemoveSuspendedClubRequest {
+message RemoveTerminatedClubRequest {
   string clubId = 1;
 }
 
@@ -30,8 +30,8 @@ service Sting {
   rpc RemovePost(PostRequest) returns (google.protobuf.Empty);
   rpc RejectPost(PostRequest) returns (google.protobuf.Empty);
   rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
-  rpc AddSuspendedClub(AddSuspendedClubRequest) returns (google.protobuf.Empty);
-  rpc RemoveSuspendedClub(RemoveSuspendedClubRequest) returns (google.protobuf.Empty);
+  rpc AddTerminatedClub(AddTerminatedClubRequest) returns (google.protobuf.Empty);
+  rpc RemoveTerminatedClub(RemoveTerminatedClubRequest) returns (google.protobuf.Empty);
 
   rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

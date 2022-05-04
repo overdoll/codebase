@@ -32,6 +32,8 @@ var clubTable = table.New(table.Metadata{
 		"suspended_until",
 		"next_supporter_post_time",
 		"has_created_supporter_only_post",
+		"terminated",
+		"terminated_by_account_id",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -50,6 +52,8 @@ type clubs struct {
 	SuspendedUntil              *time.Time        `db:"suspended_until"`
 	NextSupporterPostTime       *time.Time        `db:"next_supporter_post_time"`
 	HasCreatedSupporterOnlyPost bool              `db:"has_created_supporter_only_post"`
+	Terminated                  bool              `db:"terminated"`
+	TerminatedByAccountId       *string           `db:"terminated_by_account_id"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -230,6 +234,8 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		b.SuspendedUntil,
 		b.NextSupporterPostTime,
 		b.HasCreatedSupporterOnlyPost,
+		b.Terminated,
+		b.TerminatedByAccountId,
 	), nil
 }
 
@@ -262,6 +268,8 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			b.SuspendedUntil,
 			b.NextSupporterPostTime,
 			b.HasCreatedSupporterOnlyPost,
+			b.Terminated,
+			b.TerminatedByAccountId,
 		))
 	}
 
@@ -449,6 +457,10 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubNextSupporterPostTime(ct
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"next_supporter_post_time", "has_created_supporter_only_post"})
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubTerminationStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"terminated", "terminated_by_account_id"})
+}
+
 func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
 
 	clb, err := r.getClubById(ctx, clubId)
@@ -484,6 +496,8 @@ func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.
 		clb.SuspendedUntil,
 		clb.NextSupporterPostTime,
 		clb.HasCreatedSupporterOnlyPost,
+		clb.Terminated,
+		clb.TerminatedByAccountId,
 	))
 }
 
@@ -645,15 +659,61 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubsCountOperator(ctx c
 
 func (r ClubCassandraElasticsearchRepository) DeleteAccountData(ctx context.Context, accountId string) error {
 
-	count, err := r.getAccountClubsCount(ctx, accountId)
+	del, err := r.hasNonTerminatedClubs(ctx, accountId)
 
 	if err != nil {
 		return err
 	}
 
-	if count != 0 {
-		return errors.New("cannot delete account data when account has a club")
+	if del {
+		return errors.New("cannot delete account data")
 	}
 
 	return r.deleteAccountClubMemberships(ctx, accountId)
+}
+
+func (r ClubCassandraElasticsearchRepository) hasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error) {
+
+	var clubsData []accountClubs
+
+	if err := accountClubsTable.
+		SelectBuilder().
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountClubs{
+			AccountId: accountId,
+		}).
+		Select(&clubsData); err != nil {
+		return false, fmt.Errorf("failed to get account clubs by account: %v", err)
+	}
+
+	canDelete := false
+
+	for _, c := range clubsData {
+		clb, err := r.getClubById(ctx, c.ClubId)
+
+		if err != nil {
+			return false, err
+		}
+
+		if !clb.Terminated {
+			canDelete = true
+			break
+		}
+	}
+
+	return canDelete, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) HasNonTerminatedClubs(ctx context.Context, requester *principal.Principal, accountId string) (bool, error) {
+
+	if requester != nil {
+		if !requester.IsStaff() {
+			if err := requester.BelongsToAccount(accountId); err != nil {
+				return false, err
+			}
+		}
+	}
+
+	return r.hasNonTerminatedClubs(ctx, accountId)
 }

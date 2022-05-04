@@ -13,9 +13,9 @@ func NewStingGrpc(client sting.StingClient) StingGrpc {
 	return StingGrpc{client: client}
 }
 
-func (s StingGrpc) AddSuspendedClub(ctx context.Context, clubId string) error {
+func (s StingGrpc) AddTerminatedClub(ctx context.Context, clubId string) error {
 
-	_, err := s.client.AddSuspendedClub(ctx, &sting.AddSuspendedClubRequest{ClubId: clubId})
+	_, err := s.client.AddTerminatedClub(ctx, &sting.AddTerminatedClubRequest{ClubId: clubId})
 
 	if err != nil {
 		return err
@@ -24,9 +24,9 @@ func (s StingGrpc) AddSuspendedClub(ctx context.Context, clubId string) error {
 	return nil
 }
 
-func (s StingGrpc) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+func (s StingGrpc) RemoveTerminatedClub(ctx context.Context, clubId string) error {
 
-	_, err := s.client.RemoveSuspendedClub(ctx, &sting.RemoveSuspendedClubRequest{ClubId: clubId})
+	_, err := s.client.RemoveTerminatedClub(ctx, &sting.RemoveTerminatedClubRequest{ClubId: clubId})
 
 	if err != nil {
 		return err

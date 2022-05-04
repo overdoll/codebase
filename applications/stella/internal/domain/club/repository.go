@@ -20,6 +20,7 @@ type Repository interface {
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 	UpdateClubNextSupporterPostTime(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+	UpdateClubTerminationStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 	GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error)
@@ -50,4 +51,5 @@ type Repository interface {
 	GetAccountClubDigestById(ctx context.Context, accountId string) (*AccountClubDigest, error)
 
 	DeleteAccountData(ctx context.Context, accountId string) error
+	HasNonTerminatedClubs(ctx context.Context, requester *principal.Principal, accountId string) (bool, error)
 }

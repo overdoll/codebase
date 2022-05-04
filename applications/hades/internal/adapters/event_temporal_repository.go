@@ -256,3 +256,19 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 
 	return nil
 }
+
+func (r EventTemporalRepository) CancelActiveSubscriptionsForClub(ctx context.Context, clubId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "CancelActiveSubscriptionsForClub_" + clubId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelActiveSubscriptionsForClub, workflows.CancelActiveSubscriptionsForClubInput{
+		ClubId: clubId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -100,6 +100,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory: command.NewGenerateClubSupporterPaymentReceiptFromAccountTransaction(billingRepo, billingFileRepo),
 			DeleteAndRecreateAccountTransactionsIndex:                        command.NewDeleteAndRecreateAccountTransactionsIndexHandler(billingRepo),
 			DeleteAccountData:                                                command.NewDeleteAccountDataHandler(billingRepo),
+			CancelActiveSubscriptionsForClub:                                 command.NewCancelActiveSubscriptionsForClubHandler(eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:                                     query.NewPrincipalByIdHandler(eva),

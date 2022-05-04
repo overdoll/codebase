@@ -38,6 +38,10 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
+func (e StellaServiceMock) NewSupporterPost(ctx context.Context, clubId string) error {
+	return nil
+}
+
 func (e StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
 	//TODO implement me
 	panic("implement me")

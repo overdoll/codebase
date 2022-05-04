@@ -90,6 +90,9 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			RemoveClubSupporter:               command.NewRemoveClubSupporterHandler(eventRepo),
 			DeleteAccountData:                 command.NewDeleteAccountDataHandler(clubRepo),
 			NewSupporterPost:                  command.NewNewSupporterPostHandler(eventRepo),
+
+			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
+			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
 		},
 		Queries: app.Queries{
 			PrincipalById:               query.NewPrincipalByIdHandler(eva),
@@ -107,6 +110,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			SearchClubMemberships:       query.NewSearchClubMembershipsHandler(clubRepo),
 			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
+			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 		},
 		Activities: activities.NewActivitiesHandler(clubRepo, sting, carrier),
 	}

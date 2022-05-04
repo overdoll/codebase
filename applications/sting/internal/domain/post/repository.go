@@ -103,8 +103,8 @@ type Repository interface {
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)
 	GetTotalPostsForCategoryOperator(ctx context.Context, category *Category) (int, error)
 
-	AddSuspendedClub(ctx context.Context, clubId string) error
-	RemoveSuspendedClub(ctx context.Context, clubId string) error
+	AddTerminatedClub(ctx context.Context, clubId string) error
+	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
 }

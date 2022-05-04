@@ -35,9 +35,12 @@ type Account struct {
 	// Total amount of chargeback transactions.
 	TransactionsChargebackCount int `json:"transactionsChargebackCount"`
 	// Transactions for this account.
-	Transactions                                          *AccountTransactionConnection `json:"transactions"`
-	HasActiveOrCancelledAccountClubSupporterSubscriptions bool                          `json:"hasActiveOrCancelledAccountClubSupporterSubscriptions"`
-	ID                                                    relay.ID                      `json:"id"`
+	Transactions *AccountTransactionConnection `json:"transactions"`
+	// Whether or not this account has at least 1 active or cancelled club supporter subscription.
+	//
+	// This should be false in order to delete the account.
+	HasActiveOrCancelledAccountClubSupporterSubscriptions bool     `json:"hasActiveOrCancelledAccountClubSupporterSubscriptions"`
+	ID                                                    relay.ID `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -399,6 +402,18 @@ type CancelAccountClubSupporterSubscriptionInput struct {
 type CancelAccountClubSupporterSubscriptionPayload struct {
 	// The new subscription.
 	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
+}
+
+// Cancel all active subscriptions for a club.
+type CancelActiveSubscriptionsForClubInput struct {
+	// The id of the club.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Payload for cancelling all active subscriptions.
+type CancelActiveSubscriptionsForClubPayload struct {
+	// The club.
+	Club *Club `json:"club"`
 }
 
 // Cancellation reason.

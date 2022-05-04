@@ -134,3 +134,21 @@ func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account
 
 	return types.MarshalClubMembersToGraphQLConnection(ctx, results, cursor), nil
 }
+
+func (r AccountResolver) HasNonTerminatedClubs(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	result, err := r.App.Queries.HasNonTerminatedClubs.Handle(ctx, query.HasNonTerminatedClubs{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}

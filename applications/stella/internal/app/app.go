@@ -31,6 +31,9 @@ type Commands struct {
 	SuspendClub   command.SuspendClubHandler
 	UnSuspendClub command.UnSuspendClubHandler
 
+	TerminateClub   command.TerminateClubHandler
+	UnTerminateClub command.UnTerminateClubHandler
+
 	SuspendClubOperator command.SuspendClubOperatorHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
@@ -59,4 +62,6 @@ type Queries struct {
 
 	ClubSuspensionLogs   query.ClubSuspensionLogsHandler
 	CanDeleteAccountData query.CanDeleteAccountDataHandler
+
+	HasNonTerminatedClubs query.HasNonTerminatedClubsHandler
 }

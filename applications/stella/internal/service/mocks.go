@@ -43,11 +43,11 @@ func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, 
 
 type StingServiceMock struct{}
 
-func (s StingServiceMock) AddSuspendedClub(ctx context.Context, clubId string) error {
+func (s StingServiceMock) AddTerminatedClub(ctx context.Context, clubId string) error {
 	return nil
 }
 
-func (s StingServiceMock) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+func (s StingServiceMock) RemoveTerminatedClub(ctx context.Context, clubId string) error {
 	return nil
 }
 

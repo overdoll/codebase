@@ -28,8 +28,8 @@ type Commands struct {
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
 	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
-	AddSuspendedClub    command.AddSuspendedClubHandler
-	RemoveSuspendedClub command.RemoveSuspendedClubHandler
+	AddTerminatedClub    command.AddTerminatedClubHandler
+	RemoveTerminatedClub command.RemoveTerminatedClubHandler
 
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler

@@ -19,6 +19,10 @@ type Account struct {
 	ClubsLimit int `json:"clubsLimit"`
 	// Current count of the amount of clubs that the account has created.
 	ClubsCount int `json:"clubsCount"`
+	// Whether or not this club has non-terminated clubs.
+	//
+	// Cannot delete account if this is true.
+	HasNonTerminatedClubs bool `json:"hasNonTerminatedClubs"`
 	// Represents the clubs that the account has created.
 	Clubs *ClubConnection `json:"clubs"`
 	// Maximum amount of clubs that you can join as an account.
@@ -67,6 +71,8 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// Whether or not this club is terminated.
+	Termination *ClubTermination `json:"termination"`
 	// Whether or not this club is suspended.
 	Suspension *ClubSuspension `json:"suspension"`
 	// Club Suspension Logs.
@@ -177,6 +183,11 @@ type ClubSuspensionLogEdge struct {
 	Node   ClubSuspensionLog `json:"node"`
 }
 
+type ClubTermination struct {
+	// The account that terminated the club.
+	Account *Account `json:"account"`
+}
+
 // Create club.
 type CreateClubInput struct {
 	// The chosen slug for the club.
@@ -269,6 +280,18 @@ type SuspendClubPayload struct {
 	Club *Club `json:"club"`
 }
 
+// Terminate the club.
+type TerminateClubInput struct {
+	// The club to terminate.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Terminate club payload.
+type TerminateClubPayload struct {
+	// The new club after it's terminated.
+	Club *Club `json:"club"`
+}
+
 // Un-Suspend the club.
 type UnSuspendClubInput struct {
 	// The club to un-suspend.
@@ -278,6 +301,18 @@ type UnSuspendClubInput struct {
 // Un suspend club payload.
 type UnSuspendClubPayload struct {
 	// The new club after it's not suspended anymore.
+	Club *Club `json:"club"`
+}
+
+// Un-Terminate the club.
+type UnTerminateClubInput struct {
+	// The club to un-terminate.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Un terminate club payload.
+type UnTerminateClubPayload struct {
+	// The new club after it's not terminated anymore.
 	Club *Club `json:"club"`
 }
 

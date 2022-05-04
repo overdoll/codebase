@@ -34,6 +34,8 @@ type Commands struct {
 	UpdateCancellationReasonTitle      command.UpdateCancellationReasonTitleHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
+
+	CancelActiveSubscriptionsForClub command.CancelActiveSubscriptionsForClubHandler
 }
 
 type Queries struct {

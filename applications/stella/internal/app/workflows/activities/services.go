@@ -6,8 +6,8 @@ import (
 )
 
 type StingService interface {
-	AddSuspendedClub(ctx context.Context, clubId string) error
-	RemoveSuspendedClub(ctx context.Context, clubId string) error
+	AddTerminatedClub(ctx context.Context, clubId string) error
+	RemoveTerminatedClub(ctx context.Context, clubId string) error
 }
 
 type CarrierService interface {

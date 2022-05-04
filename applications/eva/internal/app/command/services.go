@@ -15,12 +15,12 @@ type CarrierService interface {
 }
 
 type HadesService interface {
-	CanDeleteAccountData(ctx context.Context, accountId string) (bool, error)
+	HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error)
 	DeleteAccountData(ctx context.Context, accountId string) error
 }
 
 type StellaService interface {
-	CanDeleteAccountData(ctx context.Context, accountId string) (bool, error)
+	HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error)
 	DeleteAccountData(ctx context.Context, accountId string) error
 }
 

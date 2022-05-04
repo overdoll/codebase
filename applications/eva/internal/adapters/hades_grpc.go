@@ -13,7 +13,7 @@ func NewHadesGrpc(client hades.HadesClient) HadesGrpc {
 	return HadesGrpc{client: client}
 }
 
-func (s HadesGrpc) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+func (s HadesGrpc) HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error) {
 
 	res, err := s.client.CanDeleteAccountData(ctx, &hades.CanDeleteAccountDataRequest{AccountId: accountId})
 

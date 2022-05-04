@@ -13,4 +13,7 @@ type Repository interface {
 	SuspendClub(ctx context.Context, clubId string, accountId *string, endTime time.Time, reason string) error
 	UnSuspendClub(ctx context.Context, clubId, accountId string) error
 	NewSupporterPost(ctx context.Context, clubId string) error
+
+	TerminateClub(ctx context.Context, clubId, accountId string) error
+	UnTerminateClub(ctx context.Context, clubId string) error
 }

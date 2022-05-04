@@ -39,13 +39,5 @@ func SuspendClub(ctx workflow.Context, input SuspendClubInput) error {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.AddClubSuspension,
-		activities.AddClubSuspensionInput{
-			ClubId: input.ClubId,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
 	return nil
 }

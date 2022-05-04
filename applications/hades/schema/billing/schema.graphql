@@ -772,6 +772,18 @@ input GenerateClubSupporterRefundReceiptFromAccountTransactionInput {
   transactionEventId: ID!
 }
 
+"""Cancel all active subscriptions for a club."""
+input CancelActiveSubscriptionsForClubInput {
+  """The id of the club."""
+  clubId: ID!
+}
+
+"""Payload for cancelling all active subscriptions."""
+type CancelActiveSubscriptionsForClubPayload {
+  """The club."""
+  club: Club
+}
+
 """Payload for generating the receipt."""
 type GenerateRefundAmountForAccountTransactionPayload {
   """The refund amount."""
@@ -955,7 +967,7 @@ extend type Mutation {
 
   Staff+ only.
   """
-  generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload!
+  generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload
 
   """
   Delete an account saved payment method
@@ -971,6 +983,13 @@ extend type Mutation {
   Generate a refund receipt from the account transaction.
   """
   generateClubSupporterRefundReceiptFromAccountTransaction(input: GenerateClubSupporterRefundReceiptFromAccountTransactionInput!): GenerateClubSupporterRefundReceiptFromAccountTransactionPayload
+
+  """
+  Cancel all active subscriptions for a club.
+
+  Staff+ only.
+  """
+  cancelActiveSubscriptionsForClub(input: CancelActiveSubscriptionsForClubInput!): CancelActiveSubscriptionsForClubPayload
 }
 
 extend type Query {

@@ -248,3 +248,25 @@ func (r *MutationResolver) DeleteAccountSavedPaymentMethod(ctx context.Context, 
 		DeletedAccountSavedPaymentMethodID: input.SavedPaymentMethodID,
 	}, nil
 }
+
+func (r *MutationResolver) CancelActiveSubscriptionsForClub(ctx context.Context, input types.CancelActiveSubscriptionsForClubInput) (*types.CancelActiveSubscriptionsForClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.CancelActiveSubscriptionsForClub.
+		Handle(
+			ctx,
+			command.CancelActiveSubscriptionsForClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+			},
+		); err != nil {
+		return nil, err
+	}
+
+	return &types.CancelActiveSubscriptionsForClubPayload{
+		Club: &types.Club{ID: input.ClubID},
+	}, nil
+}

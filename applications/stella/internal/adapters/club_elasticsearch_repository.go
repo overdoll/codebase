@@ -31,6 +31,8 @@ type clubDocument struct {
 	SuspendedUntil              *time.Time        `json:"suspended_until"`
 	NextSupporterPostTime       *time.Time        `json:"next_supporter_post_time"`
 	HasCreatedSupporterOnlyPost bool              `json:"has_created_supporter_only_post"`
+	Terminated                  bool              `json:"terminated"`
+	TerminatedByAccountId       *string           `json:"terminated_by_account_id"`
 }
 
 const clubsIndexProperties = `
@@ -65,6 +67,12 @@ const clubsIndexProperties = `
 	},
     "has_created_supporter_only_post": {
 		"type": "boolean"
+	},
+    "terminated": {
+		"type": "boolean"
+	},
+    "terminated_by_account_id": {
+		"type": "keyword"
 	},
 	"created_at": {
 		"type": "date"
@@ -153,12 +161,28 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	query := elastic.NewBoolQuery()
 
+	if filter.Suspended() != nil && *filter.Suspended() {
+		if requester == nil || (requester != nil && !requester.IsStaff()) {
+			return nil, principal.ErrNotAuthorized
+		}
+	}
+
+	if filter.Terminated() != nil && *filter.Terminated() {
+		if requester == nil || (requester != nil && !requester.IsStaff()) {
+			return nil, principal.ErrNotAuthorized
+		}
+	}
+
+	if filter.Suspended() != nil && *filter.Suspended() {
+		query.Filter(elastic.NewTermQuery("suspended", *filter.Suspended()))
+	}
+
+	if filter.Terminated() != nil && *filter.Suspended() {
+		query.Filter(elastic.NewTermQuery("terminated", *filter.Terminated()))
+	}
+
 	if filter.OwnerAccountId() != nil {
 		query.Filter(elastic.NewTermQuery("owner_account_id", *filter.OwnerAccountId()))
-	} else {
-		if requester == nil || (requester != nil && !requester.IsStaff()) {
-			query.Filter(elastic.NewTermQuery("suspended", filter.Suspended()))
-		}
 	}
 
 	if filter.Search() != nil {
@@ -195,7 +219,21 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
 		}
 
-		newBrand := club.UnmarshalClubFromDatabase(bd.Id, bd.Slug, bd.SlugAliases, bd.Name, bd.ThumbnailResourceId, bd.MembersCount, bd.OwnerAccountId, bd.Suspended, bd.SuspendedUntil, bd.NextSupporterPostTime, bd.HasCreatedSupporterOnlyPost)
+		newBrand := club.UnmarshalClubFromDatabase(
+			bd.Id,
+			bd.Slug,
+			bd.SlugAliases,
+			bd.Name,
+			bd.ThumbnailResourceId,
+			bd.MembersCount,
+			bd.OwnerAccountId,
+			bd.Suspended,
+			bd.SuspendedUntil,
+			bd.NextSupporterPostTime,
+			bd.HasCreatedSupporterOnlyPost,
+			bd.Terminated,
+			bd.TerminatedByAccountId,
+		)
 		newBrand.Node = paging.NewNode(hit.Sort)
 
 		brands = append(brands, newBrand)
@@ -239,6 +277,8 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context)
 				SuspendedUntil:              m.SuspendedUntil,
 				HasCreatedSupporterOnlyPost: m.HasCreatedSupporterOnlyPost,
 				NextSupporterPostTime:       m.NextSupporterPostTime,
+				Terminated:                  m.Terminated,
+				TerminatedByAccountId:       m.TerminatedByAccountId,
 			}
 
 			_, err = r.client.

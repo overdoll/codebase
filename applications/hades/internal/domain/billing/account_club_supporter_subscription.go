@@ -274,3 +274,11 @@ func CanViewAccountClubSupporterSubscription(requester *principal.Principal, acc
 
 	return nil
 }
+
+func CanCancelActiveSubscriptionsForClub(requester *principal.Principal) error {
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return principal.ErrNotAuthorized
+}

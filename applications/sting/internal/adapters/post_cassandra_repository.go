@@ -53,8 +53,8 @@ type posts struct {
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
-var suspendedClubsTable = table.New(table.Metadata{
-	Name: "suspended_clubs",
+var terminatedClubsTable = table.New(table.Metadata{
+	Name: "terminated_clubs",
 	Columns: []string{
 		"bucket",
 		"club_id",
@@ -63,7 +63,7 @@ var suspendedClubsTable = table.New(table.Metadata{
 	SortKey: []string{"club_id"},
 })
 
-type suspendedClubs struct {
+type terminatedClubs struct {
 	Bucket int    `db:"bucket"`
 	ClubId string `db:"club_id"`
 }
@@ -240,13 +240,13 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 
 func (r PostsCassandraElasticsearchRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
 
-	var suspendedClub []*suspendedClubs
+	var suspendedClub []*terminatedClubs
 
-	if err := qb.Select(suspendedClubsTable.Name()).
+	if err := qb.Select(terminatedClubsTable.Name()).
 		Where(qb.Eq("bucket")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&suspendedClubs{Bucket: 0}).
+		BindStruct(&terminatedClubs{Bucket: 0}).
 		Select(&suspendedClub); err != nil {
 		return nil, fmt.Errorf("failed to get suspended clubs: %v", err)
 	}
@@ -260,12 +260,12 @@ func (r PostsCassandraElasticsearchRepository) getSuspendedClubIds(ctx context.C
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) AddSuspendedClub(ctx context.Context, clubId string) error {
+func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Context, clubId string) error {
 
 	if err := r.session.
-		Query(suspendedClubsTable.Insert()).
+		Query(terminatedClubsTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&suspendedClubs{Bucket: 0, ClubId: clubId}).
+		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to add suspended club: %v", err)
 	}
@@ -273,14 +273,14 @@ func (r PostsCassandraElasticsearchRepository) AddSuspendedClub(ctx context.Cont
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) RemoveSuspendedClub(ctx context.Context, clubId string) error {
+func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.Context, clubId string) error {
 
 	if err := r.session.
-		Query(suspendedClubsTable.Delete()).
+		Query(terminatedClubsTable.Delete()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&suspendedClubs{Bucket: 0, ClubId: clubId}).
+		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete suspended club: %v", err)
+		return fmt.Errorf("failed to delete terminated club: %v", err)
 	}
 
 	return nil
@@ -466,4 +466,9 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 	}
 
 	return pst, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error) {
+	//TODO implement me
+	panic("implement me")
 }

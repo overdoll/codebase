@@ -50,7 +50,7 @@ func GetEmailConfirmationTokenFromEmail(email string) (string, string, error) {
 
 type HadesServiceMock struct{}
 
-func (h HadesServiceMock) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+func (h HadesServiceMock) HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error) {
 	return true, nil
 }
 
@@ -60,7 +60,7 @@ func (h HadesServiceMock) DeleteAccountData(ctx context.Context, accountId strin
 
 type StellaServiceMock struct{}
 
-func (s StellaServiceMock) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+func (s StellaServiceMock) HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error) {
 	return true, nil
 }
 

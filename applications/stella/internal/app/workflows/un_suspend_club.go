@@ -34,13 +34,5 @@ func UnSuspendClub(ctx workflow.Context, input UnSuspendClubInput) error {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.RemoveClubSuspension,
-		activities.RemoveClubSuspensionInput{
-			ClubId: input.ClubId,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
 	return nil
 }

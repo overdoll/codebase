@@ -38,7 +38,7 @@ func (s Server) GetClubById(ctx context.Context, request *stella.GetClubByIdRequ
 			Slug:           clb.Slug(),
 			Name:           clb.Name().TranslateDefault(""),
 			OwnerAccountId: clb.OwnerAccountId(),
-			IsSuspended:    clb.Suspended(),
+			IsSuspended:    clb.IsSuspended(),
 			CanSupport:     clb.CanSupport(),
 		},
 	}, nil

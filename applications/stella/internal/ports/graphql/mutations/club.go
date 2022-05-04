@@ -273,3 +273,51 @@ func (r *MutationResolver) SuspendClub(ctx context.Context, input types.SuspendC
 		Club: types.MarshalClubToGraphQL(ctx, result),
 	}, nil
 }
+
+func (r *MutationResolver) TerminateClub(ctx context.Context, input types.TerminateClubInput) (*types.TerminateClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.TerminateClub.
+		Handle(
+			ctx,
+			command.TerminateClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.TerminateClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}
+
+func (r *MutationResolver) UnTerminateClub(ctx context.Context, input types.UnTerminateClubInput) (*types.UnTerminateClubPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.UnTerminateClub.
+		Handle(
+			ctx,
+			command.UnTerminateClub{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UnTerminateClubPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}

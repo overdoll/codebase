@@ -77,6 +77,10 @@ message CanDeleteAccountDataResponse {
   bool canDelete = 1;
 }
 
+message CancelActiveSubscriptionsForClubRequest {
+  string clubId = 1;
+}
+
 service Hades {
   rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
   rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);

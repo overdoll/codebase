@@ -91,20 +91,9 @@ func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*em
 	return &emptypb.Empty{}, nil
 }
 
-func (s Server) AddSuspendedClub(ctx context.Context, request *sting.AddSuspendedClubRequest) (*emptypb.Empty, error) {
+func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddSuspendedClubRequest) (*emptypb.Empty, error) {
 
-	if err := s.app.Commands.AddSuspendedClub.Handle(ctx, command.AddSuspendedClub{
-		ClubId: request.ClubId,
-	}); err != nil {
-		return nil, err
-	}
-
-	return &emptypb.Empty{}, nil
-}
-
-func (s Server) RemoveSuspendedClub(ctx context.Context, request *sting.RemoveSuspendedClubRequest) (*emptypb.Empty, error) {
-
-	if err := s.app.Commands.RemoveSuspendedClub.Handle(ctx, command.RemoveSuspendedClub{
+	if err := s.app.Commands.AddTerminatedClub.Handle(ctx, command.AddSuspendedClub{
 		ClubId: request.ClubId,
 	}); err != nil {
 		return nil, err
