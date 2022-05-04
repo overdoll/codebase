@@ -64,4 +64,6 @@ type Queries struct {
 	HasActiveOrCancelledAccountClubSupporterSubscriptions query.HasActiveOrCancelledAccountClubSupporterSubscriptionsHandler
 
 	CanDeleteAccountData query.CanDeleteAccountDataHandler
+
+	ClubTransactionMetrics query.ClubTransactionMetricsHandler
 }

@@ -10,6 +10,7 @@ import (
 type UpdateChargebackClubSubscriptionAccountTransactionRecordInput struct {
 	TransactionId string
 
+	Id        string
 	Timestamp time.Time
 
 	Currency string
@@ -26,7 +27,7 @@ func (h *Activities) UpdateChargebackClubSubscriptionAccountTransaction(ctx cont
 	}
 
 	_, err = h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
-		return transaction.MakeChargeback(input.Timestamp, input.Amount, cr, input.Reason)
+		return transaction.MakeChargeback(input.Id, input.Timestamp, input.Amount, cr, input.Reason)
 	})
 
 	if err != nil {

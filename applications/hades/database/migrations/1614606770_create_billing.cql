@@ -168,3 +168,58 @@ CREATE TABLE IF NOT EXISTS receipt_files
 
     primary key ( id )
 );
+
+CREATE TABLE IF NOT EXISTS club_all_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_refund_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_chargeback_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_metrics
+(
+    club_id                                text,
+    timestamp                              timestamp,
+    bucket                                 int,
+
+    currency                               text,
+
+    total_transactions_count               bigint,
+    total_transactions_amount              bigint,
+    total_transactions_last_update_id      timeuuid,
+
+    chargeback_transactions_count          bigint,
+    chargeback_transactions_amount         bigint,
+    chargeback_transactions_last_update_id timeuuid,
+
+    refund_transactions_count              bigint,
+    refund_transactions_amount             bigint,
+    refund_transactions_last_update_id     timeuuid,
+    primary key ( (club_id, bucket) )
+);

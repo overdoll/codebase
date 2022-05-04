@@ -43,6 +43,7 @@ enum SuspensionSource {
   POST_MODERATION_QUEUE = 0;
   POST_REMOVAL = 1;
   MANUAL = 2;
+  AUTOMATED_CHARGEBACKS = 3;
 }
 
 message GetAccountClubDigestRequest {

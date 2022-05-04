@@ -48,3 +48,19 @@ func (s StellaGrpc) RemoveClubSupporter(ctx context.Context, clubId, accountId s
 
 	return nil
 }
+
+func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, isChargeback bool) error {
+
+	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{
+		ClubId:             clubId,
+		EndTimeUnix:        0,
+		InitiatorAccountId: nil,
+		Source:             stella.SuspensionSource_AUTOMATED_CHARGEBACKS,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -9,6 +9,7 @@ import (
 
 type UpdateRefundClubSubscriptionAccountTransactionInput struct {
 	TransactionId string
+	Id            string
 
 	Timestamp time.Time
 
@@ -26,7 +27,7 @@ func (h *Activities) UpdateRefundClubSubscriptionAccountTransaction(ctx context.
 	}
 
 	_, err = h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
-		return transaction.MakeRefunded(input.Timestamp, input.Amount, cr, input.Reason)
+		return transaction.MakeRefunded(input.Id, input.Timestamp, input.Amount, cr, input.Reason)
 	})
 
 	if err != nil {

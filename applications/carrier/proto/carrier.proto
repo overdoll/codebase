@@ -21,6 +21,13 @@ service Carrier {
   rpc AccountDeletionBegin(AccountDeletionBeginRequest) returns (google.protobuf.Empty) {}
   rpc AccountDeletionReminder(AccountDeletionReminderRequest) returns (google.protobuf.Empty) {}
   rpc AccountDeleted(AccountDeletedRequest) returns (google.protobuf.Empty) {}
+
+  rpc ClubOverChargebackThreshold(ClubOverChargebackThresholdRequest) returns (google.protobuf.Empty) {}
+}
+
+message ClubOverChargebackThresholdRequest {
+  Club club = 1;
+  double threshold = 2;
 }
 
 message AccountDeletionReminderRequest {

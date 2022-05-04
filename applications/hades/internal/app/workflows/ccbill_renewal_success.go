@@ -1,6 +1,8 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -107,6 +109,30 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 			Currency:      input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// spawn a child workflow that will calculate club transaction metrics
+	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+		WorkflowID:        "ClubTransactionMetric_" + input.TransactionId,
+		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+	})
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
+		ClubTransactionMetricInput{
+			ClubId:    subscriptionDetails.ClubId,
+			Timestamp: timestamp,
+			Id:        input.TransactionId,
+			Amount:    accountingAmount,
+			Currency:  input.AccountingCurrency,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(childCtx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

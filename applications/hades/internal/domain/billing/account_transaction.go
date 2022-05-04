@@ -5,7 +5,6 @@ import (
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/uuid"
 	"time"
 )
 
@@ -148,10 +147,10 @@ func (c *AccountTransaction) CCBillTransactionId() *string {
 	return c.ccbillTransactionId
 }
 
-func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, currency money.Currency, reason string) error {
+func (c *AccountTransaction) MakeRefunded(id string, timestamp time.Time, amount int64, currency money.Currency, reason string) error {
 	c.transaction = Refund
 	c.events = append(c.events, &AccountTransactionEvent{
-		id:        uuid.New().String(),
+		id:        id,
 		timestamp: timestamp,
 		amount:    amount,
 		currency:  currency,
@@ -160,10 +159,10 @@ func (c *AccountTransaction) MakeRefunded(timestamp time.Time, amount int64, cur
 	return nil
 }
 
-func (c *AccountTransaction) MakeChargeback(timestamp time.Time, amount int64, currency money.Currency, reason string) error {
+func (c *AccountTransaction) MakeChargeback(id string, timestamp time.Time, amount int64, currency money.Currency, reason string) error {
 	c.transaction = Chargeback
 	c.events = append(c.events, &AccountTransactionEvent{
-		id:        uuid.New().String(),
+		id:        id,
 		timestamp: timestamp,
 		amount:    amount,
 		currency:  currency,

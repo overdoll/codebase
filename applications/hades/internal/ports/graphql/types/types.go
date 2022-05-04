@@ -458,10 +458,53 @@ type Card struct {
 type Club struct {
 	// A supporter subscription price for this club.
 	SupporterSubscriptionPrice *LocalizedPricingPoint `json:"supporterSubscriptionPrice"`
-	ID                         relay.ID               `json:"id"`
+	// Month-by-month transaction metrics of this club.
+	TransactionMetrics *ClubTransactionMetricConnection `json:"transactionMetrics"`
+	ID                 relay.ID                         `json:"id"`
 }
 
 func (Club) IsEntity() {}
+
+type ClubTransactionMetric struct {
+	// The month that this metric represents for this club.
+	Month int `json:"month"`
+	// The year that this metric represents for this club.
+	Year int `json:"year"`
+	// The currency that this metric is in.
+	Currency graphql1.Currency `json:"currency"`
+	// How many transactions were created for this month.
+	TotalTransactionsCount int `json:"totalTransactionsCount"`
+	// Total transaction in money amount.
+	TotalTransactionsAmount int `json:"totalTransactionsAmount"`
+	// How many chargebacks were issued for this month.
+	ChargebacksCount int `json:"chargebacksCount"`
+	// All of the chargebacks in money amount.
+	ChargebacksAmount int `json:"chargebacksAmount"`
+	// The chargeback ratio for this month - for the count.
+	ChargebacksCountRatio float64 `json:"chargebacksCountRatio"`
+	// The chargeback ratio for this month - for the amount.
+	ChargebacksAmountRatio float64 `json:"chargebacksAmountRatio"`
+	// How many refunds were issued for this month.
+	RefundsCount int `json:"refundsCount"`
+	// All of the refunds in money amount.
+	RefundsAmount int `json:"refundsAmount"`
+	// The refund ratio for this month - for the count.
+	RefundsCountRatio float64 `json:"refundsCountRatio"`
+	// The refund ratio for this month - for the amount.
+	RefundsAmountRatio float64 `json:"refundsAmountRatio"`
+}
+
+// Connection of the club metric
+type ClubTransactionMetricConnection struct {
+	Edges    []*ClubTransactionMetricEdge `json:"edges"`
+	PageInfo *relay.PageInfo              `json:"pageInfo"`
+}
+
+// Edge of the club metric
+type ClubTransactionMetricEdge struct {
+	Node   *ClubTransactionMetric `json:"node"`
+	Cursor string                 `json:"cursor"`
+}
 
 // Create a new cancellation reason input.
 type CreateCancellationReasonInput struct {

@@ -12,6 +12,7 @@ type StellaService interface {
 	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
+	SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error
 }
 
 type RingerService interface {
@@ -29,4 +30,5 @@ type CarrierService interface {
 	ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error
 	ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
 	NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
+	ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error
 }

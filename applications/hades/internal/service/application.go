@@ -80,6 +80,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	cancelRepo := adapters.NewCancellationCassandraRepository(session)
+	metricRepo := adapters.NewMetricsCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -123,8 +124,9 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			AccountTransactionsTotalCount:      query.NewAccountTransactionsCountHandler(billingRepo),
 
 			HasActiveOrCancelledAccountClubSupporterSubscriptions: query.NewHasActiveOrCancelledAccountClubSupporterSubscriptionsHandler(billingRepo),
-			CanDeleteAccountData: query.NewCanDeleteAccountDataHandler(billingRepo),
+			CanDeleteAccountData:   query.NewCanDeleteAccountDataHandler(billingRepo),
+			ClubTransactionMetrics: query.NewClubTransactionMetricsHandler(metricRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
 }
