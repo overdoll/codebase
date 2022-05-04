@@ -1,11 +1,14 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { Box } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import type { ClubExclusivePostsFragment$key } from '@//:artifacts/ClubExclusivePostsFragment.graphql'
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
 import { configMap } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/constants'
 import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: ClubExclusivePostsFragment$key
@@ -43,11 +46,30 @@ export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
     supporter: ['FULL', 'PARTIAL']
   })
 
+  const link = `/${data.slug as string}/posts?${stringify(newPostsEncodedQuery)}`
+
   return (
     <Box>
+      <PageSectionWrap>
+        <HStack justify='space-between'>
+          <PageSectionTitle colorScheme='orange'>
+            Exclusive Posts
+          </PageSectionTitle>
+          <LinkButton
+            href={link}
+            size='sm'
+            colorScheme='gray'
+            variant='solid'
+          >
+            <Trans>
+              See All
+            </Trans>
+          </LinkButton>
+        </HStack>
+      </PageSectionWrap>
       <PostsHorizontalPreview
         hasNext={hasNext}
-        href={`/${data.slug as string}/posts?${stringify(newPostsEncodedQuery)}`}
+        href={link}
         query={data.exclusivePosts}
       />
     </Box>

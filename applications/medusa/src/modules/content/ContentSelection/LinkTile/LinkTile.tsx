@@ -1,4 +1,4 @@
-import { ButtonProps } from '@chakra-ui/react'
+import { Box, ButtonProps } from '@chakra-ui/react'
 import ClickableTile from '../ClickableTile/ClickableTile'
 import { Link } from '../../../routing'
 import { UrlObject } from 'url'
@@ -14,9 +14,11 @@ export default function LinkTile ({
 }: Props): JSX.Element {
   return (
     <Link passHref href={href}>
-      <ClickableTile as='a' {...rest}>
-        {children}
-      </ClickableTile>
+      <Box as='a'>
+        <ClickableTile {...rest}>
+          {children}
+        </ClickableTile>
+      </Box>
     </Link>
   )
 }

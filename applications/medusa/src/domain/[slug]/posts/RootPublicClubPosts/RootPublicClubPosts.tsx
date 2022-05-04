@@ -10,13 +10,14 @@ import useGeneralSearchArguments
 import { PostOrderButton } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
 import PostSearchButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import PostSupporterStatusButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRefs: {
@@ -46,19 +47,27 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
       </Head>
       <PageWrapper>
         <Stack spacing={8}>
-          <HStack spacing={2} justify='space-between'>
+
+          <Stack spacing={2}>
+            <HStack spacing={2} justify='space-between'>
+              <Heading color='gray.00' fontSize='2xl'>
+                <Trans>
+                  Club Posts Search
+                </Trans>
+              </Heading>
+              <PostSearchButton routeTo={{
+                pathname: '[slug]/posts',
+                query: {
+                  slug: slug
+                }
+              }}
+              />
+            </HStack>
             <HStack spacing={2}>
               <PostOrderButton />
               <PostSupporterStatusButton />
             </HStack>
-            <PostSearchButton routeTo={{
-              pathname: '[slug]/posts',
-              query: {
-                slug: slug
-              }
-            }}
-            />
-          </HStack>
+          </Stack>
           <QueryErrorBoundary loadQuery={() => loadQuery({
             sortBy: 'TOP',
             slug: slug as string

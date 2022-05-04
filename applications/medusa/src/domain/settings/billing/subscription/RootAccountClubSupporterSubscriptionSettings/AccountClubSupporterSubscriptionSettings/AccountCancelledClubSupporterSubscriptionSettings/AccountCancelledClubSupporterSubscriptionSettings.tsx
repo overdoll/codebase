@@ -59,19 +59,12 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
         </LargeBackgroundBox>
       </Box>
       <Box>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='green'>
-            <Trans>
-              Club Benefits
-            </Trans>
-          </PageSectionTitle>
-          <PageSectionDescription>
-            <Trans>
-              As a supporter, you have access to all exclusive content from this club.
-            </Trans>
-          </PageSectionDescription>
-        </PageSectionWrap>
         <ClubExclusiveContentSuspensionNotice query={data.club} />
+        <PageSectionDescription>
+          <Trans>
+            As a supporter, you have access to all exclusive content from this club.
+          </Trans>
+        </PageSectionDescription>
       </Box>
       <ManageCancelledSubscriptionButton query={data} />
     </Stack>

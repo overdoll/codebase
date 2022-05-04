@@ -2,7 +2,7 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import { graphql } from 'react-relay'
 import LargeClubHeader from '../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
-import { Box, Flex, Stack } from '@chakra-ui/react'
+import { Box, Flex, HStack, Stack } from '@chakra-ui/react'
 import StatisticNumber from './StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
@@ -127,14 +127,7 @@ export default function PublicClub (props: Props): JSX.Element {
           </Stack>
           <ClubExclusivePosts query={queryData?.club} />
         </Stack>
-        <Box>
-          <PageSectionWrap>
-            <PageSectionTitle colorScheme='orange'>
-              Top Posts
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <ClubTopPosts query={queryData?.club} />
-        </Box>
+        <ClubTopPosts query={queryData?.club} />
       </Stack>
     </>
   )

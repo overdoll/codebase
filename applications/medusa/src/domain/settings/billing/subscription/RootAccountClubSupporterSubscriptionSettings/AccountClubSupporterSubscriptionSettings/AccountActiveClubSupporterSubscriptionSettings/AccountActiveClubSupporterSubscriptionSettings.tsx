@@ -61,19 +61,12 @@ export default function AccountActiveClubSupporterSubscriptionSettings ({
         </LargeBackgroundBox>
       </Box>
       <Box>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='green'>
-            <Trans>
-              Club Benefits
-            </Trans>
-          </PageSectionTitle>
-          <PageSectionDescription>
-            <Trans>
-              As a supporter, you have access to all exclusive content from this club.
-            </Trans>
-          </PageSectionDescription>
-        </PageSectionWrap>
         <ClubExclusiveContentSuspensionNotice query={data.club} />
+        <PageSectionDescription>
+          <Trans>
+            As a supporter, you have access to all exclusive content from this club.
+          </Trans>
+        </PageSectionDescription>
       </Box>
       <ManageActiveSubscriptionButton connectionId={connectionId} query={data} />
     </Stack>

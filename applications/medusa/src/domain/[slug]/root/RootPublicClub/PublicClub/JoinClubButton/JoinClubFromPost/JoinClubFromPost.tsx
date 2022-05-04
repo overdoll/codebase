@@ -81,7 +81,7 @@ export default function JoinClubFromPost ({
         {...rest}
       >
         <Trans>
-          Supporter!
+          Supporter
         </Trans>
       </LinkButton>
     )
