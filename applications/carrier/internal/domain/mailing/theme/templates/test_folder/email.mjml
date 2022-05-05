@@ -1,8 +1,0 @@
-<mjml>
-    <mj-include path="../../support/header.mjml"/>
-    <mj-body>
-        <mj-raw>
-            <a href="{{.Link}}" target="_blank">authenticate</a>
-        </mj-raw>
-    </mj-body>
-</mjml>

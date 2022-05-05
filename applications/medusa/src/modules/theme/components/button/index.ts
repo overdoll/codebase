@@ -324,7 +324,7 @@ const sizes = {
     minW: 10,
     fontSize: 'md',
     px: 5,
-    borderRadius: 'semi',
+    borderRadius: '-semi',
     fontWeight: 'semibold'
   },
   sm: {

@@ -1,6 +1,6 @@
 <mj-attributes>
-    <mj-class name="mjclass" color="green" font-size="30px"/>
     <mj-text font-size="14px" color="#ffffff"/>
+    <mj-navbar-link font-weight="700" color="#ffffff"/>
     <mj-button
             line-height="1.2"
             letter-spacing="0.025em"
