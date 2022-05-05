@@ -3,6 +3,8 @@ package metrics
 import (
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
+	"time"
 )
 
 var (
@@ -26,6 +28,25 @@ type ClubTransactionMetrics struct {
 	totalTransactionsAmount int64
 
 	currency money.Currency
+}
+
+func UnmarshalClubTransactionMetricsFromDatabase(clubId string, timestamp time.Time, currency string,
+	totalTransactionsCount, chargebacksCount, refundsCount,
+	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount int64,
+) *ClubTransactionMetrics {
+	cr, _ := money.CurrencyFromString(currency)
+	return &ClubTransactionMetrics{
+		clubId:                  clubId,
+		month:                   int(timestamp.Month()),
+		year:                    timestamp.Year(),
+		totalTransactionsCount:  totalTransactionsCount,
+		chargebacksCount:        chargebacksCount,
+		refundsCount:            refundsCount,
+		totalRefundsAmount:      totalRefundsAmount,
+		totalChargebacksAmount:  totalChargebacksAmount,
+		totalTransactionsAmount: totalTransactionsAmount,
+		currency:                cr,
+	}
 }
 
 func (m *ClubTransactionMetrics) ClubId() string {
@@ -90,4 +111,18 @@ func (m *ClubTransactionMetrics) IsOverChargebacksThreshold() bool {
 
 func (m *ClubTransactionMetrics) ChargebacksThreshold() float64 {
 	return chargebacksThreshold
+}
+
+func CanViewClubTransactionMetrics(requester *principal.Principal, clubId string) error {
+
+	if !requester.IsStaff() {
+
+		if err := requester.CheckClubOwner(clubId); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	return nil
 }

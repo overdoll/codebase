@@ -13,4 +13,5 @@ type StingService interface {
 type CarrierService interface {
 	ClubSupporterRequiredPostReminder(ctx context.Context, clubId string, duration time.Duration) error
 	ClubSupporterNoPosts(ctx context.Context, clubId string) error
+	ClubSuspended(ctx context.Context, clubId string, endTime time.Time) error
 }

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 
 	carrier "overdoll/applications/carrier/proto"
@@ -33,6 +34,20 @@ func (s CarrierGrpc) ClubSupporterNoPosts(ctx context.Context, clubId string) er
 
 	_, err := s.client.ClubSupporterNoPosts(ctx, &carrier.ClubSupporterNoPostsRequest{
 		Club: &carrier.Club{Id: clubId},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s CarrierGrpc) ClubSuspended(ctx context.Context, clubId string, endTime time.Time) error {
+
+	_, err := s.client.ClubSuspended(ctx, &carrier.ClubSuspendedRequest{
+		Club:    &carrier.Club{Id: clubId},
+		EndTime: timestamppb.New(endTime),
 	})
 
 	if err != nil {

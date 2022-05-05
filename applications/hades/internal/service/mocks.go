@@ -55,6 +55,10 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 
 type StellaServiceMock struct{}
 
+func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error {
+	return nil
+}
+
 func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
 	return club.UnmarshalClubFromDatabase(clubId, "", "", false, true, ""), nil
 }
@@ -103,6 +107,10 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 }
 
 type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
+	return nil
+}
 
 func (c CarrierServiceMock) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
 	return nil

@@ -1,0 +1,11 @@
+{{template "layout.gohtml" .}}
+
+{{define "title"}}Club Over Chargeback Threshold{{end}}
+
+{{define "content"}}
+    Club {{.ClubName}} ({{.ClubLink}}) is over the chargeback threshold and has been suspended.
+    <br/>
+    Current chargeback {{.Threshold}}
+{{end}}
+
+

@@ -22,6 +22,8 @@ type Commands struct {
 	AccountDeletionBegin                      command.AccountDeletionBeginHandler
 	AccountDeletionReminder                   command.AccountDeletionReminderHandler
 	AccountDeleted                            command.AccountDeletedHandler
+	ClubSuspended                             command.ClubSuspendedHandler
+	ClubOverChargebackThreshold               command.ClubOverChargebackThresholdHandler
 }
 
 type Queries struct{}

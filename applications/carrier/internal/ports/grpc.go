@@ -225,3 +225,31 @@ func (s Server) AccountDeleted(ctx context.Context, request *carrier.AccountDele
 
 	return &empty.Empty{}, nil
 }
+
+func (s Server) ClubOverChargebackThreshold(ctx context.Context, request *carrier.ClubOverChargebackThresholdRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.ClubOverChargebackThreshold.Handle(ctx,
+		command.ClubOverChargebackThreshold{
+			ClubId:    request.Club.Id,
+			Threshold: request.Threshold,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s Server) ClubSuspended(ctx context.Context, request *carrier.ClubSuspendedRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.ClubSuspended.Handle(ctx,
+		command.ClubSuspended{
+			ClubId:  request.Club.Id,
+			EndTime: request.EndTime.AsTime(),
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}

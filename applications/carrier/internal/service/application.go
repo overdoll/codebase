@@ -66,6 +66,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AccountDeletionReminder:                   command.NewAccountDeletionReminderHandler(mailingRepo, eva),
 			AccountDeletionBegin:                      command.NewAccountDeletionBeginHandler(mailingRepo, eva),
 			AccountDeleted:                            command.NewAccountDeletedHandler(mailingRepo),
+			ClubSuspended:                             command.NewClubSuspendedHandler(mailingRepo, eva, stella),
+			ClubOverChargebackThreshold:               command.NewClubOverChargebackThresholdHandler(mailingRepo, eva, stella),
 		},
 		Queries: app.Queries{},
 	}

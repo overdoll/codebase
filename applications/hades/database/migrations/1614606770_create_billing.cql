@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS club_chargeback_transactions
     primary key ( (club_id, bucket), timestamp, id )
 ) WITH CLUSTERING ORDER BY (timestamp ASC);
 
-CREATE TABLE IF NOT EXISTS club_metrics
+CREATE TABLE IF NOT EXISTS club_transaction_metrics
 (
     club_id                                text,
     timestamp                              timestamp,
@@ -221,5 +221,12 @@ CREATE TABLE IF NOT EXISTS club_metrics
     refund_transactions_count              bigint,
     refund_transactions_amount             bigint,
     refund_transactions_last_update_id     timeuuid,
+    primary key ( (club_id, bucket) )
+);
+
+CREATE TABLE IF NOT EXISTS club_chargeback_suspensions
+(
+    club_id text,
+    bucket  int,
     primary key ( (club_id, bucket) )
 );

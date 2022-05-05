@@ -1,0 +1,15 @@
+{{template "layout.gohtml" .}}
+
+{{define "title"}}Club Suspended{{end}}
+
+{{define "content"}}
+    Hello {{.Username}},
+    <br/>
+    Your club {{.ClubName}} ({{.ClubLink}}), has been suspended.
+    <br/>
+    The suspension will be lifted on {{.EndTime}}. During this time, you cannot collect new subscriptions or create new posts.
+    <br/>
+    Please contact hello@overdoll.com for additional information.
+{{end}}
+
+

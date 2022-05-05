@@ -67,3 +67,31 @@ func NewChargebackTransactionMetric(clubId string, timestamp gocql.UUID, id stri
 		isChargeback: true,
 	}, nil
 }
+
+func (m *ClubTransactionMetric) ClubId() string {
+	return m.clubId
+}
+
+func (m *ClubTransactionMetric) Timestamp() gocql.UUID {
+	return m.timestamp
+}
+
+func (m *ClubTransactionMetric) Id() string {
+	return m.id
+}
+
+func (m *ClubTransactionMetric) Amount() int64 {
+	return m.amount
+}
+
+func (m *ClubTransactionMetric) Currency() money.Currency {
+	return m.currency
+}
+
+func (m *ClubTransactionMetric) IsRefund() bool {
+	return m.isRefund
+}
+
+func (m *ClubTransactionMetric) IsChargeback() bool {
+	return m.isChargeback
+}

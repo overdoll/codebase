@@ -23,6 +23,12 @@ service Carrier {
   rpc AccountDeleted(AccountDeletedRequest) returns (google.protobuf.Empty) {}
 
   rpc ClubOverChargebackThreshold(ClubOverChargebackThresholdRequest) returns (google.protobuf.Empty) {}
+  rpc ClubSuspended(ClubSuspendedRequest) returns (google.protobuf.Empty) {}
+}
+
+message ClubSuspendedRequest {
+  Club club = 1;
+  google.protobuf.Timestamp endTime = 2;
 }
 
 message ClubOverChargebackThresholdRequest {
