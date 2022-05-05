@@ -15,6 +15,7 @@ go_library(
         "club_slug_aliases_limit.go",
         "club_suspension_logs.go",
         "clubs_by_ids.go",
+        "has_non_terminated_clubs.go",
         "principal_by_id.go",
         "search_club_memberships.go",
         "search_clubs.go",

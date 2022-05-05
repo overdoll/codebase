@@ -43,6 +43,7 @@ go_test(
     deps = [
         ":service",
         "//applications/eva/internal/adapters",
+        "//applications/eva/internal/app/workflows",
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/ports",
         "//applications/eva/internal/ports/graphql/types",
@@ -57,7 +58,10 @@ go_test(
         "@com_github_bxcodec_faker_v3//:faker",
         "@com_github_pquerna_otp//totp",
         "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
+        "@io_temporal_go_sdk//mocks",
+        "@io_temporal_go_sdk//testsuite",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )

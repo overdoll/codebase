@@ -104,7 +104,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CancelActiveSupporterSubscriptionsForClub:                        command.NewCancelActiveSubscriptionsForClubHandler(eventRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:                                     query.NewPrincipalByIdHandler(eva),
+			PrincipalById:                                     query.NewPrincipalByIdHandler(eva, stella),
 			SearchAccountClubSupporterSubscriptions:           query.NewSearchAccountClubSupporterSubscriptionsHandler(billingRepo),
 			ExpiredAccountClubSupporterSubscriptionsByAccount: query.NewExpiredAccountClubSupporterSubscriptionsByAccountHandler(billingRepo),
 			AccountClubSupporterSubscriptionById:              query.NewAccountClubSupporterSubscriptionByIdHandler(billingRepo),

@@ -39,6 +39,7 @@ go_test(
         "post_component_test.go",
         "post_custom_feeds_test.go",
         "post_like_component_test.go",
+        "post_terminate_component_test.go",
         "series_component_test.go",
     ],
     data = [
@@ -48,6 +49,7 @@ go_test(
         ":service",
         "//applications/sting/internal/adapters",
         "//applications/sting/internal/app/workflows",
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports",
         "//applications/sting/internal/ports/graphql/types",

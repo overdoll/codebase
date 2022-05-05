@@ -5,6 +5,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -63,4 +64,15 @@ func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, isChargeback
 	}
 
 	return nil
+}
+
+func (s StellaGrpc) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+
+	md, err := s.client.GetAccountClubDigest(ctx, &stella.GetAccountClubDigestRequest{AccountId: accountId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return principal.NewClubExtension(md)
 }

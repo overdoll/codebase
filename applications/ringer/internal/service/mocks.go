@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"overdoll/applications/ringer/internal/adapters"
 	"overdoll/applications/ringer/internal/domain/club"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
 )
@@ -43,13 +44,15 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 type StellaServiceMock struct{}
 
 func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
-	//TODO implement me
-	panic("implement me")
+	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      nil,
+	})
 }
 
 func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
-	//TODO implement me
-	panic("implement me")
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, ""), nil
 }
 
 type MockPaxumHttpClient struct {

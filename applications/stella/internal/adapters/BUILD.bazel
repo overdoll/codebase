@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
+        "carrier_grpc.go",
         "club_cassandra_repository.go",
         "club_elasticsearch_repository.go",
         "club_members_cassandra_repository.go",
@@ -15,6 +16,7 @@ go_library(
     importpath = "overdoll/applications/stella/internal/adapters",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
+        "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
         "//applications/loader/proto:v1_go_proto",
         "//applications/stella/internal/app/workflows",
@@ -32,6 +34,7 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
 )
 

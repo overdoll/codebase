@@ -21,5 +21,6 @@ go_library(
         "//libraries/router",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//worker",
+        "@org_golang_google_protobuf//types/known/emptypb",
     ],
 )

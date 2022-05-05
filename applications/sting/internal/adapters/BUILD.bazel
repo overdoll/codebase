@@ -32,6 +32,7 @@ go_library(
         "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/post",
+        "//libraries/bucket",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",

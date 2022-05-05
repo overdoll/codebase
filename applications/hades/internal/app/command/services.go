@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/club"
 	"overdoll/libraries/location"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type StellaService interface {
 	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
 	SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error
+	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
 }
 
 type RingerService interface {

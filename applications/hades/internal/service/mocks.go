@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/club"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -54,6 +55,14 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 }
 
 type StellaServiceMock struct{}
+
+func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      nil,
+	})
+}
 
 func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error {
 	return nil

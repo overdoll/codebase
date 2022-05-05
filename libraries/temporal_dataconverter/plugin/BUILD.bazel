@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "plugin_lib",
+    srcs = [
+        "main.go",
+        "plugin.go",
+    ],
+    importpath = "overdoll/libraries/temporal_dataconverter/plugin",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//libraries/temporal_dataconverter",
+        "@com_github_hashicorp_go_hclog//:go-hclog",
+        "@com_github_hashicorp_go_plugin//:go-plugin",
+        "@io_temporal_go_api//common/v1:common",
+        "@io_temporal_go_sdk//converter",
+    ],
+)
+
+go_binary(
+    name = "plugin",
+    embed = [":plugin_lib"],
+    visibility = ["//visibility:public"],
+)

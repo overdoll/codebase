@@ -3,9 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "activities",
     srcs = [
+        "account_deleted.go",
+        "account_deletion_begin.go",
+        "account_deletion_reminder.go",
         "activities.go",
         "delete_account_data.go",
         "delete_session_data.go",
+        "get_account_data.go",
         "hades_delete_account_data.go",
         "parley_delete_account_data.go",
         "ringer_delete_account_data.go",

@@ -4,7 +4,7 @@ go_library(
     name = "command",
     srcs = [
         "add_post_content.go",
-        "add_suspended_club.go",
+        "add_terminated_club.go",
         "archive_post.go",
         "create_audience.go",
         "create_category.go",
@@ -24,7 +24,7 @@ go_library(
         "reject_post.go",
         "remove_post.go",
         "remove_post_content.go",
-        "remove_suspended_club.go",
+        "remove_terminated_club.go",
         "services.go",
         "submit_post.go",
         "un_archive_post.go",

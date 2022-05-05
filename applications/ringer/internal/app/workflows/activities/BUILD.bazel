@@ -32,6 +32,7 @@ go_library(
     importpath = "overdoll/applications/ringer/internal/app/workflows/activities",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
+        "//applications/ringer/internal/app/query",
         "//applications/ringer/internal/domain/balance",
         "//applications/ringer/internal/domain/club",
         "//applications/ringer/internal/domain/details",
