@@ -52,6 +52,8 @@ type Repository interface {
 	DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error
 
 	DeleteAccountData(ctx context.Context, accountId string) error
+
+	GetActiveClubSupporterSubscriptionsForClub(ctx context.Context, clubId string) ([]string, error)
 }
 
 type FileRepository interface {

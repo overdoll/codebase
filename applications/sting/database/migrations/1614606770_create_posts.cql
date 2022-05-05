@@ -101,10 +101,20 @@ CREATE TABLE IF NOT EXISTS post_likes_counter
 
 CREATE TABLE IF NOT EXISTS post_likes
 (
+    bucket           int,
     post_id          text,
     liked_account_id text,
     liked_at         timestamp,
     primary key ( (post_id, liked_account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS account_post_likes
+(
+    bucket           int,
+    post_id          text,
+    liked_account_id text,
+    liked_at         timestamp,
+    primary key ( (bucket, liked_account_id), post_id )
 );
 
 CREATE TABLE IF NOT EXISTS curation_profile

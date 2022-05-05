@@ -107,4 +107,5 @@ type Repository interface {
 	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
+	DeleteAccountPostLike(ctx context.Context, accountId, postId string) error
 }

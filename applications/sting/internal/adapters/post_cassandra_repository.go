@@ -467,8 +467,3 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 
 	return pst, nil
 }
-
-func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error) {
-	//TODO implement me
-	panic("implement me")
-}

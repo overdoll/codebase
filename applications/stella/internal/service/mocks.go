@@ -53,6 +53,10 @@ func (s StingServiceMock) RemoveTerminatedClub(ctx context.Context, clubId strin
 
 type CarrierServiceMock struct{}
 
+func (c CarrierServiceMock) ClubSuspended(ctx context.Context, clubId string, endTime time.Time) error {
+	return nil
+}
+
 func (c CarrierServiceMock) ClubSupporterRequiredPostReminder(ctx context.Context, clubId string, duration time.Duration) error {
 	return nil
 }

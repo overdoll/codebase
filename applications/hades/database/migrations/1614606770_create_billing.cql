@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     billing_amount                  bigint,
     billing_currency                text,
 
+    created_at                      timestamp,
     cancelled_at                    timestamp,
     expired_at                      timestamp,
 
@@ -36,6 +37,15 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     cancellation_reason_id          text,
 
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions
+(
+    bucket                 int,
+    club_id                text,
+    id                     text,
+    ccbill_subscription_id text,
+    primary key ( (bucket, club_id), id )
 );
 
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account

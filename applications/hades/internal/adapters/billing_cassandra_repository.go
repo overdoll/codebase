@@ -11,6 +11,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
+	bucket2 "overdoll/libraries/bucket"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -62,6 +63,25 @@ type accountSavedPaymentMethod struct {
 	UpdatedAt              time.Time `db:"updated_at"`
 }
 
+var clubActiveSupporterSubscriptionsTable = table.New(table.Metadata{
+	Name: "club_active_supporter_subscriptions",
+	Columns: []string{
+		"bucket",
+		"club_id",
+		"id",
+		"ccbill_subscription_id",
+	},
+	PartKey: []string{"bucket", "club_id"},
+	SortKey: []string{"id"},
+})
+
+type clubActiveSupporterSubscriptions struct {
+	ClubId               string  `db:"account_id"`
+	Id                   string  `db:"id"`
+	Bucket               int     `db:"bucket"`
+	CCBillSubscriptionId *string `db:"ccbill_subscription_id"`
+}
+
 var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 	Name: "account_club_supporter_subscriptions_by_account",
 	Columns: []string{
@@ -75,6 +95,7 @@ var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 		"billing_amount",
 		"billing_currency",
 
+		"created_at",
 		"cancelled_at",
 		"expired_at",
 
@@ -108,6 +129,7 @@ var accountClubSupporterSubscriptionsTable = table.New(table.Metadata{
 		"billing_amount",
 		"billing_currency",
 
+		"created_at",
 		"cancelled_at",
 		"expired_at",
 
@@ -138,6 +160,7 @@ type accountClubSupporterSubscription struct {
 	BillingAmount   int64     `db:"billing_amount"`
 	BillingCurrency string    `db:"billing_currency"`
 
+	CreatedAt   time.Time  `db:"cancelled_at"`
 	CancelledAt *time.Time `db:"cancelled_at"`
 	ExpiredAt   *time.Time `db:"expired_at"`
 
@@ -377,6 +400,7 @@ func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountCl
 		Status:                      accountClubSupp.Status().String(),
 		SupporterSince:              accountClubSupp.SupporterSince(),
 		LastBillingDate:             accountClubSupp.LastBillingDate(),
+		CreatedAt:                   accountClubSupp.CreatedAt(),
 		NextBillingDate:             accountClubSupp.NextBillingDate(),
 		CancelledAt:                 accountClubSupp.CancelledAt(),
 		BillingAmount:               accountClubSupp.BillingAmount(),
@@ -641,6 +665,43 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountSavedPaymentMethod
 	return savedPaymentMethod, nil
 }
 
+func (r BillingCassandraElasticsearchRepository) GetActiveClubSupporterSubscriptionsForClub(ctx context.Context, clubId string) ([]string, error) {
+
+	var subscriptionIds []string
+
+	startingBucket := bucket2.MakeMonthlyBucketFromTimestamp(time.Now())
+	endingBucket := 0
+
+	// iterate through all buckets starting from x bucket until we have enough values
+	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+
+		var builder *qb.SelectBuilder
+
+		info := map[string]interface{}{}
+
+		builder = qb.Select(clubActiveSupporterSubscriptionsTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("club_id"))
+
+		info["bucket"] = bucketId
+		info["club_id"] = clubId
+
+		var subs []clubActiveSupporterSubscriptions
+
+		if err := builder.
+			Query(r.session).
+			BindMap(info).
+			Select(&subs); err != nil {
+			return nil, fmt.Errorf("failed to get club active supporter subscriptions: %v", err)
+		}
+
+		for _, l := range subs {
+			subscriptionIds = append(subscriptionIds, l.Id)
+		}
+	}
+
+	return subscriptionIds, nil
+}
+
 func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubscriptionOperator(ctx context.Context, accountClubSupp *billing.AccountClubSupporterSubscription) error {
 
 	target, err := marshalAccountClubSubscriptionToDatabase(accountClubSupp)
@@ -663,6 +724,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		target.NextBillingDate,
 		target.BillingAmount,
 		target.BillingCurrency,
+		target.CreatedAt,
 		target.CancelledAt,
 		target.ExpiredAt,
 		target.FailedAt,
@@ -687,6 +749,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		target.NextBillingDate,
 		target.BillingAmount,
 		target.BillingCurrency,
+		target.CreatedAt,
 		target.CancelledAt,
 		target.ExpiredAt,
 		target.FailedAt,
@@ -697,6 +760,15 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		target.CCBillSubscriptionId,
 		target.UpdatedAt,
 		target.CancellationReasonId,
+	)
+
+	stmt, _ = clubActiveSupporterSubscriptionsTable.Insert()
+
+	batch.Query(stmt,
+		bucket2.MakeMonthlyBucketFromTimestamp(target.CreatedAt),
+		target.ClubId,
+		target.Id,
+		target.CCBillSubscriptionId,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -798,6 +870,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 		decrypt,
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
+		accountClubSupported.CreatedAt,
 		accountClubSupported.UpdatedAt,
 		accountClubSupported.CancellationReasonId,
 		accountClubSupported.ExpiredAt,
@@ -869,7 +942,30 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterBilli
 }
 
 func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
-	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancelled_at", "status", "next_billing_date", "expired_at", "failed_at", "ccbill_error_text", "ccbill_error_code", "billing_failure_next_retry_date"})
+
+	s, err := r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancelled_at", "status", "next_billing_date", "expired_at", "failed_at", "ccbill_error_text", "ccbill_error_code", "billing_failure_next_retry_date"})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// cancelled subscription, remove from active list
+	if s.CancelledAt() != nil {
+		if err := r.session.
+			Query(clubActiveSupporterSubscriptionsTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubActiveSupporterSubscriptions{
+				ClubId:               s.ClubId(),
+				Id:                   s.Id(),
+				Bucket:               bucket2.MakeMonthlyBucketFromTimestamp(s.CreatedAt()),
+				CCBillSubscriptionId: s.CCBillSubscriptionId(),
+			}).
+			ExecRelease(); err != nil {
+			return nil, fmt.Errorf("failed to delete club active supporter subscriptions: %v", err)
+		}
+	}
+
+	return s, nil
 }
 
 func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterPaymentMethodOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
@@ -1003,6 +1099,7 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		decrypt,
 		accountClubSupported.CCBillSubscriptionId,
 		accountClubSupported.CancelledAt,
+		accountClubSupported.CreatedAt,
 		accountClubSupported.UpdatedAt,
 		accountClubSupported.CancellationReasonId,
 		accountClubSupported.ExpiredAt,
@@ -1081,6 +1178,7 @@ func (r BillingCassandraElasticsearchRepository) searchAccountClubSupporterSubsc
 			decrypt,
 			support.CCBillSubscriptionId,
 			support.CancelledAt,
+			support.CreatedAt,
 			support.UpdatedAt,
 			support.CancellationReasonId,
 			support.ExpiredAt,
