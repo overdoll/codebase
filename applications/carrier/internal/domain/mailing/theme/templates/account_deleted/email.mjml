@@ -1,0 +1,18 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>Account Deleted</h2>
+                    <p>Hello {{.Username}}!</p>
+                    <p>As requested, your account and all associated data has been deleted.</p>
+                    <p>We're sorry to see you go. This is the last email we will send you.</p>
+                    <p>Goodbye.</p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>
