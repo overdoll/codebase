@@ -1,0 +1,5 @@
+<mj-head>
+    <mj-include path="./attributes.mjml"/>
+    <mj-include path="./inline-styles.css" type="css" css-inline="inline"/>
+    <mj-title>{{block "title" .}}{{end}}</mj-title>
+</mj-head>

@@ -1,0 +1,10 @@
+<mj-attributes>
+    <mj-class name="mjclass" color="green" font-size="30px"/>
+    <mj-text font-size="14px" color="#ffffff"/>
+    <mj-button
+            line-height="1.2"
+            letter-spacing="0.025em"
+            font-weight="700"
+    />
+    <mj-all fontFamily="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, RobotoDraft, Helvetica, Apple Color Emoji, Arial, sans-serif, Segoe UI Emoji, Segoe UI Symbol"/>
+</mj-attributes>

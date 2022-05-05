@@ -1,0 +1,54 @@
+body {
+    background-color: hsla(0, 0%, 10%, 1) !important;
+}
+
+.small td {
+    height: 2.5rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    border-radius: 0.375rem !important;
+}
+
+.small p {
+    font-size: 1rem !important;
+}
+
+.medium td {
+    height: 3rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    border-radius: 0.625rem !important;
+}
+
+.medium p {
+    font-size: 1.125rem !important;
+}
+
+.large td {
+    height: 4rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    border-radius: 1rem !important;
+}
+
+.large p {
+    font-size: 1.5rem !important;
+}
+
+.primary td {
+    background-color: hsla(342, 100%, 58%, 1) !important;
+}
+
+.primary p {
+    background-color: hsla(342, 100%, 58%, 1) !important;
+    color: hsla(346, 90%, 15%, 1) !important;
+}
+
+.gray td {
+    background-color: hsla(0, 0%, 14%, 1) !important;
+}
+
+.gray p {
+    background-color: hsla(0, 0%, 14%, 1) !important;
+    color: hsla(0, 0%, 100%, 1) !important;
+}
