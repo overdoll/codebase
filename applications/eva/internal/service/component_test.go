@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
+	"go.temporal.io/sdk/mocks"
+	"go.temporal.io/sdk/testsuite"
 	"log"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
@@ -25,6 +27,10 @@ import (
 	"overdoll/libraries/testing_tools"
 )
 
+var (
+	temporalClientMock *mocks.Client
+)
+
 const EvaHttpAddr = ":7777"
 const EvaHttpClientAddr = "http://:7777/api/graphql"
 
@@ -40,6 +46,11 @@ type AccountModified struct {
 	Username    string
 	IsStaff     bool
 	IsModerator bool
+	IsArtist    bool
+
+	Deleting *types.AccountDeleting
+
+	IsDeleted bool
 }
 
 type AccountByUsername struct {
@@ -208,6 +219,15 @@ func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string)
 	return token, secret
 }
 
+func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+
+	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(newApp.Activities)
+
+	return env
+}
+
 func getHttpClientWithAuthenticatedAccount(t *testing.T, account string) (*graphql.Client, *passport.Pocket) {
 
 	client, transport := passport.NewHTTPTestClientWithPassport(&account)
@@ -244,7 +264,9 @@ func startService() bool {
 	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/eva")
 
-	app, _ := service.NewComponentTestApplication(context.Background())
+	app, _, temporalClient := service.NewComponentTestApplication(context.Background())
+
+	temporalClientMock = temporalClient
 
 	srv := ports.NewHttpServer(&app)
 

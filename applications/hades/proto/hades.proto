@@ -64,7 +64,6 @@ message CCBillTransaction {
   optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 4;
 }
 
-
 message CanDeleteAccountDataRequest {
   string accountId = 1;
 }
@@ -75,10 +74,6 @@ message DeleteAccountDataRequest {
 
 message CanDeleteAccountDataResponse {
   bool canDelete = 1;
-}
-
-message CancelActiveSubscriptionsForClubRequest {
-  string clubId = 1;
 }
 
 service Hades {

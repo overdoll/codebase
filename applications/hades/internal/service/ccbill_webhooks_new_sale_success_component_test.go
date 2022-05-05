@@ -119,6 +119,12 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
+	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
+
+	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
+	require.Equal(t, 699, metrics.TotalTransactionsAmount, "should have 1 transaction count")
+	require.Equal(t, graphql1.CurrencyUsd, metrics.Currency, "should have 1 transaction count")
+
 	// get club supporter subscriptions
 	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
 	require.Len(t, subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges, 1, "should have 1 subscription")

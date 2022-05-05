@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
@@ -90,6 +91,15 @@ type AccountExpiredClubSupporterSubscriptions struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
+type HasActiveOrCancelledAccountClubSupporterSubscriptions struct {
+	Entities []struct {
+		Account struct {
+			Id                                                    relay.ID
+			HasActiveOrCancelledAccountClubSupporterSubscriptions bool
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
 // test a bunch of webhooks at the same time
 func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	t.Parallel()
@@ -100,6 +110,13 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	clubId := uuid.New().String()
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
+
+	grpcClient := getGrpcClient(t)
+
+	// CHECK FOR ACCOUNT DELETION
+	res, err := grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
+	require.NotNil(t, err, "no error checking if can delete account data")
+	require.False(t, res.CanDelete, "cannot delete account data with active subscription")
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCancellation, mock.Anything)
 
@@ -123,7 +140,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	var cancelledSubscriptions AccountCancelledClubSupporterSubscriptions
 
-	err := gqlClient.Query(context.Background(), &cancelledSubscriptions, map[string]interface{}{
+	err = gqlClient.Query(context.Background(), &cancelledSubscriptions, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
@@ -158,6 +175,11 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	expiredWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
+
+	// CHECK FOR ACCOUNT DELETION
+	res, err = grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
+	require.NotNil(t, err, "no error checking if can delete account data")
+	require.True(t, res.CanDelete, "can delete account data with no active subscriptions")
 
 	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
 
@@ -197,4 +219,26 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", expiredSubscriptionNew.ExpiredAt.String(), "correct expiration date")
 	require.Equal(t, "2022-03-01 03:18:00 +0000 UTC", expiredSubscriptionNew.CancelledAt.String(), "correct cancellation date")
 	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", expiredSubscriptionNew.SupporterSince.String(), "correct supporter date")
+
+	// CHECK FOR ACCOUNT DELETION - DELETE THE DATA
+	_, err = grpcClient.DeleteAccountData(context.Background(), &hades.DeleteAccountDataRequest{AccountId: accountId})
+	require.NotNil(t, err, "no error deleting account data")
+
+	// check that the saved payment methods were deleted
+	savedPaymentMethods := getAccountSavedPaymentMethods(t, gqlClient, accountId)
+	require.Len(t, savedPaymentMethods.Entities[0].Account.SavedPaymentMethods.Edges, 0, "no saved payment methods remaining after deletion")
+
+	var hasActive HasActiveOrCancelledAccountClubSupporterSubscriptions
+
+	err = gqlClient.Query(context.Background(), &hasActive, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(accountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing active or cancelled account club supporter subscriptions")
+	require.False(t, hasActive.Entities[0].Account.HasActiveOrCancelledAccountClubSupporterSubscriptions, "no more active or cancelled subscriptions")
 }

@@ -50,6 +50,13 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
+	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
+
+	require.Equal(t, 699, metrics.ChargebacksAmount, "should have 1 chargeback amount")
+	require.Equal(t, 1, metrics.ChargebacksCount, "should have 1 chargeback count")
+	require.Equal(t, 1, metrics.ChargebacksCountRatio, "should have correct chargeback ratio")
+	require.Equal(t, 1, metrics.ChargebacksAmountRatio, "should have correct chargeback amount")
+
 	transactions := getAccountTransactions(t, gqlClient, accountId)
 
 	require.Len(t, transactions.Entities[0].Account.Transactions.Edges, 1, "1 transaction item")

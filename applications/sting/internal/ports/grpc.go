@@ -91,9 +91,20 @@ func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*em
 	return &emptypb.Empty{}, nil
 }
 
-func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddSuspendedClubRequest) (*emptypb.Empty, error) {
+func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAccountDataRequest) (*emptypb.Empty, error) {
 
-	if err := s.app.Commands.AddTerminatedClub.Handle(ctx, command.AddSuspendedClub{
+	if err := s.app.Commands.DeleteAccountData.Handle(ctx, command.DeleteAccountData{
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddTerminatedClubRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AddTerminatedClub.Handle(ctx, command.AddTerminatedClub{
 		ClubId: request.ClubId,
 	}); err != nil {
 		return nil, err
@@ -102,10 +113,10 @@ func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddSuspend
 	return &emptypb.Empty{}, nil
 }
 
-func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAccountDataRequest) (*emptypb.Empty, error) {
+func (s Server) RemoveTerminatedClub(ctx context.Context, request *sting.RemoveTerminatedClubRequest) (*emptypb.Empty, error) {
 
-	if err := s.app.Commands.DeleteAccountData.Handle(ctx, command.DeleteAccountData{
-		AccountId: request.AccountId,
+	if err := s.app.Commands.RemoveTerminatedClub.Handle(ctx, command.RemoveTerminatedClub{
+		ClubId: request.ClubId,
 	}); err != nil {
 		return nil, err
 	}

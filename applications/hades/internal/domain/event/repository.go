@@ -15,5 +15,5 @@ type Repository interface {
 	CCBillBillingDateChange(ctx context.Context, payload []byte) error
 	CCBillCustomerDataUpdate(ctx context.Context, payload []byte) error
 	CCBillRenewalFailure(ctx context.Context, payload []byte) error
-	CancelActiveSubscriptionsForClub(ctx context.Context, clubId string) error
+	CancelActiveSupporterSubscriptionsForClub(ctx context.Context, clubId string) error
 }

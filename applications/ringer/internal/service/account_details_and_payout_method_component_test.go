@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
+	ringer "overdoll/applications/ringer/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -138,4 +139,23 @@ func TestCreateAndGetAccountPayoutMethod(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Nil(t, method.Entities[0].Account.PayoutMethod, "payout method should be nil since it was deleted")
+
+	grpcClient := getGrpcClient(t)
+
+	_, err = grpcClient.DeleteAccountData(context.Background(), &ringer.DeleteAccountDataRequest{AccountId: accountId})
+
+	require.NoError(t, err, "no error deleting account data")
+
+	err = gClient.Query(context.Background(), &details, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         string(convertAccountIdToRelayId(accountId)),
+			},
+		},
+	})
+
+	require.NoError(t, err)
+
+	require.Nil(t, details.Entities[0].Account.Details, "account details were deleted")
 }

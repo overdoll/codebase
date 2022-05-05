@@ -4,11 +4,14 @@ import (
 	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/eva/internal/app/workflows"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/applications/eva/internal/service"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"strings"
 	"testing"
 	"time"
@@ -322,4 +325,99 @@ func TestAccountSessions_view_and_revoke_remote(t *testing.T) {
 	v, err := grpcClient.GetSession(ctx, &eva.SessionRequest{Id: s.Id})
 	require.NoError(t, err)
 	require.Equal(t, false, v.Valid, "session should no longer be valid")
+}
+
+type DeleteAccount struct {
+	DeleteAccount struct {
+		Account *AccountModified
+	} `graphql:"deleteAccount(input: $input)"`
+}
+
+type CancelAccountDeletion struct {
+	CancelAccountDeletion struct {
+		Account *AccountModified
+	} `graphql:"cancelAccountDeletion(input: $input)"`
+}
+
+func TestAccount_delete(t *testing.T) {
+	t.Parallel()
+
+	accs := seedMfaAccount(t)
+	accountId := accs.ID()
+	accountUsername := accs.Username()
+	accountRelayId := convertAccountIdToRelayId(accountId)
+
+	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
+
+	var deleteAccount DeleteAccount
+
+	err := client.Mutate(context.Background(), &deleteAccount, map[string]interface{}{
+		"input": types.DeleteAccountInput{AccountID: accountRelayId},
+	})
+
+	require.NoError(t, err)
+
+	env := getWorkflowEnvironment(t)
+
+	env.RegisterDelayedCallback(func() {
+		// see that the account is deleting status
+		acc := getAccountByUsername(t, client, accountUsername)
+		require.NotNil(t, acc.Deleting)
+	}, time.Minute)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	acc := getAccountByUsername(t, client, accountUsername)
+
+	require.Nil(t, acc, "account is no longer found")
+}
+
+func TestAccount_delete_and_cancel(t *testing.T) {
+	t.Parallel()
+
+	accs := seedMfaAccount(t)
+	accountId := accs.ID()
+	accountUsername := accs.Username()
+	accountRelayId := convertAccountIdToRelayId(accountId)
+
+	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
+
+	var deleteAccount DeleteAccount
+
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
+
+	err := client.Mutate(context.Background(), &deleteAccount, map[string]interface{}{
+		"input": types.DeleteAccountInput{AccountID: accountRelayId},
+	})
+
+	require.NoError(t, err)
+
+	env := getWorkflowEnvironment(t)
+
+	env.RegisterDelayedCallback(func() {
+
+		var cancelAccountDeletion CancelAccountDeletion
+
+		// cancel the deletion
+		err = client.Mutate(context.Background(), &cancelAccountDeletion, map[string]interface{}{
+			"input": types.CancelAccountDeletionInput{AccountID: accountRelayId},
+		})
+
+		require.NoError(t, err)
+	}, time.Minute)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	acc := getAccountByUsername(t, client, accountUsername)
+
+	require.False(t, acc.IsDeleted, "account is not deleted")
+	require.Nil(t, acc.Deleting, "account is not deleting")
 }

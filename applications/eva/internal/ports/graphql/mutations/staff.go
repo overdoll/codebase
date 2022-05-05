@@ -80,6 +80,42 @@ func (r *MutationResolver) RevokeAccountStaffRole(ctx context.Context, input typ
 	return &types.RevokeAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
 }
 
+func (r *MutationResolver) AssignAccountArtistRole(ctx context.Context, input types.AssignAccountArtistRole) (*types.AssignAccountArtistRolePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.AssignAccountArtistRole.Handle(ctx, command.AssignAccountArtistRole{
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.AssignAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
+func (r *MutationResolver) RevokeAccountArtistRole(ctx context.Context, input types.RevokeAccountArtistRole) (*types.RevokeAccountArtistRolePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.RevokeAccountArtistRole.Handle(ctx, command.RevokeAccountArtistRole{
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.RevokeAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
 func (r *MutationResolver) UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

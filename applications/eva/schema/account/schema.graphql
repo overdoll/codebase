@@ -14,6 +14,9 @@ type Account implements Node @key(fields: "id") {
   """Whether or not this account is a staff member"""
   isStaff: Boolean!
 
+  """Whether or not this account is an artist"""
+  isArtist: Boolean!
+
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 

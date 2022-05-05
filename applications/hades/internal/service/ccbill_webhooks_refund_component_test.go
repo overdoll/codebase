@@ -68,6 +68,13 @@ func TestBillingFlow_Refund(t *testing.T) {
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
+	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
+
+	require.Equal(t, 699, metrics.RefundsAmount, "should have 1 refunds amount")
+	require.Equal(t, 1, metrics.RefundsCount, "should have 1 refunds count")
+	require.Equal(t, 1, metrics.RefundsCountRatio, "should have correct refunds ratio")
+	require.Equal(t, 1, metrics.RefundsAmountRatio, "should have correct refunds amount")
+
 	accountTransactionsRefund := getAccountTransactions(t, gqlClient, accountId)
 
 	require.Len(t, accountTransactionsRefund.Entities[0].Account.Transactions.Edges, 1, "1 transaction items")

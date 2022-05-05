@@ -172,3 +172,51 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	require.Nil(t, query.Viewer.Lock, "should not be locked")
 }
+
+type AssignAccountArtistRole struct {
+	AssignAccountArtistRole struct {
+		Account *AccountModified
+	} `graphql:"assignAccountArtistRole(input: $input)"`
+}
+
+type RevokeAccountArtistRole struct {
+	RevokeAccountStaffRole struct {
+		Account *AccountModified
+	} `graphql:"revokeAccountArtistRole(input: $input)"`
+}
+
+func TestAccountRole_assign_and_revoke_artist(t *testing.T) {
+	t.Parallel()
+
+	accs := seedMfaAccount(t)
+	accountId := accs.ID()
+	accountUsername := accs.Username()
+	accountRelayId := convertAccountIdToRelayId(accountId)
+	moderatorAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+
+	client, _ := getHttpClientWithAuthenticatedAccount(t, moderatorAccountId)
+
+	var assignAccountArtistRole AssignAccountArtistRole
+
+	err := client.Mutate(context.Background(), &assignAccountArtistRole, map[string]interface{}{
+		"input": types.AssignAccountArtistRole{AccountID: accountRelayId},
+	})
+
+	require.NoError(t, err)
+
+	acc := getAccountByUsername(t, client, accountUsername)
+
+	require.True(t, acc.IsArtist, "account is artist")
+
+	var revokeAccountArtistRole RevokeAccountArtistRole
+
+	err = client.Mutate(context.Background(), &revokeAccountArtistRole, map[string]interface{}{
+		"input": types.RevokeAccountArtistRole{AccountID: accountRelayId},
+	})
+
+	require.NoError(t, err)
+
+	acc = getAccountByUsername(t, client, accountUsername)
+
+	require.False(t, acc.IsArtist, "account is not artist")
+}

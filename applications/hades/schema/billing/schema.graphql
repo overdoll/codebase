@@ -773,13 +773,13 @@ input GenerateClubSupporterRefundReceiptFromAccountTransactionInput {
 }
 
 """Cancel all active subscriptions for a club."""
-input CancelActiveSubscriptionsForClubInput {
+input CancelActiveSupporterSubscriptionsForClubInput {
   """The id of the club."""
   clubId: ID!
 }
 
 """Payload for cancelling all active subscriptions."""
-type CancelActiveSubscriptionsForClubPayload {
+type CancelActiveSupporterSubscriptionsForClubPayload {
   """The club."""
   club: Club
 }
@@ -989,7 +989,7 @@ extend type Mutation {
 
   Staff+ only.
   """
-  cancelActiveSubscriptionsForClub(input: CancelActiveSubscriptionsForClubInput!): CancelActiveSubscriptionsForClubPayload
+  cancelActiveSupporterSubscriptionsForClub(input: CancelActiveSupporterSubscriptionsForClubInput!): CancelActiveSupporterSubscriptionsForClubPayload
 }
 
 extend type Query {

@@ -48,6 +48,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Username:                result.Username(),
 		IsSecure:                result.IsSecure(),
 		IsStaff:                 result.IsStaff(),
+		IsArtist:                result.IsArtist(),
 		IsModerator:             result.IsModerator(),
 		Lock:                    MarshalAccountLockToGraphQL(result),
 		UsernameEditAvailableAt: result.UsernameEditAvailableAt(),

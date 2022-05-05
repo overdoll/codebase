@@ -21,6 +21,8 @@ type Account struct {
 	Username string `json:"username"`
 	// Whether or not this account is a staff member
 	IsStaff bool `json:"isStaff"`
+	// Whether or not this account is an artist
+	IsArtist bool `json:"isArtist"`
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
 	// Whether or not this account is secure.
@@ -152,6 +154,18 @@ type AddAccountEmailPayload struct {
 	AccountEmail *AccountEmail `json:"accountEmail"`
 	// Any validation errors from the backend
 	Validation *AddAccountEmailValidation `json:"validation"`
+}
+
+// Input to assign account to a arist role
+type AssignAccountArtistRole struct {
+	// The account ID that the role needs to be assigned to
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Assigned account
+type AssignAccountArtistRolePayload struct {
+	// The account that the role was assigned to
+	Account *Account `json:"account"`
 }
 
 // Input to assign account to a moderator role
@@ -434,6 +448,18 @@ func (Resource) IsEntity() {}
 type RevokeAccountAccessPayload struct {
 	// The account that was revoked
 	RevokedAccountID relay.ID `json:"revokedAccountId"`
+}
+
+// Input to revoke artist role
+type RevokeAccountArtistRole struct {
+	// The account ID that the role needs to be revoked from
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Revoked account
+type RevokeAccountArtistRolePayload struct {
+	// The account that the role was revoked from
+	Account *Account `json:"account"`
 }
 
 // Input to revoke moderator role

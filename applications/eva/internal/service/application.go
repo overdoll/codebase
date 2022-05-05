@@ -46,12 +46,13 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
-
-	temporalClient := &mocks.Client{}
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
 
 	// mock out carrier so we don't have to send emails in tests
 	// we "send" emails by placing them inside of a redis DB to be read later from tests
+
+	temporalClient := &mocks.Client{}
+
 	return createApplication(
 			ctx,
 			NewCarrierServiceMock(),
@@ -63,7 +64,8 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 			temporalClient,
 		),
 		func() {
-		}
+		},
+		temporalClient
 }
 
 func createApplication(
@@ -158,6 +160,7 @@ func createApplication(
 			sting,
 			parley,
 			ringer,
+			carrier,
 		),
 	}
 }

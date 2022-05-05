@@ -261,7 +261,7 @@ type ComplexityRoot struct {
 		ClubSupporterSubscription func(childComplexity int) int
 	}
 
-	CancelActiveSubscriptionsForClubPayload struct {
+	CancelActiveSupporterSubscriptionsForClubPayload struct {
 		Club func(childComplexity int) int
 	}
 
@@ -391,7 +391,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		BecomeClubSupporterWithAccountSavedPaymentMethod          func(childComplexity int, input types.BecomeClubSupporterWithAccountSavedPaymentMethodInput) int
 		CancelAccountClubSupporterSubscription                    func(childComplexity int, input types.CancelAccountClubSupporterSubscriptionInput) int
-		CancelActiveSubscriptionsForClub                          func(childComplexity int, input types.CancelActiveSubscriptionsForClubInput) int
+		CancelActiveSupporterSubscriptionsForClub                 func(childComplexity int, input types.CancelActiveSupporterSubscriptionsForClubInput) int
 		CreateCancellationReason                                  func(childComplexity int, input types.CreateCancellationReasonInput) int
 		DeleteAccountSavedPaymentMethod                           func(childComplexity int, input types.DeleteAccountSavedPaymentMethodInput) int
 		ExtendAccountClubSupporterSubscription                    func(childComplexity int, input types.ExtendAccountClubSupporterSubscriptionInput) int
@@ -517,7 +517,7 @@ type MutationResolver interface {
 	DeleteAccountSavedPaymentMethod(ctx context.Context, input types.DeleteAccountSavedPaymentMethodInput) (*types.DeleteAccountSavedPaymentMethodPayload, error)
 	GenerateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, input types.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput) (*types.GenerateClubSupporterPaymentReceiptFromAccountTransactionPayload, error)
 	GenerateClubSupporterRefundReceiptFromAccountTransaction(ctx context.Context, input types.GenerateClubSupporterRefundReceiptFromAccountTransactionInput) (*types.GenerateClubSupporterRefundReceiptFromAccountTransactionPayload, error)
-	CancelActiveSubscriptionsForClub(ctx context.Context, input types.CancelActiveSubscriptionsForClubInput) (*types.CancelActiveSubscriptionsForClubPayload, error)
+	CancelActiveSupporterSubscriptionsForClub(ctx context.Context, input types.CancelActiveSupporterSubscriptionsForClubInput) (*types.CancelActiveSupporterSubscriptionsForClubPayload, error)
 	CreateCancellationReason(ctx context.Context, input types.CreateCancellationReasonInput) (*types.CreateCancellationReasonPayload, error)
 	UpdateCancellationReasonTitle(ctx context.Context, input types.UpdateCancellationReasonTitleInput) (*types.UpdateCancellationReasonTitlePayload, error)
 	UpdateCancellationReasonDeprecated(ctx context.Context, input types.UpdateCancellationReasonDeprecatedInput) (*types.UpdateCancellationReasonDeprecatedPayload, error)
@@ -1540,12 +1540,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CancelAccountClubSupporterSubscriptionPayload.ClubSupporterSubscription(childComplexity), true
 
-	case "CancelActiveSubscriptionsForClubPayload.club":
-		if e.complexity.CancelActiveSubscriptionsForClubPayload.Club == nil {
+	case "CancelActiveSupporterSubscriptionsForClubPayload.club":
+		if e.complexity.CancelActiveSupporterSubscriptionsForClubPayload.Club == nil {
 			break
 		}
 
-		return e.complexity.CancelActiveSubscriptionsForClubPayload.Club(childComplexity), true
+		return e.complexity.CancelActiveSupporterSubscriptionsForClubPayload.Club(childComplexity), true
 
 	case "CancellationReason.deprecated":
 		if e.complexity.CancellationReason.Deprecated == nil {
@@ -2036,17 +2036,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CancelAccountClubSupporterSubscription(childComplexity, args["input"].(types.CancelAccountClubSupporterSubscriptionInput)), true
 
-	case "Mutation.cancelActiveSubscriptionsForClub":
-		if e.complexity.Mutation.CancelActiveSubscriptionsForClub == nil {
+	case "Mutation.cancelActiveSupporterSubscriptionsForClub":
+		if e.complexity.Mutation.CancelActiveSupporterSubscriptionsForClub == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_cancelActiveSubscriptionsForClub_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_cancelActiveSupporterSubscriptionsForClub_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CancelActiveSubscriptionsForClub(childComplexity, args["input"].(types.CancelActiveSubscriptionsForClubInput)), true
+		return e.complexity.Mutation.CancelActiveSupporterSubscriptionsForClub(childComplexity, args["input"].(types.CancelActiveSupporterSubscriptionsForClubInput)), true
 
 	case "Mutation.createCancellationReason":
 		if e.complexity.Mutation.CreateCancellationReason == nil {
@@ -3224,13 +3224,13 @@ input GenerateClubSupporterRefundReceiptFromAccountTransactionInput {
 }
 
 """Cancel all active subscriptions for a club."""
-input CancelActiveSubscriptionsForClubInput {
+input CancelActiveSupporterSubscriptionsForClubInput {
   """The id of the club."""
   clubId: ID!
 }
 
 """Payload for cancelling all active subscriptions."""
-type CancelActiveSubscriptionsForClubPayload {
+type CancelActiveSupporterSubscriptionsForClubPayload {
   """The club."""
   club: Club
 }
@@ -3440,7 +3440,7 @@ extend type Mutation {
 
   Staff+ only.
   """
-  cancelActiveSubscriptionsForClub(input: CancelActiveSubscriptionsForClubInput!): CancelActiveSubscriptionsForClubPayload
+  cancelActiveSupporterSubscriptionsForClub(input: CancelActiveSupporterSubscriptionsForClubInput!): CancelActiveSupporterSubscriptionsForClubPayload
 }
 
 extend type Query {
@@ -4383,13 +4383,13 @@ func (ec *executionContext) field_Mutation_cancelAccountClubSupporterSubscriptio
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_cancelActiveSubscriptionsForClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_cancelActiveSupporterSubscriptionsForClub_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.CancelActiveSubscriptionsForClubInput
+	var arg0 types.CancelActiveSupporterSubscriptionsForClubInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCancelActiveSubscriptionsForClubInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSubscriptionsForClubInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCancelActiveSupporterSubscriptionsForClubInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSupporterSubscriptionsForClubInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9511,7 +9511,7 @@ func (ec *executionContext) _CancelAccountClubSupporterSubscriptionPayload_clubS
 	return ec.marshalOAccountClubSupporterSubscription2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CancelActiveSubscriptionsForClubPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.CancelActiveSubscriptionsForClubPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _CancelActiveSupporterSubscriptionsForClubPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.CancelActiveSupporterSubscriptionsForClubPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -9519,7 +9519,7 @@ func (ec *executionContext) _CancelActiveSubscriptionsForClubPayload_club(ctx co
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "CancelActiveSubscriptionsForClubPayload",
+		Object:     "CancelActiveSupporterSubscriptionsForClubPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -12039,7 +12039,7 @@ func (ec *executionContext) _Mutation_generateClubSupporterRefundReceiptFromAcco
 	return ec.marshalOGenerateClubSupporterRefundReceiptFromAccountTransactionPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateClubSupporterRefundReceiptFromAccountTransactionPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_cancelActiveSubscriptionsForClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_cancelActiveSupporterSubscriptionsForClub(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -12056,7 +12056,7 @@ func (ec *executionContext) _Mutation_cancelActiveSubscriptionsForClub(ctx conte
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_cancelActiveSubscriptionsForClub_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_cancelActiveSupporterSubscriptionsForClub_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -12064,7 +12064,7 @@ func (ec *executionContext) _Mutation_cancelActiveSubscriptionsForClub(ctx conte
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CancelActiveSubscriptionsForClub(rctx, args["input"].(types.CancelActiveSubscriptionsForClubInput))
+		return ec.resolvers.Mutation().CancelActiveSupporterSubscriptionsForClub(rctx, args["input"].(types.CancelActiveSupporterSubscriptionsForClubInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12073,9 +12073,9 @@ func (ec *executionContext) _Mutation_cancelActiveSubscriptionsForClub(ctx conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.CancelActiveSubscriptionsForClubPayload)
+	res := resTmp.(*types.CancelActiveSupporterSubscriptionsForClubPayload)
 	fc.Result = res
-	return ec.marshalOCancelActiveSubscriptionsForClubPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSubscriptionsForClubPayload(ctx, field.Selections, res)
+	return ec.marshalOCancelActiveSupporterSubscriptionsForClubPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSupporterSubscriptionsForClubPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createCancellationReason(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -14442,8 +14442,8 @@ func (ec *executionContext) unmarshalInputCancelAccountClubSupporterSubscription
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCancelActiveSubscriptionsForClubInput(ctx context.Context, obj interface{}) (types.CancelActiveSubscriptionsForClubInput, error) {
-	var it types.CancelActiveSubscriptionsForClubInput
+func (ec *executionContext) unmarshalInputCancelActiveSupporterSubscriptionsForClubInput(ctx context.Context, obj interface{}) (types.CancelActiveSupporterSubscriptionsForClubInput, error) {
+	var it types.CancelActiveSupporterSubscriptionsForClubInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -16846,19 +16846,19 @@ func (ec *executionContext) _CancelAccountClubSupporterSubscriptionPayload(ctx c
 	return out
 }
 
-var cancelActiveSubscriptionsForClubPayloadImplementors = []string{"CancelActiveSubscriptionsForClubPayload"}
+var cancelActiveSupporterSubscriptionsForClubPayloadImplementors = []string{"CancelActiveSupporterSubscriptionsForClubPayload"}
 
-func (ec *executionContext) _CancelActiveSubscriptionsForClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CancelActiveSubscriptionsForClubPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, cancelActiveSubscriptionsForClubPayloadImplementors)
+func (ec *executionContext) _CancelActiveSupporterSubscriptionsForClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CancelActiveSupporterSubscriptionsForClubPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancelActiveSupporterSubscriptionsForClubPayloadImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("CancelActiveSubscriptionsForClubPayload")
+			out.Values[i] = graphql.MarshalString("CancelActiveSupporterSubscriptionsForClubPayload")
 		case "club":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._CancelActiveSubscriptionsForClubPayload_club(ctx, field, obj)
+				return ec._CancelActiveSupporterSubscriptionsForClubPayload_club(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -18109,9 +18109,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "cancelActiveSubscriptionsForClub":
+		case "cancelActiveSupporterSubscriptionsForClub":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_cancelActiveSubscriptionsForClub(ctx, field)
+				return ec._Mutation_cancelActiveSupporterSubscriptionsForClub(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -19547,8 +19547,8 @@ func (ec *executionContext) unmarshalNCancelAccountClubSupporterSubscriptionInpu
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCancelActiveSubscriptionsForClubInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSubscriptionsForClubInput(ctx context.Context, v interface{}) (types.CancelActiveSubscriptionsForClubInput, error) {
-	res, err := ec.unmarshalInputCancelActiveSubscriptionsForClubInput(ctx, v)
+func (ec *executionContext) unmarshalNCancelActiveSupporterSubscriptionsForClubInput2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSupporterSubscriptionsForClubInput(ctx context.Context, v interface{}) (types.CancelActiveSupporterSubscriptionsForClubInput, error) {
+	res, err := ec.unmarshalInputCancelActiveSupporterSubscriptionsForClubInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -20712,11 +20712,11 @@ func (ec *executionContext) marshalOCancelAccountClubSupporterSubscriptionPayloa
 	return ec._CancelAccountClubSupporterSubscriptionPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCancelActiveSubscriptionsForClubPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSubscriptionsForClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.CancelActiveSubscriptionsForClubPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOCancelActiveSupporterSubscriptionsForClubPayload2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelActiveSupporterSubscriptionsForClubPayload(ctx context.Context, sel ast.SelectionSet, v *types.CancelActiveSupporterSubscriptionsForClubPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._CancelActiveSubscriptionsForClubPayload(ctx, sel, v)
+	return ec._CancelActiveSupporterSubscriptionsForClubPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCancellationReason2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancellationReason(ctx context.Context, sel ast.SelectionSet, v *types.CancellationReason) graphql.Marshaler {

@@ -5,11 +5,11 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 )
 
-type CancelActiveSubscriptionsForClubInput struct {
+type CancelActiveSupporterSubscriptionsForClubInput struct {
 	ClubId string
 }
 
-func CancelActiveSubscriptionsForClub(ctx workflow.Context, input CancelActiveSubscriptionsForClubInput) error {
+func CancelActiveSupporterSubscriptionsForClub(ctx workflow.Context, input CancelActiveSupporterSubscriptionsForClubInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 

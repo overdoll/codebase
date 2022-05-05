@@ -59,6 +59,7 @@ type ComplexityRoot struct {
 		Emails                    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		EmailsLimit               func(childComplexity int) int
 		ID                        func(childComplexity int) int
+		IsArtist                  func(childComplexity int) int
 		IsDeleted                 func(childComplexity int) int
 		IsModerator               func(childComplexity int) int
 		IsSecure                  func(childComplexity int) int
@@ -126,6 +127,10 @@ type ComplexityRoot struct {
 	AddAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
 		Validation   func(childComplexity int) int
+	}
+
+	AssignAccountArtistRolePayload struct {
+		Account func(childComplexity int) int
 	}
 
 	AssignAccountModeratorRolePayload struct {
@@ -251,6 +256,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddAccountEmail                                                     func(childComplexity int, input types.AddAccountEmailInput) int
+		AssignAccountArtistRole                                             func(childComplexity int, input types.AssignAccountArtistRole) int
 		AssignAccountModeratorRole                                          func(childComplexity int, input types.AssignAccountModeratorRole) int
 		AssignAccountStaffRole                                              func(childComplexity int, input types.AssignAccountStaffRole) int
 		CancelAccountDeletion                                               func(childComplexity int, input types.CancelAccountDeletionInput) int
@@ -268,6 +274,7 @@ type ComplexityRoot struct {
 		GrantAuthenticationToken                                            func(childComplexity int, input types.GrantAuthenticationTokenInput) int
 		LockAccount                                                         func(childComplexity int, input types.LockAccountInput) int
 		RevokeAccountAccess                                                 func(childComplexity int) int
+		RevokeAccountArtistRole                                             func(childComplexity int, input types.RevokeAccountArtistRole) int
 		RevokeAccountModeratorRole                                          func(childComplexity int, input types.RevokeAccountModeratorRole) int
 		RevokeAccountSession                                                func(childComplexity int, input types.RevokeAccountSessionInput) int
 		RevokeAccountStaffRole                                              func(childComplexity int, input types.RevokeAccountStaffRole) int
@@ -300,6 +307,10 @@ type ComplexityRoot struct {
 
 	RevokeAccountAccessPayload struct {
 		RevokedAccountID func(childComplexity int) int
+	}
+
+	RevokeAccountArtistRolePayload struct {
+		Account func(childComplexity int) int
 	}
 
 	RevokeAccountModeratorRolePayload struct {
@@ -395,6 +406,8 @@ type MutationResolver interface {
 	AssignAccountStaffRole(ctx context.Context, input types.AssignAccountStaffRole) (*types.AssignAccountStaffRolePayload, error)
 	RevokeAccountModeratorRole(ctx context.Context, input types.RevokeAccountModeratorRole) (*types.RevokeAccountModeratorRolePayload, error)
 	RevokeAccountStaffRole(ctx context.Context, input types.RevokeAccountStaffRole) (*types.RevokeAccountStaffRolePayload, error)
+	AssignAccountArtistRole(ctx context.Context, input types.AssignAccountArtistRole) (*types.AssignAccountArtistRolePayload, error)
+	RevokeAccountArtistRole(ctx context.Context, input types.RevokeAccountArtistRole) (*types.RevokeAccountArtistRolePayload, error)
 }
 type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context, token string, secret *string) (*types.AuthenticationToken, error)
@@ -464,6 +477,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ID(childComplexity), true
+
+	case "Account.isArtist":
+		if e.complexity.Account.IsArtist == nil {
+			break
+		}
+
+		return e.complexity.Account.IsArtist(childComplexity), true
 
 	case "Account.isDeleted":
 		if e.complexity.Account.IsDeleted == nil {
@@ -728,6 +748,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
+
+	case "AssignAccountArtistRolePayload.account":
+		if e.complexity.AssignAccountArtistRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.AssignAccountArtistRolePayload.Account(childComplexity), true
 
 	case "AssignAccountModeratorRolePayload.account":
 		if e.complexity.AssignAccountModeratorRolePayload.Account == nil {
@@ -1120,6 +1147,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddAccountEmail(childComplexity, args["input"].(types.AddAccountEmailInput)), true
 
+	case "Mutation.assignAccountArtistRole":
+		if e.complexity.Mutation.AssignAccountArtistRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_assignAccountArtistRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AssignAccountArtistRole(childComplexity, args["input"].(types.AssignAccountArtistRole)), true
+
 	case "Mutation.assignAccountModeratorRole":
 		if e.complexity.Mutation.AssignAccountModeratorRole == nil {
 			break
@@ -1303,6 +1342,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RevokeAccountAccess(childComplexity), true
+
+	case "Mutation.revokeAccountArtistRole":
+		if e.complexity.Mutation.RevokeAccountArtistRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_revokeAccountArtistRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RevokeAccountArtistRole(childComplexity, args["input"].(types.RevokeAccountArtistRole)), true
 
 	case "Mutation.revokeAccountModeratorRole":
 		if e.complexity.Mutation.RevokeAccountModeratorRole == nil {
@@ -1499,6 +1550,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RevokeAccountAccessPayload.RevokedAccountID(childComplexity), true
 
+	case "RevokeAccountArtistRolePayload.account":
+		if e.complexity.RevokeAccountArtistRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.RevokeAccountArtistRolePayload.Account(childComplexity), true
+
 	case "RevokeAccountModeratorRolePayload.account":
 		if e.complexity.RevokeAccountModeratorRolePayload.Account == nil {
 			break
@@ -1677,6 +1735,9 @@ var sources = []*ast.Source{
   """Whether or not this account is a staff member"""
   isStaff: Boolean!
 
+  """Whether or not this account is an artist"""
+  isArtist: Boolean!
+  
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
@@ -2278,6 +2339,20 @@ input AssignAccountStaffRole {
   accountId: ID!
 }
 
+"""Input to assign account to a arist role"""
+input AssignAccountArtistRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountArtistRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
 """Revoked account"""
 type RevokeAccountModeratorRolePayload {
   """The account that the role was revoked from"""
@@ -2306,6 +2381,20 @@ input RevokeAccountStaffRole {
   accountId: ID!
 }
 
+"""Revoked account"""
+type RevokeAccountArtistRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke artist role"""
+input RevokeAccountArtistRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
 extend type Mutation {
   """
   Assign a moderator role to the account
@@ -2326,6 +2415,16 @@ extend type Mutation {
   Revoke the staff role from the account
   """
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+
+  """
+  Assign a artist role to the account
+  """
+  assignAccountArtistRole(input: AssignAccountArtistRole!): AssignAccountArtistRolePayload
+
+  """
+  Revoke the artist role from the account
+  """
+  revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload
 }
 `, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `"""Types of multi factor enabled for this account"""
@@ -2858,6 +2957,21 @@ func (ec *executionContext) field_Mutation_addAccountEmail_args(ctx context.Cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_assignAccountArtistRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.AssignAccountArtistRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAssignAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_assignAccountModeratorRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3045,6 +3159,21 @@ func (ec *executionContext) field_Mutation_lockAccount_args(ctx context.Context,
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNLockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_revokeAccountArtistRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RevokeAccountArtistRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRevokeAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRole(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3436,6 +3565,41 @@ func (ec *executionContext) _Account_isStaff(ctx context.Context, field graphql.
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.IsStaff, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_isArtist(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsArtist, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4779,6 +4943,38 @@ func (ec *executionContext) _AddAccountEmailPayload_validation(ctx context.Conte
 	res := resTmp.(*types.AddAccountEmailValidation)
 	fc.Result = res
 	return ec.marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AssignAccountArtistRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountArtistRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AssignAccountArtistRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AssignAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountModeratorRolePayload) (ret graphql.Marshaler) {
@@ -7539,6 +7735,84 @@ func (ec *executionContext) _Mutation_revokeAccountStaffRole(ctx context.Context
 	return ec.marshalORevokeAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRolePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_assignAccountArtistRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_assignAccountArtistRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AssignAccountArtistRole(rctx, args["input"].(types.AssignAccountArtistRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AssignAccountArtistRolePayload)
+	fc.Result = res
+	return ec.marshalOAssignAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRolePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_revokeAccountArtistRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revokeAccountArtistRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountArtistRole(rctx, args["input"].(types.RevokeAccountArtistRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RevokeAccountArtistRolePayload)
+	fc.Result = res
+	return ec.marshalORevokeAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRolePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8034,6 +8308,38 @@ func (ec *executionContext) _RevokeAccountAccessPayload_revokedAccountId(ctx con
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RevokeAccountArtistRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountArtistRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RevokeAccountArtistRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RevokeAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountModeratorRolePayload) (ret graphql.Marshaler) {
@@ -9705,6 +10011,29 @@ func (ec *executionContext) unmarshalInputAddAccountEmailInput(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputAssignAccountArtistRole(ctx context.Context, obj interface{}) (types.AssignAccountArtistRole, error) {
+	var it types.AssignAccountArtistRole
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context.Context, obj interface{}) (types.AssignAccountModeratorRole, error) {
 	var it types.AssignAccountModeratorRole
 	asMap := map[string]interface{}{}
@@ -10052,6 +10381,29 @@ func (ec *executionContext) unmarshalInputLockAccountInput(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRevokeAccountArtistRole(ctx context.Context, obj interface{}) (types.RevokeAccountArtistRole, error) {
+	var it types.RevokeAccountArtistRole
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context.Context, obj interface{}) (types.RevokeAccountModeratorRole, error) {
 	var it types.RevokeAccountModeratorRole
 	asMap := map[string]interface{}{}
@@ -10377,6 +10729,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		case "isStaff":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Account_isStaff(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "isArtist":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_isArtist(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11075,6 +11437,34 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 		case "validation":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AddAccountEmailPayload_validation(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var assignAccountArtistRolePayloadImplementors = []string{"AssignAccountArtistRolePayload"}
+
+func (ec *executionContext) _AssignAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountArtistRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountArtistRolePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AssignAccountArtistRolePayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AssignAccountArtistRolePayload_account(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -12273,6 +12663,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "assignAccountArtistRole":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_assignAccountArtistRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "revokeAccountArtistRole":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountArtistRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12563,6 +12967,34 @@ func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var revokeAccountArtistRolePayloadImplementors = []string{"RevokeAccountArtistRolePayload"}
+
+func (ec *executionContext) _RevokeAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountArtistRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountArtistRolePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RevokeAccountArtistRolePayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountArtistRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13564,6 +13996,11 @@ func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicatio
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNAssignAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRole(ctx context.Context, v interface{}) (types.AssignAccountArtistRole, error) {
+	res, err := ec.unmarshalInputAssignAccountArtistRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNAssignAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRole(ctx context.Context, v interface{}) (types.AssignAccountModeratorRole, error) {
 	res, err := ec.unmarshalInputAssignAccountModeratorRole(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13771,6 +14208,11 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNRevokeAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRole(ctx context.Context, v interface{}) (types.RevokeAccountArtistRole, error) {
+	res, err := ec.unmarshalInputRevokeAccountArtistRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNRevokeAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRole(ctx context.Context, v interface{}) (types.RevokeAccountModeratorRole, error) {
@@ -14278,6 +14720,13 @@ func (ec *executionContext) marshalOAddAccountEmailValidation2ᚖoverdollᚋappl
 	return v
 }
 
+func (ec *executionContext) marshalOAssignAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountArtistRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AssignAccountArtistRolePayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOAssignAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -14584,6 +15033,13 @@ func (ec *executionContext) marshalORevokeAccountAccessPayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._RevokeAccountAccessPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORevokeAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountArtistRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RevokeAccountArtistRolePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORevokeAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountModeratorRolePayload) graphql.Marshaler {

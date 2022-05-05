@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"github.com/stretchr/testify/mock"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
@@ -65,6 +66,46 @@ func getPostWithViewerLike(t *testing.T, accountId, id string) PostWithViewer {
 	require.NoError(t, err)
 
 	return post
+}
+
+func TestLikePost_and_delete_account_data(t *testing.T) {
+	t.Parallel()
+
+	grpcClient := getGrpcClient(t)
+
+	testingAccountId := newFakeAccount(t)
+	publishedPost := seedPublishedPost(t, testingAccountId)
+	postId := publishedPost.ID()
+	relayId := convertPostIdToRelayId(postId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, mock.Anything)
+
+	var likePost LikePost
+
+	err := client.Mutate(context.Background(), &likePost, map[string]interface{}{
+		"input": types.LikePostInput{
+			ID: relayId,
+		},
+	})
+
+	require.NoError(t, err, "no error liking a post")
+
+	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
+	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should not be nil")
+
+	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
+	require.NoError(t, err, "no error deleting account data")
+
+	postAfterLiked = getPostWithViewerLike(t, testingAccountId, postId)
+	require.Nil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should be nil")
 }
 
 // TestLikePost_and_undo - like a post, check viewer, and then also undo the like

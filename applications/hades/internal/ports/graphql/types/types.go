@@ -405,13 +405,13 @@ type CancelAccountClubSupporterSubscriptionPayload struct {
 }
 
 // Cancel all active subscriptions for a club.
-type CancelActiveSubscriptionsForClubInput struct {
+type CancelActiveSupporterSubscriptionsForClubInput struct {
 	// The id of the club.
 	ClubID relay.ID `json:"clubId"`
 }
 
 // Payload for cancelling all active subscriptions.
-type CancelActiveSubscriptionsForClubPayload struct {
+type CancelActiveSupporterSubscriptionsForClubPayload struct {
 	// The club.
 	Club *Club `json:"club"`
 }

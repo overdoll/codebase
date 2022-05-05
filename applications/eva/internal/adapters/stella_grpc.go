@@ -13,7 +13,7 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) HasNonTerminatedClubs(ctx context.Context, accountId string) (bool, error) {
+func (s StellaGrpc) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
 
 	res, err := s.client.CanDeleteAccountData(ctx, &stella.CanDeleteAccountDataRequest{AccountId: accountId})
 

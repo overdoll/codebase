@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
+	"overdoll/applications/sting/internal/domain/club"
 
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
@@ -54,7 +55,7 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 
 func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
-	pst, err := post.NewPost(testing_tools.NewDefaultPrincipal(accountId), clubId)
+	pst, err := post.NewPost(testing_tools.NewDefaultPrincipal(accountId), club.UnmarshalClubFromDatabase(clubId, "", "", false, accountId))
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(testing_tools.NewDefaultPrincipal(accountId), post.UnmarshalAudienceFromDatabase(
@@ -95,14 +96,10 @@ func newFakeAccount(t *testing.T) string {
 
 func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
-
-	adapter := adapters.NewPostsCassandraRepository(session, service.StellaServiceMock{})
-	err := adapter.CreatePost(context.Background(), pst)
-	require.NoError(t, err)
-
 	es := bootstrap.InitializeElasticSearchSession()
-	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session, service.StellaServiceMock{})
-	err = adapterEs.IndexPost(context.Background(), pst)
+
+	adapter := adapters.NewPostsCassandraRepository(session, es)
+	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
 	refreshPostESIndex(t)
