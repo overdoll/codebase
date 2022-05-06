@@ -25,8 +25,6 @@ const Fragment = graphql`
 export default function PayoutsMethodSettings ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  console.log('from settings', data)
-
   return (
     <Stack spacing={2}>
       <PagePanelWrap isDisabled={data.details?.id == null} href='/settings/payouts/method'>
