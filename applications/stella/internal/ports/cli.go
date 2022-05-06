@@ -28,6 +28,9 @@ func init() {
 				log.Fatalf(err.Error())
 			}
 
+			if err := application.Commands.DeleteAndRecreateClubMembersIndex.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 

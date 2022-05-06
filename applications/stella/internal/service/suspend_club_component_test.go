@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
@@ -26,15 +27,21 @@ type UnSuspendClub struct {
 }
 
 type ClubSuspensionLogsModified struct {
-	ID             string
+	Id             string
 	Reference      string
 	Slug           string
 	Name           string
 	SuspensionLogs struct {
 		Edges []struct {
 			Node struct {
-				ItemIssued  *types.ClubIssuedSuspensionLog  `graphql:"... on ClubIssuedSuspensionLog"`
-				ItemRemoved *types.ClubRemovedSuspensionLog `graphql:"... on ClubRemovedSuspensionLog"`
+				ItemIssued struct {
+					Id             relay.ID
+					Reason         types.ClubSuspensionReason
+					SuspendedUntil time.Time
+				} `graphql:"... on ClubIssuedSuspensionLog"`
+				ItemRemoved struct {
+					Id relay.ID
+				} `graphql:"... on ClubRemovedSuspensionLog"`
 			}
 		}
 	}
@@ -117,11 +124,6 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 		},
 	})
 
-	updatedClb = getSuspensionClub(t, client, clb.Slug())
-	require.NotNil(t, updatedClb.Club.Suspension, "club is suspended")
-	require.Len(t, updatedClb.Club.SuspensionLogs.Edges, 3, "should have 3 suspension logs")
-	require.NotNil(t, updatedClb.Club.SuspensionLogs.Edges[2].Node.ItemRemoved, "should have a removed log type")
-
 	require.NoError(t, err, "no error un suspending club")
 
 	env = getWorkflowEnvironment(t)
@@ -130,5 +132,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	require.NoError(t, env.GetWorkflowError())
 
 	updatedClb = getSuspensionClub(t, client, clb.Slug())
-	require.Nil(t, updatedClb.Club.Suspension, "club is no longer suspended")
+	require.Nil(t, updatedClb.Club.Suspension, "club is suspended")
+	require.Len(t, updatedClb.Club.SuspensionLogs.Edges, 3, "should have 3 suspension logs")
+	require.NotNil(t, updatedClb.Club.SuspensionLogs.Edges[2].Node.ItemRemoved, "should have a removed log type")
 }

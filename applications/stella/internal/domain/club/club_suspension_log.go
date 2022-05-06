@@ -38,6 +38,25 @@ func NewSuspensionRemovalLog(id, clubId string, accountId string) (*SuspensionLo
 	}, nil
 }
 
+func UnmarshalSuspensionLogFromDatabase(id, clubId string, accountId *string, reason *string, suspendedUntil *time.Time, isRemoval bool) *SuspensionLog {
+
+	var re *SuspensionReason
+
+	if reason != nil {
+		r, _ := SuspensionReasonFromString(*reason)
+		re = &r
+	}
+
+	return &SuspensionLog{
+		id:                  id,
+		clubId:              clubId,
+		accountId:           accountId,
+		isSuspensionRemoval: isRemoval,
+		reason:              re,
+		suspendedUntil:      suspendedUntil,
+	}
+}
+
 func (s *SuspensionLog) Id() string {
 	return s.id
 }

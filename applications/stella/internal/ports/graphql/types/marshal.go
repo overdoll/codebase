@@ -70,6 +70,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		suspension = &ClubSuspension{Expires: *result.SuspendedUntil()}
 	}
 
+	var termination *ClubTermination
+
+	if result.TerminatedByAccountId() != nil {
+		termination = &ClubTermination{Account: &Account{ID: relay.NewID(Account{}, *result.TerminatedByAccountId())}}
+	}
+
 	accountId := ""
 
 	if passport.FromContext(ctx).Authenticated() == nil {
@@ -88,6 +94,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		Thumbnail:             res,
 		Owner:                 &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
 		Suspension:            suspension,
+		Termination:           termination,
 		ViewerIsOwner:         accountId == result.OwnerAccountId(),
 	}
 }

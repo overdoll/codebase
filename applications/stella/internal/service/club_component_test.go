@@ -17,7 +17,11 @@ type ClubModified struct {
 	Reference   string
 	Slug        string
 	Name        string
-	Termination *types.ClubTermination
+	Termination *struct {
+		Account struct {
+			Id string
+		}
+	}
 	SlugAliases []struct {
 		Slug string
 	}
@@ -25,7 +29,6 @@ type ClubModified struct {
 		ID relay.ID
 	}
 	ViewerIsOwner         bool
-	SlugAliasesLimit      int
 	CanSupport            bool
 	NextSupporterPostTime *time.Time
 	Suspension            *types.ClubSuspension

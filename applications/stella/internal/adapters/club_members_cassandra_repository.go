@@ -79,6 +79,10 @@ func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx co
 	stmt, _ = accountSupportedClubsTable.Insert()
 	batch.Query(stmt, accountId, clubId)
 
+	if err := r.indexClubMember(ctx, club.UnmarshalMemberFromDatabase(accountId, clubId, timestamp, true, &timestamp)); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -86,6 +90,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 
 	if err := r.session.
 		Query(clubMembersTable.Insert()).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMember{
 			ClubId:          member.ClubId(),
 			MemberAccountId: member.AccountId(),
@@ -107,7 +112,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 
 	if err := r.session.
 		Query(clubMembersTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
 		Get(&clubMem); err != nil {
 
@@ -172,14 +177,14 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 
 		// delete from club members by account
 		stmt, _ = clubMembersByAccountTable.Delete()
-		batch.Query(stmt, clubId, accountId)
+		batch.Query(stmt, accountId, clubId)
 
 		// delete from supported clubs
 		stmt, _ = accountSupportedClubsTable.Delete()
 		batch.Query(stmt, accountId, clubId)
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return err
+			return fmt.Errorf("failed to delete account club memberships: %v", err)
 		}
 	}
 
@@ -261,7 +266,12 @@ func (r ClubCassandraElasticsearchRepository) AddClubMemberToList(ctx context.Co
 
 	// insert into account's club list
 	stmt, _ := clubMembersByAccountTable.Insert()
-	batch.Query(stmt, clb.ClubId, clb.MemberAccountId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
+	batch.Query(stmt, clb.ClubId, clb.MemberAccountId)
+
+	// execute batch
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to add member to list: %v", err)
+	}
 
 	currentClub := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
 
@@ -269,12 +279,6 @@ func (r ClubCassandraElasticsearchRepository) AddClubMemberToList(ctx context.Co
 		return err
 	}
 
-	// execute batch
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to add member to list: %v", err)
-	}
-
-	// finally, also update the count
 	return nil
 }
 
@@ -326,7 +330,7 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx
 			MemberAccountId: accountId,
 		}).
 		Get(&clubMembersCount); err != nil {
-		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
+		return 0, fmt.Errorf("failed to get account clubs by account count: %v", err)
 	}
 
 	return clubMembersCount.Count, nil
@@ -348,7 +352,7 @@ func (r ClubCassandraElasticsearchRepository) RemoveClubMemberFromlist(ctx conte
 
 	// delete from account's club list
 	stmt, _ := clubMembersByAccountTable.Delete()
-	batch.Query(stmt, clb.MemberAccountId, clb.JoinedAt, clb.ClubId)
+	batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -415,7 +419,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 
 func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx context.Context, accountId string) ([]string, error) {
 
-	var accountClubs []*clubMembersByAccount
+	var accountClub []clubMembersByAccount
 
 	if err := clubMembersByAccountTable.
 		SelectBuilder().
@@ -424,12 +428,12 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx cont
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
 		}).
-		Select(&accountClubs); err != nil {
-		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
+		Select(&accountClub); err != nil {
+		return nil, fmt.Errorf("failed to get club members by account: %v", err)
 	}
 
 	var clubIds []string
-	for _, clb := range accountClubs {
+	for _, clb := range accountClub {
 		clubIds = append(clubIds, clb.ClubId)
 	}
 
@@ -438,17 +442,16 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx cont
 
 func (r ClubCassandraElasticsearchRepository) getAccountClubs(ctx context.Context, accountId string) ([]string, error) {
 
-	var accountClub []*accountClubs
+	var accountClub []accountClubs
 
 	if err := accountClubsTable.
 		SelectBuilder().
-		CountAll().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountClubs{
 			AccountId: accountId,
 		}).
-		Get(&accountClub); err != nil {
+		Select(&accountClub); err != nil {
 		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
 	}
 

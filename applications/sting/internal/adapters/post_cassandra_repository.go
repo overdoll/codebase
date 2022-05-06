@@ -238,7 +238,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 	return r.unmarshalPost(ctx, *postPending)
 }
 
-func (r PostsCassandraElasticsearchRepository) getSuspendedClubIds(ctx context.Context) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {
 
 	var suspendedClub []*terminatedClubs
 
@@ -300,7 +300,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, 
 		return nil, err
 	}
 
-	suspendedClubIds, err := r.getSuspendedClubIds(ctx)
+	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err

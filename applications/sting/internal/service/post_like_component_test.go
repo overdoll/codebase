@@ -101,8 +101,18 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should not be nil")
 
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccountData, mock.Anything)
+
 	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error deleting account data")
+
+	env = getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.RemovePost)
+	env.RegisterWorkflow(workflows.RemovePostLike)
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 
 	postAfterLiked = getPostWithViewerLike(t, testingAccountId, postId)
 	require.Nil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should be nil")

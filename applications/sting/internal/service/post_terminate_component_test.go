@@ -25,17 +25,21 @@ func TestAddClubAndRemoveClubFromTerminatedList(t *testing.T) {
 	require.NotNil(t, pst.Post, "post is not nil")
 
 	// add club to terminated list
-	_, err := grpcClient.AddTerminatedClub(context.Background(), &sting.AddTerminatedClubRequest{ClubId: clubId})
+	_, err := grpcClient.AddTerminatedClub(context.Background(), &sting.AddTerminatedClubRequest{ClubId: publishedPost.ClubId()})
 	require.NoError(t, err, "no error terminating club")
 
-	pst = getPost(t, client, postId)
+	// use a random account
+	randomAccountClient := getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	pst = getPost(t, randomAccountClient, postId)
 	// post should no longer be visible after terminating
 	require.Nil(t, pst.Post, "post should be nil")
 
-	_, err = grpcClient.RemoveTerminatedClub(context.Background(), &sting.RemoveTerminatedClubRequest{ClubId: clubId})
+	_, err = grpcClient.RemoveTerminatedClub(context.Background(), &sting.RemoveTerminatedClubRequest{ClubId: publishedPost.ClubId()})
 	require.NoError(t, err, "no error terminating club")
 
-	pst = getPost(t, client, postId)
+	// use a random account
+	randomAccountClient = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	pst = getPost(t, randomAccountClient, postId)
 	// post should now be visible once again
 	require.NotNil(t, pst.Post, "post is not nil")
 }

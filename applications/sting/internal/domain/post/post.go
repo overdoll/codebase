@@ -51,7 +51,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 		return nil, principal.ErrLocked
 	}
 
-	if err := requester.CheckClubOwner(club.OwnerAccountId()); err != nil {
+	if err := requester.CheckClubOwner(club.Id()); err != nil {
 		return nil, err
 	}
 
@@ -537,7 +537,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 		// not owner, return not found
 		if err := requester.CheckClubOwner(p.clubId); err != nil {
 
-			if err := requester.BelongsToAccount(requester.AccountId()); err != nil {
+			if err := requester.BelongsToAccount(p.ContributorId()); err != nil {
 				return ErrNotFound
 			}
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
-	"github.com/google/uuid"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/mocks"
@@ -25,6 +24,7 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -67,7 +67,7 @@ type TestClub struct {
 }
 
 func newPrincipal(t *testing.T, accountId string) *principal.Principal {
-	return testing_tools.NewDefaultPrincipal(accountId)
+	return testing_tools.NewArtistPrincipal(accountId)
 }
 
 func newClub(t *testing.T, accountId string) *club.Club {
@@ -85,6 +85,12 @@ func newClub(t *testing.T, accountId string) *club.Club {
 func refreshClubESIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
 	_, err := es.Refresh(adapters.ClubsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func refreshClubMembersESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubMembersIndexName).Do(context.Background())
 	require.NoError(t, err)
 }
 

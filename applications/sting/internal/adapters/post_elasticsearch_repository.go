@@ -402,7 +402,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	var filterQueries []elastic.Query
 
-	suspendedClubIds, err := r.getSuspendedClubIds(ctx)
+	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
@@ -450,7 +450,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	suspendedClubIds, err := r.getSuspendedClubIds(ctx)
+	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
@@ -548,7 +548,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		sortingAscending = false
 	}
 
-	suspendedClubIds, err := r.getSuspendedClubIds(ctx)
+	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err

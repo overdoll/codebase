@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
@@ -26,7 +27,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return testing_tools.NewDefaultPrincipal(s), nil
+				return testing_tools.NewArtistPrincipal(s), nil
 			}
 		}
 
@@ -43,8 +44,18 @@ func (e StellaServiceMock) NewSupporterPost(ctx context.Context, clubId string) 
 }
 
 func (e StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
-	//TODO implement me
-	panic("implement me")
+
+	var supportedClubIds []string
+
+	if accountId == "1pcKiTRBqURVEdcw1cKhyiejFp7" {
+		supportedClubIds = []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"}
+	}
+
+	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  supportedClubIds,
+		ClubMembershipIds: []string{accountId},
+		OwnerClubIds:      []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"},
+	})
 }
 
 func (e StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {

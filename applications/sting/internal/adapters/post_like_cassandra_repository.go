@@ -53,6 +53,21 @@ type postLike struct {
 	LikedAt        time.Time `db:"liked_at"`
 }
 
+var accountPostLikeBucketsTable = table.New(table.Metadata{
+	Name: "account_post_likes_buckets",
+	Columns: []string{
+		"liked_account_id",
+		"bucket",
+	},
+	PartKey: []string{"liked_account_id"},
+	SortKey: []string{"bucket"},
+})
+
+type postLikeBucket struct {
+	Bucket         int    `db:"bucket"`
+	LikedAccountId string `db:"liked_account_id"`
+}
+
 type postLikeCounter struct {
 	PostId string `db:"post_id"`
 	Likes  int    `db:"likes"`
@@ -77,6 +92,10 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 
 	batch.Query(stmt, postLike.Bucket, postLike.LikedAccountId, postLike.PostId, postLike.LikedAt)
 
+	stmt, _ = accountPostLikeBucketsTable.Insert()
+
+	batch.Query(stmt, postLike.LikedAccountId, postLike.Bucket)
+
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create post like: %v", err)
 	}
@@ -97,7 +116,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 
 	stmt, _ := postLikeTable.Delete()
 
-	batch.Query(stmt, postLike.PostId, postLike.LikedAccountId, postLike.LikedAt, postLike.Bucket)
+	batch.Query(stmt, postLike.PostId, postLike.LikedAccountId)
 
 	stmt, _ = accountPostLikeTable.Delete()
 
@@ -198,15 +217,39 @@ func (r PostsCassandraElasticsearchRepository) DeleteAccountPostLike(ctx context
 	return r.DeletePostLike(ctx, nil, lk)
 }
 
+func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx context.Context, accountId string) ([]int, error) {
+
+	var pstLike []postLikeBucket
+
+	if err := r.session.
+		Query(accountPostLikeBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postLikeBucket{LikedAccountId: accountId}).
+		Select(&pstLike); err != nil {
+		return nil, fmt.Errorf("failed to get post like buckets: %v", err)
+	}
+
+	var buckets []int
+
+	for _, l := range pstLike {
+		buckets = append(buckets, l.Bucket)
+	}
+
+	return buckets, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error) {
 
 	var postLikedIds []string
 
-	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getAccountPostLikesBuckets(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	for _, bucketId := range buckets {
 
 		var builder *qb.SelectBuilder
 

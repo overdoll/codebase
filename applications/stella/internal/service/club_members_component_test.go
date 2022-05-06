@@ -115,6 +115,8 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	joinClub(t, client, clb.ID(), testingAccountId)
 
+	refreshClubESIndex(t)
+
 	// get club and check that the viewer is part of it
 	clubViewer := getClubViewer(t, client, clb.Slug())
 	require.NotNil(t, clubViewer.Club.ViewerMember, "club viewer is available")
@@ -125,6 +127,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// grab account ID so we can look through club members
 	accountId := clubViewer.Club.ViewerMember.Account.ID
 
+	require.Len(t, clubViewer.Club.Members.Edges, 2, "should have 2 club members in club list")
 	require.Equal(t, accountId, clubViewer.Club.Members.Edges[1].Node.Account.ID, "should have found the account in the club member list")
 
 	// query accountPosts once more, make sure post is no longer visible
@@ -170,6 +173,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// run supporter method
 	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	env.RegisterWorkflow(workflows.AddClubMember)
 	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -210,6 +214,8 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
+
+	refreshClubESIndex(t)
 
 	// get club and check that the viewer is part of it
 	clubViewer = getClubViewer(t, client, clb.Slug())

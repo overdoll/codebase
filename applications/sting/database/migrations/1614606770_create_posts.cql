@@ -117,6 +117,13 @@ CREATE TABLE IF NOT EXISTS account_post_likes
     primary key ( (bucket, liked_account_id), post_id )
 );
 
+CREATE TABLE IF NOT EXISTS account_post_likes_buckets
+(
+    liked_account_id text,
+    bucket           int,
+    primary key ( liked_account_id, bucket )
+);
+
 CREATE TABLE IF NOT EXISTS curation_profile
 (
     account_id            text,
@@ -129,7 +136,7 @@ CREATE TABLE IF NOT EXISTS curation_profile
     primary key ( account_id )
 );
 
-CREATE TABLE IF NOT EXISTS suspended_clubs
+CREATE TABLE IF NOT EXISTS terminated_clubs
 (
     bucket  int,
     club_id text,

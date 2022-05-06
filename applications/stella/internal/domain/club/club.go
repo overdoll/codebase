@@ -157,6 +157,14 @@ func (m *Club) Suspended() bool {
 	return m.suspended
 }
 
+func (m *Club) Terminated() bool {
+	return m.terminated
+}
+
+func (m *Club) TerminatedByAccountId() *string {
+	return m.terminatedByAccountId
+}
+
 func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
 }
@@ -184,7 +192,7 @@ func (m *Club) CanUnSuspend(requester *principal.Principal) error {
 		return nil
 	}
 
-	return principal.ErrNotAuthorized
+	return nil
 }
 
 func (m *Club) CanSupport() bool {
@@ -427,6 +435,19 @@ func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (in
 
 func CanViewAccountClubs(requester *principal.Principal, accountId string) error {
 	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanViewClubSuspensionLogs(requester *principal.Principal, club *Club) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	if err := requester.BelongsToAccount(club.ownerAccountId); err != nil {
 		return err
 	}
 

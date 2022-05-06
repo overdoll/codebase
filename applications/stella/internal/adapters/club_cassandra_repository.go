@@ -120,16 +120,20 @@ func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *ela
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	return &clubs{
-		Id:                       cl.ID(),
-		Slug:                     cl.Slug(),
-		SlugAliases:              cl.SlugAliases(),
-		Name:                     localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResourceId:      cl.ThumbnailResourceId(),
-		MembersCount:             cl.MembersCount(),
-		MembersCountLastUpdateId: gocql.TimeUUID(),
-		OwnerAccountId:           cl.OwnerAccountId(),
-		Suspended:                cl.Suspended(),
-		SuspendedUntil:           cl.SuspendedUntil(),
+		Id:                          cl.ID(),
+		Slug:                        cl.Slug(),
+		SlugAliases:                 cl.SlugAliases(),
+		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
+		ThumbnailResourceId:         cl.ThumbnailResourceId(),
+		MembersCount:                cl.MembersCount(),
+		MembersCountLastUpdateId:    gocql.TimeUUID(),
+		OwnerAccountId:              cl.OwnerAccountId(),
+		Suspended:                   cl.Suspended(),
+		SuspendedUntil:              cl.SuspendedUntil(),
+		NextSupporterPostTime:       cl.NextSupporterPostTime(),
+		HasCreatedSupporterOnlyPost: cl.HasCreatedSupporterOnlyPost(),
+		Terminated:                  cl.Terminated(),
+		TerminatedByAccountId:       cl.TerminatedByAccountId(),
 	}, nil
 }
 
@@ -161,7 +165,53 @@ func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx contex
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club.SuspensionLog, error) {
-	return nil, nil
+
+	clb, err := r.GetClubById(ctx, clubId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := club.CanViewClubSuspensionLogs(requester, clb); err != nil {
+		return nil, err
+	}
+
+	var clubLogs []*clubSuspensionLog
+
+	builder := clubSuspensionLogTable.SelectBuilder()
+
+	if cursor != nil {
+		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := builder.Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&clubSuspensionLog{
+			ClubId: clubId,
+		}).
+		Select(&clubLogs); err != nil {
+
+		return nil, fmt.Errorf("failed to club suspension logs: %v", err)
+	}
+
+	var logs []*club.SuspensionLog
+
+	for _, log := range clubLogs {
+		lg := club.UnmarshalSuspensionLogFromDatabase(
+			log.Id,
+			log.ClubId,
+			log.ActionAccountId,
+			log.Reason,
+			log.SuspendedUntil,
+			log.IsSuspensionRemoval,
+		)
+		lg.Node = paging.NewNode(log.Id)
+		logs = append(logs, lg)
+	}
+
+	return logs, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
@@ -200,7 +250,7 @@ func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, b
 
 	if err := r.session.
 		Query(clubTable.Get()).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(clubs{Id: brandId}).
 		Get(&b); err != nil {
 
@@ -247,7 +297,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 		Select(clubTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.LocalOne).
+		Consistency(gocql.LocalQuorum).
 		Bind(clubIds).
 		Select(&databaseClubs); err != nil {
 		return nil, fmt.Errorf("failed to get clubs by ids: %v", err)
@@ -551,7 +601,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubsCount(ctx context.C
 			AccountId: accountId,
 		}).
 		Get(&clubsCount); err != nil {
-		return 0, fmt.Errorf("failed to get account clubs by account: %v", err)
+		return 0, fmt.Errorf("failed to get account clubs by account count: %v", err)
 	}
 
 	return clubsCount.Count, nil
@@ -583,7 +633,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	stmt, _ := clubTable.Insert()
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil, cla.NextSupporterPostTime, cla.HasCreatedSupporterOnlyPost)
+	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil, cla.NextSupporterPostTime, cla.HasCreatedSupporterOnlyPost, cla.Terminated, cla.TerminatedByAccountId)
 
 	stmt, _ = accountClubsTable.Insert()
 
@@ -602,7 +652,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 			return err
 		}
 
-		return err
+		return fmt.Errorf("failed to create club batch: %v", err)
 	}
 
 	if err := r.indexClub(ctx, club); err != nil {
@@ -684,10 +734,10 @@ func (r ClubCassandraElasticsearchRepository) hasNonTerminatedClubs(ctx context.
 			AccountId: accountId,
 		}).
 		Select(&clubsData); err != nil {
-		return false, fmt.Errorf("failed to get account clubs by account: %v", err)
+		return false, fmt.Errorf("failed to get account clubs by account terminated: %v", err)
 	}
 
-	canDelete := false
+	hasActiveClubs := false
 
 	for _, c := range clubsData {
 		clb, err := r.getClubById(ctx, c.ClubId)
@@ -697,12 +747,12 @@ func (r ClubCassandraElasticsearchRepository) hasNonTerminatedClubs(ctx context.
 		}
 
 		if !clb.Terminated {
-			canDelete = true
+			hasActiveClubs = true
 			break
 		}
 	}
 
-	return canDelete, nil
+	return hasActiveClubs, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) HasNonTerminatedClubs(ctx context.Context, requester *principal.Principal, accountId string) (bool, error) {

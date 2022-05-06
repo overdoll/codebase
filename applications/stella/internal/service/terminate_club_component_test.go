@@ -28,9 +28,10 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	t.Parallel()
 
 	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+	regularAccountId := uuid.New().String()
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
-	clb := seedClub(t, staffAccountId)
+	clb := seedClub(t, regularAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.TerminateClub, mock.Anything)
@@ -56,7 +57,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	can, err := grpcClient.CanDeleteAccountData(context.Background(), &stella.CanDeleteAccountDataRequest{AccountId: staffAccountId})
+	can, err := grpcClient.CanDeleteAccountData(context.Background(), &stella.CanDeleteAccountDataRequest{AccountId: regularAccountId})
 	require.NoError(t, err, "no error seeing if you can delete account data")
 	require.True(t, can.CanDelete, "should be able to delete")
 

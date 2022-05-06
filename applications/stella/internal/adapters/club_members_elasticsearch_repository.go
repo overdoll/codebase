@@ -15,6 +15,7 @@ import (
 )
 
 type clubMembersDocument struct {
+	Id              string     `json:"id"`
 	ClubId          string     `json:"club_id"`
 	MemberAccountId string     `json:"member_account_id"`
 	JoinedAt        time.Time  `json:"joined_at"`
@@ -24,6 +25,9 @@ type clubMembersDocument struct {
 
 const clubMembersIndexProperties = `
 {
+	"id": {
+		"type": "keyword"
+	},
 	"member_account_id": {
 		"type": "keyword"
 	},
@@ -54,6 +58,7 @@ const ClubMembersIndexName = "club_members"
 
 func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error) {
 	return &clubMembersDocument{
+		Id:              cat.ClubId() + "-" + cat.AccountId(),
 		ClubId:          cat.ClubId(),
 		MemberAccountId: cat.AccountId(),
 		JoinedAt:        cat.JoinedAt(),
@@ -80,7 +85,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 
 	if filters.SortBy() == club.MemberNewSort {
 		sortingColumn = "joined_at"
-		sortingAscending = false
+		sortingAscending = true
 	}
 
 	if err := cursor.BuildElasticsearch(builder, sortingColumn, "id", sortingAscending); err != nil {
@@ -102,6 +107,8 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 	}
 
 	if filters.Supporter() == true {
+
+		query.Filter(elastic.NewTermQuery("is_supporter", filters.Supporter()))
 
 		if !requester.IsStaff() {
 
@@ -126,11 +133,9 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 		}
 	}
 
-	query.Filter(elastic.NewTermQuery("supporter", filters.Supporter()))
-
 	builder.Query(query)
 
-	response, err := builder.Pretty(true).Do(ctx)
+	response, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed search club members: %v", err)
@@ -167,8 +172,8 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 
 	_, err = r.client.
 		Index().
-		Index(ClubsIndexName).
-		Id(clb.ClubId + "-" + clb.MemberAccountId).
+		Index(ClubMembersIndexName).
+		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
 
@@ -189,13 +194,14 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubMembers(ctx context.Co
 		},
 	)
 
-	err := scanner.RunIterator(ctx, clubTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, clubMembersTable, func(iter *gocqlx.Iterx) error {
 
 		var m clubMember
 
 		for iter.StructScan(&m) {
 
 			doc := clubMembersDocument{
+				Id:              m.ClubId + "-" + m.MemberAccountId,
 				ClubId:          m.ClubId,
 				MemberAccountId: m.MemberAccountId,
 				JoinedAt:        m.JoinedAt,
@@ -205,8 +211,8 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubMembers(ctx context.Co
 
 			_, err := r.client.
 				Index().
-				Index(ClubsIndexName).
-				Id(m.ClubId + "-" + m.MemberAccountId).
+				Index(ClubMembersIndexName).
+				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
 
