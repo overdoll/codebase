@@ -60,6 +60,7 @@ export default function PostGalleryPublicSimple ({
             >
               <Box as='a'>
                 <Flex
+                  direction='column'
                   bg='gray.800'
                   w='100%'
                   cursor='pointer'

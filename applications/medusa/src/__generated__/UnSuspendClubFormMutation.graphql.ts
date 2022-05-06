@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<57fd5ca806a35ddd5b5a67af9f4a9fa0>>
- * @relayHash d37d3e5b99fb63dc469301b05c69d821
+ * @generated SignedSource<<9f2733c8dcf5b00d9e14d7c88facf198>>
+ * @relayHash 4740f0f84396b27bf53ec1216ccdc2a7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d37d3e5b99fb63dc469301b05c69d821
+// @relayRequestID 4740f0f84396b27bf53ec1216ccdc2a7
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UnSuspendClubInput = {
@@ -24,6 +24,7 @@ export type UnSuspendClubFormMutation$data = {
     readonly club: {
       readonly id: string;
       readonly suspension: {
+        readonly __typename: string;
         readonly expires: any;
       } | null;
     } | null;
@@ -85,6 +86,13 @@ v1 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "expires",
                 "storageKey": null
               }
@@ -116,7 +124,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "d37d3e5b99fb63dc469301b05c69d821",
+    "id": "4740f0f84396b27bf53ec1216ccdc2a7",
     "metadata": {},
     "name": "UnSuspendClubFormMutation",
     "operationKind": "mutation",
@@ -125,6 +133,6 @@ return {
 };
 })();
 
-(node as any).hash = "348b8b79d0dfa8805fb30915e99f37b6";
+(node as any).hash = "4be67d5ac2c5e4cb665714015b111719";
 
 export default node;

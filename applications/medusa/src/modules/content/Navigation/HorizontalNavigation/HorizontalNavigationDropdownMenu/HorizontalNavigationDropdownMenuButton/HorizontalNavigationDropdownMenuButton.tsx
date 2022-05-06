@@ -4,6 +4,7 @@ import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationDropdownMenuButtonBody
   from './HorizontalNavigationDropdownMenuButtonBody/HorizontalNavigationDropdownMenuButtonBody'
 import { LinkProps } from 'next/link'
+import { Box } from '@chakra-ui/react'
 
 interface Props extends LinkProps {
   label?: ReactNode
@@ -69,14 +70,15 @@ const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({
       {({
         isActiveBasePath
       }) => (
-        <HorizontalNavigationDropdownMenuButtonBody
-          as='a'
-          ref={forwardRef}
-          isActive={isActiveBasePath}
-          {...ButtonProps}
-        >
-          {children}
-        </HorizontalNavigationDropdownMenuButtonBody>
+        <Box as='a'>
+          <HorizontalNavigationDropdownMenuButtonBody
+            ref={forwardRef}
+            isActive={isActiveBasePath}
+            {...ButtonProps}
+          >
+            {children}
+          </HorizontalNavigationDropdownMenuButtonBody>
+        </Box>
       )}
     </NavLink>
   )

@@ -8,7 +8,6 @@ const Query = graphql`
   query CountriesOptionsQuery {
     countries {
       id
-      emoji
       name
     }
   }
@@ -20,7 +19,7 @@ export default function CountriesOptions ({ searchArguments }: CountriesOptionsP
   return (
     <>
       {data.countries.map((item, index) =>
-        <option key={index} value={item.id}>{item.emoji} {item.name}</option>
+        <option key={index} value={item.id}>{item.name}</option>
       )}
     </>
   )

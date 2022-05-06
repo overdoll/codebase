@@ -1,4 +1,4 @@
-import { ButtonProps } from '@chakra-ui/react'
+import { Box, ButtonProps } from '@chakra-ui/react'
 import { ExternalLink, Link } from '../../../../routing'
 import { forwardRef, ReactNode } from 'react'
 import PagePanelBox from '../PagePanelBox/PagePanelBox'
@@ -30,11 +30,14 @@ const PagePanelWrap = forwardRef(({
   return (
     <Link
       href={href}
+      isDisabled={isDisabled}
       passHref
     >
-      <PagePanelBox as='a' ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
-        {children}
-      </PagePanelBox>
+      <Box as='a'>
+        <PagePanelBox ref={forwardRef} isDisabled={isDisabled} isExternal={isExternal} {...rest}>
+          {children}
+        </PagePanelBox>
+      </Box>
     </Link>
   )
 })

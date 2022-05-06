@@ -1,4 +1,4 @@
-import { ButtonProps } from '@chakra-ui/react'
+import { Box, ButtonProps } from '@chakra-ui/react'
 import Button from '../../../form/Button/Button'
 import { Link } from '../../../routing'
 import { UrlObject } from 'url'
@@ -14,9 +14,11 @@ export default function LinkButton ({
 }: Props): JSX.Element {
   return (
     <Link passHref href={href}>
-      <Button as='a' {...rest}>
-        {children}
-      </Button>
+      <Box as='a'>
+        <Button {...rest}>
+          {children}
+        </Button>
+      </Box>
     </Link>
   )
 }

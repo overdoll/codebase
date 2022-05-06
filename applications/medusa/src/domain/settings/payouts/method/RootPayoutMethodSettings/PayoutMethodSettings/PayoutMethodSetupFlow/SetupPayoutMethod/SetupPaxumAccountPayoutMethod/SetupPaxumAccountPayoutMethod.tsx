@@ -20,7 +20,7 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { UnSuspendClubFormMutation } from '@//:artifacts/UnSuspendClubFormMutation.graphql'
+import { SetupPaxumAccountPayoutMethodMutation } from '@//:artifacts/SetupPaxumAccountPayoutMethodMutation.graphql'
 
 interface EmailValues {
   email: string
@@ -31,6 +31,8 @@ const Mutation = graphql`
     setPaxumAccountPayoutMethod(input: $input) {
       accountPayoutMethod {
         __typename
+        ...PayoutMethodFragment
+        ...PayoutMethodDeleteFragment
         ...on AccountPaxumPayoutMethod {
           id
           email
@@ -41,7 +43,7 @@ const Mutation = graphql`
 `
 
 export default function SetupPaxumAccountPayoutMethod (): JSX.Element {
-  const [commit, isLoading] = useMutation<UnSuspendClubFormMutation>(Mutation)
+  const [commit, isLoading] = useMutation<SetupPaxumAccountPayoutMethodMutation>(Mutation)
 
   const schema = Joi.object({
     email: Email()
@@ -81,7 +83,7 @@ export default function SetupPaxumAccountPayoutMethod (): JSX.Element {
         if (viewer != null) {
           const payload = store?.getRootField('setPaxumAccountPayoutMethod')?.getLinkedRecord('accountPayoutMethod')
           if (payload != null) {
-            viewer.setLinkedRecord(payload, 'payoutMethod')
+            viewer?.setLinkedRecord(payload, 'payoutMethod')
           }
         }
       }

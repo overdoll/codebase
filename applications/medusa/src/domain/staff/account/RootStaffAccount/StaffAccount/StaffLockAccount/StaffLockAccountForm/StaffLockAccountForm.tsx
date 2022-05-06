@@ -8,7 +8,6 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { StaffLockAccountFormMutation } from '@//:artifacts/StaffLockAccountFormMutation.graphql'
 import { StaffLockAccountFormFragment$key } from '@//:artifacts/StaffLockAccountFormFragment.graphql'
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
-import GenericDate from '../../../../../../../common/validation/GenericDate'
 import LockDurationSelect from './LockDurationSelect/LockDurationSelect'
 
 interface Props {
@@ -46,7 +45,7 @@ export default function StaffLockAccountForm ({
   const [commit, isInFlight] = useMutation<StaffLockAccountFormMutation>(Mutation)
 
   const schema = Joi.object({
-    endTime: GenericDate()
+    endTime: Joi.date()
   })
 
   const notify = useToast()

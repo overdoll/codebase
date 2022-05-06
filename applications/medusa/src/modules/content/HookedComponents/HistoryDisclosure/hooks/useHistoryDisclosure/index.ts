@@ -12,7 +12,12 @@ interface UseHistoryDisclosureProps extends UseDisclosureProps {
   hash?: string | undefined
 }
 
-export default function useHistoryDisclosure (props: UseHistoryDisclosureProps = {}): UseDisclosureReturn {
+export interface UseHistoryDisclosurePropsReturn extends Omit<UseDisclosureReturn, 'onClose' | 'onToggle'> {
+  onClose: () => void
+  onToggle: () => void
+}
+
+export default function useHistoryDisclosure (props: UseHistoryDisclosureProps = {}): UseHistoryDisclosurePropsReturn {
   const {
     hash,
     ...rest
@@ -35,6 +40,8 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
 
   const onOpen = (): void => {
     onOpenAction()
+    const extractedHash = router.asPath.split('#')?.[1]
+    if (extractedHash?.includes(defineHash)) return
     void router.push({
       pathname: router.pathname,
       hash: defineHash,
@@ -44,6 +51,11 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
 
   const onClose = (): void => {
     onCloseAction()
+    // TODO handle this better
+    // TODO cancel rendering route error happens when you close modal and then redirect a user to another page
+    // TODO also it causes the page to re-render which is not ideal (even though shallow is enabled)
+    /*
+    if (push === false) return
     const extractedHash = router.asPath.split('#')?.[1]
     if (extractedHash?.includes(defineHash)) {
       void router.replace({
@@ -51,6 +63,8 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
         query: router.query
       }, undefined, { shallow: true })
     }
+
+     */
   }
 
   const onToggle = (): void => {

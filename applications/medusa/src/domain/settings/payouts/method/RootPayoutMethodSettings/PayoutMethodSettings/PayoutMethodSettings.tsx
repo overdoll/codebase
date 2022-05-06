@@ -35,6 +35,8 @@ export default function PayoutMethodSettings (props: Props): JSX.Element {
     props.query
   )
 
+  console.log('from method', data)
+
   if (data?.viewer?.details?.country == null) {
     return (
       <Stack spacing={2}>

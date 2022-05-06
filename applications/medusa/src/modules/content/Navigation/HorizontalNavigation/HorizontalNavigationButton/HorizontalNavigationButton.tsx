@@ -2,7 +2,7 @@ import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
 import { UrlObject } from 'url'
-import { ButtonProps } from '@chakra-ui/react'
+import { Box, ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   icon?: FunctionComponent<any>
@@ -54,13 +54,15 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
       }) => {
         const determineActive = exact ? isActive : isActiveBasePath
         return (
-          <HorizontalNavigationButtonBody
-            as='a'
-            isActive={determineActive}
-            {...ButtonProps}
-          >
-            {children}
-          </HorizontalNavigationButtonBody>
+          <Box as='a'>
+            <HorizontalNavigationButtonBody
+              isActive={determineActive}
+              {...ButtonProps}
+            >
+              {children}
+            </HorizontalNavigationButtonBody>
+          </Box>
+
         )
       }}
     </NavLink>

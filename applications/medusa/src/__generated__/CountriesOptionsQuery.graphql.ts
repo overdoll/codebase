@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<017795692a0eeb483e4bc81a59ce08db>>
- * @relayHash 348f35a71a292178b3b1ca0ba98fb86b
+ * @generated SignedSource<<40c40e8fb4e3815473f673787ed805be>>
+ * @relayHash 15182e8e9e125bda5574764aa156047b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 348f35a71a292178b3b1ca0ba98fb86b
+// @relayRequestID 15182e8e9e125bda5574764aa156047b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CountriesOptionsQuery$variables = {};
@@ -17,7 +17,6 @@ export type CountriesOptionsQueryVariables = CountriesOptionsQuery$variables;
 export type CountriesOptionsQuery$data = {
   readonly countries: ReadonlyArray<{
     readonly id: string;
-    readonly emoji: string;
     readonly name: string;
   }>;
 };
@@ -42,13 +41,6 @@ var v0 = [
         "args": null,
         "kind": "ScalarField",
         "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "emoji",
         "storageKey": null
       },
       {
@@ -80,7 +72,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "348f35a71a292178b3b1ca0ba98fb86b",
+    "id": "15182e8e9e125bda5574764aa156047b",
     "metadata": {},
     "name": "CountriesOptionsQuery",
     "operationKind": "query",
@@ -89,6 +81,6 @@ return {
 };
 })();
 
-(node as any).hash = "cf5295e06cfbb4a4d388f7c24332f234";
+(node as any).hash = "455409bc39aa517eb8d614623363f29c";
 
 export default node;

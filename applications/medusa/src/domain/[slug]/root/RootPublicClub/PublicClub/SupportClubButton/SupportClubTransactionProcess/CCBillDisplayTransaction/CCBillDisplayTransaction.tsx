@@ -67,7 +67,7 @@ export default function CCBillDisplayTransaction ({
 
   const onComplete = (): void => {
     setTokenParam(undefined)
-    onClose?.()
+    onClose?.(false)
   }
 
   const isVerifying = queryData?.ccbillTransactionDetails?.approved === true &&

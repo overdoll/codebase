@@ -17,7 +17,7 @@ export default function PostSearchButton ({ routeTo }: Props): JSX.Element {
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useHistoryDisclosure({ hash: 'search' })
 
   const { i18n } = useLingui()
 

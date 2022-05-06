@@ -15,8 +15,6 @@ import SetupPayoutMethod from './SetupPayoutMethod/SetupPayoutMethod'
 import AgreementPayoutMethod from './AgreementPayoutMethod/AgreementPayoutMethod'
 import { useState } from 'react'
 import PayoutMethodFooter from './PayoutMethodFooter/PayoutMethodFooter'
-import UploadFlowFooter
-  from '../../../../../../club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UploadFlowFooter'
 
 interface Props {
   query: PayoutMethodSetupFlowFragment$key
