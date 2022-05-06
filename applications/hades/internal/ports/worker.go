@@ -34,6 +34,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.CCBillChargeback)
 	w.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	w.RegisterWorkflow(workflows.CancelActiveSupporterSubscriptionsForClub)
+	w.RegisterWorkflow(workflows.ClubTransactionMetric)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

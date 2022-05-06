@@ -16,6 +16,7 @@ import (
 
 type PostWithViewerLike struct {
 	ID          string
+	Reference   string
 	ViewerLiked *PostLikeModified
 	Likes       int
 	Categories  []struct {
@@ -80,7 +81,10 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, workflows.AddPostLikeInput{
+		PostId:    postId,
+		AccountId: testingAccountId,
+	})
 
 	var likePost LikePost
 
@@ -129,7 +133,10 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, workflows.AddPostLikeInput{
+		PostId:    postId,
+		AccountId: testingAccountId,
+	})
 
 	var likePost LikePost
 

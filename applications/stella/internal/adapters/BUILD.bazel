@@ -40,19 +40,7 @@ go_library(
 
 go_test(
     name = "adapters_test",
-    srcs = [
-        "club_members_cassandra_repository_test.go",
-        "repository_test.go",
-    ],
+    srcs = ["repository_test.go"],
     data = ["//applications/stella:config.toml"],
-    deps = [
-        ":adapters",
-        "//applications/stella/internal/domain/club",
-        "//libraries/bootstrap",
-        "//libraries/config",
-        "//libraries/paging",
-        "//libraries/testing_tools",
-        "//libraries/uuid",
-        "@com_github_stretchr_testify//require",
-    ],
+    deps = ["//libraries/config"],
 )

@@ -19,6 +19,8 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
+		"likes",
+		"likes_last_update_id",
 		"supporter_only_status",
 		"content_resource_ids",
 		"content_supporter_only",
@@ -39,6 +41,8 @@ var postTable = table.New(table.Metadata{
 type posts struct {
 	Id                              string            `db:"id"`
 	State                           string            `db:"state"`
+	Likes                           int               `db:"likes"`
+	LikesLastUpdateId               gocql.UUID        `db:"likes_last_update_id"`
 	SupporterOnlyStatus             string            `db:"supporter_only_status"`
 	ContentResourceIds              []string          `db:"content_resource_ids"`
 	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
@@ -95,6 +99,8 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		Id:                              pending.ID(),
 		State:                           pending.State().String(),
 		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
+		Likes:                           pending.Likes(),
+		LikesLastUpdateId:               gocql.TimeUUID(),
 		ClubId:                          pending.ClubId(),
 		AudienceId:                      pending.AudienceId(),
 		ContributorId:                   pending.ContributorId(),
@@ -110,18 +116,11 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 }
 
 func (r PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
-
-	likes, err := r.getLikesForPost(ctx, postPending.Id)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
 		postPending.SupporterOnlyStatus,
-		likes,
+		postPending.Likes,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
 		postPending.ContentSupporterOnly,
@@ -447,23 +446,42 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
-	pst, err := r.GetPostByIdOperator(ctx, id)
+	postPending, err := r.getPostById(ctx, id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	oldTotalLikes := pst.Likes()
+	unmarshalled, err := r.unmarshalPost(ctx, *postPending)
 
-	if err = updateFn(pst); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	newTotalLikes := pst.Likes()
+	err = updateFn(unmarshalled)
 
-	if err := r.updatePostLikes(ctx, id, newTotalLikes > oldTotalLikes); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	return pst, nil
+	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id").
+		If(qb.EqLit("likes_last_update_id", postPending.LikesLastUpdateId.String())).
+		Query(r.session).
+		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID()}).
+		SerialConsistency(gocql.Serial).
+		ExecCAS()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update post likes: %v", err)
+	}
+
+	if !ok {
+		return nil, fmt.Errorf("failed to update post likes")
+	}
+
+	if err := r.indexPost(ctx, unmarshalled); err != nil {
+		return nil, err
+	}
+
+	return unmarshalled, nil
 }

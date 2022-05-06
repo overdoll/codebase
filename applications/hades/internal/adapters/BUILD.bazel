@@ -65,6 +65,7 @@ go_test(
         ":adapters",
         "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/ccbill",
+        "//applications/hades/internal/domain/club",
         "//libraries/config",
         "//libraries/money",
         "//libraries/testing_tools",

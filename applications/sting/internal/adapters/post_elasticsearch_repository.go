@@ -646,12 +646,6 @@ func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context
 
 		for iter.StructScan(&p) {
 
-			likes, err := r.getLikesForPost(ctx, p.Id)
-
-			if err != nil {
-				return err
-			}
-
 			var audienceId string
 
 			if p.AudienceId != nil {
@@ -665,7 +659,7 @@ func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context
 				ContentResourceIds:              p.ContentResourceIds,
 				ContentSupporterOnly:            p.ContentSupporterOnly,
 				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
-				Likes:                           likes,
+				Likes:                           p.Likes,
 				ContributorId:                   p.ContributorId,
 				ClubId:                          p.ClubId,
 				AudienceId:                      audienceId,
@@ -676,7 +670,7 @@ func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context
 				PostedAt:                        strconv.FormatInt(p.PostedAt.Unix(), 10),
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(PostIndexName).
 				Id(p.Id).

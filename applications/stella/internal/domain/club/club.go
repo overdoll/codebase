@@ -369,6 +369,10 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 		return principal.ErrLocked
 	}
 
+	if m.terminated {
+		return principal.ErrNotAuthorized
+	}
+
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
 	}

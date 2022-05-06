@@ -27,6 +27,9 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.NewSupporterPost)
 	w.RegisterWorkflow(workflows.TerminateClub)
 	w.RegisterWorkflow(workflows.UnTerminateClub)
+	w.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
+	w.RegisterWorkflow(workflows.SuspendClub)
+	w.RegisterWorkflow(workflows.UnSuspendClub)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

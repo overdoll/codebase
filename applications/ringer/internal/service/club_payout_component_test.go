@@ -167,7 +167,11 @@ func TestClubPayout(t *testing.T) {
 
 	require.Equal(t, 10500, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubMonthlyPayout, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
+		ClubId:     clubId,
+		FutureTime: nil,
+		WorkflowId: "GenerateClubMonthlyPayout_Manual_" + clubId,
+	})
 
 	var initiate InitiateClubPayout
 

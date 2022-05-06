@@ -52,7 +52,7 @@ func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context,
 }
 
 func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
-	return club.UnmarshalClubFromDatabase(clubId, "", "", false, ""), nil
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, clubId), nil
 }
 
 type MockPaxumHttpClient struct {

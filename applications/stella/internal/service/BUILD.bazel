@@ -55,7 +55,6 @@ go_test(
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
-        "@com_github_google_uuid//:uuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",

@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
 	"time"
@@ -34,7 +35,8 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 	if !alreadyAMember {
 
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID: "AddClubMember_" + input.ClubId + "_" + input.AccountId,
+			WorkflowID:        "AddClubMember_" + input.ClubId + "_" + input.AccountId,
+			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 
 		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)

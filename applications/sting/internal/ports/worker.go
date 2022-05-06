@@ -31,6 +31,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.UnArchivePost)
 	w.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
 	w.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	w.RegisterWorkflow(workflows.DeleteAccountData)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

@@ -9,6 +9,7 @@ go_library(
     importpath = "overdoll/applications/sting/internal/service",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/stella/proto:v1_go_proto",
         "//applications/sting/internal/adapters",
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
@@ -47,6 +48,7 @@ go_test(
     ],
     deps = [
         ":service",
+        "//applications/stella/proto:v1_go_proto",
         "//applications/sting/internal/adapters",
         "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/domain/club",
@@ -59,6 +61,7 @@ go_test(
         "//libraries/config",
         "//libraries/graphql/relay",
         "//libraries/passport",
+        "//libraries/principal",
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",

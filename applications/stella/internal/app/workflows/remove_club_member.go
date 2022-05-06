@@ -1,6 +1,8 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
 )
@@ -29,7 +31,8 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 	// spawn a child workflow asynchronously to count the total club member count
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID: "UpdateClubMemberTotalCount_" + input.ClubId,
+		WorkflowID:        "UpdateClubMemberTotalCount_" + input.ClubId,
+		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
 	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
@@ -41,6 +44,9 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		// ignore already started errors
 		return err
 	}

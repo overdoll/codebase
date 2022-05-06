@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS posts
 (
     id                                  text,
     state                               text,
+    likes                               bigint,
+    likes_last_update_id                timeuuid,
     supporter_only_status               text,
     contributor_account_id              text,
     club_id                             text,
@@ -90,13 +92,6 @@ CREATE TABLE IF NOT EXISTS posts
     created_at                          timestamp,
     posted_at                           timestamp,
     primary key ( id )
-);
-
-CREATE TABLE IF NOT EXISTS post_likes_counter
-(
-    post_id text,
-    likes   counter,
-    primary key ( post_id )
 );
 
 CREATE TABLE IF NOT EXISTS post_likes
