@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fee1ccdc81636cf5a5104df871e8042d>>
+ * @generated SignedSource<<71dcdd9c399f285aad01d99c2dbe2679>>
  * @relayHash 60b15c8b79a4c42c67fa076ec6bc61fa
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type CancelAccountClubSupporterSubscriptionInput = {
 };
 export type CancelSubscriptionButtonMutation$variables = {
   input: CancelAccountClubSupporterSubscriptionInput;
-  connections: ReadonlyArray<string>;
 };
 export type CancelSubscriptionButtonMutationVariables = CancelSubscriptionButtonMutation$variables;
 export type CancelSubscriptionButtonMutation$data = {
@@ -49,89 +48,86 @@ export type CancelSubscriptionButtonMutation = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "connections"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "input"
-},
-v2 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "input",
     "variableName": "input"
   }
 ],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
-  (v4/*: any*/)
+v4 = [
+  (v3/*: any*/)
 ],
-v6 = {
+v5 = {
   "kind": "InlineFragment",
-  "selections": (v5/*: any*/),
+  "selections": (v4/*: any*/),
   "type": "IAccountClubSupporterSubscription",
   "abstractKey": "__isIAccountClubSupporterSubscription"
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "reference",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "supporterSince",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cancelledAt",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "endDate",
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -140,17 +136,14 @@ v13 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "CancelSubscriptionButtonMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "CancelAccountClubSupporterSubscriptionPayload",
         "kind": "LinkedField",
         "name": "cancelAccountClubSupporterSubscription",
@@ -164,16 +157,16 @@ return {
             "name": "clubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v6/*: any*/),
+              (v2/*: any*/),
+              (v5/*: any*/),
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v4/*: any*/),
+                  (v3/*: any*/),
+                  (v6/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -182,8 +175,8 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
+                      (v10/*: any*/),
                       (v11/*: any*/),
-                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -224,16 +217,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "CancelSubscriptionButtonMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "CancelAccountClubSupporterSubscriptionPayload",
         "kind": "LinkedField",
         "name": "cancelAccountClubSupporterSubscription",
@@ -247,16 +237,16 @@ return {
             "name": "clubSupporterSubscription",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v6/*: any*/),
+              (v2/*: any*/),
+              (v5/*: any*/),
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v4/*: any*/),
+                  (v3/*: any*/),
+                  (v6/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -265,8 +255,8 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
+                      (v10/*: any*/),
                       (v11/*: any*/),
-                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -283,7 +273,7 @@ return {
                             "name": "urls",
                             "plural": true,
                             "selections": [
-                              (v13/*: any*/),
+                              (v12/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -302,7 +292,7 @@ return {
                             "name": "videoThumbnail",
                             "plural": false,
                             "selections": [
-                              (v13/*: any*/)
+                              (v12/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -313,11 +303,11 @@ return {
                             "name": "type",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v4/*: any*/)
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -327,33 +317,12 @@ return {
               },
               {
                 "kind": "InlineFragment",
-                "selections": (v5/*: any*/),
+                "selections": (v4/*: any*/),
                 "type": "Node",
                 "abstractKey": "__isNode"
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "filters": null,
-            "handle": "appendNode",
-            "key": "",
-            "kind": "LinkedHandle",
-            "name": "clubSupporterSubscription",
-            "handleArgs": [
-              {
-                "kind": "Variable",
-                "name": "connections",
-                "variableName": "connections"
-              },
-              {
-                "kind": "Literal",
-                "name": "edgeTypeName",
-                "value": "createCategoryEdge"
-              }
-            ]
           }
         ],
         "storageKey": null
@@ -370,6 +339,6 @@ return {
 };
 })();
 
-(node as any).hash = "ca7fff688fc16aef241b2a4011fcb8ba";
+(node as any).hash = "27673c747eb7f63adbf500f0accd0dfe";
 
 export default node;

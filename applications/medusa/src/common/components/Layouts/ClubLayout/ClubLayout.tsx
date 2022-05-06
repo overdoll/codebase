@@ -1,10 +1,18 @@
 import type { ReactNode } from 'react'
 import { Suspense } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { BirdHouse, ContentBrushPen, FileMultiple, SettingCog, SettingHammer, UserHuman } from '@//:assets/icons'
+import {
+  BirdHouse,
+  ContentBrushPen,
+  FileMultiple,
+  SettingCog,
+  SettingHammer,
+  SubscriptionIdentifier,
+  UserHuman
+} from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
-import { Box, Skeleton } from '@chakra-ui/react'
+import { Box, Skeleton, useUpdateEffect } from '@chakra-ui/react'
 import QueryErrorBoundary from '../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SelectClubs from './SelectClubs/SelectClubs'
 import { useRouter } from 'next/router'
@@ -24,12 +32,19 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
 
   const {
     searchArguments,
-    loadQuery
+    loadQuery,
+    changeArguments
   } = useSearch<SearchProps>({
     defaultValue: {
       slug: slug as string
     }
   })
+
+  useUpdateEffect(() => {
+    changeArguments({
+      slug: slug as string
+    })
+  }, [slug])
 
   return (
     <>
@@ -79,6 +94,16 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
                 <Trans>Home</Trans>
               }
               icon={BirdHouse}
+            />
+            <VerticalNavigation.Button
+              href={{
+                pathname: '/club/[slug]/revenue',
+                query: { slug: slug }
+              }}
+              title={
+                <Trans>Revenue</Trans>
+              }
+              icon={SubscriptionIdentifier}
             />
           </Can>
           <Can I='create' a='Post'>

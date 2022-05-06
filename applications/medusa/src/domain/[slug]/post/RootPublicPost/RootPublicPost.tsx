@@ -31,15 +31,16 @@ const RootPublicPost: PageProps<Props> = (props: Props) => {
           Post :: overdoll.com
         </title>
       </Head>
-      <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string ?? '' })}>
-        <Suspense fallback={(
-          <PageWrapper>
+      <PageWrapper>
+        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string ?? '' })}>
+          <Suspense fallback={(
             <SkeletonPost />
-          </PageWrapper>)}
-        >
-          <PublicPost query={queryRef as PreloadedQuery<PublicPostQueryType>} />
-        </Suspense>
-      </QueryErrorBoundary>
+          )}
+          >
+            <PublicPost query={queryRef as PreloadedQuery<PublicPostQueryType>} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </PageWrapper>
     </>
   )
 }

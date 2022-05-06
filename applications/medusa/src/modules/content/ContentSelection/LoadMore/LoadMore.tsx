@@ -2,9 +2,10 @@ import { Flex, Heading, Spinner } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import { ClickableTile } from '../index'
+import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 
 export interface LoadMoreProps {
-  onLoadNext: () => {}
+  onLoadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   text?: ReactNode
 }
@@ -20,7 +21,7 @@ export default function LoadMore ({
         ? <Spinner color='gray.100' />
         : (
           <ClickableTile
-            onClick={onLoadNext}
+            onClick={onLoadNext as any}
             borderRadius='inherit'
             h='inherit'
             w='inherit'

@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type {
@@ -12,6 +11,7 @@ import StaffAccountTransaction from './StaffAccountTransaction/StaffAccountTrans
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
+import PageWrapperDesktop from '../../../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
 
 interface Props {
   queryRefs: {
@@ -34,13 +34,13 @@ const RootStaffAccountTransaction: PageProps<Props> = (props: Props) => {
           Transaction - Staff :: overdoll.com
         </title>
       </Head>
-      <PageWrapper>
+      <PageWrapperDesktop>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string })}>
           <Suspense fallback={<SkeletonStack />}>
             <StaffAccountTransaction query={queryRef as PreloadedQuery<StaffAccountTransactionQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageWrapperDesktop>
     </>
   )
 }

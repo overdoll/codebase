@@ -332,8 +332,8 @@ const sizes = {
     minW: 8,
     fontSize: 'sm',
     px: 3,
-    borderRadius: 'md',
-    fontWeight: 'normal'
+    borderRadius: 'semi',
+    fontWeight: 'semibold'
   },
   xs: {
     h: 6,

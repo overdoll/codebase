@@ -1,0 +1,17 @@
+<mj-section>
+    <mj-group vertical-align="middle">
+        <mj-column vertical-align="middle">
+            <mj-text color="#ff2969">
+                <h1>
+                    overdoll
+                </h1>
+            </mj-text>
+        </mj-column>
+        <mj-column vertical-align="middle">
+            <mj-navbar base-url="https://overdoll.com" ico-color="#ffffff">
+                <mj-navbar-link href="/home" color="#ffffff">Home</mj-navbar-link>
+                <mj-navbar-link href="/clubs/discover" color="#ffffff">Discover Clubs</mj-navbar-link>
+            </mj-navbar>
+        </mj-column>
+    </mj-group>
+</mj-section>

@@ -23,6 +23,7 @@ const ClickableTile = forwardRef<any, Props>(({
       borderRadius='md'
       position='relative'
       overflow='hidden'
+      whiteSpace='normal'
       bg='transparent'
       {...rest}
     >

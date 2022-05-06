@@ -164,8 +164,6 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Select a saved payment method/iu).should('be.visible')
 
     // use saved payment method to subscribe
-    clickOnButton('Subscribe')
-    cy.findByText(/Please select a payment method/iu).should('exist')
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click()
     clickOnToggle(/I have read and agree to the/iu, true)
     clickOnButton('Subscribe')

@@ -15,8 +15,6 @@ import IconButton from '@//:modules/form/IconButton/IconButton'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
-import { PostVideoManagerProvider } from '@//:modules/content/Posts'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import PostTagsPreview from './PostTagsPreview/PostTagsPreview'
 
 interface Props {
@@ -183,11 +181,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
             key={index}
             position='relative'
           >
-            <ObserverManagerProvider>
-              <PostVideoManagerProvider>
-                <PostPreview query={item.node.post} />
-              </PostVideoManagerProvider>
-            </ObserverManagerProvider>
+            <PostPreview query={item.node.post} />
             <PostTagsPreview query={item.node.post} />
             <Flex justify='flex-end' mt={4}>
               <ModeratePost

@@ -3,7 +3,6 @@ import type {
   StaffAccountTransactionEventFragment$key
 } from '@//:artifacts/StaffAccountTransactionEventFragment.graphql'
 import {
-  TableBodyColumn,
   TableBodyColumnText,
   TableBodyRow,
   TableBodyRowBackground
@@ -41,14 +40,14 @@ export default function StaffAccountTransactionEvent ({ query }: Props): JSX.Ele
 
   return (
     <TableBodyRowBackground>
-      <TableBodyRow columns={6}>
-        <TableBodyColumnText column={2}>
+      <TableBodyRow columns={4}>
+        <TableBodyColumnText column={1}>
           {price}
         </TableBodyColumnText>
-        <TableBodyColumn column={2}>
-          {data.reason}
-        </TableBodyColumn>
         <TableBodyColumnText column={2}>
+          {data.reason}
+        </TableBodyColumnText>
+        <TableBodyColumnText column={1}>
           {timestamp}
         </TableBodyColumnText>
       </TableBodyRow>

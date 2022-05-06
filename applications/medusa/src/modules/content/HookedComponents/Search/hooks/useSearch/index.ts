@@ -35,16 +35,16 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
     timeoutMs: 2000
   })
 
-  const incrementFetchKey = (previous: number): UseSearchQueryOptions => ({
+  const incrementFetchKey = (previous: number, fullReload: boolean): UseSearchQueryOptions => ({
     options: {
       fetchKey: previous + 1,
-      fetchPolicy: 'store-or-network'
+      fetchPolicy: fullReload ? 'network-only' : 'store-or-network'
     }
   })
 
   // Keep the previous variables as to not interrupt the query
-  const replaceOrCreateQueryArguments = (previous, args): UseSearchQueryState<TArguments> => ({
-    ...incrementFetchKey(previous.options.fetchKey),
+  const replaceOrCreateQueryArguments = (previous, args, fullReload: boolean): UseSearchQueryState<TArguments> => ({
+    ...incrementFetchKey(previous.options.fetchKey, fullReload),
     variables: {
       ...previous.variables, ...args
     }
@@ -52,14 +52,14 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
 
   // Replace all variables regardless of whether it will interrupt the query
   const replaceQueryArguments = (previous, args): UseSearchQueryState<TArguments> => ({
-    ...incrementFetchKey(previous.options.fetchKey),
+    ...incrementFetchKey(previous.options.fetchKey, false),
     variables: args
   })
 
   // One of the replace functions but as a callback and with a transition
   const changeArguments = useCallback((args) => {
     startTransition(() => {
-      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, args))
+      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, args, false))
     })
   }, [])
 
@@ -71,7 +71,7 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
 
   const loadQuery = useCallback(() => {
     startTransition(() => {
-      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, {}))
+      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, {}, true))
     })
   }, [])
 

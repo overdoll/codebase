@@ -16,9 +16,13 @@ interface ChildrenCallable {
 
 interface Props {
   children?: MaybeRenderProp<ChildrenCallable>
+  isDisabled?: boolean | undefined
 }
 
-export default function FlowBuilderFooter ({ children }: Props): JSX.Element {
+export default function FlowBuilderFooter ({
+  children,
+  isDisabled
+}: Props): JSX.Element {
   const {
     currentStep,
     stepsArray,
@@ -38,20 +42,20 @@ export default function FlowBuilderFooter ({ children }: Props): JSX.Element {
       case stepsArray.length - 1:
         return (
           <Flex justify='flex-start'>
-            <FlowBuilderPreviousButton />
+            <FlowBuilderPreviousButton isDisabled={isDisabled} />
           </Flex>
         )
       case 0:
         return (
           <Flex justify='flex-end'>
-            <FlowBuilderNextButton />
+            <FlowBuilderNextButton isDisabled={isDisabled} />
           </Flex>
         )
       default:
         return (
           <Flex justify='space-between'>
-            <FlowBuilderPreviousButton />
-            <FlowBuilderNextButton />
+            <FlowBuilderPreviousButton isDisabled={isDisabled} />
+            <FlowBuilderNextButton isDisabled={isDisabled} />
           </Flex>
         )
     }

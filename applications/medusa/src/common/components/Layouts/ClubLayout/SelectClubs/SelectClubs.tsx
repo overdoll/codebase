@@ -39,9 +39,7 @@ const flexProps = {
   justify: 'space-between'
 }
 
-export default function SelectClubs ({
-  searchArguments
-}: Props): JSX.Element {
+export default function SelectClubs ({ searchArguments }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<SelectClubsQuery>(
     Query,
     searchArguments.variables,

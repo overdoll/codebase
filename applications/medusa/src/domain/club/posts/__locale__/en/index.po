@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:35
+#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:34
 msgid "ARCHIVED"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:51
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:54
 msgid "Edit Draft"
 msgstr ""
 

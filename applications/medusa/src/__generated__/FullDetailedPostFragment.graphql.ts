@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d4b8ce5d349f6a714997a6a00562859>>
+ * @generated SignedSource<<5283c92d17048b464492ea8dfc28cbf0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,12 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type FullDetailedPostFragment$data = {
-  readonly reference: string;
   readonly state: PostState;
   readonly club: {
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostModerateButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostIndexerFragment" | "PostArchiveButtonFragment" | "PostUnArchiveButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostModerateButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostArchiveButtonFragment" | "PostUnArchiveButtonFragment">;
   readonly " $fragmentType": "FullDetailedPostFragment";
 };
 export type FullDetailedPostFragment = FullDetailedPostFragment$data;
@@ -33,13 +32,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "FullDetailedPostFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -90,11 +82,6 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostIndexerFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "PostArchiveButtonFragment"
     },
     {
@@ -135,6 +122,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8143338587f571a225fb690eb75978f6";
+(node as any).hash = "8eac7e6282ce29c5e0390f9f6e178831";
 
 export default node;

@@ -1,10 +1,13 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { Box } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import type { ClubTopPostsFragment$key } from '@//:artifacts/ClubTopPostsFragment.graphql'
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
 import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: ClubTopPostsFragment$key
@@ -43,11 +46,30 @@ export default function ClubTopPosts ({ query }: Props): JSX.Element {
     sort: 'TOP'
   })
 
+  const link = `/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`
+
   return (
     <Box>
+      <PageSectionWrap>
+        <HStack justify='space-between'>
+          <PageSectionTitle colorScheme='orange'>
+            Top Posts
+          </PageSectionTitle>
+          <LinkButton
+            href={link}
+            size='sm'
+            colorScheme='gray'
+            variant='solid'
+          >
+            <Trans>
+              See All
+            </Trans>
+          </LinkButton>
+        </HStack>
+      </PageSectionWrap>
       <PostsHorizontalPreview
         hasNext={hasNext}
-        href={`/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`}
+        href={link}
         query={data.topPosts}
       />
     </Box>

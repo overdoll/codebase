@@ -100,7 +100,7 @@ export default function CCBillSubscribeForm ({
       },
       onCompleted (payload) {
         const paymentLink = payload?.generateCCBillClubSupporterPaymentLink?.paymentLink as string
-
+        if (paymentLink == null) return
         windowReference.current = window.open(paymentLink, '_blank', 'width=600,height=800')
         const url = new URL(paymentLink)
         updateOriginLink(url.origin)

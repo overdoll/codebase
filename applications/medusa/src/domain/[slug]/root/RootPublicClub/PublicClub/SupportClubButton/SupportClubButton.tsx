@@ -129,11 +129,6 @@ export default function SupportClubButton ({
       {clubData.viewerMember?.isSupporter === true
         ? (
           <Stack spacing={1}>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Thanks for supporting this club! You can now access all of its exclusive content.
-              </Trans>
-            </Text>
             <LinkButton
               colorScheme='gray'
               size='lg'
@@ -145,14 +140,14 @@ export default function SupportClubButton ({
                 My Subscriptions
               </Trans>
             </LinkButton>
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                Thanks for supporting this club! You can now access all of its exclusive content.
+              </Trans>
+            </Text>
           </Stack>)
         : (
           <Stack spacing={1}>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Support this club and get access to all of its exclusive content!
-              </Trans>
-            </Text>
             <Can I='interact' a='Club' passThrough>
               {allowed => (
                 <Button
@@ -162,6 +157,11 @@ export default function SupportClubButton ({
                   {...rest}
                 />)}
             </Can>
+            <Text fontSize='md' color='gray.00'>
+              <Trans>
+                Support this club and get access to all of its exclusive content!
+              </Trans>
+            </Text>
           </Stack>
           )}
       <Modal

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f258bc8a19531fd77db19def578bb3c4>>
- * @relayHash b729e795a87abcba7416e54dd224713d
+ * @generated SignedSource<<b040ad14185703c96df05cafb07abcca>>
+ * @relayHash e3556bae816ab64f8e4237f8ffc61ca1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b729e795a87abcba7416e54dd224713d
+// @relayRequestID e3556bae816ab64f8e4237f8ffc61ca1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type ClubHomeQuery$data = {
     readonly name: string;
     readonly membersCount: number;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubBalanceHeaderFragment" | "ClubSupporterHeaderFragment">;
   } | null;
 };
 export type ClubHomeQueryResponse = ClubHomeQuery$data;
@@ -80,6 +80,13 @@ v6 = {
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -103,6 +110,16 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "LargeClubHeaderFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubBalanceHeaderFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubSupporterHeaderFragment"
           }
         ],
         "storageKey": null
@@ -178,14 +195,73 @@ return {
               (v5/*: any*/)
             ],
             "storageKey": null
-          }
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": null,
+                "kind": "LinkedField",
+                "name": "payoutMethod",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v5/*: any*/)
+                    ],
+                    "type": "AccountPaxumPayoutMethod",
+                    "abstractKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Balance",
+            "kind": "LinkedField",
+            "name": "balance",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "amount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "currency",
+                "storageKey": null
+              },
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "b729e795a87abcba7416e54dd224713d",
+    "id": "e3556bae816ab64f8e4237f8ffc61ca1",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -194,6 +270,9 @@ return {
 };
 })();
 
-(node as any).hash = "bae4267c4abe2834b940404df87f12c9";
+(node as any).hash = "65ecbfc0e4115d8885dcc4f0e8074cde";
+
+import { PreloadableQueryRegistry } from 'relay-runtime';
+PreloadableQueryRegistry.set(node.params.id, node);
 
 export default node;

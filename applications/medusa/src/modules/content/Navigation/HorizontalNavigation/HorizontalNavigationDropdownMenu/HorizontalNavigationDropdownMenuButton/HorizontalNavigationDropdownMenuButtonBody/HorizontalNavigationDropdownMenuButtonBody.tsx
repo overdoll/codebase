@@ -1,15 +1,12 @@
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import { ButtonProps, Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox } from '../../../../../PageLayout'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 
-interface Props {
+interface Props extends Omit<ButtonProps, 'label'> {
   label?: ReactNode
   icon?: FunctionComponent<any>
-  onClick?: () => void
-  isDisabled?: boolean
   isActive: boolean
-  colorScheme?: string
   color?: string
   children?: ReactNode
 }
@@ -22,7 +19,8 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   label,
   isActive,
   isDisabled = false,
-  onClick
+  onClick,
+  ...rest
 }: Props, forwardRef): JSX.Element => {
   const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
 
@@ -74,7 +72,7 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   }
 
   return (
-    <Box>
+    <Flex h='100%' w='100%'>
       <ClickableBox
         ref={forwardRef}
         ignoreTransition
@@ -84,6 +82,7 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
         bg={isActive ? 'gray.900' : 'gray.800'}
         p={2}
         whiteSpace='break-spaces'
+        {...rest}
       >
         <Flex
           p={1}
@@ -110,7 +109,7 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
           {(icon == null) && children}
         </Flex>
       </ClickableBox>
-    </Box>
+    </Flex>
   )
 })
 

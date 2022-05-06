@@ -50,7 +50,7 @@ const RootSubscriptionsSettings: PageProps<Props> = (props: Props) => {
             <Trans>
               A list of charges that occurred for your club supporter subscriptions.{' '}
               <HighlightInline color='purple.200'>CCBill.com
-                *overdoll Inc.
+                *overdoll Inc
               </HighlightInline> will appear on your Cardholder
               statement.
             </Trans>

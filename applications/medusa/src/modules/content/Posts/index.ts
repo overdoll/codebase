@@ -14,9 +14,7 @@ export {
   default as PostClickableCharacters
 } from './components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 export { default as PostFooter } from './components/PostInteraction/PostFooter/PostFooter'
-export { default as PostIndexer } from './components/PostInteraction/PostIndexer/PostIndexer'
 export { default as PostLikeButton } from './components/PostInteraction/PostLikeButton/PostLikeButton'
 export { default as PostMenu } from './components/PostInteraction/PostMenu/PostMenu'
 
-export * from './support/PostVideoManager/PostVideoManager'
 export * from './support/GlobalVideoManager/GlobalVideoManager'

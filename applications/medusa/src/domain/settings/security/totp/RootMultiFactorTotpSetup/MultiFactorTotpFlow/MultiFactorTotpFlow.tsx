@@ -28,7 +28,7 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import TotpAppDownloadStep from './TotpAppDownloadStep/TotpAppDownloadStep'
 import { Barcode, MobilePhone, QrCode } from '@//:assets/icons/interface'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import Button from '@//:modules/form/Button/Button'
 
 const MultiFactorTotpFlowMutationGQL = graphql`
   mutation MultiFactorTotpFlowMutation {
@@ -134,7 +134,6 @@ export default function MultiFactorTotpFlow (): JSX.Element {
           <FlowBuilderProgress />
         </Stack>
         <FlowBuilderBody />
-
         <FlowBuilderFooter />
       </FlowBuilder>
       <Modal
@@ -166,11 +165,11 @@ export default function MultiFactorTotpFlow (): JSX.Element {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <LinkButton size='lg' colorScheme='green' href='/settings/security'>
+            <Button onClick={onClose} size='lg' colorScheme='green'>
               <Trans>
-                Back to settings
+                Complete
               </Trans>
-            </LinkButton>
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -3,15 +3,7 @@ import { graphql } from 'react-relay'
 import { FullDetailedPostFragment$key } from '@//:artifacts/FullDetailedPostFragment.graphql'
 import { FullDetailedPostViewerFragment$key } from '@//:artifacts/FullDetailedPostViewerFragment.graphql'
 import { HStack, Stack } from '@chakra-ui/react'
-import { useContext } from 'react'
-import {
-  PostFooter,
-  PostHeaderClub,
-  PostIndexer,
-  PostLikeButton,
-  PostMenu,
-  PostVideoManagerContext
-} from '@//:modules/content/Posts'
+import { PostFooter, PostHeaderClub, PostLikeButton, PostMenu } from '@//:modules/content/Posts'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import PostClickableCharacters
@@ -38,7 +30,6 @@ interface Props {
 
 const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
-    reference
     state
     ...PostGalleryPublicDetailedFragment
     ...PostCopyLinkButtonFragment
@@ -48,7 +39,6 @@ const PostFragment = graphql`
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    ...PostIndexerFragment
     ...PostArchiveButtonFragment
     ...PostUnArchiveButtonFragment
     club @required(action: THROW) {
@@ -73,11 +63,6 @@ export default function FullDetailedPost ({
   const data = useFragment<FullDetailedPostFragment$key>(PostFragment, query)
   const viewerData = useFragment<FullDetailedPostViewerFragment$key>(ViewerFragment, viewerQuery)
 
-  const {
-    slidesCount,
-    currentSlide
-  } = useContext(PostVideoManagerContext)
-
   const ArchiveButton = (): JSX.Element => {
     switch (data.state) {
       case 'ARCHIVED':
@@ -99,11 +84,6 @@ export default function FullDetailedPost ({
         <PostGalleryPublicDetailed query={data} />
         <PostFooter
           leftItem={<PostLikeButton size='sm' query={data} viewerQuery={viewerData} />}
-          centerItem={<PostIndexer
-            query={data}
-            length={slidesCount}
-            currentIndex={currentSlide}
-                      />}
           rightItem={(
             <PostMenu variant='ghost' size='sm'>
               {data.state === 'PUBLISHED' && <PostCopyLinkButton query={data} />}

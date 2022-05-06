@@ -30,6 +30,7 @@ const Mutation = graphql`
       club {
         id
         suspension {
+          __typename
           expires
         }
       }

@@ -8,7 +8,7 @@ export default function LargeBackgroundBox ({
     <Box
       bg='gray.800'
       p={4}
-      borderRadius='md'
+      borderRadius='semi'
       {...rest}
     >
       {children}
