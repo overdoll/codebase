@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"github.com/pkg/errors"
+	"os"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
@@ -47,7 +48,7 @@ func (h ClubSupporterNoPostsHandler) Handle(ctx context.Context, cmd ClubSupport
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("overdoll team", "hello@overdoll.com")
+	recipient, err := mailing.NewRecipient("overdoll", os.Getenv("STAFF_ADDRESS"))
 
 	if err != nil {
 		return err

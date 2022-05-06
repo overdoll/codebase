@@ -31,17 +31,15 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
 	return createApplication(ctx,
 			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
 			// this makes testing easier because we can get reproducible tests with each run
 			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			adapters.NewStellaGrpc(stellaClient),
+			StellaServiceMock{},
 		),
 		func() {
 			cleanup()
-			cleanup2()
 		}
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/pkg/errors"
+	"os"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
@@ -50,7 +51,7 @@ func (h ClubOverChargebackThresholdHandler) Handle(ctx context.Context, cmd Club
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("overdoll team", "hello@overdoll.com")
+	recipient, err := mailing.NewRecipient("overdoll team", os.Getenv("STAFF_ADDRESS"))
 
 	if err != nil {
 		return err

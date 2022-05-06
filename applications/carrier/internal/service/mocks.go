@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 	"os"
 	"overdoll/applications/carrier/internal/adapters"
+	"overdoll/applications/carrier/internal/domain/club"
 	"overdoll/applications/carrier/internal/domain/identifier"
 )
 
@@ -36,4 +37,11 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*identifier.I
 	}
 
 	return prin, nil
+}
+
+type StellaServiceMock struct {
+}
+
+func (s StellaServiceMock) GetClub(ctx context.Context, s2 string) (*club.Club, error) {
+	return club.UnmarshalClubFromDatabase(s2, "testclub", s2), nil
 }
