@@ -76,7 +76,7 @@ var clubActiveSupporterSubscriptionsTable = table.New(table.Metadata{
 })
 
 type clubActiveSupporterSubscriptions struct {
-	ClubId               string  `db:"account_id"`
+	ClubId               string  `db:"club_id"`
 	Id                   string  `db:"id"`
 	Bucket               int     `db:"bucket"`
 	CCBillSubscriptionId *string `db:"ccbill_subscription_id"`
@@ -1034,10 +1034,10 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.C
 	}
 
 	// delete any saved payment methods
-	if err := accountSavedPaymentMethodTable.
-		DeleteBuilder().
-		Where(qb.Eq("account_id")).
-		Query(r.session).
+	if err := r.session.Query(
+		qb.Delete(accountSavedPaymentMethodTable.Name()).
+			Where(qb.Eq("account_id")).
+			ToCql()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountSavedPaymentMethod{AccountId: accountId}).
 		ExecRelease(); err != nil {

@@ -40,6 +40,10 @@ var (
 	temporalClientMock *mocks.Client
 )
 
+var (
+	delayedCallback = time.Minute
+)
+
 type _Any map[string]interface{}
 
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
@@ -83,9 +87,20 @@ func convertAccountIdToRelayId(ruleId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, ruleId))))
 }
 
-func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string) {
-	env := getWorkflowEnvironment(t)
+func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string, count int) {
 
+	newApp, _, _ := service.NewComponentTestApplication(context.Background())
+
+	for i := 0; i < count; i++ {
+
+		env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+		env.RegisterActivity(newApp.Activities)
+
+		seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
+	}
+}
+
+func seedPaymentWithEnv(t *testing.T, env *testsuite.TestWorkflowEnvironment, accountTransactionId, destinationClubId, sourceAccountId string) {
 	env.RegisterWorkflow(workflows.ClubPaymentDeposit)
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	// mock out this generate club monthly payout workflow
@@ -106,6 +121,11 @@ func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAc
 	require.NoError(t, env.GetWorkflowError(), "payment seeded without errors")
 }
 
+func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string) {
+	env := getWorkflowEnvironment(t)
+	seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
+}
+
 func cleanupDepositRequests(t *testing.T) {
 	session := bootstrap.InitializeDatabaseSession()
 	err := session.Query("TRUNCATE deposit_requests", nil).ExecRelease()
@@ -116,19 +136,22 @@ func cleanupDepositRequests(t *testing.T) {
 
 func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+
+	principal := testing_tools.NewArtistPrincipal(accountId)
 
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
 	_, err := detailsRepo.UpdateAccountDetails(context.Background(), testing_tools.NewStaffPrincipal(accountId), accountId, func(id *details.AccountDetails) error {
-		id.UpdateFirstName("test")
-		id.UpdateLastName("test")
-		id.UpdateCountry("USA")
+		id.UpdateFirstName(principal, "test")
+		id.UpdateLastName(principal, "test")
+		id.UpdateCountry(principal, "USA")
 		return nil
 	})
 	require.NoError(t, err)
 
-	adapter := adapters.NewPayoutCassandraElasticsearchRepository(session, service.StellaServiceMock{})
+	adapter := adapters.NewPayoutCassandraElasticsearchRepository(session, es)
 
-	pay, err := payout.NewPaxumAccountPayoutMethod(accountId, email)
+	pay, err := payout.NewPaxumAccountPayoutMethod(principal, accountId, email)
 	require.NoError(t, err)
 
 	err = adapter.UpdateAccountPayoutMethod(context.Background(), pay)

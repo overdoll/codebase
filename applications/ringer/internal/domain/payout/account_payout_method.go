@@ -25,7 +25,7 @@ func NewPaxumAccountPayoutMethod(requester *principal.Principal, accountId, emai
 		return nil, err
 	}
 
-	if !requester.IsArtist() {
+	if !requester.IsArtist() && !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
 	}
 

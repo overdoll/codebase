@@ -154,7 +154,6 @@ type InitiateClubPayout struct {
 func TestClubPayout(t *testing.T) {
 	t.Parallel()
 
-	seedAmount := 15
 	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -162,9 +161,7 @@ func TestClubPayout(t *testing.T) {
 	// seed a payout method for this account or else the payout won't work
 	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
-	for i := 0; i < seedAmount; i++ {
-		seedPayment(t, uuid.New().String(), clubId, accountId)
-	}
+	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
 
 	balances := getClubBalances(t, gClient, clubId)
 
@@ -213,7 +210,7 @@ func TestClubPayout(t *testing.T) {
 			require.Equal(t, types.ClubPaymentStatusReady, p.Node.Status, "payments should be in the ready stage")
 		}
 		ranCallback = true
-	}, time.Minute)
+	}, delayedCallback)
 
 	// generate the payout
 	workflowExecution.FindAndExecuteWorkflow(t, env)
@@ -310,7 +307,6 @@ type RetryClubPayout struct {
 func TestClubPayout_simulate_error(t *testing.T) {
 	t.Parallel()
 
-	seedAmount := 10
 	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -318,9 +314,7 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	// seed a payout method for this account or else the payout won't work
 	setupPayoutMethodForAccount(t, accountId, "test-failure@test.com")
 
-	for i := 0; i < seedAmount; i++ {
-		seedPayment(t, uuid.New().String(), clubId, accountId)
-	}
+	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
@@ -387,7 +381,6 @@ type CancelClubPayout struct {
 func TestClubPayout_cancel(t *testing.T) {
 	t.Parallel()
 
-	seedAmount := 10
 	clubId := uuid.New().String()
 	accountId := clubId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -395,9 +388,7 @@ func TestClubPayout_cancel(t *testing.T) {
 	// seed a payout method for this account or else the payout won't work
 	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
-	for i := 0; i < seedAmount; i++ {
-		seedPayment(t, uuid.New().String(), clubId, accountId)
-	}
+	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
@@ -435,7 +426,7 @@ func TestClubPayout_cancel(t *testing.T) {
 		require.True(t, newEnd.IsWorkflowCompleted(), "cancel workflow succeeded")
 		require.NoError(t, newEnd.GetWorkflowError(), "cancel workflow succeeded without errors")
 
-	}, time.Minute)
+	}, delayedCallback)
 
 	// generate the payout
 	env.ExecuteWorkflow(workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
@@ -465,7 +456,6 @@ type UpdateClubPayoutDepositDate struct {
 func TestClubPayout_update_deposit_date(t *testing.T) {
 	t.Parallel()
 
-	seedAmount := 10
 	accountId := uuid.New().String()
 	clubId := accountId
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -473,9 +463,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	// seed a payout method for this account or else the payout won't work
 	setupPayoutMethodForAccount(t, accountId, "test@test.com")
 
-	for i := 0; i < seedAmount; i++ {
-		seedPayment(t, uuid.New().String(), clubId, accountId)
-	}
+	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment(t)
@@ -513,7 +501,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 		})
 
 		require.NoError(t, err, "no error retrying a payout")
-	}, time.Minute)
+	}, delayedCallback)
 
 	// generate the payout
 	env.ExecuteWorkflow(workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{

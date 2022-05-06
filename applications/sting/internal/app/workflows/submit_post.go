@@ -70,7 +70,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(childCtx, nil); err != nil {
+			Get(ctx, nil); err != nil {
 			// ignore already started errors
 			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 				return nil

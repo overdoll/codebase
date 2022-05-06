@@ -40,7 +40,7 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(childCtx, nil); err != nil {
+		Get(ctx, nil); err != nil {
 		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil

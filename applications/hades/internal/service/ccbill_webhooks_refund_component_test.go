@@ -71,6 +71,10 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
 
+	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
+	require.Equal(t, 699, metrics.TotalTransactionsAmount, "should have 1 transaction count")
+	require.Equal(t, graphql1.CurrencyUsd, metrics.Currency, "should have 1 transaction count")
+
 	require.Equal(t, 699, metrics.RefundsAmount, "should have 1 refunds amount")
 	require.Equal(t, 1, metrics.RefundsCount, "should have 1 refunds count")
 	require.Equal(t, float64(1), metrics.RefundsCountRatio, "should have correct refunds ratio")

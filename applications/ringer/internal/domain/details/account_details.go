@@ -40,7 +40,7 @@ func (a *AccountDetails) canUpdate(requester *principal.Principal) error {
 		return err
 	}
 
-	if !requester.IsArtist() {
+	if !requester.IsArtist() && !requester.IsStaff() {
 		return principal.ErrNotAuthorized
 	}
 

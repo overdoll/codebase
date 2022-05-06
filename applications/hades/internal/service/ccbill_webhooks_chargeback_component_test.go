@@ -53,6 +53,10 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
 
+	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
+	require.Equal(t, 699, metrics.TotalTransactionsAmount, "should have 1 transaction count")
+	require.Equal(t, graphql.CurrencyUsd, metrics.Currency, "should have 1 transaction count")
+
 	require.Equal(t, 699, metrics.ChargebacksAmount, "should have 1 chargeback amount")
 	require.Equal(t, 1, metrics.ChargebacksCount, "should have 1 chargeback count")
 	require.Equal(t, float64(1), metrics.ChargebacksCountRatio, "should have correct chargeback ratio")

@@ -86,7 +86,7 @@ func TestReportPost(t *testing.T) {
 	// will contain reports
 	require.Equal(t, 1, len(reportsOnPost.Entities[0].Post.Reports.Edges))
 	// reporting account is correct
-	require.Equal(t, accountIdRelay, reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
+	require.Equal(t, string(accountIdRelay), reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
 	require.Equal(t, ruleIdRelay, reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Rule.ID, "correct rule on the report")
 
 	var postReports PostReports

@@ -49,7 +49,7 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(childCtx, nil); err != nil {
+		Get(ctx, nil); err != nil {
 		// ignore already started errors
 		return err
 	}

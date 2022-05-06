@@ -59,7 +59,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(childCtx, nil); err != nil {
+			Get(ctx, nil); err != nil {
 			// ignore already started errors
 			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 				return nil

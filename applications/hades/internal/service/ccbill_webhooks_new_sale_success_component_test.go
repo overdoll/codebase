@@ -110,21 +110,15 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
-	env.SetDetachedChildWait(false)
 	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
+	env.SetDetachedChildWait(false)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
-
-	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
-
-	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
-	require.Equal(t, 699, metrics.TotalTransactionsAmount, "should have 1 transaction count")
-	require.Equal(t, graphql1.CurrencyUsd, metrics.Currency, "should have 1 transaction count")
 
 	// get club supporter subscriptions
 	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
