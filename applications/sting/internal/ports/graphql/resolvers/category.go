@@ -10,7 +10,6 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 type CategoryResolver struct {
@@ -59,7 +58,7 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 		State:               stateModified,
 		CategorySlugs:       []string{obj.Slug},
 		Principal:           principal.FromContext(ctx),
-		SortBy:              strings.ToLower(sortBy.String()),
+		SortBy:              sortBy.String(),
 		ShowSuspendedClubs:  false,
 	})
 

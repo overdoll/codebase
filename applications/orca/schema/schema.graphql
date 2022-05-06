@@ -1235,9 +1235,6 @@ type Balance {
   """The currency the balance is in."""
   currency: Currency!
 
-  """An ID to uniquely identify this balance."""
-  id: ID!
-
   """When the balance was last updated."""
   updatedAt: Time!
 }

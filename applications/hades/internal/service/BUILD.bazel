@@ -16,6 +16,7 @@ go_library(
         "//applications/hades/internal/app/workflows/activities",
         "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/club",
+        "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/location",

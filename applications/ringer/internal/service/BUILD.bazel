@@ -15,6 +15,7 @@ go_library(
         "//applications/ringer/internal/app/query",
         "//applications/ringer/internal/app/workflows/activities",
         "//applications/ringer/internal/domain/club",
+        "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/principal",

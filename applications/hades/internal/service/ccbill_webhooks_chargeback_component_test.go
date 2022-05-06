@@ -43,6 +43,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -54,8 +55,8 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	require.Equal(t, 699, metrics.ChargebacksAmount, "should have 1 chargeback amount")
 	require.Equal(t, 1, metrics.ChargebacksCount, "should have 1 chargeback count")
-	require.Equal(t, 1, metrics.ChargebacksCountRatio, "should have correct chargeback ratio")
-	require.Equal(t, 1, metrics.ChargebacksAmountRatio, "should have correct chargeback amount")
+	require.Equal(t, float64(1), metrics.ChargebacksCountRatio, "should have correct chargeback ratio")
+	require.Equal(t, float64(1), metrics.ChargebacksAmountRatio, "should have correct chargeback amount")
 
 	transactions := getAccountTransactions(t, gqlClient, accountId)
 

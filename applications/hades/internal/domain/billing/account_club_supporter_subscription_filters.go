@@ -1,7 +1,5 @@
 package billing
 
-import "strings"
-
 type AccountClubSupporterSubscriptionFilters struct {
 	accountId string
 	status    []SupportStatus
@@ -12,7 +10,7 @@ func NewAccountClubSupporterSubscriptionFilters(accountId string, status []strin
 	var newStatus []SupportStatus
 
 	for _, i := range status {
-		s, err := SupportStatusFromString(strings.ToLower(i))
+		s, err := SupportStatusFromString(i)
 		if err != nil {
 			return nil, err
 		}

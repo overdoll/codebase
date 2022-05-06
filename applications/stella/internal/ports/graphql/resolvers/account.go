@@ -9,7 +9,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 type AccountResolver struct {
@@ -95,7 +94,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 		Cursor:         cursor,
 		OwnerAccountId: &accountId,
 		Name:           name,
-		SortBy:         strings.ToLower(sortBy.String()),
+		SortBy:         sortBy.String(),
 		Slugs:          slugs,
 	})
 

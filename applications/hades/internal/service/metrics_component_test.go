@@ -13,8 +13,8 @@ type ClubTransactionMetrics struct {
 	Entities []struct {
 		Club struct {
 			Id                 relay.ID
-			TransactionMetrics *types.ClubTransactionMetricConnection `graphql:"transactionMetrics(status: [ACTIVE])"`
-		} `graphql:"... on Account"`
+			TransactionMetrics *types.ClubTransactionMetricConnection `graphql:"transactionMetrics()"`
+		} `graphql:"... on Club"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 

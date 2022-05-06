@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
@@ -24,7 +23,7 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 		Cursor:     cursor,
 		Name:       name,
 		Slugs:      slugs,
-		SortBy:     strings.ToLower(sortBy.String()),
+		SortBy:     sortBy.String(),
 		Suspended:  &suspended,
 		Terminated: &terminated,
 	})

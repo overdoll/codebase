@@ -18,7 +18,6 @@ go_library(
         "//libraries/clients",
         "//libraries/commands",
         "//libraries/config",
-        "//libraries/crypt",
         "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//:go_default_library",
     ],

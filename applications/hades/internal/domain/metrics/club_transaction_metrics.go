@@ -66,18 +66,38 @@ func (m *ClubTransactionMetrics) Currency() money.Currency {
 }
 
 func (m *ClubTransactionMetrics) ChargebacksCountRatio() float64 {
+
+	if m.totalTransactionsCount == 0 {
+		return 0
+	}
+
 	return float64(m.totalTransactionsCount / m.totalTransactionsCount)
 }
 
 func (m *ClubTransactionMetrics) ChargebacksAmountRatio() float64 {
+
+	if m.totalChargebacksAmount == 0 {
+		return 0
+	}
+
 	return float64(m.totalTransactionsAmount / m.totalChargebacksAmount)
 }
 
 func (m *ClubTransactionMetrics) RefundsAmountRatio() float64 {
+
+	if m.totalRefundsAmount == 0 {
+		return 0
+	}
+
 	return float64(m.totalTransactionsAmount / m.totalRefundsAmount)
 }
 
 func (m *ClubTransactionMetrics) RefundsCountRatio() float64 {
+
+	if m.refundsCount == 0 {
+		return 0
+	}
+
 	return float64(m.totalTransactionsCount / m.refundsCount)
 }
 

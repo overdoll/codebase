@@ -43,6 +43,7 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 	env := getWorkflowEnvironment(t)
 	env.SetDetachedChildWait(false)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	// execute a new sale success workflow so we can seed data for this test
 	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpsaleSuccessInput{
 		AccountingCurrency:             "USD",

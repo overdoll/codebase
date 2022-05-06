@@ -65,8 +65,6 @@ func (AccountTransaction) IsEntity() {}
 //
 // Represents balance on a specific club.
 type Balance struct {
-	// An ID to uniquely identify this balance.
-	ID relay.ID `json:"id"`
 	// The amount on this balance.
 	Amount int `json:"amount"`
 	// The currency the balance is in.

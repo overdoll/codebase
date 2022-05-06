@@ -9,7 +9,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 type AccountResolver struct {
@@ -93,7 +92,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		SeriesSlugs:         seriesSlugs,
 		CategorySlugs:       categorySlugs,
 		CharacterSlugs:      characterSlugs,
-		SortBy:              strings.ToLower(sortBy.String()),
+		SortBy:              sortBy.String(),
 		State:               stateModified,
 		SupporterOnlyStatus: supporterOnly,
 		Principal:           principal.FromContext(ctx),

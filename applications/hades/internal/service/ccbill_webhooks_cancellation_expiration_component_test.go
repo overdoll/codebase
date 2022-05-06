@@ -115,7 +115,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	// CHECK FOR ACCOUNT DELETION
 	res, err := grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
-	require.NotNil(t, err, "no error checking if can delete account data")
+	require.NoError(t, err, "no error checking if can delete account data")
 	require.False(t, res.CanDelete, "cannot delete account data with active subscription")
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCancellation, mock.Anything)
@@ -178,7 +178,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	// CHECK FOR ACCOUNT DELETION
 	res, err = grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
-	require.NotNil(t, err, "no error checking if can delete account data")
+	require.NoError(t, err, "no error checking if can delete account data")
 	require.True(t, res.CanDelete, "can delete account data with no active subscriptions")
 
 	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
@@ -222,7 +222,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	// CHECK FOR ACCOUNT DELETION - DELETE THE DATA
 	_, err = grpcClient.DeleteAccountData(context.Background(), &hades.DeleteAccountDataRequest{AccountId: accountId})
-	require.NotNil(t, err, "no error deleting account data")
+	require.NoError(t, err, "no error deleting account data")
 
 	// check that the saved payment methods were deleted
 	savedPaymentMethods := getAccountSavedPaymentMethods(t, gqlClient, accountId)

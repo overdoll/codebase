@@ -61,6 +61,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -72,8 +73,8 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	require.Equal(t, 699, metrics.RefundsAmount, "should have 1 refunds amount")
 	require.Equal(t, 1, metrics.RefundsCount, "should have 1 refunds count")
-	require.Equal(t, 1, metrics.RefundsCountRatio, "should have correct refunds ratio")
-	require.Equal(t, 1, metrics.RefundsAmountRatio, "should have correct refunds amount")
+	require.Equal(t, float64(1), metrics.RefundsCountRatio, "should have correct refunds ratio")
+	require.Equal(t, float64(1), metrics.RefundsAmountRatio, "should have correct refunds amount")
 
 	accountTransactionsRefund := getAccountTransactions(t, gqlClient, accountId)
 

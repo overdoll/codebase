@@ -15,6 +15,8 @@ func TestAccountDeletionReminder(t *testing.T) {
 
 	client := getGrpcClient()
 
+	timestampFrom := time.Now()
+
 	accountId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
 
@@ -25,7 +27,7 @@ func TestAccountDeletionReminder(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending account deletion reminder request")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	title := doc.Find("head").Find("title").First()
 	require.Equal(t, "Account Deletion Reminder", title.Text(), "has the correct email title")

@@ -10,7 +10,6 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 type SeriesResolver struct {
@@ -58,7 +57,7 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 		CharacterSlugs:     characterSlugs,
 		Principal:          principal.FromContext(ctx),
 		State:              stateModified,
-		SortBy:             strings.ToLower(sortBy.String()),
+		SortBy:             sortBy.String(),
 		ShowSuspendedClubs: false,
 	})
 

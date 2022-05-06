@@ -77,6 +77,21 @@ var clubTransactionMetricsTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
+var clubTransactionMetricsBucketsTable = table.New(table.Metadata{
+	Name: "club_transaction_metrics_buckets",
+	Columns: []string{
+		"club_id",
+		"bucket",
+	},
+	PartKey: []string{"club_id"},
+	SortKey: []string{"bucket"},
+})
+
+type clubTransactionMetricsBuckets struct {
+	ClubId string `db:"club_id"`
+	Bucket int    `db:"bucket"`
+}
+
 type clubTransactionMetrics struct {
 	ClubId    string    `db:"club_id"`
 	Bucket    int       `db:"bucket"`
@@ -147,7 +162,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			Currency:  metric.Currency().String(),
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create club transaction metric: %v", err)
+		return fmt.Errorf("failed to create club transaction metrics: %v", err)
 	}
 
 	// try to get the metrics, to update it
@@ -159,6 +174,13 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	// did not find metrics - create one instead - do a unique insert
 	if met == nil {
+
+		if err := r.session.Query(clubTransactionMetricsBucketsTable.Insert()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubTransactionMetricsBuckets{ClubId: metric.ClubId(), Bucket: bucket}).
+			ExecRelease(); err != nil {
+			return fmt.Errorf("failed to insert club transaction metric bucket: %v", err)
+		}
 
 		target := clubTransactionMetrics{
 			ClubId:                             metric.ClubId(),
@@ -176,13 +198,13 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			RefundTransactionsLastUpdateId:     gocql.TimeUUID(),
 		}
 
-		applied, err := r.session.Query(clubTransactionMetricsTable.Insert()).
+		applied, err := r.session.Query(clubTransactionMetricsTable.InsertBuilder().Unique().ToCql()).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(target).
 			ExecCAS()
 
 		if err != nil {
-			return fmt.Errorf("failed to create club transaction metric: %v", err)
+			return fmt.Errorf("failed to insert club transaction metric: %v", err)
 		}
 
 		if !applied {
@@ -193,9 +215,9 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	}
 
 	type metricsCount struct {
-		MaxTimestamp gocql.UUID `db:"system.max(timestamp)"`
-		Count        int64      `db:"count"`
-		Amount       int64      `db:"system.sum(amount)"`
+		MaxTimestamp *gocql.UUID `db:"system.max(timestamp)"`
+		Count        int64       `db:"count"`
+		Amount       int64       `db:"system.sum(amount)"`
 	}
 
 	var res metricsCount
@@ -221,13 +243,20 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	metricsStruct := met
 
+	// if max timestamp is nil, this must be our first record
+	if res.MaxTimestamp == nil {
+		res.MaxTimestamp = &newInsertTimestamp
+		res.Amount = metric.Amount()
+		res.Count = 1
+	}
+
 	// update metrics for each item with LWT transactions
 	if !metric.IsRefund() && !metric.IsChargeback() {
 		metricsBuilder.Set("total_transactions_count", "total_transactions_amount", "total_transactions_last_update_id")
 		metricsBuilder.If(qb.EqLit("total_transactions_last_update_id", met.TotalTransactionsLastUpdateId.String()))
 		metricsStruct.TotalTransactionsAmount += res.Amount
 		metricsStruct.TotalTransactionsCount += res.Count
-		metricsStruct.TotalTransactionsLastUpdateId = res.MaxTimestamp
+		metricsStruct.TotalTransactionsLastUpdateId = *res.MaxTimestamp
 	}
 
 	if metric.IsRefund() {
@@ -235,7 +264,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		metricsBuilder.If(qb.EqLit("refund_transactions_last_update_id", met.RefundTransactionsLastUpdateId.String()))
 		metricsStruct.RefundTransactionsAmount += res.Amount
 		metricsStruct.RefundTransactionsCount += res.Count
-		metricsStruct.RefundTransactionsLastUpdateId = res.MaxTimestamp
+		metricsStruct.RefundTransactionsLastUpdateId = *res.MaxTimestamp
 	}
 
 	if metric.IsChargeback() {
@@ -243,7 +272,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		metricsBuilder.If(qb.EqLit("chargeback_transactions_last_update_id", met.ChargebackTransactionsLastUpdateId.String()))
 		metricsStruct.ChargebackTransactionsAmount += res.Amount
 		metricsStruct.ChargebackTransactionsCount += res.Count
-		metricsStruct.ChargebackTransactionsLastUpdateId = res.MaxTimestamp
+		metricsStruct.ChargebackTransactionsLastUpdateId = *res.MaxTimestamp
 	}
 
 	// apply the count
@@ -305,6 +334,27 @@ func (r MetricsCassandraRepository) GetClubTransactionMetrics(ctx context.Contex
 		met.TotalTransactionsAmount,
 	), nil
 }
+func (r MetricsCassandraRepository) getClubTransactionMetricsBuckets(ctx context.Context, clubId string) ([]int, error) {
+
+	var buckets []clubTransactionMetricsBuckets
+
+	if err := r.session.Query(clubTransactionMetricsBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubTransactionMetricsBuckets{
+			ClubId: clubId,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get club transaction metric buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
 
 func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*metrics.ClubTransactionMetrics, error) {
 
@@ -314,11 +364,14 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 		return nil, err
 	}
 
-	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getClubTransactionMetricsBuckets(ctx, clubId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	for _, bucketId := range buckets {
 
 		var builder *qb.SelectBuilder
 
@@ -336,6 +389,12 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 			Query(r.session).
 			BindMap(info).
 			Get(&met); err != nil {
+
+			// if we didn't find any transaction metric, skip this iteration
+			if err == gocql.ErrNotFound {
+				continue
+			}
+
 			return nil, fmt.Errorf("failed to get club transaction metrics: %v", err)
 		}
 

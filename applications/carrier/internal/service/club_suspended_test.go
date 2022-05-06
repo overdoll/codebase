@@ -14,6 +14,7 @@ func TestClubSuspended(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient()
+	timestampFrom := time.Now()
 
 	clubId := uuid.New().String()
 	email := generateEmail("carrier-" + clubId)
@@ -25,7 +26,7 @@ func TestClubSuspended(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending club suspended")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	title := doc.Find("head").Find("title").First()
 	require.Equal(t, "Club Suspended", title.Text(), "has the correct email title")

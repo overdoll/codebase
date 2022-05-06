@@ -160,7 +160,7 @@ type accountClubSupporterSubscription struct {
 	BillingAmount   int64     `db:"billing_amount"`
 	BillingCurrency string    `db:"billing_currency"`
 
-	CreatedAt   time.Time  `db:"cancelled_at"`
+	CreatedAt   time.Time  `db:"created_at"`
 	CancelledAt *time.Time `db:"cancelled_at"`
 	ExpiredAt   *time.Time `db:"expired_at"`
 
@@ -1005,6 +1005,7 @@ func (r BillingCassandraElasticsearchRepository) HasActiveOrCancelledAccountClub
 		SelectBuilder().
 		CountAll().
 		Where(qb.Eq("account_id"), qb.In("status")).
+		AllowFiltering().
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindMap(map[string]interface{}{

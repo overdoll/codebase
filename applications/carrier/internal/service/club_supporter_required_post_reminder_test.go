@@ -6,6 +6,7 @@ import (
 	carrier "overdoll/applications/carrier/proto"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestClubSupporterRequiredPostReminder(t *testing.T) {
@@ -13,17 +14,19 @@ func TestClubSupporterRequiredPostReminder(t *testing.T) {
 
 	client := getGrpcClient()
 
+	timestampFrom := time.Now()
+
 	clubId := uuid.New().String()
 	email := generateEmail("carrier-" + clubId)
 
 	_, err := client.ClubSupporterRequiredPostReminder(context.Background(), &carrier.ClubSupporterRequiredPostReminderRequest{
 		Club:       &carrier.Club{Id: clubId},
-		TimePassed: 12412412312412,
+		TimePassed: 1651849358004,
 	})
 
 	require.NoError(t, err, "no error for sending club supporter required post reminder")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	title := doc.Find("head").Find("title").First()
 	require.Equal(t, "Supporter Post Required", title.Text(), "has the correct email title")

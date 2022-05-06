@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
     billing_amount                  bigint,
     billing_currency                text,
 
+    created_at                      timestamp,
     cancelled_at                    timestamp,
     expired_at                      timestamp,
 
@@ -232,6 +233,13 @@ CREATE TABLE IF NOT EXISTS club_transaction_metrics
     refund_transactions_amount             bigint,
     refund_transactions_last_update_id     timeuuid,
     primary key ( (club_id, bucket) )
+);
+
+CREATE TABLE IF NOT EXISTS club_transaction_metrics_buckets
+(
+    club_id text,
+    bucket  int,
+    primary key ( (club_id), bucket )
 );
 
 CREATE TABLE IF NOT EXISTS club_chargeback_suspensions

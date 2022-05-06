@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
+	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -13,7 +14,9 @@ import (
 
 type CancelActiveSupporterSubscriptionsForClub struct {
 	CancelActiveSupporterSubscriptionsForClub *struct {
-		Id relay.ID
+		Club struct {
+			Id relay.ID
+		}
 	} `graphql:"cancelActiveSupporterSubscriptionsForClub(input: $input)"`
 }
 
@@ -34,12 +37,7 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 	var cancelActiveSubscriptions CancelActiveSupporterSubscriptionsForClub
 
 	err := graphqlClient.Mutate(context.Background(), &cancelActiveSubscriptions, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(accountId),
-			},
-		},
+		"input": types.CancelActiveSupporterSubscriptionsForClubInput{ClubID: convertClubIdIdToRelayId(clubId)},
 	})
 
 	require.NoError(t, err, "no error cancelling active subscriptions")
