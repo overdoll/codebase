@@ -8,11 +8,11 @@ import RenderVideo from './components/RenderVideo/RenderVideo'
 import ControlVideo from './components/ControlVideo/ControlVideo'
 import { useUpdateEffect } from 'usehooks-ts'
 
-interface Controls {
-  canSeek?: boolean | undefined
-  canFullscreen?: boolean | undefined
-  canControl?: boolean | undefined
-}
+type Controls = Partial<{
+  canSeek: boolean
+  canFullscreen: boolean
+  canControl: boolean
+}>
 
 export interface ControlledVideoProps extends HTMLChakraProps<any> {
   query: ControlledVideoFragment$key
@@ -23,7 +23,7 @@ export interface ControlledVideoProps extends HTMLChakraProps<any> {
   onInitialize?: (target) => void
   volume?: number
   isMuted?: boolean
-  controls?: Controls
+  controls: Controls
 }
 
 const Fragment = graphql`
@@ -41,7 +41,7 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
   onMute: onDefaultVolumeMute,
   volume: defaultVolume = 0.1,
   isMuted: isDefaultMuted = true,
-  controls,
+  controls = {},
   ...rest
 }: ControlledVideoProps, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)

@@ -74,7 +74,7 @@ export default function CCBillWindowListener ({
 
   // If the modal is closed we want to close the window
   useEffect(() => {
-    if (windowReference?.current?.closed === false && isOpen === false) {
+    if (windowReference?.current?.closed === false && !isOpen) {
       cancelFlow()
     }
   }, [isOpen])

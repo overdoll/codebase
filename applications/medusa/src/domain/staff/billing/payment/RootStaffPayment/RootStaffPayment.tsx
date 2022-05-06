@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { StaffPaymentQuery as StaffPaymentQueryType } from '@//:artifacts/StaffPaymentQuery.graphql'
@@ -9,7 +9,6 @@ import { SkeletonStack } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
-import { Trans } from '@lingui/macro'
 import StaffPayment from './StaffPayment/StaffPayment'
 
 interface Props {

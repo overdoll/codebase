@@ -2,17 +2,15 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubSupporterHeaderFragment$key } from '@//:artifacts/ClubSupporterHeaderFragment.graphql'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import TextHeader from '../../../../../../common/components/TextHeader/TextHeader'
-import { PayoutMethod, WarningTriangle } from '@//:assets/icons'
+import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import StatisticHeader from '../../../../../../common/components/StatisticHeader/StatisticHeader'
 import { useRouter } from 'next/router'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: ClubSupporterHeaderFragment$key
 }
+
+// TODO implement this when the variable is available
 
 const Fragment = graphql`
   fragment ClubSupporterHeaderFragment on Club {
@@ -23,35 +21,37 @@ const Fragment = graphql`
 export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const { query: { slug } } = useRouter()
+  /*
 
   const supporters = (3321).toLocaleString()
 
-  if (true) {
-    return (
-      <LinkTile
-        href={{
-          pathname: '/club/[slug]/create-post',
-          query: { slug: slug }
-        }}
-      >
-        <TextHeader
-          colorScheme='orange'
-          icon={WarningTriangle}
-          title={(
-            <Trans>
-              Cannot Collect Subscriptions
-            </Trans>)}
-        >
-          <Trans>
-            In order to collect supporter subscription payments, you must post at least one piece of exclusive supporter
-            content.
-          </Trans>
-        </TextHeader>
-      </LinkTile>
-    )
-  }
+   */
 
+  const { query: { slug } } = useRouter()
+
+  return (
+    <LinkTile
+      href={{
+        pathname: '/club/[slug]/create-post',
+        query: { slug: slug }
+      }}
+    >
+      <TextHeader
+        colorScheme='orange'
+        icon={WarningTriangle}
+        title={(
+          <Trans>
+            Cannot Collect Subscriptions
+          </Trans>)}
+      >
+        <Trans>
+          In order to collect supporter subscription payments, you must post at least one piece of exclusive supporter
+          content. {data.__typename}
+        </Trans>
+      </TextHeader>
+    </LinkTile>
+  )
+  /*
   return (
     <Stack spacing={2}>
       <StatisticHeader
@@ -86,4 +86,6 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
       </LargeBackgroundBox>
     </Stack>
   )
+
+   */
 }
