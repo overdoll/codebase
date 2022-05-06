@@ -6,7 +6,7 @@ import { Box, ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   icon?: FunctionComponent<any>
-  label: string
+  label: ReactNode
   exact?: boolean
   children?: ReactNode
   isActive?: boolean

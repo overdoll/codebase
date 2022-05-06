@@ -6,7 +6,7 @@ import IconButton from '../../../../../form/IconButton/IconButton'
 
 interface Props extends ButtonProps {
   icon?: FunctionComponent<any>
-  label: string
+  label: ReactNode
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
@@ -69,7 +69,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   return (
     <ButtonWrapper>
       <IconButton
-        aria-label={label}
+        aria-label={label as string}
         icon={<Icon
           icon={icon}
           p={2}
