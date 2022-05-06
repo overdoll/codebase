@@ -8,10 +8,10 @@ type Transaction struct {
 
 var (
 	UnknownTransaction = Transaction{""}
-	Payment            = Transaction{"payment"}
-	Void               = Transaction{"void"}
-	Chargeback         = Transaction{"chargeback"}
-	Refund             = Transaction{"refund"}
+	Payment            = Transaction{"PAYMENT"}
+	Void               = Transaction{"VOID"}
+	Chargeback         = Transaction{"CHARGEBACK"}
+	Refund             = Transaction{"REFUND"}
 )
 
 func (r Transaction) String() string {

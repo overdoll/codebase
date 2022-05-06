@@ -17,10 +17,10 @@ type SearchAudience struct {
 }
 
 type SearchAudienceHandler struct {
-	pr post.IndexRepository
+	pr post.Repository
 }
 
-func NewSearchAudienceHandler(pr post.IndexRepository) SearchAudienceHandler {
+func NewSearchAudienceHandler(pr post.Repository) SearchAudienceHandler {
 	return SearchAudienceHandler{pr: pr}
 }
 

@@ -275,7 +275,8 @@ func (r MultiFactorCassandraRepository) DeleteAccountData(ctx context.Context, a
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := accountMultiFactorRecoveryCodeTable.Delete()
+	stmt, _ := qb.Delete(accountMultiFactorRecoveryCodeTable.Name()).
+		Where(qb.Eq("account_id")).ToCql()
 
 	batch.Query(stmt, accountId)
 

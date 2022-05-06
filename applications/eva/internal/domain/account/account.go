@@ -425,7 +425,7 @@ func (a *Account) AssignArtistRole(requester *principal.Principal) error {
 		return err
 	}
 
-	if a.IsStaff() {
+	if a.IsArtist() {
 		return nil
 	}
 
@@ -507,7 +507,7 @@ func (a *Account) RevokeArtistRole(requester *principal.Principal) error {
 		return err
 	}
 
-	if !a.IsStaff() {
+	if !a.IsArtist() {
 		return ErrAccountNoRole
 	}
 

@@ -6,6 +6,7 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/temporal"
 	"overdoll/applications/eva/internal/app/workflows"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/applications/eva/internal/service"
@@ -349,7 +350,11 @@ func TestAccount_delete(t *testing.T) {
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, workflows.DeleteAccountInput{
+		AccountId:  accountId,
+		WorkflowId: "DeleteAccount_" + accountId,
+		CanCancel:  true,
+	})
 
 	var deleteAccount DeleteAccount
 
@@ -365,7 +370,7 @@ func TestAccount_delete(t *testing.T) {
 		// see that the account is deleting status
 		acc := getAccountByUsername(t, client, accountUsername)
 		require.NotNil(t, acc.Deleting)
-	}, time.Minute)
+	}, time.Hour)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
@@ -386,11 +391,13 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, workflows.DeleteAccountInput{
+		AccountId:  accountId,
+		WorkflowId: "DeleteAccount_" + accountId,
+		CanCancel:  true,
+	})
 
 	var deleteAccount DeleteAccount
-
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, mock.Anything)
 
 	err := client.Mutate(context.Background(), &deleteAccount, map[string]interface{}{
 		"input": types.DeleteAccountInput{AccountID: accountRelayId},
@@ -402,6 +409,15 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	env.RegisterDelayedCallback(func() {
 
+		temporalClientMock.On("CancelWorkflow", mock.Anything, mock.Anything, mock.Anything).
+			Run(
+				func(args mock.Arguments) {
+					env.CancelWorkflow()
+				},
+			).
+			Return(nil).
+			Once()
+
 		var cancelAccountDeletion CancelAccountDeletion
 
 		// cancel the deletion
@@ -410,11 +426,11 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 		})
 
 		require.NoError(t, err)
-	}, time.Minute)
+	}, time.Hour)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	require.True(t, temporal.IsCanceledError(env.GetWorkflowError()), "should have been a cancelled error")
 
 	acc := getAccountByUsername(t, client, accountUsername)
 

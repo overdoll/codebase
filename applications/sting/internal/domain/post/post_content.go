@@ -54,6 +54,10 @@ func (m *Content) canView(requester *principal.Principal, p *Post) bool {
 
 	if m.isSupporterOnly {
 
+		if requester != nil && requester.IsStaff() {
+			return true
+		}
+
 		if requester != nil {
 			// false if check supporter fails
 			if err := requester.CheckSupporter(p.clubId); err != nil {
@@ -64,10 +68,6 @@ func (m *Content) canView(requester *principal.Principal, p *Post) bool {
 		}
 
 		return false
-	}
-
-	if requester != nil && requester.IsStaff() {
-		return true
 	}
 
 	return false

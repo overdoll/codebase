@@ -8,13 +8,13 @@ type State struct {
 
 var (
 	Unknown   = State{""}
-	Draft     = State{"draft"}
-	Review    = State{"review"}
-	Published = State{"published"}
-	Discarded = State{"discarded"}
-	Rejected  = State{"rejected"}
-	Removed   = State{"removed"}
-	Archived  = State{"archived"}
+	Draft     = State{"DRAFT"}
+	Review    = State{"REVIEW"}
+	Published = State{"PUBLISHED"}
+	Discarded = State{"DISCARDED"}
+	Rejected  = State{"REJECTED"}
+	Removed   = State{"REMOVED"}
+	Archived  = State{"ARCHIVED"}
 )
 
 func (r State) String() string {

@@ -7,6 +7,7 @@ import (
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
@@ -61,14 +62,14 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	for _, res := range result.Content() {
 
-		resourceId := res.ResourceIdRequest(result)
+		resourceId := res.ResourceIdRequest(principal.FromContext(ctx), result)
 
 		if resourceId != "" {
 			content = append(content, &PostContent{
 				ID:                                relay.NewID(PostContent{}, res.Id(), resourceId),
 				Resource:                          &Resource{ID: relay.NewID(Resource{}, result.ID(), resourceId)},
 				IsSupporterOnly:                   res.IsSupporterOnly(),
-				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(result),
+				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx), result),
 			})
 		}
 	}
