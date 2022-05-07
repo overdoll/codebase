@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:79
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:84
 msgid "A recovery code can only contain numbers and letters"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:78
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:83
 msgid "A recovery code must be 8 characters long"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:113
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:118
 msgid "A recovery code was successfully used up to log you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:157
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:162
 msgid "An 8-character recovery code"
 msgstr ""
 
@@ -33,8 +33,8 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:152
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:159
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:157
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:164
 msgid "Code"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:129
+#: src/domain/join/Join/pages/Register/Register.tsx:134
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand our <1>Terms of Service</1>  and  <2>Privacy Policy</2>."
 msgstr ""
 
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Enter an email"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:141
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:146
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -78,19 +78,19 @@ msgstr ""
 msgid "If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the email will be invalidated. Are you sure?"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:142
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:147
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:127
+#: src/domain/join/Join/pages/Grant/Grant.tsx:131
 msgid "Logging in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:77
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:82
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:135
+#: src/domain/join/Join/pages/Grant/Grant.tsx:139
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -98,11 +98,11 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:167
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:172
 msgid "Submit"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:174
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:179
 msgid "Submit Code"
 msgstr ""
 
@@ -114,15 +114,15 @@ msgstr ""
 msgid "The login code has previously expired or is no longer valid. Try again?"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:95
+#: src/domain/join/Join/pages/Grant/Grant.tsx:100
 msgid "There was an error logging you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:127
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:132
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:118
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:123
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:101
+#: src/domain/join/Join/pages/Register/Register.tsx:106
 msgid "There was an issue with registration."
 msgstr ""
 
@@ -138,15 +138,15 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:81
+#: src/domain/join/Join/pages/Grant/Grant.tsx:86
 msgid "Welcome back!"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:104
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:109
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:94
+#: src/domain/join/Join/pages/Register/Register.tsx:99
 msgid "Welcome to overdoll!"
 msgstr ""
 
@@ -154,6 +154,10 @@ msgstr ""
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:150
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:155
 msgid "You can find this in the same app you used to set up two-factor authentication"
+msgstr ""
+
+#: src/domain/join/Join/pages/Register/Register.tsx:161
+msgid "You must also be at least 18 years of age."
 msgstr ""

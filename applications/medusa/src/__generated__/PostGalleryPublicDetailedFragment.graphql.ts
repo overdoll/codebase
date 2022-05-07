@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3d6f5f55d129e782214ca00444332bb>>
+ * @generated SignedSource<<4e6e4ac62ea754b5ed1df284b137eedd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,17 +11,16 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicDetailedFragment$data = {
-  readonly id: string;
-  readonly reference: string;
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
   };
   readonly content: ReadonlyArray<{
     readonly resource: {
-      readonly " $fragmentSpreads": FragmentRefs<"PostFullMediaFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
+  readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexFragment">;
   readonly " $fragmentType": "PostGalleryPublicDetailedFragment";
 };
 export type PostGalleryPublicDetailedFragment = PostGalleryPublicDetailedFragment$data;
@@ -36,20 +35,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostGalleryPublicDetailedFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -85,7 +70,7 @@ const node: ReaderFragment = {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "PostFullMediaFragment"
+              "name": "PostMediaFragment"
             }
           ],
           "storageKey": null
@@ -97,12 +82,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostSlideIndexFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "8fdf258d1bef10480b39f218cc7f8501";
+(node as any).hash = "a5f78fadcee9509ce094289fad416028";
 
 export default node;

@@ -1,0 +1,24 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>Account Deletion Request</h2>
+                    <p>Hello {{.Username}}!</p>
+                    <p>As requested, we have scheduled a deletion of your account.</p>
+                    <p>We will send you one more reminder letting you know that your account is being deleted before
+                        fully confirming the action. You may ignore this and subsequent reminders if you are aware of
+                        the action.
+                    </p>
+                    <p>Until then, you can restore your account using the button below.</p>
+                </mj-text>
+                <mj-button css-class="medium gray" href="{{.DeletionLink}}">
+                    Restore Account
+                </mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

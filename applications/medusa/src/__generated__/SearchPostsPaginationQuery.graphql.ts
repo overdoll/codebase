@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8791843510812a423c771549d2c149bc>>
- * @relayHash 0357f1b7046c84b3fca4ad7f41db674b
+ * @generated SignedSource<<0f372881d70d76aac6a30792ddcbefc5>>
+ * @relayHash a0c5ca28feed645cdc63b22be01c1758
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0357f1b7046c84b3fca4ad7f41db674b
+// @relayRequestID a0c5ca28feed645cdc63b22be01c1758
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -149,18 +149,30 @@ v8 = {
 v9 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v7/*: any*/)
+  ],
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "slug",
   "storageKey": null
 },
 v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -169,24 +181,13 @@ v11 = {
   "plural": false,
   "selections": [
     (v8/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "videoThumbnail",
-      "plural": false,
-      "selections": [
-        (v7/*: any*/)
-      ],
-      "storageKey": null
-    },
+    (v9/*: any*/),
     (v6/*: any*/),
     (v5/*: any*/)
   ],
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -277,6 +278,7 @@ return {
                         "selections": [
                           (v6/*: any*/),
                           (v8/*: any*/),
+                          (v9/*: any*/),
                           (v5/*: any*/)
                         ],
                         "storageKey": null
@@ -307,10 +309,10 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
-                      (v5/*: any*/),
                       (v10/*: any*/),
+                      (v5/*: any*/),
                       (v11/*: any*/),
+                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -342,9 +344,9 @@ return {
                     "plural": true,
                     "selections": [
                       (v5/*: any*/),
-                      (v9/*: any*/),
-                      (v12/*: any*/),
-                      (v11/*: any*/)
+                      (v10/*: any*/),
+                      (v13/*: any*/),
+                      (v12/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -365,15 +367,15 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
-                          (v12/*: any*/),
-                          (v9/*: any*/),
+                          (v13/*: any*/),
+                          (v10/*: any*/),
                           (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
+                      (v11/*: any*/),
                       (v10/*: any*/),
-                      (v9/*: any*/),
-                      (v11/*: any*/)
+                      (v12/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -448,7 +450,7 @@ return {
     ]
   },
   "params": {
-    "id": "0357f1b7046c84b3fca4ad7f41db674b",
+    "id": "a0c5ca28feed645cdc63b22be01c1758",
     "metadata": {},
     "name": "SearchPostsPaginationQuery",
     "operationKind": "query",

@@ -4,8 +4,7 @@ import type {
 } from '@//:artifacts/CCBillUpdatePaymentMethodInstructionsFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
-import CopyCodeToClipboard
-  from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/HighlightInline'
 import { ExternalLink } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
@@ -157,9 +156,11 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
         <Trans>
           A list with one or more subscriptions should appear.{' '}
           <HighlightInline colorScheme='teal'>Find the Subscription ID
-            that correlates to the one
-            listed here
-          </HighlightInline>{' '}and click on{' '}
+          </HighlightInline> that is{' '}
+          <HighlightInline
+            colorScheme='teal'
+          >{data.ccbillSubscription.ccbillSubscriptionId}
+          </HighlightInline> and click on{' '}
           <HighlightInline colorScheme='teal'>Click here to update your payment
             information
           </HighlightInline>{' '}to update your payment information.

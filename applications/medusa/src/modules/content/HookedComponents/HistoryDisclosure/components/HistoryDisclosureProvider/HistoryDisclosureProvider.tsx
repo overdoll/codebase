@@ -1,7 +1,7 @@
 import { createContext, ReactNode } from 'react'
-import { UseDisclosureProps } from '@chakra-ui/react'
+import { UseHistoryDisclosurePropsReturn } from '../../hooks/useHistoryDisclosure'
 
-export type HistoryDisclosureContextProps = UseDisclosureProps
+export type HistoryDisclosureContextProps = UseHistoryDisclosurePropsReturn
 
 interface HistoryDisclosureProviderProps extends HistoryDisclosureContextProps {
   children: ReactNode

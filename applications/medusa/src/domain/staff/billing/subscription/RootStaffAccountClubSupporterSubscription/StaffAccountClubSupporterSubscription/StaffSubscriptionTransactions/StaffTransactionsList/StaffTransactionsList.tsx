@@ -12,11 +12,12 @@ import {
 import { EmptyBoundary, EmptyTransactions } from '@//:modules/content/Placeholder'
 import { StaffTransactionsListFragment$key } from '@//:artifacts/StaffTransactionsListFragment.graphql'
 import StaffTransactionCard from './StaffTransactionCard/StaffTransactionCard'
+import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 
 interface Props {
   query: StaffTransactionsListFragment$key
   hasNext: boolean
-  loadNext: () => {}
+  loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
 }
 
@@ -71,7 +72,15 @@ export default function StaffTransactionsList ({
         </TableHeader>
         <TableBody>
           {data.edges.map((item, index) => (
-            <TableBodyRowLink key={index} href={`/staff/transaction/${item.node.reference}`}>
+            <TableBodyRowLink
+              key={index}
+              href={{
+                pathname: '/staff/billing/transaction/[reference]',
+                query: {
+                  reference: item.node.reference
+                }
+              }}
+            >
               <StaffTransactionCard query={item.node} />
             </TableBodyRowLink>
           ))}

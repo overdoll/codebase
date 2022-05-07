@@ -25,16 +25,16 @@ export default function Icon ({
       as={icon}
       sx={{
         path: {
-          stroke: color ?? 'none',
-          fill: fill ?? 'none'
+          stroke: color ?? undefined,
+          fill: fill ?? undefined
         },
         circle: {
-          stroke: color ?? 'none',
-          fill: fill ?? 'none'
+          stroke: color ?? undefined,
+          fill: fill ?? undefined
         },
         rect: {
-          stroke: color ?? 'none',
-          fill: fill ?? 'none'
+          stroke: color ?? undefined,
+          fill: fill ?? undefined
         },
         ...sx
       }}

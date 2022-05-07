@@ -1,6 +1,7 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
 import { join, logout } from '../../../support/join_actions'
 import { gotoNextStep } from '../../../support/flow_builder'
+import { clickOnButton } from '../../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
@@ -88,8 +89,7 @@ describe('Settings - Configure Two-Factor', () => {
         cy.get('form').findByPlaceholderText('123456').type(token as string)
         cy.findByRole('button', { name: /Activate/iu }).click()
         cy.findByText(/Two-factor setup complete/iu).should('exist')
-        cy.findByRole('button', { name: 'Back to settings' }).click()
-        cy.waitUntil(() => cy.findByText('Two-factor Authentication').should('exist'))
+        cy.findByRole('button', { name: 'Complete' }).click()
       })
     })
 
@@ -129,8 +129,8 @@ describe('Settings - Configure Two-Factor', () => {
     // Disable two factor
     gotoSettingsPage()
     cy.waitUntil(() => cy.findByRole('button', { name: /Disable/iu }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Disable/iu }).click()
-    cy.findByRole('button', { name: /Disable Two-factor/iu }).click()
+    clickOnButton(/Disable/iu)
+    clickOnButton(/Disable Two-factor/iu)
     cy.findByText(/Disable Two-Factor Authentication/iu).should('not.exist')
   })
 })

@@ -1,0 +1,22 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text align="center">
+                    <h1>
+                        New Login
+                    </h1>
+                    <h5 font-color="#bfbfbf">
+                        Tap on the button below to finish logging into your overdoll account
+                    </h5>
+                </mj-text>
+                <mj-button css-class="large primary" href="{{.Link}}">
+                    Authenticate
+                </mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { BillingIdentifier, SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons'
+import { BillingIdentifier, PayoutMethod, SecurityShield, SettingWrench, UserHuman } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
 import { CategoryIdentifier } from '@//:assets/icons/interface'
@@ -47,6 +47,16 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
             </Trans>
           }
           icon={CategoryIdentifier}
+        />
+        <VerticalNavigation.Button
+          href='/settings/payouts'
+          colorScheme='green'
+          title={
+            <Trans>
+              Payouts
+            </Trans>
+          }
+          icon={PayoutMethod}
         />
         <VerticalNavigation.Button
           href='/settings/billing'

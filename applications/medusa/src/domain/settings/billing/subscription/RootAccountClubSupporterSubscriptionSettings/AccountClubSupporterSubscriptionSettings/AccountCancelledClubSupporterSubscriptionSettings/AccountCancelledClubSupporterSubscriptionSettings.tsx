@@ -2,20 +2,15 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   AccountCancelledClubSupporterSubscriptionSettingsFragment$key
 } from '@//:artifacts/AccountCancelledClubSupporterSubscriptionSettingsFragment.graphql'
-import {
-  LargeBackgroundBox,
-  PageSectionDescription,
-  PageSectionTitle,
-  PageSectionWrap
-} from '@//:modules/content/PageLayout'
-import { Box, Stack } from '@chakra-ui/react'
+import { LargeBackgroundBox, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Box, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import ManageCancelledSubscriptionButton from './ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton'
 import AccountCancelledClubSupporterSubscriptionDetails
   from '../AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import ClubExclusiveContentSuspensionNotice
-  from '../ClubExclusiveContentSuspensionNotice/ClubExclusiveContentSuspensionNotice'
+import ClubExclusivePosts
+  from '../../../../../../[slug]/root/RootPublicClub/PublicClub/ClubExclusivePosts/ClubExclusivePosts'
 
 interface Props {
   query: AccountCancelledClubSupporterSubscriptionSettingsFragment$key
@@ -27,7 +22,7 @@ const Fragment = graphql`
     ...ManageCancelledSubscriptionButtonFragment
     club {
       slug
-      ...ClubExclusiveContentSuspensionNoticeFragment
+      ...ClubExclusivePostsFragment
     }
   }
 `
@@ -59,19 +54,12 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
         </LargeBackgroundBox>
       </Box>
       <Box>
-        <PageSectionWrap>
-          <PageSectionTitle colorScheme='green'>
-            <Trans>
-              Club Benefits
-            </Trans>
-          </PageSectionTitle>
-          <PageSectionDescription>
-            <Trans>
-              As a supporter, you have access to all exclusive content from this club.
-            </Trans>
-          </PageSectionDescription>
-        </PageSectionWrap>
-        <ClubExclusiveContentSuspensionNotice query={data.club} />
+        <ClubExclusivePosts query={data.club} />
+        <Text fontSize='sm' color='gray.200'>
+          <Trans>
+            As a supporter, you have access to all exclusive content from this club.
+          </Trans>
+        </Text>
       </Box>
       <ManageCancelledSubscriptionButton query={data} />
     </Stack>

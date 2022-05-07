@@ -15,7 +15,16 @@ export const clientFetch = (securityToken) => {
       }
     )
 
-    return await response.json()
+    const body = await response.json()
+
+    /*
+    if (Array.isArray(body.errors)) {
+      throw new Error(body)
+    }
+
+     */
+
+    return body
   }
 }
 

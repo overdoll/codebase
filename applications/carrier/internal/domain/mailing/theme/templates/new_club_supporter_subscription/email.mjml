@@ -1,0 +1,31 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>New Subscription</h2>
+                    <p>Hello {{.Username}}!</p>
+                    <p>Thank you for your purchase. Your order number is #{{.SubscriptionId}}.</p>
+                </mj-text>
+                <mj-text>
+                    <h4>Billing Details</h4>
+                    <p>Purchase of {{.FormattedAmount}} to {{.ClubName}} ({{.ClubLink}}).</p>
+                    <p>Your subscription will be active from {{.BillingDateStart}} to {{.BillingDateEnd}}.</p>
+                    <p>We will renew your subscription automatically every 30 days. Your next renewal is on
+                        {{.BillingDateEnd}}.
+                    </p>
+                    <p>You may cancel your subscription using the link below at any time.</p>
+                </mj-text>
+                <mj-button css-class="medium gray" href="{{.SubscriptionLink}}">
+                    Manage Subscription
+                </mj-button>
+                <mj-text>
+                    <p>Please contact hello@overdoll.com if you have any questions or concerns.</p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

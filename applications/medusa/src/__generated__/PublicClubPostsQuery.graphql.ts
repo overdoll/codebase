@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<da32b472871121bf557f6f404cd5591d>>
- * @relayHash f515e5ff2a546bc5ac2d715b0b0438e0
+ * @generated SignedSource<<ea1f5b5cdfbd8877b0aecdecea609892>>
+ * @relayHash a0ff59ca269e4e7da5555a1955a8807e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f515e5ff2a546bc5ac2d715b0b0438e0
+// @relayRequestID a0ff59ca269e4e7da5555a1955a8807e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -174,30 +174,31 @@ v14 = {
 v15 = {
   "alias": null,
   "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v13/*: any*/)
+  ],
+  "storageKey": null
+},
+v16 = {
+  "alias": null,
+  "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
   "selections": [
     (v14/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "videoThumbnail",
-      "plural": false,
-      "selections": [
-        (v13/*: any*/)
-      ],
-      "storageKey": null
-    },
+    (v15/*: any*/),
     (v12/*: any*/),
     (v11/*: any*/)
   ],
   "storageKey": null
 },
-v16 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -338,6 +339,7 @@ return {
                             "selections": [
                               (v12/*: any*/),
                               (v14/*: any*/),
+                              (v15/*: any*/),
                               (v11/*: any*/)
                             ],
                             "storageKey": null
@@ -371,7 +373,7 @@ return {
                           (v7/*: any*/),
                           (v11/*: any*/),
                           (v8/*: any*/),
-                          (v15/*: any*/),
+                          (v16/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -404,8 +406,8 @@ return {
                         "selections": [
                           (v11/*: any*/),
                           (v7/*: any*/),
-                          (v16/*: any*/),
-                          (v15/*: any*/)
+                          (v17/*: any*/),
+                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -426,7 +428,7 @@ return {
                             "name": "series",
                             "plural": false,
                             "selections": [
-                              (v16/*: any*/),
+                              (v17/*: any*/),
                               (v7/*: any*/),
                               (v11/*: any*/)
                             ],
@@ -434,7 +436,7 @@ return {
                           },
                           (v8/*: any*/),
                           (v7/*: any*/),
-                          (v15/*: any*/)
+                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -540,7 +542,7 @@ return {
     ]
   },
   "params": {
-    "id": "f515e5ff2a546bc5ac2d715b0b0438e0",
+    "id": "a0ff59ca269e4e7da5555a1955a8807e",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

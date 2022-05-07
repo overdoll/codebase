@@ -2,6 +2,7 @@ import { FunctionComponent, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import VerticalNavigationButtonBody from './VerticalNavigationButtonBody/VerticalNavigationButtonBody'
 import { LinkProps } from 'next/link'
+import { Box } from '@chakra-ui/react'
 
 interface Props extends LinkProps {
   title: ReactNode
@@ -30,16 +31,19 @@ export default function VerticalNavigationButton ({
 
   return (
     <NavLink
+      passHref
       href={href}
       {...rest}
     >
       {({
         isActiveBasePath
       }) => (
-        <VerticalNavigationButtonBody
-          isActive={isActiveBasePath}
-          {...ButtonProps}
-        />
+        <Box as='a'>
+          <VerticalNavigationButtonBody
+            isActive={isActiveBasePath}
+            {...ButtonProps}
+          />
+        </Box>
       )}
     </NavLink>
   )

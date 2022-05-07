@@ -39,7 +39,7 @@ export default function PostSupporterContent ({
   return (
     <>
       {(data.isSupporterOnly && data.viewerCanViewSupporterOnlyContent) && (
-        <HStack align='center' spacing={1}>
+        <HStack w='100%' align='center' spacing={1}>
           <Icon
             p={1}
             icon={PremiumStar}

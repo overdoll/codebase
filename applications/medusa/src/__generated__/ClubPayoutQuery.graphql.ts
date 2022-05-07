@@ -1,0 +1,273 @@
+/**
+ * @generated SignedSource<<388d4e07ecfc185862e0ba91c3990087>>
+ * @relayHash 3713b78a0ed5ea2b244488fb0612f7e8
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+// @relayRequestID 3713b78a0ed5ea2b244488fb0612f7e8
+
+import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
+export type ClubPayoutStatus = "CANCELLED" | "DEPOSITED" | "FAILED" | "PROCESSING" | "QUEUED" | "%future added value";
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
+export type ClubPayoutQuery$variables = {
+  reference: string;
+};
+export type ClubPayoutQueryVariables = ClubPayoutQuery$variables;
+export type ClubPayoutQuery$data = {
+  readonly payout: {
+    readonly amount: number;
+    readonly currency: Currency;
+    readonly status: ClubPayoutStatus;
+    readonly depositDate: any;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPayoutPaymentsListFragment">;
+  } | null;
+};
+export type ClubPayoutQueryResponse = ClubPayoutQuery$data;
+export type ClubPayoutQuery = {
+  variables: ClubPayoutQueryVariables;
+  response: ClubPayoutQuery$data;
+};
+
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "reference"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "reference",
+    "variableName": "reference"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "amount",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "currency",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "depositDate",
+  "storageKey": null
+},
+v6 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  }
+],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ClubPayoutQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "ClubPayout",
+        "kind": "LinkedField",
+        "name": "payout",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubPayoutPaymentsListFragment"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "ClubPayoutQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "ClubPayout",
+        "kind": "LinkedField",
+        "name": "payout",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": (v6/*: any*/),
+            "concreteType": "ClubPaymentConnection",
+            "kind": "LinkedField",
+            "name": "payments",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubPaymentEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubPayment",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "reference",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "settlementDate",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "finalAmount",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/),
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isDeduction",
+                        "storageKey": null
+                      },
+                      (v7/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "payments(first:5)"
+          },
+          {
+            "alias": null,
+            "args": (v6/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "ClubPayoutPayments_payments",
+            "kind": "LinkedHandle",
+            "name": "payments"
+          },
+          (v7/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ]
+  },
+  "params": {
+    "id": "3713b78a0ed5ea2b244488fb0612f7e8",
+    "metadata": {},
+    "name": "ClubPayoutQuery",
+    "operationKind": "query",
+    "text": null
+  }
+};
+})();
+
+(node as any).hash = "2c6ff521b0f12540312ac1982c7bf493";
+
+export default node;

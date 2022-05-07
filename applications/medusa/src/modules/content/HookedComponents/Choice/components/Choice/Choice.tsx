@@ -34,7 +34,6 @@ export default function Choice ({
       borderRadius='md'
       borderColor={isActive ? 'green.500' : 'transparent'}
       borderWidth={2}
-      overflow='hidden'
     >
       <ClickableTile
         isDisabled={isDisabled}

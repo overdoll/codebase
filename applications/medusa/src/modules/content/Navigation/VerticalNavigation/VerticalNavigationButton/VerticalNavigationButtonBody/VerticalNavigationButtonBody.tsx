@@ -1,16 +1,14 @@
-import { Heading, HStack } from '@chakra-ui/react'
+import { ButtonProps, Heading, HStack } from '@chakra-ui/react'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import { ShareExternalLink } from '@//:assets/icons/interface'
 import { ClickableBox, Icon } from '../../../../PageLayout'
 
-interface Props {
+interface Props extends Omit<ButtonProps, 'title'> {
   title: ReactNode
   icon?: FunctionComponent<any> | undefined
-  colorScheme?: string
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
   isActive: boolean
-  onClick?: (() => void) | undefined
 }
 
 const VerticalNavigationButtonBody = forwardRef<any, Props>(({
@@ -57,9 +55,11 @@ const VerticalNavigationButtonBody = forwardRef<any, Props>(({
           ? `${colorScheme}.400`
           : 'transparent'}
       onClick={onClick}
+      {...rest}
     >
       <HStack
         w='100%'
+        h='100%'
         align='center'
         justify='space-between'
         spacing={4}

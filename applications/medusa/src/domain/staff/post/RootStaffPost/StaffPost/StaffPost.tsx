@@ -4,7 +4,6 @@ import { Box, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } fro
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SearchDateRange, {
   getDateRangeDefault
@@ -15,7 +14,6 @@ import { Suspense } from 'react'
 import ViewPostReports from './ViewPostReports/ViewPostReports'
 import PostPreview
   from '../../../../moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostPreview/PostPreview'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
 import PostTagsPreview
   from '../../../../moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostTagsPreview/PostTagsPreview'
 import ModerationPostActions from './ModerationPostActions/ModerationPostActions'
@@ -24,10 +22,8 @@ import LargeAccountHeader from '../../../../../common/components/LargeAccountHea
 import LargeClubHeader from '../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import ClubPageButton from '../../../../[slug]/root/RootPublicClub/PublicClub/ClubMenu/ClubPageButton/ClubPageButton'
-import ClubStaffButton
-  from '../../../../[slug]/root/RootPublicClub/PublicClub/ClubMenu/ClubStaffButton/ClubStaffButton'
-import ProfilePageButton
-  from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import ClubStaffButton from '../../../../[slug]/root/RootPublicClub/PublicClub/ClubMenu/ClubStaffButton/ClubStaffButton'
+import ProfilePageButton from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
 import ProfileStaffButton
   from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 
@@ -87,11 +83,7 @@ export default function StaffPost ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <ObserverManagerProvider>
-        <PostVideoManagerProvider>
-          <PostPreview query={queryData.post} />
-        </PostVideoManagerProvider>
-      </ObserverManagerProvider>
+      <PostPreview query={queryData.post} />
       <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Wrap>

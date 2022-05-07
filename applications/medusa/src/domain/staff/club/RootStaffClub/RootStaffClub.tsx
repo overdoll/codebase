@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { StaffClubQuery as StaffClubQueryType } from '@//:artifacts/StaffClubQuery.graphql'
@@ -10,6 +9,7 @@ import { SkeletonStack } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
+import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
 
 interface Props {
   queryRefs: {
@@ -32,13 +32,13 @@ const RootStaffClub: PageProps<Props> = (props: Props) => {
           Club - Staff :: overdoll.com
         </title>
       </Head>
-      <PageWrapper>
+      <PageWrapperDesktop>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
           <Suspense fallback={<SkeletonStack />}>
             <StaffClub query={queryRef as PreloadedQuery<StaffClubQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-      </PageWrapper>
+      </PageWrapperDesktop>
     </>
   )
 }

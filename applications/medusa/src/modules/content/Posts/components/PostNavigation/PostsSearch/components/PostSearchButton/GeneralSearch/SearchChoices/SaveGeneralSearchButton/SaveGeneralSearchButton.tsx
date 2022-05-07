@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 
 interface Props {
-  onClose: () => void
+  onClose: (push?: boolean) => void
   routeTo: string | UrlObject
 }
 
@@ -64,7 +64,7 @@ export default function SaveGeneralSearchButton ({
           sort: 'TOP'
         })
       void router.push(`${resolved}?${stringify(encodedQuery)}`)
-      onClose()
+      onClose(false)
       return
     }
     setQuery(setValues)
@@ -73,7 +73,7 @@ export default function SaveGeneralSearchButton ({
 
   if (Object.keys(values).length < 1) {
     return (
-      <Button onClick={onClose} size='lg' colorScheme='gray'>
+      <Button onClick={onClose as any} size='lg' colorScheme='gray'>
         <Trans>
           Close
         </Trans>

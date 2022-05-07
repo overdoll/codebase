@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3496bc2e111b6584ca1bc0e3924a2ed>>
+ * @generated SignedSource<<03dd63263b031eec43a2dadbe9bc75b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicSimpleFragment$data = {
-  readonly id: string;
   readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly resource: {
-      readonly " $fragmentSpreads": FragmentRefs<"PostSimpleMediaFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
@@ -23,7 +22,7 @@ export type PostGalleryPublicSimpleFragment$data = {
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment" | "PostSlideIndexFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
 };
 export type PostGalleryPublicSimpleFragment = PostGalleryPublicSimpleFragment$data;
@@ -38,13 +37,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostGalleryPublicSimpleFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -71,7 +63,7 @@ const node: ReaderFragment = {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "PostSimpleMediaFragment"
+              "name": "PostMediaFragment"
             }
           ],
           "storageKey": null
@@ -116,12 +108,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostClickableCharactersFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostSlideIndexFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "06482e26bb5e34e1c5936445bdaecdd2";
+(node as any).hash = "f712c07146e729b3074fda085de9e198";
 
 export default node;

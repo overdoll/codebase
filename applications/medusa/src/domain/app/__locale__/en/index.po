@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
+msgid "Account Locked"
+msgstr ""
+
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:16
 msgid "Account Settings"
 msgstr ""
@@ -45,7 +49,7 @@ msgstr ""
 msgid "Best"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:55
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:65
 msgid "Billing"
 msgstr ""
 
@@ -208,6 +212,10 @@ msgstr ""
 msgid "I promise to be better and to follow the club guidelines more closely"
 msgstr ""
 
+#: src/common/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
+msgid "I promise to be better and to follow the community guidelines more closely"
+msgstr ""
+
 #: src/domain/root/Root/NoScript/NoScript.tsx:28
 #~ msgid "In order for the platform to function correctly, JavaScript must be enabled in your browser. Please enable it and refresh the page."
 #~ msgstr ""
@@ -242,6 +250,7 @@ msgid "Locale does not match BCP47 pattern"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:72
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
 msgid "Locked for {remaining}"
 msgstr ""
 
@@ -250,6 +259,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:75
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:75
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
@@ -266,7 +276,7 @@ msgid "Moderate"
 msgstr ""
 
 #: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:15
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:66
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:76
 msgid "Moderation"
 msgstr ""
 
@@ -330,17 +340,30 @@ msgstr ""
 msgid "No transactions were found"
 msgstr ""
 
+#: src/modules/validation/FirstName.ts:13
+#: src/modules/validation/LastName.ts:13
+msgid "One or more characters cannot be accepted"
+msgstr ""
+
 #: src/modules/content/ThemeComponents/Collapse/Collapse.tsx:53
 msgid "Open"
 msgstr ""
 
+#: src/common/components/LockedAccount/LockedAccountTrigger/LockedAccountButton/LockedAccountButton.tsx:38
+msgid "Open Lock Info"
+msgstr ""
+
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:46
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:44
 msgid "Open Menu"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton.tsx:27
 msgid "Open Search"
+msgstr ""
+
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:55
+msgid "Payouts"
 msgstr ""
 
 #: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:16
@@ -357,6 +380,14 @@ msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:35
 msgid "Please enter a club link"
+msgstr ""
+
+#: src/modules/validation/FirstName.ts:12
+msgid "Please enter a first name"
+msgstr ""
+
+#: src/modules/validation/LastName.ts:12
+msgid "Please enter a last name"
 msgstr ""
 
 #: src/modules/validation/Locale.ts:12
@@ -381,6 +412,10 @@ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:82
 msgid "Please review the <0>Club Guidelines</0> to make sure this doesn't happen again."
+msgstr ""
+
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:82
+msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 msgstr ""
 
 #: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:45
@@ -490,6 +525,10 @@ msgstr ""
 msgid "Select Series"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/CountryInput/CountryInput.tsx:47
+msgid "Select a country"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:91
 msgid "Select a rule"
 msgstr ""
@@ -594,11 +633,15 @@ msgstr ""
 msgid "There was an error un-suspending your club"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundAccount/NotFoundAccount.tsx:12
+#: src/common/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
+msgid "There was an error unlocking your account"
+msgstr ""
+
+#: src/modules/content/Placeholder/NotFound/NotFoundAccount/NotFoundAccount.tsx:10
 msgid "This account was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:12
+#: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:10
 msgid "This club was not found"
 msgstr ""
 
@@ -611,11 +654,11 @@ msgstr ""
 msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundGeneric/NotFoundGeneric.tsx:12
+#: src/modules/content/Placeholder/NotFound/NotFoundGeneric/NotFoundGeneric.tsx:10
 msgid "This page was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundPublicPost/NotFoundPublicPost.tsx:13
+#: src/modules/content/Placeholder/NotFound/NotFoundPublicPost/NotFoundPublicPost.tsx:11
 msgid "This post was not found"
 msgstr ""
 
@@ -623,7 +666,7 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundSubscription/NotFoundSubscription.tsx:12
+#: src/modules/content/Placeholder/NotFound/NotFoundSubscription/NotFoundSubscription.tsx:10
 msgid "This subscription was not found"
 msgstr ""
 
@@ -633,6 +676,10 @@ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:112
 msgid "Un-Suspend Club"
+msgstr ""
+
+#: src/common/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
+msgid "Unlock Account"
 msgstr ""
 
 #: src/modules/validation/Username.ts:16
@@ -647,6 +694,10 @@ msgstr ""
 msgid "Usernames can only contain numbers and letters"
 msgstr ""
 
+#: src/common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner.tsx:58
+msgid "View Details"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
 msgstr ""
@@ -659,12 +710,29 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
+msgid "You may unlock your account after agreeing to the community guidelines."
+msgstr ""
+
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:96
 msgid "You may unlock your club after agreeing to the community guidelines."
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:53
+#: src/common/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:55
 msgid "You must agree to follow the community guidelines"
+msgstr ""
+
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:107
+msgid "Your account has been locked and you'll have the ability to unlock it after"
+msgstr ""
+
+#: src/common/components/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:78
+msgid "Your account has been unlocked"
+msgstr ""
+
+#: src/common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner.tsx:47
+msgid "Your account is currently locked. Functionality is limited."
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:101
@@ -684,5 +752,6 @@ msgid "{0}"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:111
+#: src/common/components/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
 msgid "{countdown}"
 msgstr ""

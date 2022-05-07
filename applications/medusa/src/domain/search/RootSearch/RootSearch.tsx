@@ -8,10 +8,11 @@ import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/S
 import useGeneralSearchArguments
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/support/useGeneralSearchArguments'
 import { PostOrderButton, PostSearchButton } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   queryRefs: {
@@ -36,10 +37,17 @@ const RootSearch: PageProps<Props> = (props: Props) => {
       </Head>
       <PageWrapper>
         <Stack spacing={8}>
-          <HStack spacing={2} justify='space-between'>
+          <Stack spacing={2}>
+            <HStack spacing={2} justify='space-between'>
+              <Heading color='gray.00' fontSize='2xl'>
+                <Trans>
+                  Search
+                </Trans>
+              </Heading>
+              <PostSearchButton routeTo='/search' />
+            </HStack>
             <PostOrderButton />
-            <PostSearchButton routeTo='/search' />
-          </HStack>
+          </Stack>
           <QueryErrorBoundary loadQuery={() => loadQuery({
             sortBy: 'TOP'
           })}

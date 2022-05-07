@@ -1,0 +1,37 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>
+                        Upcoming Renewals
+                    </h2>
+                    <p>
+                        Here are your upcoming subscription renewals for this month
+                    </p>
+                </mj-text>
+            </mj-column>
+            <mj-column>
+                <mj-text>
+                    <p>
+                        {{ .Renewals}}
+                    </p>
+                </mj-text>
+            </mj-column>
+            <mj-column>
+                <mj-text>
+                    <p>You may manage any of these subscriptions, such as cancelling them, using the button below</p>
+                </mj-text>
+                <mj-button css-class="medium gray" href="{{.Link}}">
+                    Manage Subscriptions
+                </mj-button>
+                <mj-text>
+                    <p>Please contact hello@overdoll.com if you have any questions or concerns.</p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

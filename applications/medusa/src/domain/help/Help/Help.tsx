@@ -13,6 +13,7 @@ import {
   FlagReport,
   InfoCircle,
   MailEnvelope,
+  PayoutMethod,
   PremiumStar,
   SeriesIdentifier,
   WarningTriangle
@@ -23,6 +24,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import {
   CLUB_GUIDELINES,
   COMMUNITY_GUIDELINES,
+  PAYOUTS_INFORMATION,
   PRIVACY_POLICY,
   SUPPORTER_GUIDELINES,
   TERMS_OF_SERVICE
@@ -78,6 +80,17 @@ const Help: PageProps<{}> = () => {
                     }
                     description={(
                       <Trans>For clubs posting content</Trans>
+                    )}
+                  />
+                </PagePanelWrap>
+                <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
+                  <PagePanelIcon icon={PayoutMethod} colorScheme='purple' />
+                  <PagePanelText
+                    title={
+                      <Trans>Payouts Information</Trans>
+                    }
+                    description={(
+                      <Trans>Information about payouts</Trans>
                     )}
                   />
                 </PagePanelWrap>

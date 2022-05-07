@@ -147,11 +147,10 @@ export default function PostLikeButton ({
             bg='transparent'
             isLoading={isLiking || isUnliking}
             icon={(<Icon
-              p={1}
               icon={hasLiked ? HeartFull : HeartOutline}
               fill={hasLiked ? 'primary.400' : 'gray.200'}
-              h='100%'
-              w='100%'
+              h={6}
+              w={6}
                    />)}
             onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : async () => await router.push(redirect)}
             {...rest}

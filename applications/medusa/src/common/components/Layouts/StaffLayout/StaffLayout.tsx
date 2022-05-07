@@ -1,8 +1,15 @@
 import type { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { CharacterIdentifier, ClubPeopleGroup, FlagReport, SeriesIdentifier } from '@//:assets/icons'
+import {
+  CategoryIdentifier,
+  CharacterIdentifier,
+  ClubPeopleGroup,
+  FlagReport,
+  PayoutMethod,
+  SeriesIdentifier
+} from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import { CategoryIdentifier } from '@//:assets/icons/interface'
+import Can from '@//:modules/authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -18,6 +25,15 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
           </Trans>
         }
       >
+        <Can I='staff' a='Billing'>
+          <VerticalNavigation.Button
+            href='/staff/billing/deposit-requests'
+            icon={PayoutMethod}
+            title={
+              <Trans>Deposit Requests</Trans>
+            }
+          />
+        </Can>
         <VerticalNavigation.Group
           title={<Trans>Characters</Trans>}
           icon={CharacterIdentifier}

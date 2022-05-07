@@ -3,11 +3,10 @@ import type { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import { graphql } from 'react-relay'
 import LargeClubHeader from '../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import { Box, Flex, Stack } from '@chakra-ui/react'
-import StatisticNumber from '../../../../club/home/RootClubHome/ClubHome/StatisticNumber/StatisticNumber'
+import StatisticNumber from './StatisticNumber/StatisticNumber'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import abbreviateNumber from '@//:modules/support/abbreviateNumber'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { ClubMembers } from '@//:assets/icons/interface'
@@ -115,26 +114,10 @@ export default function PublicClub (props: Props): JSX.Element {
           />
         </Stack>
         <Stack spacing={2}>
-          <Stack spacing={2}>
-            <Box>
-              <PageSectionWrap>
-                <PageSectionTitle colorScheme='orange'>
-                  Exclusive Posts
-                </PageSectionTitle>
-              </PageSectionWrap>
-              <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
-            </Box>
-          </Stack>
+          <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
           <ClubExclusivePosts query={queryData?.club} />
         </Stack>
-        <Box>
-          <PageSectionWrap>
-            <PageSectionTitle colorScheme='orange'>
-              Top Posts
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <ClubTopPosts query={queryData?.club} />
-        </Box>
+        <ClubTopPosts query={queryData?.club} />
       </Stack>
     </>
   )

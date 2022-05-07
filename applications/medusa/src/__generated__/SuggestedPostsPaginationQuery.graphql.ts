@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<938937700ff5d0df0a8988dc551e93a0>>
- * @relayHash 3c7324645521b6315d1175c865fc2a2d
+ * @generated SignedSource<<95c0ce14127d9d29336f2e959b37b028>>
+ * @relayHash 85470a6f635be1de411b141756d1982f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3c7324645521b6315d1175c865fc2a2d
+// @relayRequestID 85470a6f635be1de411b141756d1982f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -117,18 +117,30 @@ v7 = {
 v8 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v6/*: any*/)
+  ],
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "slug",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -137,24 +149,13 @@ v10 = {
   "plural": false,
   "selections": [
     (v7/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "videoThumbnail",
-      "plural": false,
-      "selections": [
-        (v6/*: any*/)
-      ],
-      "storageKey": null
-    },
+    (v8/*: any*/),
     (v5/*: any*/),
     (v4/*: any*/)
   ],
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -266,6 +267,7 @@ return {
                                 "selections": [
                                   (v5/*: any*/),
                                   (v7/*: any*/),
+                                  (v8/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
@@ -296,10 +298,10 @@ return {
                             "name": "club",
                             "plural": false,
                             "selections": [
-                              (v8/*: any*/),
-                              (v4/*: any*/),
                               (v9/*: any*/),
+                              (v4/*: any*/),
                               (v10/*: any*/),
+                              (v11/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -331,9 +333,9 @@ return {
                             "plural": true,
                             "selections": [
                               (v4/*: any*/),
-                              (v8/*: any*/),
-                              (v11/*: any*/),
-                              (v10/*: any*/)
+                              (v9/*: any*/),
+                              (v12/*: any*/),
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -354,15 +356,15 @@ return {
                                 "name": "series",
                                 "plural": false,
                                 "selections": [
-                                  (v11/*: any*/),
-                                  (v8/*: any*/),
+                                  (v12/*: any*/),
+                                  (v9/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
                               },
+                              (v10/*: any*/),
                               (v9/*: any*/),
-                              (v8/*: any*/),
-                              (v10/*: any*/)
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -439,7 +441,7 @@ return {
     ]
   },
   "params": {
-    "id": "3c7324645521b6315d1175c865fc2a2d",
+    "id": "85470a6f635be1de411b141756d1982f",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

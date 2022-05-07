@@ -38,6 +38,7 @@ const NavLink = ({
   return (
     <Link
       href={href}
+      passHref
       {...rest}
     >
       {runIfFunction(children, {

@@ -42,23 +42,18 @@ export default function StaffAccountTransactionEvents ({ query }: Props): JSX.El
     >
       <Table>
         <TableHeader>
-          <TableHeaderRow columns={8}>
-            <TableHeaderColumnText column={2}>
-              <Trans>
-                Type
-              </Trans>
-            </TableHeaderColumnText>
-            <TableHeaderColumnText column={2}>
+          <TableHeaderRow columns={4}>
+            <TableHeaderColumnText column={1}>
               <Trans>
                 Price
               </Trans>
             </TableHeaderColumnText>
             <TableHeaderColumnText column={2}>
               <Trans>
-                Club
+                Reason
               </Trans>
             </TableHeaderColumnText>
-            <TableHeaderColumnText column={2}>
+            <TableHeaderColumnText column={1}>
               <Trans>
                 Date
               </Trans>

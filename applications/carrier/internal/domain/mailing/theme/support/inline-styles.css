@@ -1,0 +1,120 @@
+body {
+    background-color: hsla(0, 0%, 10%, 1) !important;
+}
+
+h1 {
+    font-size: 2.25rem !important;
+}
+
+h2 {
+    font-size: 1.5rem !important;
+}
+
+h3 {
+    font-size: 1.25rem !important;
+}
+
+h4 {
+    font-size: 1.125rem !important;
+}
+
+h5 {
+    font-size: 1rem !important;
+}
+
+h6 {
+    font-size: 0.875rem !important;
+}
+
+.link a:link a:hover a:visited a:active {
+    color: #bfbfbf !important;
+    text-decoration: none !important;
+    font-size: 1rem !important;
+}
+
+.small td {
+    height: 2.5rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    border-radius: 1rem !important;
+}
+
+.small p {
+    font-size: 1rem !important;
+}
+
+.medium td {
+    height: 3rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    border-radius: 5rem !important;
+}
+
+.medium p {
+    font-size: 1.125rem !important;
+}
+
+.medium a {
+    font-size: 1.125rem !important;
+}
+
+.large td {
+    height: 4rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    border-radius: 5rem !important;
+}
+
+.large a {
+    font-size: 1.5rem !important;
+}
+
+.large p {
+    font-size: 1.5rem !important;
+}
+
+.primary td {
+    background-color: hsla(342, 100%, 58%, 1) !important;
+    border-color: hsla(342, 100%, 58%, 1) !important;
+}
+
+.primary p {
+    background-color: hsla(342, 100%, 58%, 1) !important;
+    color: hsla(346, 90%, 15%, 1) !important;
+}
+
+.primary a {
+    background-color: hsla(342, 100%, 58%, 1) !important;
+    color: hsla(346, 90%, 15%, 1) !important;
+}
+
+.gray td {
+    background-color: hsla(0, 0%, 14%, 1) !important;
+}
+
+.gray p {
+    background-color: hsla(0, 0%, 14%, 1) !important;
+    color: hsla(0, 0%, 100%, 1) !important;
+}
+
+.gray a {
+    background-color: hsla(0, 0%, 14%, 1) !important;
+    color: hsla(0, 0%, 100%, 1) !important;
+}
+
+.outline-primary td {
+    background-color: transparent !important;
+    border: 12px solid #ff2969 !important;
+    color: hsla(342, 100%, 58%, 1) !important;
+}
+
+.outline-primary p {
+    color: hsla(342, 100%, 58%, 1) !important;
+}
+
+.outline-primary a {
+    background-color: transparent !important;
+    color: hsla(342, 100%, 58%, 1) !important;
+}
+
+

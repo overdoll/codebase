@@ -12,7 +12,7 @@ describe('Lock/Unlock Account', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.visit(`/staff/account/${username}`)
     clickOnButton('Lock Account')
-    cy.findByText('Select duration').parent().select('Warning (none)')
+    cy.findByText(/Select duration/iu).parent().should('be.visible').select('Warning (none)')
     clickOnButton('Confirm Lock Account')
   })
 
@@ -30,7 +30,7 @@ describe('Lock/Unlock Account', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.visit(`/staff/account/${username}`)
     clickOnButton('Lock Account')
-    cy.findByText('Select duration').parent().select('12 hours')
+    cy.findByText('Select duration').parent().should('be.visible').select('12 hours')
     clickOnButton('Confirm Lock Account')
   })
 

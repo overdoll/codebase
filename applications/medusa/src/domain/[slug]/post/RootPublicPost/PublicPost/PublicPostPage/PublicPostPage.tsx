@@ -6,8 +6,6 @@ import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeCom
 import { Box, HStack } from '@chakra-ui/react'
 import ClubSuspendedStaffAlert
   from '../../../../root/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
-import { ObserverManagerProvider } from '@//:modules/content/Posts/support/ObserverManager/ObserverManager'
-import { PostVideoManagerProvider } from '@//:modules/content/Posts'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
 
 interface Props {
@@ -64,11 +62,7 @@ export default function PublicPostPage ({
           </HStack>
         </Alert>
       )}
-      <ObserverManagerProvider>
-        <PostVideoManagerProvider>
-          <FullDetailedPost query={data} viewerQuery={viewerData} />
-        </PostVideoManagerProvider>
-      </ObserverManagerProvider>
+      <FullDetailedPost query={data} viewerQuery={viewerData} />
     </Box>
   )
 }

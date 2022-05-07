@@ -31,7 +31,6 @@ import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { DeleteCircle } from '@//:assets/icons'
 import { dateFormat } from '@//:modules/constants/format'
 import { ConnectionProp } from '@//:types/components'
-import { useRouter } from 'next/router'
 
 interface Props extends ConnectionProp {
   query: CancelSubscriptionButtonFragment$key
@@ -48,9 +47,9 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!, $connections: [ID!]!) {
+  mutation CancelSubscriptionButtonMutation($input: CancelAccountClubSupporterSubscriptionInput!) {
     cancelAccountClubSupporterSubscription(input: $input) {
-      clubSupporterSubscription @appendNode(connections: $connections, edgeTypeName: "createCategoryEdge") {
+      clubSupporterSubscription {
         __typename
         ... on IAccountClubSupporterSubscription {
           id
@@ -83,7 +82,6 @@ export default function CancelSubscriptionButton ({
 
   const [commit, isInFlight] = useMutation<CancelSubscriptionButtonMutation>(Mutation)
 
-  const router = useRouter()
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
 
@@ -120,8 +118,7 @@ export default function CancelSubscriptionButton ({
         input: {
           clubSupporterSubscriptionId: data.id,
           cancellationReasonId: cancellationReasonId
-        },
-        connections: [connectionId]
+        }
       },
       onCompleted (data) {
         notify({
@@ -130,10 +127,15 @@ export default function CancelSubscriptionButton ({
         })
         onClose()
         clearValues()
-        void router.push('/settings/billing/subscriptions')
       },
-      updater: (store) => {
-        store.delete(data.id)
+      updater: (store, payloadData) => {
+        const naturalPayload = payloadData?.cancelAccountClubSupporterSubscription?.clubSupporterSubscription
+        const subscription = store.get(data.id)
+        if (subscription != null && naturalPayload != null) {
+          subscription.setValue(naturalPayload.__typename, '__typename')
+          subscription.setValue(naturalPayload.cancelledAt, 'cancelledAt')
+          subscription.setValue(naturalPayload.endDate, 'endDate')
+        }
       },
       onError () {
         notify({
