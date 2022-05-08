@@ -68,11 +68,11 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	emptyCursor, err := paging.NewCursor(nil, nil, &firstItems, nil)
 	require.NoError(t, err, "no error creating empty cursor")
 
-	state := "published"
+	state := "PUBLISHED"
 
 	// filters so we don't get conflicts
 	filters, err := post.NewPostFilters(
-		"new",
+		"NEW",
 		&state,
 		nil,
 		nil,
