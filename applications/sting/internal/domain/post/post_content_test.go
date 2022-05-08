@@ -2,6 +2,8 @@ package post
 
 import (
 	"github.com/stretchr/testify/require"
+	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -54,6 +56,7 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 
 	resourceId := uuid.New().String()
 	resourceIdHidden := uuid.New().String()
+	clubId := uuid.New().String()
 
 	contentItem := &Content{
 		id:               uuid.New().String(),
@@ -63,11 +66,20 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 	}
 
 	post := &Post{
-		state: Published,
+		state:  Published,
+		clubId: clubId,
 	}
 
-	require.True(t, contentItem.CanViewSupporterOnly(nil, post), "can view supporter only content on draft")
-	require.Equal(t, resourceId, contentItem.ResourceIdRequest(nil, post))
+	requester := testing_tools.NewDefaultPrincipal("")
+	p, _ := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      []string{clubId},
+	})
+	requester.ExtendWithClubExtension(p)
+
+	require.True(t, contentItem.CanViewSupporterOnly(requester, post), "can view supporter only content on draft")
+	require.Equal(t, resourceId, contentItem.ResourceIdRequest(requester, post))
 }
 
 func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
@@ -106,12 +118,10 @@ func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 		isSupporterOnly:  true,
 	}
 
-	requester := testing_tools.NewStaffPrincipal("")
-
 	post := &Post{
 		state: Published,
 	}
 
-	require.False(t, contentItem.CanViewSupporterOnly(requester, post), "cannot view supporter only content on draft")
-	require.Equal(t, resourceIdHidden, contentItem.ResourceIdRequest(requester, post), "show hidden resource id")
+	require.False(t, contentItem.CanViewSupporterOnly(nil, post), "cannot view supporter only content on draft")
+	require.Equal(t, resourceIdHidden, contentItem.ResourceIdRequest(nil, post), "show hidden resource id")
 }
