@@ -19,7 +19,6 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	t.Parallel()
 
 	postRepo := newPostRepository(t)
-	postIndexRepo := newPostIndexRepository(t)
 
 	// create x new posts
 	createNewPosts := 6
@@ -60,11 +59,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 		err := postRepo.CreatePost(ctx, newPost)
 		require.NoError(t, err, "no error creating a new post")
 
-		// index the post
-		err = postIndexRepo.IndexPost(ctx, newPost)
-		require.NoError(t, err, "no error indexing the post")
-
-		err = postIndexRepo.RefreshPostIndex(ctx)
+		err = postRepo.RefreshPostIndex(ctx)
 		require.NoError(t, err, "no error refreshing post index")
 	}
 
@@ -94,7 +89,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	principalItem := testing_tools.NewDefaultPrincipal(testAccountId)
 
 	// get first 5 posts
-	results, err := postIndexRepo.SearchPosts(ctx, principalItem, emptyCursor, filters)
+	results, err := postRepo.SearchPosts(ctx, principalItem, emptyCursor, filters)
 
 	require.NoError(t, err, "no error searching posts")
 
@@ -117,7 +112,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	require.NoError(t, err, "no error creating new cursor")
 
 	// get the next set of posts
-	results, err = postIndexRepo.SearchPosts(ctx, principalItem, newCursor, filters)
+	results, err = postRepo.SearchPosts(ctx, principalItem, newCursor, filters)
 	require.NoError(t, err, "no error searching posts")
 
 	require.Len(t, results, 1, "should have found only the last post")
@@ -126,7 +121,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	backwardsCursor, err := paging.NewCursor(nil, nil, nil, &firstItems)
 	require.NoError(t, err, "no error creating backwards cursor")
 
-	results, err = postIndexRepo.SearchPosts(ctx, principalItem, backwardsCursor, filters)
+	results, err = postRepo.SearchPosts(ctx, principalItem, backwardsCursor, filters)
 	require.NoError(t, err, "no error searching posts")
 
 	require.Len(t, results, 6, "should have found 6 posts")
@@ -150,21 +145,15 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	backwardsCursorWithCursor, err := paging.NewCursor(nil, &lastCursor, nil, &firstItems)
 	require.NoError(t, err, "no error creating backwards cursor")
 
-	results, err = postIndexRepo.SearchPosts(ctx, principalItem, backwardsCursorWithCursor, filters)
+	results, err = postRepo.SearchPosts(ctx, principalItem, backwardsCursorWithCursor, filters)
 	require.NoError(t, err, "no error searching posts")
 
 	require.Len(t, results, 1, "should have found only the last post")
 }
 
-func newPostIndexRepository(t *testing.T) adapters.PostsIndexElasticSearchRepository {
-	session := bootstrap.InitializeDatabaseSession()
-	client := bootstrap.InitializeElasticSearchSession()
-
-	return adapters.NewPostsIndexElasticSearchRepository(client, session)
-}
-
 func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
 	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
 
-	return adapters.NewPostsCassandraRepository(session)
+	return adapters.NewPostsCassandraRepository(session, es)
 }
