@@ -72,7 +72,7 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 
 	requester := testing_tools.NewDefaultPrincipal("")
 	p, _ := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  nil,
+		SupportedClubIds:  []string{clubId},
 		ClubMembershipIds: nil,
 		OwnerClubIds:      []string{clubId},
 	})
