@@ -16,11 +16,10 @@ type UpdateAudienceTitle struct {
 
 type UpdateAudienceTitleHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdateAudienceTitleHandler(pr post.Repository, pi post.IndexRepository) UpdateAudienceTitleHandler {
-	return UpdateAudienceTitleHandler{pr: pr, pi: pi}
+func NewUpdateAudienceTitleHandler(pr post.Repository) UpdateAudienceTitleHandler {
+	return UpdateAudienceTitleHandler{pr: pr}
 }
 
 func (h UpdateAudienceTitleHandler) Handle(ctx context.Context, cmd UpdateAudienceTitle) (*post.Audience, error) {
@@ -30,10 +29,6 @@ func (h UpdateAudienceTitleHandler) Handle(ctx context.Context, cmd UpdateAudien
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexAudience(ctx, aud); err != nil {
 		return nil, err
 	}
 

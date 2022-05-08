@@ -3,7 +3,7 @@ syntax = "proto3";
 package applications.grpc.hades.v1;
 
 import "google/protobuf/timestamp.proto";
-
+import "google/protobuf/empty.proto";
 
 // generated messages used to communicate with CCBill and our system
 message CCBillClubSupporter {
@@ -62,4 +62,21 @@ message CCBillTransaction {
   CCBillPayment ccbillPayment = 2;
   optional CCBillTransactionDenied ccbillTransactionDenied = 3;
   optional CCBillTransactionAuthorized ccbillTransactionAuthorized = 4;
+}
+
+message CanDeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message CanDeleteAccountDataResponse {
+  bool canDelete = 1;
+}
+
+service Hades {
+  rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

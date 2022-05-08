@@ -10,7 +10,7 @@ type Sorting struct {
 
 var (
 	UnknownSort = Sorting{""}
-	PopularSort = Sorting{"popular"}
+	PopularSort = Sorting{"POPULAR"}
 )
 
 func (r Sorting) String() string {

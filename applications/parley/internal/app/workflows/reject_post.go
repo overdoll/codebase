@@ -58,8 +58,10 @@ func RejectPost(ctx workflow.Context, input RejectPostInput) error {
 
 		if err := workflow.ExecuteActivity(ctx, a.SuspendClub,
 			activities.SuspendClubInput{
-				ClubId:   input.ClubId,
-				Duration: clubSuspensionLength,
+				ClubId:            input.ClubId,
+				Duration:          clubSuspensionLength,
+				IsPostRemoval:     false,
+				IsModerationQueue: true,
 			},
 		).Get(ctx, nil); err != nil {
 			return err

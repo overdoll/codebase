@@ -14,15 +14,16 @@ type SearchClubs struct {
 	OwnerAccountId *string
 	Name           *string
 	SortBy         string
-	Suspended      bool
+	Suspended      *bool
 	Slugs          []string
+	Terminated     *bool
 }
 
 type SearchClubsHandler struct {
-	cr club.IndexRepository
+	cr club.Repository
 }
 
-func NewSearchClubsHandler(cr club.IndexRepository) SearchClubsHandler {
+func NewSearchClubsHandler(cr club.Repository) SearchClubsHandler {
 	return SearchClubsHandler{cr: cr}
 }
 
@@ -34,6 +35,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*c
 		query.SortBy,
 		query.Slugs,
 		query.OwnerAccountId,
+		query.Terminated,
 	)
 
 	if err != nil {

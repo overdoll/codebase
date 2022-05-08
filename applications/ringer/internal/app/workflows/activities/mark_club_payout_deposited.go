@@ -26,10 +26,6 @@ func (h *Activities) MarkClubPayoutDeposited(ctx context.Context, input MarkClub
 		return nil, err
 	}
 
-	if err := h.pir.IndexClubPayout(ctx, pay); err != nil {
-		return nil, err
-	}
-
 	return &MarkClubPayoutDepositedPayload{
 		Amount:   pay.Amount(),
 		Currency: pay.Currency(),

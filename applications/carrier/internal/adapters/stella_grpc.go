@@ -22,5 +22,5 @@ func (s StellaGrpc) GetClub(ctx context.Context, clubId string) (*club.Club, err
 		return nil, err
 	}
 
-	return club.UnmarshalClubFromDatabase(md.Club.Slug, md.Club.Name), nil
+	return club.UnmarshalClubFromDatabase(md.Club.Slug, md.Club.Name, md.Club.OwnerAccountId), nil
 }

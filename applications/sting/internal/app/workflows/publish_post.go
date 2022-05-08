@@ -32,9 +32,9 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-	if err := workflow.ExecuteChildWorkflow(ctx, UpdateTotalPostsForPostTags,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpdateTotalPostsForPostTags,
 		UpdateTotalPostsForPostTagsInput{
 			PostId: input.PostId,
 		},
@@ -45,6 +45,15 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil
 		}
+		return err
+	}
+
+	// if the post has supporter-only content, we send a notification to stella that a new premium post was created
+	if err := workflow.ExecuteActivity(ctx, a.CheckPostSupporterStatusAndSendNew,
+		activities.CheckPostSupporterStatusAndSendNewInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

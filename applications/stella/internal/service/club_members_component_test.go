@@ -81,6 +81,27 @@ type LeaveClub struct {
 	} `graphql:"leaveClub(input: $input)"`
 }
 
+func joinClub(t *testing.T, client *graphql.Client, clubId, accountId string) {
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubMember, workflows.AddClubMemberInput{
+		ClubId:    clubId,
+		AccountId: accountId,
+	})
+
+	// become a club member
+	var joinClub JoinClub
+	err := client.Mutate(context.Background(), &joinClub, map[string]interface{}{
+		"input": types.JoinClubInput{ClubID: convertClubIdToRelayId(clubId)},
+	})
+	require.NoError(t, err, "no error becoming a club member")
+
+	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	workflowExecution.FindAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+}
+
 // TestCreateClub_edit_name - create a club and edit the name
 func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	t.Parallel()
@@ -92,20 +113,9 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	clubId := clb.ID()
 	relayId := convertClubIdToRelayId(clb.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubMember, mock.Anything)
+	joinClub(t, client, clb.ID(), testingAccountId)
 
-	// become a club member
-	var joinClub JoinClub
-	err := client.Mutate(context.Background(), &joinClub, map[string]interface{}{
-		"input": types.JoinClubInput{ClubID: relayId},
-	})
-	require.NoError(t, err, "no error becoming a club member")
-
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	refreshClubESIndex(t)
 
 	// get club and check that the viewer is part of it
 	clubViewer := getClubViewer(t, client, clb.Slug())
@@ -117,12 +127,13 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// grab account ID so we can look through club members
 	accountId := clubViewer.Club.ViewerMember.Account.ID
 
+	require.Len(t, clubViewer.Club.Members.Edges, 2, "should have 2 club members in club list")
 	require.Equal(t, accountId, clubViewer.Club.Members.Edges[1].Node.Account.ID, "should have found the account in the club member list")
 
 	// query accountPosts once more, make sure post is no longer visible
 	var accountClubDetails AccountClubDetails
 
-	err = client.Query(context.Background(), &accountClubDetails, map[string]interface{}{
+	err := client.Query(context.Background(), &accountClubDetails, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
@@ -140,22 +151,14 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	grpcClient := getGrpcClient(t)
 
 	// check permissions
-	res, err := grpcClient.GetAccountClubMembershipIds(context.Background(), &stella.GetAccountClubMembershipIdsRequest{
+	res, err := grpcClient.GetAccountClubDigest(context.Background(), &stella.GetAccountClubDigestRequest{
 		AccountId: testingAccountId,
 	})
 
 	require.NoError(t, err, "no error grabbing club memberships for account")
-	require.Len(t, res.ClubIds, 1, "should have 1 club id")
+	require.Len(t, res.ClubMembershipIds, 1, "should have 1 club id")
 
-	require.Equal(t, clubId, res.ClubIds[0], "should have a matching club ID")
-
-	// now, make this member a supporter
-	canBecomeSupporter, err := grpcClient.CanAccountBecomeClubSupporter(context.Background(), &stella.CanAccountBecomeClubSupporterRequest{
-		AccountId: testingAccountId,
-		ClubId:    clubId,
-	})
-	require.NoError(t, err, "no error getting permission for supporter")
-	require.True(t, canBecomeSupporter.Allowed, "allowed to become a supporter")
+	require.Equal(t, clubId, res.ClubMembershipIds[0], "should have a matching club ID")
 
 	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubSupporter, mock.Anything)
 
@@ -168,8 +171,9 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error making a club member a supporter")
 
 	// run supporter method
-	env = getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment(t)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	env.RegisterWorkflow(workflows.AddClubMember)
 	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
@@ -211,6 +215,8 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
+	refreshClubESIndex(t)
+
 	// get club and check that the viewer is part of it
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.Nil(t, clubViewer.Club.ViewerMember, "club viewer no longer available")
@@ -218,4 +224,23 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// make sure count is 1
 	require.Equal(t, 1, clubViewer.Club.MembersCount, "only 1 member, owner")
 	require.Len(t, clubViewer.Club.Members.Edges, 1, "edges count is 1, owner only")
+}
+
+func TestCreateClub_become_member_and_delete(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, uuid.New().String())
+
+	joinClub(t, client, clb.ID(), testingAccountId)
+
+	grpcClient := getGrpcClient(t)
+
+	_, err := grpcClient.DeleteAccountData(context.Background(), &stella.DeleteAccountDataRequest{AccountId: testingAccountId})
+	require.NoError(t, err, "no error deleting account data")
+
+	clubViewer := getClubViewer(t, client, clb.Slug())
+	require.Nil(t, clubViewer.Club.ViewerMember, "should no longer be a member")
 }

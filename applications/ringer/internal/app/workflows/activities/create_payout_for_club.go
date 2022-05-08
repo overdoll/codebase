@@ -41,9 +41,5 @@ func (h *Activities) CreatePayoutForClub(ctx context.Context, input CreatePayout
 		return nil, err
 	}
 
-	if err := h.pir.IndexClubPayout(ctx, newPayout); err != nil {
-		return nil, err
-	}
-
 	return &CreatePayoutForClubPayload{DepositDate: newPayout.DepositDate()}, nil
 }

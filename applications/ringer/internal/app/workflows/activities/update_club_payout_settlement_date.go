@@ -13,15 +13,11 @@ type UpdateClubPayoutDepositDateInput struct {
 
 func (h *Activities) UpdateClubPayoutDepositDate(ctx context.Context, input UpdateClubPayoutDepositDateInput) error {
 
-	pay, err := h.par.UpdateClubPayoutDepositDate(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	_, err := h.par.UpdateClubPayoutDepositDate(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.UpdateDepositDate(input.DepositDate)
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pir.IndexClubPayout(ctx, pay); err != nil {
 		return err
 	}
 

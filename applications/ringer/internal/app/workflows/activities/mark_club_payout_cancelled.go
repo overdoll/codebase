@@ -11,15 +11,11 @@ type MarkClubPayoutCancelledInput struct {
 
 func (h *Activities) MarkClubPayoutCancelled(ctx context.Context, input MarkClubPayoutCancelledInput) error {
 
-	pay, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
+	_, err := h.par.UpdateClubPayoutStatus(ctx, input.PayoutId, func(pay *payout.ClubPayout) error {
 		return pay.MakeCancelled()
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pir.IndexClubPayout(ctx, pay); err != nil {
 		return err
 	}
 

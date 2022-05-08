@@ -12,7 +12,7 @@ type UnArchivePostInput struct {
 
 func (h *Activities) UnArchivePost(ctx context.Context, input UnArchivePostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.MakePublish()
 	})
 
@@ -21,5 +21,5 @@ func (h *Activities) UnArchivePost(ctx context.Context, input UnArchivePostInput
 	}
 
 	// index pending post
-	return h.pi.IndexPost(ctx, pendingPost)
+	return nil
 }

@@ -7,12 +7,14 @@ import (
 	carrier "overdoll/applications/carrier/proto"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestConfirmAccountEmail(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient()
+	timestampFrom := time.Now()
 
 	email := generateEmail("carrier-confirm_account_email")
 	token := uuid.New().String()
@@ -23,7 +25,7 @@ func TestConfirmAccountEmail(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending confirm account email")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	link := doc.Find("a").First()
 

@@ -8,9 +8,9 @@ type SupportStatus struct {
 
 var (
 	UnknownSupportStatus = SupportStatus{""}
-	Active               = SupportStatus{"active"}
-	Cancelled            = SupportStatus{"cancelled"}
-	Expired              = SupportStatus{"expired"}
+	Active               = SupportStatus{"ACTIVE"}
+	Cancelled            = SupportStatus{"CANCELLED"}
+	Expired              = SupportStatus{"EXPIRED"}
 )
 
 func (r SupportStatus) String() string {

@@ -25,6 +25,7 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/club",
         "//applications/hades/proto:v1_go_proto",
         "//libraries/principal",
         "@com_github_golang_protobuf//proto:go_default_library",

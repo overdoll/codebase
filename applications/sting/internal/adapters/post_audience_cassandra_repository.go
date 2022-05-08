@@ -71,7 +71,7 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
 
 	var audienceSlugResults []audienceSlug
 
@@ -99,7 +99,7 @@ func (r PostsCassandraRepository) GetAudienceIdsFromSlugs(ctx context.Context, a
 	return ids, nil
 }
 
-func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
 
 	var b audienceSlug
 
@@ -119,7 +119,7 @@ func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, request
 	return r.GetAudienceById(ctx, requester, b.AudienceId)
 }
 
-func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*post.Audience, error) {
 
 	var audiences []*post.Audience
 
@@ -154,7 +154,7 @@ func (r PostsCassandraRepository) GetAudiencesByIds(ctx context.Context, request
 	return audiences, nil
 }
 
-func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
 
 	var b audience
 
@@ -182,11 +182,11 @@ func (r PostsCassandraRepository) getAudienceById(ctx context.Context, audienceI
 	), nil
 }
 
-func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 	return r.getAudienceById(ctx, audienceId)
 }
 
-func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *principal.Principal) ([]*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context, requester *principal.Principal) ([]*post.Audience, error) {
 
 	var res []audience
 
@@ -214,7 +214,7 @@ func (r PostsCassandraRepository) GetAudiences(ctx context.Context, requester *p
 	return results, nil
 }
 
-func (r PostsCassandraRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
+func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
 
 	aud, err := marshalAudienceToDatabase(audience)
 
@@ -247,30 +247,34 @@ func (r PostsCassandraRepository) CreateAudience(ctx context.Context, requester 
 		return err
 	}
 
+	if err := r.indexAllAudience(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource_id"})
 }
 
-func (r PostsCassandraRepository) UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"title"})
 }
 
-func (r PostsCassandraRepository) UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"standard"})
 }
 
-func (r PostsCassandraRepository) UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"total_posts"})
 }
 
-func (r PostsCassandraRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"total_likes"})
 }
 
-func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string, updateFn func(audience *post.Audience) error, columns []string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Context, id string, updateFn func(audience *post.Audience) error, columns []string) (*post.Audience, error) {
 
 	aud, err := r.getAudienceById(ctx, id)
 
@@ -298,6 +302,10 @@ func (r PostsCassandraRepository) updateAudience(ctx context.Context, id string,
 		BindStruct(pst).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update audience: %v", err)
+	}
+
+	if err := r.indexAudience(ctx, aud); err != nil {
+		return nil, err
 	}
 
 	return aud, nil

@@ -16,11 +16,10 @@ type UpdatePostCategories struct {
 
 type UpdatePostCategoriesHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdatePostCategoriesHandler(pr post.Repository, pi post.IndexRepository) UpdatePostCategoriesHandler {
-	return UpdatePostCategoriesHandler{pr: pr, pi: pi}
+func NewUpdatePostCategoriesHandler(pr post.Repository) UpdatePostCategoriesHandler {
+	return UpdatePostCategoriesHandler{pr: pr}
 }
 
 func (h UpdatePostCategoriesHandler) Handle(ctx context.Context, cmd UpdatePostCategories) (*post.Post, error) {
@@ -37,11 +36,6 @@ func (h UpdatePostCategoriesHandler) Handle(ctx context.Context, cmd UpdatePostC
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	// index the post
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

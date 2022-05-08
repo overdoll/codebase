@@ -62,7 +62,7 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
 
 	var categorySlugResults []categorySlugs
 
@@ -90,7 +90,7 @@ func (r PostsCassandraRepository) GetCategoryIdsFromSlugs(ctx context.Context, c
 	return ids, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
 
 	var b categorySlugs
 
@@ -110,7 +110,7 @@ func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, request
 	return r.GetCategoryById(ctx, requester, b.CategoryId)
 }
 
-func (r PostsCassandraRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 
@@ -143,11 +143,11 @@ func (r PostsCassandraRepository) GetCategoriesByIds(ctx context.Context, reques
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
 }
 
-func (r PostsCassandraRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
+func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
 
 	pst, err := marshalCategoryToDatabase(category)
 
@@ -180,10 +180,14 @@ func (r PostsCassandraRepository) CreateCategory(ctx context.Context, requester 
 		return err
 	}
 
+	if err := r.indexCategory(ctx, category); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
 
 	category, err := r.getCategoryById(ctx, id)
 
@@ -213,26 +217,30 @@ func (r PostsCassandraRepository) updateCategory(ctx context.Context, id string,
 		return nil, fmt.Errorf("failed to update category: %v", err)
 	}
 
+	if err := r.indexCategory(ctx, category); err != nil {
+		return nil, err
+	}
+
 	return category, nil
 }
 
-func (r PostsCassandraRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource_id"})
 }
 
-func (r PostsCassandraRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"title"})
 }
 
-func (r PostsCassandraRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"total_posts"})
 }
 
-func (r PostsCassandraRepository) UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"total_likes"})
 }
 
-func (r PostsCassandraRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 
 	var cat category
 

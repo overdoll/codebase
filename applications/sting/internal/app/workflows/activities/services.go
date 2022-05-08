@@ -10,7 +10,7 @@ type ParleyService interface {
 }
 
 type StellaService interface {
-	CanAccountCreatePostUnderClub(context.Context, string, string) (bool, error)
+	NewSupporterPost(ctx context.Context, clubId string) error
 }
 
 type LoaderService interface {

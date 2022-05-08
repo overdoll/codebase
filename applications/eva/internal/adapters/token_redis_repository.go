@@ -34,7 +34,7 @@ func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationT
 	return AuthenticationTokenRepository{client: client}
 }
 
-// GetCookieById - Get authentication cookie by ID
+// GetAuthenticationToken - Get authentication cookie by ID
 func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Context, passport *passport.Passport, tk string, secret *string) (*token.AuthenticationToken, error) {
 
 	val, err := r.client.Get(ctx, authenticationTokenPrefix+tk).Result()
@@ -77,7 +77,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 	return instance, nil
 }
 
-// DeleteCookieById - Delete cookie by ID
+// DeleteAuthenticationToken - Delete cookie by ID
 func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Context, passport *passport.Passport, id string, secret *string) error {
 
 	tk, err := r.GetAuthenticationToken(ctx, passport, id, secret)
@@ -99,7 +99,7 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Con
 	return nil
 }
 
-// CreateCookie - Create a authenticationToken
+// CreateAuthenticationToken - Create a authenticationToken
 func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Context, instance *token.AuthenticationToken) error {
 
 	// run a query to create the authentication token

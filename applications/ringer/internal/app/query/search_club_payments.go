@@ -16,10 +16,10 @@ type SearchClubPayments struct {
 }
 
 type SearchClubPaymentsHandler struct {
-	pr payment.IndexRepository
+	pr payment.Repository
 }
 
-func NewSearchClubPaymentsHandler(pr payment.IndexRepository) SearchClubPaymentsHandler {
+func NewSearchClubPaymentsHandler(pr payment.Repository) SearchClubPaymentsHandler {
 	return SearchClubPaymentsHandler{pr: pr}
 }
 

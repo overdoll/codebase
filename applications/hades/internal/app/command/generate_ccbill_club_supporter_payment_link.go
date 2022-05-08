@@ -31,14 +31,10 @@ func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr bi
 
 func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupportPaymentLink) (*ccbill.ClubSupporterPaymentLink, error) {
 
-	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
+	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return nil, err
-	}
-
-	if !allowed {
-		return nil, errors.New("cannot generate a link - club not accessible")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
@@ -64,7 +60,7 @@ func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	paymentLink, err := ccbill.NewClubSupporterPaymentLink(cmd.Principal, cmd.ClubId, cmd.SavePaymentForLater, price)
+	paymentLink, err := ccbill.NewClubSupporterPaymentLink(cmd.Principal, club, cmd.SavePaymentForLater, price)
 
 	if err != nil {
 		return nil, err

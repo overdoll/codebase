@@ -4,10 +4,87 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/metrics"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 )
+
+func MarshalClubTransactionMetricsToGraphQL(ctx context.Context, result *metrics.ClubTransactionMetrics) *ClubTransactionMetric {
+	return &ClubTransactionMetric{
+		Month:                   result.Month(),
+		Year:                    result.Year(),
+		Currency:                graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
+		TotalTransactionsCount:  int(result.TotalTransactions()),
+		TotalTransactionsAmount: int(result.TotalTransactionsAmount()),
+		ChargebacksCount:        int(result.ChargebacksCount()),
+		ChargebacksAmount:       int(result.ChargebacksAmount()),
+		ChargebacksCountRatio:   result.ChargebacksCountRatio(),
+		ChargebacksAmountRatio:  result.ChargebacksAmountRatio(),
+		RefundsCount:            int(result.RefundsCount()),
+		RefundsAmount:           int(result.RefundsAmount()),
+		RefundsCountRatio:       result.RefundsCountRatio(),
+		RefundsAmountRatio:      result.RefundsAmountRatio(),
+	}
+}
+
+func MarshalClubTransactionMetricsToGraphQLConnection(ctx context.Context, results []*metrics.ClubTransactionMetrics, cursor *paging.Cursor) *ClubTransactionMetricConnection {
+	var cancellationReasons []*ClubTransactionMetricEdge
+
+	conn := &ClubTransactionMetricConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: cancellationReasons,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *metrics.ClubTransactionMetrics
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *metrics.ClubTransactionMetrics {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *metrics.ClubTransactionMetrics {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		cancellationReasons = append(cancellationReasons, &ClubTransactionMetricEdge{
+			Node:   MarshalClubTransactionMetricsToGraphQL(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = cancellationReasons
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
 
 func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results []*cancellation.Reason, cursor *paging.Cursor) *CancellationReasonConnection {
 

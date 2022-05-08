@@ -24,8 +24,10 @@ type Commands struct {
 	UpdateClubPayoutDepositDate command.UpdateClubPayoutDepositDateHandler
 	UpdateClubPlatformFee       command.UpdateClubPlatformFeeHandler
 
-	IndexAllClubPayments command.IndexAllClubPaymentsHandler
-	IndexAllClubPayouts  command.IndexAllClubPayoutsHandler
+	DeleteAndRecreateClubPaymentsIndex command.DeleteAndRecreateClubPaymentsIndexHandler
+	DeleteAndRecreateClubPayoutsIndex  command.DeleteAndRecreateClubPayoutsIndexHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {

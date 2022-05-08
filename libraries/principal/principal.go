@@ -24,9 +24,12 @@ type Principal struct {
 	verified  bool
 	locked    bool
 	secure    bool
+	deleting  bool
+
+	clubExtension *ClubExtension
 }
 
-func NewPrincipal(accountId, email string, roles []string, verified, locked, secure bool) *Principal {
+func NewPrincipal(accountId, email string, roles []string, verified, locked, secure, deleting bool) *Principal {
 	return &Principal{
 		accountId: accountId,
 		email:     email,
@@ -34,6 +37,7 @@ func NewPrincipal(accountId, email string, roles []string, verified, locked, sec
 		verified:  verified,
 		locked:    locked,
 		secure:    secure,
+		deleting:  deleting,
 	}
 }
 
@@ -79,12 +83,20 @@ func (p *Principal) IsSecure() bool {
 	return p.secure
 }
 
+func (p *Principal) IsDeleting() bool {
+	return p.deleting
+}
+
 func (p *Principal) IsStaff() bool {
-	return p.hasRoles([]string{"staff"})
+	return p.hasRoles([]string{"STAFF"})
 }
 
 func (p *Principal) IsModerator() bool {
-	return p.hasRoles([]string{"moderator"})
+	return p.hasRoles([]string{"MODERATOR"})
+}
+
+func (p *Principal) IsArtist() bool {
+	return p.hasRoles([]string{"ARTIST"})
 }
 
 func (p *Principal) hasRoles(roles []string) bool {

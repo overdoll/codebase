@@ -3,6 +3,8 @@ package adapters
 import (
 	"context"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/principal"
 )
 
 type StellaGrpc struct {
@@ -13,65 +15,35 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
+func (s StellaGrpc) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
 
-	md, err := s.client.CanAccountCreatePostUnderClub(ctx, &stella.CanAccountCreatePostUnderClubRequest{ClubId: clubId, AccountId: accountId})
-
-	if err != nil {
-		return false, err
-	}
-
-	if md == nil {
-		return false, nil
-	}
-
-	return md.Allowed, nil
-}
-
-func (s StellaGrpc) CanAccountViewPostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
-
-	md, err := s.client.CanAccountViewPostUnderClub(ctx, &stella.CanAccountViewPostUnderClubRequest{ClubId: clubId, AccountId: accountId})
-
-	if err != nil {
-		return false, err
-	}
-
-	if md == nil {
-		return false, nil
-	}
-
-	return md.Allowed, nil
-}
-
-func (s StellaGrpc) GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error) {
-
-	md, err := s.client.GetAccountClubMembershipIds(ctx, &stella.GetAccountClubMembershipIdsRequest{AccountId: accountId})
+	md, err := s.client.GetAccountClubDigest(ctx, &stella.GetAccountClubDigestRequest{AccountId: accountId})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return md.ClubIds, nil
+	return principal.NewClubExtension(md)
 }
 
-func (s StellaGrpc) GetSuspendedClubs(ctx context.Context) ([]string, error) {
+func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
 
-	md, err := s.client.GetSuspendedClubs(ctx, &stella.GetSuspendedClubsRequest{})
+	md, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return md.ClubIds, nil
+	return club.UnmarshalClubFromDatabase(clubId, md.Club.Slug, md.Club.Name, md.Club.IsSuspended, md.Club.OwnerAccountId), nil
 }
 
-func (s StellaGrpc) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+func (s StellaGrpc) NewSupporterPost(ctx context.Context, clubId string) error {
 
-	md, err := s.client.GetAccountSupportedClubs(ctx, &stella.GetAccountSupportedClubsRequest{AccountId: accountId})
+	_, err := s.client.NewSupporterPost(ctx, &stella.NewSupporterPostRequest{ClubId: clubId})
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return md.ClubIds, nil
+	return nil
 }

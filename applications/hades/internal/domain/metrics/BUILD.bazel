@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "metrics",
+    srcs = [
+        "club_transaction_metric.go",
+        "club_transaction_metrics.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/hades/internal/domain/metrics",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//libraries/money",
+        "//libraries/paging",
+        "//libraries/principal",
+        "@com_github_gocql_gocql//:gocql",
+    ],
+)

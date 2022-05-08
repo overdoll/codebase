@@ -26,15 +26,15 @@ func (h UpdateAccountDetailsHandler) Handle(ctx context.Context, cmd UpdateAccou
 
 	id, err := h.ir.UpdateAccountDetails(ctx, cmd.Principal, cmd.AccountId, func(id *details.AccountDetails) error {
 
-		if err := id.UpdateFirstName(cmd.FirstName); err != nil {
+		if err := id.UpdateFirstName(cmd.Principal, cmd.FirstName); err != nil {
 			return err
 		}
 
-		if err := id.UpdateLastName(cmd.LastName); err != nil {
+		if err := id.UpdateLastName(cmd.Principal, cmd.LastName); err != nil {
 			return err
 		}
 
-		return id.UpdateCountry(cmd.CountryOfResidence)
+		return id.UpdateCountry(cmd.Principal, cmd.CountryOfResidence)
 	})
 
 	if err != nil {

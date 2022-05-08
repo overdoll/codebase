@@ -15,11 +15,10 @@ type CreateClub struct {
 
 type CreateClubHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewCreateClubHandler(cr club.Repository, ci club.IndexRepository) CreateClubHandler {
-	return CreateClubHandler{cr: cr, ci: ci}
+func NewCreateClubHandler(cr club.Repository) CreateClubHandler {
+	return CreateClubHandler{cr: cr}
 }
 
 func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Club, error) {
@@ -38,10 +37,6 @@ func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Cl
 	}
 
 	if err := h.cr.CreateClub(ctx, clb); err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

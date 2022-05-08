@@ -6,6 +6,7 @@ go_library(
         "add_moderator_to_post_queue.go",
         "approve_post.go",
         "create_rule.go",
+        "delete_account_data.go",
         "issue_club_infraction.go",
         "put_post_into_moderator_queue_or_publish.go",
         "reject_post.go",

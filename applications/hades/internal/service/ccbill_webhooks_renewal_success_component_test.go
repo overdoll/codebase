@@ -49,6 +49,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())

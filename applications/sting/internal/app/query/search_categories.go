@@ -17,10 +17,10 @@ type SearchCategories struct {
 }
 
 type SearchCategoriesHandler struct {
-	pr post.IndexRepository
+	pr post.Repository
 }
 
-func NewSearchCategoriesHandler(pr post.IndexRepository) SearchCategoriesHandler {
+func NewSearchCategoriesHandler(pr post.Repository) SearchCategoriesHandler {
 	return SearchCategoriesHandler{pr: pr}
 }
 

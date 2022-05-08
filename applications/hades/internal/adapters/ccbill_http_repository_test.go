@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/applications/hades/internal/domain/club"
 	"overdoll/libraries/money"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -33,7 +34,7 @@ func Test_ChargeByPrevious_Refund(t *testing.T) {
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
-		uuid.New().String(),
+		club.UnmarshalClubFromDatabase(uuid.New().String(), "", "", false, true, ""),
 		existingSubscriptionId,
 		billing.UnmarshalPricingFromDatabase(money.USD, 699),
 	)
@@ -83,7 +84,7 @@ func Test_ChargeByPrevious_Extend_Cancel(t *testing.T) {
 
 	chargeUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(
 		requester,
-		uuid.New().String(),
+		club.UnmarshalClubFromDatabase(uuid.New().String(), "", "", false, true, ""),
 		existingSubscriptionId2,
 		billing.UnmarshalPricingFromDatabase(money.USD, 699),
 	)

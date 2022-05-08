@@ -19,6 +19,37 @@ func MarshalClubMemberToGraphql(ctx context.Context, result *club2.Member) *Club
 	}
 }
 
+func MarshalClubSuspensionLogToGraphQL(ctx context.Context, result *club2.SuspensionLog) ClubSuspensionLog {
+
+	if result.IsSuspensionRemoval() {
+		return &ClubRemovedSuspensionLog{
+			ID:      relay.NewID(ClubRemovedSuspensionLog{}, result.Id()),
+			Account: &Account{ID: relay.NewID(Account{}, *result.AccountId())},
+		}
+	}
+
+	var suspensionReason ClubSuspensionReason
+
+	if *result.SuspensionReason() == club2.Manual {
+		suspensionReason = ClubSuspensionReasonManual
+	}
+
+	if *result.SuspensionReason() == club2.PostModerationQueue {
+		suspensionReason = ClubSuspensionReasonPostModerationQueue
+	}
+
+	if *result.SuspensionReason() == club2.PostRemoval {
+		suspensionReason = ClubSuspensionReasonPostRemoval
+	}
+
+	return &ClubIssuedSuspensionLog{
+		ID:             relay.NewID(ClubIssuedSuspensionLog{}, result.Id()),
+		Account:        &Account{ID: relay.NewID(Account{}, *result.AccountId())},
+		Reason:         suspensionReason,
+		SuspendedUntil: *result.SuspendedUntil(),
+	}
+}
+
 func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 
 	var res *Resource
@@ -39,6 +70,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 		suspension = &ClubSuspension{Expires: *result.SuspendedUntil()}
 	}
 
+	var termination *ClubTermination
+
+	if result.TerminatedByAccountId() != nil {
+		termination = &ClubTermination{Account: &Account{ID: relay.NewID(Account{}, *result.TerminatedByAccountId())}}
+	}
+
 	accountId := ""
 
 	if passport.FromContext(ctx).Authenticated() == nil {
@@ -46,16 +83,19 @@ func MarshalClubToGraphQL(ctx context.Context, result *club2.Club) *Club {
 	}
 
 	return &Club{
-		ID:            relay.NewID(Club{}, result.ID()),
-		Reference:     result.ID(),
-		Name:          result.Name().TranslateDefault(""),
-		Slug:          result.Slug(),
-		SlugAliases:   slugAliases,
-		MembersCount:  result.MembersCount(),
-		Thumbnail:     res,
-		Owner:         &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-		Suspension:    suspension,
-		ViewerIsOwner: accountId == result.OwnerAccountId(),
+		ID:                    relay.NewID(Club{}, result.ID()),
+		Reference:             result.ID(),
+		Name:                  result.Name().TranslateDefault(""),
+		Slug:                  result.Slug(),
+		SlugAliases:           slugAliases,
+		NextSupporterPostTime: result.NextSupporterPostTime(),
+		CanSupport:            result.CanSupport(),
+		MembersCount:          result.MembersCount(),
+		Thumbnail:             res,
+		Owner:                 &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:            suspension,
+		Termination:           termination,
+		ViewerIsOwner:         accountId == result.OwnerAccountId(),
 	}
 }
 
@@ -101,6 +141,64 @@ func MarshalClubMembersToGraphQLConnection(ctx context.Context, results []*club2
 		node := nodeAt(i)
 		clubs = append(clubs, &ClubMemberEdge{
 			Node:   MarshalClubMemberToGraphql(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = clubs
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
+
+func MarshalClubSuspensionLogsToGraphQLConnection(ctx context.Context, results []*club2.SuspensionLog, cursor *paging.Cursor) *ClubSuspensionLogConnection {
+	var clubs []*ClubSuspensionLogEdge
+
+	conn := &ClubSuspensionLogConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: clubs,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *club2.SuspensionLog
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *club2.SuspensionLog {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *club2.SuspensionLog {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		clubs = append(clubs, &ClubSuspensionLogEdge{
+			Node:   MarshalClubSuspensionLogToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}

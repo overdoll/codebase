@@ -3,11 +3,13 @@ package app
 import (
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
+	"overdoll/applications/eva/internal/app/workflows/activities"
 )
 
 type Application struct {
-	Commands Commands
-	Queries  Queries
+	Commands   Commands
+	Queries    Queries
+	Activities *activities.Activities
 }
 
 type Commands struct {
@@ -31,8 +33,10 @@ type Commands struct {
 
 	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
 	RevokeAccountStaffRole     command.RevokeAccountStaffRoleHandler
+	RevokeAccountArtistRole    command.RevokeAccountArtistRoleHandler
 	AssignAccountModeratorRole command.AssignAccountModeratorRoleHandler
 	AssignAccountStaffRole     command.AssignAccountStaffRoleHandler
+	AssignAccountArtistRole    command.AssignAccountArtistRoleHandler
 
 	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
@@ -40,6 +44,9 @@ type Commands struct {
 	CreateAccountSessionOperator command.CreateAccountSessionOperatorHandler
 	TouchAccountSessionOperator  command.TouchAccountSessionOperatorHandler
 	RevokeAccountSessionOperator command.RevokeAccountSessionOperatorHandler
+
+	CancelAccountDeletion command.CancelAccountDeletionHandler
+	DeleteAccount         command.DeleteAccountHandler
 }
 
 type Queries struct {

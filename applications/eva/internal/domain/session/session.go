@@ -2,6 +2,7 @@ package session
 
 import (
 	"errors"
+	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/uuid"
 	"time"
@@ -44,19 +45,21 @@ func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, las
 	}
 }
 
-func NewSession(accountId, userAgent, ip string, location *location.Location) (*Session, error) {
+func NewSession(account *account.Account, userAgent, ip string, location *location.Location) (*Session, error) {
 
-	// account ID is hashed so you dont know who the session belongs to
+	if account.IsDeleted() {
+		return nil, errors.New("cannot create session for deleted account")
+	}
 
 	return &Session{
-		id:        uuid.New().String() + ":account:" + accountId,
+		id:        uuid.New().String() + ":account:" + account.ID(),
 		device:    userAgent,
 		ip:        ip,
 		location:  location,
 		current:   false,
 		created:   time.Now(),
 		lastSeen:  time.Now(),
-		accountId: accountId,
+		accountId: account.ID(),
 	}, nil
 }
 

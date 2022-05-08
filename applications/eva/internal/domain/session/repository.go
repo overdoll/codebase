@@ -16,4 +16,6 @@ type Repository interface {
 	CreateSessionOperator(ctx context.Context, session *Session) error
 	UpdateSessionOperator(ctx context.Context, sessionId string, updateFn func(session *Session) error) (*Session, error)
 	RevokeSessionOperator(ctx context.Context, sessionId string) error
+
+	DeleteAccountSessionData(ctx context.Context, accountId string) error
 }

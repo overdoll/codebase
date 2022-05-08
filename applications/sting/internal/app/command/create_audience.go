@@ -16,11 +16,10 @@ type CreateAudience struct {
 
 type CreateAudienceHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewCreateAudienceHandler(pr post.Repository, pi post.IndexRepository) CreateAudienceHandler {
-	return CreateAudienceHandler{pr: pr, pi: pi}
+func NewCreateAudienceHandler(pr post.Repository) CreateAudienceHandler {
+	return CreateAudienceHandler{pr: pr}
 }
 
 func (h CreateAudienceHandler) Handle(ctx context.Context, cmd CreateAudience) (*post.Audience, error) {
@@ -32,10 +31,6 @@ func (h CreateAudienceHandler) Handle(ctx context.Context, cmd CreateAudience) (
 	}
 
 	if err := h.pr.CreateAudience(ctx, cmd.Principal, aud); err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexAudience(ctx, aud); err != nil {
 		return nil, err
 	}
 

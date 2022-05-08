@@ -38,7 +38,9 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	if err := workflow.ExecuteChildWorkflow(workflow.WithChildOptions(ctx, childWorkflowOptions), ProcessClubPayout,
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, ProcessClubPayout,
 		ProcessClubPayoutInput{
 			PayoutId: input.PayoutId,
 		},

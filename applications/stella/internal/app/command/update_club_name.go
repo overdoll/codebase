@@ -16,11 +16,10 @@ type UpdateClubName struct {
 
 type UpdateClubNameHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewUpdateClubNameHandler(cr club.Repository, ci club.IndexRepository) UpdateClubNameHandler {
-	return UpdateClubNameHandler{cr: cr, ci: ci}
+func NewUpdateClubNameHandler(cr club.Repository) UpdateClubNameHandler {
+	return UpdateClubNameHandler{cr: cr}
 }
 
 func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (*club.Club, error) {
@@ -30,10 +29,6 @@ func (h UpdateClubNameHandler) Handle(ctx context.Context, cmd UpdateClubName) (
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

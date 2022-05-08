@@ -5,10 +5,11 @@ import (
 )
 
 type Activities struct {
-	cr club.Repository
-	ci club.IndexRepository
+	cr      club.Repository
+	sting   StingService
+	carrier CarrierService
 }
 
-func NewActivitiesHandler(cr club.Repository, ci club.IndexRepository) *Activities {
-	return &Activities{cr: cr, ci: ci}
+func NewActivitiesHandler(cr club.Repository, sting StingService, carrier CarrierService) *Activities {
+	return &Activities{cr: cr, sting: sting, carrier: carrier}
 }

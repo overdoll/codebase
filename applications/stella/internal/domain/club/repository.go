@@ -19,11 +19,13 @@ type Repository interface {
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+	UpdateClubNextSupporterPostTime(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+	UpdateClubTerminationStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
+	GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error)
 
 	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
-	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
 
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, member *Member) error
@@ -35,16 +37,19 @@ type Repository interface {
 	UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *Member) error) (*Member, error)
 
 	GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
-	GetAccountClubMemberships(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Member, error)
-	GetMembersForClub(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*Member, error)
 
-	GetAccountClubMembershipsOperator(ctx context.Context, accountId string) ([]*Member, error)
-}
+	SearchClubMembers(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *MemberFilters) ([]*Member, error)
 
-type IndexRepository interface {
-	IndexAllClubs(ctx context.Context) error
-	IndexClub(ctx context.Context, club *Club) error
-	DeleteClubsIndex(ctx context.Context) error
-	SuspendedClubs(ctx context.Context) ([]*Club, error)
+	GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*SuspensionLog, error)
+
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
+	DeleteAndRecreateClubsIndex(ctx context.Context) error
+	DeleteAndRecreateClubMembersIndex(ctx context.Context) error
+
+	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
+
+	GetAccountClubDigestById(ctx context.Context, accountId string) (*AccountClubDigest, error)
+
+	DeleteAccountData(ctx context.Context, accountId string) error
+	HasNonTerminatedClubs(ctx context.Context, requester *principal.Principal, accountId string) (bool, error)
 }

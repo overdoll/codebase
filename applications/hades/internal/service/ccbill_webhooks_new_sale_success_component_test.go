@@ -110,8 +110,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
-	env.SetDetachedChildWait(false)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
+	env.SetDetachedChildWait(false)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())

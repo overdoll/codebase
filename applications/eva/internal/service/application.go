@@ -3,12 +3,15 @@ package service
 import (
 	"context"
 	"github.com/oschwald/geoip2-golang"
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/mocks"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
+	"overdoll/applications/eva/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -17,23 +20,64 @@ import (
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	carrierClient, cleanup := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
+	hadesClient, cleanup2 := clients.NewHadesClient(ctx, os.Getenv("HADES_SERVICE"))
+	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	parleyClient, cleanup4 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+	stingClient, cleanup5 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
+	ringerClient, cleanup6 := clients.NewRingerClient(ctx, os.Getenv("RINGER_SERVICE"))
 
-	return createApplication(ctx, adapters.NewCarrierGrpc(carrierClient)),
+	return createApplication(
+			ctx,
+			adapters.NewCarrierGrpc(carrierClient),
+			adapters.NewHadesGrpc(hadesClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewRingerGrpc(ringerClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStingGrpc(stingClient),
+			clients.NewTemporalClient(ctx),
+		),
 		func() {
 			cleanup()
+			cleanup2()
+			cleanup3()
+			cleanup4()
+			cleanup5()
+			cleanup6()
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
 
 	// mock out carrier so we don't have to send emails in tests
 	// we "send" emails by placing them inside of a redis DB to be read later from tests
-	return createApplication(ctx, NewCarrierServiceMock()),
+
+	temporalClient := &mocks.Client{}
+
+	return createApplication(
+			ctx,
+			NewCarrierServiceMock(),
+			HadesServiceMock{},
+			StellaServiceMock{},
+			RingerServiceMock{},
+			ParleyServiceMock{},
+			StingServiceMock{},
+			temporalClient,
+		),
 		func() {
-		}
+		},
+		temporalClient
 }
 
-func createApplication(ctx context.Context, carrier command.CarrierService) app.Application {
+func createApplication(
+	ctx context.Context,
+	carrier command.CarrierService,
+	hades command.HadesService,
+	stella command.StellaService,
+	ringer command.RingerService,
+	parley command.ParleyService,
+	sting command.StingService,
+	client client.Client,
+) app.Application {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -53,6 +97,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
+	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -76,12 +121,17 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
+			RevokeAccountArtistRole:    command.NewRevokeAccountArtistRoleHandler(accountRepo),
 			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
 			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
+			AssignAccountArtistRole:    command.NewAssignAccountArtistRoleHandler(accountRepo),
 
-			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, locationRepo),
+			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, accountRepo, locationRepo),
 			TouchAccountSessionOperator:  command.NewTouchAccountSessionOperatorHandler(sessionRepo),
 			RevokeAccountSessionOperator: command.NewRevokeAccountSessionOperatorHandler(sessionRepo),
+
+			CancelAccountDeletion: command.NewCancelAccountDeletionHandler(accountRepo, eventRepo),
+			DeleteAccount:         command.NewDeleteAccountHandler(accountRepo, eventRepo, hades, stella),
 		},
 		Queries: app.Queries{
 			AccountById:            query.NewAccountByIdHandler(accountRepo),
@@ -101,5 +151,16 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 			LocationFromIp: query.NewLocationFromIpHandler(locationRepo),
 		},
+		Activities: activities.NewActivitiesHandler(
+			accountRepo,
+			mfaRepo,
+			sessionRepo,
+			hades,
+			stella,
+			sting,
+			parley,
+			ringer,
+			carrier,
+		),
 	}
 }

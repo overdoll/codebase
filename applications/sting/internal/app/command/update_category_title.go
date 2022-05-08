@@ -16,11 +16,10 @@ type UpdateCategoryTitle struct {
 
 type UpdateCategoryTitleHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewUpdateCategoryTitleHandler(pr post.Repository, pi post.IndexRepository) UpdateCategoryTitleHandler {
-	return UpdateCategoryTitleHandler{pr: pr, pi: pi}
+func NewUpdateCategoryTitleHandler(pr post.Repository) UpdateCategoryTitleHandler {
+	return UpdateCategoryTitleHandler{pr: pr}
 }
 
 func (h UpdateCategoryTitleHandler) Handle(ctx context.Context, cmd UpdateCategoryTitle) (*post.Category, error) {
@@ -30,10 +29,6 @@ func (h UpdateCategoryTitleHandler) Handle(ctx context.Context, cmd UpdateCatego
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexCategory(ctx, cat); err != nil {
 		return nil, err
 	}
 

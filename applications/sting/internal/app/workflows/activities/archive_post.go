@@ -12,7 +12,7 @@ type ArchivePostInput struct {
 
 func (h *Activities) ArchivePost(ctx context.Context, input ArchivePostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.MakeArchived()
 	})
 
@@ -21,5 +21,5 @@ func (h *Activities) ArchivePost(ctx context.Context, input ArchivePostInput) er
 	}
 
 	// index pending post
-	return h.pi.IndexPost(ctx, pendingPost)
+	return nil
 }

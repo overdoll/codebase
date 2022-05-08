@@ -3,66 +3,22 @@ syntax = "proto3";
 package applications.grpc.stella.v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 message Club {
   string slug = 1;
   string name = 2;
   string ownerAccountId = 3;
-}
-
-message CanAccountCreatePostUnderClubRequest {
-  string clubId = 1;
-  string accountId = 2;
-}
-
-message CanAccountViewPostUnderClubRequest {
-  string clubId = 1;
-  string accountId = 2;
-}
-
-message CanAccountCreatePostUnderClubResponse {
-  bool allowed = 1;
-}
-
-message CanAccountViewPostUnderClubResponse {
-  bool allowed = 1;
-}
-
-message GetAccountClubMembershipIdsRequest {
-  string accountId = 1;
+  bool isSuspended = 4;
+  bool canSupport = 5;
 }
 
 message GetClubByIdRequest {
   string clubId = 1;
 }
 
-message SuspendClubRequest {
-  string clubId = 1;
-  int64 endTimeUnix = 2;
-}
-
 message GetClubByIdResponse {
   Club club = 1;
-}
-
-message SuspendClubResponse {}
-
-message GetAccountClubMembershipIdsResponse {
-  repeated string clubIds = 1;
-}
-
-message GetSuspendedClubsRequest {}
-
-message GetSuspendedClubsResponse {
-  repeated string clubIds = 1;
-}
-
-message GetAccountSupportedClubsRequest {
-  string accountId = 1;
-}
-
-message GetAccountSupportedClubsResponse {
-  repeated string clubIds = 1;
 }
 
 message AddClubSupporterRequest {
@@ -71,33 +27,61 @@ message AddClubSupporterRequest {
   google.protobuf.Timestamp supportedAt = 3;
 }
 
-message AddClubSupporterResponse {}
-
 message RemoveClubSupporterRequest {
   string accountId = 1;
   string clubId = 2;
 }
 
-message RemoveClubSupporterResponse {}
-
-message CanAccountBecomeClubSupporterRequest {
-  string accountId = 1;
-  string clubId = 2;
+message SuspendClubRequest {
+  string clubId = 1;
+  int64 endTimeUnix = 2;
+  optional string initiatorAccountId = 3;
+  SuspensionSource source = 4;
 }
 
-message CanAccountBecomeClubSupporterResponse {
-  bool allowed = 1;
+enum SuspensionSource {
+  POST_MODERATION_QUEUE = 0;
+  POST_REMOVAL = 1;
+  MANUAL = 2;
+  AUTOMATED_CHARGEBACKS = 3;
+}
+
+message GetAccountClubDigestRequest {
+  string accountId = 1;
+}
+
+message GetAccountClubDigestResponse {
+  repeated string supportedClubIds = 1;
+  repeated string clubMembershipIds = 2;
+  repeated string ownerClubIds = 3;
+}
+
+message CanDeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message CanDeleteAccountDataResponse {
+  bool canDelete = 1;
+}
+
+message NewSupporterPostRequest {
+  string clubId = 1;
 }
 
 service Stella {
-  rpc SuspendClub(SuspendClubRequest) returns (SuspendClubResponse);
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
-  rpc CanAccountCreatePostUnderClub(CanAccountCreatePostUnderClubRequest) returns (CanAccountCreatePostUnderClubResponse);
-  rpc CanAccountViewPostUnderClub(CanAccountViewPostUnderClubRequest) returns (CanAccountViewPostUnderClubResponse);
-  rpc GetSuspendedClubs(GetSuspendedClubsRequest) returns (GetSuspendedClubsResponse);
-  rpc GetAccountSupportedClubs(GetAccountSupportedClubsRequest) returns (GetAccountSupportedClubsResponse);
-  rpc GetAccountClubMembershipIds(GetAccountClubMembershipIdsRequest) returns (GetAccountClubMembershipIdsResponse);
-  rpc AddClubSupporter(AddClubSupporterRequest) returns (AddClubSupporterResponse);
-  rpc RemoveClubSupporter(RemoveClubSupporterRequest) returns (RemoveClubSupporterResponse);
-  rpc CanAccountBecomeClubSupporter(CanAccountBecomeClubSupporterRequest) returns (CanAccountBecomeClubSupporterResponse);
+  rpc GetAccountClubDigest(GetAccountClubDigestRequest) returns (GetAccountClubDigestResponse);
+
+  rpc SuspendClub(SuspendClubRequest) returns (google.protobuf.Empty);
+  rpc AddClubSupporter(AddClubSupporterRequest) returns (google.protobuf.Empty);
+  rpc RemoveClubSupporter(RemoveClubSupporterRequest) returns (google.protobuf.Empty);
+
+  rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
+
+  rpc NewSupporterPost(NewSupporterPostRequest) returns (google.protobuf.Empty);
 }

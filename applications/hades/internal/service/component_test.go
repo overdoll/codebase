@@ -6,12 +6,15 @@ import (
 	"github.com/shurcooL/graphql"
 	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
+	"google.golang.org/grpc"
 	"log"
 	"os"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/applications/hades/internal/service"
+	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -23,6 +26,9 @@ const HadesHttpAddr = ":6666"
 const HadesHttpCCBillWebhookAddr = "http://:6666/api/ccbill/webhook"
 const HadesHttpCCBillPaymentFlowAddr = "http://:6666/api/ccbill/payment-flow"
 const HadesHttpCCBillPaymentFlowCallbackAddr = "http://:6666/api/ccbill/payment-flow/callback"
+
+const HadesGrpcAddr = "localhost:6247"
+const HadesGrpcClientAddr = "localhost:6247"
 
 const HadesGraphqlClientAddr = "http://:6666/api/graphql"
 
@@ -54,6 +60,13 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 	return env
 }
 
+func getGrpcClient(t *testing.T) hades.HadesClient {
+
+	hadesClient, _ := clients.NewHadesClient(context.Background(), HadesGrpcClientAddr)
+
+	return hadesClient
+}
+
 func startService() bool {
 	config.Read("applications/hades")
 
@@ -67,7 +80,20 @@ func startService() bool {
 
 	ok := testing_tools.WaitForPort(HadesHttpAddr)
 	if !ok {
-		log.Println("timed out waiting for sting HTTP to come up")
+		log.Println("timed out waiting for hades HTTP to come up")
+		return false
+	}
+
+	s := ports.NewGrpcServer(&application)
+
+	go bootstrap.InitializeGRPCServer(HadesGrpcAddr, func(server *grpc.Server) {
+		hades.RegisterHadesServer(server, s)
+	})
+
+	ok = testing_tools.WaitForPort(HadesGrpcAddr)
+
+	if !ok {
+		log.Println("timed out waiting for hades GRPC to come up")
 		return false
 	}
 

@@ -3,9 +3,8 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/sting/internal/app/query"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -20,6 +19,8 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
+		"likes",
+		"likes_last_update_id",
 		"supporter_only_status",
 		"content_resource_ids",
 		"content_supporter_only",
@@ -40,6 +41,8 @@ var postTable = table.New(table.Metadata{
 type posts struct {
 	Id                              string            `db:"id"`
 	State                           string            `db:"state"`
+	Likes                           int               `db:"likes"`
+	LikesLastUpdateId               gocql.UUID        `db:"likes_last_update_id"`
 	SupporterOnlyStatus             string            `db:"supporter_only_status"`
 	ContentResourceIds              []string          `db:"content_resource_ids"`
 	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
@@ -54,13 +57,28 @@ type posts struct {
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
-type PostsCassandraRepository struct {
-	session gocqlx.Session
-	stella  query.StellaService
+var terminatedClubsTable = table.New(table.Metadata{
+	Name: "terminated_clubs",
+	Columns: []string{
+		"bucket",
+		"club_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"club_id"},
+})
+
+type terminatedClubs struct {
+	Bucket int    `db:"bucket"`
+	ClubId string `db:"club_id"`
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, stella query.StellaService) PostsCassandraRepository {
-	return PostsCassandraRepository{session: session, stella: stella}
+type PostsCassandraElasticsearchRepository struct {
+	session gocqlx.Session
+	client  *elastic.Client
+}
+
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -81,6 +99,8 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		Id:                              pending.ID(),
 		State:                           pending.State().String(),
 		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
+		Likes:                           pending.Likes(),
+		LikesLastUpdateId:               gocql.TimeUUID(),
 		ClubId:                          pending.ClubId(),
 		AudienceId:                      pending.AudienceId(),
 		ContributorId:                   pending.ContributorId(),
@@ -95,19 +115,12 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts, requester *principal.Principal, supportedClubIds []string) (*post.Post, error) {
-
-	likes, err := r.getLikesForPost(ctx, postPending.Id)
-
-	if err != nil {
-		return nil, err
-	}
-
+func (r PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
 		postPending.SupporterOnlyStatus,
-		likes,
+		postPending.Likes,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
 		postPending.ContentSupporterOnly,
@@ -119,22 +132,10 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		postPending.CategoryIds,
 		postPending.CreatedAt,
 		postPending.PostedAt,
-		requester,
-		supportedClubIds,
 	), nil
 }
 
-func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
-
-	validClub, err := r.stella.CanAccountCreatePostUnderClub(ctx, pending.ClubId(), pending.ContributorId())
-
-	if err != nil {
-		return errors.Wrap(err, "failed to get account permissions for posting")
-	}
-
-	if !validClub {
-		return errors.New("bad club given")
-	}
+func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
 	pst, err := marshalPostToDatabase(pending)
 
@@ -150,10 +151,14 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 		return fmt.Errorf("failed to create post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, pending); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
+func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, id string) error {
 
 	if err := r.session.
 		Query(postTable.Delete()).
@@ -163,10 +168,14 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 		return fmt.Errorf("failed to delete post: %v", err)
 	}
 
+	if err := r.deletePostIndexById(ctx, id); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
 
 	var postResults []*post.Post
 
@@ -186,19 +195,8 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
 	}
 
-	var supportedClubIds []string
-	var err error
-
-	if requester != nil {
-		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	for _, b := range postsModels {
-		p, err := r.unmarshalPost(ctx, *b, requester, supportedClubIds)
+		p, err := r.unmarshalPost(ctx, *b)
 		if err != nil {
 			return nil, err
 		}
@@ -208,7 +206,7 @@ func (r PostsCassandraRepository) GetPostsByIds(ctx context.Context, requester *
 	return postResults, nil
 }
 
-func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*posts, error) {
+func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, id string) (*posts, error) {
 
 	var postPending posts
 
@@ -228,7 +226,7 @@ func (r PostsCassandraRepository) getPostById(ctx context.Context, id string) (*
 	return &postPending, nil
 }
 
-func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
 
 	postPending, err := r.getPostById(ctx, id)
 
@@ -236,10 +234,58 @@ func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id st
 		return nil, err
 	}
 
-	return r.unmarshalPost(ctx, *postPending, nil, nil)
+	return r.unmarshalPost(ctx, *postPending)
 }
 
-func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {
+
+	var suspendedClub []*terminatedClubs
+
+	if err := qb.Select(terminatedClubsTable.Name()).
+		Where(qb.Eq("bucket")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&terminatedClubs{Bucket: 0}).
+		Select(&suspendedClub); err != nil {
+		return nil, fmt.Errorf("failed to get suspended clubs: %v", err)
+	}
+
+	var ids []string
+
+	for _, suspended := range suspendedClub {
+		ids = append(ids, suspended.ClubId)
+	}
+
+	return ids, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Context, clubId string) error {
+
+	if err := r.session.
+		Query(terminatedClubsTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to add suspended club: %v", err)
+	}
+
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.Context, clubId string) error {
+
+	if err := r.session.
+		Query(terminatedClubsTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete terminated club: %v", err)
+	}
+
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
 
 	postPending, err := r.getPostById(ctx, id)
 
@@ -247,46 +293,26 @@ func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *pr
 		return nil, err
 	}
 
-	var supportedClubIds []string
-
-	if requester != nil {
-		supportedClubIds, err = r.stella.GetAccountSupportedClubs(ctx, requester.AccountId())
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	pst, err := r.unmarshalPost(ctx, *postPending, requester, supportedClubIds)
+	pst, err := r.unmarshalPost(ctx, *postPending)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := pst.CanView(requester); err != nil {
-		return nil, err
-	}
-
-	var accountId string
-
-	if requester != nil {
-		accountId = requester.AccountId()
-	}
-
-	// a simple permission check for posts
-	allowed, err := r.stella.CanAccountViewPostUnderClub(ctx, pst.ClubId(), accountId)
+	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if !allowed {
-		return nil, post.ErrNotFound
+	if err := pst.CanView(suspendedClubIds, requester); err != nil {
+		return nil, err
 	}
 
 	return pst, err
 }
 
-func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
@@ -317,10 +343,14 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
 
 	currentPost, err := r.GetPostById(ctx, requester, id)
 
@@ -328,14 +358,8 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, err
 	}
 
-	validClub, err := r.stella.CanAccountCreatePostUnderClub(ctx, currentPost.ClubId(), requester.AccountId())
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get account permissions for posting")
-	}
-
-	if !validClub {
-		return nil, errors.New("bad club given")
+	if err := currentPost.CanUpdate(requester); err != nil {
+		return nil, err
 	}
 
 	err = updateFn(currentPost)
@@ -360,26 +384,30 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
 }
 
-func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids", "series_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
 }
 
-func (r PostsCassandraRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
@@ -409,28 +437,51 @@ func (r PostsCassandraRepository) UpdatePostContentOperator(ctx context.Context,
 		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
 	return currentPost, nil
 }
 
-func (r PostsCassandraRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
-	pst, err := r.GetPostByIdOperator(ctx, id)
+	postPending, err := r.getPostById(ctx, id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	oldTotalLikes := pst.Likes()
+	unmarshalled, err := r.unmarshalPost(ctx, *postPending)
 
-	if err = updateFn(pst); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	newTotalLikes := pst.Likes()
+	err = updateFn(unmarshalled)
 
-	if err := r.updatePostLikes(ctx, id, newTotalLikes > oldTotalLikes); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	return pst, nil
+	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id").
+		If(qb.EqLit("likes_last_update_id", postPending.LikesLastUpdateId.String())).
+		Query(r.session).
+		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID()}).
+		SerialConsistency(gocql.Serial).
+		ExecCAS()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to update post likes: %v", err)
+	}
+
+	if !ok {
+		return nil, fmt.Errorf("failed to update post likes")
+	}
+
+	if err := r.indexPost(ctx, unmarshalled); err != nil {
+		return nil, err
+	}
+
+	return unmarshalled, nil
 }

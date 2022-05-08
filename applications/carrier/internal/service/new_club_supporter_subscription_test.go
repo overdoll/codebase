@@ -14,6 +14,7 @@ func TestNewClubSupporterSubscription(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient()
+	timestampFrom := time.Now()
 
 	accountId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
@@ -32,7 +33,7 @@ func TestNewClubSupporterSubscription(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending new club supporter subscription")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	title := doc.Find("head").Find("title").First()
 	require.Equal(t, "New Subscription", title.Text(), "has the correct new subscription details")

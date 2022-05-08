@@ -86,3 +86,13 @@ func (s CarrierGrpc) UpcomingClubSupporterSubscriptionRenewals(ctx context.Conte
 
 	return err
 }
+
+func (s CarrierGrpc) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
+
+	_, err := s.client.ClubOverChargebackThreshold(ctx, &carrier.ClubOverChargebackThresholdRequest{
+		Club:      &carrier.Club{Id: clubId},
+		Threshold: threshold,
+	})
+
+	return err
+}

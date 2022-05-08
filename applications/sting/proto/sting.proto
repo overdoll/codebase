@@ -2,20 +2,36 @@ syntax = "proto3";
 
 package applications.grpc.sting.v1;
 
+import "google/protobuf/empty.proto";
+
 message PostRequest {
   string id = 1;
 }
-
-message UpdatePostResponse {}
 
 message Post {
   string clubId = 1;
 }
 
+message AddTerminatedClubRequest {
+  string clubId = 1;
+}
+
+message RemoveTerminatedClubRequest {
+  string clubId = 1;
+}
+
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
-  rpc PublishPost(PostRequest) returns (UpdatePostResponse);
-  rpc RemovePost(PostRequest) returns (UpdatePostResponse);
-  rpc RejectPost(PostRequest) returns (UpdatePostResponse);
-  rpc DiscardPost(PostRequest) returns (UpdatePostResponse);
+  rpc PublishPost(PostRequest) returns (google.protobuf.Empty);
+  rpc RemovePost(PostRequest) returns (google.protobuf.Empty);
+  rpc RejectPost(PostRequest) returns (google.protobuf.Empty);
+  rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
+  rpc AddTerminatedClub(AddTerminatedClubRequest) returns (google.protobuf.Empty);
+  rpc RemoveTerminatedClub(RemoveTerminatedClubRequest) returns (google.protobuf.Empty);
+
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

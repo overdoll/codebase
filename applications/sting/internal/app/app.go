@@ -28,15 +28,18 @@ type Commands struct {
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
 	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
+	AddTerminatedClub    command.AddTerminatedClubHandler
+	RemoveTerminatedClub command.RemoveTerminatedClubHandler
+
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
 
-	IndexAllCategories command.IndexAllCategoriesHandler
-	IndexAllCharacters command.IndexAllCharactersHandler
-	IndexAllSeries     command.IndexAllSeriesHandler
-	IndexAllAudience   command.IndexAllAudienceHandler
-	IndexAllPosts      command.IndexAllPostsHandler
+	DeleteAndRecreateCategoriesIndex command.DeleteAndRecreateCategoriesIndexHandler
+	DeleteAndRecreateCharactersIndex command.DeleteAndRecreateCharactersIndexHandler
+	DeleteAndRecreateSeriesIndex     command.DeleteAndRecreateSeriesIndexHandler
+	DeleteAndRecreateAudienceIndex   command.DeleteAndRecreateAudienceIndexHandler
+	DeleteAndRecreatePostsIndex      command.DeleteAndRecreatePostsIndexHandler
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
@@ -61,6 +64,8 @@ type Commands struct {
 	CreateSeries          command.CreateSeriesHandler
 	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {

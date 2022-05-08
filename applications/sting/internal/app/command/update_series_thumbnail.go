@@ -16,12 +16,11 @@ type UpdateSeriesThumbnail struct {
 
 type UpdateSeriesThumbnailHandler struct {
 	pr     post.Repository
-	pi     post.IndexRepository
 	loader LoaderService
 }
 
-func NewUpdateSeriesThumbnailHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) UpdateSeriesThumbnailHandler {
-	return UpdateSeriesThumbnailHandler{pr: pr, pi: pi, loader: loader}
+func NewUpdateSeriesThumbnailHandler(pr post.Repository, loader LoaderService) UpdateSeriesThumbnailHandler {
+	return UpdateSeriesThumbnailHandler{pr: pr, loader: loader}
 }
 
 func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeriesThumbnail) (*post.Series, error) {
@@ -38,10 +37,6 @@ func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeri
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexSeries(ctx, series); err != nil {
 		return nil, err
 	}
 

@@ -32,9 +32,9 @@ func ArchivePost(ctx workflow.Context, input ArchivePostInput) error {
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-	if err := workflow.ExecuteChildWorkflow(ctx, UpdateTotalPostsForPostTags,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpdateTotalPostsForPostTags,
 		UpdateTotalPostsForPostTagsInput{
 			PostId: input.PostId,
 		},

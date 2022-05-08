@@ -6,8 +6,6 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"strings"
-
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -46,7 +44,7 @@ func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string,
 		CharacterSlugs:     characterSlugs,
 		SeriesSlugs:        seriesSlugs,
 		State:              stateModified,
-		SortBy:             strings.ToLower(sortBy.String()),
+		SortBy:             sortBy.String(),
 		ShowSuspendedClubs: true,
 	})
 

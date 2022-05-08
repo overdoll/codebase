@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -15,4 +16,8 @@ type LoaderService interface {
 	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error)
 	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
 	AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error)
+}
+
+type StellaService interface {
+	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 }

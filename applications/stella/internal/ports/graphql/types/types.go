@@ -10,11 +10,19 @@ import (
 	"time"
 )
 
+type ClubSuspensionLog interface {
+	IsClubSuspensionLog()
+}
+
 type Account struct {
 	// Maximum amount of clubs that you can create.
 	ClubsLimit int `json:"clubsLimit"`
 	// Current count of the amount of clubs that the account has created.
 	ClubsCount int `json:"clubsCount"`
+	// Whether or not this club has non-terminated clubs.
+	//
+	// Cannot delete account if this is true.
+	HasNonTerminatedClubs bool `json:"hasNonTerminatedClubs"`
 	// Represents the clubs that the account has created.
 	Clubs *ClubConnection `json:"clubs"`
 	// Maximum amount of clubs that you can join as an account.
@@ -63,10 +71,24 @@ type Club struct {
 	Name string `json:"name"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
+	// Whether or not this club is terminated.
+	Termination *ClubTermination `json:"termination"`
 	// Whether or not this club is suspended.
 	Suspension *ClubSuspension `json:"suspension"`
+	// Club Suspension Logs.
+	//
+	// Can see who a club was suspended by, the reason and who unsuspended a particular club.
+	SuspensionLogs *ClubSuspensionLogConnection `json:"suspensionLogs"`
 	// Whether or not the viewer is the owner of the club.
 	ViewerIsOwner bool `json:"viewerIsOwner"`
+	// Whether or not you can become a supporter of this club.
+	CanSupport bool `json:"canSupport"`
+	// When the owner of the club needs to post the next supporter post.
+	//
+	// Usually 30 days after the next post.
+	//
+	// Nil if no supporter-only posts have been created.
+	NextSupporterPostTime *time.Time `json:"nextSupporterPostTime"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
 	// The total amount of members in this club.
@@ -87,6 +109,21 @@ type ClubEdge struct {
 	Cursor string `json:"cursor"`
 	Node   *Club  `json:"node"`
 }
+
+type ClubIssuedSuspensionLog struct {
+	// The ID linked to this suspension log.
+	ID relay.ID `json:"id"`
+	// The account that created this suspension.
+	//
+	// If nil, the suspension was created automatically
+	Account *Account `json:"account"`
+	// The reason this suspension was issued.
+	Reason ClubSuspensionReason `json:"reason"`
+	// How long the club was suspended until.
+	SuspendedUntil time.Time `json:"suspendedUntil"`
+}
+
+func (ClubIssuedSuspensionLog) IsClubSuspensionLog() {}
 
 type ClubMember struct {
 	// An ID pointing to this club member.
@@ -116,6 +153,15 @@ type ClubMemberEdge struct {
 	Node   *ClubMember `json:"node"`
 }
 
+type ClubRemovedSuspensionLog struct {
+	// The ID linked to this suspension log.
+	ID relay.ID `json:"id"`
+	// The account that removed this suspension.
+	Account *Account `json:"account"`
+}
+
+func (ClubRemovedSuspensionLog) IsClubSuspensionLog() {}
+
 // The club slug alias
 type ClubSlugAlias struct {
 	// The slug alias
@@ -125,6 +171,21 @@ type ClubSlugAlias struct {
 type ClubSuspension struct {
 	// When the suspension expires. Can call UnSuspendClub when time = now.
 	Expires time.Time `json:"expires"`
+}
+
+type ClubSuspensionLogConnection struct {
+	Edges    []*ClubSuspensionLogEdge `json:"edges"`
+	PageInfo *relay.PageInfo          `json:"pageInfo"`
+}
+
+type ClubSuspensionLogEdge struct {
+	Cursor string            `json:"cursor"`
+	Node   ClubSuspensionLog `json:"node"`
+}
+
+type ClubTermination struct {
+	// The account that terminated the club.
+	Account *Account `json:"account"`
 }
 
 // Create club.
@@ -157,13 +218,6 @@ type JoinClubInput struct {
 type JoinClubPayload struct {
 	// The membership after creation
 	ClubMember *ClubMember `json:"clubMember"`
-}
-
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
 }
 
 // Leave a club.
@@ -226,11 +280,16 @@ type SuspendClubPayload struct {
 	Club *Club `json:"club"`
 }
 
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
+// Terminate the club.
+type TerminateClubInput struct {
+	// The club to terminate.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Terminate club payload.
+type TerminateClubPayload struct {
+	// The new club after it's terminated.
+	Club *Club `json:"club"`
 }
 
 // Un-Suspend the club.
@@ -242,6 +301,18 @@ type UnSuspendClubInput struct {
 // Un suspend club payload.
 type UnSuspendClubPayload struct {
 	// The new club after it's not suspended anymore.
+	Club *Club `json:"club"`
+}
+
+// Un-Terminate the club.
+type UnTerminateClubInput struct {
+	// The club to un-terminate.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Un terminate club payload.
+type UnTerminateClubPayload struct {
+	// The new club after it's not terminated anymore.
 	Club *Club `json:"club"`
 }
 
@@ -353,6 +424,53 @@ func (e *ClubMembersSort) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ClubMembersSort) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Reasons a club suspension was created.
+type ClubSuspensionReason string
+
+const (
+	// Suspension was issued from a post moderation queue.
+	ClubSuspensionReasonPostModerationQueue ClubSuspensionReason = "POST_MODERATION_QUEUE"
+	// Suspension was issued from a post removal.
+	ClubSuspensionReasonPostRemoval ClubSuspensionReason = "POST_REMOVAL"
+	// Suspension was issued manually.
+	ClubSuspensionReasonManual ClubSuspensionReason = "MANUAL"
+)
+
+var AllClubSuspensionReason = []ClubSuspensionReason{
+	ClubSuspensionReasonPostModerationQueue,
+	ClubSuspensionReasonPostRemoval,
+	ClubSuspensionReasonManual,
+}
+
+func (e ClubSuspensionReason) IsValid() bool {
+	switch e {
+	case ClubSuspensionReasonPostModerationQueue, ClubSuspensionReasonPostRemoval, ClubSuspensionReasonManual:
+		return true
+	}
+	return false
+}
+
+func (e ClubSuspensionReason) String() string {
+	return string(e)
+}
+
+func (e *ClubSuspensionReason) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubSuspensionReason(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubSuspensionReason", str)
+	}
+	return nil
+}
+
+func (e ClubSuspensionReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

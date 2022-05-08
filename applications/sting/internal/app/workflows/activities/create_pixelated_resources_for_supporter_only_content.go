@@ -11,7 +11,7 @@ type CreatePixelatedResourcesForSupporterOnlyContentInput struct {
 
 func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, input CreatePixelatedResourcesForSupporterOnlyContentInput) error {
 
-	pendingPost, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
 
 		var resourceIds []string
 
@@ -50,11 +50,6 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 	})
 
 	if err != nil {
-		return err
-	}
-
-	// index the post
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return err
 	}
 

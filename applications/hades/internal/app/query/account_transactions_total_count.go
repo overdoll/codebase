@@ -12,10 +12,10 @@ type AccountTransactionsTotalCount struct {
 }
 
 type AccountTransactionsTotalCountHandler struct {
-	bi billing.IndexRepository
+	bi billing.Repository
 }
 
-func NewAccountTransactionsCountHandler(bi billing.IndexRepository) AccountTransactionsTotalCountHandler {
+func NewAccountTransactionsCountHandler(bi billing.Repository) AccountTransactionsTotalCountHandler {
 	return AccountTransactionsTotalCountHandler{bi: bi}
 }
 

@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "links",
     srcs = [
+        "cancel_account_deletion.go",
         "club.go",
         "confirm_email.go",
         "manage_subscription.go",

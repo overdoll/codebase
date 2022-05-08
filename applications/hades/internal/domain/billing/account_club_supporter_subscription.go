@@ -27,6 +27,7 @@ type AccountClubSupporterSubscription struct {
 	lastBillingDate time.Time
 	nextBillingDate time.Time
 
+	createdAt time.Time
 	updatedAt time.Time
 
 	cancelledAt *time.Time
@@ -47,7 +48,7 @@ type AccountClubSupporterSubscription struct {
 	billingFailureNextRetryDate *time.Time
 }
 
-func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountClubSupporterSubscription, error) {
+func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
 
 	currenc, err := money.CurrencyFromString(currency)
 
@@ -66,6 +67,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccb
 		cancelledAt:          nil,
 		expiredAt:            nil,
 		billingAmount:        amount,
+		createdAt:            timestamp,
 		billingCurrency:      currenc,
 		paymentMethod:        paymentMethod,
 		updatedAt:            time.Now(),
@@ -91,6 +93,10 @@ func (c *AccountClubSupporterSubscription) CancellationReasonId() *string {
 
 func (c *AccountClubSupporterSubscription) UpdatedAt() time.Time {
 	return c.updatedAt
+}
+
+func (c *AccountClubSupporterSubscription) CreatedAt() time.Time {
+	return c.createdAt
 }
 
 func (c *AccountClubSupporterSubscription) IsActive() bool {
@@ -235,7 +241,7 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 
 func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
 	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod,
-	ccbillSubscriptionId *string, cancelledAt *time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
+	ccbillSubscriptionId *string, cancelledAt *time.Time, createdAt time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
 	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
 ) *AccountClubSupporterSubscription {
 	st, _ := SupportStatusFromString(status)
@@ -245,6 +251,7 @@ func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId
 		accountId:                   accountId,
 		clubId:                      clubId,
 		status:                      st,
+		createdAt:                   createdAt,
 		cancelledAt:                 cancelledAt,
 		supporterSince:              supporterSince,
 		lastBillingDate:             lastBillingDate,
@@ -273,4 +280,12 @@ func CanViewAccountClubSupporterSubscription(requester *principal.Principal, acc
 	}
 
 	return nil
+}
+
+func CanCancelActiveSubscriptionsForClub(requester *principal.Principal) error {
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return principal.ErrNotAuthorized
 }

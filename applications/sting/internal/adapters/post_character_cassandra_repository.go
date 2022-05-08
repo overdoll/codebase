@@ -68,7 +68,7 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 	}, nil
 }
 
-func (r PostsCassandraRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
 
 	var characterSlugResults []seriesSlug
 
@@ -99,7 +99,7 @@ func (r PostsCassandraRepository) GetCharacterIdsFromSlugs(ctx context.Context, 
 	return ids, nil
 }
 
-func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
 
 	// get series first
 	series, err := r.getSeriesBySlug(ctx, requester, seriesSlug)
@@ -129,7 +129,7 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 	return r.GetCharacterById(ctx, requester, b.CharacterId)
 }
 
-func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, requester *principal.Principal, chars []string) ([]*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, requester *principal.Principal, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 
@@ -206,11 +206,11 @@ func (r PostsCassandraRepository) GetCharactersByIds(ctx context.Context, reques
 	return characters, nil
 }
 
-func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
 	return r.getCharacterById(ctx, characterId)
 }
 
-func (r PostsCassandraRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
+func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
 
 	char, err := marshalCharacterToDatabase(character)
 
@@ -243,26 +243,30 @@ func (r PostsCassandraRepository) CreateCharacter(ctx context.Context, requester
 		return err
 	}
 
+	if err := r.indexCharacter(ctx, character); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
 	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource_id"})
 }
 
-func (r PostsCassandraRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
 	return r.updateCharacter(ctx, id, updateFn, []string{"name"})
 }
 
-func (r PostsCassandraRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
 	return r.updateCharacter(ctx, id, updateFn, []string{"total_posts"})
 }
 
-func (r PostsCassandraRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
 	return r.updateCharacter(ctx, id, updateFn, []string{"total_likes"})
 }
 
-func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string, updateFn func(char *post.Character) error, columns []string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Context, id string, updateFn func(char *post.Character) error, columns []string) (*post.Character, error) {
 
 	char, err := r.getCharacterById(ctx, id)
 
@@ -292,10 +296,14 @@ func (r PostsCassandraRepository) updateCharacter(ctx context.Context, id string
 		return nil, fmt.Errorf("failed to update character: %v", err)
 	}
 
+	if err := r.indexCharacter(ctx, char); err != nil {
+		return nil, err
+	}
+
 	return char, nil
 }
 
-func (r PostsCassandraRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 
 	var char character
 

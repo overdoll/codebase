@@ -24,11 +24,11 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllClubPayments.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateClubPaymentsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllClubPayouts.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateClubPayoutsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -45,7 +45,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllClubPayments.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateClubPaymentsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -62,7 +62,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllClubPayouts.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateClubPayoutsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

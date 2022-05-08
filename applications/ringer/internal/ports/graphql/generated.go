@@ -79,7 +79,6 @@ type ComplexityRoot struct {
 	Balance struct {
 		Amount    func(childComplexity int) int
 		Currency  func(childComplexity int) int
-		ID        func(childComplexity int) int
 		UpdatedAt func(childComplexity int) int
 	}
 
@@ -411,13 +410,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Balance.Currency(childComplexity), true
-
-	case "Balance.id":
-		if e.complexity.Balance.ID == nil {
-			break
-		}
-
-		return e.complexity.Balance.ID(childComplexity), true
 
 	case "Balance.updatedAt":
 		if e.complexity.Balance.UpdatedAt == nil {
@@ -1323,9 +1315,6 @@ A balance item.
 Represents balance on a specific club.
 """
 type Balance {
-  """An ID to uniquely identify this balance."""
-  id: ID!
-
   """The amount on this balance."""
   amount: Int!
 
@@ -3102,41 +3091,6 @@ func (ec *executionContext) _AccountTransaction_id(ctx context.Context, field gr
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "AccountTransaction",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Balance_id(ctx context.Context, field graphql.CollectedField, obj *types.Balance) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Balance",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -8721,16 +8675,6 @@ func (ec *executionContext) _Balance(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Balance")
-		case "id":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Balance_id(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "amount":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Balance_amount(ctx, field, obj)

@@ -23,12 +23,12 @@ func (h *Activities) MakeClubPaymentsForPayoutComplete(ctx context.Context, inpu
 		}
 
 		// update the payment ids to be completed
+		// and index the payments to be completed. Note that payments might be a large table so we don't actually grab the whole record,
+		// only the ids, which should be enough for batch updates
 		if err := h.pr.UpdateClubPaymentsCompleted(ctx, paymentIds); err != nil {
 			return err
 		}
 
-		// and index the payments to be completed. Note that payments might be a large table so we don't actually grab the whole record,
-		// only the ids, which should be enough for batch updates
-		return h.pi.UpdateIndexClubPaymentsCompleted(ctx, paymentIds)
+		return nil
 	})
 }

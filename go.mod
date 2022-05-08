@@ -7,14 +7,16 @@ require (
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aws/aws-sdk-go v1.38.51
+	github.com/aws/aws-sdk-go v1.42.52
 	github.com/bazelbuild/rules_go v0.27.0
+	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/biter777/countries v1.3.4
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/corona10/goimagehash v1.0.3
 	github.com/disintegration/gift v1.2.1
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/frankban/quicktest v1.13.0 // indirect
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1
@@ -26,12 +28,19 @@ require (
 	github.com/graph-gophers/dataloader v5.0.0+incompatible
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
+	github.com/hashicorp/go-hclog v1.2.0
+	github.com/hashicorp/go-plugin v1.4.4
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 // indirect
 	github.com/joho/godotenv v1.3.0
+	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jung-kurt/gofpdf v1.16.2
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
-	github.com/olivere/elastic/v7 v7.0.26
+	github.com/oklog/run v1.1.0 // indirect
+	github.com/olivere/elastic/v7 v7.0.31
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1
@@ -49,17 +58,20 @@ require (
 	github.com/u2takey/ffmpeg-go v0.4.0
 	github.com/vektah/gqlparser/v2 v2.4.1
 	github.com/yuin/goldmark v1.4.4
+	go.opentelemetry.io/otel/internal/metric v0.27.0 // indirect
 	go.temporal.io/api v1.6.1-0.20211110205628-60c98e9cbfe2
 	go.temporal.io/sdk v1.13.0
-	go.uber.org/zap v1.18.1
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
+	go.uber.org/multierr v1.7.0 // indirect
+	go.uber.org/zap v1.21.0
+	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220406163625-3f8b81556e12 // indirect
+	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.10 // indirect
-	google.golang.org/grpc v1.42.0
-	google.golang.org/protobuf v1.27.1
+	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
+	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3 // indirect
+	google.golang.org/grpc v1.46.0
+	google.golang.org/protobuf v1.28.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 

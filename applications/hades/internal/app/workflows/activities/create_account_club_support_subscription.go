@@ -70,6 +70,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 		input.Amount,
 		input.Currency,
 		ccbillSubscription.PaymentMethod(),
+		input.Timestamp,
 	)
 
 	if err != nil {

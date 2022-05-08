@@ -66,6 +66,9 @@ type Account implements Node
 
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
   ): ClubMemberConnection! @join__field(graph: STELLA)
 
   """
@@ -131,6 +134,9 @@ type Account implements Node
   """The curation profile linked to this account."""
   curationProfile: CurationProfile! @join__field(graph: STING)
 
+  """The details of a deleting state."""
+  deleting: AccountDeleting @join__field(graph: EVA)
+
   """
   Details belonging to this account.
   
@@ -181,8 +187,32 @@ type Account implements Node
     last: Int
   ): ExpiredAccountClubSupporterSubscriptionConnection! @join__field(graph: HADES)
 
+  """
+  Whether or not this account has at least 1 active or cancelled club supporter subscription.
+  
+  This should be false in order to delete the account.
+  """
+  hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean! @join__field(graph: HADES)
+
+  """
+  Whether or not this club has non-terminated clubs.
+  
+  Cannot delete account if this is true.
+  """
+  hasNonTerminatedClubs: Boolean! @join__field(graph: STELLA)
+
   """ID representing the account"""
   id: ID! @join__field(graph: EVA)
+
+  """Whether or not this account is an artist"""
+  isArtist: Boolean! @join__field(graph: EVA)
+
+  """
+  Whether or not this account is deleted.
+  
+  When an account is deleted, the username, email and any other data is blank.
+  """
+  isDeleted: Boolean! @join__field(graph: EVA)
 
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean! @join__field(graph: EVA)
@@ -197,7 +227,7 @@ type Account implements Node
   """Whether or not this account is a staff member"""
   isStaff: Boolean! @join__field(graph: EVA)
 
-  """The details of the account lock"""
+  """The details of the account lock."""
   lock: AccountLock @join__field(graph: EVA)
 
   """
@@ -582,6 +612,10 @@ enum AccountClubSupporterSubscriptionStatus {
   ACTIVE
   CANCELLED
   EXPIRED
+}
+
+type AccountDeleting {
+  scheduledDeletion: Time!
 }
 
 """Details belonging to an account."""
@@ -1003,6 +1037,18 @@ type ArchivePostPayload {
   post: Post
 }
 
+"""Input to assign account to a arist role"""
+input AssignAccountArtistRole {
+  """The account ID that the role needs to be assigned to"""
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountArtistRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
 """Input to assign account to a moderator role"""
 input AssignAccountModeratorRole {
   """The account ID that the role needs to be assigned to"""
@@ -1188,9 +1234,6 @@ type Balance {
 
   """The currency the balance is in."""
   currency: Currency!
-
-  """An ID to uniquely identify this balance."""
-  id: ID!
 
   """When the balance was last updated."""
   updatedAt: Time!
@@ -1381,6 +1424,30 @@ input CancelAccountClubSupporterSubscriptionInput {
 type CancelAccountClubSupporterSubscriptionPayload {
   """The new subscription."""
   clubSupporterSubscription: AccountClubSupporterSubscription
+}
+
+"""Input for cancelling an account deletion."""
+input CancelAccountDeletionInput {
+  """The account to cancel deletion."""
+  accountID: ID!
+}
+
+"""Payload for cancelling an account deletion."""
+type CancelAccountDeletionPayload {
+  """Account that was cancelled for deletion."""
+  account: Account
+}
+
+"""Cancel all active subscriptions for a club."""
+input CancelActiveSupporterSubscriptionsForClubInput {
+  """The id of the club."""
+  clubId: ID!
+}
+
+"""Payload for cancelling all active subscriptions."""
+type CancelActiveSupporterSubscriptionsForClubPayload {
+  """The club."""
+  club: Club
 }
 
 """Cancel a specific payout."""
@@ -1645,6 +1712,9 @@ type Club implements Node
   """The current balance of this club."""
   balance: Balance! @join__field(graph: RINGER)
 
+  """Whether or not you can become a supporter of this club."""
+  canSupport: Boolean! @join__field(graph: STELLA)
+
   """An ID pointing to this club."""
   id: ID! @join__field(graph: STELLA)
 
@@ -1687,6 +1757,9 @@ type Club implements Node
 
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
   ): ClubMemberConnection! @join__field(graph: STELLA)
 
   """The total amount of members in this club."""
@@ -1694,6 +1767,15 @@ type Club implements Node
 
   """A name for this club."""
   name: String! @join__field(graph: STELLA)
+
+  """
+  When the owner of the club needs to post the next supporter post.
+  
+  Usually 30 days after the next post.
+  
+  Nil if no supporter-only posts have been created.
+  """
+  nextSupporterPostTime: Time @join__field(graph: STELLA)
 
   """The account that owns this club."""
   owner: Account! @join__field(graph: STELLA)
@@ -1804,8 +1886,49 @@ type Club implements Node
   """Whether or not this club is suspended."""
   suspension: ClubSuspension @join__field(graph: STELLA)
 
+  """
+  Club Suspension Logs.
+  
+  Can see who a club was suspended by, the reason and who unsuspended a particular club.
+  """
+  suspensionLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubSuspensionLogConnection! @join__field(graph: STELLA)
+
+  """Whether or not this club is terminated."""
+  termination: ClubTermination @join__field(graph: STELLA)
+
   """A URL pointing to the object's thumbnail."""
   thumbnail(size: Int): Resource @join__field(graph: STELLA)
+
+  """Month-by-month transaction metrics of this club."""
+  transactionMetrics(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubTransactionMetricConnection! @join__field(graph: HADES)
 
   """Whether or not the viewer is the owner of the club."""
   viewerIsOwner: Boolean! @join__field(graph: STELLA)
@@ -1869,6 +1992,24 @@ enum ClubInfractionHistorySource {
   MANUAL
   POST_MANUAL_REMOVAL
   POST_MODERATION_REJECTION
+}
+
+type ClubIssuedSuspensionLog {
+  """
+  The account that created this suspension.
+  
+  If nil, the suspension was created automatically
+  """
+  account: Account
+
+  """The ID linked to this suspension log."""
+  id: ID!
+
+  """The reason this suspension was issued."""
+  reason: ClubSuspensionReason!
+
+  """How long the club was suspended until."""
+  suspendedUntil: Time!
 }
 
 type ClubMember implements Node
@@ -2115,6 +2256,14 @@ type ClubPlatformFee {
   percent: Int!
 }
 
+type ClubRemovedSuspensionLog {
+  """The account that removed this suspension."""
+  account: Account!
+
+  """The ID linked to this suspension log."""
+  id: ID!
+}
+
 """The club slug alias"""
 type ClubSlugAlias {
   """The slug alias"""
@@ -2124,6 +2273,88 @@ type ClubSlugAlias {
 type ClubSuspension {
   """When the suspension expires. Can call UnSuspendClub when time = now."""
   expires: Time!
+}
+
+union ClubSuspensionLog = ClubIssuedSuspensionLog | ClubRemovedSuspensionLog
+
+type ClubSuspensionLogConnection {
+  edges: [ClubSuspensionLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ClubSuspensionLogEdge {
+  cursor: String!
+  node: ClubSuspensionLog!
+}
+
+"""Reasons a club suspension was created."""
+enum ClubSuspensionReason {
+  """Suspension was issued manually."""
+  MANUAL
+
+  """Suspension was issued from a post moderation queue."""
+  POST_MODERATION_QUEUE
+
+  """Suspension was issued from a post removal."""
+  POST_REMOVAL
+}
+
+type ClubTermination {
+  """The account that terminated the club."""
+  account: Account!
+}
+
+type ClubTransactionMetric {
+  """All of the chargebacks in money amount."""
+  chargebacksAmount: Int!
+
+  """The chargeback ratio for this month - for the amount."""
+  chargebacksAmountRatio: Float!
+
+  """How many chargebacks were issued for this month."""
+  chargebacksCount: Int!
+
+  """The chargeback ratio for this month - for the count."""
+  chargebacksCountRatio: Float!
+
+  """The currency that this metric is in."""
+  currency: Currency!
+
+  """The month that this metric represents for this club."""
+  month: Int!
+
+  """All of the refunds in money amount."""
+  refundsAmount: Int!
+
+  """The refund ratio for this month - for the amount."""
+  refundsAmountRatio: Float!
+
+  """How many refunds were issued for this month."""
+  refundsCount: Int!
+
+  """The refund ratio for this month - for the count."""
+  refundsCountRatio: Float!
+
+  """Total transaction in money amount."""
+  totalTransactionsAmount: Int!
+
+  """How many transactions were created for this month."""
+  totalTransactionsCount: Int!
+
+  """The year that this metric represents for this club."""
+  year: Int!
+}
+
+"""Connection of the club metric"""
+type ClubTransactionMetricConnection {
+  edges: [ClubTransactionMetricEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Edge of the club metric"""
+type ClubTransactionMetricEdge {
+  cursor: String!
+  node: ClubTransactionMetric!
 }
 
 """Properties by which club connections can be sorted."""
@@ -2470,6 +2701,18 @@ input DeleteAccountEmailInput {
 type DeleteAccountEmailPayload {
   """The ID of the account email that was removed"""
   accountEmailId: ID!
+}
+
+"""Input for deleting an account."""
+input DeleteAccountInput {
+  """The account to delete."""
+  accountID: ID!
+}
+
+"""Payload for the delete account"""
+type DeleteAccountPayload {
+  """Account that was deleted"""
+  account: Account
 }
 
 """Delete a specific account payout method."""
@@ -3089,6 +3332,9 @@ type Mutation {
   """Archive a post, removing it from public visibility."""
   archivePost(input: ArchivePostInput!): ArchivePostPayload @join__field(graph: STING)
 
+  """Assign a artist role to the account"""
+  assignAccountArtistRole(input: AssignAccountArtistRole!): AssignAccountArtistRolePayload @join__field(graph: EVA)
+
   """Assign a moderator role to the account"""
   assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload @join__field(graph: EVA)
 
@@ -3100,6 +3346,16 @@ type Mutation {
 
   """Cancel a club supporter subscription"""
   cancelAccountClubSupporterSubscription(input: CancelAccountClubSupporterSubscriptionInput!): CancelAccountClubSupporterSubscriptionPayload @join__field(graph: HADES)
+
+  """Cancel an account deletion."""
+  cancelAccountDeletion(input: CancelAccountDeletionInput!): CancelAccountDeletionPayload @join__field(graph: EVA)
+
+  """
+  Cancel all active subscriptions for a club.
+  
+  Staff+ only.
+  """
+  cancelActiveSupporterSubscriptionsForClub(input: CancelActiveSupporterSubscriptionsForClubInput!): CancelActiveSupporterSubscriptionsForClubPayload @join__field(graph: HADES)
 
   """
   Cancel a specific club payout.
@@ -3137,6 +3393,15 @@ type Mutation {
 
   """Create a new series"""
   createSeries(input: CreateSeriesInput!): CreateSeriesPayload @join__field(graph: STING)
+
+  """
+  Delete an account.
+  
+  The deletion will be scheduled and deleted after 30 days.
+  
+  During this time, the account will be locked. (isLocked will not be true, however, "deleting" will be available).
+  """
+  deleteAccount(input: DeleteAccountInput!): DeleteAccountPayload @join__field(graph: EVA)
 
   """
   Delete account email - email must belong to account and cannot be the primary email
@@ -3206,7 +3471,7 @@ type Mutation {
   
   Staff+ only.
   """
-  generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload! @join__field(graph: HADES)
+  generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload @join__field(graph: HADES)
 
   """
   Grant account access with authentication token
@@ -3325,6 +3590,9 @@ type Mutation {
   """Logout the current account"""
   revokeAccountAccess: RevokeAccountAccessPayload @join__field(graph: EVA)
 
+  """Revoke the artist role from the account"""
+  revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload @join__field(graph: EVA)
+
   """Revoke the moderator role from the account"""
   revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload @join__field(graph: EVA)
 
@@ -3356,6 +3624,15 @@ type Mutation {
   """
   suspendClub(input: SuspendClubInput!): SuspendClubPayload @join__field(graph: STELLA)
 
+  """
+  Terminate the club.
+  
+  Terminating a club will remove it from public visibility and cancel all subscriptions.
+  
+  Staff+ only.
+  """
+  terminateClub(input: TerminateClubInput!): TerminateClubPayload @join__field(graph: STELLA)
+
   """Un-archive a post, putting it back in public view."""
   unArchivePost(input: UnArchivePostInput!): UnArchivePostPayload @join__field(graph: STING)
 
@@ -3365,6 +3642,15 @@ type Mutation {
   Staff+ may un-suspend even if suspension hasn't expired yet.
   """
   unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload @join__field(graph: STELLA)
+
+  """
+  Un-Terminate the club.
+  
+  Un-terminating will allow the club to be viewed publicly again, but all subscriptions will remain cancelled.
+  
+  Staff+ only.
+  """
+  unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload @join__field(graph: STELLA)
 
   """Undo a like on a post"""
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload @join__field(graph: STING)
@@ -4017,6 +4303,20 @@ type Query {
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
+
+    """
+    Filter by all the clubs that are suspended.
+    
+    Staff+ only for "true"
+    """
+    suspended: Boolean! = false
+
+    """
+    Filter by all the clubs that are terminated.
+    
+    Staff+ only for "true"
+    """
+    terminated: Boolean! = false
   ): ClubConnection! @join__field(graph: STELLA)
 
   """Grab all available countries."""
@@ -4464,6 +4764,18 @@ type RevokeAccountAccessPayload {
   revokedAccountId: ID!
 }
 
+"""Input to revoke artist role"""
+input RevokeAccountArtistRole {
+  """The account ID that the role needs to be revoked from"""
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountArtistRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
 """Input to revoke moderator role"""
 input RevokeAccountModeratorRole {
   """The account ID that the role needs to be revoked from"""
@@ -4708,6 +5020,18 @@ type SuspendClubPayload {
   club: Club
 }
 
+"""Terminate the club."""
+input TerminateClubInput {
+  """The club to terminate."""
+  clubId: ID!
+}
+
+"""Terminate club payload."""
+type TerminateClubPayload {
+  """The new club after it's terminated."""
+  club: Club
+}
+
 scalar Time
 
 type Translation {
@@ -4742,6 +5066,18 @@ input UnSuspendClubInput {
 """Un suspend club payload."""
 type UnSuspendClubPayload {
   """The new club after it's not suspended anymore."""
+  club: Club
+}
+
+"""Un-Terminate the club."""
+input UnTerminateClubInput {
+  """The club to un-terminate."""
+  clubId: ID!
+}
+
+"""Un terminate club payload."""
+type UnTerminateClubPayload {
+  """The new club after it's not terminated anymore."""
   club: Club
 }
 

@@ -16,10 +16,10 @@ type SearchClubPayouts struct {
 }
 
 type SearchClubPayoutsHandler struct {
-	pir payout.IndexRepository
+	pir payout.Repository
 }
 
-func NewSearchClubPayoutsHandler(pir payout.IndexRepository) SearchClubPayoutsHandler {
+func NewSearchClubPayoutsHandler(pir payout.Repository) SearchClubPayoutsHandler {
 	return SearchClubPayoutsHandler{pir: pir}
 }
 

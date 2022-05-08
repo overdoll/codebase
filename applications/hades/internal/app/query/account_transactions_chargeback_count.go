@@ -12,10 +12,10 @@ type AccountTransactionsChargebackCount struct {
 }
 
 type AccountTransactionsChargebackCountHandler struct {
-	bi billing.IndexRepository
+	bi billing.Repository
 }
 
-func NewAccountTransactionsChargebackCountHandler(bi billing.IndexRepository) AccountTransactionsChargebackCountHandler {
+func NewAccountTransactionsChargebackCountHandler(bi billing.Repository) AccountTransactionsChargebackCountHandler {
 	return AccountTransactionsChargebackCountHandler{bi: bi}
 }
 

@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -47,10 +48,13 @@ type PostReports struct {
 func TestReportPost(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+
+	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	// post ID has to be random since we can only report once
 	postIdRelay := convertPostIdToRelayId(uuid.New().String())
+	accountIdRelay := convertAccountIdToRelayId(accountId)
 	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
@@ -80,9 +84,9 @@ func TestReportPost(t *testing.T) {
 	require.NoError(t, err, "no error getting reports on a post")
 
 	// will contain reports
-	require.Greater(t, len(reportsOnPost.Entities[0].Post.Reports.Edges), 0)
+	require.Equal(t, 1, len(reportsOnPost.Entities[0].Post.Reports.Edges))
 	// reporting account is correct
-	require.Equal(t, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
+	require.Equal(t, string(accountIdRelay), reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
 	require.Equal(t, ruleIdRelay, reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Rule.ID, "correct rule on the report")
 
 	var postReports PostReports
@@ -96,4 +100,24 @@ func TestReportPost(t *testing.T) {
 	// check we have the correct report listed
 	require.Greater(t, len(reportsOnPost.Entities[0].Post.Reports.Edges), 0, "contains more than 0 reports")
 	require.Equal(t, ruleIdRelay, reportsOnPost.Entities[0].Post.Reports.Edges[0].Node.Rule.ID, "correct rule on the report")
+
+	grpcClient := getGrpcClient(t)
+
+	_, err = grpcClient.DeleteAccountData(context.Background(), &parley.DeleteAccountDataRequest{AccountId: accountId})
+
+	require.NoError(t, err, "no error deleting account data")
+
+	err = client.Query(context.Background(), &reportsOnPost, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Post",
+				"id":         string(postIdRelay),
+			},
+		},
+		"from": time.Now(),
+	})
+
+	require.NoError(t, err, "no error getting reports on a post")
+
+	require.Equal(t, 0, len(reportsOnPost.Entities[0].Post.Reports.Edges), "should have no reports after deleting reports for that account")
 }

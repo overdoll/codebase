@@ -35,6 +35,14 @@ type Club struct {
 	suspended      bool
 	suspendedUntil *time.Time
 
+	terminated            bool
+	terminatedByAccountId *string
+
+	nextSupporterPostTime       *time.Time
+	hasCreatedSupporterOnlyPost bool
+
+	canSupport bool
+
 	newClubMembers []string
 
 	membersCount   int
@@ -45,6 +53,10 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 
 	if requester.IsLocked() {
 		return nil, principal.ErrLocked
+	}
+
+	if !requester.IsStaff() && !requester.IsArtist() {
+		return nil, errors.New("must be artist or staff in order to create a club")
 	}
 
 	res, err := IsAccountClubsLimitReached(requester, requester.AccountId(), currentClubCount)
@@ -74,27 +86,33 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}
 
 	return &Club{
-		id:                  id.String(),
-		slug:                slug,
-		name:                lc,
-		slugAliases:         []string{},
-		thumbnailResourceId: nil,
-		membersCount:        1,
-		ownerAccountId:      requester.AccountId(),
+		id:                          id.String(),
+		slug:                        slug,
+		name:                        lc,
+		slugAliases:                 []string{},
+		thumbnailResourceId:         nil,
+		membersCount:                1,
+		ownerAccountId:              requester.AccountId(),
+		hasCreatedSupporterOnlyPost: false,
+		terminated:                  false,
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil *time.Time) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string) *Club {
 	return &Club{
-		id:                  id,
-		slug:                slug,
-		slugAliases:         alternativeSlugs,
-		name:                localization.UnmarshalTranslationFromDatabase(name),
-		thumbnailResourceId: thumbnail,
-		ownerAccountId:      ownerAccountId,
-		membersCount:        membersCount,
-		suspended:           suspended,
-		suspendedUntil:      suspendedUntil,
+		id:                          id,
+		slug:                        slug,
+		slugAliases:                 alternativeSlugs,
+		name:                        localization.UnmarshalTranslationFromDatabase(name),
+		thumbnailResourceId:         thumbnail,
+		ownerAccountId:              ownerAccountId,
+		membersCount:                membersCount,
+		suspended:                   suspended,
+		suspendedUntil:              suspendedUntil,
+		nextSupporterPostTime:       nextSupporterPostTime,
+		hasCreatedSupporterOnlyPost: hasCreatedSupporterOnlyPost,
+		terminated:                  terminated,
+		terminatedByAccountId:       terminatedByAccountId,
 	}
 }
 
@@ -130,53 +148,117 @@ func (m *Club) OwnerAccountId() string {
 	return m.ownerAccountId
 }
 
+func (m *Club) IsSuspended() bool {
+	// this is also true when terminated to prevent posting
+	return m.suspended || m.terminated
+}
+
 func (m *Club) Suspended() bool {
 	return m.suspended
+}
+
+func (m *Club) Terminated() bool {
+	return m.terminated
+}
+
+func (m *Club) TerminatedByAccountId() *string {
+	return m.terminatedByAccountId
 }
 
 func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
 }
 
-func (m *Club) SuspendOperator(endTime time.Time) error {
-	m.suspended = true
-	m.suspendedUntil = &endTime
+func (m *Club) NextSupporterPostTime() *time.Time {
+	return m.nextSupporterPostTime
+}
+
+func (m *Club) HasCreatedSupporterOnlyPost() bool {
+	return m.hasCreatedSupporterOnlyPost
+}
+
+func (m *Club) CanUnSuspend(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+
+		if err := m.canUpdate(requester); err != nil {
+			return err
+		}
+
+		if !time.Now().After(*m.suspendedUntil) {
+			return errors.New("cannot un suspend yet")
+		}
+
+		return nil
+	}
 
 	return nil
 }
 
-func (m *Club) Suspend(requester *principal.Principal, endTime time.Time) error {
+func (m *Club) CanSupport() bool {
+	return !m.suspended && m.hasCreatedSupporterOnlyPost && !m.terminated
+}
+
+func (m *Club) CanSuspend(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
 	}
 
+	return nil
+}
+
+func (m *Club) CanTerminate(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
+func (m *Club) CanUnTerminate(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
+func (m *Club) Suspend(endTime time.Time) error {
+
 	m.suspended = true
 	m.suspendedUntil = &endTime
 
 	return nil
 }
 
-func (m *Club) UnSuspend(requester *principal.Principal) error {
+func (m *Club) Terminate(accountId string) error {
 
-	if requester.IsStaff() {
-		m.suspended = false
-		m.suspendedUntil = nil
-		return nil
-	}
+	m.terminatedByAccountId = &accountId
+	m.terminated = true
 
-	if err := m.canUpdate(requester); err != nil {
-		return err
-	}
+	return nil
+}
 
-	if !m.suspended {
-		return nil
-	}
+func (m *Club) UnTerminate() error {
+	m.terminatedByAccountId = nil
+	m.terminated = false
+	return nil
+}
 
-	if !time.Now().After(*m.suspendedUntil) {
-		return errors.New("cannot un suspend yet")
-	}
+func (m *Club) UpdateNextSupporterPostTime(timestamp time.Time) error {
+	ts := timestamp.Add(time.Hour * 24 * 30)
+	m.nextSupporterPostTime = &ts
+	m.hasCreatedSupporterOnlyPost = true
 
+	return nil
+}
+
+func (m *Club) UnSuspend() error {
+	m.suspended = false
+	m.suspendedUntil = nil
 	return nil
 }
 
@@ -287,6 +369,10 @@ func (m *Club) canUpdate(requester *principal.Principal) error {
 		return principal.ErrLocked
 	}
 
+	if m.terminated {
+		return principal.ErrNotAuthorized
+	}
+
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
 	}
@@ -300,7 +386,7 @@ func (m *Club) AccountIdCanCreatePost(accountId string) bool {
 
 func (m *Club) CanView(requester *principal.Principal) bool {
 
-	if m.suspended {
+	if m.terminated {
 		if requester == nil {
 			return false
 		}
@@ -317,29 +403,6 @@ func (m *Club) CanView(requester *principal.Principal) bool {
 	}
 
 	return true
-}
-
-func (m *Club) CanBecomeSupporter(requester *principal.Principal, clubMemberships []*Member) (bool, error) {
-
-	if m.suspended {
-		return false, nil
-	}
-
-	foundClub := false
-
-	for _, membership := range clubMemberships {
-		if membership.clubId == m.id && membership.isSupporter {
-			foundClub = true
-			break
-		}
-	}
-
-	// already member, return false
-	if foundClub {
-		return false, nil
-	}
-
-	return true, nil
 }
 
 func IsAccountClubsLimitReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {
@@ -376,6 +439,19 @@ func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (in
 
 func CanViewAccountClubs(requester *principal.Principal, accountId string) error {
 	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanViewClubSuspensionLogs(requester *principal.Principal, club *Club) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	if err := requester.BelongsToAccount(club.ownerAccountId); err != nil {
 		return err
 	}
 

@@ -34,7 +34,7 @@ func NewMemberOperator(accountId, clubId string) (*Member, error) {
 	}, nil
 }
 
-func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Member) (*Member, error) {
+func NewMember(requester *principal.Principal, club *Club, currentClubCount int) (*Member, error) {
 
 	if requester.IsLocked() {
 		return nil, principal.ErrLocked
@@ -44,7 +44,7 @@ func NewMember(requester *principal.Principal, club *Club, currentClubIds []*Mem
 		return nil, errors.New("owner cannot become member of own club")
 	}
 
-	res, err := IsAccountClubMembershipReached(requester, requester.AccountId(), currentClubIds)
+	res, err := IsAccountClubMembershipReached(requester, requester.AccountId(), currentClubCount)
 
 	if err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func (m *Member) CanRevokeClubMembership(requester *principal.Principal, club *C
 	return nil
 }
 
-func IsAccountClubMembershipReached(requester *principal.Principal, accountId string, currentClubIds []*Member) (bool, error) {
+func IsAccountClubMembershipReached(requester *principal.Principal, accountId string, currentClubCount int) (bool, error) {
 
 	lim, err := ViewAccountClubMembershipsLimit(requester, accountId)
 
@@ -132,7 +132,7 @@ func IsAccountClubMembershipReached(requester *principal.Principal, accountId st
 		return false, err
 	}
 
-	if len(currentClubIds) >= lim {
+	if currentClubCount >= lim {
 		return true, nil
 	}
 

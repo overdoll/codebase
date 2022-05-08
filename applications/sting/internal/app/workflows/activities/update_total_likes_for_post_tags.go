@@ -13,7 +13,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 		return err
 	}
 
-	if err := h.pi.RefreshPostIndex(ctx); err != nil {
+	if err := h.pr.RefreshPostIndex(ctx); err != nil {
 		return err
 	}
 
@@ -21,8 +21,8 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 	// so we re-index them as well
 	for _, cat := range pendingPost.CategoryIds() {
 
-		newCat, err := h.pr.UpdateCategoryTotalLikesOperator(ctx, cat, func(category *post.Category) error {
-			totalLikes, err := h.pi.GetTotalLikesForCategoryOperator(ctx, category)
+		_, err := h.pr.UpdateCategoryTotalLikesOperator(ctx, cat, func(category *post.Category) error {
+			totalLikes, err := h.pr.GetTotalLikesForCategoryOperator(ctx, category)
 
 			if err != nil {
 				return err
@@ -35,9 +35,6 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 			return err
 		}
 
-		if err := h.pi.IndexCategory(ctx, newCat); err != nil {
-			return err
-		}
 	}
 
 	var updatedSeries map[string]bool
@@ -46,7 +43,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 		newChar, err := h.pr.UpdateCharacterTotalLikesOperator(ctx, char, func(character *post.Character) error {
 
-			totalLikes, err := h.pi.GetTotalLikesForCharacterOperator(ctx, character)
+			totalLikes, err := h.pr.GetTotalLikesForCharacterOperator(ctx, character)
 
 			if err != nil {
 				return err
@@ -59,15 +56,11 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 			return err
 		}
 
-		if err := h.pi.IndexCharacter(ctx, newChar); err != nil {
-			return err
-		}
-
 		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
-			newSeries, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
+			_, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
-				totalLikes, err := h.pi.GetTotalLikesForSeriesOperator(ctx, series)
+				totalLikes, err := h.pr.GetTotalLikesForSeriesOperator(ctx, series)
 
 				if err != nil {
 					return err
@@ -80,17 +73,13 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 				return err
 			}
 
-			if err := h.pi.IndexSeries(ctx, newSeries); err != nil {
-				return err
-			}
-
 			updatedSeries[newChar.Series().ID()] = true
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalLikesOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
+	_, err = h.pr.UpdateAudienceTotalLikesOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
 
-		totalLikes, err := h.pi.GetTotalLikesForAudienceOperator(ctx, audience)
+		totalLikes, err := h.pr.GetTotalLikesForAudienceOperator(ctx, audience)
 
 		if err != nil {
 			return err
@@ -100,10 +89,6 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pi.IndexAudience(ctx, newAud); err != nil {
 		return err
 	}
 

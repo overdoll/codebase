@@ -2,8 +2,6 @@ package queries
 
 import (
 	"context"
-	"strings"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/domain/post"
@@ -22,7 +20,7 @@ func (r *QueryResolver) Series(ctx context.Context, after *string, before *strin
 
 	results, err := r.App.Queries.SearchSeries.Handle(ctx, query.SearchSeries{
 		Principal: principal.FromContext(ctx),
-		SortBy:    strings.ToLower(sortBy.String()),
+		SortBy:    sortBy.String(),
 		Slugs:     slugs,
 		Cursor:    cursor,
 		Title:     title,

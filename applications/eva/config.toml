@@ -3,3 +3,6 @@ keyspace = "eva"
 
 [redis]
 db = 1
+
+[temporal]
+queue = "eva"

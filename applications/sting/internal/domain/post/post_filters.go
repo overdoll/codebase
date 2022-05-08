@@ -1,9 +1,5 @@
 package post
 
-import (
-	"strings"
-)
-
 type Filters struct {
 	sortBy        Sorting
 	contributorId *string
@@ -27,7 +23,7 @@ func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlySt
 	var err error
 
 	if state != nil {
-		s := strings.ToLower(*state)
+		s := *state
 
 		newState, err = StateFromString(s)
 
@@ -39,7 +35,7 @@ func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlySt
 	var supporterOnlyStatusItem []SupporterOnlyStatus
 
 	for _, s := range supporterOnlyStatus {
-		s := strings.ToLower(s)
+		s := s
 
 		newSuppStatus, err := SupporterOnlyStatusFromString(s)
 

@@ -3,7 +3,9 @@ package adapters
 import (
 	"context"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"overdoll/applications/hades/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -15,19 +17,15 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error) {
+func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
 
-	md, err := s.client.CanAccountBecomeClubSupporter(ctx, &stella.CanAccountBecomeClubSupporterRequest{ClubId: clubId, AccountId: accountId})
+	md, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	if md == nil {
-		return false, nil
-	}
-
-	return md.Allowed, nil
+	return club.UnmarshalClubFromDatabase(clubId, md.Club.Slug, md.Club.Name, md.Club.IsSuspended, md.Club.CanSupport, md.Club.OwnerAccountId), nil
 }
 
 func (s StellaGrpc) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
@@ -50,4 +48,31 @@ func (s StellaGrpc) RemoveClubSupporter(ctx context.Context, clubId, accountId s
 	}
 
 	return nil
+}
+
+func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, isChargeback bool) error {
+
+	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{
+		ClubId:             clubId,
+		EndTimeUnix:        0,
+		InitiatorAccountId: nil,
+		Source:             stella.SuspensionSource_AUTOMATED_CHARGEBACKS,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s StellaGrpc) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+
+	md, err := s.client.GetAccountClubDigest(ctx, &stella.GetAccountClubDigestRequest{AccountId: accountId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return principal.NewClubExtension(md)
 }
