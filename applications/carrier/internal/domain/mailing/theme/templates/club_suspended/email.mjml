@@ -7,9 +7,9 @@
                 <mj-text>
                     <h2>Club Suspended</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>Your club has been suspended for violating the platform's club guidelines.</p>
+                    <p>Your club {{.ClubName}} ({{.ClubLink}}) has been suspended for violating the platform's club guidelines.</p>
                     <p>During this time, you will not be able to collect new subscriptions or create any posts.</p>
-                    <p>The suspension will last until {{.Duration}}, after which you will be able to unsuspend your
+                    <p>The suspension will last until {{.EndTime}}, after which you will be able to unsuspend your
                         club.
                     </p>
                     <p>Please contact hello@overdoll.com if you have any questions or concerns.</p>
