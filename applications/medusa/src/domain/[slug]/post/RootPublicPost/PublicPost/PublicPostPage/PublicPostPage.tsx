@@ -45,7 +45,7 @@ export default function PublicPostPage ({
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                This post is not published. Only you can see it
+                This post is not published. Only you can see it.
               </Trans>
             </AlertDescription>
           </HStack>
@@ -56,7 +56,7 @@ export default function PublicPostPage ({
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                This post is archived. Only you can see it
+                This post is archived. Only you can see it.
               </Trans>
             </AlertDescription>
           </HStack>

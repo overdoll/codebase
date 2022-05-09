@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2c400e9c16c6d76d177fb23641dcb2cc>>
- * @relayHash 878fba8266f5f67b58ddbfa3335fd6d7
+ * @generated SignedSource<<289f9b07869339ae03b9b6b48817edd6>>
+ * @relayHash 45da1a6e185615ee1f81f3e201359820
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 878fba8266f5f67b58ddbfa3335fd6d7
+// @relayRequestID 45da1a6e185615ee1f81f3e201359820
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type CurationSettingsQuery$variables = {};
 export type CurationSettingsQueryVariables = CurationSettingsQuery$variables;
 export type CurationSettingsQuery$data = {
@@ -20,6 +21,7 @@ export type CurationSettingsQuery$data = {
       readonly id: string;
       readonly completed: boolean;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   } | null;
 };
 export type CurationSettingsQueryResponse = CurationSettingsQuery$data;
@@ -54,6 +56,13 @@ v1 = {
     }
   ],
   "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -70,7 +79,12 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/)
+          (v1/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountInformationBannerFragment"
+          }
         ],
         "storageKey": null
       }
@@ -93,6 +107,44 @@ return {
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           (v0/*: any*/)
         ],
         "storageKey": null
@@ -100,7 +152,7 @@ return {
     ]
   },
   "params": {
-    "id": "878fba8266f5f67b58ddbfa3335fd6d7",
+    "id": "45da1a6e185615ee1f81f3e201359820",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",
@@ -109,6 +161,6 @@ return {
 };
 })();
 
-(node as any).hash = "9807e3b02dab84b1feb7c1513aacb9bc";
+(node as any).hash = "35ff8b37314f185e990c2f1632fb5e8e";
 
 export default node;

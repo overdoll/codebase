@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c4cb0c6d59951b85ed79aa999051686>>
+ * @generated SignedSource<<f0117f8ed6723412c9c9b3036cebcfc5>>
  * @relayHash 4acb968e94d42f3c1d06757a5efb48ca
  * @lightSyntaxTransform
  * @nogrep
@@ -27,7 +27,7 @@ export type StaffGenerateRefundAmountForAccountTransactionInputMutation$data = {
       readonly maximumAmount: number;
       readonly proratedAmount: number;
     } | null;
-  };
+  } | null;
 };
 export type StaffGenerateRefundAmountForAccountTransactionInputMutationResponse = StaffGenerateRefundAmountForAccountTransactionInputMutation$data;
 export type StaffGenerateRefundAmountForAccountTransactionInputMutation = {

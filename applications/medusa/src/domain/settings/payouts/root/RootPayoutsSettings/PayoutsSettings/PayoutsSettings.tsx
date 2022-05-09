@@ -4,6 +4,8 @@ import type { PayoutsSettingsQuery } from '@//:artifacts/PayoutsSettingsQuery.gr
 import { Stack } from '@chakra-ui/react'
 import PayoutsDetailsSettings from './PayoutsDetailsSettings/PayoutsDetailsSettings'
 import PayoutsMethodSettings from './PayoutsMethodSettings/PayoutsMethodSettings'
+import AccountInformationBanner
+  from '../../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<PayoutsSettingsQuery>
@@ -14,6 +16,7 @@ const Query = graphql`
     viewer @required(action: THROW) {
       ...PayoutsDetailsSettingsFragment
       ...PayoutsMethodSettingsFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -25,9 +28,12 @@ export default function PayoutsSettings (props: Props): JSX.Element {
   )
 
   return (
-    <Stack spacing={8}>
-      <PayoutsDetailsSettings query={data.viewer} />
-      <PayoutsMethodSettings query={data.viewer} />
-    </Stack>
+    <>
+      <AccountInformationBanner query={data.viewer} />
+      <Stack spacing={8}>
+        <PayoutsDetailsSettings query={data.viewer} />
+        <PayoutsMethodSettings query={data.viewer} />
+      </Stack>
+    </>
   )
 }

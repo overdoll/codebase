@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4297ee03738c5556c44ccdac0a42b8f9>>
- * @relayHash c90d4edc9796c20565aeadd3c0ce8884
+ * @generated SignedSource<<4d945369d90977527958534cd3e31c25>>
+ * @relayHash 00151fd7c33616d450adae43ec519291
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c90d4edc9796c20565aeadd3c0ce8884
+// @relayRequestID 00151fd7c33616d450adae43ec519291
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -119,6 +119,13 @@ return {
             "name": "isStaff",
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isArtist",
+            "storageKey": null
+          },
           (v0/*: any*/),
           {
             "alias": null,
@@ -183,7 +190,7 @@ return {
     ]
   },
   "params": {
-    "id": "c90d4edc9796c20565aeadd3c0ce8884",
+    "id": "00151fd7c33616d450adae43ec519291",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

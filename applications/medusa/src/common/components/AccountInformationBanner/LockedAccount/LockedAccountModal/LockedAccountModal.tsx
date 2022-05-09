@@ -38,7 +38,7 @@ export default function LockedAccountModal ({
   queryRef,
   isOpen,
   onClose
-}: Props): JSX.Element | null {
+}: Props): JSX.Element {
   const data = useFragment(LockedAccountModalGQL, queryRef)
 
   const {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<61dd8fc662cf2ab1911a6115d8f7cd8d>>
- * @relayHash 37c43106e2132d3c843218d1d963dfd8
+ * @generated SignedSource<<3487f02a46a8076855f34778a23c11e3>>
+ * @relayHash 73d47e206712a26936eb5feb8ee52799
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 37c43106e2132d3c843218d1d963dfd8
+// @relayRequestID 73d47e206712a26936eb5feb8ee52799
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -30,7 +30,7 @@ export type PublicPostQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsFragment" | "PublicPostPageFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsViewerFragment" | "PublicPostPageViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsViewerFragment" | "PublicPostPageViewerFragment" | "AccountInformationBannerFragment">;
   } | null;
 };
 export type PublicPostQueryResponse = PublicPostQuery$data;
@@ -271,6 +271,13 @@ v19 = {
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
+},
+v20 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "expires",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -343,6 +350,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PublicPostPageViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -500,13 +512,7 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "expires",
-                    "storageKey": null
-                  }
+                  (v20/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -574,6 +580,38 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v6/*: any*/),
+              (v20/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v6/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -581,7 +619,7 @@ return {
     ]
   },
   "params": {
-    "id": "37c43106e2132d3c843218d1d963dfd8",
+    "id": "73d47e206712a26936eb5feb8ee52799",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -590,6 +628,6 @@ return {
 };
 })();
 
-(node as any).hash = "4152453293044459b393c0cba44aab22";
+(node as any).hash = "c2e549d229a05d1c77c81e52f61516a1";
 
 export default node;

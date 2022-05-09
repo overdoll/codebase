@@ -48,16 +48,18 @@ export default function SettingsLayout ({ children }: Props): JSX.Element {
           }
           icon={CategoryIdentifier}
         />
-        <VerticalNavigation.Button
-          href='/settings/payouts'
-          colorScheme='green'
-          title={
-            <Trans>
-              Payouts
-            </Trans>
-          }
-          icon={PayoutMethod}
-        />
+        <Can I='configure' a='Club'>
+          <VerticalNavigation.Button
+            href='/settings/payouts'
+            colorScheme='green'
+            title={
+              <Trans>
+                Payouts
+              </Trans>
+            }
+            icon={PayoutMethod}
+          />
+        </Can>
         <VerticalNavigation.Button
           href='/settings/billing'
           colorScheme='green'

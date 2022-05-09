@@ -32,13 +32,6 @@ const RootProfileSettings: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <PageSectionWrap>
-          <PageSectionTitle>
-            <Trans>
-              Account
-            </Trans>
-          </PageSectionTitle>
-        </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
             <ProfileSettings query={queryRef as PreloadedQuery<ProfileSettingsQueryType>} />

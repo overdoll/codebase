@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<80e11dc821c86449778afe9491e6a8f3>>
- * @relayHash 3b37a40cd2479f9a397a7b797d879b57
+ * @generated SignedSource<<332db8a000ae02872dd0559d79d227d7>>
+ * @relayHash 536483e8895954294762dfa1b9c71a26
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b37a40cd2479f9a397a7b797d879b57
+// @relayRequestID 536483e8895954294762dfa1b9c71a26
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,7 @@ export type MultiFactorSettingsQueryVariables = MultiFactorSettingsQuery$variabl
 export type MultiFactorSettingsQuery$data = {
   readonly viewer: {
     readonly multiFactorTotpConfigured: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment" | "AccountInformationBannerFragment">;
   };
 };
 export type MultiFactorSettingsQueryResponse = MultiFactorSettingsQuery$data;
@@ -33,6 +33,13 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "multiFactorTotpConfigured",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -67,6 +74,11 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "RecoveryCodesSettingsFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "AccountInformationBannerFragment"
             }
           ],
           "storageKey": null
@@ -110,6 +122,44 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
@@ -120,7 +170,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b37a40cd2479f9a397a7b797d879b57",
+    "id": "536483e8895954294762dfa1b9c71a26",
     "metadata": {},
     "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
@@ -129,7 +179,7 @@ return {
 };
 })();
 
-(node as any).hash = "d633eec7203e5c5a8d434ad4a1406683";
+(node as any).hash = "2f06b1585a76d39c36e942775a2664a4";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

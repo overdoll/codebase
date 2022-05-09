@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b6970296298e07e0a46f602f82ae7ee4>>
- * @relayHash 412b009d93cb7baf133c6fad77ed82df
+ * @generated SignedSource<<f7076c8b3a9bfc5637f906e9147f8b42>>
+ * @relayHash 68b43c0d67d099d493dc879eae932234
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 412b009d93cb7baf133c6fad77ed82df
+// @relayRequestID 68b43c0d67d099d493dc879eae932234
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type ClubRevenueQuery$data = {
   readonly club: {
     readonly __typename: string;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment" | "ClubInformationBannerFragment">;
   } | null;
 };
 export type ClubRevenueQueryResponse = ClubRevenueQuery$data;
@@ -73,25 +73,24 @@ v5 = {
   "name": "currency",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v7 = [
+v6 = [
   (v4/*: any*/),
-  (v5/*: any*/),
-  (v6/*: any*/)
+  (v5/*: any*/)
 ],
-v8 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 3
   }
-];
+],
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -123,6 +122,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPayoutMethodAlertFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -161,7 +165,7 @@ return {
             "kind": "LinkedField",
             "name": "pendingBalance",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -171,12 +175,12 @@ return {
             "kind": "LinkedField",
             "name": "balance",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "ClubPayoutConnection",
             "kind": "LinkedField",
             "name": "payouts",
@@ -221,7 +225,7 @@ return {
                         "name": "depositDate",
                         "storageKey": null
                       },
-                      (v6/*: any*/),
+                      (v8/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -266,14 +270,14 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubPayouts_payouts",
             "kind": "LinkedHandle",
             "name": "payouts"
           },
-          (v6/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -294,7 +298,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v6/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "type": "AccountPaxumPayoutMethod",
                     "abstractKey": null
@@ -302,7 +306,57 @@ return {
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v8/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "username",
+                    "storageKey": null
+                  },
+                  (v8/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           }
@@ -312,7 +366,7 @@ return {
     ]
   },
   "params": {
-    "id": "412b009d93cb7baf133c6fad77ed82df",
+    "id": "68b43c0d67d099d493dc879eae932234",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",
@@ -321,6 +375,6 @@ return {
 };
 })();
 
-(node as any).hash = "f45ec4586ffe0fd1d8661f669ce0565c";
+(node as any).hash = "d5de7b9d3b390621bec7355a6e95643f";
 
 export default node;

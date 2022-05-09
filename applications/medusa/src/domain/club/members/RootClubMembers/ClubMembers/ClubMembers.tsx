@@ -7,6 +7,7 @@ import { Trans } from '@lingui/macro'
 import AccountTileOverlay from '@//:modules/content/ContentSelection/TileOverlay/AccountTileOverlay/AccountTileOverlay'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
+import ClubInformationBanner from '../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -15,9 +16,10 @@ interface Props {
 const Query = graphql`
   query ClubMembersQuery($slug: String!) {
     club(slug: $slug) {
-      ...ClubMembersFragment
       name
       viewerIsOwner
+      ...ClubInformationBannerFragment
+      ...ClubMembersFragment
     }
   }
 `
@@ -84,6 +86,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
           {queryData.club.name}'s Members :: overdoll.com
         </title>
       </Head>
+      <ClubInformationBanner query={queryData.club} />
       <GridWrap justify='flex-start'>
         {data.members.edges.map((item, index) =>
           <GridTile key={index}>

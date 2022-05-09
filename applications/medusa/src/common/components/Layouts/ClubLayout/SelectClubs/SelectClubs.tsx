@@ -7,7 +7,6 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { SwapCircle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import MultipleClubsModal from './MultipleClubsModal/MultipleClubsModal'
-import SuspendedClubBanner from './SuspendedClubBanner/SuspendedClubBanner'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
 interface Props extends ComponentSearchArguments<any> {
@@ -79,7 +78,6 @@ export default function SelectClubs ({ searchArguments }: Props): JSX.Element {
         <Flex {...flexProps}>
           <ClubPreview query={queryData.club as ClubPreviewFragment$key} />
         </Flex>
-        <SuspendedClubBanner query={queryData.club} />
       </Stack>
     )
   }
@@ -92,7 +90,6 @@ export default function SelectClubs ({ searchArguments }: Props): JSX.Element {
           <Icon ml={3} icon={SwapCircle} h={5} w={5} fill='gray.300' />
         </Flex>
       </MultipleClubsModal>
-      <SuspendedClubBanner query={queryData.club} />
     </Stack>
   )
 }

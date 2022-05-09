@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f5d7689dfed7938963f46e89a06e0131>>
- * @relayHash 5fca730cdd1e3ad4f9727198a6343cdc
+ * @generated SignedSource<<46724679a485f2b76f5d924c3b33a3a9>>
+ * @relayHash a63e2437b8120f135f18b667b6c1f6a0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5fca730cdd1e3ad4f9727198a6343cdc
+// @relayRequestID a63e2437b8120f135f18b667b6c1f6a0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,7 @@ export type SavedPaymentMethodsSettingsQueryVariables = SavedPaymentMethodsSetti
 export type SavedPaymentMethodsSettingsQuery$data = {
   readonly viewer: {
     readonly isSecure: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment" | "AccountInformationBannerFragment">;
   };
 };
 export type SavedPaymentMethodsSettingsQueryResponse = SavedPaymentMethodsSettingsQuery$data;
@@ -48,6 +48,13 @@ v2 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -66,12 +73,17 @@ return {
           "name": "viewer",
           "plural": false,
           "selections": [
+            (v0/*: any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
               "name": "SavedPaymentMethodsSettingsFragment"
             },
-            (v0/*: any*/)
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "AccountInformationBannerFragment"
+            }
           ],
           "storageKey": null
         },
@@ -96,6 +108,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": (v1/*: any*/),
@@ -164,13 +177,7 @@ return {
                         "storageKey": null
                       },
                       (v2/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__typename",
-                        "storageKey": null
-                      }
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -234,14 +241,51 @@ return {
             "name": "savedPaymentMethods"
           },
           (v2/*: any*/),
-          (v0/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "5fca730cdd1e3ad4f9727198a6343cdc",
+    "id": "a63e2437b8120f135f18b667b6c1f6a0",
     "metadata": {},
     "name": "SavedPaymentMethodsSettingsQuery",
     "operationKind": "query",
@@ -250,6 +294,6 @@ return {
 };
 })();
 
-(node as any).hash = "43ff7d077f413dfc86c9ff8504645ed4";
+(node as any).hash = "015dda05ced7002119e1428c961e9a8d";
 
 export default node;

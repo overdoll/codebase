@@ -8,19 +8,16 @@ import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeCom
 import { LockedAccountBannerFragment$key } from '@//:artifacts/LockedAccountBannerFragment.graphql'
 
 interface Props {
-  query: LockedAccountBannerFragment$key | null
+  query: LockedAccountBannerFragment$key
 }
 
 const Fragment = graphql`
   fragment LockedAccountBannerFragment on Account {
-    lock {
-      __typename
-    }
     ...LockedAccountModalFragment
   }
 `
 
-export default function LockedAccountBanner ({ query }: Props): JSX.Element | null {
+export default function LockedAccountBanner ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const {
@@ -28,8 +25,6 @@ export default function LockedAccountBanner ({ query }: Props): JSX.Element | nu
     onToggle,
     onClose
   } = useHistoryDisclosure()
-
-  if (data?.lock == null) return null
 
   return (
     <Alert

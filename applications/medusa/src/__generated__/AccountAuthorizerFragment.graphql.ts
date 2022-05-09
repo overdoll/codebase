@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b2cb6fca15b390c33668b532a041488>>
+ * @generated SignedSource<<c13700ac529f4b33222a851255735bdd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AccountAuthorizerFragment$data = {
   } | null;
   readonly isModerator: boolean;
   readonly isStaff: boolean;
+  readonly isArtist: boolean;
   readonly " $fragmentType": "AccountAuthorizerFragment";
 };
 export type AccountAuthorizerFragment = AccountAuthorizerFragment$data;
@@ -61,12 +62,19 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "isStaff",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isArtist",
+      "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "ca7c8a6fbbaee601868f43208836444a";
+(node as any).hash = "2b3f5e95fba7b044bee0b16ebd83901e";
 
 export default node;

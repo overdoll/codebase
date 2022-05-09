@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9410e6da05d921135484ddbb6c3fe766>>
- * @relayHash 65b8ef136aec64e3912a883a4c2d95b0
+ * @generated SignedSource<<7b94f7badcbb686fd8f07122199a13dc>>
+ * @relayHash 77f4448ab28d7158e378b0aa6cdc8c80
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 65b8ef136aec64e3912a883a4c2d95b0
+// @relayRequestID 77f4448ab28d7158e378b0aa6cdc8c80
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +23,7 @@ export type ClubPostsQuery$data = {
   readonly club: {
     readonly __typename: string;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment" | "ClubInformationBannerFragment">;
   } | null;
 };
 export type ClubPostsQueryResponse = ClubPostsQuery$data;
@@ -113,6 +113,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubPostsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -331,14 +336,64 @@ return {
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v5/*: any*/)
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "username",
+                    "storageKey": null
+                  },
+                  (v5/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "65b8ef136aec64e3912a883a4c2d95b0",
+    "id": "77f4448ab28d7158e378b0aa6cdc8c80",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",
@@ -347,6 +402,6 @@ return {
 };
 })();
 
-(node as any).hash = "215463f9c0e3444c8906a355e03fd4ac";
+(node as any).hash = "e2549c4da03ca4261e82b8d415b28f0e";
 
 export default node;

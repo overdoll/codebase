@@ -6,8 +6,8 @@ import getIdFromUppyUrl from '../../hooks/getIdFromUppyUrl/getIdFromUppyUrl'
 import { UppyContext } from '../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import ClubSuspended from '../ClubSuspended/ClubSuspended'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import ClubRestricted from '../ClubRestricted/ClubRestricted'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -21,11 +21,16 @@ const Query = graphql`
     }
     club (slug: $slug) {
       __typename
-      ...PostStateClubFragment
+
       suspension {
-        expires
+        __typename
+      }
+      termination {
+        __typename
       }
       viewerIsOwner
+      ...PostStateClubFragment
+      ...ClubRestrictedFragment
     }
   }
 `
@@ -111,8 +116,8 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (data?.club != null && data.club?.suspension != null) {
-    return <ClubSuspended />
+  if (data?.club != null && (data.club?.suspension != null || data.club?.termination != null)) {
+    return <ClubRestricted query={data.club} />
   }
 
   return (

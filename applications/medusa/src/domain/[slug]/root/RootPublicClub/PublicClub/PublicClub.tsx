@@ -18,7 +18,10 @@ import SupportClubButton from './SupportClubButton/SupportClubButton'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import Head from 'next/head'
-import LockedAccountBanner from '../../../../../common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import LockedAccountBanner
+  from '../../../../../common/components/AccountInformationBanner/LockedAccount/LockedAccountBanner/LockedAccountBanner'
+import AccountInformationBanner
+  from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -54,7 +57,7 @@ const Query = graphql`
     viewer {
       ...JoinClubFromPageViewerFragment
       ...SupportClubButtonViewerFragment
-      ...LockedAccountBannerFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -80,7 +83,7 @@ export default function PublicClub (props: Props): JSX.Element {
           {queryData.club.name} on overdoll :: overdoll.com/{queryData.club.slug}
         </title>
       </Head>
-      <LockedAccountBanner query={queryData?.viewer} />
+      <AccountInformationBanner query={queryData.viewer} />
       <ClubSuspendedStaffAlert query={queryData?.club} />
       <Stack spacing={8}>
         <Box h={200}>

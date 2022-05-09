@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1c600b6bd341e103d4be6c62e6226002>>
- * @relayHash 1be79f42a9e888b019fb7a4b18deda3e
+ * @generated SignedSource<<739b5e0922ac715d916ea3a55342898f>>
+ * @relayHash fa242b35ee5e45ba02cf138479d65f7e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1be79f42a9e888b019fb7a4b18deda3e
+// @relayRequestID fa242b35ee5e45ba02cf138479d65f7e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type PayoutsSettingsQuery$variables = {};
 export type PayoutsSettingsQueryVariables = PayoutsSettingsQuery$variables;
 export type PayoutsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment" | "AccountInformationBannerFragment">;
   };
 };
 export type PayoutsSettingsQueryResponse = PayoutsSettingsQuery$data;
@@ -32,6 +32,13 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -60,6 +67,11 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "PayoutsMethodSettingsFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "AccountInformationBannerFragment"
             }
           ],
           "storageKey": null
@@ -145,13 +157,7 @@ return {
             "name": "payoutMethod",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              },
+              (v1/*: any*/),
               {
                 "kind": "TypeDiscriminator",
                 "abstractKey": "__isAccountPayoutMethod"
@@ -174,6 +180,44 @@ return {
             ],
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           (v0/*: any*/)
         ],
         "storageKey": null
@@ -181,7 +225,7 @@ return {
     ]
   },
   "params": {
-    "id": "1be79f42a9e888b019fb7a4b18deda3e",
+    "id": "fa242b35ee5e45ba02cf138479d65f7e",
     "metadata": {},
     "name": "PayoutsSettingsQuery",
     "operationKind": "query",
@@ -190,7 +234,7 @@ return {
 };
 })();
 
-(node as any).hash = "bfdbd02cd10596d218b9971fad8d3591";
+(node as any).hash = "fcd9f2180495b90d3ce1afc606f764b2";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

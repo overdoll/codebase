@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a14de6232fafed083c93199d7123dde1>>
- * @relayHash 098765da4dfca42a2cc0be3afdaa2e40
+ * @generated SignedSource<<e7a59e80f3cb77bb2b0cabbad3a4867a>>
+ * @relayHash 749eaed327d3917ef87f9688b8b9650b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 098765da4dfca42a2cc0be3afdaa2e40
+// @relayRequestID 749eaed327d3917ef87f9688b8b9650b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -492,8 +492,7 @@ return {
             "plural": false,
             "selections": [
               (v10/*: any*/),
-              (v11/*: any*/),
-              (v3/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": null
           },
@@ -506,8 +505,7 @@ return {
             "plural": false,
             "selections": [
               (v11/*: any*/),
-              (v10/*: any*/),
-              (v3/*: any*/)
+              (v10/*: any*/)
             ],
             "storageKey": null
           },
@@ -656,7 +654,7 @@ return {
     ]
   },
   "params": {
-    "id": "098765da4dfca42a2cc0be3afdaa2e40",
+    "id": "749eaed327d3917ef87f9688b8b9650b",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

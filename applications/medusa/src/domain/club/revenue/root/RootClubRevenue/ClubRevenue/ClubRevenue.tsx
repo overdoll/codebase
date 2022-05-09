@@ -15,6 +15,7 @@ import { Trans } from '@lingui/macro'
 import ClubPayoutMethodAlert from './ClubPayoutMethodAlert/ClubPayoutMethodAlert'
 import { CLUB_GUIDELINES, PAYOUTS_INFORMATION } from '@//:modules/constants/links'
 import { ClubPeopleGroup, PayoutMethod } from '@//:assets/icons'
+import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   query: PreloadedQuery<ClubRevenueQuery>
@@ -28,6 +29,7 @@ const Query = graphql`
       ...ClubFullBalanceFragment
       ...ClubPayoutsListFragment
       ...ClubPayoutMethodAlertFragment
+      ...ClubInformationBannerFragment
     }
   }
 `
@@ -48,9 +50,8 @@ export default function ClubRevenue ({ query }: Props): JSX.Element {
 
   return (
     <>
-      <Box mb={2}>
-        <ClubPayoutMethodAlert query={queryData.club} />
-      </Box>
+      <ClubInformationBanner query={queryData.club} />
+      <ClubPayoutMethodAlert query={queryData.club} />
       <Stack spacing={8}>
         <ClubFullBalance query={queryData.club} />
         <ClubPayoutsList query={queryData.club} />

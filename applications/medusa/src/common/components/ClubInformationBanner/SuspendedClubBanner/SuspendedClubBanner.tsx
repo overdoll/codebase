@@ -13,9 +13,6 @@ interface Props {
 
 const Fragment = graphql`
   fragment SuspendedClubBannerFragment on Club {
-    suspension {
-      __typename
-    }
     ...SuspendedClubModalFragment
   }
 `
@@ -28,8 +25,6 @@ export default function SuspendedClubBanner ({ query }: Props): JSX.Element {
     onToggle,
     onClose
   } = useHistoryDisclosure()
-
-  if (data?.suspension == null) return <></>
 
   return (
     <Box>

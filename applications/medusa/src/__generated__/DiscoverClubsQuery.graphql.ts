@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<201e0938ac4370ae6a2a0451d86caeb1>>
- * @relayHash 47d2ec949fb5555cfe206564f1e76b19
+ * @generated SignedSource<<0b85edf3fe71a8d21f8bbef72b6a045f>>
+ * @relayHash c1f67c085962e07f0db09594fbdc76fc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 47d2ec949fb5555cfe206564f1e76b19
+// @relayRequestID c1f67c085962e07f0db09594fbdc76fc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -25,7 +25,7 @@ export type DiscoverClubsQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LockedAccountBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   } | null;
 };
 export type DiscoverClubsQueryResponse = DiscoverClubsQuery$data;
@@ -78,11 +78,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "LockedAccountBannerFragment"
-          },
           (v0/*: any*/),
           {
             "alias": null,
@@ -117,6 +112,11 @@ return {
               }
             ],
             "storageKey": "clubMembersPostsFeed(first:1)"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -139,26 +139,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountLock",
-            "kind": "LinkedField",
-            "name": "lock",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          (v3/*: any*/),
           (v0/*: any*/),
           {
             "alias": null,
@@ -194,14 +174,53 @@ return {
               }
             ],
             "storageKey": "clubMembersPostsFeed(first:1)"
-          }
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "47d2ec949fb5555cfe206564f1e76b19",
+    "id": "c1f67c085962e07f0db09594fbdc76fc",
     "metadata": {},
     "name": "DiscoverClubsQuery",
     "operationKind": "query",
@@ -210,6 +229,6 @@ return {
 };
 })();
 
-(node as any).hash = "0db475c6cb94b558b0ddfc913384f8b9";
+(node as any).hash = "2b479aeb296585a95d3869cb20c22e05";
 
 export default node;

@@ -10,10 +10,13 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
   can('interact', ['Club', 'Post'])
 
   if (data != null) {
-    can('configure', ['Account', 'Club'])
+    can('configure', 'Account')
 
-    if (!data.isLocked) {
-      can('create', ['Club', 'Post'])
+    if (data.isArtist) {
+      can('configure', 'Club')
+      if (!data.isLocked) {
+        can('create', ['Club', 'Post'])
+      }
     }
 
     if (data.isModerator) {

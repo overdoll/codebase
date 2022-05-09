@@ -6,6 +6,8 @@ import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
+import AccountInformationBanner
+  from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -26,6 +28,7 @@ const Query = graphql`
     }
     viewer {
       ...PostsInfiniteScrollViewerFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -81,6 +84,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
           {queryData.club.name}'s Posts :: overdoll.com/{queryData.club.slug}
         </title>
       </Head>
+      <AccountInformationBanner query={queryData.viewer} />
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll
           hasNext={hasNext}
