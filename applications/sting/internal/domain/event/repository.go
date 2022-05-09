@@ -15,4 +15,6 @@ type Repository interface {
 	RemovePost(ctx context.Context, postId string) error
 	AddPostLike(ctx context.Context, postId, accountId string) error
 	RemovePostLike(ctx context.Context, postId, accountId string) error
+
+	DeleteAccountData(ctx context.Context, postId string) error
 }

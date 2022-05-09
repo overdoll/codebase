@@ -1,6 +1,8 @@
 package mailing
 
-import "overdoll/applications/carrier/internal/domain/identifier"
+import (
+	"overdoll/applications/carrier/internal/domain/identifier"
+)
 
 type Recipient struct {
 	username string

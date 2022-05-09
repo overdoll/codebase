@@ -3,8 +3,10 @@ package ccbill
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"errors"
 	"os"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/club"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/principal"
 	"strconv"
@@ -20,10 +22,15 @@ type ClubSupporterPaymentLink struct {
 	currency int
 }
 
-func NewClubSupporterPaymentLink(requester *principal.Principal, clubId string, savePaymentDetails bool, price *billing.Price) (*ClubSupporterPaymentLink, error) {
+func NewClubSupporterPaymentLink(requester *principal.Principal, club *club.Club, savePaymentDetails bool, price *billing.Price) (*ClubSupporterPaymentLink, error) {
+
+	if !club.CanSupport() {
+		return nil, errors.New("club cannot be supported at this time")
+	}
+
 	return &ClubSupporterPaymentLink{
 		savePaymentDetails: savePaymentDetails,
-		clubId:             clubId,
+		clubId:             club.Id(),
 		accountId:          requester.AccountId(),
 		amount:             price.Amount(),
 		email:              requester.Email(),

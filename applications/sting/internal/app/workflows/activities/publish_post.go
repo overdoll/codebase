@@ -12,7 +12,7 @@ type PublishPostInput struct {
 
 func (h *Activities) PublishPost(ctx context.Context, input PublishPostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		// This will make sure the state of the post is always "review" before publishing - we may get an outdated record
 		// from the review stage so it will retry at some point
 		return pending.MakePublish()
@@ -23,5 +23,5 @@ func (h *Activities) PublishPost(ctx context.Context, input PublishPostInput) er
 	}
 
 	// index pending post
-	return h.pi.IndexPost(ctx, pendingPost)
+	return nil
 }

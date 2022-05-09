@@ -21,11 +21,6 @@ func (h *Activities) DeletePost(ctx context.Context, input DeletePostInput) erro
 		return err
 	}
 
-	// delete from index
-	if err := h.pi.DeletePost(ctx, input.PostId); err != nil {
-		return err
-	}
-
 	// delete from database
 	if err := h.pr.DeletePost(ctx, input.PostId); err != nil {
 		return err

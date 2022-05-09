@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/club"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/principal"
 	"strconv"
@@ -18,14 +19,18 @@ type ChargeByPreviousClubSupporterPaymentUrl struct {
 	currency int
 }
 
-func NewChargeByPreviousClubSupporterPaymentUrl(requester *principal.Principal, clubId, ccbillSubscriptionId string, price *billing.Price) (*ChargeByPreviousClubSupporterPaymentUrl, error) {
+func NewChargeByPreviousClubSupporterPaymentUrl(requester *principal.Principal, club *club.Club, ccbillSubscriptionId string, price *billing.Price) (*ChargeByPreviousClubSupporterPaymentUrl, error) {
 
 	if !requester.IsSecure() {
 		return nil, errors.New("account must be secure to use charge by previous id")
 	}
 
+	if !club.CanSupport() {
+		return nil, errors.New("club cannot be supported at this time")
+	}
+
 	return &ChargeByPreviousClubSupporterPaymentUrl{
-		clubId:               clubId,
+		clubId:               club.Id(),
 		accountId:            requester.AccountId(),
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		amount:               price.Amount(),

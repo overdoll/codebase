@@ -36,7 +36,7 @@ func (h SetPaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd SetP
 		return nil, err
 	}
 
-	pay, err := payout.NewPaxumAccountPayoutMethod(cmd.AccountId, cmd.PaxumEmail)
+	pay, err := payout.NewPaxumAccountPayoutMethod(cmd.Principal, cmd.AccountId, cmd.PaxumEmail)
 
 	if err != nil {
 		return nil, err

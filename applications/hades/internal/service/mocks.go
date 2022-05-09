@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/club"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/location"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -54,8 +56,20 @@ func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*locatio
 
 type StellaServiceMock struct{}
 
-func (s StellaServiceMock) CanAccountBecomeClubSupporter(ctx context.Context, clubId, accountId string) (bool, error) {
-	return true, nil
+func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      nil,
+	})
+}
+
+func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error {
+	return nil
+}
+
+func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, true, ""), nil
 }
 
 func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
@@ -64,10 +78,6 @@ func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, account
 
 func (s StellaServiceMock) RemoveClubSupporter(ctx context.Context, clubId, accountId string) error {
 	return nil
-}
-
-func (s StellaServiceMock) CanAccountViewClub(ctx context.Context, clubId, accountId string) (bool, error) {
-	return true, nil
 }
 
 type MockCCBillHttpClient struct {
@@ -106,6 +116,10 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 }
 
 type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
+	return nil
+}
 
 func (c CarrierServiceMock) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
 	return nil

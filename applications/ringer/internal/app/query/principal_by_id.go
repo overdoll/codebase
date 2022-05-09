@@ -2,17 +2,16 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/ringer/internal/domain/event"
-
 	"overdoll/libraries/principal"
 )
 
 type PrincipalByIdHandler struct {
-	eva EvaService
+	eva    EvaService
+	stella StellaService
 }
 
-func NewPrincipalByIdHandler(eva EvaService, event event.Repository) PrincipalByIdHandler {
-	return PrincipalByIdHandler{eva: eva}
+func NewPrincipalByIdHandler(eva EvaService, stella StellaService) PrincipalByIdHandler {
+	return PrincipalByIdHandler{eva: eva, stella: stella}
 }
 
 func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal.Principal, error) {
@@ -20,6 +19,16 @@ func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal
 	result, err := h.eva.GetAccount(ctx, id)
 
 	if err != nil {
+		return nil, err
+	}
+
+	clubExtension, err := h.stella.GetAccountClubPrincipalExtension(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := result.ExtendWithClubExtension(clubExtension); err != nil {
 		return nil, err
 	}
 

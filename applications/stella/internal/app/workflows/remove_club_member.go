@@ -35,19 +35,19 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-	if err := workflow.ExecuteChildWorkflow(ctx, UpdateClubMemberTotalCount,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpdateClubMemberTotalCount,
 		UpdateClubMemberTotalCountInput{
 			ClubId: input.ClubId,
 		},
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil {
-		// ignore already started errors
 		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return nil
 		}
+		// ignore already started errors
 		return err
 	}
 

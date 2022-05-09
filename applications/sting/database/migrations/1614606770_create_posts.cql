@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS posts
 (
     id                                  text,
     state                               text,
+    likes                               bigint,
+    likes_last_update_id                timeuuid,
     supporter_only_status               text,
     contributor_account_id              text,
     club_id                             text,
@@ -92,19 +94,29 @@ CREATE TABLE IF NOT EXISTS posts
     primary key ( id )
 );
 
-CREATE TABLE IF NOT EXISTS post_likes_counter
-(
-    post_id text,
-    likes   counter,
-    primary key ( post_id )
-);
-
 CREATE TABLE IF NOT EXISTS post_likes
 (
+    bucket           int,
     post_id          text,
     liked_account_id text,
     liked_at         timestamp,
     primary key ( (post_id, liked_account_id) )
+);
+
+CREATE TABLE IF NOT EXISTS account_post_likes
+(
+    bucket           int,
+    post_id          text,
+    liked_account_id text,
+    liked_at         timestamp,
+    primary key ( (bucket, liked_account_id), post_id )
+);
+
+CREATE TABLE IF NOT EXISTS account_post_likes_buckets
+(
+    liked_account_id text,
+    bucket           int,
+    primary key ( liked_account_id, bucket )
 );
 
 CREATE TABLE IF NOT EXISTS curation_profile
@@ -117,4 +129,11 @@ CREATE TABLE IF NOT EXISTS curation_profile
     audience_ids_skipped  boolean,
     category_ids_skipped  boolean,
     primary key ( account_id )
+);
+
+CREATE TABLE IF NOT EXISTS terminated_clubs
+(
+    bucket  int,
+    club_id text,
+    primary key ( bucket, club_id )
 );

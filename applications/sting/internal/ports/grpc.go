@@ -2,6 +2,7 @@ package ports
 
 import (
 	"context"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/libraries/principal"
 
 	"overdoll/applications/sting/internal/app"
@@ -46,7 +47,7 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 	}, nil
 }
 
-func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.RejectPost.Handle(ctx, command.RejectPost{
 		PostId: request.Id,
@@ -54,10 +55,10 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 		return nil, err
 	}
 
-	return &sting.UpdatePostResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.PublishPost.Handle(ctx, command.PublishPost{
 		PostId: request.Id,
@@ -65,10 +66,10 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 		return nil, err
 	}
 
-	return &sting.UpdatePostResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.DiscardPost.Handle(ctx, command.DiscardPost{
 		PostId: request.Id,
@@ -76,10 +77,10 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 		return nil, err
 	}
 
-	return &sting.UpdatePostResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
-func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.RemovePost.Handle(ctx, command.RemovePost{
 		PostId: request.Id,
@@ -87,5 +88,38 @@ func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*st
 		return nil, err
 	}
 
-	return &sting.UpdatePostResponse{}, nil
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAccountDataRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.DeleteAccountData.Handle(ctx, command.DeleteAccountData{
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddTerminatedClubRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AddTerminatedClub.Handle(ctx, command.AddTerminatedClub{
+		ClubId: request.ClubId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) RemoveTerminatedClub(ctx context.Context, request *sting.RemoveTerminatedClubRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.RemoveTerminatedClub.Handle(ctx, command.RemoveTerminatedClub{
+		ClubId: request.ClubId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
 }

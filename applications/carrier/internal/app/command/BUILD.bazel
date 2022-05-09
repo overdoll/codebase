@@ -3,9 +3,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "account_deleted.go",
+        "account_deletion_begin.go",
+        "account_deletion_reminder.go",
+        "club_over_chargeback_threshold.go",
+        "club_supporter_no_posts.go",
+        "club_supporter_required_post_reminder.go",
         "club_supporter_subscription_cancelled.go",
         "club_supporter_subscription_payment_failure.go",
         "club_supporter_subscription_refunded.go",
+        "club_suspended.go",
         "confirm_account_email.go",
         "new_club_supporter_subscription.go",
         "new_login_token.go",

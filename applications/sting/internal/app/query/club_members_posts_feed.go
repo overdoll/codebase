@@ -14,10 +14,10 @@ type ClubMembersPostsFeed struct {
 }
 
 type ClubMembersPostsFeedHandler struct {
-	pi post.IndexRepository
+	pi post.Repository
 }
 
-func NewClubMembersPostsFeedHandler(pi post.IndexRepository) ClubMembersPostsFeedHandler {
+func NewClubMembersPostsFeedHandler(pi post.Repository) ClubMembersPostsFeedHandler {
 	return ClubMembersPostsFeedHandler{pi: pi}
 }
 

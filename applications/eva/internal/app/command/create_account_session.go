@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/passport"
 
@@ -15,11 +16,12 @@ type CreateAccountSessionOperator struct {
 
 type CreateAccountSessionOperatorHandler struct {
 	sr session.Repository
+	ar account.Repository
 	lr location.Repository
 }
 
-func NewCreateAccountSessionOperatorHandler(sr session.Repository, lr location.Repository) CreateAccountSessionOperatorHandler {
-	return CreateAccountSessionOperatorHandler{sr: sr, lr: lr}
+func NewCreateAccountSessionOperatorHandler(sr session.Repository, ar account.Repository, lr location.Repository) CreateAccountSessionOperatorHandler {
+	return CreateAccountSessionOperatorHandler{sr: sr, lr: lr, ar: ar}
 }
 
 func (h CreateAccountSessionOperatorHandler) Handle(ctx context.Context, cmd CreateAccountSessionOperator) (*session.Session, error) {
@@ -30,7 +32,13 @@ func (h CreateAccountSessionOperatorHandler) Handle(ctx context.Context, cmd Cre
 		return nil, err
 	}
 
-	s, err := session.NewSession(cmd.AccountId, cmd.Passport.UserAgent(), cmd.Passport.IP(), loc)
+	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	s, err := session.NewSession(acc, cmd.Passport.UserAgent(), cmd.Passport.IP(), loc)
 
 	if err != nil {
 		return nil, err

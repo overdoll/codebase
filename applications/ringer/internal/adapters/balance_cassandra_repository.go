@@ -67,7 +67,7 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 		return nil, fmt.Errorf("failed to get balance for club: %v", err)
 	}
 
-	if err := canViewSensitive(ctx, r.stella, requester, clubId); err != nil {
+	if err := canViewSensitive(ctx, requester, clubId); err != nil {
 		return nil, err
 	}
 

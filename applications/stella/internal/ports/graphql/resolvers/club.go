@@ -57,7 +57,7 @@ func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types
 	return types.MarshalClubMemberToGraphql(ctx, clb), nil
 }
 
-func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
+func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -65,10 +65,14 @@ func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.ClubMembersByClub.Handle(ctx, query.ClubMembersByClub{
+	clubId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchClubMemberships.Handle(ctx, query.SearchClubMemberships{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
-		ClubId:    obj.ID.GetID(),
+		ClubId:    &clubId,
+		Supporter: supporter,
+		SortBy:    sortBy.String(),
 	})
 
 	if err != nil {
@@ -88,4 +92,30 @@ func (r ClubResolver) SlugAliasesLimit(ctx context.Context, obj *types.Club) (in
 		AccountId: obj.Owner.ID.GetID(),
 		Principal: principal.FromContext(ctx),
 	})
+}
+
+func (r ClubResolver) SuspensionLogs(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubSuspensionLogConnection, error) {
+
+	// non-authed users will just return nil
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	logs, err := r.App.Queries.ClubSuspensionLogs.Handle(ctx, query.ClubSuspensionLogs{
+		ClubId:    obj.ID.GetID(),
+		Cursor:    cursor,
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalClubSuspensionLogsToGraphQLConnection(ctx, logs, cursor), nil
 }

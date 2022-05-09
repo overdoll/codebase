@@ -7,12 +7,14 @@ import (
 	carrier "overdoll/applications/carrier/proto"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestNewLoginTokenEmail(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient()
+	timestampFrom := time.Now()
 
 	email := generateEmail("carrier-new_login_token")
 	token := uuid.New().String()
@@ -22,7 +24,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending login token email")
 
-	doc := waitForEmailAndGetDocument(t, email)
+	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
 
 	link := doc.Find("a").First()
 

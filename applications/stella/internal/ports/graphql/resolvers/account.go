@@ -9,7 +9,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
 type AccountResolver struct {
@@ -95,7 +94,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 		Cursor:         cursor,
 		OwnerAccountId: &accountId,
 		Name:           name,
-		SortBy:         strings.ToLower(sortBy.String()),
+		SortBy:         sortBy.String(),
 		Slugs:          slugs,
 	})
 
@@ -106,7 +105,7 @@ func (r AccountResolver) Clubs(ctx context.Context, obj *types.Account, after *s
 	return types.MarshalClubsToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
+func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -118,10 +117,14 @@ func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountClubMemberships.Handle(ctx, query.AccountClubMemberships{
+	accId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchClubMemberships.Handle(ctx, query.SearchClubMemberships{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
-		AccountId: obj.ID.GetID(),
+		AccountId: &accId,
+		Supporter: supporter,
+		SortBy:    sortBy.String(),
 	})
 
 	if err != nil {
@@ -129,4 +132,22 @@ func (r AccountResolver) ClubMemberships(ctx context.Context, obj *types.Account
 	}
 
 	return types.MarshalClubMembersToGraphQLConnection(ctx, results, cursor), nil
+}
+
+func (r AccountResolver) HasNonTerminatedClubs(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	result, err := r.App.Queries.HasNonTerminatedClubs.Handle(ctx, query.HasNonTerminatedClubs{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }

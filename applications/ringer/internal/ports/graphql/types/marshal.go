@@ -343,7 +343,6 @@ func MarshalAccountPayoutMethodToGraphQL(ctx context.Context, result *payout.Acc
 
 func MarshalClubBalanceToGraphQL(ctx context.Context, result *balance.ClubBalance) *Balance {
 	return &Balance{
-		ID:        relay.NewID(Balance{}, result.ClubId()),
 		Amount:    int(result.Amount()),
 		Currency:  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		UpdatedAt: result.UpdatedAt(),

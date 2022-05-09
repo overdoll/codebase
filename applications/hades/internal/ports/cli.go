@@ -24,7 +24,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllAccountTransactions.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateAccountTransactionsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -41,7 +41,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllAccountTransactions.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateAccountTransactionsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

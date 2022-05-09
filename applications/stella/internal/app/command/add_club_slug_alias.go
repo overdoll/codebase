@@ -16,11 +16,10 @@ type AddClubSlugAlias struct {
 
 type AddClubSlugAliasHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewAddClubSlugAliasHandler(cr club.Repository, ci club.IndexRepository) AddClubSlugAliasHandler {
-	return AddClubSlugAliasHandler{cr: cr, ci: ci}
+func NewAddClubSlugAliasHandler(cr club.Repository) AddClubSlugAliasHandler {
+	return AddClubSlugAliasHandler{cr: cr}
 }
 
 func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlias) (*club.Club, error) {
@@ -30,10 +29,6 @@ func (h AddClubSlugAliasHandler) Handle(ctx context.Context, cmd AddClubSlugAlia
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

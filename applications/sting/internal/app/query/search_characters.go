@@ -18,10 +18,10 @@ type SearchCharacters struct {
 }
 
 type SearchCharactersHandler struct {
-	pr post.IndexRepository
+	pr post.Repository
 }
 
-func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler {
+func NewSearchCharactersHandler(pr post.Repository) SearchCharactersHandler {
 	return SearchCharactersHandler{pr: pr}
 }
 

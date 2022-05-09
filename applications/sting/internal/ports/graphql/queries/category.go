@@ -2,8 +2,6 @@ package queries
 
 import (
 	"context"
-	"strings"
-
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/domain/post"
@@ -25,7 +23,7 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 		Cursor:    cursor,
 		Title:     title,
 		Slugs:     slugs,
-		SortBy:    strings.ToLower(sortBy.String()),
+		SortBy:    sortBy.String(),
 	})
 
 	if err != nil {

@@ -13,10 +13,12 @@ go_library(
     deps = [
         "//applications/hades/internal/ports",
         "//applications/hades/internal/service",
+        "//applications/hades/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
 

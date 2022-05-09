@@ -19,10 +19,10 @@ type SearchAccountTransactions struct {
 }
 
 type SearchAccountTransactionsHandler struct {
-	bi billing.IndexRepository
+	bi billing.Repository
 }
 
-func NewSearchAccountTransactionsHandler(bi billing.IndexRepository) SearchAccountTransactionsHandler {
+func NewSearchAccountTransactionsHandler(bi billing.Repository) SearchAccountTransactionsHandler {
 	return SearchAccountTransactionsHandler{bi: bi}
 }
 

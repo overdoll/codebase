@@ -6,6 +6,9 @@ import (
 	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
+	stella "overdoll/applications/stella/proto"
+	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/principal"
 
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
@@ -54,16 +57,27 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 
 func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
-	pst, err := post.NewPost(testing_tools.NewDefaultPrincipal(accountId), clubId)
+	prin := testing_tools.NewDefaultPrincipal(accountId)
+	ext, err := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      []string{clubId},
+	})
 	require.NoError(t, err)
 
-	err = pst.UpdateAudienceRequest(testing_tools.NewDefaultPrincipal(accountId), post.UnmarshalAudienceFromDatabase(
+	err = prin.ExtendWithClubExtension(ext)
+	require.NoError(t, err)
+
+	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", "", false, accountId))
+	require.NoError(t, err)
+
+	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
 		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0,
 	))
 
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(testing_tools.NewDefaultPrincipal(accountId), true)
+	err = pst.SubmitPostRequest(prin, true)
 
 	require.NoError(t, err)
 	return pst
@@ -95,14 +109,10 @@ func newFakeAccount(t *testing.T) string {
 
 func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
-
-	adapter := adapters.NewPostsCassandraRepository(session, service.StellaServiceMock{})
-	err := adapter.CreatePost(context.Background(), pst)
-	require.NoError(t, err)
-
 	es := bootstrap.InitializeElasticSearchSession()
-	adapterEs := adapters.NewPostsIndexElasticSearchRepository(es, session, service.StellaServiceMock{})
-	err = adapterEs.IndexPost(context.Background(), pst)
+
+	adapter := adapters.NewPostsCassandraRepository(session, es)
+	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
 	refreshPostESIndex(t)

@@ -17,7 +17,7 @@ type Commands struct {
 	GenerateCCBillFlexFormsPaymentLink              command.GenerateCCBillFlexFormsPaymentLinkHandler
 	ParseCCBillFlexFormsResponseAndGenerateTemplate command.ParseCCBillFlexFormsResponseAndGenerateTemplateHandler
 
-	IndexAllAccountTransactions command.IndexAllAccountTransactionsHandler
+	DeleteAndRecreateAccountTransactionsIndex command.DeleteAndRecreateAccountTransactionsIndexHandler
 
 	ProcessCCBillWebhook                                             command.ProcessCCBillWebhookHandler
 	GenerateProratedRefundAmountForAccountTransaction                command.GenerateProratedRefundAmountForAccountTransactionHandler
@@ -32,6 +32,10 @@ type Commands struct {
 	CreateCancellationReason           command.CreateCancellationReasonHandler
 	UpdateCancellationReasonDeprecated command.UpdateCancellationReasonDeprecatedHandler
 	UpdateCancellationReasonTitle      command.UpdateCancellationReasonTitleHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
+
+	CancelActiveSupporterSubscriptionsForClub command.CancelActiveSupporterSubscriptionsForClubHandler
 }
 
 type Queries struct {
@@ -56,4 +60,10 @@ type Queries struct {
 	AccountTransactionsChargebackCount query.AccountTransactionsChargebackCountHandler
 	AccountTransactionsPaymentCount    query.AccountTransactionsPaymentCountHandler
 	AccountTransactionsRefundCount     query.AccountTransactionsRefundCountHandler
+
+	HasActiveOrCancelledAccountClubSupporterSubscriptions query.HasActiveOrCancelledAccountClubSupporterSubscriptionsHandler
+
+	CanDeleteAccountData query.CanDeleteAccountDataHandler
+
+	ClubTransactionMetrics query.ClubTransactionMetricsHandler
 }

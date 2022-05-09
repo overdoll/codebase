@@ -17,11 +17,10 @@ type PostsFeed struct {
 type PostsFeedHandler struct {
 	ppr curation.Repository
 	pr  post.Repository
-	pi  post.IndexRepository
 }
 
-func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository, pi post.IndexRepository) PostsFeedHandler {
-	return PostsFeedHandler{pi: pi, ppr: ppr, pr: pr}
+func NewPostsFeedHandler(ppr curation.Repository, pr post.Repository) PostsFeedHandler {
+	return PostsFeedHandler{ppr: ppr, pr: pr}
 }
 
 func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.Post, error) {
@@ -63,7 +62,7 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		return nil, err
 	}
 
-	posts, err := h.pi.PostsFeed(ctx, query.Principal, query.Cursor, filters)
+	posts, err := h.pr.PostsFeed(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

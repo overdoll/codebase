@@ -1,9 +1,12 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/support"
 )
 
 type CCBillRefundInput struct {
@@ -56,9 +59,16 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
 	// create refund record
 	if err := workflow.ExecuteActivity(ctx, a.UpdateRefundClubSubscriptionAccountTransaction,
 		activities.UpdateRefundClubSubscriptionAccountTransactionInput{
+			Id:            *uniqueId,
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Currency:      input.Currency,
@@ -98,6 +108,31 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Currency:      input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// spawn a child workflow that will calculate club transaction metrics
+	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+		WorkflowID:        "ClubTransactionMetric_" + *uniqueId,
+		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+	})
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
+		ClubTransactionMetricInput{
+			ClubId:    subscriptionDetails.ClubId,
+			Timestamp: timestamp,
+			Id:        *uniqueId,
+			Amount:    accountingAmount,
+			Currency:  input.AccountingCurrency,
+			IsRefund:  true,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
 		return err
 	}
 

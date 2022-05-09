@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
@@ -130,13 +130,13 @@ type depositRequests struct {
 	LastInsertId       gocql.UUID `db:"last_insert_id"`
 }
 
-type PayoutCassandraRepository struct {
+type PayoutCassandraElasticsearchRepository struct {
 	session gocqlx.Session
-	stella  query.StellaService
+	client  *elastic.Client
 }
 
-func NewPayoutCassandraRepository(session gocqlx.Session, stella query.StellaService) PayoutCassandraRepository {
-	return PayoutCassandraRepository{session: session, stella: stella}
+func NewPayoutCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client) PayoutCassandraElasticsearchRepository {
+	return PayoutCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*clubPayout, error) {
@@ -172,7 +172,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 	}, nil
 }
 
-func (r PayoutCassandraRepository) UpdateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
+func (r PayoutCassandraElasticsearchRepository) UpdateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Insert()).
 		Consistency(gocql.LocalQuorum).
@@ -189,16 +189,16 @@ func (r PayoutCassandraRepository) UpdateAccountPayoutMethod(ctx context.Context
 	return nil
 }
 
-func (r PayoutCassandraRepository) DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *payout.AccountPayoutMethod) error {
+func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethodOperator(ctx context.Context, accountId string) error {
+	return r.deleteAccountPayoutMethod(ctx, accountId)
+}
 
-	if err := pay.CanDelete(requester); err != nil {
-		return err
-	}
+func (r PayoutCassandraElasticsearchRepository) deleteAccountPayoutMethod(ctx context.Context, payoutMethodId string) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Delete()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
-			AccountId: pay.AccountId(),
+			AccountId: payoutMethodId,
 		}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete account payout method: %v", err)
@@ -207,7 +207,16 @@ func (r PayoutCassandraRepository) DeleteAccountPayoutMethod(ctx context.Context
 	return nil
 }
 
-func (r PayoutCassandraRepository) GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountId string) (*payout.AccountPayoutMethod, error) {
+func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethod(ctx context.Context, requester *principal.Principal, pay *payout.AccountPayoutMethod) error {
+
+	if err := pay.CanDelete(requester); err != nil {
+		return err
+	}
+
+	return r.deleteAccountPayoutMethod(ctx, pay.AccountId())
+}
+
+func (r PayoutCassandraElasticsearchRepository) GetAccountPayoutMethodById(ctx context.Context, requester *principal.Principal, accountId string) (*payout.AccountPayoutMethod, error) {
 
 	pay, err := r.GetAccountPayoutMethodByIdOperator(ctx, accountId)
 
@@ -222,7 +231,7 @@ func (r PayoutCassandraRepository) GetAccountPayoutMethodById(ctx context.Contex
 	return pay, nil
 }
 
-func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*payout.AccountPayoutMethod, error) {
+func (r PayoutCassandraElasticsearchRepository) GetAccountPayoutMethodByIdOperator(ctx context.Context, accountId string) (*payout.AccountPayoutMethod, error) {
 
 	var accountPayout accountPayoutMethod
 
@@ -243,7 +252,7 @@ func (r PayoutCassandraRepository) GetAccountPayoutMethodByIdOperator(ctx contex
 	return payout.UnmarshalAccountPayoutMethodFromDatabase(accountPayout.AccountId, accountPayout.Method, accountPayout.PaxumEmail), nil
 }
 
-func (r PayoutCassandraRepository) CreateClubPayout(ctx context.Context, payout *payout.ClubPayout) error {
+func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Context, payout *payout.ClubPayout) error {
 
 	var lockedPay clubLockedPayout
 
@@ -292,10 +301,14 @@ func (r PayoutCassandraRepository) CreateClubPayout(ctx context.Context, payout 
 		return fmt.Errorf("failed to insert club payout: %v", err)
 	}
 
+	if err := r.indexClubPayout(ctx, payout); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PayoutCassandraRepository) GetClubPayoutById(ctx context.Context, requester *principal.Principal, payoutId string) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) GetClubPayoutById(ctx context.Context, requester *principal.Principal, payoutId string) (*payout.ClubPayout, error) {
 
 	pay, err := r.GetClubPayoutByIdOperator(ctx, payoutId)
 
@@ -303,14 +316,14 @@ func (r PayoutCassandraRepository) GetClubPayoutById(ctx context.Context, reques
 		return nil, err
 	}
 
-	if err := canViewSensitive(ctx, r.stella, requester, pay.ClubId()); err != nil {
+	if err := canViewSensitive(ctx, requester, pay.ClubId()); err != nil {
 		return nil, err
 	}
 
 	return pay, nil
 }
 
-func (r PayoutCassandraRepository) GetClubPayoutByIdOperator(ctx context.Context, payoutId string) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx context.Context, payoutId string) (*payout.ClubPayout, error) {
 
 	var clubPay clubPayout
 
@@ -358,7 +371,7 @@ func (r PayoutCassandraRepository) GetClubPayoutByIdOperator(ctx context.Context
 	), nil
 }
 
-func (r PayoutCassandraRepository) updateClubPayout(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error, columns []string) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) updateClubPayout(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error, columns []string) (*payout.ClubPayout, error) {
 
 	pay, err := r.GetClubPayoutByIdOperator(ctx, payoutId)
 
@@ -383,10 +396,14 @@ func (r PayoutCassandraRepository) updateClubPayout(ctx context.Context, payoutI
 		return nil, fmt.Errorf("failed to update club payout: %v", err)
 	}
 
+	if err := r.indexClubPayout(ctx, pay); err != nil {
+		return nil, err
+	}
+
 	return pay, nil
 }
 
-func (r PayoutCassandraRepository) UpdateClubPayoutStatus(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) UpdateClubPayoutStatus(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
 	pay, err := r.updateClubPayout(ctx, payoutId, updateFn, []string{"status", "temporal_workflow_id"})
 
 	if err != nil {
@@ -406,15 +423,15 @@ func (r PayoutCassandraRepository) UpdateClubPayoutStatus(ctx context.Context, p
 	return pay, nil
 }
 
-func (r PayoutCassandraRepository) UpdateClubPayoutDepositDate(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) UpdateClubPayoutDepositDate(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
 	return r.updateClubPayout(ctx, payoutId, updateFn, []string{"deposit_date"})
 }
 
-func (r PayoutCassandraRepository) UpdateClubPayoutEvents(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
+func (r PayoutCassandraElasticsearchRepository) UpdateClubPayoutEvents(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error) (*payout.ClubPayout, error) {
 	return r.updateClubPayout(ctx, payoutId, updateFn, []string{"events"})
 }
 
-func (r PayoutCassandraRepository) CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error {
+func (r PayoutCassandraElasticsearchRepository) CanInitiateClubPayout(ctx context.Context, requester *principal.Principal, clubId string) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
@@ -437,7 +454,7 @@ func (r PayoutCassandraRepository) CanInitiateClubPayout(ctx context.Context, re
 	return errors.New("payout is locked - an existing payout is already pending")
 }
 
-func (r PayoutCassandraRepository) CreateDepositRequest(ctx context.Context, deposit *payout.DepositRequest) error {
+func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context.Context, deposit *payout.DepositRequest) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -494,7 +511,7 @@ func (r PayoutCassandraRepository) CreateDepositRequest(ctx context.Context, dep
 	return nil
 }
 
-func (r PayoutCassandraRepository) getDepositRequestById(ctx context.Context, id string) (*depositRequests, error) {
+func (r PayoutCassandraElasticsearchRepository) getDepositRequestById(ctx context.Context, id string) (*depositRequests, error) {
 
 	var deposit depositRequests
 
@@ -512,7 +529,7 @@ func (r PayoutCassandraRepository) getDepositRequestById(ctx context.Context, id
 	return &deposit, nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
+func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
 	deposit, err := r.getDepositRequestById(ctx, id)
 
 	if err != nil {
@@ -532,7 +549,7 @@ func (r PayoutCassandraRepository) GetDepositRequestByIdOperator(ctx context.Con
 	), nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, requester *principal.Principal, id string) (*payout.DepositRequest, error) {
+func (r PayoutCassandraElasticsearchRepository) GetDepositRequestById(ctx context.Context, requester *principal.Principal, id string) (*payout.DepositRequest, error) {
 
 	deposit, err := r.GetDepositRequestByIdOperator(ctx, id)
 
@@ -547,7 +564,7 @@ func (r PayoutCassandraRepository) GetDepositRequestById(ctx context.Context, re
 	return deposit, nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*payout.DepositRequest, error) {
+func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*payout.DepositRequest, error) {
 
 	if err := payout.CanViewDepositRequests(requester); err != nil {
 		return nil, err
@@ -617,7 +634,7 @@ func (r PayoutCassandraRepository) GetDepositRequests(ctx context.Context, reque
 	return depositResults, nil
 }
 
-func (r PayoutCassandraRepository) GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*payout.DepositRequest, error) {
+func (r PayoutCassandraElasticsearchRepository) GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*payout.DepositRequest, error) {
 
 	var depositResults []*payout.DepositRequest
 
@@ -651,7 +668,7 @@ func (r PayoutCassandraRepository) GetDepositRequestsForMonth(ctx context.Contex
 	return depositResults, nil
 }
 
-func (r PayoutCassandraRepository) UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *payout.DepositRequest) error) (*payout.DepositRequest, error) {
+func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *payout.DepositRequest) error) (*payout.DepositRequest, error) {
 
 	deposit, err := r.getDepositRequestById(ctx, depositRequestId)
 

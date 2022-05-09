@@ -17,10 +17,6 @@ const (
 	testmailApiEndpoint = "https://api.testmail.app/api/graphql"
 )
 
-var (
-	timestampFrom = time.Now()
-)
-
 type Inbox struct {
 	Inbox struct {
 		Result string
@@ -45,7 +41,7 @@ func generateEmail(name string) string {
 	return os.Getenv("TESTMAIL_NAMESPACE") + "." + name + "@inbox.testmail.app"
 }
 
-func waitForEmailAndGetDocument(t *testing.T, email string) *goquery.Document {
+func waitForEmailAndGetDocument(t *testing.T, email string, timestampFrom time.Time) *goquery.Document {
 
 	parts := strings.Split(email, "@")
 	main := strings.Split(parts[0], ".")

@@ -32,6 +32,8 @@ type Commands struct {
 
 	AddModeratorToPostQueue      command.AddModeratorToPostQueueHandler
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
 }
 
 type Queries struct {

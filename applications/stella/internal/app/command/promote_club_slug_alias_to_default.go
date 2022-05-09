@@ -16,11 +16,10 @@ type PromoteClubSlugAliasToDefault struct {
 
 type PromoteClubSlugAliasToDefaultHandler struct {
 	cr club.Repository
-	ci club.IndexRepository
 }
 
-func NewPromoteClubSlugAliasToDefaultHandler(cr club.Repository, ci club.IndexRepository) PromoteClubSlugAliasToDefaultHandler {
-	return PromoteClubSlugAliasToDefaultHandler{cr: cr, ci: ci}
+func NewPromoteClubSlugAliasToDefaultHandler(cr club.Repository) PromoteClubSlugAliasToDefaultHandler {
+	return PromoteClubSlugAliasToDefaultHandler{cr: cr}
 }
 
 func (h PromoteClubSlugAliasToDefaultHandler) Handle(ctx context.Context, cmd PromoteClubSlugAliasToDefault) (*club.Club, error) {
@@ -30,10 +29,6 @@ func (h PromoteClubSlugAliasToDefaultHandler) Handle(ctx context.Context, cmd Pr
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
 		return nil, err
 	}
 

@@ -14,13 +14,12 @@ type ArchivePost struct {
 }
 
 type ArchivePostHandler struct {
-	pi    post.IndexRepository
 	pr    post.Repository
 	event event.Repository
 }
 
-func NewArchivePostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) ArchivePostHandler {
-	return ArchivePostHandler{pr: pr, pi: pi, event: event}
+func NewArchivePostHandler(pr post.Repository, event event.Repository) ArchivePostHandler {
+	return ArchivePostHandler{pr: pr, event: event}
 }
 
 func (h ArchivePostHandler) Handle(ctx context.Context, cmd ArchivePost) (*post.Post, error) {

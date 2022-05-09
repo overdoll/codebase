@@ -14,7 +14,7 @@ type SubmitPostInput struct {
 
 func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.UpdatePostPostedDate(input.PostDate)
 	})
 
@@ -23,5 +23,5 @@ func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) erro
 	}
 
 	// Update pending post index
-	return h.pi.IndexPost(ctx, pendingPost)
+	return nil
 }

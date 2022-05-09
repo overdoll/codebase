@@ -11,14 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GraphQLErrorResponse struct {
-	Errors []struct {
-		Message   string   `json:"message"`
-		Path      []string `json:"path"`
-		Locations []string `json:"locations"`
-	} `json:"errors"`
-}
-
 type HttpServicePrincipalFunc interface {
 	PrincipalById(ctx context.Context, id string) (*Principal, error)
 }

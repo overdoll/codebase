@@ -26,6 +26,20 @@ input AssignAccountStaffRole {
   accountId: ID!
 }
 
+"""Input to assign account to a arist role"""
+input AssignAccountArtistRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountArtistRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
 """Revoked account"""
 type RevokeAccountModeratorRolePayload {
   """The account that the role was revoked from"""
@@ -54,6 +68,20 @@ input RevokeAccountStaffRole {
   accountId: ID!
 }
 
+"""Revoked account"""
+type RevokeAccountArtistRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke artist role"""
+input RevokeAccountArtistRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
 extend type Mutation {
   """
   Assign a moderator role to the account
@@ -74,4 +102,14 @@ extend type Mutation {
   Revoke the staff role from the account
   """
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+
+  """
+  Assign a artist role to the account
+  """
+  assignAccountArtistRole(input: AssignAccountArtistRole!): AssignAccountArtistRolePayload
+
+  """
+  Revoke the artist role from the account
+  """
+  revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload
 }

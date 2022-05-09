@@ -16,12 +16,11 @@ type UpdateCharacterThumbnail struct {
 
 type UpdateCharacterThumbnailHandler struct {
 	pr     post.Repository
-	pi     post.IndexRepository
 	loader LoaderService
 }
 
-func NewUpdateCharacterThumbnailHandler(pr post.Repository, pi post.IndexRepository, loader LoaderService) UpdateCharacterThumbnailHandler {
-	return UpdateCharacterThumbnailHandler{pr: pr, pi: pi, loader: loader}
+func NewUpdateCharacterThumbnailHandler(pr post.Repository, loader LoaderService) UpdateCharacterThumbnailHandler {
+	return UpdateCharacterThumbnailHandler{pr: pr, loader: loader}
 }
 
 func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateCharacterThumbnail) (*post.Character, error) {
@@ -38,10 +37,6 @@ func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateC
 	})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexCharacter(ctx, char); err != nil {
 		return nil, err
 	}
 

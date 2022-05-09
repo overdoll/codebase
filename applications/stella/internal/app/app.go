@@ -13,7 +13,8 @@ type Application struct {
 }
 
 type Commands struct {
-	IndexAllClubs command.IndexAllClubsHandler
+	DeleteAndRecreateClubsIndex       command.DeleteAndRecreateClubsIndexHandler
+	DeleteAndRecreateClubMembersIndex command.DeleteAndRecreateClubMembersIndexHandler
 
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
@@ -30,7 +31,14 @@ type Commands struct {
 	SuspendClub   command.SuspendClubHandler
 	UnSuspendClub command.UnSuspendClubHandler
 
+	TerminateClub   command.TerminateClubHandler
+	UnTerminateClub command.UnTerminateClubHandler
+
 	SuspendClubOperator command.SuspendClubOperatorHandler
+
+	DeleteAccountData command.DeleteAccountDataHandler
+
+	NewSupporterPost command.NewSupporterPostHandler
 }
 
 type Queries struct {
@@ -40,22 +48,20 @@ type Queries struct {
 	ClubsByIds                  query.ClubsByIdsHandler
 	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
-	AccountClubMemberships      query.AccountClubMembershipsHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 
-	CanAccountCreatePostUnderClub query.CanAccountCreatePostUnderClubHandler
-	CanAccountViewPostUnderClub   query.CanAccountViewPostUnderClubHandler
-	CanAccountBecomeClubSupporter query.CanAccountBecomeClubSupporterHandler
-	AccountSupportedClubs         query.AccountSupportedClubsHandler
-
-	SuspendedClubs query.SuspendedClubsHandler
+	AccountClubDigest query.AccountClubDigestHandler
 
 	AccountClubsCount query.AccountClubsCountHandler
 	AccountClubsLimit query.AccountClubsLimitHandler
 
-	PrincipalById     query.PrincipalByIdHandler
-	ClubMemberById    query.ClubMemberByIdHandler
-	ClubMembersByClub query.ClubMembersByClubHandler
+	PrincipalById  query.PrincipalByIdHandler
+	ClubMemberById query.ClubMemberByIdHandler
 
-	AccountClubMembershipsOperator query.AccountClubMembershipsOperatorHandler
+	SearchClubMemberships query.SearchClubMembershipsHandler
+
+	ClubSuspensionLogs   query.ClubSuspensionLogsHandler
+	CanDeleteAccountData query.CanDeleteAccountDataHandler
+
+	HasNonTerminatedClubs query.HasNonTerminatedClubsHandler
 }

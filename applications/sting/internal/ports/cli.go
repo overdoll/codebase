@@ -24,23 +24,23 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllCategories.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateCategoriesIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllCharacters.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateCharactersIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllSeries.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateSeriesIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllAudience.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateAudienceIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreatePostsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -57,7 +57,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllCategories.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateCategoriesIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -74,7 +74,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllCharacters.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateCharactersIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -91,7 +91,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllSeries.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateSeriesIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -108,7 +108,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllAudience.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreateAudienceIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -125,7 +125,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
+			if err := application.Commands.DeleteAndRecreatePostsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

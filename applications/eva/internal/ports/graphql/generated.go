@@ -55,9 +55,12 @@ type ComplexityRoot struct {
 	Account struct {
 		Avatar                    func(childComplexity int) int
 		CanDisableMultiFactor     func(childComplexity int) int
+		Deleting                  func(childComplexity int) int
 		Emails                    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		EmailsLimit               func(childComplexity int) int
 		ID                        func(childComplexity int) int
+		IsArtist                  func(childComplexity int) int
+		IsDeleted                 func(childComplexity int) int
 		IsModerator               func(childComplexity int) int
 		IsSecure                  func(childComplexity int) int
 		IsStaff                   func(childComplexity int) int
@@ -70,6 +73,10 @@ type ComplexityRoot struct {
 		Sessions                  func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Username                  func(childComplexity int) int
 		UsernameEditAvailableAt   func(childComplexity int) int
+	}
+
+	AccountDeleting struct {
+		ScheduledDeletion func(childComplexity int) int
 	}
 
 	AccountEmail struct {
@@ -122,6 +129,10 @@ type ComplexityRoot struct {
 		Validation   func(childComplexity int) int
 	}
 
+	AssignAccountArtistRolePayload struct {
+		Account func(childComplexity int) int
+	}
+
 	AssignAccountModeratorRolePayload struct {
 		Account func(childComplexity int) int
 	}
@@ -146,6 +157,10 @@ type ComplexityRoot struct {
 		Registered  func(childComplexity int) int
 	}
 
+	CancelAccountDeletionPayload struct {
+		Account func(childComplexity int) int
+	}
+
 	ConfirmAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
 		Validation   func(childComplexity int) int
@@ -159,6 +174,10 @@ type ComplexityRoot struct {
 
 	DeleteAccountEmailPayload struct {
 		AccountEmailID func(childComplexity int) int
+	}
+
+	DeleteAccountPayload struct {
+		Account func(childComplexity int) int
 	}
 
 	DisableAccountMultiFactorPayload struct {
@@ -237,10 +256,13 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddAccountEmail                                                     func(childComplexity int, input types.AddAccountEmailInput) int
+		AssignAccountArtistRole                                             func(childComplexity int, input types.AssignAccountArtistRole) int
 		AssignAccountModeratorRole                                          func(childComplexity int, input types.AssignAccountModeratorRole) int
 		AssignAccountStaffRole                                              func(childComplexity int, input types.AssignAccountStaffRole) int
+		CancelAccountDeletion                                               func(childComplexity int, input types.CancelAccountDeletionInput) int
 		ConfirmAccountEmail                                                 func(childComplexity int, input types.ConfirmAccountEmailInput) int
 		CreateAccountWithAuthenticationToken                                func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
+		DeleteAccount                                                       func(childComplexity int, input types.DeleteAccountInput) int
 		DeleteAccountEmail                                                  func(childComplexity int, input types.DeleteAccountEmailInput) int
 		DisableAccountMultiFactor                                           func(childComplexity int) int
 		EnrollAccountMultiFactorTotp                                        func(childComplexity int, input types.EnrollAccountMultiFactorTotpInput) int
@@ -252,6 +274,7 @@ type ComplexityRoot struct {
 		GrantAuthenticationToken                                            func(childComplexity int, input types.GrantAuthenticationTokenInput) int
 		LockAccount                                                         func(childComplexity int, input types.LockAccountInput) int
 		RevokeAccountAccess                                                 func(childComplexity int) int
+		RevokeAccountArtistRole                                             func(childComplexity int, input types.RevokeAccountArtistRole) int
 		RevokeAccountModeratorRole                                          func(childComplexity int, input types.RevokeAccountModeratorRole) int
 		RevokeAccountSession                                                func(childComplexity int, input types.RevokeAccountSessionInput) int
 		RevokeAccountStaffRole                                              func(childComplexity int, input types.RevokeAccountStaffRole) int
@@ -284,6 +307,10 @@ type ComplexityRoot struct {
 
 	RevokeAccountAccessPayload struct {
 		RevokedAccountID func(childComplexity int) int
+	}
+
+	RevokeAccountArtistRolePayload struct {
+		Account func(childComplexity int) int
 	}
 
 	RevokeAccountModeratorRolePayload struct {
@@ -333,6 +360,7 @@ type ComplexityRoot struct {
 
 type AccountResolver interface {
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
+	Deleting(ctx context.Context, obj *types.Account) (*types.AccountDeleting, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
 	UsernameEditAvailableAt(ctx context.Context, obj *types.Account) (*time.Time, error)
 	EmailsLimit(ctx context.Context, obj *types.Account) (int, error)
@@ -362,6 +390,8 @@ type MutationResolver interface {
 	RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error)
 	UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error)
 	LockAccount(ctx context.Context, input types.LockAccountInput) (*types.LockAccountPayload, error)
+	DeleteAccount(ctx context.Context, input types.DeleteAccountInput) (*types.DeleteAccountPayload, error)
+	CancelAccountDeletion(ctx context.Context, input types.CancelAccountDeletionInput) (*types.CancelAccountDeletionPayload, error)
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
@@ -376,6 +406,8 @@ type MutationResolver interface {
 	AssignAccountStaffRole(ctx context.Context, input types.AssignAccountStaffRole) (*types.AssignAccountStaffRolePayload, error)
 	RevokeAccountModeratorRole(ctx context.Context, input types.RevokeAccountModeratorRole) (*types.RevokeAccountModeratorRolePayload, error)
 	RevokeAccountStaffRole(ctx context.Context, input types.RevokeAccountStaffRole) (*types.RevokeAccountStaffRolePayload, error)
+	AssignAccountArtistRole(ctx context.Context, input types.AssignAccountArtistRole) (*types.AssignAccountArtistRolePayload, error)
+	RevokeAccountArtistRole(ctx context.Context, input types.RevokeAccountArtistRole) (*types.RevokeAccountArtistRolePayload, error)
 }
 type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context, token string, secret *string) (*types.AuthenticationToken, error)
@@ -413,6 +445,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.CanDisableMultiFactor(childComplexity), true
 
+	case "Account.deleting":
+		if e.complexity.Account.Deleting == nil {
+			break
+		}
+
+		return e.complexity.Account.Deleting(childComplexity), true
+
 	case "Account.emails":
 		if e.complexity.Account.Emails == nil {
 			break
@@ -438,6 +477,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ID(childComplexity), true
+
+	case "Account.isArtist":
+		if e.complexity.Account.IsArtist == nil {
+			break
+		}
+
+		return e.complexity.Account.IsArtist(childComplexity), true
+
+	case "Account.isDeleted":
+		if e.complexity.Account.IsDeleted == nil {
+			break
+		}
+
+		return e.complexity.Account.IsDeleted(childComplexity), true
 
 	case "Account.isModerator":
 		if e.complexity.Account.IsModerator == nil {
@@ -527,6 +580,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.UsernameEditAvailableAt(childComplexity), true
+
+	case "AccountDeleting.scheduledDeletion":
+		if e.complexity.AccountDeleting.ScheduledDeletion == nil {
+			break
+		}
+
+		return e.complexity.AccountDeleting.ScheduledDeletion(childComplexity), true
 
 	case "AccountEmail.account":
 		if e.complexity.AccountEmail.Account == nil {
@@ -689,6 +749,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
 
+	case "AssignAccountArtistRolePayload.account":
+		if e.complexity.AssignAccountArtistRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.AssignAccountArtistRolePayload.Account(childComplexity), true
+
 	case "AssignAccountModeratorRolePayload.account":
 		if e.complexity.AssignAccountModeratorRolePayload.Account == nil {
 			break
@@ -773,6 +840,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AuthenticationTokenAccountStatus.Registered(childComplexity), true
 
+	case "CancelAccountDeletionPayload.account":
+		if e.complexity.CancelAccountDeletionPayload.Account == nil {
+			break
+		}
+
+		return e.complexity.CancelAccountDeletionPayload.Account(childComplexity), true
+
 	case "ConfirmAccountEmailPayload.accountEmail":
 		if e.complexity.ConfirmAccountEmailPayload.AccountEmail == nil {
 			break
@@ -814,6 +888,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteAccountEmailPayload.AccountEmailID(childComplexity), true
+
+	case "DeleteAccountPayload.account":
+		if e.complexity.DeleteAccountPayload.Account == nil {
+			break
+		}
+
+		return e.complexity.DeleteAccountPayload.Account(childComplexity), true
 
 	case "DisableAccountMultiFactorPayload.accountMultiFactorTotpEnabled":
 		if e.complexity.DisableAccountMultiFactorPayload.AccountMultiFactorTotpEnabled == nil {
@@ -1066,6 +1147,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddAccountEmail(childComplexity, args["input"].(types.AddAccountEmailInput)), true
 
+	case "Mutation.assignAccountArtistRole":
+		if e.complexity.Mutation.AssignAccountArtistRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_assignAccountArtistRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AssignAccountArtistRole(childComplexity, args["input"].(types.AssignAccountArtistRole)), true
+
 	case "Mutation.assignAccountModeratorRole":
 		if e.complexity.Mutation.AssignAccountModeratorRole == nil {
 			break
@@ -1090,6 +1183,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AssignAccountStaffRole(childComplexity, args["input"].(types.AssignAccountStaffRole)), true
 
+	case "Mutation.cancelAccountDeletion":
+		if e.complexity.Mutation.CancelAccountDeletion == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_cancelAccountDeletion_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CancelAccountDeletion(childComplexity, args["input"].(types.CancelAccountDeletionInput)), true
+
 	case "Mutation.confirmAccountEmail":
 		if e.complexity.Mutation.ConfirmAccountEmail == nil {
 			break
@@ -1113,6 +1218,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateAccountWithAuthenticationToken(childComplexity, args["input"].(types.CreateAccountWithAuthenticationTokenInput)), true
+
+	case "Mutation.deleteAccount":
+		if e.complexity.Mutation.DeleteAccount == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteAccount_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteAccount(childComplexity, args["input"].(types.DeleteAccountInput)), true
 
 	case "Mutation.deleteAccountEmail":
 		if e.complexity.Mutation.DeleteAccountEmail == nil {
@@ -1225,6 +1342,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RevokeAccountAccess(childComplexity), true
+
+	case "Mutation.revokeAccountArtistRole":
+		if e.complexity.Mutation.RevokeAccountArtistRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_revokeAccountArtistRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RevokeAccountArtistRole(childComplexity, args["input"].(types.RevokeAccountArtistRole)), true
 
 	case "Mutation.revokeAccountModeratorRole":
 		if e.complexity.Mutation.RevokeAccountModeratorRole == nil {
@@ -1421,6 +1550,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RevokeAccountAccessPayload.RevokedAccountID(childComplexity), true
 
+	case "RevokeAccountArtistRolePayload.account":
+		if e.complexity.RevokeAccountArtistRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.RevokeAccountArtistRolePayload.Account(childComplexity), true
+
 	case "RevokeAccountModeratorRolePayload.account":
 		if e.complexity.RevokeAccountModeratorRolePayload.Account == nil {
 			break
@@ -1599,6 +1735,9 @@ var sources = []*ast.Source{
   """Whether or not this account is a staff member"""
   isStaff: Boolean!
 
+  """Whether or not this account is an artist"""
+  isArtist: Boolean!
+  
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
@@ -1609,12 +1748,26 @@ var sources = []*ast.Source{
   """
   isSecure: Boolean!
 
-  """The details of the account lock"""
+  """
+  Whether or not this account is deleted.
+
+  When an account is deleted, the username, email and any other data is blank.
+  """
+  isDeleted: Boolean!
+
+  """The details of the account lock."""
   lock: AccountLock @goField(forceResolver: true)
+
+  """The details of a deleting state."""
+  deleting: AccountDeleting @goField(forceResolver: true)
 }
 
 type AccountLock {
   expires: Time!
+}
+
+type AccountDeleting {
+  scheduledDeletion: Time!
 }
 
 """Input for locking an account."""
@@ -1624,6 +1777,22 @@ input LockAccountInput {
 
   """When the lock should end."""
   endTime: Time!
+}
+
+"""Input for deleting an account."""
+input DeleteAccountInput {
+  """
+  The account to delete.
+  """
+  accountID: ID!
+}
+
+"""Input for cancelling an account deletion."""
+input CancelAccountDeletionInput {
+  """
+  The account to cancel deletion.
+  """
+  accountID: ID!
 }
 
 """Input for unlocking an account"""
@@ -1641,6 +1810,18 @@ type UnlockAccountPayload {
 """Payload for the locked account"""
 type LockAccountPayload {
   """Account that was locked"""
+  account: Account
+}
+
+"""Payload for the delete account"""
+type DeleteAccountPayload {
+  """Account that was deleted"""
+  account: Account
+}
+
+"""Payload for cancelling an account deletion."""
+type CancelAccountDeletionPayload {
+  """Account that was cancelled for deletion."""
   account: Account
 }
 
@@ -1662,6 +1843,20 @@ extend type Mutation {
   Lock an account for a specific duration.
   """
   lockAccount(input: LockAccountInput!): LockAccountPayload
+
+  """
+  Delete an account.
+
+  The deletion will be scheduled and deleted after 30 days.
+
+  During this time, the account will be locked. (isLocked will not be true, however, "deleting" will be available).
+  """
+  deleteAccount(input: DeleteAccountInput!): DeleteAccountPayload
+
+  """
+  Cancel an account deletion.
+  """
+  cancelAccountDeletion(input: CancelAccountDeletionInput!): CancelAccountDeletionPayload
 }
 
 extend type Query {
@@ -2144,6 +2339,20 @@ input AssignAccountStaffRole {
   accountId: ID!
 }
 
+"""Input to assign account to a arist role"""
+input AssignAccountArtistRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountArtistRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
 """Revoked account"""
 type RevokeAccountModeratorRolePayload {
   """The account that the role was revoked from"""
@@ -2172,6 +2381,20 @@ input RevokeAccountStaffRole {
   accountId: ID!
 }
 
+"""Revoked account"""
+type RevokeAccountArtistRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke artist role"""
+input RevokeAccountArtistRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
 extend type Mutation {
   """
   Assign a moderator role to the account
@@ -2192,6 +2415,16 @@ extend type Mutation {
   Revoke the staff role from the account
   """
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+
+  """
+  Assign a artist role to the account
+  """
+  assignAccountArtistRole(input: AssignAccountArtistRole!): AssignAccountArtistRolePayload
+
+  """
+  Revoke the artist role from the account
+  """
+  revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload
 }
 `, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `"""Types of multi factor enabled for this account"""
@@ -2724,6 +2957,21 @@ func (ec *executionContext) field_Mutation_addAccountEmail_args(ctx context.Cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_assignAccountArtistRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.AssignAccountArtistRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAssignAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_assignAccountModeratorRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2746,6 +2994,21 @@ func (ec *executionContext) field_Mutation_assignAccountStaffRole_args(ctx conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNAssignAccountStaffRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountStaffRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_cancelAccountDeletion_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CancelAccountDeletionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCancelAccountDeletionInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountDeletionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2791,6 +3054,21 @@ func (ec *executionContext) field_Mutation_deleteAccountEmail_args(ctx context.C
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.DeleteAccountInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2881,6 +3159,21 @@ func (ec *executionContext) field_Mutation_lockAccount_args(ctx context.Context,
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNLockAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_revokeAccountArtistRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RevokeAccountArtistRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRevokeAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRole(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3288,6 +3581,41 @@ func (ec *executionContext) _Account_isStaff(ctx context.Context, field graphql.
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Account_isArtist(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsArtist, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_isModerator(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3358,6 +3686,41 @@ func (ec *executionContext) _Account_isSecure(ctx context.Context, field graphql
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Account_isDeleted(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsDeleted, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3388,6 +3751,38 @@ func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.Col
 	res := resTmp.(*types.AccountLock)
 	fc.Result = res
 	return ec.marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_deleting(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Deleting(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountDeleting)
+	fc.Result = res
+	return ec.marshalOAccountDeleting2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountDeleting(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_sessions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -3717,6 +4112,41 @@ func (ec *executionContext) _Account_recoveryCodes(ctx context.Context, field gr
 	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
 	fc.Result = res
 	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountDeleting_scheduledDeletion(ctx context.Context, field graphql.CollectedField, obj *types.AccountDeleting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountDeleting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ScheduledDeletion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountEmail_id(ctx context.Context, field graphql.CollectedField, obj *types.AccountEmail) (ret graphql.Marshaler) {
@@ -4515,6 +4945,38 @@ func (ec *executionContext) _AddAccountEmailPayload_validation(ctx context.Conte
 	return ec.marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AssignAccountArtistRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountArtistRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AssignAccountArtistRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AssignAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountModeratorRolePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4923,6 +5385,38 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx co
 	return ec.marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CancelAccountDeletionPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.CancelAccountDeletionPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CancelAccountDeletionPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ConfirmAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5119,6 +5613,38 @@ func (ec *executionContext) _DeleteAccountEmailPayload_accountEmailId(ctx contex
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteAccountPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.DeleteAccountPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteAccountPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx context.Context, field graphql.CollectedField, obj *types.DisableAccountMultiFactorPayload) (ret graphql.Marshaler) {
@@ -6606,6 +7132,84 @@ func (ec *executionContext) _Mutation_lockAccount(ctx context.Context, field gra
 	return ec.marshalOLockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLockAccountPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_deleteAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteAccount_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccount(rctx, args["input"].(types.DeleteAccountInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.DeleteAccountPayload)
+	fc.Result = res
+	return ec.marshalODeleteAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_cancelAccountDeletion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_cancelAccountDeletion_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CancelAccountDeletion(rctx, args["input"].(types.CancelAccountDeletionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CancelAccountDeletionPayload)
+	fc.Result = res
+	return ec.marshalOCancelAccountDeletionPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountDeletionPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_revokeAccountSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7131,6 +7735,84 @@ func (ec *executionContext) _Mutation_revokeAccountStaffRole(ctx context.Context
 	return ec.marshalORevokeAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRolePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_assignAccountArtistRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_assignAccountArtistRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AssignAccountArtistRole(rctx, args["input"].(types.AssignAccountArtistRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AssignAccountArtistRolePayload)
+	fc.Result = res
+	return ec.marshalOAssignAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRolePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_revokeAccountArtistRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revokeAccountArtistRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountArtistRole(rctx, args["input"].(types.RevokeAccountArtistRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RevokeAccountArtistRolePayload)
+	fc.Result = res
+	return ec.marshalORevokeAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRolePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7626,6 +8308,38 @@ func (ec *executionContext) _RevokeAccountAccessPayload_revokedAccountId(ctx con
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RevokeAccountArtistRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountArtistRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RevokeAccountArtistRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RevokeAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountModeratorRolePayload) (ret graphql.Marshaler) {
@@ -9297,6 +10011,29 @@ func (ec *executionContext) unmarshalInputAddAccountEmailInput(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputAssignAccountArtistRole(ctx context.Context, obj interface{}) (types.AssignAccountArtistRole, error) {
+	var it types.AssignAccountArtistRole
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context.Context, obj interface{}) (types.AssignAccountModeratorRole, error) {
 	var it types.AssignAccountModeratorRole
 	asMap := map[string]interface{}{}
@@ -9333,6 +10070,29 @@ func (ec *executionContext) unmarshalInputAssignAccountStaffRole(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCancelAccountDeletionInput(ctx context.Context, obj interface{}) (types.CancelAccountDeletionInput, error) {
+	var it types.CancelAccountDeletionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountID"))
 			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
@@ -9419,6 +10179,29 @@ func (ec *executionContext) unmarshalInputDeleteAccountEmailInput(ctx context.Co
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountEmailId"))
 			it.AccountEmailID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteAccountInput(ctx context.Context, obj interface{}) (types.DeleteAccountInput, error) {
+	var it types.DeleteAccountInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountID"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9589,6 +10372,29 @@ func (ec *executionContext) unmarshalInputLockAccountInput(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("endTime"))
 			it.EndTime, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRevokeAccountArtistRole(ctx context.Context, obj interface{}) (types.RevokeAccountArtistRole, error) {
+	var it types.RevokeAccountArtistRole
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9930,6 +10736,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "isArtist":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_isArtist(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "isModerator":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Account_isModerator(ctx, field, obj)
@@ -9950,6 +10766,16 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "isDeleted":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Account_isDeleted(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "lock":
 			field := field
 
@@ -9960,6 +10786,23 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_lock(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "deleting":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_deleting(ctx, field, obj)
 				return res
 			}
 
@@ -10147,6 +10990,37 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accountDeletingImplementors = []string{"AccountDeleting"}
+
+func (ec *executionContext) _AccountDeleting(ctx context.Context, sel ast.SelectionSet, obj *types.AccountDeleting) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountDeletingImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountDeleting")
+		case "scheduledDeletion":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountDeleting_scheduledDeletion(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10578,6 +11452,34 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 	return out
 }
 
+var assignAccountArtistRolePayloadImplementors = []string{"AssignAccountArtistRolePayload"}
+
+func (ec *executionContext) _AssignAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountArtistRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountArtistRolePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AssignAccountArtistRolePayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AssignAccountArtistRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var assignAccountModeratorRolePayloadImplementors = []string{"AssignAccountModeratorRolePayload"}
 
 func (ec *executionContext) _AssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
@@ -10770,6 +11672,34 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus(ctx context.Contex
 	return out
 }
 
+var cancelAccountDeletionPayloadImplementors = []string{"CancelAccountDeletionPayload"}
+
+func (ec *executionContext) _CancelAccountDeletionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CancelAccountDeletionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cancelAccountDeletionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CancelAccountDeletionPayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CancelAccountDeletionPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var confirmAccountEmailPayloadImplementors = []string{"ConfirmAccountEmailPayload"}
 
 func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.ConfirmAccountEmailPayload) graphql.Marshaler {
@@ -10870,6 +11800,34 @@ func (ec *executionContext) _DeleteAccountEmailPayload(ctx context.Context, sel 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deleteAccountPayloadImplementors = []string{"DeleteAccountPayload"}
+
+func (ec *executionContext) _DeleteAccountPayload(ctx context.Context, sel ast.SelectionSet, obj *types.DeleteAccountPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccountPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteAccountPayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._DeleteAccountPayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11593,6 +12551,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
+		case "deleteAccount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteAccount(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "cancelAccountDeletion":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_cancelAccountDeletion(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
 		case "revokeAccountSession":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_revokeAccountSession(ctx, field)
@@ -11687,6 +12659,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "revokeAccountStaffRole":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_revokeAccountStaffRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "assignAccountArtistRole":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_assignAccountArtistRole(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "revokeAccountArtistRole":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_revokeAccountArtistRole(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -11981,6 +12967,34 @@ func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var revokeAccountArtistRolePayloadImplementors = []string{"RevokeAccountArtistRolePayload"}
+
+func (ec *executionContext) _RevokeAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountArtistRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountArtistRolePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RevokeAccountArtistRolePayload")
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._RevokeAccountArtistRolePayload_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12982,6 +13996,11 @@ func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicatio
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNAssignAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRole(ctx context.Context, v interface{}) (types.AssignAccountArtistRole, error) {
+	res, err := ec.unmarshalInputAssignAccountArtistRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNAssignAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRole(ctx context.Context, v interface{}) (types.AssignAccountModeratorRole, error) {
 	res, err := ec.unmarshalInputAssignAccountModeratorRole(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13022,6 +14041,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCancelAccountDeletionInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountDeletionInput(ctx context.Context, v interface{}) (types.CancelAccountDeletionInput, error) {
+	res, err := ec.unmarshalInputCancelAccountDeletionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNConfirmAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailInput(ctx context.Context, v interface{}) (types.ConfirmAccountEmailInput, error) {
 	res, err := ec.unmarshalInputConfirmAccountEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13034,6 +14058,11 @@ func (ec *executionContext) unmarshalNCreateAccountWithAuthenticationTokenInput2
 
 func (ec *executionContext) unmarshalNDeleteAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailInput(ctx context.Context, v interface{}) (types.DeleteAccountEmailInput, error) {
 	res, err := ec.unmarshalInputDeleteAccountEmailInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDeleteAccountInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountInput(ctx context.Context, v interface{}) (types.DeleteAccountInput, error) {
+	res, err := ec.unmarshalInputDeleteAccountInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -13179,6 +14208,11 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNRevokeAccountArtistRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRole(ctx context.Context, v interface{}) (types.RevokeAccountArtistRole, error) {
+	res, err := ec.unmarshalInputRevokeAccountArtistRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNRevokeAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRole(ctx context.Context, v interface{}) (types.RevokeAccountModeratorRole, error) {
@@ -13642,6 +14676,13 @@ func (ec *executionContext) marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋi
 	return ec._Account(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOAccountDeleting2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountDeleting(ctx context.Context, sel ast.SelectionSet, v *types.AccountDeleting) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AccountDeleting(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx context.Context, sel ast.SelectionSet, v *types.AccountEmail) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -13677,6 +14718,13 @@ func (ec *executionContext) marshalOAddAccountEmailValidation2ᚖoverdollᚋappl
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalOAssignAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountArtistRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AssignAccountArtistRolePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOAssignAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
@@ -13733,6 +14781,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) marshalOCancelAccountDeletionPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCancelAccountDeletionPayload(ctx context.Context, sel ast.SelectionSet, v *types.CancelAccountDeletionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CancelAccountDeletionPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, v *types.ConfirmAccountEmailPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -13784,6 +14839,13 @@ func (ec *executionContext) marshalODeleteAccountEmailPayload2ᚖoverdollᚋappl
 		return graphql.Null
 	}
 	return ec._DeleteAccountEmailPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteAccountPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODisableAccountMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableAccountMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, v *types.DisableAccountMultiFactorPayload) graphql.Marshaler {
@@ -13971,6 +15033,13 @@ func (ec *executionContext) marshalORevokeAccountAccessPayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._RevokeAccountAccessPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORevokeAccountArtistRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountArtistRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountArtistRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RevokeAccountArtistRolePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORevokeAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountModeratorRolePayload) graphql.Marshaler {

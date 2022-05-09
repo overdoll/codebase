@@ -4,7 +4,7 @@
     "username": "poisonminion",
     "email": "i2fhz.poisonminion@inbox.testmail.app",
     "roles": [
-      "moderator"
+      "MODERATOR"
     ],
     "verified": true
   },
@@ -13,7 +13,7 @@
     "username": "0eclipse",
     "email": "i2fhz.0eclipse@inbox.testmail.app",
     "roles": [
-      "staff"
+      "STAFF"
     ],
     "verified": true
   },

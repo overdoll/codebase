@@ -30,7 +30,10 @@ go_test(
     srcs = [
         "club_component_test.go",
         "club_members_component_test.go",
+        "club_support_component_test.go",
         "component_test.go",
+        "suspend_club_component_test.go",
+        "terminate_club_component_test.go",
     ],
     data = [
         "//applications/stella:config.toml",
@@ -52,7 +55,6 @@ go_test(
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
-        "@com_github_google_uuid//:uuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",

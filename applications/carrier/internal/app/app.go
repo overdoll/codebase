@@ -17,6 +17,13 @@ type Commands struct {
 	ClubSupporterSubscriptionPaymentFailure   command.ClubSupporterSubscriptionPaymentFailureHandler
 	ClubSupporterSubscriptionRefunded         command.ClubSupporterSubscriptionRefundedHandler
 	UpcomingClubSupporterSubscriptionRenewals command.UpcomingClubSupporterSubscriptionRenewalsHandler
+	ClubSupporterNoPosts                      command.ClubSupporterNoPostsHandler
+	ClubSupporterRequiredPostReminder         command.ClubSupporterRequiredPostReminderHandler
+	AccountDeletionBegin                      command.AccountDeletionBeginHandler
+	AccountDeletionReminder                   command.AccountDeletionReminderHandler
+	AccountDeleted                            command.AccountDeletedHandler
+	ClubSuspended                             command.ClubSuspendedHandler
+	ClubOverChargebackThreshold               command.ClubOverChargebackThresholdHandler
 }
 
 type Queries struct{}

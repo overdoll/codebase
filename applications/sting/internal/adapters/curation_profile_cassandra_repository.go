@@ -139,3 +139,16 @@ func (r CurationProfileCassandraRepository) UpdateProfileCategory(ctx context.Co
 func (r CurationProfileCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"audience_ids", "audience_ids_skipped"})
 }
+
+func (r CurationProfileCassandraRepository) DeleteProfileOperator(ctx context.Context, accountId string) error {
+
+	if err := r.session.
+		Query(curationProfileTable.Delete()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(curationProfile{AccountId: accountId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete curation profile: %v", err)
+	}
+
+	return nil
+}

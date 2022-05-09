@@ -32,14 +32,10 @@ func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repos
 
 func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*string, error) {
 
-	allowed, err := h.stella.CanAccountBecomeClubSupporter(ctx, cmd.ClubId, cmd.Principal.AccountId())
+	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return nil, err
-	}
-
-	if !allowed {
-		return nil, errors.New("cannot become supporter - club not accessible")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
@@ -71,7 +67,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 		return nil, err
 	}
 
-	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, cmd.ClubId, *savedPaymentMethod.CCBillSubscriptionId(), price)
+	paymentUrl, err := ccbill.NewChargeByPreviousClubSupporterPaymentUrl(cmd.Principal, club, *savedPaymentMethod.CCBillSubscriptionId(), price)
 
 	if err != nil {
 		return nil, err

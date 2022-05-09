@@ -2,7 +2,7 @@ package workflows
 
 import (
 	"fmt"
-	enums "go.temporal.io/api/enums/v1"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
@@ -254,18 +254,40 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	// spawn an async child workflow
 	// that will run this notification reminder at the beginning of each month to tell you how many subscriptions
 	// you have re-billing this month
-	childWorkflowOptions := workflow.ChildWorkflowOptions{
+	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
 		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + details.AccountInitiator.AccountId,
 		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 		CronSchedule:          "0 0 1 * *",
-	}
+	})
 
-	ctx = workflow.WithChildOptions(ctx, childWorkflowOptions)
-
-	if err := workflow.ExecuteChildWorkflow(ctx, UpcomingSubscriptionReminderNotification,
+	if err := workflow.ExecuteChildWorkflow(childCtx, UpcomingSubscriptionReminderNotification,
 		UpcomingSubscriptionReminderNotificationInput{
 			AccountId: details.AccountInitiator.AccountId,
+		},
+	).
+		GetChildWorkflowExecution().
+		Get(ctx, nil); err != nil {
+		// ignore already started errors
+		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			return nil
+		}
+		return err
+	}
+
+	// spawn a child workflow that will calculate club transaction metrics
+	childCtx = workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+		WorkflowID:        "ClubTransactionMetric_" + input.TransactionId,
+		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+	})
+
+	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
+		ClubTransactionMetricInput{
+			ClubId:    details.CcbillClubSupporter.ClubId,
+			Timestamp: timestamp,
+			Id:        input.TransactionId,
+			Amount:    accountingAmount,
+			Currency:  input.AccountingCurrency,
 		},
 	).
 		GetChildWorkflowExecution().

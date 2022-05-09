@@ -23,12 +23,7 @@ type Repository interface {
 	ScanClubPaymentsListForPayout(ctx context.Context, payoutId string, scanFn func(paymentIds []string) error) error
 	AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error
 	UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error
-}
 
-type IndexRepository interface {
+	DeleteAndRecreateClubPaymentsIndex(ctx context.Context) error
 	SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ClubPaymentsFilters) ([]*ClubPayment, error)
-	IndexAllClubPayments(ctx context.Context) error
-	DeleteClubPaymentsIndex(ctx context.Context) error
-	IndexClubPayment(ctx context.Context, pay *ClubPayment) error
-	UpdateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error
 }

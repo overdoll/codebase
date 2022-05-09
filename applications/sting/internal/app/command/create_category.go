@@ -15,11 +15,10 @@ type CreateCategory struct {
 
 type CreateCategoryHandler struct {
 	pr post.Repository
-	pi post.IndexRepository
 }
 
-func NewCreateCategoryHandler(pr post.Repository, pi post.IndexRepository) CreateCategoryHandler {
-	return CreateCategoryHandler{pr: pr, pi: pi}
+func NewCreateCategoryHandler(pr post.Repository) CreateCategoryHandler {
+	return CreateCategoryHandler{pr: pr}
 }
 
 func (h CreateCategoryHandler) Handle(ctx context.Context, cmd CreateCategory) (*post.Category, error) {
@@ -31,10 +30,6 @@ func (h CreateCategoryHandler) Handle(ctx context.Context, cmd CreateCategory) (
 	}
 
 	if err := h.pr.CreateCategory(ctx, cmd.Principal, cat); err != nil {
-		return nil, err
-	}
-
-	if err := h.pi.IndexCategory(ctx, cat); err != nil {
 		return nil, err
 	}
 

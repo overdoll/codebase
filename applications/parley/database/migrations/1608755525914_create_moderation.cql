@@ -134,3 +134,13 @@ CREATE TABLE IF NOT EXISTS post_report_for_account_and_post
     rule_id              text,
     primary key ( (post_id, reporting_account_id) ),
 );
+
+CREATE TABLE IF NOT EXISTS post_report_by_account_and_bucket
+(
+    post_id              text,
+    reporting_account_id text,
+    bucket               int,
+    id                   text,
+    rule_id              text,
+    primary key ( (bucket, reporting_account_id), id ),
+);

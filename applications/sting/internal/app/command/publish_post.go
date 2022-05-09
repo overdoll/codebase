@@ -12,13 +12,12 @@ type PublishPost struct {
 }
 
 type PublishPostHandler struct {
-	pi    post.IndexRepository
 	pr    post.Repository
 	event event.Repository
 }
 
-func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, event event.Repository) PublishPostHandler {
-	return PublishPostHandler{pr: pr, pi: pi, event: event}
+func NewPublishPostHandler(pr post.Repository, event event.Repository) PublishPostHandler {
+	return PublishPostHandler{pr: pr, event: event}
 }
 
 func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {

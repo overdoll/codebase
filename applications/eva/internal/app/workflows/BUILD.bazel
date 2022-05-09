@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "workflows",
+    srcs = [
+        "delete_account.go",
+        "options.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/app/workflows",
+    visibility = ["//applications/eva:__subpackages__"],
+    deps = [
+        "//applications/eva/internal/app/workflows/activities",
+        "@io_temporal_go_sdk//temporal",
+        "@io_temporal_go_sdk//workflow",
+    ],
+)

@@ -3,34 +3,35 @@ package command
 import (
 	"context"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/event"
 	"time"
 )
 
 type SuspendClubOperator struct {
-	ClubId  string
-	EndTime time.Time
+	ClubId    string
+	AccountId *string
+	EndTime   time.Time
+	Reason    string
 }
 
 type SuspendClubOperatorHandler struct {
-	cr club.Repository
-	ci club.IndexRepository
+	cr    club.Repository
+	event event.Repository
 }
 
-func NewSuspendClubOperatorHandler(cr club.Repository, ci club.IndexRepository) SuspendClubOperatorHandler {
-	return SuspendClubOperatorHandler{cr: cr, ci: ci}
+func NewSuspendClubOperatorHandler(cr club.Repository, event event.Repository) SuspendClubOperatorHandler {
+	return SuspendClubOperatorHandler{cr: cr, event: event}
 }
 
 func (h SuspendClubOperatorHandler) Handle(ctx context.Context, cmd SuspendClubOperator) error {
 
-	clb, err := h.cr.UpdateClubSuspensionStatus(ctx, cmd.ClubId, func(club *club.Club) error {
-		return club.SuspendOperator(cmd.EndTime)
-	})
+	clb, err := h.cr.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err
 	}
 
-	if err := h.ci.IndexClub(ctx, clb); err != nil {
+	if err := h.event.SuspendClub(ctx, clb.ID(), cmd.AccountId, cmd.EndTime, cmd.Reason); err != nil {
 		return err
 	}
 

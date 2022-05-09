@@ -8,9 +8,9 @@ type PostAuditLogAction struct {
 
 var (
 	PostAuditLogActionUnknown  = PostAuditLogAction{""}
-	PostAuditLogActionRemoved  = PostAuditLogAction{"removed"}
-	PostAuditLogActionApproved = PostAuditLogAction{"approved"}
-	PostAuditLogActionDenied   = PostAuditLogAction{"denied"}
+	PostAuditLogActionRemoved  = PostAuditLogAction{"REMOVED"}
+	PostAuditLogActionApproved = PostAuditLogAction{"APPROVED"}
+	PostAuditLogActionDenied   = PostAuditLogAction{"DENIED"}
 )
 
 func (r PostAuditLogAction) String() string {

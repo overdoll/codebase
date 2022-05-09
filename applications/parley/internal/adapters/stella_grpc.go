@@ -13,21 +13,6 @@ func NewStellaGrpc(client stella.StellaClient) StellaGrpc {
 	return StellaGrpc{client: client}
 }
 
-func (s StellaGrpc) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
-
-	md, err := s.client.CanAccountCreatePostUnderClub(ctx, &stella.CanAccountCreatePostUnderClubRequest{ClubId: clubId, AccountId: accountId})
-
-	if err != nil {
-		return false, err
-	}
-
-	if md == nil {
-		return false, nil
-	}
-
-	return md.Allowed, nil
-}
-
 func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) error {
 
 	_, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
@@ -39,9 +24,24 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) error {
 	return nil
 }
 
-func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64) error {
+func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64, isModerationQueue bool, isPostRemoval bool) error {
 
-	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime})
+	var reason stella.SuspensionSource
+
+	if isModerationQueue {
+		reason = stella.SuspensionSource_POST_MODERATION_QUEUE
+	}
+
+	if isPostRemoval {
+		reason = stella.SuspensionSource_POST_REMOVAL
+	}
+
+	// manual
+	if !isPostRemoval && !isModerationQueue {
+		reason = stella.SuspensionSource_MANUAL
+	}
+
+	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime, Source: reason})
 
 	if err != nil {
 		return err

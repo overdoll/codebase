@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package applications.grpc.parley.v1;
 
+import "google/protobuf/empty.proto";
+
 message PutPostIntoModeratorQueueOrPublishRequest {
   string postId = 1;
 }
@@ -10,6 +12,11 @@ message PutPostIntoModeratorQueueOrPublishResponse {
   bool putIntoReview = 1;
 }
 
+message DeleteAccountDataRequest {
+  string accountId = 1;
+}
+
 service Parley {
   rpc PutPostIntoModeratorQueueOrPublish(PutPostIntoModeratorQueueOrPublishRequest) returns (PutPostIntoModeratorQueueOrPublishResponse);
+  rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 }

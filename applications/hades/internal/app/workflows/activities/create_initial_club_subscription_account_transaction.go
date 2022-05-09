@@ -52,9 +52,5 @@ func (h *Activities) CreateInitialClubSubscriptionAccountTransaction(ctx context
 		return fmt.Errorf("failed to create transaction history: %s", err)
 	}
 
-	if err := h.bi.IndexAccountTransaction(ctx, transaction); err != nil {
-		return err
-	}
-
 	return nil
 }

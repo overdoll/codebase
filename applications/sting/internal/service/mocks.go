@@ -4,7 +4,9 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
@@ -25,7 +27,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return testing_tools.NewDefaultPrincipal(s), nil
+				return testing_tools.NewArtistPrincipal(s), nil
 			}
 		}
 
@@ -37,29 +39,27 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 
 type StellaServiceMock struct{}
 
-func (e StellaServiceMock) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
+func (e StellaServiceMock) NewSupporterPost(ctx context.Context, clubId string) error {
+	return nil
+}
+
+func (e StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
+
+	var supportedClubIds []string
 
 	if accountId == "1pcKiTRBqURVEdcw1cKhyiejFp7" {
-		return []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"}, nil
+		supportedClubIds = []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"}
 	}
 
-	return []string{}, nil
+	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+		SupportedClubIds:  supportedClubIds,
+		ClubMembershipIds: []string{accountId},
+		OwnerClubIds:      []string{"1q7MJFMVgDPo4mFjsfNag6rRwRy"},
+	})
 }
 
-func (e StellaServiceMock) CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error) {
-	return true, nil
-}
-
-func (e StellaServiceMock) GetSuspendedClubs(ctx context.Context) ([]string, error) {
-	return []string{}, nil
-}
-
-func (e StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error) {
-	return []string{accountId}, nil
-}
-
-func (e StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, clubId, accountId string) (bool, error) {
-	return true, nil
+func (e StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
+	return club.UnmarshalClubFromDatabase(clubId, "", "", false, ""), nil
 }
 
 type LoaderServiceMock struct{}

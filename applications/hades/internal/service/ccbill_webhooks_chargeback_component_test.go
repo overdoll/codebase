@@ -43,12 +43,24 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 	})
 
 	env := getWorkflowEnvironment(t)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
+
+	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
+	require.Equal(t, 699, metrics.TotalTransactionsAmount, "should have 1 transaction count")
+	require.Equal(t, graphql.CurrencyUsd, metrics.Currency, "should have 1 transaction count")
+
+	require.Equal(t, 699, metrics.ChargebacksAmount, "should have 1 chargeback amount")
+	require.Equal(t, 1, metrics.ChargebacksCount, "should have 1 chargeback count")
+	require.Equal(t, float64(1), metrics.ChargebacksCountRatio, "should have correct chargeback ratio")
+	require.Equal(t, float64(1), metrics.ChargebacksAmountRatio, "should have correct chargeback amount")
 
 	transactions := getAccountTransactions(t, gqlClient, accountId)
 

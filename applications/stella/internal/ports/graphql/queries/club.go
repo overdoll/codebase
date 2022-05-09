@@ -8,10 +8,9 @@ import (
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"strings"
 )
 
-func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) (*types.ClubConnection, error) {
+func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -20,11 +19,13 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 	}
 
 	results, err := r.App.Queries.SearchClubs.Handle(ctx, query.SearchClubs{
-		Principal: principal.FromContext(ctx),
-		Cursor:    cursor,
-		Name:      name,
-		Slugs:     slugs,
-		SortBy:    strings.ToLower(sortBy.String()),
+		Principal:  principal.FromContext(ctx),
+		Cursor:     cursor,
+		Name:       name,
+		Slugs:      slugs,
+		SortBy:     sortBy.String(),
+		Suspended:  &suspended,
+		Terminated: &terminated,
 	})
 
 	if err != nil {

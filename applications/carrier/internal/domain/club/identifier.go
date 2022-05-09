@@ -1,8 +1,9 @@
 package club
 
 type Club struct {
-	slug string
-	name string
+	slug           string
+	name           string
+	ownerAccountId string
 }
 
 func (i *Club) Slug() string {
@@ -13,9 +14,14 @@ func (i *Club) Name() string {
 	return i.name
 }
 
-func UnmarshalClubFromDatabase(slug, name string) *Club {
+func (i *Club) OwnerAccountId() string {
+	return i.ownerAccountId
+}
+
+func UnmarshalClubFromDatabase(slug, name, ownerAccountId string) *Club {
 	return &Club{
-		slug: slug,
-		name: name,
+		slug:           slug,
+		name:           name,
+		ownerAccountId: ownerAccountId,
 	}
 }

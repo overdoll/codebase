@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
 )
 
@@ -10,9 +11,7 @@ type EvaService interface {
 }
 
 type StellaService interface {
-	GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error)
-	CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error)
-	GetSuspendedClubs(ctx context.Context) ([]string, error)
-	CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error)
-	GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error)
+	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
+	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
+	NewSupporterPost(ctx context.Context, clubId string) error
 }

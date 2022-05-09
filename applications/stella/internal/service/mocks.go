@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
+	"time"
 )
 
 type EvaServiceMock struct {
@@ -24,7 +25,7 @@ func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Pr
 		if e, ok := status.FromError(err); ok {
 			switch e.Code() {
 			case codes.NotFound:
-				return testing_tools.NewDefaultPrincipal(s), nil
+				return testing_tools.NewArtistPrincipal(s), nil
 			}
 		}
 
@@ -38,4 +39,28 @@ type LoaderServiceMock struct{}
 
 func (l LoaderServiceMock) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string) ([]string, error) {
 	return resourceIds, nil
+}
+
+type StingServiceMock struct{}
+
+func (s StingServiceMock) AddTerminatedClub(ctx context.Context, clubId string) error {
+	return nil
+}
+
+func (s StingServiceMock) RemoveTerminatedClub(ctx context.Context, clubId string) error {
+	return nil
+}
+
+type CarrierServiceMock struct{}
+
+func (c CarrierServiceMock) ClubSuspended(ctx context.Context, clubId string, endTime time.Time) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterRequiredPostReminder(ctx context.Context, clubId string, duration time.Duration) error {
+	return nil
+}
+
+func (c CarrierServiceMock) ClubSupporterNoPosts(ctx context.Context, clubId string) error {
+	return nil
 }

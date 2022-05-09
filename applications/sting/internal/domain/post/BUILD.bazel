@@ -26,6 +26,7 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
+        "//applications/sting/internal/domain/club",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
@@ -39,6 +40,8 @@ go_test(
     srcs = ["post_content_test.go"],
     embed = [":post"],
     deps = [
+        "//applications/stella/proto:v1_go_proto",
+        "//libraries/principal",
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_stretchr_testify//require",

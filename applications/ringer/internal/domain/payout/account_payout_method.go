@@ -19,7 +19,16 @@ type AccountPayoutMethod struct {
 	paxumEmail *string
 }
 
-func NewPaxumAccountPayoutMethod(accountId, email string) (*AccountPayoutMethod, error) {
+func NewPaxumAccountPayoutMethod(requester *principal.Principal, accountId, email string) (*AccountPayoutMethod, error) {
+
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return nil, err
+	}
+
+	if !requester.IsArtist() && !requester.IsStaff() {
+		return nil, principal.ErrNotAuthorized
+	}
+
 	return &AccountPayoutMethod{
 		accountId:  accountId,
 		method:     Paxum,
@@ -51,7 +60,16 @@ func (p *AccountPayoutMethod) CanView(requester *principal.Principal) error {
 	return requester.BelongsToAccount(p.accountId)
 }
 
-func (p *AccountPayoutMethod) Validate(amount int64, currency money.Currency) bool {
+func (p *AccountPayoutMethod) Validate(requester *principal.Principal, amount int64, currency money.Currency) bool {
+
+	if err := requester.BelongsToAccount(p.accountId); err != nil {
+		return false
+	}
+
+	// locked accounts cannot receive payouts
+	if requester.IsLocked() {
+		return false
+	}
 
 	// only opennode for now
 	if p.method != Paxum {

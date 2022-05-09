@@ -20,7 +20,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
-	stellaClient, cleanup := clients.NewStellaClient(ctx, os.Getenv("EVA_SERVICE"))
+	stellaClient, cleanup := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
@@ -83,6 +83,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			UpdateRuleDeprecated:  command.NewUpdateRuleDeprecatedHandler(ruleRepo),
 			UpdateRuleTitle:       command.NewUpdateRuleTitleHandler(ruleRepo),
 			UpdateRuleDescription: command.NewUpdateRuleDescriptionHandler(ruleRepo),
+
+			DeleteAccountData: command.NewDeleteAccountDataHandler(reportRepo),
 
 			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, eva, sting),
 

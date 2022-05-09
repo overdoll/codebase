@@ -104,16 +104,14 @@ func (r SessionRepository) GetSessionById(ctx context.Context, requester *princi
 	return res, nil
 }
 
-// GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
-
+func (r SessionRepository) scanKeys(ctx context.Context, accountId string, count int64) ([]string, error) {
 	var keys []string
 
 	curse := 0
 
 	getKeys := func() ([]string, uint64, error) {
-		// for grabbing sessions, we get the first "100" results, and then filter based on the cursor
-		newKeys, newCursor, err := r.client.Scan(ctx, uint64(curse), sessionPrefix+session.GetSearchTermForAccounts(accountId), 100).Result()
+		// infinite scan
+		newKeys, newCursor, err := r.client.Scan(ctx, uint64(curse), sessionPrefix+session.GetSearchTermForAccounts(accountId), count).Result()
 
 		if err != nil {
 
@@ -143,7 +141,37 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		}
 	}
 
-	var err error
+	return keys, nil
+}
+
+func (r SessionRepository) DeleteAccountSessionData(ctx context.Context, accountId string) error {
+
+	keys, err := r.scanKeys(ctx, accountId, 0)
+
+	if err != nil {
+		return err
+	}
+
+	for _, key := range keys {
+
+		_, err := r.client.Del(ctx, key).Result()
+
+		if err != nil {
+			return fmt.Errorf("failed to delete session: %v", err)
+		}
+	}
+
+	return nil
+}
+
+// GetSessionsByAccountId - Get sessions
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
+
+	keys, err := r.scanKeys(ctx, accountId, 0)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// sort keys - based on cursor
 	if cursor != nil {
@@ -152,6 +180,8 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		if err != nil {
 			return nil, err
 		}
+	} else {
+
 	}
 
 	var sessions []*session.Session

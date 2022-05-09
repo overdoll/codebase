@@ -31,8 +31,8 @@ func (h *Activities) AddClubMemberIfNotExists(ctx context.Context, input AddClub
 			return false, err
 		}
 
-		return true, nil
+		return false, nil
 	}
 
-	return false, nil
+	return true, nil
 }

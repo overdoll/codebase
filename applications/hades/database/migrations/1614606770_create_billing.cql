@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     billing_amount                  bigint,
     billing_currency                text,
 
+    created_at                      timestamp,
     cancelled_at                    timestamp,
     expired_at                      timestamp,
 
@@ -38,6 +39,15 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     primary key ( id )
 );
 
+CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions
+(
+    bucket                 int,
+    club_id                text,
+    id                     text,
+    ccbill_subscription_id text,
+    primary key ( (bucket, club_id), id )
+);
+
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
 (
     account_id                      text,
@@ -49,6 +59,7 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
     billing_amount                  bigint,
     billing_currency                text,
 
+    created_at                      timestamp,
     cancelled_at                    timestamp,
     expired_at                      timestamp,
 
@@ -167,4 +178,73 @@ CREATE TABLE IF NOT EXISTS receipt_files
     temporal_workflow_id         text,
 
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS club_all_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_refund_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_chargeback_transactions
+(
+    club_id   text,
+    bucket    int,
+    timestamp timeuuid,
+    id        text,
+    amount    bigint,
+    currency  text,
+    primary key ( (club_id, bucket), timestamp, id )
+) WITH CLUSTERING ORDER BY (timestamp ASC);
+
+CREATE TABLE IF NOT EXISTS club_transaction_metrics
+(
+    club_id                                text,
+    timestamp                              timestamp,
+    bucket                                 int,
+
+    currency                               text,
+
+    total_transactions_count               bigint,
+    total_transactions_amount              bigint,
+    total_transactions_last_update_id      timeuuid,
+
+    chargeback_transactions_count          bigint,
+    chargeback_transactions_amount         bigint,
+    chargeback_transactions_last_update_id timeuuid,
+
+    refund_transactions_count              bigint,
+    refund_transactions_amount             bigint,
+    refund_transactions_last_update_id     timeuuid,
+    primary key ( (club_id, bucket) )
+);
+
+CREATE TABLE IF NOT EXISTS club_transaction_metrics_buckets
+(
+    club_id text,
+    bucket  int,
+    primary key ( (club_id), bucket )
+);
+
+CREATE TABLE IF NOT EXISTS club_chargeback_suspensions
+(
+    club_id text,
+    bucket  int,
+    primary key ( (club_id, bucket) )
 );

@@ -4,9 +4,6 @@ A balance item.
 Represents balance on a specific club.
 """
 type Balance {
-  """An ID to uniquely identify this balance."""
-  id: ID!
-
   """The amount on this balance."""
   amount: Int!
 

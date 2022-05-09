@@ -23,6 +23,11 @@ type Account struct {
 	locked      bool
 	lockedUntil *time.Time
 
+	deleting                    bool
+	scheduledDeletionAt         *time.Time
+	scheduledDeletionWorkflowId *string
+	deleted                     bool
+
 	lastUsernameEdit time.Time
 
 	multiFactorEnabled bool
@@ -37,9 +42,10 @@ var (
 	ErrMultiFactorRequired    = errors.New("account needs to have multi factor enabled")
 	ErrAccountNoRole          = errors.New("account does not have the assigned role")
 	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
+	ErrAccountIsDeleting      = errors.New("cannot updated account in deleting status")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locked bool, lockedUntil *time.Time, multiFactorEnabled bool, lastUsernameEdit time.Time) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool) *Account {
 
 	var newRoles []Role
 
@@ -49,16 +55,20 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 	}
 
 	return &Account{
-		id:                 id,
-		username:           username,
-		email:              email,
-		roles:              newRoles,
-		verified:           verified,
-		avatarResourceId:   avatar,
-		lockedUntil:        lockedUntil,
-		locked:             locked,
-		multiFactorEnabled: multiFactorEnabled,
-		lastUsernameEdit:   lastUsernameEdit,
+		id:                          id,
+		username:                    username,
+		email:                       email,
+		roles:                       newRoles,
+		verified:                    verified,
+		avatarResourceId:            avatar,
+		deleting:                    isDeleting,
+		scheduledDeletionAt:         scheduledDeletionAt,
+		scheduledDeletionWorkflowId: scheduledDeletionWorkflowId,
+		lockedUntil:                 lockedUntil,
+		locked:                      locked,
+		multiFactorEnabled:          multiFactorEnabled,
+		lastUsernameEdit:            lastUsernameEdit,
+		deleted:                     isDeleted,
 	}
 }
 
@@ -107,7 +117,42 @@ func (a *Account) CanUnlock() bool {
 	return time.Now().After(*a.lockedUntil)
 }
 
+func (a *Account) CanCancelDeletion(requester *principal.Principal) error {
+
+	if a.deleted {
+		return errors.New("already deleted")
+	}
+
+	if !a.deleting {
+		return errors.New("not in deletion state")
+	}
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return requester.BelongsToAccount(a.id)
+}
+
+func (a *Account) CanDelete(requester *principal.Principal) error {
+
+	if a.IsDeleting() {
+		return errors.New("already deleting")
+	}
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return requester.BelongsToAccount(a.id)
+}
+
 func (a *Account) IsLocked() bool {
+	// an account that is deleting is also locked
+	return a.locked || a.deleting
+}
+
+func (a *Account) Locked() bool {
 	return a.locked
 }
 
@@ -115,11 +160,31 @@ func (a *Account) IsSecure() bool {
 	return a.multiFactorEnabled
 }
 
+func (a *Account) ScheduledDeletionWorkflowId() *string {
+	return a.scheduledDeletionWorkflowId
+}
+
 func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
 }
 
+func (a *Account) IsDeleting() bool {
+	return a.deleting
+}
+
+func (a *Account) IsDeleted() bool {
+	return a.deleted
+}
+
+func (a *Account) ScheduledDeletionAt() *time.Time {
+	return a.scheduledDeletionAt
+}
+
 func (a *Account) DisableMultiFactor() error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
 
 	if a.multiFactorEnabled && !a.CanDisableMultiFactor() {
 		return ErrAccountPrivileged
@@ -182,11 +247,15 @@ func (a *Account) isPrivileged() bool {
 }
 
 func (a *Account) IsStaff() bool {
-	return a.hasRoles([]string{"staff"})
+	return a.hasRoles([]string{Staff.String()})
 }
 
 func (a *Account) IsModerator() bool {
-	return (a.hasRoles([]string{"moderator"}) || a.IsStaff()) && !a.IsLocked()
+	return (a.hasRoles([]string{Moderator.String()}) || a.IsStaff()) && !a.IsLocked()
+}
+
+func (a *Account) IsArtist() bool {
+	return (a.hasRoles([]string{Artist.String()}) || a.IsStaff()) && !a.IsLocked()
 }
 
 func (a *Account) hasRoles(roles []string) bool {
@@ -202,6 +271,10 @@ func (a *Account) hasRoles(roles []string) bool {
 }
 
 func (a *Account) EditUsername(username string) error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
 
 	if err := validateUsername(username); err != nil {
 		return err
@@ -229,6 +302,10 @@ func (a *Account) RolesAsString() []string {
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {
 
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
+
 	for _, current := range emails {
 		if current.IsEqual(email) {
 			if current.IsConfirmed() {
@@ -240,6 +317,31 @@ func (a *Account) UpdateEmail(emails []*Email, email string) error {
 	}
 
 	return ErrEmailNotConfirmed
+}
+
+func (a *Account) MarkDeleting(timestamp time.Time, workflowId string) error {
+
+	future := timestamp.Add(time.Hour * 24 * 30)
+
+	a.deleting = true
+	a.scheduledDeletionAt = &future
+	a.scheduledDeletionWorkflowId = &workflowId
+
+	return nil
+}
+
+func (a *Account) MarkUnDeleted() error {
+	a.deleting = false
+	a.scheduledDeletionAt = nil
+
+	return nil
+}
+
+func (a *Account) MarkDeleted() error {
+
+	a.deleted = true
+
+	return nil
 }
 
 func validateUsername(username string) error {
@@ -254,6 +356,10 @@ func validateUsername(username string) error {
 
 func (a *Account) CanMakeEmailPrimary(requester *principal.Principal) error {
 
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
+
 	if err := requester.BelongsToAccount(a.id); err != nil {
 		return err
 	}
@@ -262,6 +368,11 @@ func (a *Account) CanMakeEmailPrimary(requester *principal.Principal) error {
 }
 
 func (a *Account) CanUpdateUsername(requester *principal.Principal) error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
+
 	if err := requester.BelongsToAccount(a.id); err != nil {
 		return err
 	}
@@ -270,6 +381,10 @@ func (a *Account) CanUpdateUsername(requester *principal.Principal) error {
 }
 
 func (a *Account) assignRoleCheck(requester *principal.Principal) error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
 
 	// doesn't belong to account
 	if !requester.IsStaff() {
@@ -304,6 +419,21 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 	return nil
 }
 
+func (a *Account) AssignArtistRole(requester *principal.Principal) error {
+
+	if err := a.assignRoleCheck(requester); err != nil {
+		return err
+	}
+
+	if a.IsArtist() {
+		return nil
+	}
+
+	a.roles = append(a.roles, Artist)
+
+	return nil
+}
+
 func (a *Account) AssignStaffRole(requester *principal.Principal) error {
 
 	if err := a.assignRoleCheck(requester); err != nil {
@@ -320,6 +450,10 @@ func (a *Account) AssignStaffRole(requester *principal.Principal) error {
 }
 
 func (a *Account) revokeRoleCheck(requester *principal.Principal) error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
 
 	// doesn't belong to account
 	if !requester.IsStaff() {
@@ -367,6 +501,23 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 	return nil
 }
 
+func (a *Account) RevokeArtistRole(requester *principal.Principal) error {
+
+	if err := a.revokeRoleCheck(requester); err != nil {
+		return err
+	}
+
+	if !a.IsArtist() {
+		return ErrAccountNoRole
+	}
+
+	if err := a.removeRole(Artist); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 
 	if err := a.revokeRoleCheck(requester); err != nil {
@@ -385,5 +536,5 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 }
 
 func ToPrincipal(acc *Account) *principal.Principal {
-	return principal.NewPrincipal(acc.id, acc.email, acc.RolesAsString(), acc.verified, acc.locked, acc.IsSecure())
+	return principal.NewPrincipal(acc.id, acc.email, acc.RolesAsString(), acc.verified, acc.locked, acc.IsSecure(), false)
 }

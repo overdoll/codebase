@@ -11,7 +11,7 @@ type RemovePostInput struct {
 
 func (h *Activities) RemovePost(ctx context.Context, input RemovePostInput) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		// Delete all resources
 		if err := h.loader.DeleteResources(ctx, input.PostId, pending.AllContentResourceIds()); err != nil {
 			return err
@@ -21,10 +21,6 @@ func (h *Activities) RemovePost(ctx context.Context, input RemovePostInput) erro
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		return err
 	}
 

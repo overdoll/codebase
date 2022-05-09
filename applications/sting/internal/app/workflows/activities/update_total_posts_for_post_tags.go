@@ -17,14 +17,14 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 		return err
 	}
 
-	if err := h.pi.RefreshPostIndex(ctx); err != nil {
+	if err := h.pr.RefreshPostIndex(ctx); err != nil {
 		return err
 	}
 
 	for _, cat := range pendingPost.CategoryIds() {
 
-		newCat, err := h.pr.UpdateCategoryTotalPostsOperator(ctx, cat, func(category *post.Category) error {
-			totalPosts, err := h.pi.GetTotalPostsForCategoryOperator(ctx, category)
+		_, err := h.pr.UpdateCategoryTotalPostsOperator(ctx, cat, func(category *post.Category) error {
+			totalPosts, err := h.pr.GetTotalPostsForCategoryOperator(ctx, category)
 
 			if err != nil {
 				return err
@@ -37,9 +37,6 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 			return err
 		}
 
-		if err := h.pi.IndexCategory(ctx, newCat); err != nil {
-			return err
-		}
 	}
 
 	updatedSeries := make(map[string]bool)
@@ -48,7 +45,7 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 
 		newChar, err := h.pr.UpdateCharacterTotalPostsOperator(ctx, char, func(character *post.Character) error {
 
-			totalPosts, err := h.pi.GetTotalPostsForCharacterOperator(ctx, character)
+			totalPosts, err := h.pr.GetTotalPostsForCharacterOperator(ctx, character)
 
 			if err != nil {
 				return err
@@ -61,15 +58,11 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 			return err
 		}
 
-		if err := h.pi.IndexCharacter(ctx, newChar); err != nil {
-			return err
-		}
-
 		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
 			newSeries, err := h.pr.UpdateSeriesTotalPostsOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
-				totalPosts, err := h.pi.GetTotalPostsForSeriesOperator(ctx, series)
+				totalPosts, err := h.pr.GetTotalPostsForSeriesOperator(ctx, series)
 
 				if err != nil {
 					return err
@@ -82,17 +75,13 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 				return err
 			}
 
-			if err := h.pi.IndexSeries(ctx, newSeries); err != nil {
-				return err
-			}
-
 			updatedSeries[newSeries.ID()] = true
 		}
 	}
 
-	newAud, err := h.pr.UpdateAudienceTotalPostsOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
+	_, err = h.pr.UpdateAudienceTotalPostsOperator(ctx, *pendingPost.AudienceId(), func(audience *post.Audience) error {
 
-		totalPosts, err := h.pi.GetTotalPostsForAudienceOperator(ctx, audience)
+		totalPosts, err := h.pr.GetTotalPostsForAudienceOperator(ctx, audience)
 
 		if err != nil {
 			return err
@@ -102,10 +91,6 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 	})
 
 	if err != nil {
-		return err
-	}
-
-	if err := h.pi.IndexAudience(ctx, newAud); err != nil {
 		return err
 	}
 

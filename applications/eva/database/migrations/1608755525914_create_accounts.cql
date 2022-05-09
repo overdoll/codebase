@@ -1,15 +1,19 @@
 CREATE TABLE IF NOT EXISTS accounts
 (
-    id                   text,
-    username             text,
-    email                text,
-    roles                list<text>,
-    verified             boolean,
-    avatar_resource_id   text,
-    locked               boolean,
-    locked_until         timestamp,
-    last_username_edit   timestamp,
-    multi_factor_enabled boolean,
+    id                             text,
+    username                       text,
+    email                          text,
+    roles                          list<text>,
+    verified                       boolean,
+    avatar_resource_id             text,
+    locked                         boolean,
+    locked_until                   timestamp,
+    deleting                       boolean,
+    scheduled_deletion_at          timestamp,
+    scheduled_deletion_workflow_id text,
+    deleted                        boolean,
+    last_username_edit             timestamp,
+    multi_factor_enabled           boolean,
     primary key ( id )
 );
 

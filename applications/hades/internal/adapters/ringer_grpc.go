@@ -39,7 +39,7 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Conte
 
 func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
 
-	_, err := s.client.ClubPaymentDeposit(ctx, &ringer.ClubPaymentDepositRequest{
+	_, err := s.client.ClubPaymentDeduction(ctx, &ringer.ClubPaymentDeductionRequest{
 		AccountTransactionId: transactionId,
 		SourceAccountId:      accountId,
 		DestinationClubId:    clubId,
