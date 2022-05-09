@@ -11,7 +11,7 @@ type GetReadyPaymentsForClubInput struct {
 
 type GetReadyPaymentsForClubCurrencyGroupPayload struct {
 	PaymentIds  []string
-	TotalAmount int64
+	TotalAmount uint64
 	Currency    money.Currency
 }
 
@@ -23,14 +23,14 @@ func (h *Activities) GetReadyPaymentsForClub(ctx context.Context, input GetReady
 
 	type paymentGroup struct {
 		paymentIds  []string
-		totalAmount int64
+		totalAmount uint64
 	}
 
 	currencyMap := make(map[money.Currency]*paymentGroup)
 
 	if err := h.pr.ScanClubReadyPaymentsList(ctx,
 		input.ClubId,
-		func(paymentId string, amount int64, isDeduction bool, currency money.Currency) {
+		func(paymentId string, amount uint64, isDeduction bool, currency money.Currency) {
 
 			if _, ok := currencyMap[currency]; !ok {
 				currencyMap[currency] = &paymentGroup{

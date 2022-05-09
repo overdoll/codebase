@@ -2,14 +2,15 @@ package activities
 
 import (
 	"context"
+	"overdoll/libraries/money"
 )
 
 type SendAccountClubSupporterSubscriptionRefundNotificationInput struct {
 	SubscriptionId string
 	TransactionId  string
 
-	Currency string
-	Amount   int64
+	Currency money.Currency
+	Amount   uint64
 }
 
 func (h *Activities) SendAccountClubSupporterSubscriptionRefundNotification(ctx context.Context, input SendAccountClubSupporterSubscriptionRefundNotificationInput) error {

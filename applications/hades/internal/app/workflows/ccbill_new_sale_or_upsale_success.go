@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/money"
 	"overdoll/libraries/uuid"
 	"strings"
 )
@@ -177,6 +178,12 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return fmt.Errorf("failed to parse date: %s", err)
 	}
 
+	billedCurrency, err := money.CurrencyFromString(input.BilledCurrency)
+
+	if err != nil {
+		return err
+	}
+
 	// create record for new transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInitialClubSubscriptionAccountTransaction,
 		activities.CreateInitialClubSubscriptionAccountTransactionInput{
@@ -185,7 +192,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			AccountId:                          details.AccountInitiator.AccountId,
 			Timestamp:                          timestamp,
 			Amount:                             amount,
-			Currency:                           input.BilledCurrency,
+			Currency:                           billedCurrency,
 			NextBillingDate:                    nextBillingDate,
 			BillingDate:                        billedAtDate,
 		},
@@ -216,7 +223,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			NextRenewalDate:      nextBillingDate,
 			Timestamp:            timestamp,
 			Amount:               amount,
-			Currency:             input.BilledCurrency,
+			Currency:             billedCurrency,
 		},
 	).Get(ctx, &details); err != nil {
 		return err
@@ -237,6 +244,12 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return fmt.Errorf("failed to parse amount: %s", err)
 	}
 
+	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
@@ -245,7 +258,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			Currency:      accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -287,7 +300,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			Timestamp: timestamp,
 			Id:        input.TransactionId,
 			Amount:    accountingAmount,
-			Currency:  input.AccountingCurrency,
+			Currency:  accountingCurrency,
 		},
 	).
 		GetChildWorkflowExecution().

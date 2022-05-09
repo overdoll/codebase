@@ -1322,7 +1322,7 @@ type Balance {
   currency: Currency!
 
   """When the balance was last updated."""
-  updatedAt: Time!
+  updatedAt: Time
 }
 
 extend type Club {
@@ -3212,14 +3212,11 @@ func (ec *executionContext) _Balance_updatedAt(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CancelClubPayoutPayload_clubPayout(ctx context.Context, field graphql.CollectedField, obj *types.CancelClubPayoutPayload) (ret graphql.Marshaler) {
@@ -8702,9 +8699,6 @@ func (ec *executionContext) _Balance(ctx context.Context, sel ast.SelectionSet, 
 
 			out.Values[i] = innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

@@ -11,7 +11,6 @@ import (
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"time"
 )
 
 type postReport struct {
@@ -20,6 +19,11 @@ type postReport struct {
 	Bucket             int    `db:"bucket"`
 	ReportingAccountId string `db:"reporting_account_id"`
 	RuleId             string `db:"rule_id"`
+}
+
+type postReportInit struct {
+	Init   int `db:"init"`
+	Bucket int `db:"bucket"`
 }
 
 var postReportTable = table.New(table.Metadata{
@@ -59,6 +63,36 @@ var postReportsByAccountAndBucketTable = table.New(table.Metadata{
 	},
 	PartKey: []string{"bucket", "reporting_account_id"},
 	SortKey: []string{"id"},
+})
+
+var postReportsByAccountAndBucketBucketsTable = table.New(table.Metadata{
+	Name: "post_report_by_account_and_bucket_buckets",
+	Columns: []string{
+		"reporting_account_id",
+		"bucket",
+	},
+	PartKey: []string{"reporting_account_id"},
+	SortKey: []string{"bucket"},
+})
+
+var postReportsBucketsTable = table.New(table.Metadata{
+	Name: "post_reports_buckets",
+	Columns: []string{
+		"init",
+		"bucket",
+	},
+	PartKey: []string{"init"},
+	SortKey: []string{"bucket"},
+})
+
+var postReportsByPostBucketsTable = table.New(table.Metadata{
+	Name: "post_report_by_post_buckets",
+	Columns: []string{
+		"post_id",
+		"bucket",
+	},
+	PartKey: []string{"post_id"},
+	SortKey: []string{"bucket"},
 })
 
 var postReportByPostTable = table.New(table.Metadata{
@@ -172,6 +206,27 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 		marshalledPostReport.RuleId,
 	)
 
+	stmt, _ = postReportsByAccountAndBucketBucketsTable.Insert()
+
+	batch.Query(stmt,
+		marshalledPostReport.ReportingAccountId,
+		marshalledPostReport.Bucket,
+	)
+
+	stmt, _ = postReportsByPostBucketsTable.Insert()
+
+	batch.Query(stmt,
+		marshalledPostReport.PostId,
+		marshalledPostReport.Bucket,
+	)
+
+	stmt, _ = postReportsByBucketTable.Insert()
+
+	batch.Query(stmt,
+		0,
+		marshalledPostReport.Bucket,
+	)
+
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create report log: %v", err)
 	}
@@ -212,6 +267,72 @@ func (r ReportCassandraRepository) GetPostReportById(ctx context.Context, reques
 	return rep, nil
 }
 
+func (r ReportCassandraRepository) getPostReportsBucketForPost(ctx context.Context, postId string) ([]int, error) {
+
+	var buckets []postReport
+
+	if err := r.session.Query(postReportsByPostBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postReport{
+			PostId: postId,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get post reports by post buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
+func (r ReportCassandraRepository) getPostReportsBuckets(ctx context.Context) ([]int, error) {
+
+	var buckets []postReportInit
+
+	if err := r.session.Query(postReportsBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postReportInit{
+			Init: 0,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get post reports buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
+func (r ReportCassandraRepository) getPostReportsByAccountBuckets(ctx context.Context, accountId string) ([]int, error) {
+
+	var buckets []postReport
+
+	if err := r.session.Query(postReportsByAccountAndBucketBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postReport{
+			ReportingAccountId: accountId,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get post reports by account buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
 func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *report.PostReportFilters) ([]*report.PostReport, error) {
 
 	var postReports []*report.PostReport
@@ -220,15 +341,33 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 		return nil, err
 	}
 
-	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(filters.From())
-	endingBucket := 0
+	var buckets []int
+	var err error
 
-	if filters.To() != nil {
-		endingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filters.To())
+	if filters.PostId() != nil {
+		buckets, err = r.getPostReportsBucketForPost(ctx, *filters.PostId())
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		buckets, err = r.getPostReportsBuckets(ctx)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	for _, bucketId := range buckets {
+
+		if bucketId > bucket.MakeWeeklyBucketFromTimestamp(filters.From()) {
+			continue
+		}
+
+		if filters.To() != nil {
+			if bucketId < bucket.MakeWeeklyBucketFromTimestamp(*filters.To()) {
+				continue
+			}
+		}
 
 		info := map[string]interface{}{
 			"bucket":  bucketId,
@@ -317,16 +456,13 @@ func (r ReportCassandraRepository) GetPostReportForPostAndAccount(ctx context.Co
 
 func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accountId string) error {
 
-	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getPostReportsByAccountBuckets(ctx, accountId)
 
+	if err != nil {
+		return err
+	}
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
-
-		info := map[string]interface{}{
-			"bucket":               bucketId,
-			"reporting_account_id": accountId,
-		}
+	for _, bucketId := range buckets {
 
 		builder := qb.Select(postReportsByAccountAndBucketTable.Name()).
 			Where(qb.Eq("bucket"), qb.Eq("reporting_account_id"))
@@ -335,7 +471,7 @@ func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accoun
 
 		if err := builder.
 			Query(r.session).
-			BindMap(info).
+			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
 			Select(&results); err != nil {
 			return fmt.Errorf("failed to search post reports: %v", err)
 		}
@@ -389,7 +525,19 @@ func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accoun
 		if err := r.session.ExecuteBatch(batch); err != nil {
 			return fmt.Errorf("failed to delete report log: %v", err)
 		}
+	}
 
+	// delete all buckets for this account as well
+	if err := r.session.Query(qb.
+		Delete(postReportsByAccountAndBucketBucketsTable.Name()).
+		Where(qb.Eq("account_id")).
+		ToCql()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postReport{
+			ReportingAccountId: accountId,
+		}).
+		Select(&buckets); err != nil {
+		return fmt.Errorf("failed to delete post reports by account buckets: %v", err)
 	}
 
 	return nil

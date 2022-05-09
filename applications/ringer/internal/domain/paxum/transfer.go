@@ -13,7 +13,7 @@ type Transfer struct {
 	amount    float64
 }
 
-func NewTransfer(payoutId string, email, firstName, lastName string, amount int64, currency money.Currency) (*Transfer, error) {
+func NewTransfer(payoutId string, email, firstName, lastName string, amount uint64, currency money.Currency) (*Transfer, error) {
 	if currency != money.USD {
 		return nil, errors.New("invalid currency")
 	}

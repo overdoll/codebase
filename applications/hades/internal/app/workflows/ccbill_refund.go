@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"overdoll/libraries/support"
 )
 
@@ -53,6 +54,12 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
+	currency, err := money.CurrencyFromString(input.Currency)
+
+	if err != nil {
+		return err
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -71,7 +78,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Id:            *uniqueId,
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
-			Currency:      input.Currency,
+			Currency:      currency,
 			Amount:        amount,
 			Reason:        input.Reason,
 		},
@@ -84,7 +91,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		activities.SendAccountClubSupporterSubscriptionRefundNotificationInput{
 			SubscriptionId: input.SubscriptionId,
 			TransactionId:  input.TransactionId,
-			Currency:       input.Currency,
+			Currency:       currency,
 			Amount:         amount,
 		},
 	).Get(ctx, nil); err != nil {
@@ -92,6 +99,12 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	}
 
 	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
+	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
 
 	if err != nil {
 		return err
@@ -105,7 +118,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			Currency:      accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -123,7 +136,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Timestamp: timestamp,
 			Id:        *uniqueId,
 			Amount:    accountingAmount,
-			Currency:  input.AccountingCurrency,
+			Currency:  accountingCurrency,
 			IsRefund:  true,
 		},
 	).

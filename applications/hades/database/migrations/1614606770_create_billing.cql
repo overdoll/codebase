@@ -48,6 +48,13 @@ CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions
     primary key ( (bucket, club_id), id )
 );
 
+CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions_buckets
+(
+    club_id text,
+    bucket  int,
+    primary key ( club_id, bucket )
+);
+
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
 (
     account_id                      text,

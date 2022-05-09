@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"overdoll/libraries/support"
 )
 
@@ -54,6 +55,12 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 		return err
 	}
 
+	currency, err := money.CurrencyFromString(input.Currency)
+
+	if err != nil {
+		return err
+	}
+
 	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
@@ -66,7 +73,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 			Id:            *uniqueId,
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
-			Currency:      input.Currency,
+			Currency:      currency,
 			Amount:        amount,
 			Reason:        input.Reason,
 		},
@@ -80,6 +87,12 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 		return err
 	}
 
+	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
@@ -88,7 +101,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			Currency:      accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -106,7 +119,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 			Timestamp:    timestamp,
 			Id:           *uniqueId,
 			Amount:       accountingAmount,
-			Currency:     input.AccountingCurrency,
+			Currency:     accountingCurrency,
 			IsChargeback: true,
 		},
 	).

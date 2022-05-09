@@ -11,7 +11,7 @@ type Balance {
   currency: Currency!
 
   """When the balance was last updated."""
-  updatedAt: Time!
+  updatedAt: Time
 }
 
 extend type Club {

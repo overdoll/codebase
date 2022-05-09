@@ -78,7 +78,7 @@ type clubPayoutDocument struct {
 	DepositDate        time.Time                 `json:"deposit_date"`
 	ClubId             string                    `json:"club_id"`
 	Currency           string                    `json:"currency"`
-	Amount             int64                     `json:"amount"`
+	Amount             uint64                    `json:"amount"`
 	PayoutAccountId    string                    `json:"payout_account_id"`
 	DepositRequestId   string                    `json:"deposit_request_id"`
 	Timestamp          time.Time                 `json:"timestamp"`

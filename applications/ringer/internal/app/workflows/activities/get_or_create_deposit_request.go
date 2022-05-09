@@ -12,7 +12,7 @@ type GetOrCreateDepositRequestInput struct {
 	Currency              money.Currency
 	AccountPayoutMethodId string
 	Timestamp             time.Time
-	Amount                int64
+	Amount                uint64
 }
 
 type GetOrCreateDepositRequestPayload struct {

@@ -33,7 +33,7 @@ type AccountClubSupporterSubscription struct {
 	cancelledAt *time.Time
 	expiredAt   *time.Time
 
-	billingAmount   int64
+	billingAmount   uint64
 	billingCurrency money.Currency
 
 	paymentMethod *PaymentMethod
@@ -48,14 +48,7 @@ type AccountClubSupporterSubscription struct {
 	billingFailureNextRetryDate *time.Time
 }
 
-func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
-
-	currenc, err := money.CurrencyFromString(currency)
-
-	if err != nil {
-		return nil, err
-	}
-
+func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
 	return &AccountClubSupporterSubscription{
 		accountId:            accountId,
 		clubId:               clubId,
@@ -68,7 +61,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccb
 		expiredAt:            nil,
 		billingAmount:        amount,
 		createdAt:            timestamp,
-		billingCurrency:      currenc,
+		billingCurrency:      currency,
 		paymentMethod:        paymentMethod,
 		updatedAt:            time.Now(),
 		ccbillSubscriptionId: &ccbillSubscriptionId,
@@ -123,7 +116,7 @@ func (c *AccountClubSupporterSubscription) NextBillingDate() time.Time {
 	return c.nextBillingDate
 }
 
-func (c *AccountClubSupporterSubscription) BillingAmount() int64 {
+func (c *AccountClubSupporterSubscription) BillingAmount() uint64 {
 	return c.billingAmount
 }
 
@@ -240,7 +233,7 @@ func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principa
 }
 
 func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
-	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod,
+	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount uint64, billingCurrency string, paymentMethod *PaymentMethod,
 	ccbillSubscriptionId *string, cancelledAt *time.Time, createdAt time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
 	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
 ) *AccountClubSupporterSubscription {

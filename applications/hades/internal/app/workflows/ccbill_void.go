@@ -4,6 +4,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"strconv"
 )
 
@@ -60,7 +61,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 	currency := input.AccountingCurrency
 
 	if currency == "" {
-		currency = subscriptionDetails.Currency
+		currency = subscriptionDetails.Currency.String()
 	}
 
 	amount := input.AccountingAmount
@@ -75,6 +76,12 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
+	accountingCurrency, err := money.CurrencyFromString(currency)
+
+	if err != nil {
+		return err
+	}
+
 	// send a payment indicating a deduction for this club
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
@@ -83,7 +90,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      currency,
+			Currency:      accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

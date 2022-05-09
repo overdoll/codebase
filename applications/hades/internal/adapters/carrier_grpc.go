@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 
 	carrier "overdoll/applications/carrier/proto"
 )
@@ -42,14 +43,14 @@ func (s CarrierGrpc) ClubSupporterSubscriptionCancelled(ctx context.Context, sub
 	return err
 }
 
-func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
+func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount uint64, currency money.Currency) error {
 
 	_, err := s.client.ClubSupporterSubscriptionRefunded(ctx, &carrier.ClubSupporterSubscriptionRefundedRequest{
 		Account:      &carrier.Account{Id: subscription.AccountId()},
 		Club:         &carrier.Club{Id: subscription.ClubId()},
 		Subscription: &carrier.Subscription{Id: subscription.Id()},
 		Transaction:  &carrier.Transaction{Id: transaction.Id()},
-		Refund:       &carrier.Payment{Amount: amount, Currency: currency},
+		Refund:       &carrier.Payment{Amount: amount, Currency: currency.String()},
 	})
 
 	return err

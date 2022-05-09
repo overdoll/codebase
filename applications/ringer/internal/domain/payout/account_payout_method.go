@@ -60,7 +60,7 @@ func (p *AccountPayoutMethod) CanView(requester *principal.Principal) error {
 	return requester.BelongsToAccount(p.accountId)
 }
 
-func (p *AccountPayoutMethod) Validate(requester *principal.Principal, amount int64, currency money.Currency) bool {
+func (p *AccountPayoutMethod) Validate(requester *principal.Principal, amount uint64, currency money.Currency) bool {
 
 	if err := requester.BelongsToAccount(p.accountId); err != nil {
 		return false

@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 	"strings"
 )
 
@@ -49,6 +50,12 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
+	currency, err := money.CurrencyFromString(input.BilledCurrency)
+
+	if err != nil {
+		return err
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -74,7 +81,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 			CardType:                           input.CardType,
 			CardExpirationDate:                 input.ExpDate,
 			Amount:                             amount,
-			Currency:                           input.BilledCurrency,
+			Currency:                           currency,
 			BillingDate:                        billedAtDate,
 			NextBillingDate:                    nextBillingDate,
 		},
@@ -98,6 +105,12 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
+	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
+
+	if err != nil {
+		return err
+	}
+
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
@@ -106,7 +119,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 			TransactionId: input.TransactionId,
 			Timestamp:     timestamp,
 			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			Currency:      accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -124,7 +137,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 			Timestamp: timestamp,
 			Id:        input.TransactionId,
 			Amount:    accountingAmount,
-			Currency:  input.AccountingCurrency,
+			Currency:  accountingCurrency,
 		},
 	).
 		GetChildWorkflowExecution().

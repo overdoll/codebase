@@ -70,7 +70,7 @@ type Balance struct {
 	// The currency the balance is in.
 	Currency graphql1.Currency `json:"currency"`
 	// When the balance was last updated.
-	UpdatedAt time.Time `json:"updatedAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 // Cancel a specific payout.

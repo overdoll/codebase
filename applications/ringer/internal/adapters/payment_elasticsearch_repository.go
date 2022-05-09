@@ -76,9 +76,9 @@ type clubPaymentDocument struct {
 	AccountTransactionId     string    `json:"account_transaction_id"`
 	DestinationClubId        string    `json:"destination_club_id"`
 	Currency                 string    `json:"currency"`
-	BaseAmount               int64     `json:"base_amount"`
-	PlatformFeeAmount        int64     `json:"platform_fee_amount"`
-	FinalAmount              int64     `json:"final_amount"`
+	BaseAmount               uint64    `json:"base_amount"`
+	PlatformFeeAmount        uint64    `json:"platform_fee_amount"`
+	FinalAmount              uint64    `json:"final_amount"`
 	IsDeduction              bool      `json:"is_deduction"`
 	DeductionSourcePaymentId *string   `json:"deduction_source_payment_id"`
 	Timestamp                time.Time `json:"timestamp"`

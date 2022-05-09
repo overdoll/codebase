@@ -75,6 +75,16 @@ var clubActiveSupporterSubscriptionsTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+var clubActiveSupporterSubscriptionsBucketsTable = table.New(table.Metadata{
+	Name: "club_active_supporter_subscriptions_buckets",
+	Columns: []string{
+		"club_id",
+		"bucket",
+	},
+	PartKey: []string{"club_id", "bucket"},
+	SortKey: []string{},
+})
+
 type clubActiveSupporterSubscriptions struct {
 	ClubId               string  `db:"club_id"`
 	Id                   string  `db:"id"`
@@ -157,7 +167,7 @@ type accountClubSupporterSubscription struct {
 	SupporterSince  time.Time `db:"supporter_since"`
 	LastBillingDate time.Time `db:"last_billing_date"`
 	NextBillingDate time.Time `db:"next_billing_date"`
-	BillingAmount   int64     `db:"billing_amount"`
+	BillingAmount   uint64    `db:"billing_amount"`
 	BillingCurrency string    `db:"billing_currency"`
 
 	CreatedAt   time.Time  `db:"created_at"`
@@ -234,7 +244,7 @@ var accountTransactionsTable = table.New(table.Metadata{
 type accountTransactionEvent struct {
 	Id        string
 	Timestamp time.Time
-	Amount    int64
+	Amount    uint64
 	Currency  string
 	Reason    string
 }
@@ -250,7 +260,7 @@ type accountTransactions struct {
 	ClubSupporterSubscriptionId *string `db:"club_supporter_subscription_id"`
 	EncryptedPaymentMethod      string  `db:"encrypted_payment_method"`
 
-	Amount   int64  `db:"amount"`
+	Amount   uint64 `db:"amount"`
 	Currency string `db:"currency"`
 
 	VoidedAt   *time.Time `db:"voided_at"`
@@ -301,16 +311,16 @@ type ccbillSubscriptionDetails struct {
 	EncryptedPaymentMethod string    `db:"encrypted_payment_method"`
 	UpdatedAt              time.Time `db:"updated_at"`
 
-	SubscriptionInitialPrice   int64  `db:"subscription_initial_price"`
-	SubscriptionRecurringPrice int64  `db:"subscription_recurring_price"`
+	SubscriptionInitialPrice   uint64 `db:"subscription_initial_price"`
+	SubscriptionRecurringPrice uint64 `db:"subscription_recurring_price"`
 	SubscriptionCurrency       string `db:"subscription_currency"`
 
-	BilledInitialPrice   int64  `db:"billed_initial_price"`
-	BilledRecurringPrice int64  `db:"billed_recurring_price"`
+	BilledInitialPrice   uint64 `db:"billed_initial_price"`
+	BilledRecurringPrice uint64 `db:"billed_recurring_price"`
 	BilledCurrency       string `db:"billed_currency"`
 
-	AccountingInitialPrice   int64  `db:"accounting_initial_price"`
-	AccountingRecurringPrice int64  `db:"accounting_recurring_price"`
+	AccountingInitialPrice   uint64 `db:"accounting_initial_price"`
+	AccountingRecurringPrice uint64 `db:"accounting_recurring_price"`
 	AccountingCurrency       string `db:"accounting_currency"`
 
 	IdempotencyKey string `db:"idempotency_key"`
@@ -665,31 +675,50 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountSavedPaymentMethod
 	return savedPaymentMethod, nil
 }
 
+func (r BillingCassandraElasticsearchRepository) getActiveClubSupporterSubscriptionsBuckets(ctx context.Context, clubId string) ([]int, error) {
+
+	var buckets []clubActiveSupporterSubscriptions
+
+	if err := r.session.Query(clubActiveSupporterSubscriptionsBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubActiveSupporterSubscriptions{
+			ClubId: clubId,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get club active supporter subscription buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
 func (r BillingCassandraElasticsearchRepository) GetActiveClubSupporterSubscriptionsForClub(ctx context.Context, clubId string) ([]string, error) {
 
 	var subscriptionIds []string
 
-	startingBucket := bucket2.MakeMonthlyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getActiveClubSupporterSubscriptionsBuckets(ctx, clubId)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
-
-		var builder *qb.SelectBuilder
-
-		info := map[string]interface{}{}
-
-		builder = qb.Select(clubActiveSupporterSubscriptionsTable.Name()).
-			Where(qb.Eq("bucket"), qb.Eq("club_id"))
-
-		info["bucket"] = bucketId
-		info["club_id"] = clubId
+	for _, bucketId := range buckets {
 
 		var subs []clubActiveSupporterSubscriptions
 
-		if err := builder.
+		if err := qb.Select(clubActiveSupporterSubscriptionsTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("club_id")).
 			Query(r.session).
-			BindMap(info).
+			BindStruct(clubActiveSupporterSubscriptions{
+				Bucket: bucketId,
+				ClubId: clubId,
+			}).
 			Select(&subs); err != nil {
 			return nil, fmt.Errorf("failed to get club active supporter subscriptions: %v", err)
 		}
@@ -762,13 +791,22 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		target.CancellationReasonId,
 	)
 
+	bucket := bucket2.MakeMonthlyBucketFromTimestamp(target.CreatedAt)
+
 	stmt, _ = clubActiveSupporterSubscriptionsTable.Insert()
 
 	batch.Query(stmt,
-		bucket2.MakeMonthlyBucketFromTimestamp(target.CreatedAt),
+		bucket,
 		target.ClubId,
 		target.Id,
 		target.CCBillSubscriptionId,
+	)
+
+	stmt, _ = clubActiveSupporterSubscriptionsBucketsTable.Insert()
+
+	batch.Query(stmt,
+		target.ClubId,
+		bucket,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -848,6 +886,11 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 			Id: id,
 		}).
 		Get(&accountClubSupported); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get account club support by id: %v", err)
 	}
 

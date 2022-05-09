@@ -51,7 +51,7 @@ func ConvertAmountToCCBillFloat(amount int64, currencyCode int) (float64, error)
 	return 0, fmt.Errorf("invalid currency code passed: %s", strconv.Itoa(currencyCode))
 }
 
-func ParseCCBillCurrencyAmount(amount string, currency string) (int64, error) {
+func ParseCCBillCurrencyAmount(amount string, currency string) (uint64, error) {
 	switch currency {
 	case "USD":
 		fallthrough
@@ -68,7 +68,7 @@ func ParseCCBillCurrencyAmount(amount string, currency string) (int64, error) {
 			return 0, err
 		}
 
-		return int64(amt * 100), nil
+		return uint64(amt * 100), nil
 	case "JPY":
 		amt, err := strconv.ParseInt(amount, 10, 64)
 
@@ -76,7 +76,7 @@ func ParseCCBillCurrencyAmount(amount string, currency string) (int64, error) {
 			return 0, err
 		}
 
-		return amt, nil
+		return uint64(amt), nil
 	}
 
 	return 0, fmt.Errorf("invalid currency passed: %s", currency)

@@ -8,7 +8,7 @@ import (
 
 type GetClubPayoutMethodsInput struct {
 	ClubId   string
-	Amount   int64
+	Amount   uint64
 	Currency money.Currency
 }
 

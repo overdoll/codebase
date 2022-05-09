@@ -2,14 +2,15 @@ package activities
 
 import (
 	"context"
+	"overdoll/libraries/money"
 )
 
 type GetCCBillSubscriptionDetailsPayload struct {
 	ClubId    string
 	AccountId string
 	Duplicate bool
-	Currency  string
-	Amount    int64
+	Currency  money.Currency
+	Amount    uint64
 }
 
 func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSubscriptionId string) (*GetCCBillSubscriptionDetailsPayload, error) {
@@ -24,7 +25,7 @@ func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSub
 		ClubId:    details.ClubId(),
 		AccountId: details.AccountId(),
 		Duplicate: details.Duplicate(),
-		Currency:  details.AccountingCurrency().String(),
+		Currency:  details.AccountingCurrency(),
 		Amount:    details.AccountingInitialPrice(),
 	}, nil
 }

@@ -23,9 +23,9 @@ type ClubPayment struct {
 
 	currency money.Currency
 
-	baseAmount        int64
-	platformFeeAmount int64
-	finalAmount       int64
+	baseAmount        uint64
+	platformFeeAmount uint64
+	finalAmount       uint64
 
 	isDeduction              bool
 	deductionSourcePaymentId *string
@@ -36,7 +36,7 @@ type ClubPayment struct {
 	clubPayoutIds []string
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 	// get percent of original platform fee
 	platformFee, err := NewClubPlatformFeeFromAmountAndFinalAmount(destinationClubId, existingPayment.baseAmount, existingPayment.finalAmount)
 
@@ -69,7 +69,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
@@ -117,7 +117,7 @@ func (p *ClubPayment) DestinationClubId() string {
 	return p.destinationClubId
 }
 
-func (p *ClubPayment) BaseAmount() int64 {
+func (p *ClubPayment) BaseAmount() uint64 {
 	return p.baseAmount
 }
 
@@ -125,11 +125,11 @@ func (p *ClubPayment) Currency() money.Currency {
 	return p.currency
 }
 
-func (p *ClubPayment) PlatformFeeAmount() int64 {
+func (p *ClubPayment) PlatformFeeAmount() uint64 {
 	return p.platformFeeAmount
 }
 
-func (p *ClubPayment) FinalAmount() int64 {
+func (p *ClubPayment) FinalAmount() uint64 {
 	return p.finalAmount
 }
 
@@ -202,9 +202,9 @@ func UnmarshalClubPaymentFromDatabase(
 
 	currency string,
 
-	baseAmount int64,
-	platformFeeAmount int64,
-	finalAmount int64,
+	baseAmount uint64,
+	platformFeeAmount uint64,
+	finalAmount uint64,
 
 	isDeduction bool,
 	deductionSourcePaymentId *string,

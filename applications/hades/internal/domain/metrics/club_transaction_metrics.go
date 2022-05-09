@@ -19,20 +19,20 @@ type ClubTransactionMetrics struct {
 	month int
 	year  int
 
-	totalTransactionsCount int64
-	chargebacksCount       int64
-	refundsCount           int64
+	totalTransactionsCount uint64
+	chargebacksCount       uint64
+	refundsCount           uint64
 
-	totalRefundsAmount      int64
-	totalChargebacksAmount  int64
-	totalTransactionsAmount int64
+	totalRefundsAmount      uint64
+	totalChargebacksAmount  uint64
+	totalTransactionsAmount uint64
 
 	currency money.Currency
 }
 
 func UnmarshalClubTransactionMetricsFromDatabase(clubId string, timestamp time.Time, currency string,
 	totalTransactionsCount, chargebacksCount, refundsCount,
-	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount int64,
+	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount uint64,
 ) *ClubTransactionMetrics {
 	cr, _ := money.CurrencyFromString(currency)
 	return &ClubTransactionMetrics{
@@ -101,27 +101,27 @@ func (m *ClubTransactionMetrics) RefundsCountRatio() float64 {
 	return float64(m.totalTransactionsCount / m.refundsCount)
 }
 
-func (m *ClubTransactionMetrics) TotalTransactions() int64 {
+func (m *ClubTransactionMetrics) TotalTransactions() uint64 {
 	return m.totalTransactionsCount
 }
 
-func (m *ClubTransactionMetrics) ChargebacksCount() int64 {
+func (m *ClubTransactionMetrics) ChargebacksCount() uint64 {
 	return m.chargebacksCount
 }
 
-func (m *ClubTransactionMetrics) RefundsCount() int64 {
+func (m *ClubTransactionMetrics) RefundsCount() uint64 {
 	return m.refundsCount
 }
 
-func (m *ClubTransactionMetrics) TotalTransactionsAmount() int64 {
+func (m *ClubTransactionMetrics) TotalTransactionsAmount() uint64 {
 	return m.totalTransactionsAmount
 }
 
-func (m *ClubTransactionMetrics) RefundsAmount() int64 {
+func (m *ClubTransactionMetrics) RefundsAmount() uint64 {
 	return m.totalRefundsAmount
 }
 
-func (m *ClubTransactionMetrics) ChargebacksAmount() int64 {
+func (m *ClubTransactionMetrics) ChargebacksAmount() uint64 {
 	return m.totalChargebacksAmount
 }
 

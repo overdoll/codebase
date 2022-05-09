@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/hades/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/location"
+	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/testing_tools"
 	"time"
@@ -129,7 +130,7 @@ func (c CarrierServiceMock) ClubSupporterSubscriptionPaymentFailure(ctx context.
 	return nil
 }
 
-func (c CarrierServiceMock) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
+func (c CarrierServiceMock) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount uint64, currency money.Currency) error {
 	return nil
 }
 

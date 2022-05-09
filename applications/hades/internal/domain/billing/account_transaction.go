@@ -26,7 +26,7 @@ type AccountTransaction struct {
 
 	paymentMethod *PaymentMethod
 
-	amount   int64
+	amount   uint64
 	currency money.Currency
 
 	billedAtDate    time.Time
@@ -41,13 +41,7 @@ type AccountTransaction struct {
 	events []*AccountTransactionEvent
 }
 
-func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
-	cr, err := money.CurrencyFromString(currency)
-
-	if err != nil {
-		return nil, err
-	}
-
+func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -56,7 +50,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
-		currency:                    cr,
+		currency:                    currency,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
 		ccbillTransactionId:         &id,
@@ -64,13 +58,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 	}, nil
 }
 
-func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
-	cr, err := money.CurrencyFromString(currency)
-
-	if err != nil {
-		return nil, err
-	}
-
+func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -79,7 +67,7 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
-		currency:                    cr,
+		currency:                    currency,
 		ccbillTransactionId:         &id,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
@@ -111,7 +99,7 @@ func (c *AccountTransaction) PaymentMethod() *PaymentMethod {
 	return c.paymentMethod
 }
 
-func (c *AccountTransaction) Amount() int64 {
+func (c *AccountTransaction) Amount() uint64 {
 	return c.amount
 }
 
@@ -147,7 +135,7 @@ func (c *AccountTransaction) CCBillTransactionId() *string {
 	return c.ccbillTransactionId
 }
 
-func (c *AccountTransaction) MakeRefunded(id string, timestamp time.Time, amount int64, currency money.Currency, reason string) error {
+func (c *AccountTransaction) MakeRefunded(id string, timestamp time.Time, amount uint64, currency money.Currency, reason string) error {
 	c.transaction = Refund
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        id,
@@ -159,7 +147,7 @@ func (c *AccountTransaction) MakeRefunded(id string, timestamp time.Time, amount
 	return nil
 }
 
-func (c *AccountTransaction) MakeChargeback(id string, timestamp time.Time, amount int64, currency money.Currency, reason string) error {
+func (c *AccountTransaction) MakeChargeback(id string, timestamp time.Time, amount uint64, currency money.Currency, reason string) error {
 	c.transaction = Chargeback
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        id,
@@ -178,9 +166,9 @@ func (c *AccountTransaction) MakeVoid(timestamp time.Time, reason string) error 
 	return nil
 }
 
-func (c *AccountTransaction) getTotalRefunded() int64 {
+func (c *AccountTransaction) getTotalRefunded() uint64 {
 
-	var sum int64
+	var sum uint64
 
 	for _, i := range c.events {
 		sum += i.amount
@@ -189,7 +177,7 @@ func (c *AccountTransaction) getTotalRefunded() int64 {
 	return sum
 }
 
-func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amount int64) error {
+func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amount uint64) error {
 
 	if c.transaction != Payment && c.transaction != Refund {
 		return errors.New("transaction in incorrect state")
@@ -249,7 +237,7 @@ func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.P
 	return refund, nil
 }
 
-func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount int64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, ccbillTransactionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string, events []*AccountTransactionEvent) *AccountTransaction {
+func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp time.Time, transaction string, paymentMethod *PaymentMethod, amount uint64, currency string, billedAtDate, nextBillingDate time.Time, ccbillSubscriptionId, ccbillTransactionId, clubSupporterSubscriptionId *string, voidedAt *time.Time, voidReason *string, events []*AccountTransactionEvent) *AccountTransaction {
 	tr, _ := TransactionFromString(transaction)
 	cr, _ := money.CurrencyFromString(currency)
 

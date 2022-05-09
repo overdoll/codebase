@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 	"time"
 )
 
@@ -14,8 +15,8 @@ type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
 
 	Timestamp time.Time
 
-	Currency string
-	Amount   int64
+	Currency money.Currency
+	Amount   uint64
 
 	BillingDate     time.Time
 	NextBillingDate time.Time

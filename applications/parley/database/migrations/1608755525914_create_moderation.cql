@@ -94,6 +94,14 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
 ) WITH CLUSTERING ORDER BY (id DESC);
 
 
+CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator_buckets
+(
+    moderator_account_id text,
+    bucket               int,
+    primary key ( (moderator_account_id), bucket ),
+) WITH CLUSTERING ORDER BY (bucket DESC);
+
+
 CREATE TABLE IF NOT EXISTS post_reports
 (
     id                   text,
@@ -113,6 +121,20 @@ CREATE TABLE IF NOT EXISTS post_reports_by_post
     rule_id              text,
     primary key ( (post_id, bucket), id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
+
+CREATE TABLE IF NOT EXISTS post_report_by_post_buckets
+(
+    post_id text,
+    bucket  int,
+    primary key ( (post_id), bucket ),
+);
+
+CREATE TABLE IF NOT EXISTS post_reports_buckets
+(
+    init   int,
+    bucket int,
+    primary key ( (init), bucket ),
+) WITH CLUSTERING ORDER BY (bucket DESC);
 
 CREATE TABLE IF NOT EXISTS post_reports_by_bucket
 (
@@ -143,4 +165,11 @@ CREATE TABLE IF NOT EXISTS post_report_by_account_and_bucket
     id                   text,
     rule_id              text,
     primary key ( (bucket, reporting_account_id), id ),
+);
+
+CREATE TABLE IF NOT EXISTS post_report_by_account_and_bucket_buckets
+(
+    reporting_account_id text,
+    bucket               int,
+    primary key ( (reporting_account_id), bucket ),
 );

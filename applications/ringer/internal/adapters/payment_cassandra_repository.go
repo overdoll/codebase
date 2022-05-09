@@ -78,9 +78,9 @@ type clubPayment struct {
 	AccountTransactionId     string    `db:"account_transaction_id"`
 	DestinationClubId        string    `db:"destination_club_id"`
 	Currency                 string    `db:"currency"`
-	BaseAmount               int64     `db:"base_amount"`
-	PlatformFeeAmount        int64     `db:"platform_fee_amount"`
-	FinalAmount              int64     `db:"final_amount"`
+	BaseAmount               uint64    `db:"base_amount"`
+	PlatformFeeAmount        uint64    `db:"platform_fee_amount"`
+	FinalAmount              uint64    `db:"final_amount"`
 	IsDeduction              bool      `db:"is_deduction"`
 	DeductionSourcePaymentId *string   `db:"deduction_source_payment_id"`
 	Timestamp                time.Time `db:"timestamp"`
@@ -99,7 +99,7 @@ var clubPlatformFeeTable = table.New(table.Metadata{
 
 type clubPlatformFee struct {
 	ClubId  string `db:"club_id"`
-	Percent int64  `db:"percent"`
+	Percent uint64 `db:"percent"`
 }
 
 type PaymentCassandraElasticsearchRepository struct {
@@ -361,7 +361,7 @@ func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(c
 	return nil
 }
 
-func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error {
+func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount uint64, isDeduction bool, currency money.Currency)) error {
 
 	var page []byte
 

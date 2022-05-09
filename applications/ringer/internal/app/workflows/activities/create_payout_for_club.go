@@ -11,7 +11,7 @@ type CreatePayoutForClubInput struct {
 	DepositRequestId      string
 	PayoutId              string
 	ClubId                string
-	Amount                int64
+	Amount                uint64
 	Currency              money.Currency
 	Timestamp             time.Time
 	DepositDate           *time.Time

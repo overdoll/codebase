@@ -112,7 +112,7 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 	), nil
 }
 
-func (r BalanceCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx context.Context, table *table.Table, clubId string, amount int64, currency money.Currency, increment bool) error {
+func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.Context, table *table.Table, clubId string, updateFn func(*balance.ClubBalance) error) error {
 
 	var b clubBalance
 
@@ -131,7 +131,7 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecremen
 
 		b = clubBalance{
 			ClubId:       clubId,
-			Currency:     currency.String(),
+			Currency:     money.USD.String(),
 			Amount:       0,
 			LastInsertId: gocql.TimeUUID(),
 		}
@@ -152,19 +152,17 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecremen
 		}
 	}
 
-	finalBalance := b.Amount
+	marshalled := balance.UnmarshalClubBalanceFromDatabase(b.ClubId, b.Amount, b.Currency, b.LastInsertId.Time())
 
-	if increment {
-		finalBalance += amount
-	} else {
-		finalBalance -= amount
+	if err := updateFn(marshalled); err != nil {
+		return err
 	}
 
 	// now, do an increment or decrement of the balance
 	ok, err := table.UpdateBuilder("last_insert_id", "amount").
 		If(qb.EqLit("last_insert_id", b.LastInsertId.String())).
 		Query(r.session).
-		BindStruct(clubBalance{ClubId: clubId, LastInsertId: gocql.TimeUUID(), Amount: finalBalance}).
+		BindStruct(clubBalance{ClubId: clubId, LastInsertId: gocql.TimeUUID(), Amount: marshalled.Amount()}).
 		SerialConsistency(gocql.Serial).
 		ExecCAS()
 
@@ -179,18 +177,10 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndIncrementOrDecremen
 	return nil
 }
 
-func (r BalanceCassandraRepository) IncrementClubPendingBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubPendingBalanceTable, clubId, amount, currency, true)
+func (r BalanceCassandraRepository) UpdateClubBalance(ctx context.Context, clubId string, updateFn func(*balance.ClubBalance) error) error {
+	return r.getOrCreateClubBalanceAndUpdate(ctx, clubBalanceTable, clubId, updateFn)
 }
 
-func (r BalanceCassandraRepository) DecrementClubPendingBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubPendingBalanceTable, clubId, amount, currency, false)
-}
-
-func (r BalanceCassandraRepository) IncrementClubBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubBalanceTable, clubId, amount, currency, true)
-}
-
-func (r BalanceCassandraRepository) DecrementClubBalance(ctx context.Context, clubId string, amount int64, currency money.Currency) error {
-	return r.getOrCreateClubBalanceAndIncrementOrDecrementAmount(ctx, clubBalanceTable, clubId, amount, currency, false)
+func (r BalanceCassandraRepository) UpdateClubPendingBalance(ctx context.Context, clubId string, updateFn func(*balance.ClubBalance) error) error {
+	return r.getOrCreateClubBalanceAndUpdate(ctx, clubPendingBalanceTable, clubId, updateFn)
 }

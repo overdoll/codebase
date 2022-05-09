@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/club"
 	"overdoll/libraries/location"
+	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -29,7 +30,7 @@ type EvaService interface {
 type CarrierService interface {
 	UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error
 	ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
-	ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error
+	ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount uint64, currency money.Currency) error
 	ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
 	NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
 	ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error

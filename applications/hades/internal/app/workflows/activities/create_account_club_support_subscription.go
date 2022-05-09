@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 	"time"
 )
 
@@ -15,8 +16,8 @@ type CreateAccountClubSupportSubscriptionInput struct {
 
 	Timestamp time.Time
 
-	Amount   int64
-	Currency string
+	Amount   uint64
+	Currency money.Currency
 
 	LastRenewalDate time.Time
 	NextRenewalDate time.Time

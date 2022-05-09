@@ -49,7 +49,7 @@ type clubTransactionMetric struct {
 	Bucket    int        `db:"bucket"`
 	Timestamp gocql.UUID `db:"timestamp"`
 	Id        string     `db:"id"`
-	Amount    int64      `db:"amount"`
+	Amount    uint64     `db:"amount"`
 	Currency  string     `db:"currency"`
 }
 
@@ -98,16 +98,16 @@ type clubTransactionMetrics struct {
 	Timestamp time.Time `db:"timestamp"`
 	Currency  string    `db:"currency"`
 
-	TotalTransactionsCount        int64      `db:"total_transactions_count"`
-	TotalTransactionsAmount       int64      `db:"total_transactions_amount"`
+	TotalTransactionsCount        uint64     `db:"total_transactions_count"`
+	TotalTransactionsAmount       uint64     `db:"total_transactions_amount"`
 	TotalTransactionsLastUpdateId gocql.UUID `db:"total_transactions_last_update_id"`
 
-	ChargebackTransactionsCount        int64      `db:"chargeback_transactions_count"`
-	ChargebackTransactionsAmount       int64      `db:"chargeback_transactions_amount"`
+	ChargebackTransactionsCount        uint64     `db:"chargeback_transactions_count"`
+	ChargebackTransactionsAmount       uint64     `db:"chargeback_transactions_amount"`
 	ChargebackTransactionsLastUpdateId gocql.UUID `db:"chargeback_transactions_last_update_id"`
 
-	RefundTransactionsCount        int64      `db:"refund_transactions_count"`
-	RefundTransactionsAmount       int64      `db:"refund_transactions_amount"`
+	RefundTransactionsCount        uint64     `db:"refund_transactions_count"`
+	RefundTransactionsAmount       uint64     `db:"refund_transactions_amount"`
 	RefundTransactionsLastUpdateId gocql.UUID `db:"refund_transactions_last_update_id"`
 }
 
@@ -216,8 +216,8 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	type metricsCount struct {
 		MaxTimestamp *gocql.UUID `db:"system.max(timestamp)"`
-		Count        int64       `db:"count"`
-		Amount       int64       `db:"system.sum(amount)"`
+		Count        uint64      `db:"count"`
+		Amount       uint64      `db:"system.sum(amount)"`
 	}
 
 	var res metricsCount

@@ -65,7 +65,7 @@ type clubPayout struct {
 	DepositDate        time.Time `db:"deposit_date"`
 	ClubId             string    `db:"club_id"`
 	Currency           string    `db:"currency"`
-	Amount             int64     `db:"amount"`
+	Amount             uint64    `db:"amount"`
 	PayoutAccountId    string    `db:"payout_account_id"`
 	DepositRequestId   string    `db:"deposit_request_id"`
 	Timestamp          time.Time `db:"timestamp"`
@@ -120,9 +120,9 @@ type depositRequests struct {
 	Bucket             int        `db:"bucket"`
 	Id                 string     `db:"id"`
 	LastDateForDeposit time.Time  `db:"last_date_for_deposit"`
-	BaseAmount         int64      `db:"base_amount"`
-	EstimatedFeeAmount int64      `db:"estimated_fee_amount"`
-	TotalAmount        int64      `db:"total_amount"`
+	BaseAmount         uint64     `db:"base_amount"`
+	EstimatedFeeAmount uint64     `db:"estimated_fee_amount"`
+	TotalAmount        uint64     `db:"total_amount"`
 	Currency           string     `db:"currency"`
 	PayoutMethod       string     `db:"payout_method"`
 	PayoutIds          []string   `db:"payout_ids"`

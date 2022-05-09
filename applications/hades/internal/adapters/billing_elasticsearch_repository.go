@@ -16,7 +16,7 @@ import (
 type accountTransactionEventDocument struct {
 	Id        string    `json:"id"`
 	Timestamp time.Time `json:"timestamp"`
-	Amount    int64     `json:"amount"`
+	Amount    uint64    `json:"amount"`
 	Currency  string    `json:"currency"`
 	Reason    string    `json:"reason"`
 }
@@ -28,7 +28,7 @@ type accountTransactionDocument struct {
 	TransactionType             string                            `json:"transaction_type"`
 	ClubSupporterSubscriptionId *string                           `json:"club_supporter_subscription_id"`
 	EncryptedPaymentMethod      string                            `json:"encrypted_payment_method"`
-	Amount                      int64                             `json:"amount"`
+	Amount                      uint64                            `json:"amount"`
 	Currency                    string                            `json:"currency"`
 	VoidedAt                    *time.Time                        `json:"voided_at"`
 	VoidReason                  *string                           `json:"void_reason"`

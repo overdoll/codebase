@@ -17,9 +17,9 @@ type DepositRequest struct {
 
 	id                      string
 	lastDateForDeposit      time.Time
-	baseAmount              int64
-	estimatedFeeAmount      int64
-	totalAmount             int64
+	baseAmount              uint64
+	estimatedFeeAmount      uint64
+	totalAmount             uint64
 	payoutIds               []string
 	currency                money.Currency
 	accountPayoutMethodKind Method
@@ -40,9 +40,9 @@ func NewDepositRequest(id string, kind Method, lastDateForDeposit time.Time, cur
 	return &DepositRequest{
 		id:                      id,
 		lastDateForDeposit:      lastDateForDeposit,
-		totalAmount:             int64(totalAmount),
+		totalAmount:             uint64(totalAmount),
 		baseAmount:              0,
-		estimatedFeeAmount:      int64(estimatedFeeAmount),
+		estimatedFeeAmount:      uint64(estimatedFeeAmount),
 		currency:                currency,
 		accountPayoutMethodKind: kind,
 		payoutIds:               nil,
@@ -58,15 +58,15 @@ func (p *DepositRequest) LastDateForDeposit() time.Time {
 	return p.lastDateForDeposit
 }
 
-func (p *DepositRequest) BaseAmount() int64 {
+func (p *DepositRequest) BaseAmount() uint64 {
 	return p.baseAmount
 }
 
-func (p *DepositRequest) EstimatedFeeAmount() int64 {
+func (p *DepositRequest) EstimatedFeeAmount() uint64 {
 	return p.estimatedFeeAmount
 }
 
-func (p *DepositRequest) TotalAmount() int64 {
+func (p *DepositRequest) TotalAmount() uint64 {
 	return p.totalAmount
 }
 
@@ -98,7 +98,7 @@ func (p *DepositRequest) CanView(requester *principal.Principal) error {
 	return nil
 }
 
-func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount int64, currency money.Currency) error {
+func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount uint64, currency money.Currency) error {
 
 	if p.currency != currency {
 		return errors.New("deposit cannot take this currency type")
@@ -128,7 +128,7 @@ func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount int64, cu
 	return nil
 }
 
-func UnmarshalDepositRequestFromDatabase(id string, lastDateForDeposit time.Time, baseAmount, estimatedFeeAmount, totalAmount int64, payoutIds []string, currency string, accountPayoutMethodKind string, timestamp time.Time) *DepositRequest {
+func UnmarshalDepositRequestFromDatabase(id string, lastDateForDeposit time.Time, baseAmount, estimatedFeeAmount, totalAmount uint64, payoutIds []string, currency string, accountPayoutMethodKind string, timestamp time.Time) *DepositRequest {
 	cr, _ := money.CurrencyFromString(currency)
 	mt, _ := MethodFromString(accountPayoutMethodKind)
 
