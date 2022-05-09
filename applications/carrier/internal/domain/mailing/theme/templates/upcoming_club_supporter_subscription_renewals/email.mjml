@@ -16,7 +16,7 @@
             <mj-column>
                 <mj-text>
                     <p>
-                        {{ .Renewals}}
+                        {{.Username}}
                     </p>
                 </mj-text>
             </mj-column>

@@ -7,13 +7,15 @@
                 <mj-text>
                     <h2>Account Deletion Reminder</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>We're just letting you know one more time that your account is scheduled to be deleted.</p>
+                    <p>We're just letting you know one more time that your account is scheduled to be deleted on
+                        {{.DeletionDate}}
+                    </p>
                     <p>You may ignore this email if you are aware of this action and we will proceed with the
                         deletion.
                     </p>
                     <p>Your account can be restored using the link below at any time.</p>
                 </mj-text>
-                <mj-button css-class="medium gray" href="{{.DeletionLink}}">
+                <mj-button css-class="medium gray" href="{{.SettingsLink}}">
                     Restore Account
                 </mj-button>
             </mj-column>
