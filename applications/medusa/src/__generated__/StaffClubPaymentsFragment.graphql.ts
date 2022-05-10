@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da09dd90ed82a9b9db2bbad28c382691>>
+ * @generated SignedSource<<9037873b6210ce135adcc2f3133efb0c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type StaffClubPaymentsFragment$data = {
   readonly platformFee: {
     readonly percent: number;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPlatformFeeFormFragment" | "StaffClubPaymentsListFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPlatformFeeFormFragment" | "StaffClubPaymentsListFragment" | "ClubTransactionMetricsFragment">;
   readonly " $fragmentType": "StaffClubPaymentsFragment";
 };
 export type StaffClubPaymentsFragment = StaffClubPaymentsFragment$data;
@@ -56,12 +56,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffClubPaymentsListFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubTransactionMetricsFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "08ec26b3e57d743440154f184ef4d6ae";
+(node as any).hash = "22ec8e72f44f933b5291a307ce3ab9ec";
 
 export default node;

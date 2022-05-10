@@ -29,7 +29,7 @@ export default function StaffClubInfractions ({ query }: Props): JSX.Element {
   return (
     <>
       <PageSectionWrap>
-        <PageSectionTitle colorScheme='teal'>
+        <PageSectionTitle>
           <Trans>
             Infractions
           </Trans>

@@ -15,8 +15,8 @@ import {
   InputHeader,
   RuleInput
 } from '@//:modules/content/HookedComponents/Form'
-import LockDurationSelect from '../../../../../account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect'
-import GenericTagId from '../../../../../../../common/validation/GenericTagId'
+import LockDurationSelect from '../../../../../../account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect'
+import GenericTagId from '../../../../../../../../common/validation/GenericTagId'
 
 interface Props {
   query: IssueClubInfractionFormFragment$key

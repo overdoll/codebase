@@ -8,6 +8,8 @@ import UpdateClubPlatformFeeForm from '../StaffClubPayouts/UpdateClubPlatformFee
 import { Box, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import StaffClubPaymentsList from './StaffClubPaymentsList/StaffClubPaymentsList'
+import ClubTransactionMetrics
+  from '../../../../../club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetrics'
 
 interface Props {
   query: StaffClubPaymentsFragment$key
@@ -20,6 +22,7 @@ const Fragment = graphql`
     }
     ...UpdateClubPlatformFeeFormFragment
     ...StaffClubPaymentsListFragment
+    ...ClubTransactionMetricsFragment
   }
 `
 
@@ -49,6 +52,7 @@ export default function StaffClubPayments ({ query }: Props): JSX.Element {
           </CollapseBody>
         </Collapse>
       </Stack>
+      <ClubTransactionMetrics query={data} />
       <Box>
         <PageSectionWrap>
           <PageSectionTitle>

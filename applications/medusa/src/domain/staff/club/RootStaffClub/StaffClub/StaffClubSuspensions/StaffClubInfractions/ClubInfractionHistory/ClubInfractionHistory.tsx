@@ -15,10 +15,12 @@ import {
 import { usePaginationFragment } from 'react-relay'
 import { SessionsPaginationQuery } from '@//:artifacts/SessionsPaginationQuery.graphql'
 import { Trans } from '@lingui/macro'
-import useDateDistance from '../../../../../../../common/support/useDateDistance'
-import useFormattedDate from '../../../../../../../common/support/useFormattedDate'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
+import { useLingui } from '@lingui/react'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   query: ClubInfractionHistoryFragment$key
@@ -58,6 +60,9 @@ export default function ClubInfractionHistory ({ query }: Props): JSX.Element {
     query
   )
 
+  const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
+
   return (
     <EmptyBoundary
       fallback={<SmallBackgroundBox><Trans>No infractions found</Trans></SmallBackgroundBox>}
@@ -89,13 +94,16 @@ export default function ClubInfractionHistory ({ query }: Props): JSX.Element {
               <TableBodyRowBackground key={index}>
                 <TableBodyRow columns={8}>
                   <TableBodyColumn column={2}>
-                    {useFormattedDate(item.node.issuedAt)}
+                    {formatDistanceToNowStrict(new Date(item.node.issuedAt), {
+                      locale,
+                      addSuffix: true
+                    })}
                   </TableBodyColumn>
                   <TableBodyColumn column={4}>
                     {item.node.rule.title}
                   </TableBodyColumn>
                   <TableBodyColumn column={2}>
-                    {useDateDistance(item.node.issuedAt, item.node.expiresAt)}
+                    {formatDistanceStrict(new Date(item.node.issuedAt), new Date(item.node.expiresAt), { locale })}
                   </TableBodyColumn>
                 </TableBodyRow>
               </TableBodyRowBackground>))}

@@ -9,6 +9,7 @@ import LargeAccountHeader from '../../../../../common/components/LargeAccountHea
 import StaffPermissions from './StaffPermissions/StaffPermissions'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import ProfilePageButton from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
+import StaffAccountClubs from './StaffAccountClubs/StaffAccountClubs'
 
 interface Props {
   query: PreloadedQuery<StaffAccountQuery>
@@ -22,6 +23,7 @@ const Query = graphql`
       ...StaffTransactionsFragment
       ...LargeAccountHeaderFragment
       ...ProfilePageButtonFragment
+      ...StaffAccountClubsFragment
     }
   }
 `
@@ -64,6 +66,11 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
                 Transactions
               </Trans>
             </Tab>
+            <Tab>
+              <Trans>
+                Clubs
+              </Trans>
+            </Tab>
           </Wrap>
         </TabList>
         <TabPanels>
@@ -75,6 +82,9 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
           </TabPanel>
           <TabPanel>
             <StaffTransactions query={queryData.account} />
+          </TabPanel>
+          <TabPanel>
+            <StaffAccountClubs query={queryData.account} />
           </TabPanel>
         </TabPanels>
       </Tabs>

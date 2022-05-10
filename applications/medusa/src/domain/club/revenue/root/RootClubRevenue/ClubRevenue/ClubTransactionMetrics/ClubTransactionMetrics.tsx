@@ -39,8 +39,6 @@ export default function ClubTransactionMetrics ({ query }: Props): JSX.Element {
     Fragment, query
   )
 
-  console.log(data)
-
   if (data.transactionMetrics.edges.length < 1) {
     return <></>
   }
