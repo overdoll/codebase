@@ -24,6 +24,7 @@ type Repository interface {
 
 	GetAccountClubsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)
 	GetAccountClubsCountOperator(ctx context.Context, accountId string) (int, error)
+	GetClubSupporterMembershipsCount(ctx context.Context, requester *principal.Principal, clubId string) (int64, error)
 
 	GetClubMemberByIdOperator(ctx context.Context, clubId, accountId string) (*Member, error)
 

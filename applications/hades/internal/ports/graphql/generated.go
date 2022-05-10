@@ -163,13 +163,14 @@ type ComplexityRoot struct {
 		BilledAtDate              func(childComplexity int) int
 		CcbillTransaction         func(childComplexity int) int
 		ClubSupporterSubscription func(childComplexity int) int
+		CreatedAt                 func(childComplexity int) int
 		Currency                  func(childComplexity int) int
 		Events                    func(childComplexity int) int
 		ID                        func(childComplexity int) int
 		NextBillingDate           func(childComplexity int) int
 		PaymentMethod             func(childComplexity int) int
 		Reference                 func(childComplexity int) int
-		Timestamp                 func(childComplexity int) int
+		TotalRefunded             func(childComplexity int) int
 		Type                      func(childComplexity int) int
 	}
 
@@ -185,10 +186,10 @@ type ComplexityRoot struct {
 
 	AccountTransactionEvent struct {
 		Amount    func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
 		Currency  func(childComplexity int) int
 		ID        func(childComplexity int) int
 		Reason    func(childComplexity int) int
-		Timestamp func(childComplexity int) int
 	}
 
 	BecomeClubSupporterWithAccountSavedPaymentMethodPayload struct {
@@ -1099,6 +1100,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountTransaction.ClubSupporterSubscription(childComplexity), true
 
+	case "AccountTransaction.createdAt":
+		if e.complexity.AccountTransaction.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.AccountTransaction.CreatedAt(childComplexity), true
+
 	case "AccountTransaction.currency":
 		if e.complexity.AccountTransaction.Currency == nil {
 			break
@@ -1141,12 +1149,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountTransaction.Reference(childComplexity), true
 
-	case "AccountTransaction.timestamp":
-		if e.complexity.AccountTransaction.Timestamp == nil {
+	case "AccountTransaction.totalRefunded":
+		if e.complexity.AccountTransaction.TotalRefunded == nil {
 			break
 		}
 
-		return e.complexity.AccountTransaction.Timestamp(childComplexity), true
+		return e.complexity.AccountTransaction.TotalRefunded(childComplexity), true
 
 	case "AccountTransaction.type":
 		if e.complexity.AccountTransaction.Type == nil {
@@ -1190,6 +1198,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountTransactionEvent.Amount(childComplexity), true
 
+	case "AccountTransactionEvent.createdAt":
+		if e.complexity.AccountTransactionEvent.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.AccountTransactionEvent.CreatedAt(childComplexity), true
+
 	case "AccountTransactionEvent.currency":
 		if e.complexity.AccountTransactionEvent.Currency == nil {
 			break
@@ -1210,13 +1225,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountTransactionEvent.Reason(childComplexity), true
-
-	case "AccountTransactionEvent.timestamp":
-		if e.complexity.AccountTransactionEvent.Timestamp == nil {
-			break
-		}
-
-		return e.complexity.AccountTransactionEvent.Timestamp(childComplexity), true
 
 	case "BecomeClubSupporterWithAccountSavedPaymentMethodPayload.ccbillTransactionToken":
 		if e.complexity.BecomeClubSupporterWithAccountSavedPaymentMethodPayload.CcbillTransactionToken == nil {
@@ -2476,7 +2484,7 @@ type AccountTransactionEvent {
   reason: String!
 
   """When this event occurred."""
-  timestamp: Time!
+  createdAt: Time!
 }
 
 """
@@ -2516,6 +2524,11 @@ type AccountTransaction implements Node @key(fields: "id") {
   """
   amount: Int!
 
+  """
+  The total amount refunded, if any.
+  """
+  totalRefunded: Int!
+
   """The currency voided in."""
   currency: Currency!
 
@@ -2529,7 +2542,7 @@ type AccountTransaction implements Node @key(fields: "id") {
   paymentMethod: PaymentMethod!
 
   """When this transaction occurred."""
-  timestamp: Time!
+  createdAt: Time!
 
   """A ccbill transaction, if this transaction originated from ccbill."""
   ccbillTransaction: CCBillTransaction
@@ -7380,6 +7393,41 @@ func (ec *executionContext) _AccountTransaction_amount(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccountTransaction_totalRefunded(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountTransaction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalRefunded, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccountTransaction_currency(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7517,7 +7565,7 @@ func (ec *executionContext) _AccountTransaction_paymentMethod(ctx context.Contex
 	return ec.marshalNPaymentMethod2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐPaymentMethod(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountTransaction_timestamp(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountTransaction_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransaction) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7535,7 +7583,7 @@ func (ec *executionContext) _AccountTransaction_timestamp(ctx context.Context, f
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Timestamp, nil
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7896,7 +7944,7 @@ func (ec *executionContext) _AccountTransactionEvent_reason(ctx context.Context,
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountTransactionEvent_timestamp(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransactionEvent) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountTransactionEvent_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.AccountTransactionEvent) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7914,7 +7962,7 @@ func (ec *executionContext) _AccountTransactionEvent_timestamp(ctx context.Conte
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Timestamp, nil
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16003,6 +16051,16 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "totalRefunded":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._AccountTransaction_totalRefunded(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "currency":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._AccountTransaction_currency(ctx, field, obj)
@@ -16040,9 +16098,9 @@ func (ec *executionContext) _AccountTransaction(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "timestamp":
+		case "createdAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountTransaction_timestamp(ctx, field, obj)
+				return ec._AccountTransaction_createdAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -16217,9 +16275,9 @@ func (ec *executionContext) _AccountTransactionEvent(ctx context.Context, sel as
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "timestamp":
+		case "createdAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._AccountTransactionEvent_timestamp(ctx, field, obj)
+				return ec._AccountTransactionEvent_createdAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

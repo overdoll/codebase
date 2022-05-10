@@ -215,7 +215,7 @@ var accountTransactionsTable = table.New(table.Metadata{
 		"id",
 		"account_id",
 
-		"timestamp",
+		"created_at",
 
 		"transaction_type",
 
@@ -243,7 +243,7 @@ var accountTransactionsTable = table.New(table.Metadata{
 
 type accountTransactionEvent struct {
 	Id        string
-	Timestamp time.Time
+	CreatedAt time.Time
 	Amount    uint64
 	Currency  string
 	Reason    string
@@ -253,7 +253,7 @@ type accountTransactions struct {
 	AccountId string `db:"account_id"`
 	Id        string `db:"id"`
 
-	Timestamp time.Time `db:"timestamp"`
+	CreatedAt time.Time `db:"created_at"`
 
 	TransactionType string `db:"transaction_type"`
 
@@ -489,7 +489,7 @@ func marshalAccountTransactionToDatabase(transaction *billing.AccountTransaction
 
 		res, err := json.Marshal(accountTransactionEvent{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			CreatedAt: e.CreatedAt(),
 			Amount:    e.Amount(),
 			Currency:  e.Currency().String(),
 			Reason:    e.Reason(),
@@ -505,7 +505,7 @@ func marshalAccountTransactionToDatabase(transaction *billing.AccountTransaction
 	return &accountTransactions{
 		AccountId:                   transaction.AccountId(),
 		Id:                          transaction.Id(),
-		Timestamp:                   transaction.Timestamp(),
+		CreatedAt:                   transaction.CreatedAt(),
 		TransactionType:             transaction.Type().String(),
 		ClubSupporterSubscriptionId: transaction.ClubSupporterSubscriptionId(),
 		EncryptedPaymentMethod:      enc,
@@ -652,9 +652,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountSavedPaymentMethod
 		return nil, err
 	}
 
-	err = updateFn(savedPaymentMethod)
-
-	if err != nil {
+	if err = updateFn(savedPaymentMethod); err != nil {
 		return nil, err
 	}
 
@@ -1180,18 +1178,6 @@ func (r BillingCassandraElasticsearchRepository) searchAccountClubSupporterSubsc
 		"status":     status,
 	}
 
-	if cursor != nil {
-		createdCursor, err := cursor.GetCursor()
-
-		if err != nil {
-			return nil, err
-		}
-
-		if createdCursor != nil {
-			bound["id"] = createdCursor[0].(string)
-		}
-	}
-
 	if err := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindMap(bound).
@@ -1470,7 +1456,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 
 		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
 			unmarshal.Id,
-			unmarshal.Timestamp,
+			unmarshal.CreatedAt,
 			unmarshal.Amount,
 			unmarshal.Currency,
 			unmarshal.Reason,
@@ -1480,7 +1466,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 	return billing.UnmarshalAccountTransactionFromDatabase(
 		transaction.AccountId,
 		transaction.Id,
-		transaction.Timestamp,
+		transaction.CreatedAt,
 		transaction.TransactionType,
 		decrypt,
 		transaction.Amount,

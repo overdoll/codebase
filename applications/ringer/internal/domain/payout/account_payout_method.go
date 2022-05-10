@@ -57,6 +57,11 @@ func (p *AccountPayoutMethod) CanDelete(requester *principal.Principal) error {
 }
 
 func (p *AccountPayoutMethod) CanView(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
 	return requester.BelongsToAccount(p.accountId)
 }
 

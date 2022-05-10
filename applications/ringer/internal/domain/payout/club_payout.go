@@ -26,7 +26,7 @@ type ClubPayout struct {
 	amount   uint64
 	currency money.Currency
 
-	timestamp   time.Time
+	createdAt   time.Time
 	depositDate time.Time
 
 	events []*ClubPayoutEvent
@@ -48,7 +48,7 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		amount:             amount,
 		depositDate:        *depositDate,
 		currency:           currency,
-		timestamp:          timestamp,
+		createdAt:          timestamp,
 	}, nil
 }
 
@@ -88,8 +88,8 @@ func (p *ClubPayout) DepositDate() time.Time {
 	return p.depositDate
 }
 
-func (p *ClubPayout) Timestamp() time.Time {
-	return p.timestamp
+func (p *ClubPayout) CreatedAt() time.Time {
+	return p.createdAt
 }
 
 func (p *ClubPayout) Events() []*ClubPayoutEvent {
@@ -196,7 +196,7 @@ func UnmarshalClubPayoutFromDatabase(
 	depositDate time.Time,
 	accountPayoutMethodId string,
 	depositRequestId string,
-	timestamp time.Time,
+	createdAt time.Time,
 	events []*ClubPayoutEvent,
 	temporalWorkflowId string,
 ) *ClubPayout {
@@ -211,7 +211,7 @@ func UnmarshalClubPayoutFromDatabase(
 		temporalWorkflowId: temporalWorkflowId,
 		amount:             amount,
 		currency:           cr,
-		timestamp:          timestamp,
+		createdAt:          createdAt,
 		depositDate:        depositDate,
 		events:             events,
 	}

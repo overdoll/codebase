@@ -64,4 +64,6 @@ type Queries struct {
 	CanDeleteAccountData query.CanDeleteAccountDataHandler
 
 	HasNonTerminatedClubs query.HasNonTerminatedClubsHandler
+
+	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 }

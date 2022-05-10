@@ -25,7 +25,7 @@ type AccountTransactionEvent {
   reason: String!
 
   """When this event occurred."""
-  timestamp: Time!
+  createdAt: Time!
 }
 
 """
@@ -65,6 +65,11 @@ type AccountTransaction implements Node @key(fields: "id") {
   """
   amount: Int!
 
+  """
+  The total amount refunded, if any.
+  """
+  totalRefunded: Int!
+
   """The currency voided in."""
   currency: Currency!
 
@@ -78,7 +83,7 @@ type AccountTransaction implements Node @key(fields: "id") {
   paymentMethod: PaymentMethod!
 
   """When this transaction occurred."""
-  timestamp: Time!
+  createdAt: Time!
 
   """A ccbill transaction, if this transaction originated from ccbill."""
   ccbillTransaction: CCBillTransaction

@@ -130,7 +130,7 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 		PostId:         queue.PostId(),
 		PlacedAt:       queue.PlacedAt(),
 		ReassignmentAt: queue.ReassignmentAt(),
-		SortKey:        gocql.UUIDFromTime(time.Now()),
+		SortKey:        gocql.UUIDFromTime(queue.PlacedAt()),
 	}
 
 	stmt, _ := accountPostModeratorsQueueTable.Insert()

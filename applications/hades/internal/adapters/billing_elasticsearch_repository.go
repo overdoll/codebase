@@ -24,7 +24,7 @@ type accountTransactionEventDocument struct {
 type accountTransactionDocument struct {
 	AccountId                   string                            `json:"account_id"`
 	Id                          string                            `json:"id"`
-	Timestamp                   time.Time                         `json:"timestamp"`
+	CreatedAt                   time.Time                         `json:"created_at"`
 	TransactionType             string                            `json:"transaction_type"`
 	ClubSupporterSubscriptionId *string                           `json:"club_supporter_subscription_id"`
 	EncryptedPaymentMethod      string                            `json:"encrypted_payment_method"`
@@ -50,7 +50,7 @@ const accountTransactionIndex = `
 				"id": {
 					"type": "keyword"
 				},
-				"timestamp": {
+				"created_at": {
 					"type": "date"
 				},
 				"transaction_type": {
@@ -92,7 +92,7 @@ const accountTransactionIndex = `
 						"id": {
 							"type": "keyword"
 						},
-						"timestamp": {
+						"created_at": {
 							"type": "date"
 						},
 						"amount": {
@@ -143,7 +143,7 @@ func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.Accou
 	createdTransaction := billing.UnmarshalAccountTransactionFromDatabase(
 		doc.AccountId,
 		doc.Id,
-		doc.Timestamp,
+		doc.CreatedAt,
 		doc.TransactionType,
 		decrypted,
 		doc.Amount,
@@ -169,7 +169,7 @@ func marshalAccountTransactionToDocument(transaction *billing.AccountTransaction
 	for _, e := range transaction.Events() {
 		events = append(events, accountTransactionEventDocument{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			Timestamp: e.CreatedAt(),
 			Amount:    e.Amount(),
 			Currency:  e.Currency().String(),
 			Reason:    e.Reason(),
@@ -185,7 +185,7 @@ func marshalAccountTransactionToDocument(transaction *billing.AccountTransaction
 	return &accountTransactionDocument{
 		AccountId:                   transaction.AccountId(),
 		Id:                          transaction.Id(),
-		Timestamp:                   transaction.Timestamp(),
+		CreatedAt:                   transaction.CreatedAt(),
 		TransactionType:             transaction.Type().String(),
 		ClubSupporterSubscriptionId: transaction.ClubSupporterSubscriptionId(),
 		EncryptedPaymentMethod:      encrypted,
@@ -316,7 +316,7 @@ func (r BillingCassandraElasticsearchRepository) indexAllAccountTransactions(ctx
 
 				events = append(events, accountTransactionEventDocument{
 					Id:        unmarshal.Id,
-					Timestamp: unmarshal.Timestamp,
+					Timestamp: unmarshal.CreatedAt,
 					Amount:    unmarshal.Amount,
 					Currency:  unmarshal.Currency,
 					Reason:    unmarshal.Reason,
@@ -326,7 +326,7 @@ func (r BillingCassandraElasticsearchRepository) indexAllAccountTransactions(ctx
 			doc := accountTransactionDocument{
 				AccountId:                   transaction.AccountId,
 				Id:                          transaction.Id,
-				Timestamp:                   transaction.Timestamp,
+				CreatedAt:                   transaction.CreatedAt,
 				TransactionType:             transaction.TransactionType,
 				ClubSupporterSubscriptionId: transaction.ClubSupporterSubscriptionId,
 				EncryptedPaymentMethod:      transaction.EncryptedPaymentMethod,

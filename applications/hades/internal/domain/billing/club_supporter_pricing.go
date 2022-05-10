@@ -17,14 +17,15 @@ var (
 		money.USD: 1,
 		money.CAD: 1.45,
 		money.AUD: 1.55,
-		money.JPY: 129.40,
+		// for JPY that is in absolute value, need to remember to use the proper base price of 699 instead of 6.99 since it doesn't convert
+		money.JPY: 1.30,
 		money.GBP: 0.90,
 		money.EUR: 1.10,
 	}
 )
 
-func getRoundedPriceInInteger(price float64) int64 {
-	return int64(math.Round(price))
+func getRoundedPriceInInteger(price float64) uint64 {
+	return uint64(math.Round(price))
 }
 
 func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Price, error) {

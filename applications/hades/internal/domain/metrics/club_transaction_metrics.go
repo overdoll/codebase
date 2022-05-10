@@ -30,15 +30,15 @@ type ClubTransactionMetrics struct {
 	currency money.Currency
 }
 
-func UnmarshalClubTransactionMetricsFromDatabase(clubId string, timestamp time.Time, currency string,
+func UnmarshalClubTransactionMetricsFromDatabase(clubId string, createdAt time.Time, currency string,
 	totalTransactionsCount, chargebacksCount, refundsCount,
 	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount uint64,
 ) *ClubTransactionMetrics {
 	cr, _ := money.CurrencyFromString(currency)
 	return &ClubTransactionMetrics{
 		clubId:                  clubId,
-		month:                   int(timestamp.Month()),
-		year:                    timestamp.Year(),
+		month:                   int(createdAt.Month()),
+		year:                    createdAt.Year(),
 		totalTransactionsCount:  totalTransactionsCount,
 		chargebacksCount:        chargebacksCount,
 		refundsCount:            refundsCount,

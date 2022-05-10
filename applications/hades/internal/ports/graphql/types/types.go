@@ -229,6 +229,8 @@ type AccountTransaction struct {
 	//
 	// A positive integer representing the currency in the smallest currency unit.
 	Amount int `json:"amount"`
+	// The total amount refunded, if any.
+	TotalRefunded int `json:"totalRefunded"`
 	// The currency voided in.
 	Currency graphql1.Currency `json:"currency"`
 	// When the billing occurred.
@@ -238,7 +240,7 @@ type AccountTransaction struct {
 	// The payment method linked to this transaction.
 	PaymentMethod *PaymentMethod `json:"paymentMethod"`
 	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 	// A ccbill transaction, if this transaction originated from ccbill.
 	CcbillTransaction *CCBillTransaction `json:"ccbillTransaction"`
 	// The subscription linked to this transaction, if it's a club supporter subscription.
@@ -270,7 +272,7 @@ type AccountTransactionEvent struct {
 	// The reason for this event.
 	Reason string `json:"reason"`
 	// When this event occurred.
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // Become club supporter with saved payment method.

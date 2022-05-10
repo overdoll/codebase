@@ -23,7 +23,7 @@ func TestParseCCBillDate(t *testing.T) {
 
 type convertAmountTest struct {
 	currencyCode   int
-	amount         int64
+	amount         uint64
 	expectedAmount float64
 }
 

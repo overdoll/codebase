@@ -181,12 +181,12 @@ type ComplexityRoot struct {
 	}
 
 	DisableAccountMultiFactorPayload struct {
-		AccountMultiFactorTotpEnabled func(childComplexity int) int
+		Account func(childComplexity int) int
 	}
 
 	EnrollAccountMultiFactorTotpPayload struct {
-		AccountMultiFactorTotpEnabled func(childComplexity int) int
-		Validation                    func(childComplexity int) int
+		Account    func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	Entity struct {
@@ -896,19 +896,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteAccountPayload.Account(childComplexity), true
 
-	case "DisableAccountMultiFactorPayload.accountMultiFactorTotpEnabled":
-		if e.complexity.DisableAccountMultiFactorPayload.AccountMultiFactorTotpEnabled == nil {
+	case "DisableAccountMultiFactorPayload.account":
+		if e.complexity.DisableAccountMultiFactorPayload.Account == nil {
 			break
 		}
 
-		return e.complexity.DisableAccountMultiFactorPayload.AccountMultiFactorTotpEnabled(childComplexity), true
+		return e.complexity.DisableAccountMultiFactorPayload.Account(childComplexity), true
 
-	case "EnrollAccountMultiFactorTotpPayload.accountMultiFactorTotpEnabled":
-		if e.complexity.EnrollAccountMultiFactorTotpPayload.AccountMultiFactorTotpEnabled == nil {
+	case "EnrollAccountMultiFactorTotpPayload.account":
+		if e.complexity.EnrollAccountMultiFactorTotpPayload.Account == nil {
 			break
 		}
 
-		return e.complexity.EnrollAccountMultiFactorTotpPayload.AccountMultiFactorTotpEnabled(childComplexity), true
+		return e.complexity.EnrollAccountMultiFactorTotpPayload.Account(childComplexity), true
 
 	case "EnrollAccountMultiFactorTotpPayload.validation":
 		if e.complexity.EnrollAccountMultiFactorTotpPayload.Validation == nil {
@@ -1737,7 +1737,7 @@ var sources = []*ast.Source{
 
   """Whether or not this account is an artist"""
   isArtist: Boolean!
-  
+
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
@@ -2228,14 +2228,14 @@ type EnrollAccountMultiFactorTotpPayload {
   """Validation for enrolling TOTP"""
   validation: EnrollAccountMultiFactorTotpValidation
 
-  """TOTP that belongs to this account now"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was enrolled."""
+  account: Account
 }
 
 """Payload for disabling account multi factor"""
 type DisableAccountMultiFactorPayload {
-  """TOTP that was removed from this account, if it was removed"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was disabled."""
+  account: Account
 }
 
 """Validation for confirming account email"""
@@ -5647,7 +5647,7 @@ func (ec *executionContext) _DeleteAccountPayload_account(ctx context.Context, f
 	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx context.Context, field graphql.CollectedField, obj *types.DisableAccountMultiFactorPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _DisableAccountMultiFactorPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.DisableAccountMultiFactorPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5665,7 +5665,7 @@ func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactor
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AccountMultiFactorTotpEnabled, nil
+		return obj.Account, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5674,9 +5674,9 @@ func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactor
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.EnrollAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
@@ -5711,7 +5711,7 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_validation(ctx 
 	return ec.marshalOEnrollAccountMultiFactorTotpValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnrollAccountMultiFactorTotpValidation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx context.Context, field graphql.CollectedField, obj *types.EnrollAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.EnrollAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5729,7 +5729,7 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_accountMultiFac
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AccountMultiFactorTotpEnabled, nil
+		return obj.Account, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5738,9 +5738,9 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_accountMultiFac
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -11849,9 +11849,9 @@ func (ec *executionContext) _DisableAccountMultiFactorPayload(ctx context.Contex
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("DisableAccountMultiFactorPayload")
-		case "accountMultiFactorTotpEnabled":
+		case "account":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._DisableAccountMultiFactorPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+				return ec._DisableAccountMultiFactorPayload_account(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -11884,9 +11884,9 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload(ctx context.Con
 
 			out.Values[i] = innerFunc(ctx)
 
-		case "accountMultiFactorTotpEnabled":
+		case "account":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
+				return ec._EnrollAccountMultiFactorTotpPayload_account(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

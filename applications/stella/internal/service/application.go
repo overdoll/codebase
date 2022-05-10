@@ -111,6 +111,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
+			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 		},
 		Activities: activities.NewActivitiesHandler(clubRepo, sting, carrier),
 	}

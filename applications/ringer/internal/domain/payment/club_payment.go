@@ -30,7 +30,7 @@ type ClubPayment struct {
 	isDeduction              bool
 	deductionSourcePaymentId *string
 
-	timestamp      time.Time
+	createdAt      time.Time
 	settlementDate time.Time
 
 	clubPayoutIds []string
@@ -63,7 +63,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 		finalAmount:              amt,
 		isDeduction:              true,
 		deductionSourcePaymentId: &existingId,
-		timestamp:                timestamp,
+		createdAt:                timestamp,
 		settlementDate:           settlementDate,
 		clubPayoutIds:            nil,
 	}, nil
@@ -88,7 +88,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatform
 		finalAmount:              amt,
 		isDeduction:              false,
 		deductionSourcePaymentId: nil,
-		timestamp:                timestamp,
+		createdAt:                timestamp,
 		settlementDate:           settlementDate,
 	}, nil
 }
@@ -163,8 +163,8 @@ func (p *ClubPayment) DeductionSourcePaymentId() *string {
 	return p.deductionSourcePaymentId
 }
 
-func (p *ClubPayment) Timestamp() time.Time {
-	return p.timestamp
+func (p *ClubPayment) CreatedAt() time.Time {
+	return p.createdAt
 }
 
 func (p *ClubPayment) SettlementDate() time.Time {
@@ -209,7 +209,7 @@ func UnmarshalClubPaymentFromDatabase(
 	isDeduction bool,
 	deductionSourcePaymentId *string,
 
-	timestamp time.Time,
+	createdAt time.Time,
 	settlementDate time.Time,
 
 	clubPayoutIds []string,
@@ -230,7 +230,7 @@ func UnmarshalClubPaymentFromDatabase(
 		finalAmount:              finalAmount,
 		isDeduction:              isDeduction,
 		deductionSourcePaymentId: deductionSourcePaymentId,
-		timestamp:                timestamp,
+		createdAt:                createdAt,
 		settlementDate:           settlementDate,
 		clubPayoutIds:            clubPayoutIds,
 	}

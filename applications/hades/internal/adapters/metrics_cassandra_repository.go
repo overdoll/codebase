@@ -57,7 +57,7 @@ var clubTransactionMetricsTable = table.New(table.Metadata{
 	Name: "club_transaction_metrics",
 	Columns: []string{
 		"club_id",
-		"timestamp",
+		"created_at",
 		"bucket",
 		"currency",
 
@@ -95,7 +95,7 @@ type clubTransactionMetricsBuckets struct {
 type clubTransactionMetrics struct {
 	ClubId    string    `db:"club_id"`
 	Bucket    int       `db:"bucket"`
-	Timestamp time.Time `db:"timestamp"`
+	CreatedAt time.Time `db:"created_at"`
 	Currency  string    `db:"currency"`
 
 	TotalTransactionsCount        uint64     `db:"total_transactions_count"`
@@ -185,7 +185,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		target := clubTransactionMetrics{
 			ClubId:                             metric.ClubId(),
 			Bucket:                             bucket,
-			Timestamp:                          metric.Timestamp().Time(),
+			CreatedAt:                          metric.Timestamp().Time(),
 			Currency:                           metric.Currency().String(),
 			TotalTransactionsCount:             0,
 			TotalTransactionsAmount:            0,
@@ -324,7 +324,7 @@ func (r MetricsCassandraRepository) GetClubTransactionMetrics(ctx context.Contex
 
 	return metrics.UnmarshalClubTransactionMetricsFromDatabase(
 		met.ClubId,
-		met.Timestamp,
+		met.CreatedAt,
 		met.Currency,
 		met.TotalTransactionsCount,
 		met.ChargebackTransactionsCount,
@@ -373,21 +373,15 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 	// iterate through all buckets starting from x bucket until we have enough values
 	for _, bucketId := range buckets {
 
-		var builder *qb.SelectBuilder
-
-		info := map[string]interface{}{}
-
-		builder = qb.Select(clubTransactionMetricsTable.Name()).
-			Where(qb.Eq("bucket"), qb.Eq("club_id"))
-
-		info["bucket"] = bucketId
-		info["club_id"] = clubId
-
 		var met clubTransactionMetrics
 
-		if err := builder.
+		if err := qb.Select(clubTransactionMetricsTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("club_id")).
 			Query(r.session).
-			BindMap(info).
+			BindStruct(clubTransactionMetrics{
+				Bucket: bucketId,
+				ClubId: clubId,
+			}).
 			Get(&met); err != nil {
 
 			// if we didn't find any transaction metric, skip this iteration
@@ -400,7 +394,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 
 		res := metrics.UnmarshalClubTransactionMetricsFromDatabase(
 			met.ClubId,
-			met.Timestamp,
+			met.CreatedAt,
 			met.Currency,
 			met.TotalTransactionsCount,
 			met.ChargebackTransactionsCount,
@@ -410,7 +404,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 			met.TotalTransactionsAmount,
 		)
 
-		res.Node = paging.NewNode(met.Timestamp)
+		res.Node = paging.NewNode(met.CreatedAt)
 		results = append(results, res)
 
 		if len(results) >= cursor.GetLimit() {

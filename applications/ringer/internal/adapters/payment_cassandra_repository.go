@@ -29,7 +29,7 @@ var clubPaymentsTable = table.New(table.Metadata{
 		"final_amount",
 		"is_deduction",
 		"deduction_source_payment_id",
-		"timestamp",
+		"created_at",
 		"club_payout_ids",
 	},
 	PartKey: []string{"id"},
@@ -83,7 +83,7 @@ type clubPayment struct {
 	FinalAmount              uint64    `db:"final_amount"`
 	IsDeduction              bool      `db:"is_deduction"`
 	DeductionSourcePaymentId *string   `db:"deduction_source_payment_id"`
-	Timestamp                time.Time `db:"timestamp"`
+	CreatedAt                time.Time `db:"created_at"`
 	ClubPayoutIds            []string  `db:"club_payout_ids"`
 }
 
@@ -126,7 +126,7 @@ func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*c
 		FinalAmount:              pay.FinalAmount(),
 		IsDeduction:              pay.IsDeduction(),
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
-		Timestamp:                pay.Timestamp(),
+		CreatedAt:                pay.CreatedAt(),
 		ClubPayoutIds:            pay.ClubPayoutIds(),
 	}, nil
 }
@@ -170,7 +170,7 @@ func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx contex
 		marshalled.FinalAmount,
 		marshalled.IsDeduction,
 		marshalled.DeductionSourcePaymentId,
-		marshalled.Timestamp,
+		marshalled.CreatedAt,
 		marshalled.ClubPayoutIds,
 	)
 
@@ -219,7 +219,7 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 		clubPay.FinalAmount,
 		clubPay.IsDeduction,
 		clubPay.DeductionSourcePaymentId,
-		clubPay.Timestamp,
+		clubPay.CreatedAt,
 		clubPay.SettlementDate,
 		clubPay.ClubPayoutIds,
 	), nil

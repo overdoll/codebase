@@ -7,14 +7,14 @@ import (
 
 type ClubPayoutEvent struct {
 	id        string
-	timestamp time.Time
+	createdAt time.Time
 	error     string
 }
 
 func NewClubPayoutErrorEvent(err string, timestamp time.Time) (*ClubPayoutEvent, error) {
 	return &ClubPayoutEvent{
 		id:        uuid.New().String(),
-		timestamp: timestamp,
+		createdAt: timestamp,
 		error:     err,
 	}, nil
 }
@@ -23,18 +23,18 @@ func (e *ClubPayoutEvent) Id() string {
 	return e.id
 }
 
-func (e *ClubPayoutEvent) Timestamp() time.Time {
-	return e.timestamp
+func (e *ClubPayoutEvent) CreatedAt() time.Time {
+	return e.createdAt
 }
 
 func (e *ClubPayoutEvent) Error() string {
 	return e.error
 }
 
-func UnmarshalClubPayoutEventFromDatabase(id string, timestamp time.Time, error string) *ClubPayoutEvent {
+func UnmarshalClubPayoutEventFromDatabase(id string, createdAt time.Time, error string) *ClubPayoutEvent {
 	return &ClubPayoutEvent{
 		id:        id,
-		timestamp: timestamp,
+		createdAt: createdAt,
 		error:     error,
 	}
 }

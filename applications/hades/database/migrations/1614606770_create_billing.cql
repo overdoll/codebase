@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS account_transactions
     id                             text,
     account_id                     text,
 
-    timestamp                      timestamp,
+    created_at                     timestamp,
 
     transaction_type               text,
 
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS club_chargeback_transactions
 CREATE TABLE IF NOT EXISTS club_transaction_metrics
 (
     club_id                                text,
-    timestamp                              timestamp,
+    created_at                             timestamp,
     bucket                                 int,
 
     currency                               text,

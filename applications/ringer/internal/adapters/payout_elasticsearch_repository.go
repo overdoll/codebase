@@ -42,7 +42,7 @@ const clubPayoutsIndex = `
 				"deposit_request_id": {
 					"type": "keyword"
 				},
-				"timestamp": {
+				"created_at": {
 					"type": "date"
 				},
 				"temporal_workflow_id": {
@@ -54,7 +54,7 @@ const clubPayoutsIndex = `
 						"id": {
 							"type": "keyword"
 						},
-						"timestamp": {
+						"created_at": {
 							"type": "date"
 						},
 						"error": {
@@ -134,7 +134,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 	for _, e := range pay.Events() {
 		events = append(events, clubPayoutEventDocument{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			Timestamp: e.CreatedAt(),
 			Error:     e.Error(),
 		})
 	}
@@ -148,7 +148,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 		Amount:             pay.Amount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
-		Timestamp:          pay.Timestamp(),
+		Timestamp:          pay.CreatedAt(),
 		Events:             events,
 		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
@@ -264,7 +264,7 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 
 				events = append(events, clubPayoutEventDocument{
 					Id:        unmarshal.Id,
-					Timestamp: unmarshal.Timestamp,
+					Timestamp: unmarshal.CreatedAt,
 					Error:     unmarshal.Error,
 				})
 			}
@@ -278,7 +278,7 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 				Amount:             pay.Amount,
 				PayoutAccountId:    pay.PayoutAccountId,
 				DepositRequestId:   pay.DepositRequestId,
-				Timestamp:          pay.Timestamp,
+				Timestamp:          pay.CreatedAt,
 				Events:             events,
 				TemporalWorkflowId: pay.TemporalWorkflowId,
 			}

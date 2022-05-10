@@ -289,6 +289,21 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 	), nil
 }
 
+func (r ClubCassandraElasticsearchRepository) GetClubSupporterMembershipsCount(ctx context.Context, requester *principal.Principal, clubId string) (int64, error) {
+
+	clb, err := r.GetClubById(ctx, clubId)
+
+	if err != nil {
+		return 0, err
+	}
+
+	if err := clb.CanViewSupporterCount(requester); err != nil {
+		return 0, err
+	}
+
+	return r.getClubsSupporterMembershipCount(ctx, clubId)
+}
+
 func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
 
 	var databaseClubs []clubs

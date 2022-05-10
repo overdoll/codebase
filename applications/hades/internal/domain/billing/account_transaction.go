@@ -18,7 +18,7 @@ type AccountTransaction struct {
 	accountId string
 	id        string
 
-	timestamp time.Time
+	createdAt time.Time
 
 	transaction Transaction
 
@@ -45,7 +45,7 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
-		timestamp:                   timestamp,
+		createdAt:                   timestamp,
 		transaction:                 Payment,
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
@@ -62,7 +62,7 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
-		timestamp:                   timestamp,
+		createdAt:                   timestamp,
 		transaction:                 Payment,
 		amount:                      amount,
 		billedAtDate:                billedAtDate,
@@ -83,8 +83,8 @@ func (c *AccountTransaction) Id() string {
 	return c.id
 }
 
-func (c *AccountTransaction) Timestamp() time.Time {
-	return c.timestamp
+func (c *AccountTransaction) CreatedAt() time.Time {
+	return c.createdAt
 }
 
 func (c *AccountTransaction) Type() Transaction {
@@ -139,7 +139,7 @@ func (c *AccountTransaction) MakeRefunded(id string, timestamp time.Time, amount
 	c.transaction = Refund
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        id,
-		timestamp: timestamp,
+		createdAt: timestamp,
 		amount:    amount,
 		currency:  currency,
 		reason:    reason,
@@ -151,7 +151,7 @@ func (c *AccountTransaction) MakeChargeback(id string, timestamp time.Time, amou
 	c.transaction = Chargeback
 	c.events = append(c.events, &AccountTransactionEvent{
 		id:        id,
-		timestamp: timestamp,
+		createdAt: timestamp,
 		amount:    amount,
 		currency:  currency,
 		reason:    reason,
@@ -166,7 +166,7 @@ func (c *AccountTransaction) MakeVoid(timestamp time.Time, reason string) error 
 	return nil
 }
 
-func (c *AccountTransaction) getTotalRefunded() uint64 {
+func (c *AccountTransaction) GetTotalRefunded() uint64 {
 
 	var sum uint64
 
@@ -183,7 +183,7 @@ func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amoun
 		return errors.New("transaction in incorrect state")
 	}
 
-	sum := c.getTotalRefunded()
+	sum := c.GetTotalRefunded()
 
 	if sum+amount > c.amount {
 		return errors.New("over refund threshold")
@@ -221,7 +221,7 @@ func (c *AccountTransaction) CanView(requester *principal.Principal) error {
 func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.Principal) (*RefundAmount, error) {
 
 	// subtract the amount already refunded from the total amount
-	newAmount := c.Amount() - c.getTotalRefunded()
+	newAmount := c.Amount() - c.GetTotalRefunded()
 
 	refund, err := newRefundAmountWithProrated(
 		newAmount,
@@ -244,7 +244,7 @@ func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp tim
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
-		timestamp:                   timestamp,
+		createdAt:                   timestamp,
 		transaction:                 tr,
 		paymentMethod:               paymentMethod,
 		amount:                      amount,

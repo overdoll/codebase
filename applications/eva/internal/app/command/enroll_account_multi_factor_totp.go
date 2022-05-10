@@ -24,30 +24,30 @@ func NewEnrollAccountMultiFactorTOTPHandler(mr multi_factor.Repository, ar accou
 	return EnrollAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
 
-func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd EnrollAccountMultiFactorTOTP) error {
+func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd EnrollAccountMultiFactorTOTP) (*account.Account, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	codes, err := h.mr.GetAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId())
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// enroll TOTP
 	mfa, err := multi_factor.EnrollTOTP(codes, cmd.ID, cmd.Code)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// create the TOTP
 	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, cmd.Principal, cmd.Principal.AccountId(), mfa); err != nil {
-		return err
+		return nil, err
 	}
 
 	// if user doesn't have 2FA enabled, enable it
@@ -55,9 +55,9 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 		if _, err := h.ar.UpdateAccount(ctx, acc.ID(), func(a *account.Account) error {
 			return a.EnableMultiFactor()
 		}); err != nil {
-			return err
+			return nil, err
 		}
 	}
 
-	return nil
+	return acc, nil
 }

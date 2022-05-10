@@ -599,7 +599,7 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 			Amount:    int(event.Amount()),
 			Currency:  graphql.MarshalCurrencyToGraphQL(ctx, event.Currency()),
 			Reason:    event.Reason(),
-			Timestamp: event.Timestamp(),
+			CreatedAt: event.CreatedAt(),
 		})
 	}
 
@@ -610,12 +610,13 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 		Reference:                 result.Id(),
 		Type:                      tp,
 		Events:                    transactionEvents,
+		TotalRefunded:             int(result.GetTotalRefunded()),
 		Amount:                    int(result.Amount()),
 		Currency:                  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BilledAtDate:              result.BilledAtDate(),
 		NextBillingDate:           &date,
 		PaymentMethod:             MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-		Timestamp:                 result.Timestamp(),
+		CreatedAt:                 result.CreatedAt(),
 		CcbillTransaction:         subscriptionDetails,
 		ClubSupporterSubscription: clubSubscription,
 	}

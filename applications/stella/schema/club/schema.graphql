@@ -76,6 +76,9 @@ type Club implements Node @key(fields: "id") {
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
 
+  """The total amount of members in this club, who are supporters."""
+  membersIsSupporterCount: Int! @goField(forceResolver: true)
+
   """The total amount of members in this club."""
   membersCount: Int!
 

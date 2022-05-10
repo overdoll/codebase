@@ -60,7 +60,7 @@ const clubPaymentsIndex = `
 				"club_payout_ids": {
 					"type": "keyword"
 				},
-				"timestamp": {
+				"created_at": {
 					"type": "date"
 				}
 		}
@@ -81,7 +81,7 @@ type clubPaymentDocument struct {
 	FinalAmount              uint64    `json:"final_amount"`
 	IsDeduction              bool      `json:"is_deduction"`
 	DeductionSourcePaymentId *string   `json:"deduction_source_payment_id"`
-	Timestamp                time.Time `json:"timestamp"`
+	CreatedAt                time.Time `json:"created_at"`
 	ClubPayoutIds            []string  `json:"club_payout_ids"`
 }
 
@@ -110,7 +110,7 @@ func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment,
 		doc.FinalAmount,
 		doc.IsDeduction,
 		doc.DeductionSourcePaymentId,
-		doc.Timestamp,
+		doc.CreatedAt,
 		doc.SettlementDate,
 		doc.ClubPayoutIds,
 	)
@@ -135,7 +135,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocumen
 		FinalAmount:              pay.FinalAmount(),
 		IsDeduction:              pay.IsDeduction(),
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
-		Timestamp:                pay.Timestamp(),
+		CreatedAt:                pay.CreatedAt(),
 		ClubPayoutIds:            pay.ClubPayoutIds(),
 	}, nil
 }
@@ -162,7 +162,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 		}
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -245,8 +245,8 @@ func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx contex
 				FinalAmount:              pay.FinalAmount,
 				IsDeduction:              pay.IsDeduction,
 				DeductionSourcePaymentId: pay.DeductionSourcePaymentId,
-				Timestamp:                pay.Timestamp,
-				ClubPayoutIds:            nil,
+				CreatedAt:                pay.CreatedAt,
+				ClubPayoutIds:            pay.ClubPayoutIds,
 			}
 
 			_, err := r.client.

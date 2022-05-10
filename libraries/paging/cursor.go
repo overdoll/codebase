@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"errors"
+	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"sort"
@@ -212,19 +213,46 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column, tieB
 }
 
 func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascending bool) error {
+
+	createdCursor, err := c.GetCursor()
+
+	if err != nil {
+		return err
+	}
+
+	var valueStr string
+	var valueUUID gocql.UUID
+
+	switch g := createdCursor[0].(type) {
+	case string:
+		valueStr = g
+	case gocql.UUID:
+		valueUUID = g
+	default:
+		return errors.New("unsupported cursor type")
+	}
+
+	var value string
+
+	if valueStr != "" {
+		value = `'` + valueStr + `'`
+	} else {
+		value = valueUUID.String()
+	}
+
 	if c.After() != nil {
 		if ascending {
-			builder.Where(qb.Gt(column))
+			builder.Where(qb.GtLit(column, value))
 		} else {
-			builder.Where(qb.Lt(column))
+			builder.Where(qb.LtLit(column, value))
 		}
 	}
 
 	if c.Before() != nil {
 		if ascending {
-			builder.Where(qb.Gt(column))
+			builder.Where(qb.GtLit(column, value))
 		} else {
-			builder.Where(qb.Lt(column))
+			builder.Where(qb.LtLit(column, value))
 		}
 	}
 
@@ -246,7 +274,6 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 	return nil
 }
 
-// take redis keys, and based on cursor, sort results
 func (c *Cursor) BuildRedis(k []string) ([]string, error) {
 
 	sort.Strings(k)

@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS club_payments
     final_amount                bigint,
     is_deduction                boolean,
     deduction_source_payment_id text,
-    timestamp                   timestamp,
+    created_at                  timestamp,
     primary key ( id ),
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS club_payouts
     currency             text,
     payout_account_id    text,
     deposit_request_id   text,
-    timestamp            timestamp,
+    created_at           timestamp,
     events               list<text>,
     temporal_workflow_id text,
     primary key ( id ),
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS deposit_requests
     currency              text,
     payout_method         text,
     payout_ids            list<text>,
-    timestamp             timestamp,
+    created_at            timestamp,
     last_insert_id        timeuuid,
     primary key ( id ),
 );
@@ -125,10 +125,17 @@ CREATE TABLE IF NOT EXISTS deposit_requests_by_month
     currency              text,
     payout_method         text,
     payout_ids            list<text>,
-    timestamp             timestamp,
+    created_at            timestamp,
     last_insert_id        timeuuid,
     primary key ( bucket, id ),
 );
+
+CREATE TABLE IF NOT EXISTS deposit_requests_by_month_buckets
+(
+    init   int,
+    bucket int,
+    primary key ( init, bucket ),
+) WITH CLUSTERING ORDER BY (bucket DESC);
 
 CREATE TABLE IF NOT EXISTS account_details
 (

@@ -45,7 +45,7 @@ var clubPayoutsTable = table.New(table.Metadata{
 		"amount",
 		"payout_account_id",
 		"deposit_request_id",
-		"timestamp",
+		"created_at",
 		"events",
 		"temporal_workflow_id",
 	},
@@ -55,7 +55,7 @@ var clubPayoutsTable = table.New(table.Metadata{
 
 type clubPayoutEvent struct {
 	Id        string
-	Timestamp time.Time
+	CreatedAt time.Time
 	Error     string
 }
 
@@ -68,7 +68,7 @@ type clubPayout struct {
 	Amount             uint64    `db:"amount"`
 	PayoutAccountId    string    `db:"payout_account_id"`
 	DepositRequestId   string    `db:"deposit_request_id"`
-	Timestamp          time.Time `db:"timestamp"`
+	CreatedAt          time.Time `db:"created_at"`
 	Events             []string  `db:"events"`
 	TemporalWorkflowId string    `db:"temporal_workflow_id"`
 }
@@ -98,7 +98,7 @@ var depositRequestsColumns = []string{
 	"currency",
 	"payout_method",
 	"payout_ids",
-	"timestamp",
+	"created_at",
 	"last_insert_id",
 }
 
@@ -116,6 +116,21 @@ var depositRequestsByMonthTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+var depositRequestsByMonthBucketsTable = table.New(table.Metadata{
+	Name: "deposit_requests_by_month_buckets",
+	Columns: []string{
+		"init",
+		"bucket",
+	},
+	PartKey: []string{"init"},
+	SortKey: []string{"bucket"},
+})
+
+type depositRequestsBuckets struct {
+	Init   int `db:"init"`
+	Bucket int `db:"bucket"`
+}
+
 type depositRequests struct {
 	Bucket             int        `db:"bucket"`
 	Id                 string     `db:"id"`
@@ -126,7 +141,7 @@ type depositRequests struct {
 	Currency           string     `db:"currency"`
 	PayoutMethod       string     `db:"payout_method"`
 	PayoutIds          []string   `db:"payout_ids"`
-	Timestamp          time.Time  `db:"timestamp"`
+	CreatedAt          time.Time  `db:"created_at"`
 	LastInsertId       gocql.UUID `db:"last_insert_id"`
 }
 
@@ -146,7 +161,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 
 		data, err := json.Marshal(clubPayoutEvent{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			CreatedAt: e.CreatedAt(),
 			Error:     e.Error(),
 		})
 
@@ -166,7 +181,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 		Amount:             pay.Amount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
-		Timestamp:          pay.Timestamp(),
+		CreatedAt:          pay.CreatedAt(),
 		Events:             events,
 		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
@@ -351,7 +366,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 
 		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
 			unmarshal.Id,
-			unmarshal.Timestamp,
+			unmarshal.CreatedAt,
 			unmarshal.Error,
 		))
 	}
@@ -365,7 +380,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		clubPay.DepositDate,
 		clubPay.PayoutAccountId,
 		clubPay.DepositRequestId,
-		clubPay.Timestamp,
+		clubPay.CreatedAt,
 		events,
 		clubPay.TemporalWorkflowId,
 	), nil
@@ -468,7 +483,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		Currency:           deposit.Currency().String(),
 		PayoutMethod:       deposit.AccountPayoutMethodKind().String(),
 		PayoutIds:          deposit.PayoutIds(),
-		Timestamp:          deposit.Timestamp(),
+		CreatedAt:          deposit.Timestamp(),
 		LastInsertId:       gocql.UUIDFromTime(deposit.Timestamp()),
 	}
 
@@ -484,7 +499,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		marshalled.Currency,
 		marshalled.PayoutMethod,
 		marshalled.PayoutIds,
-		marshalled.Timestamp,
+		marshalled.CreatedAt,
 		marshalled.LastInsertId,
 	)
 
@@ -500,8 +515,15 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		marshalled.Currency,
 		marshalled.PayoutMethod,
 		marshalled.PayoutIds,
-		marshalled.Timestamp,
+		marshalled.CreatedAt,
 		marshalled.LastInsertId,
+	)
+
+	stmt, _ = depositRequestsByMonthBucketsTable.Insert()
+
+	batch.Query(stmt,
+		0,
+		marshalled.Bucket,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -529,6 +551,28 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestById(ctx contex
 	return &deposit, nil
 }
 
+func (r PayoutCassandraElasticsearchRepository) getDepositRequestBuckets(ctx context.Context) ([]int, error) {
+
+	var buckets []depositRequestsBuckets
+
+	if err := r.session.Query(depositRequestsByMonthBucketsTable.Select()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(depositRequestsBuckets{
+			Init: 0,
+		}).
+		Select(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get deposit request buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
 func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
 	deposit, err := r.getDepositRequestById(ctx, id)
 
@@ -545,7 +589,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ct
 		deposit.PayoutIds,
 		deposit.Currency,
 		deposit.PayoutMethod,
-		deposit.Timestamp,
+		deposit.CreatedAt,
 	), nil
 }
 
@@ -572,25 +616,15 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 
 	var depositResults []*payout.DepositRequest
 
-	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getDepositRequestBuckets(ctx)
 
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	if err != nil {
+		return nil, err
+	}
+	for _, bucketId := range buckets {
 
 		info := map[string]interface{}{
 			"bucket": bucketId,
-		}
-
-		if cursor != nil {
-			createdCursor, err := cursor.GetCursor()
-
-			if err != nil {
-				return nil, err
-			}
-
-			if createdCursor != nil {
-				info["id"] = createdCursor[0].(string)
-			}
 		}
 
 		builder := depositRequestsByMonthTable.SelectBuilder()
@@ -619,7 +653,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 				request.PayoutIds,
 				request.Currency,
 				request.PayoutMethod,
-				request.Timestamp,
+				request.CreatedAt,
 			)
 
 			result.Node = paging.NewNode(request.Id)
@@ -658,7 +692,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestsForMonth(ctx c
 			request.PayoutIds,
 			request.Currency,
 			request.PayoutMethod,
-			request.Timestamp,
+			request.CreatedAt,
 		)
 
 		result.Node = paging.NewNode(request.Id)
@@ -685,7 +719,7 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 		deposit.PayoutIds,
 		deposit.Currency,
 		deposit.PayoutMethod,
-		deposit.Timestamp,
+		deposit.CreatedAt,
 	)
 
 	if err = updateFn(depositRequest); err != nil {

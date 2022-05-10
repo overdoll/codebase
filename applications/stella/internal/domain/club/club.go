@@ -199,6 +199,10 @@ func (m *Club) CanSupport() bool {
 	return !m.suspended && m.hasCreatedSupporterOnlyPost && !m.terminated
 }
 
+func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
+	return requester.BelongsToAccount(m.ownerAccountId)
+}
+
 func (m *Club) CanSuspend(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {

@@ -7,7 +7,7 @@ import (
 
 type AccountTransactionEvent struct {
 	id        string
-	timestamp time.Time
+	createdAt time.Time
 	amount    uint64
 	currency  money.Currency
 	reason    string
@@ -25,20 +25,20 @@ func (e *AccountTransactionEvent) Currency() money.Currency {
 	return e.currency
 }
 
-func (e *AccountTransactionEvent) Timestamp() time.Time {
-	return e.timestamp
+func (e *AccountTransactionEvent) CreatedAt() time.Time {
+	return e.createdAt
 }
 
 func (e *AccountTransactionEvent) Reason() string {
 	return e.reason
 }
 
-func UnmarshalAccountTransactionEventFromDatabase(id string, timestamp time.Time, amount uint64, currency string, reason string) *AccountTransactionEvent {
+func UnmarshalAccountTransactionEventFromDatabase(id string, createdAt time.Time, amount uint64, currency string, reason string) *AccountTransactionEvent {
 	cr, _ := money.CurrencyFromString(currency)
 
 	return &AccountTransactionEvent{
 		id:        id,
-		timestamp: timestamp,
+		createdAt: createdAt,
 		amount:    amount,
 		currency:  cr,
 		reason:    reason,

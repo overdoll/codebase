@@ -67,6 +67,26 @@ func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error)
 	}, nil
 }
 
+func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(ctx context.Context, clubId string) (int64, error) {
+	builder := r.client.Count().
+		Index(ClubMembersIndexName)
+
+	query := elastic.NewBoolQuery()
+
+	query.Filter(elastic.NewTermQuery("club_id", clubId))
+	query.Filter(elastic.NewTermQuery("is_supporter", true))
+
+	builder.Query(query)
+
+	count, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to get club memberships supporter count: %v", err)
+	}
+
+	return count, nil
+}
+
 func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *club.MemberFilters) ([]*club.Member, error) {
 
 	builder := r.client.Search().

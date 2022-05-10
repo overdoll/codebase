@@ -107,7 +107,7 @@ func (r *MutationResolver) RefundAccountTransaction(ctx context.Context, input t
 			command.RefundAccountTransaction{
 				Principal:     principal.FromContext(ctx),
 				TransactionId: input.AccountTransactionID.GetID(),
-				Amount:        int64(input.Amount),
+				Amount:        uint64(input.Amount),
 			},
 		)
 

@@ -131,6 +131,8 @@ type ClubPayment struct {
 	DestinationClub *Club `json:"destinationClub"`
 	// The account that made this payment.
 	SourceAccount *Account `json:"sourceAccount"`
+	// When this payment was created.
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 func (ClubPayment) IsNode()   {}
@@ -197,7 +199,7 @@ type ClubPayoutEvent struct {
 	// The error that occurred.
 	Error string `json:"error"`
 	// When this event occurred.
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // Platform fee for a specific club.

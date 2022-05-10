@@ -98,6 +98,7 @@ type ComplexityRoot struct {
 	ClubPayment struct {
 		AccountTransaction func(childComplexity int) int
 		BaseAmount         func(childComplexity int) int
+		CreatedAt          func(childComplexity int) int
 		Currency           func(childComplexity int) int
 		DestinationClub    func(childComplexity int) int
 		FinalAmount        func(childComplexity int) int
@@ -146,9 +147,9 @@ type ComplexityRoot struct {
 	}
 
 	ClubPayoutEvent struct {
+		CreatedAt func(childComplexity int) int
 		Error     func(childComplexity int) int
 		ID        func(childComplexity int) int
-		Timestamp func(childComplexity int) int
 	}
 
 	ClubPlatformFee struct {
@@ -491,6 +492,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubPayment.BaseAmount(childComplexity), true
 
+	case "ClubPayment.createdAt":
+		if e.complexity.ClubPayment.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.ClubPayment.CreatedAt(childComplexity), true
+
 	case "ClubPayment.currency":
 		if e.complexity.ClubPayment.Currency == nil {
 			break
@@ -706,6 +714,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubPayoutEdge.Node(childComplexity), true
 
+	case "ClubPayoutEvent.createdAt":
+		if e.complexity.ClubPayoutEvent.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.ClubPayoutEvent.CreatedAt(childComplexity), true
+
 	case "ClubPayoutEvent.error":
 		if e.complexity.ClubPayoutEvent.Error == nil {
 			break
@@ -719,13 +734,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClubPayoutEvent.ID(childComplexity), true
-
-	case "ClubPayoutEvent.timestamp":
-		if e.complexity.ClubPayoutEvent.Timestamp == nil {
-			break
-		}
-
-		return e.complexity.ClubPayoutEvent.Timestamp(childComplexity), true
 
 	case "ClubPlatformFee.id":
 		if e.complexity.ClubPlatformFee.ID == nil {
@@ -1486,6 +1494,9 @@ type ClubPayment implements Node @key(fields: "id") {
 
   """The account that made this payment."""
   sourceAccount: Account!
+
+  """When this payment was created."""
+  createdAt: Time!
 }
 
 """Edge of the the club payment."""
@@ -1673,7 +1684,7 @@ type ClubPayoutEvent {
   error: String!
 
   """When this event occurred."""
-  timestamp: Time!
+  createdAt: Time!
 }
 
 """
@@ -3930,6 +3941,41 @@ func (ec *executionContext) _ClubPayment_sourceAccount(ctx context.Context, fiel
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋringerᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ClubPayment_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayment) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayment",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ClubPaymentConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.ClubPaymentConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4672,7 +4718,7 @@ func (ec *executionContext) _ClubPayoutEvent_error(ctx context.Context, field gr
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _ClubPayoutEvent_timestamp(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEvent) (ret graphql.Marshaler) {
+func (ec *executionContext) _ClubPayoutEvent_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayoutEvent) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4690,7 +4736,7 @@ func (ec *executionContext) _ClubPayoutEvent_timestamp(ctx context.Context, fiel
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Timestamp, nil
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9009,6 +9055,16 @@ func (ec *executionContext) _ClubPayment(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createdAt":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayment_createdAt(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9355,9 +9411,9 @@ func (ec *executionContext) _ClubPayoutEvent(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "timestamp":
+		case "createdAt":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._ClubPayoutEvent_timestamp(ctx, field, obj)
+				return ec._ClubPayoutEvent_createdAt(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

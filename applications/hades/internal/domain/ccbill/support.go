@@ -32,7 +32,7 @@ func ParseCCBillDate(timestamp string) (time.Time, error) {
 	return tm, nil
 }
 
-func ConvertAmountToCCBillFloat(amount int64, currencyCode int) (float64, error) {
+func ConvertAmountToCCBillFloat(amount uint64, currencyCode int) (float64, error) {
 	switch currencyCode {
 	case 840:
 		fallthrough

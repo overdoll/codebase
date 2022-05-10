@@ -106,7 +106,7 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 		clubPay.FinalAmount,
 		clubPay.IsDeduction,
 		clubPay.DeductionSourcePaymentId,
-		clubPay.Timestamp,
+		clubPay.CreatedAt,
 		clubPay.SettlementDate,
 		clubPay.ClubPayoutIds,
 	), nil

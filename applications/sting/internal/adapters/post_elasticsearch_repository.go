@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"strconv"
 	"time"
 
 	elastic "github.com/olivere/elastic/v7"
@@ -30,8 +29,8 @@ type postDocument struct {
 	CategoryIds                     []string          `json:"category_ids"`
 	CharacterIds                    []string          `json:"character_ids"`
 	SeriesIds                       []string          `json:"series_ids"`
-	CreatedAt                       string            `json:"created_at"`
-	PostedAt                        string            `json:"posted_at"`
+	CreatedAt                       time.Time         `json:"created_at"`
+	PostedAt                        *time.Time        `json:"posted_at"`
 }
 
 const postIndex = `
@@ -105,26 +104,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		return nil, fmt.Errorf("failed to unmarshal post: %v", err)
 	}
 
-	createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var postedAtTime *time.Time
-
-	if pst.PostedAt != "" {
-		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
-
-		if err != nil {
-			return nil, err
-		}
-
-		newTime := time.Unix(postedAt, 0)
-
-		postedAtTime = &newTime
-	}
-
 	var audience *string
 
 	if pst.AudienceId != "" {
@@ -145,8 +124,8 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		pst.CharacterIds,
 		pst.SeriesIds,
 		pst.CategoryIds,
-		time.Unix(createdAt, 0),
-		postedAtTime,
+		pst.CreatedAt,
+		pst.PostedAt,
 	)
 
 	createdPost.Node = paging.NewNode(hit.Sort)
@@ -155,14 +134,6 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 }
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
-
-	var postedAt string
-
-	if pst.PostedAt() != nil {
-		postedAt = strconv.FormatInt(pst.PostedAt().Unix(), 10)
-	} else {
-		postedAt = strconv.FormatInt(0, 10)
-	}
 
 	var audience string
 
@@ -196,8 +167,8 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		CategoryIds:                     pst.CategoryIds(),
 		CharacterIds:                    pst.CharacterIds(),
 		SeriesIds:                       pst.SeriesIds(),
-		CreatedAt:                       strconv.FormatInt(pst.CreatedAt().Unix(), 10),
-		PostedAt:                        postedAt,
+		CreatedAt:                       pst.CreatedAt(),
+		PostedAt:                        pst.PostedAt(),
 	}, nil
 }
 
@@ -666,8 +637,8 @@ func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context
 				CategoryIds:                     p.CategoryIds,
 				CharacterIds:                    p.CharacterIds,
 				SeriesIds:                       p.SeriesIds,
-				CreatedAt:                       strconv.FormatInt(p.CreatedAt.Unix(), 10),
-				PostedAt:                        strconv.FormatInt(p.PostedAt.Unix(), 10),
+				CreatedAt:                       p.CreatedAt,
+				PostedAt:                        p.PostedAt,
 			}
 
 			_, err := r.client.
