@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a20e7915080c7e28d38cfe2cd16c6da1>>
- * @relayHash 6ea7c9728d1fd613ee08f9d30618b02d
+ * @generated SignedSource<<903d029aa7e1a2148154af2ae47d88a5>>
+ * @relayHash 93f22742f9feba3068e591b58664b561
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ea7c9728d1fd613ee08f9d30618b02d
+// @relayRequestID 93f22742f9feba3068e591b58664b561
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -243,6 +243,20 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "isStaff",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isArtist",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isSecure",
             "storageKey": null
           },
           {
@@ -528,7 +542,7 @@ return {
     ]
   },
   "params": {
-    "id": "6ea7c9728d1fd613ee08f9d30618b02d",
+    "id": "93f22742f9feba3068e591b58664b561",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

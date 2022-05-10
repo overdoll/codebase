@@ -123,6 +123,8 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
     )
   }
 
+  // TODO add cancel account deletion when its fixed
+
   const scheduledDeletion = format(new Date(queryData.viewer.deleting.scheduledDeletion as Date), dateFormatWithTime, { locale })
 
   return (

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<02e17773e1024496b85fd4d54734edae>>
- * @relayHash 6ee66d50d3e0052c1a0eb52a227751eb
+ * @generated SignedSource<<9929630be992b5dde907280c464a8f41>>
+ * @relayHash 9b92acdf3021a2b3d47f632e5494e3b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ee66d50d3e0052c1a0eb52a227751eb
+// @relayRequestID 9b92acdf3021a2b3d47f632e5494e3b1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -222,6 +222,13 @@ return {
                         "plural": false,
                         "selections": [
                           (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isDeleted",
+                            "storageKey": null
+                          },
                           (v6/*: any*/),
                           {
                             "alias": null,
@@ -341,7 +348,7 @@ return {
     ]
   },
   "params": {
-    "id": "6ee66d50d3e0052c1a0eb52a227751eb",
+    "id": "9b92acdf3021a2b3d47f632e5494e3b1",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4d945369d90977527958534cd3e31c25>>
- * @relayHash 00151fd7c33616d450adae43ec519291
+ * @generated SignedSource<<c4b7a68dc735a878b73dbdddbfecae5d>>
+ * @relayHash ea396de5828edeaaeff02d2d5ae8034f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 00151fd7c33616d450adae43ec519291
+// @relayRequestID ea396de5828edeaaeff02d2d5ae8034f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -27,14 +27,23 @@ export type RootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -94,15 +103,17 @@ return {
             "kind": "LinkedField",
             "name": "lock",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              }
-            ],
+            "selections": (v0/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": (v0/*: any*/),
             "storageKey": null
           },
           {
@@ -126,7 +137,7 @@ return {
             "name": "isArtist",
             "storageKey": null
           },
-          (v0/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -150,7 +161,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -169,7 +180,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -180,7 +191,7 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v0/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           }
@@ -190,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "id": "00151fd7c33616d450adae43ec519291",
+    "id": "ea396de5828edeaaeff02d2d5ae8034f",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

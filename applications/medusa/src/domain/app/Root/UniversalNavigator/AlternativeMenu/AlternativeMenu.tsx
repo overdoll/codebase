@@ -1,5 +1,6 @@
 import {
   CogDouble,
+  ContentBrushPen,
   LoginKeys,
   PageControllerSettings,
   SafetyExitDoorLeft,
@@ -72,7 +73,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           <HorizontalNavigationDropdownMenu.Button
             href='/join'
             icon={LoginKeys}
-            colorScheme='green'
+            colorScheme='primary'
             label={
               <Trans>
                 Join
@@ -107,13 +108,27 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
-        <Can I='configure' a='Account'>
+        <Can not I='create' a='Club'>
+          <HorizontalNavigationDropdownMenu.Button
+            href='/clubs/invite-only'
+            colorScheme='primary'
+            icon={ContentBrushPen}
+            label={
+              <Trans>
+                Create a Post
+              </Trans>
+            }
+          />
+        </Can>
+        <Can I='create' a='Club'>
           <Suspense fallback={
             <SkeletonDropdownMenuButton />
           }
           >
             <DropdownMenuButtonClub />
           </Suspense>
+        </Can>
+        <Can I='configure' a='Account'>
           <HorizontalNavigationDropdownMenu.Button
             href='/settings/profile'
             colorScheme='green'

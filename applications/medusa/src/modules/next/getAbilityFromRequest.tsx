@@ -26,7 +26,8 @@ const getAbilityFromRequest = async (request: NextRequest): Promise<AppAbility> 
         ? {
             isModerator: viewer.isModerator,
             isStaff: viewer.isStaff,
-            isLocked: viewer.lock != null
+            isLocked: viewer.lock != null || viewer.deleting != null,
+            isArtist: viewer.isArtist
           }
         : null
     ))

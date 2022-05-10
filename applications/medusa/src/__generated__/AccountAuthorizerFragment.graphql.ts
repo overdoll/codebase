@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c13700ac529f4b33222a851255735bdd>>
+ * @generated SignedSource<<d238fa78672ce15adaf7e0e7ddbe1280>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type AccountAuthorizerFragment$data = {
   readonly lock: {
     readonly __typename: string;
   } | null;
+  readonly deleting: {
+    readonly __typename: string;
+  } | null;
   readonly isModerator: boolean;
   readonly isStaff: boolean;
   readonly isArtist: boolean;
@@ -25,7 +28,17 @@ export type AccountAuthorizerFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
+];
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -38,15 +51,17 @@ const node: ReaderFragment = {
       "kind": "LinkedField",
       "name": "lock",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        }
-      ],
+      "selections": (v0/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "AccountDeleting",
+      "kind": "LinkedField",
+      "name": "deleting",
+      "plural": false,
+      "selections": (v0/*: any*/),
       "storageKey": null
     },
     {
@@ -74,7 +89,8 @@ const node: ReaderFragment = {
   "type": "Account",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "2b3f5e95fba7b044bee0b16ebd83901e";
+(node as any).hash = "e2d5b8c9aad5dada6aeb05d155aebb2c";
 
 export default node;

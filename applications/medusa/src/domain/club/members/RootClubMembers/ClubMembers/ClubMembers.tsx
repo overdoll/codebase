@@ -8,6 +8,7 @@ import AccountTileOverlay from '@//:modules/content/ContentSelection/TileOverlay
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import Head from 'next/head'
 import ClubInformationBanner from '../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import ClubMemberTile from './ClubMemberTile/ClubMemberTile'
 
 interface Props {
   query: PreloadedQuery<ClubMembersQuery>
@@ -35,10 +36,7 @@ const Fragment = graphql`
     @connection (key: "ClubMembers_members") {
       edges {
         node {
-          account {
-            username
-            ...AccountTileOverlayFragment
-          }
+          ...ClubMemberTileFragment
         }
       }
     }
@@ -89,15 +87,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
       <ClubInformationBanner query={queryData.club} />
       <GridWrap justify='flex-start'>
         {data.members.edges.map((item, index) =>
-          <GridTile key={index}>
-            <LinkTile href={{
-              pathname: '/profile/[username]',
-              query: { username: item.node.account.username as string }
-            }}
-            >
-              <AccountTileOverlay query={item.node.account} />
-            </LinkTile>
-          </GridTile>
+          <ClubMemberTile key={index} query={item.node} />
         )}
         <LoadMoreGridTile
           hasNext={hasNext}

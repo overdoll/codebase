@@ -14,6 +14,8 @@ import { Trans } from '@lingui/macro'
 import StaffDepositRequestCard from './StaffDepositRequestCard/StaffDepositRequestCard'
 import { Stack } from '@chakra-ui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { EmptyBoundary } from '@//:modules/content/Placeholder'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: PreloadedQuery<StaffDepositRequestsQuery>
@@ -94,24 +96,34 @@ export default function StaffDepositRequests ({ query }: Props): JSX.Element {
             </TableHeaderColumnText>
           </TableHeaderRow>
         </TableHeader>
-        <TableBody>
-          {data.depositRequests.edges.map((item, index) => (
-            <TableBodyRowLink
-              key={index}
-              href={{
-                pathname: '/staff/billing/deposit-requests/[reference]',
-                query: { reference: item.node.reference }
-              }}
-            >
-              <StaffDepositRequestCard query={item.node} />
-            </TableBodyRowLink>
-          ))}
-          <TableBodyRowLoadMore
-            hasNext={hasNext}
-            onLoadNext={() => loadNext(5)}
-            isLoadingNext={isLoadingNext}
-          />
-        </TableBody>
+        <EmptyBoundary
+          fallback={(
+            <SmallBackgroundBox>
+              <Trans>
+                No deposit requests
+              </Trans>
+            </SmallBackgroundBox>)}
+          condition={data.depositRequests.edges.length < 1}
+        >
+          <TableBody>
+            {data.depositRequests.edges.map((item, index) => (
+              <TableBodyRowLink
+                key={index}
+                href={{
+                  pathname: '/staff/billing/deposit-requests/[reference]',
+                  query: { reference: item.node.reference }
+                }}
+              >
+                <StaffDepositRequestCard query={item.node} />
+              </TableBodyRowLink>
+            ))}
+            <TableBodyRowLoadMore
+              hasNext={hasNext}
+              onLoadNext={() => loadNext(5)}
+              isLoadingNext={isLoadingNext}
+            />
+          </TableBody>
+        </EmptyBoundary>
       </Table>
     </Stack>
   )

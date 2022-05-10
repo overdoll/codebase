@@ -21,7 +21,7 @@ interface Props {
 const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
-      __typename
+      id
       viewerIsOwner
       ...ClubPostsFragment
       ...ClubInformationBannerFragment
@@ -70,6 +70,8 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     queryData.club
   )
 
+  console.log(queryData)
+
   if (queryData?.club == null) {
     return <NotFoundClub />
   }
@@ -88,10 +90,10 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
               No posts found
             </Trans>
           </SmallBackgroundBox>)}
-        condition={data.posts.edges.length < 1}
+        condition={data?.posts?.edges.length < 1}
       >
         <GridWrap>
-          {data.posts.edges.map((item, index) => {
+          {data?.posts?.edges.map((item, index) => {
             switch (item.node.state) {
               case 'DRAFT':
                 return (
