@@ -429,7 +429,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids",
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).

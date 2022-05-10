@@ -88,6 +88,10 @@ func (c *CCBillSubscriptionDetails) Duplicate() bool {
 	return c.duplicate
 }
 
+func (c *CCBillSubscriptionDetails) UpdateDuplicate(duplicate bool) {
+	c.duplicate = duplicate
+}
+
 func (c *CCBillSubscriptionDetails) UpdatedAt() time.Time {
 	return c.updatedAt
 }

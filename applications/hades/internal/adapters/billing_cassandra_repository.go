@@ -1680,6 +1680,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		if lockedSub.AccountClubSupporterSubscriptionId != subscription.AccountClubSupporterSubscriptionId() {
 
 			marshalled.Duplicate = true
+			subscription.UpdateDuplicate(true)
 
 			if err := r.session.Query(ccbillSubscriptionDetailsTable.Insert()).
 				BindStruct(marshalled).
