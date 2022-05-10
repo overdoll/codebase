@@ -4,7 +4,22 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
-import { ButtonProps, Modal, ModalBody, ModalContent, ModalOverlay, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  ButtonProps,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Popover,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Stack,
+  Text
+} from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -31,6 +46,8 @@ const ClubFragment = graphql`
     viewerMember {
       isSupporter
     }
+    canSupport
+    viewerIsOwner
     supporterSubscriptionPrice {
       localizedPrice {
         amount
@@ -43,7 +60,6 @@ const ClubFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment SupportClubButtonViewerFragment on Account {
-    __typename
     ...SupportClubTransactionProcessViewerFragment
   }
 `
@@ -91,25 +107,8 @@ export default function SupportClubButton ({
       />)
   }
 
-  if (viewerData == null) {
-    return (
-      <Stack spacing={1}>
-        <Text fontSize='md' color='gray.00'>
-          <Trans>
-            Create an account and become a supporter to get access to this club's exclusive content!
-          </Trans>
-        </Text>
-        <LinkButton
-          href={redirect}
-          {...buttonProps}
-          {...rest}
-        />
-      </Stack>
-    )
-  }
-
   const methods = useHistoryDisclosure({
-    defaultIsOpen: (supportParam != null || tokenParam != null) && clubData.viewerMember?.isSupporter !== true
+    defaultIsOpen: (supportParam != null || tokenParam != null) && clubData.viewerMember?.isSupporter !== true && clubData.canSupport
   })
 
   const {
@@ -124,46 +123,115 @@ export default function SupportClubButton ({
     }
   }, [isOpen])
 
-  return (
-    <HistoryDisclosureProvider {...methods}>
-      {clubData.viewerMember?.isSupporter === true
-        ? (
-          <Stack spacing={1}>
-            <LinkButton
-              colorScheme='gray'
-              size='lg'
-              w='100%'
-              {...rest}
-              href='/settings/billing/subscriptions'
-            >
-              <Trans>
-                My Subscriptions
-              </Trans>
-            </LinkButton>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Thanks for supporting this club! You can now access all of its exclusive content.
-              </Trans>
-            </Text>
-          </Stack>)
-        : (
-          <Stack spacing={1}>
-            <Can I='interact' a='Club' passThrough>
-              {allowed => (
+  if (viewerData == null) {
+    if (!clubData.canSupport) {
+      return (
+        <></>
+      )
+    }
+
+    return (
+      <Stack spacing={1}>
+        <LinkButton
+          href={redirect}
+          {...buttonProps}
+          {...rest}
+        />
+        <Text fontSize='md' color='gray.00'>
+          <Trans>
+            Create an account and become a supporter to get access to this club's exclusive content!
+          </Trans>
+        </Text>
+      </Stack>
+    )
+  }
+
+  const SupporterOwnerButton = (): JSX.Element => {
+    if (clubData.canSupport) {
+      return (
+        <Stack spacing={1}>
+          <Box w='100%'>
+            <Popover>
+              <PopoverTrigger>
                 <Button
-                  isDisabled={allowed === false}
-                  onClick={onOpen}
                   {...buttonProps}
                   {...rest}
-                />)}
-            </Can>
-            <Text fontSize='md' color='gray.00'>
-              <Trans>
-                Support this club and get access to all of its exclusive content!
-              </Trans>
-            </Text>
-          </Stack>
-          )}
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverCloseButton />
+                <PopoverHeader fontWeight='semibold'>
+                  <Trans>You are the owner</Trans>
+                </PopoverHeader>
+                <PopoverBody textAlign='left' fontSize='sm'>Because you are the owner of the club, you are a supporter
+                  without an active subscription.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+          <Text fontSize='md' color='gray.00'>
+            <Trans>
+              Support this club and get access to all of its exclusive content!
+            </Trans>
+          </Text>
+        </Stack>
+      )
+    }
+
+    return <></>
+  }
+
+  const SupporterPublicButton = (): JSX.Element => {
+    if (clubData.viewerMember?.isSupporter === true) {
+      return (
+        <Stack spacing={1}>
+          <LinkButton
+            colorScheme='gray'
+            size='lg'
+            w='100%'
+            {...rest}
+            href='/settings/billing/subscriptions'
+          >
+            <Trans>
+              My Subscriptions
+            </Trans>
+          </LinkButton>
+          <Text fontSize='md' color='gray.00'>
+            <Trans>
+              Thanks for supporting this club! You can now access all of its exclusive content.
+            </Trans>
+          </Text>
+        </Stack>
+      )
+    }
+
+    if (!clubData.canSupport) {
+      return <></>
+    }
+
+    return (
+      <Stack spacing={1}>
+        <Can I='interact' a='Club' passThrough>
+          {allowed => (
+            <Button
+              isDisabled={allowed === false}
+              onClick={onOpen}
+              {...buttonProps}
+              {...rest}
+            />)}
+        </Can>
+        <Text fontSize='md' color='gray.00'>
+          <Trans>
+            Support this club and get access to all of its exclusive content!
+          </Trans>
+        </Text>
+      </Stack>
+    )
+  }
+
+  return (
+    <HistoryDisclosureProvider {...methods}>
+      {clubData.viewerIsOwner ? <SupporterOwnerButton /> : <SupporterPublicButton />}
       <Modal
         isOpen={isOpen}
         onClose={onClose}

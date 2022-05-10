@@ -1,29 +1,28 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { Box, HStack } from '@chakra-ui/react'
-import type { ClubExclusivePostsFragment$key } from '@//:artifacts/ClubExclusivePostsFragment.graphql'
-import { encodeQueryParams } from 'serialize-query-params'
+import type { ClubTopPostsFragment$key } from '@//:artifacts/ClubTopPostsFragment.graphql'
+import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
-import PostsHorizontalPreview from '../PostsHorizontalPreview/PostsHorizontalPreview'
-import { configMap } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/constants'
+import PostsHorizontalPreview from '../../PostsHorizontalPreview/PostsHorizontalPreview'
 import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Trans } from '@lingui/macro'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
-  query: ClubExclusivePostsFragment$key
+  query: ClubTopPostsFragment$key
 }
 
 const Fragment = graphql`
-  fragment ClubExclusivePostsFragment on Club
+  fragment ClubTopPostsFragment on Club
   @argumentDefinitions(
     first: {type: Int, defaultValue: 10}
     after: {type: String}
   )
-  @refetchable(queryName: "ClubExclusivePostsPaginationQuery" ) {
+  @refetchable(queryName: "ClubTopPostsPaginationQuery" ) {
     slug
-    exclusivePosts: posts(first: $first, after: $after, sortBy: NEW, supporterOnlyStatus: [FULL, PARTIAL])
-    @connection (key: "ClubExclusivePosts_exclusivePosts") {
+    topPosts: posts(first: $first, after: $after, sortBy: TOP)
+    @connection (key: "ClubTopPosts_topPosts") {
       edges {
         __typename
       }
@@ -32,7 +31,7 @@ const Fragment = graphql`
   }
 `
 
-export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
+export default function ClubTopPosts ({ query }: Props): JSX.Element {
   const {
     data,
     hasNext
@@ -41,19 +40,20 @@ export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
     query
   )
 
-  const newPostsEncodedQuery = encodeQueryParams(configMap, {
-    sort: 'NEW',
-    supporter: ['FULL', 'PARTIAL']
+  const topPostsEncodedQuery = encodeQueryParams({
+    sort: StringParam
+  }, {
+    sort: 'TOP'
   })
 
-  const link = `/${data.slug as string}/posts?${stringify(newPostsEncodedQuery)}`
+  const link = `/${data.slug as string}/posts?${stringify(topPostsEncodedQuery)}`
 
   return (
     <Box>
       <PageSectionWrap>
         <HStack justify='space-between'>
           <PageSectionTitle colorScheme='orange'>
-            Exclusive Posts
+            Top Posts
           </PageSectionTitle>
           <LinkButton
             href={link}
@@ -70,7 +70,7 @@ export default function ClubExclusivePosts ({ query }: Props): JSX.Element {
       <PostsHorizontalPreview
         hasNext={hasNext}
         href={link}
-        query={data.exclusivePosts}
+        query={data.topPosts}
       />
     </Box>
   )

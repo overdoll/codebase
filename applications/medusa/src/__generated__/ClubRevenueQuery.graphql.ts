@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f7076c8b3a9bfc5637f906e9147f8b42>>
- * @relayHash 68b43c0d67d099d493dc879eae932234
+ * @generated SignedSource<<b64ecf565e9eeb61e838df470dd660c5>>
+ * @relayHash d3057bdbe26e7cdf37f33b848d564224
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 68b43c0d67d099d493dc879eae932234
+// @relayRequestID d3057bdbe26e7cdf37f33b848d564224
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type ClubRevenueQuery$data = {
   readonly club: {
     readonly __typename: string;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment" | "ClubInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment" | "ClubInformationBannerFragment" | "ClubTransactionMetricsFragment">;
   } | null;
 };
 export type ClubRevenueQueryResponse = ClubRevenueQuery$data;
@@ -90,7 +90,46 @@ v8 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PageInfo",
+  "kind": "LinkedField",
+  "name": "pageInfo",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endCursor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasNextPage",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v11 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 2
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -127,6 +166,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubInformationBannerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubTransactionMetricsFragment"
           }
         ],
         "storageKey": null
@@ -230,41 +274,11 @@ return {
                     ],
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cursor",
-                    "storageKey": null
-                  }
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PageInfo",
-                "kind": "LinkedField",
-                "name": "pageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "endCursor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasNextPage",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
+              (v10/*: any*/)
             ],
             "storageKey": "payouts(first:3)"
           },
@@ -359,6 +373,52 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v11/*: any*/),
+            "concreteType": "ClubTransactionMetricConnection",
+            "kind": "LinkedField",
+            "name": "transactionMetrics",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubTransactionMetricEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubTransactionMetric",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v5/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v9/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v10/*: any*/)
+            ],
+            "storageKey": "transactionMetrics(first:2)"
+          },
+          {
+            "alias": null,
+            "args": (v11/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "ClubTransactionMetrics_transactionMetrics",
+            "kind": "LinkedHandle",
+            "name": "transactionMetrics"
           }
         ],
         "storageKey": null
@@ -366,7 +426,7 @@ return {
     ]
   },
   "params": {
-    "id": "68b43c0d67d099d493dc879eae932234",
+    "id": "d3057bdbe26e7cdf37f33b848d564224",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",
@@ -375,6 +435,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5de7b9d3b390621bec7355a6e95643f";
+(node as any).hash = "c52a2b9104ad632533a3d6ed38b8d952";
 
 export default node;

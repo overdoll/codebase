@@ -39,7 +39,7 @@ export default function ClubBalanceHeader ({ query }: Props): JSX.Element {
             </Trans>)}
         >
           <Trans>
-            In order to receive payouts, you must have an active payout method set up.
+            In order to receive payouts, you must have an active payout method set up
           </Trans>
         </TextHeader>
       </LinkTile>

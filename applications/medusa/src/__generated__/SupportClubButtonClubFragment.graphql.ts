@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<38ff3c72c73ee14be3f62485dff56cdc>>
+ * @generated SignedSource<<02a41787240f41247652a8485d26d6d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,8 @@ export type SupportClubButtonClubFragment$data = {
   readonly viewerMember: {
     readonly isSupporter: boolean;
   } | null;
+  readonly canSupport: boolean;
+  readonly viewerIsOwner: boolean;
   readonly supporterSubscriptionPrice: {
     readonly localizedPrice: {
       readonly amount: number;
@@ -65,6 +67,20 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "canSupport",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "viewerIsOwner",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "LocalizedPricingPoint",
       "kind": "LinkedField",
       "name": "supporterSubscriptionPrice",
@@ -108,6 +124,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d2a6654e15a220047e2d2ed1268ad3c1";
+(node as any).hash = "fdab818e1448c096877a8a48b3435cdf";
 
 export default node;

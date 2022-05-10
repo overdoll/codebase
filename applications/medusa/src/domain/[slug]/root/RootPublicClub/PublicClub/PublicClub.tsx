@@ -12,16 +12,12 @@ import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceI
 import { ClubMembers } from '@//:assets/icons/interface'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import ClubMenu from './ClubMenu/ClubMenu'
-import ClubTopPosts from './ClubTopPosts/ClubTopPosts'
-import ClubExclusivePosts from './ClubExclusivePosts/ClubExclusivePosts'
-import SupportClubButton from './SupportClubButton/SupportClubButton'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import Head from 'next/head'
-import LockedAccountBanner
-  from '../../../../../common/components/AccountInformationBanner/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import ClubConditionalPostDisplay from './ClubConditionalPostDisplay/ClubConditionalPostDisplay'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -34,6 +30,7 @@ const Query = graphql`
       name
       slug
       membersCount
+      canSupport
       backgroundPost: posts(first: 1) {
         edges {
           node {
@@ -49,15 +46,15 @@ const Query = graphql`
       ...LargeClubHeaderFragment
       ...JoinClubFromPageFragment
       ...ClubMenuFragment
-      ...ClubTopPostsFragment
       ...ClubExclusivePostsFragment
       ...SupportClubButtonClubFragment
       ...ClubSuspendedStaffAlertFragment
+      ...ClubConditionalPostDisplayFragment
     }
     viewer {
       ...JoinClubFromPageViewerFragment
-      ...SupportClubButtonViewerFragment
       ...AccountInformationBannerFragment
+      ...ClubConditionalPostDisplayViewerFragment
     }
   }
 `
@@ -116,11 +113,7 @@ export default function PublicClub (props: Props): JSX.Element {
             viewerQuery={queryData?.viewer}
           />
         </Stack>
-        <Stack spacing={2}>
-          <SupportClubButton clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
-          <ClubExclusivePosts query={queryData?.club} />
-        </Stack>
-        <ClubTopPosts query={queryData?.club} />
+        <ClubConditionalPostDisplay clubQuery={queryData?.club} viewerQuery={queryData?.viewer} />
       </Stack>
     </>
   )

@@ -16,6 +16,7 @@ import ClubPayoutMethodAlert from './ClubPayoutMethodAlert/ClubPayoutMethodAlert
 import { CLUB_GUIDELINES, PAYOUTS_INFORMATION } from '@//:modules/constants/links'
 import { ClubPeopleGroup, PayoutMethod } from '@//:assets/icons'
 import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import ClubTransactionMetrics from './ClubTransactionMetrics/ClubTransactionMetrics'
 
 interface Props {
   query: PreloadedQuery<ClubRevenueQuery>
@@ -30,6 +31,7 @@ const Query = graphql`
       ...ClubPayoutsListFragment
       ...ClubPayoutMethodAlertFragment
       ...ClubInformationBannerFragment
+      ...ClubTransactionMetricsFragment
     }
   }
 `
@@ -55,6 +57,7 @@ export default function ClubRevenue ({ query }: Props): JSX.Element {
       <Stack spacing={8}>
         <ClubFullBalance query={queryData.club} />
         <ClubPayoutsList query={queryData.club} />
+        <ClubTransactionMetrics query={queryData.club} />
         <Box>
           <PageSectionWrap>
             <PageSectionTitle>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0208d7e833db0c3f7f5b70ced6c6cf5e>>
- * @relayHash 9059582b494e548bb79d6568a2fa7e17
+ * @generated SignedSource<<f6574b997ddc17d9bd8ff515a55760f9>>
+ * @relayHash 63cbdaacbef37ec22e1cd9e2a6787d82
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9059582b494e548bb79d6568a2fa7e17
+// @relayRequestID 63cbdaacbef37ec22e1cd9e2a6787d82
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -258,7 +258,20 @@ return {
             ],
             "storageKey": null
           },
-          (v7/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canSupport",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "nextSupporterPostTime",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -315,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "9059582b494e548bb79d6568a2fa7e17",
+    "id": "63cbdaacbef37ec22e1cd9e2a6787d82",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
