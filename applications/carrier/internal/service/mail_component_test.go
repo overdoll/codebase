@@ -1,15 +1,18 @@
 package service_test
 
 import (
+	"bytes"
 	"context"
-	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
+	"unicode"
 )
 
 const (
@@ -26,7 +29,7 @@ type Inbox struct {
 	Inbox struct {
 		Result string
 		Count  int
-		Emails []Content
+		Emails []*Content
 	} `graphql:"inbox(namespace: $namespace, tag: $tag, timestamp_from: $timestamp_from, livequery: true)"`
 }
 
@@ -42,7 +45,18 @@ func generateEmail(name string) string {
 	return os.Getenv("TESTMAIL_NAMESPACE") + "." + name + "@inbox.testmail.app"
 }
 
-func waitForEmailAndGetResponse(t *testing.T, email string, timestampFrom time.Time) Content {
+func stripSpaces(str string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsSpace(r) {
+			// if the character is a space, drop it
+			return -1
+		}
+		// else keep it in the string
+		return r
+	}, str)
+}
+
+func waitForEmailAndGetResponse(t *testing.T, email string, timestampFrom time.Time) *Content {
 
 	parts := strings.Split(email, "@")
 	main := strings.Split(parts[0], ".")
@@ -63,7 +77,19 @@ func waitForEmailAndGetResponse(t *testing.T, email string, timestampFrom time.T
 	require.NoError(t, err, "no error for waiting for email to arrive")
 	require.Equal(t, 1, queryInbox.Inbox.Count)
 	require.Equal(t, "success", queryInbox.Inbox.Result)
-	fmt.Println(queryInbox.Inbox.Emails[0])
 
 	return queryInbox.Inbox.Emails[0]
+}
+
+func compareHtml(t *testing.T, expected string, actual string) bool {
+
+	expectedReader := bytes.NewReader([]byte(expected))
+	expectedDoc, err := goquery.NewDocumentFromReader(expectedReader)
+	require.NoError(t, err, "no error for parsing html document for expected")
+
+	actualReader := bytes.NewReader([]byte(actual))
+	actualDoc, err := goquery.NewDocumentFromReader(actualReader)
+	require.NoError(t, err, "no error for parsing html document for actual")
+
+	return reflect.DeepEqual(expectedDoc, actualDoc)
 }

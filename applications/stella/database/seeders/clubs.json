@@ -11,6 +11,7 @@
     "suspended": false,
     "suspended_until": "",
     "thumbnail_resource_id": null,
-    "members_count_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b"
+    "has_created_supporter_only_post": true,
+    "next_supporter_post_time": "2022-04-08 00:09:01.117"
   }
 ]

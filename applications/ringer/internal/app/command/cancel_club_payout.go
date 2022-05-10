@@ -33,7 +33,7 @@ func (h CancelClubPayoutHandler) Handle(ctx context.Context, cmd CancelClubPayou
 		return nil, err
 	}
 
-	if err := h.event.CancelClubPayout(ctx, cmd.PayoutId); err != nil {
+	if err := h.event.CancelClubPayout(ctx, pay); err != nil {
 		return nil, err
 	}
 

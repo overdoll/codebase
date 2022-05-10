@@ -95,7 +95,8 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, GenerateClubMonthlyPayout,
 		GenerateClubMonthlyPayoutInput{
-			ClubId: input.DestinationClubId,
+			ClubId:    input.DestinationClubId,
+			CanCancel: true,
 		},
 	).
 		GetChildWorkflowExecution().

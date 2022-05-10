@@ -66,16 +66,9 @@ func (r EventTemporalRepository) ClubPaymentDeduction(ctx context.Context, reque
 	return nil
 }
 
-func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, payoutId string) error {
+func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CancelClubPayout_" + payoutId,
-	}
-
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelClubPayout, workflows.CancelClubPayoutInput{PayoutId: payoutId})
-
-	if err != nil {
+	if err := r.client.CancelWorkflow(ctx, pay.TemporalWorkflowId(), ""); err != nil {
 		return err
 	}
 
@@ -95,6 +88,7 @@ func (r EventTemporalRepository) InitiateClubPayout(ctx context.Context, clubId 
 		ClubId:     clubId,
 		FutureTime: depositDate,
 		WorkflowId: workflowId,
+		CanCancel:  true,
 	})
 
 	if err != nil {

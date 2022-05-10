@@ -35,6 +35,6 @@ func TestAccountDeleted(t *testing.T) {
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
 	require.Equal(t, "Account deleted", content.Subject, "correct subject for the email")
-	require.Equal(t, accountDeletedHtml, content.Html, "correct content for the email html")
+	require.True(t, compareHtml(t, accountDeletedHtml, content.Html), "correct content for the email html")
 	require.Equal(t, accountDeletedText, content.Text, "correct content for the email text")
 }

@@ -18,6 +18,7 @@ type GenerateClubMonthlyPayoutInput struct {
 	ClubId     string
 	FutureTime *time.Time
 	WorkflowId string
+	CanCancel  bool
 }
 
 func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPayoutInput) error {
@@ -136,6 +137,31 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		return err
 	}
 
+	logger := workflow.GetLogger(ctx)
+
+	// if workflow is cancelled, we want to clean up by cancelling the payout
+	defer func() {
+
+		if !errors.Is(ctx.Err(), workflow.ErrCanceled) {
+			return
+		}
+
+		if !input.CanCancel {
+			return
+		}
+
+		newCtx, _ := workflow.NewDisconnectedContext(ctx)
+
+		if err := workflow.ExecuteActivity(newCtx, a.MarkClubPayoutCancelled,
+			activities.MarkClubPayoutCancelledInput{
+				PayoutId: payoutId,
+			},
+		).Get(newCtx, nil); err != nil {
+			logger.Error("failed to cleanup cancel generate club monthly payout", "Error", err)
+			return
+		}
+	}()
+
 	if input.FutureTime == nil {
 		input.FutureTime = &createPayload.DepositDate
 	}
@@ -177,6 +203,8 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			}
 		}
 	}
+
+	input.CanCancel = false
 
 	// mark the payout as "processing" - our initial period of x days until deposit has passed
 	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutProcessing,

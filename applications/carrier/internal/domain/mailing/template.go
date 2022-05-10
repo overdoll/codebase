@@ -9,7 +9,7 @@ import (
 	textTemplate "text/template"
 )
 
-//go:embed views/support/*.gohtml views/templates/**/*.gohtml
+//go:embed views/templates/**/*.gohtml
 var htmlTmplFS embed.FS
 
 //go:embed views/templates/**/*.gotmpl

@@ -29,8 +29,9 @@ type PostModified struct {
 	Club       struct {
 		Id string
 	}
-	Categories []CategoryModified
-	Content    []types.PostContent
+	Categories          []CategoryModified
+	Content             []types.PostContent
+	SupporterOnlyStatus types.SupporterOnlyStatus
 }
 
 type Post struct {
@@ -166,7 +167,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
 		"input": types.AddPostContentInput{
-			ID:      relay.ID(newPostId),
+			ID:      newPostId,
 			Content: []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"},
 		},
 	})
@@ -195,7 +196,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// update order
 	err = client.Mutate(context.Background(), &updatePostContentOrder, map[string]interface{}{
 		"input": types.UpdatePostContentOrderInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			ContentIds: reversedContentIds,
 		},
 	})
@@ -231,12 +232,19 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
 	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #2")
 
+	var post Post
+	err = client.Query(context.Background(), &post, map[string]interface{}{
+		"reference": graphql.String(newPostReference),
+	})
+	require.Error(t, err)
+	require.Equal(t, types.SupporterOnlyStatusPartial, post.Post.SupporterOnlyStatus, "should be partial supporter only status")
+
 	var removePostContent RemovePostContent
 
 	// remove 1 post content
 	err = client.Mutate(context.Background(), &removePostContent, map[string]interface{}{
 		"input": types.RemovePostContentInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			ContentIds: []relay.ID{addPostContent.AddPostContent.Post.Content[2].ID},
 		},
 	})
@@ -268,7 +276,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &updatePostCharacters, map[string]interface{}{
 		"input": types.UpdatePostCharactersInput{
-			ID:           relay.ID(newPostId),
+			ID:           newPostId,
 			CharacterIds: []relay.ID{"Q2hhcmFjdGVyOjFxN01KblFYQXR4ZXIwZmJvQk1IdGxDMEpNZQ=="},
 		},
 	})
@@ -283,7 +291,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &updatePostAudience, map[string]interface{}{
 		"input": types.UpdatePostAudienceInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			AudienceID: "QXVkaWVuY2U6MXBjS2lRTDdkZ1VXOENJTjd1TzF3cUZhTXFs",
 		},
 	})
@@ -313,7 +321,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// make sure we got an error for viewing a post unauthenticated
 	client2 := getGraphqlClient(t)
-	var post Post
+
 	err = client2.Query(context.Background(), &post, map[string]interface{}{
 		"reference": graphql.String(newPostReference),
 	})
