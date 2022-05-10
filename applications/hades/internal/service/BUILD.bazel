@@ -20,6 +20,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/location",
+        "//libraries/money",
         "//libraries/principal",
         "//libraries/testing_tools",
         "@io_temporal_go_sdk//client",

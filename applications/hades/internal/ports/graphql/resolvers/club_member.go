@@ -10,11 +10,11 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type CCBillTransactionDetailsResolver struct {
+type ClubMemberResolver struct {
 	App *app.Application
 }
 
-func (r CCBillTransactionDetailsResolver) LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (types.AccountClubSupporterSubscription, error) {
+func (r ClubMemberResolver) ClubSupporterSubscription(ctx context.Context, obj *types.ClubMember) (types.AccountClubSupporterSubscription, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err

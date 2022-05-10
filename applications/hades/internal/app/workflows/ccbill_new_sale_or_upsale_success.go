@@ -212,17 +212,6 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 		return err
 	}
 
-	// tell stella about this new supporter
-	if err := workflow.ExecuteActivity(ctx, a.AddClubSupporter,
-		activities.AddClubSupporterInput{
-			AccountId:   details.AccountInitiator.AccountId,
-			ClubId:      details.CcbillClubSupporter.ClubId,
-			SupportedAt: input.Timestamp,
-		},
-	).Get(ctx, nil); err != nil {
-		return err
-	}
-
 	// create a new account supporter record (this is done last because it serves as a "confirmation" that everything has been set up correctly)
 	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
 		activities.CreateAccountClubSupportSubscriptionInput{
@@ -237,6 +226,17 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			Timestamp:                          timestamp,
 			Amount:                             billedAmount,
 			Currency:                           billedCurrency,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// tell stella about this new supporter
+	if err := workflow.ExecuteActivity(ctx, a.AddClubSupporter,
+		activities.AddClubSupporterInput{
+			AccountId:   details.AccountInitiator.AccountId,
+			ClubId:      details.CcbillClubSupporter.ClubId,
+			SupportedAt: input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

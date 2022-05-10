@@ -5,3 +5,7 @@ extend type Club @key(fields: "id")  {
 extend type Account @key(fields: "id")  {
   id: ID! @external
 }
+
+extend type ClubMember @key(fields: "id")  {
+  id: ID! @external
+}

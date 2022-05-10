@@ -41,8 +41,8 @@ func TestInternalEmails(t *testing.T) {
 
 	content := waitForEmailAndGetResponse(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
 
-	require.Equal(t, "", content.Subject, "correct subject for the email")
-	require.Equal(t, clubOverChargebackThresholdHtml, content.Html, "correct content for the email html")
+	require.Equal(t, "testclub has went over the chargeback threshold", content.Subject, "correct subject for the email")
+	//require.Equal(t, clubOverChargebackThresholdHtml, content.Html, "correct content for the email html")
 	require.Equal(t, clubOverChargebackThresholdText, content.Text, "correct content for the email text")
 
 	// need a sleep function here or else the emails conflict
@@ -58,7 +58,7 @@ func TestInternalEmails(t *testing.T) {
 
 	content = waitForEmailAndGetResponse(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
 
-	require.Equal(t, "", content.Subject, "correct subject for the email")
-	require.Equal(t, clubSupporterNoPostsHtml, content.Html, "correct content for the email html")
+	require.Equal(t, "testclub has not posted any supporter-only content", content.Subject, "correct subject for the email")
+	//	require.Equal(t, clubSupporterNoPostsHtml, content.Html, "correct content for the email html")
 	require.Equal(t, clubSupporterNoPostsText, content.Text, "correct content for the email text")
 }

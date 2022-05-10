@@ -220,6 +220,26 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
+		case "ClubMember":
+			resolverName, err := entityResolverNameForClubMember(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ClubMember": %w`, err)
+			}
+			switch resolverName {
+
+			case "findClubMemberByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findClubMemberByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindClubMemberByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ClubMember": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
 
 		}
 		return fmt.Errorf("%w: %s", ErrUnknownType, typeName)
@@ -406,4 +426,21 @@ func entityResolverNameForClub(ctx context.Context, rep map[string]interface{}) 
 		return "findClubByID", nil
 	}
 	return "", fmt.Errorf("%w for Club", ErrTypeNotFound)
+}
+
+func entityResolverNameForClubMember(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findClubMemberByID", nil
+	}
+	return "", fmt.Errorf("%w for ClubMember", ErrTypeNotFound)
 }

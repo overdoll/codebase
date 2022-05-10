@@ -63,6 +63,17 @@ type accountSavedPaymentMethod struct {
 	UpdatedAt              time.Time `db:"updated_at"`
 }
 
+var accountActiveOrCancelledSupporterSubscriptionsTable = table.New(table.Metadata{
+	Name: "account_active_or_cancelled_supporter_subscriptions",
+	Columns: []string{
+		"account_id",
+		"club_id",
+		"id",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{"club_id", "id"},
+})
+
 var clubActiveSupporterSubscriptionsTable = table.New(table.Metadata{
 	Name: "club_active_supporter_subscriptions",
 	Columns: []string{
@@ -110,40 +121,6 @@ type accountClubSupporterSubscriptionLock struct {
 	CCBillSubscriptionId               *string `db:"ccbill_subscription_id"`
 	AccountClubSupporterSubscriptionId string  `db:"account_club_supporter_subscription_id"`
 }
-
-var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
-	Name: "account_club_supporter_subscriptions_by_account",
-	Columns: []string{
-		"account_id",
-		"id",
-		"club_id",
-		"status",
-		"supporter_since",
-		"last_billing_date",
-		"next_billing_date",
-		"billing_amount",
-		"billing_currency",
-
-		"created_at",
-		"cancelled_at",
-		"expired_at",
-
-		"failed_at",
-		"ccbill_error_text",
-		"ccbill_error_code",
-		"billing_failure_next_retry_date",
-
-		"encrypted_payment_method",
-
-		"ccbill_subscription_id",
-
-		"updated_at",
-
-		"cancellation_reason_id",
-	},
-	PartKey: []string{"account_id"},
-	SortKey: []string{"id"},
-})
 
 var accountClubSupporterSubscriptionsTable = table.New(table.Metadata{
 	Name: "account_club_supporter_subscriptions",
@@ -768,32 +745,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := accountClubSupporterSubscriptionsByAccountTable.Insert()
-
-	batch.Query(stmt,
-		target.AccountId,
-		target.Id,
-		target.ClubId,
-		target.Status,
-		target.SupporterSince,
-		target.LastBillingDate,
-		target.NextBillingDate,
-		target.BillingAmount,
-		target.BillingCurrency,
-		target.CreatedAt,
-		target.CancelledAt,
-		target.ExpiredAt,
-		target.FailedAt,
-		target.CCBillErrorText,
-		target.CCBillErrorCode,
-		target.BillingFailureNextRetryDate,
-		target.EncryptedPaymentMethod,
-		target.CCBillSubscriptionId,
-		target.UpdatedAt,
-		target.CancellationReasonId,
-	)
-
-	stmt, _ = accountClubSupporterSubscriptionsTable.Insert()
+	stmt, _ := accountClubSupporterSubscriptionsTable.Insert()
 
 	batch.Query(stmt,
 		target.Id,
@@ -836,8 +788,20 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		bucket,
 	)
 
+	stmt, _ = accountActiveOrCancelledSupporterSubscriptionsTable.Insert()
+
+	batch.Query(stmt,
+		target.AccountId,
+		target.ClubId,
+		target.Id,
+	)
+
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create account club supporter subscription: %v", err)
+	}
+
+	if err := r.indexAccountClubSupporterSubscription(ctx, accountClubSupp); err != nil {
+		return err
 	}
 
 	return nil
@@ -865,37 +829,6 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountSavedPaymentMethod
 		}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to delete account saved payment method: %v", err)
-	}
-
-	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-
-	target, err := marshalAccountClubSubscriptionToDatabase(subscription)
-
-	if err != nil {
-		return err
-	}
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	stmt, _ := accountClubSupporterSubscriptionsByAccountTable.Delete()
-
-	batch.Query(stmt,
-		target.AccountId,
-		target.ClubId,
-		target.Id,
-	)
-
-	stmt, _ = accountClubSupporterSubscriptionsTable.Delete()
-
-	batch.Query(stmt,
-		target.Id,
-	)
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account club support subscription: %v", err)
 	}
 
 	return nil
@@ -985,19 +918,15 @@ func (r BillingCassandraElasticsearchRepository) updateAccountClubSupporterSubsc
 	}
 
 	if err := r.session.
-		Query(accountClubSupporterSubscriptionsByAccountTable.Update(columns...)).
+		Query(accountClubSupporterSubscriptionsTable.Update(columns...)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
 	}
 
-	if err := r.session.
-		Query(accountClubSupporterSubscriptionsTable.Update(columns...)).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalled).
-		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
+	if err := r.indexAccountClubSupporterSubscription(ctx, subscription); err != nil {
+		return nil, err
 	}
 
 	return subscription, nil
@@ -1035,13 +964,21 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubsc
 		}
 	}
 
-	// subscription expired, release lock
 	if s.ExpiredAt() != nil {
+		// subscription expired, release lock
 		if err := r.session.Query(accountClubSupporterSubscriptionLockTable.Delete()).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(accountClubSupporterSubscriptionLock{ClubId: s.ClubId(), AccountId: s.AccountId()}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to delete club active supporter subscriptions: %v", err)
+			return nil, fmt.Errorf("failed to release lock on account club supporter subscription: %v", err)
+		}
+
+		// also delete from active or cancelled list
+		if err := r.session.Query(accountActiveOrCancelledSupporterSubscriptionsTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(accountClubSupporterSubscription{ClubId: s.ClubId(), AccountId: s.AccountId(), Id: s.Id()}).
+			ExecRelease(); err != nil {
+			return nil, fmt.Errorf("failed to delete club active or cancelled supporter subscription: %v", err)
 		}
 	}
 
@@ -1070,7 +1007,7 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 func (r BillingCassandraElasticsearchRepository) HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, accountId string) (*bool, error) {
 
 	if requester != nil {
-		if err := billing.CanViewAccountClubSupporterSubscription(requester, accountId); err != nil {
+		if err := billing.CanViewAccountClubSupporterSubscription(requester, &accountId, nil); err != nil {
 			return nil, err
 		}
 	}
@@ -1081,16 +1018,14 @@ func (r BillingCassandraElasticsearchRepository) HasActiveOrCancelledAccountClub
 
 	var clubMemberCounter activeOrCancelledCount
 
-	if err := accountClubSupporterSubscriptionsByAccountTable.
+	if err := accountActiveOrCancelledSupporterSubscriptionsTable.
 		SelectBuilder().
 		CountAll().
-		Where(qb.Eq("account_id"), qb.In("status")).
-		AllowFiltering().
+		Where(qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindMap(map[string]interface{}{
 			"account_id": accountId,
-			"status":     []string{billing.Cancelled.String(), billing.Active.String()},
 		}).
 		Get(&clubMemberCounter); err != nil {
 		return nil, fmt.Errorf("failed to get has active or cancelled account club supporter subscriptions: %v", err)
@@ -1124,41 +1059,49 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.C
 		return fmt.Errorf("failed to delete saved payment methods for account: %v", err)
 	}
 
+	// delete expired subscriptions
+	if err := r.session.Query(
+		qb.Delete(expiredAccountClubSupporterSubscriptionsByAccountTable.Name()).
+			Where(qb.Eq("account_id")).
+			ToCql()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(expiredAccountClubSupporterSubscription{AccountId: accountId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to delete expired account club supporter subscriptions for account: %v", err)
+	}
+
 	return nil
 }
 
 func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) (*billing.AccountClubSupporterSubscription, error) {
 
-	var accountClubSupporting []*accountClubSupporterSubscription
+	var lockedSub accountClubSupporterSubscriptionLock
 
-	if err := accountClubSupporterSubscriptionsByAccountTable.
-		SelectBuilder().
-		Where(qb.Eq("account_id")).
-		Query(r.session).
+	if err := r.session.Query(accountClubSupporterSubscriptionLockTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountClubSupporterSubscription{
-			AccountId: accountId,
-			ClubId:    clubId,
-		}).
-		Select(&accountClubSupporting); err != nil {
-		return nil, fmt.Errorf("failed to get account club support by account and club id: %v", err)
-	}
+		BindStruct(accountClubSupporterSubscriptionLock{ClubId: clubId, AccountId: accountId}).
+		Get(&lockedSub); err != nil {
 
-	if len(accountClubSupporting) == 0 {
-		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
 	}
 
 	var accountClubSupported *accountClubSupporterSubscription
 
-	for _, sub := range accountClubSupporting {
-		if sub.ClubId == clubId {
-			accountClubSupported = sub
-			break
+	if err := r.session.Query(accountClubSupporterSubscriptionsTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&accountClubSupporterSubscription{
+			Id: lockedSub.AccountClubSupporterSubscriptionId,
+		}).
+		Get(&accountClubSupported); err != nil {
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
 		}
-	}
 
-	if accountClubSupported == nil {
-		return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+		return nil, fmt.Errorf("failed to get account club support by id: %v", err)
 	}
 
 	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
@@ -1191,88 +1134,6 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 	), nil
 }
 
-func (r BillingCassandraElasticsearchRepository) searchAccountClubSupporterSubscriptions(ctx context.Context, cursor *paging.Cursor, filters *billing.AccountClubSupporterSubscriptionFilters) ([]*billing.AccountClubSupporterSubscription, error) {
-	var accountClubSupported []*accountClubSupporterSubscription
-
-	builder := accountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	var status []string
-
-	if len(filters.Status()) > 0 {
-		builder.Where(qb.In("status"))
-	}
-
-	for _, s := range filters.Status() {
-		status = append(status, s.String())
-	}
-
-	bound := map[string]interface{}{
-		"account_id": filters.AccountId(),
-		"status":     status,
-	}
-
-	if err := builder.Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindMap(bound).
-		Select(&accountClubSupported); err != nil {
-		return nil, fmt.Errorf("failed to get account club support: %v", err)
-	}
-
-	var accountSupport []*billing.AccountClubSupporterSubscription
-
-	for _, support := range accountClubSupported {
-
-		decrypt, err := decryptPaymentMethod(support.EncryptedPaymentMethod)
-
-		if err != nil {
-			return nil, err
-		}
-
-		supportItem := billing.UnmarshalAccountClubSupporterSubscriptionFromDatabase(
-			support.Id,
-			support.AccountId,
-			support.ClubId,
-			support.Status,
-			support.SupporterSince,
-			support.LastBillingDate,
-			support.NextBillingDate,
-			support.BillingAmount,
-			support.BillingCurrency,
-			decrypt,
-			support.CCBillSubscriptionId,
-			support.CancelledAt,
-			support.CreatedAt,
-			support.UpdatedAt,
-			support.CancellationReasonId,
-			support.ExpiredAt,
-			support.FailedAt,
-			support.CCBillErrorText,
-			support.CCBillErrorCode,
-			support.BillingFailureNextRetryDate,
-		)
-
-		supportItem.Node = paging.NewNode(support.Id)
-		accountSupport = append(accountSupport, supportItem)
-	}
-
-	return accountSupport, nil
-}
-
-func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountClubSupporterSubscriptionFilters) ([]*billing.AccountClubSupporterSubscription, error) {
-
-	if err := billing.CanViewAccountClubSupporterSubscription(requester, filters.AccountId()); err != nil {
-		return nil, err
-	}
-
-	return r.searchAccountClubSupporterSubscriptions(ctx, cursor, filters)
-}
-
 func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterSubscriptionsByAccount(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.ExpiredAccountClubSupporterSubscription, error) {
 
 	if err := billing.CanViewExpiredAccountClubSupporterSubscription(requester, accountId); err != nil {
@@ -1281,7 +1142,7 @@ func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterS
 
 	var expiredSubscriptions []*expiredAccountClubSupporterSubscription
 
-	builder := accountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
+	builder := expiredAccountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
 
 	if cursor != nil {
 		if err := cursor.BuildCassandra(builder, "club_id", true); err != nil {
@@ -1289,52 +1150,7 @@ func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterS
 		}
 	}
 
-	if err := r.session.Query(expiredAccountClubSupporterSubscriptionsByAccountTable.Select()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&expiredAccountClubSupporterSubscription{
-			AccountId: accountId,
-		}).
-		Select(&expiredSubscriptions); err != nil {
-		return nil, fmt.Errorf("failed to get expired account club supporter subscriptions: %v", err)
-	}
-
-	var accountExpired []*billing.ExpiredAccountClubSupporterSubscription
-
-	for _, expired := range expiredSubscriptions {
-
-		supportItem := billing.UnmarshalExpiredAccountClubSupporterSubscriptionFromDatabase(
-			expired.AccountId,
-			expired.ClubId,
-			expired.CCBillSubscriptionId,
-			expired.SupporterSince,
-			expired.CancelledAt,
-			expired.ExpiredAt,
-		)
-
-		supportItem.Node = paging.NewNode(expired.ClubId)
-		accountExpired = append(accountExpired, supportItem)
-	}
-
-	return accountExpired, nil
-}
-
-func (r BillingCassandraElasticsearchRepository) getExpiredAccountClubSupporterSubscriptionsByAccount(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*billing.ExpiredAccountClubSupporterSubscription, error) {
-
-	if err := billing.CanViewExpiredAccountClubSupporterSubscription(requester, accountId); err != nil {
-		return nil, err
-	}
-
-	var expiredSubscriptions []*expiredAccountClubSupporterSubscription
-
-	builder := accountClubSupporterSubscriptionsByAccountTable.SelectBuilder()
-
-	if cursor != nil {
-		if err := cursor.BuildCassandra(builder, "club_id", true); err != nil {
-			return nil, err
-		}
-	}
-
-	if err := r.session.Query(expiredAccountClubSupporterSubscriptionsByAccountTable.Select()).
+	if err := r.session.Query(builder.ToCql()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&expiredAccountClubSupporterSubscription{
 			AccountId: accountId,
@@ -1431,17 +1247,6 @@ func (r BillingCassandraElasticsearchRepository) CreateExpiredAccountClubSupport
 	}
 
 	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscriptionsByAccountIdOperator(ctx context.Context, id string) ([]*billing.AccountClubSupporterSubscription, error) {
-
-	filters, err := billing.NewAccountClubSupporterSubscriptionFilters(id, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return r.searchAccountClubSupporterSubscriptions(ctx, nil, filters)
 }
 
 func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByCCBillTransactionIdOperator(ctx context.Context, ccbillTransactionId string) (*billing.AccountTransaction, error) {

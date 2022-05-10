@@ -55,40 +55,6 @@ CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions_buckets
     primary key ( club_id, bucket )
 );
 
-CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions_by_account
-(
-    account_id                      text,
-    club_id                         text,
-    status                          text,
-    supporter_since                 timestamp,
-    last_billing_date               date,
-    next_billing_date               date,
-    billing_amount                  bigint,
-    billing_currency                text,
-
-    created_at                      timestamp,
-    cancelled_at                    timestamp,
-    expired_at                      timestamp,
-
-    failed_at                       timestamp,
-    ccbill_error_text               text,
-    ccbill_error_code               text,
-    billing_failure_next_retry_date date,
-
-    encrypted_payment_method        text,
-
-    id                              text,
-    ccbill_subscription_id          text,
-
-    updated_at                      timestamp,
-
-    cancellation_reason_id          text,
-
-    primary key ( account_id, id )
-);
-
-CREATE INDEX account_club_supporter_subscriptions_by_account_status ON account_club_supporter_subscriptions_by_account (status);
-
 CREATE TABLE IF NOT EXISTS exp_account_club_supporter_subscriptions_by_acc
 (
     account_id             text,
@@ -188,6 +154,14 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
     duplicate                              boolean,
 
     primary key ( ccbill_subscription_id )
+);
+
+CREATE TABLE IF NOT EXISTS account_active_or_cancelled_supporter_subscriptions
+(
+    account_id text,
+    club_id    text,
+    id         text,
+    primary key ( account_id, club_id, id )
 );
 
 CREATE TABLE IF NOT EXISTS receipt_files

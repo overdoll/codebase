@@ -118,6 +118,10 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 
 type CarrierServiceMock struct{}
 
+func (c CarrierServiceMock) ClubSupporterSubscriptionDuplicate(ctx context.Context, accountId string, clubId string, amount uint64, currency money.Currency) error {
+	return nil
+}
+
 func (c CarrierServiceMock) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
 	return nil
 }

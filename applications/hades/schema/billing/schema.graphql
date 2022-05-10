@@ -834,6 +834,17 @@ type GenerateCCBillClubSupporterPaymentLinkPayload {
   paymentLink: URI
 }
 
+extend type ClubMember {
+  """
+  The subscription linked to this club member.
+
+  Note that an account can have multiple subscriptions for the same club, due to the fact that we keep expired subscriptions.
+
+  So this will just grab the most recent active subscription for this club.
+  """
+  clubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
+}
+
 extend type Account {
   """Club supporter subscriptions linked to this account."""
   clubSupporterSubscriptions(
@@ -938,6 +949,26 @@ extend type Account {
 extend type Club {
   """A supporter subscription price for this club."""
   supporterSubscriptionPrice: LocalizedPricingPoint! @goField(forceResolver: true)
+
+  """Club supporter subscriptions linked to this club."""
+  supporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of account club supporter subscription status."""
+    status: [AccountClubSupporterSubscriptionStatus!]
+  ): AccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
 }
 
 extend type Mutation {

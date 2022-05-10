@@ -23,9 +23,7 @@ type Repository interface {
 	DeleteExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, accountId, clubId string) error
 	CreateExpiredAccountClubSupporterSubscriptionOperator(ctx context.Context, expired *ExpiredAccountClubSupporterSubscription) error
 
-	GetAccountClubSupporterSubscriptionsByAccountIdOperator(ctx context.Context, id string) ([]*AccountClubSupporterSubscription, error)
 	GetAccountClubSupporterSubscriptionByIdOperator(ctx context.Context, id string) (*AccountClubSupporterSubscription, error)
-	DeleteAccountClubSupporterSubscriptionOperator(ctx context.Context, subscription *AccountClubSupporterSubscription) error
 	CreateAccountClubSupporterSubscriptionOperator(ctx context.Context, accountClubSupp *AccountClubSupporterSubscription) error
 	UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
 	UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, id string, updateFn func(subscription *AccountClubSupporterSubscription) error) (*AccountClubSupporterSubscription, error)
@@ -51,6 +49,7 @@ type Repository interface {
 	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
 	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
 	DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error
+	DeleteAndRecreateAccountClubSupporterSubscriptionsIndex(ctx context.Context) error
 
 	DeleteAccountData(ctx context.Context, accountId string) error
 

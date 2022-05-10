@@ -230,7 +230,7 @@ func (c *AccountClubSupporterSubscription) MakeReactivated(nextBillingDate time.
 }
 
 func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principal) error {
-	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
+	return CanViewAccountClubSupporterSubscription(requester, &c.accountId, nil)
 }
 
 func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
@@ -264,13 +264,25 @@ func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId
 	}
 }
 
-func CanViewAccountClubSupporterSubscription(requester *principal.Principal, accountId string) error {
+func CanViewAccountClubSupporterSubscription(requester *principal.Principal, accountId, clubId *string) error {
 	if requester.IsStaff() {
 		return nil
 	}
 
-	if err := requester.BelongsToAccount(accountId); err != nil {
-		return err
+	if accountId == nil && clubId == nil && !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if accountId != nil {
+		if err := requester.BelongsToAccount(*accountId); err != nil {
+			return err
+		}
+	}
+
+	if clubId != nil {
+		if !requester.IsStaff() {
+			return principal.ErrNotAuthorized
+		}
 	}
 
 	return nil

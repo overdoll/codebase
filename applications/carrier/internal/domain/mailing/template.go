@@ -44,7 +44,7 @@ func NewTemplate(template string, args interface{}) (*Template, error) {
 		return nil, fmt.Errorf("failed to execute subject template: %s", err)
 	}
 
-	text, err := html2text.FromString(htmlBody.String(), html2text.Options{PrettyTables: true})
+	text, err := html2text.FromString(htmlBody.String(), html2text.Options{PrettyTables: false})
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert html to string: %s", err)
 	}

@@ -1,1 +1,25 @@
-package file_fixtures
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+---------------
+Account Deleted
+---------------
+
+Hello 1q7MJ3JkhcdcJJNqZezdfQt5pZ6_deleted!
+
+As requested, your account and all associated data has been deleted.
+
+We're sorry to see you go. This is the last email we will send you.
+
+Goodbye.
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )

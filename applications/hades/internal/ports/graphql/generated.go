@@ -48,6 +48,7 @@ type ResolverRoot interface {
 	CCBillTransactionDetails() CCBillTransactionDetailsResolver
 	CancellationReason() CancellationReasonResolver
 	Club() ClubResolver
+	ClubMember() ClubMemberResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -231,6 +232,7 @@ type ComplexityRoot struct {
 		Club                       func(childComplexity int) int
 		ExpirationDate             func(childComplexity int) int
 		ID                         func(childComplexity int) int
+		IsDuplicate                func(childComplexity int) int
 		IsRecurring                func(childComplexity int) int
 		PaymentMethod              func(childComplexity int) int
 		RefundsIssued              func(childComplexity int) int
@@ -293,7 +295,13 @@ type ComplexityRoot struct {
 	Club struct {
 		ID                         func(childComplexity int) int
 		SupporterSubscriptionPrice func(childComplexity int) int
+		SupporterSubscriptions     func(childComplexity int, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) int
 		TransactionMetrics         func(childComplexity int, after *string, before *string, first *int, last *int) int
+	}
+
+	ClubMember struct {
+		ClubSupporterSubscription func(childComplexity int) int
+		ID                        func(childComplexity int) int
 	}
 
 	ClubTransactionMetric struct {
@@ -338,6 +346,7 @@ type ComplexityRoot struct {
 		FindAccountTransactionByID                        func(childComplexity int, id relay.ID) int
 		FindCancellationReasonByID                        func(childComplexity int, id relay.ID) int
 		FindClubByID                                      func(childComplexity int, id relay.ID) int
+		FindClubMemberByID                                func(childComplexity int, id relay.ID) int
 	}
 
 	ExpiredAccountClubSupporterSubscription struct {
@@ -497,7 +506,11 @@ type CancellationReasonResolver interface {
 }
 type ClubResolver interface {
 	SupporterSubscriptionPrice(ctx context.Context, obj *types.Club) (*types.LocalizedPricingPoint, error)
+	SupporterSubscriptions(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) (*types.AccountClubSupporterSubscriptionConnection, error)
 	TransactionMetrics(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubTransactionMetricConnection, error)
+}
+type ClubMemberResolver interface {
+	ClubSupporterSubscription(ctx context.Context, obj *types.ClubMember) (types.AccountClubSupporterSubscription, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -507,6 +520,7 @@ type EntityResolver interface {
 	FindAccountTransactionByID(ctx context.Context, id relay.ID) (*types.AccountTransaction, error)
 	FindCancellationReasonByID(ctx context.Context, id relay.ID) (*types.CancellationReason, error)
 	FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error)
+	FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error)
 }
 type MutationResolver interface {
 	GenerateCCBillClubSupporterPaymentLink(ctx context.Context, input types.GenerateCCBillClubSupporterPaymentLinkInput) (*types.GenerateCCBillClubSupporterPaymentLinkPayload, error)
@@ -1408,6 +1422,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CCBillSubscriptionDetails.ID(childComplexity), true
 
+	case "CCBillSubscriptionDetails.isDuplicate":
+		if e.complexity.CCBillSubscriptionDetails.IsDuplicate == nil {
+			break
+		}
+
+		return e.complexity.CCBillSubscriptionDetails.IsDuplicate(childComplexity), true
+
 	case "CCBillSubscriptionDetails.isRecurring":
 		if e.complexity.CCBillSubscriptionDetails.IsRecurring == nil {
 			break
@@ -1658,6 +1679,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.SupporterSubscriptionPrice(childComplexity), true
 
+	case "Club.supporterSubscriptions":
+		if e.complexity.Club.SupporterSubscriptions == nil {
+			break
+		}
+
+		args, err := ec.field_Club_supporterSubscriptions_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Club.SupporterSubscriptions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.AccountClubSupporterSubscriptionStatus)), true
+
 	case "Club.transactionMetrics":
 		if e.complexity.Club.TransactionMetrics == nil {
 			break
@@ -1669,6 +1702,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.TransactionMetrics(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
+	case "ClubMember.clubSupporterSubscription":
+		if e.complexity.ClubMember.ClubSupporterSubscription == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.ClubSupporterSubscription(childComplexity), true
+
+	case "ClubMember.id":
+		if e.complexity.ClubMember.ID == nil {
+			break
+		}
+
+		return e.complexity.ClubMember.ID(childComplexity), true
 
 	case "ClubTransactionMetric.chargebacksAmount":
 		if e.complexity.ClubTransactionMetric.ChargebacksAmount == nil {
@@ -1886,6 +1933,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindClubByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findClubMemberByID":
+		if e.complexity.Entity.FindClubMemberByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findClubMemberByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindClubMemberByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "ExpiredAccountClubSupporterSubscription.account":
 		if e.complexity.ExpiredAccountClubSupporterSubscription.Account == nil {
@@ -2616,6 +2675,9 @@ type CCBillSubscriptionDetails {
   """Whether or not this is recurring, or a one-time charge."""
   isRecurring: Boolean!
 
+  """Whether or not this subscription was a duplicate."""
+  isDuplicate: Boolean!
+
   """The amount of rebills that occurred."""
   timesRebilled: Int!
 
@@ -3290,6 +3352,17 @@ type GenerateCCBillClubSupporterPaymentLinkPayload {
   paymentLink: URI
 }
 
+extend type ClubMember {
+  """
+  The subscription linked to this club member.
+
+  Note that an account can have multiple subscriptions for the same club, due to the fact that we keep expired subscriptions.
+
+  So this will just grab the most recent active subscription for this club.
+  """
+  clubSupporterSubscription: AccountClubSupporterSubscription @goField(forceResolver: true)
+}
+
 extend type Account {
   """Club supporter subscriptions linked to this account."""
   clubSupporterSubscriptions(
@@ -3394,6 +3467,26 @@ extend type Account {
 extend type Club {
   """A supporter subscription price for this club."""
   supporterSubscriptionPrice: LocalizedPricingPoint! @goField(forceResolver: true)
+
+  """Club supporter subscriptions linked to this club."""
+  supporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of account club supporter subscription status."""
+    status: [AccountClubSupporterSubscriptionStatus!]
+  ): AccountClubSupporterSubscriptionConnection! @goField(forceResolver: true)
 }
 
 extend type Mutation {
@@ -3681,6 +3774,10 @@ extend type Club {
 extend type Account @key(fields: "id")  {
   id: ID! @external
 }
+
+extend type ClubMember @key(fields: "id")  {
+  id: ID! @external
+}
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
@@ -3748,7 +3845,7 @@ directive @extends on OBJECT | INTERFACE
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountExpiredClubSupporterSubscription | AccountTransaction | CancellationReason | Club
+union _Entity = Account | AccountActiveClubSupporterSubscription | AccountCancelledClubSupporterSubscription | AccountExpiredClubSupporterSubscription | AccountTransaction | CancellationReason | Club | ClubMember
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -3759,6 +3856,7 @@ type Entity {
 	findAccountTransactionByID(id: ID!,): AccountTransaction!
 	findCancellationReasonByID(id: ID!,): CancellationReason!
 	findClubByID(id: ID!,): Club!
+	findClubMemberByID(id: ID!,): ClubMember!
 
 }
 
@@ -4219,6 +4317,57 @@ func (ec *executionContext) field_CancellationReason_title_args(ctx context.Cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Club_supporterSubscriptions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []types.AccountClubSupporterSubscriptionStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg4, err = ec.unmarshalOAccountClubSupporterSubscriptionStatus2ᚕoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscriptionStatusᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg4
+	return args, nil
+}
+
 func (ec *executionContext) field_Club_transactionMetrics_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -4352,6 +4501,21 @@ func (ec *executionContext) field_Entity_findCancellationReasonByID_args(ctx con
 }
 
 func (ec *executionContext) field_Entity_findClubByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findClubMemberByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -8988,6 +9152,41 @@ func (ec *executionContext) _CCBillSubscriptionDetails_isRecurring(ctx context.C
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CCBillSubscriptionDetails_isDuplicate(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CCBillSubscriptionDetails",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsDuplicate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CCBillSubscriptionDetails_timesRebilled(ctx context.Context, field graphql.CollectedField, obj *types.CCBillSubscriptionDetails) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10053,6 +10252,48 @@ func (ec *executionContext) _Club_supporterSubscriptionPrice(ctx context.Context
 	return ec.marshalNLocalizedPricingPoint2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐLocalizedPricingPoint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Club_supporterSubscriptions(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Club_supporterSubscriptions_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().SupporterSubscriptions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["status"].([]types.AccountClubSupporterSubscriptionStatus))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountClubSupporterSubscriptionConnection)
+	fc.Result = res
+	return ec.marshalNAccountClubSupporterSubscriptionConnection2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscriptionConnection(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Club_transactionMetrics(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10104,6 +10345,73 @@ func (ec *executionContext) _Club_id(ctx context.Context, field graphql.Collecte
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_clubSupporterSubscription(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.ClubMember().ClubSupporterSubscription(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(types.AccountClubSupporterSubscription)
+	fc.Result = res
+	return ec.marshalOAccountClubSupporterSubscription2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountClubSupporterSubscription(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubMember_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubMember",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -11084,6 +11392,48 @@ func (ec *executionContext) _Entity_findClubByID(ctx context.Context, field grap
 	res := resTmp.(*types.Club)
 	fc.Result = res
 	return ec.marshalNClub2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findClubMemberByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findClubMemberByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindClubMemberByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ClubMember)
+	fc.Result = res
+	return ec.marshalNClubMember2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ExpiredAccountClubSupporterSubscription_id(ctx context.Context, field graphql.CollectedField, obj *types.ExpiredAccountClubSupporterSubscription) (ret graphql.Marshaler) {
@@ -14968,6 +15318,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Club(ctx, sel, obj)
+	case types.ClubMember:
+		return ec._ClubMember(ctx, sel, &obj)
+	case *types.ClubMember:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ClubMember(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -16674,6 +17031,16 @@ func (ec *executionContext) _CCBillSubscriptionDetails(ctx context.Context, sel 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "isDuplicate":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._CCBillSubscriptionDetails_isDuplicate(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "timesRebilled":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._CCBillSubscriptionDetails_timesRebilled(ctx, field, obj)
@@ -17176,6 +17543,26 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
+		case "supporterSubscriptions":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_supporterSubscriptions(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "transactionMetrics":
 			field := field
 
@@ -17199,6 +17586,54 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Club_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubMemberImplementors = []string{"ClubMember", "_Entity"}
+
+func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSet, obj *types.ClubMember) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubMemberImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubMember")
+		case "clubSupporterSubscription":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ClubMember_clubSupporterSubscription(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "id":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubMember_id(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -17676,6 +18111,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findClubByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findClubMemberByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findClubMemberByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -19724,6 +20182,20 @@ func (ec *executionContext) marshalNClub2ᚖoverdollᚋapplicationsᚋhadesᚋin
 		return graphql.Null
 	}
 	return ec._Club(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubMember2overdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v types.ClubMember) graphql.Marshaler {
+	return ec._ClubMember(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNClubMember2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v *types.ClubMember) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ClubMember(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNClubTransactionMetric2ᚖoverdollᚋapplicationsᚋhadesᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubTransactionMetric(ctx context.Context, sel ast.SelectionSet, v *types.ClubTransactionMetric) graphql.Marshaler {

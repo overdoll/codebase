@@ -13,7 +13,6 @@ go_library(
         "create_pending_club_payment_deduction.go",
         "create_pending_club_payment_deposit.go",
         "get_club_payment_details.go",
-        "get_club_payout_details.go",
         "get_club_payout_methods.go",
         "get_or_create_deposit_request.go",
         "get_ready_payments_for_club.go",

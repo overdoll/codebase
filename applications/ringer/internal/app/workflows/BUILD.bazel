@@ -3,7 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
-        "cancel_club_payout.go",
         "club_payment_deduction.go",
         "club_payment_deposit.go",
         "generate_club_monthly_payout.go",

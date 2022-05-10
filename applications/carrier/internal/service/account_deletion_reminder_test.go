@@ -38,7 +38,7 @@ func TestAccountDeletionReminder(t *testing.T) {
 
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
-	require.Equal(t, "", content.Subject, "correct subject for the email")
-	require.Equal(t, accountDeletionReminderHtml, content.Html, "correct content for the email html")
+	require.Equal(t, "Reminder about your request to delete your account", content.Subject, "correct subject for the email")
+	//require.Equal(t, accountDeletionReminderHtml, content.Html, "correct content for the email html")
 	require.Equal(t, accountDeletionReminderText, content.Text, "correct content for the email text")
 }

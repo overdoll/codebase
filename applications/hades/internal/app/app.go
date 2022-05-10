@@ -44,12 +44,12 @@ type Queries struct {
 	CCBillSubscriptionDetails query.CCBillSubscriptionDetailsHandler
 	CCBillTransactionDetails  query.CCBillTransactionDetailsHandler
 
-	ExpiredAccountClubSupporterSubscriptionsByAccount query.ExpiredAccountClubSupporterSubscriptionsByAccountHandler
-	AccountClubSupporterSubscriptionById              query.AccountClubSupporterSubscriptionByIdHandler
-	SearchAccountClubSupporterSubscriptions           query.SearchAccountClubSupporterSubscriptionsHandler
-	AccountSavedPaymentMethods                        query.AccountSavedPaymentMethodsHandler
-	ClubSupporterPricing                              query.ClubSupporterPricingHandler
-	ClubSupporterSubscriptionFinalized                query.ClubSupporterSubscriptionFinalizedHandler
+	ExpiredAccountClubSupporterSubscriptionsByAccount  query.ExpiredAccountClubSupporterSubscriptionsByAccountHandler
+	AccountClubSupporterSubscriptionById               query.AccountClubSupporterSubscriptionByIdHandler
+	AccountClubSupporterSubscriptionByAccountAndClubId query.AccountClubSupporterSubscriptionByAccountAndClubIdHandler
+	SearchAccountClubSupporterSubscriptions            query.SearchAccountClubSupporterSubscriptionsHandler
+	AccountSavedPaymentMethods                         query.AccountSavedPaymentMethodsHandler
+	ClubSupporterPricing                               query.ClubSupporterPricingHandler
 
 	CancellationReasons    query.CancellationReasonsHandler
 	CancellationReasonById query.CancellationReasonByIdHandler

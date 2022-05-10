@@ -40,6 +40,6 @@ func TestClubSupporterSubscriptionRefunded(t *testing.T) {
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
 	require.Equal(t, "Subscription refunded 25WqY2AZfmlykwqKhQagxmI9gtd", content.Subject, "correct subject for the email")
-	require.Equal(t, clubSupporterSubscriptionRefundedHtml, content.Html, "correct content for the email html")
+	//	require.Equal(t, clubSupporterSubscriptionRefundedHtml, content.Html, "correct content for the email html")
 	require.Equal(t, clubSupporterSubscriptionRefundedText, content.Text, "correct content for the email text")
 }
