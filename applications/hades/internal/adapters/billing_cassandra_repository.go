@@ -92,6 +92,25 @@ type clubActiveSupporterSubscriptions struct {
 	CCBillSubscriptionId *string `db:"ccbill_subscription_id"`
 }
 
+var accountClubSupporterSubscriptionLockTable = table.New(table.Metadata{
+	Name: "account_club_supporter_subscription_lock",
+	Columns: []string{
+		"account_id",
+		"club_id",
+		"ccbill_subscription_id",
+		"account_club_supporter_subscription_id",
+	},
+	PartKey: []string{"account_id", "club_id"},
+	SortKey: []string{},
+})
+
+type accountClubSupporterSubscriptionLock struct {
+	ClubId                             string  `db:"club_id"`
+	AccountId                          string  `db:"account_id"`
+	CCBillSubscriptionId               *string `db:"ccbill_subscription_id"`
+	AccountClubSupporterSubscriptionId string  `db:"account_club_supporter_subscription_id"`
+}
+
 var accountClubSupporterSubscriptionsByAccountTable = table.New(table.Metadata{
 	Name: "account_club_supporter_subscriptions_by_account",
 	Columns: []string{
@@ -209,6 +228,16 @@ type expiredAccountClubSupporterSubscription struct {
 	CCBillSubscriptionId *string   `db:"ccbill_subscription_id"`
 }
 
+var accountTransactionByCcbillTransactionIdTable = table.New(table.Metadata{
+	Name: "account_transaction_by_ccbill_transaction_id",
+	Columns: []string{
+		"ccbill_transaction_id",
+		"id",
+	},
+	PartKey: []string{"ccbill_transaction_id"},
+	SortKey: []string{},
+})
+
 var accountTransactionsTable = table.New(table.Metadata{
 	Name: "account_transactions",
 	Columns: []string{
@@ -323,8 +352,8 @@ type ccbillSubscriptionDetails struct {
 	AccountingRecurringPrice uint64 `db:"accounting_recurring_price"`
 	AccountingCurrency       string `db:"accounting_currency"`
 
-	IdempotencyKey string `db:"idempotency_key"`
-	Duplicate      bool   `db:"duplicate"`
+	AccountClubSupporterSubscriptionId string `db:"account_club_supporter_subscription_id"`
+	Duplicate                          bool   `db:"duplicate"`
 }
 
 func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
@@ -437,12 +466,12 @@ func marshalCCBillSubscriptionToDatabase(subscription *billing.CCBillSubscriptio
 	}
 
 	return &ccbillSubscriptionDetails{
-		CCBillSubscriptionId:   subscription.CCBillSubscriptionId(),
-		InitiatorAccountId:     subscription.AccountId(),
-		SupportingClubId:       subscription.ClubId(),
-		EncryptedPaymentMethod: encrypted,
-		UpdatedAt:              subscription.UpdatedAt(),
-		IdempotencyKey:         subscription.IdempotencyKey(),
+		CCBillSubscriptionId:               subscription.CCBillSubscriptionId(),
+		InitiatorAccountId:                 subscription.AccountId(),
+		SupportingClubId:                   subscription.ClubId(),
+		EncryptedPaymentMethod:             encrypted,
+		UpdatedAt:                          subscription.UpdatedAt(),
+		AccountClubSupporterSubscriptionId: subscription.AccountClubSupporterSubscriptionId(),
 
 		SubscriptionInitialPrice:   subscription.SubscriptionInitialPrice(),
 		SubscriptionRecurringPrice: subscription.SubscriptionRecurringPrice(),
@@ -1006,6 +1035,16 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubsc
 		}
 	}
 
+	// subscription expired, release lock
+	if s.ExpiredAt() != nil {
+		if err := r.session.Query(accountClubSupporterSubscriptionLockTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(accountClubSupporterSubscriptionLock{ClubId: s.ClubId(), AccountId: s.AccountId()}).
+			ExecRelease(); err != nil {
+			return nil, fmt.Errorf("failed to delete club active supporter subscriptions: %v", err)
+		}
+	}
+
 	return s, nil
 }
 
@@ -1405,6 +1444,27 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 	return r.searchAccountClubSupporterSubscriptions(ctx, nil, filters)
 }
 
+func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByCCBillTransactionIdOperator(ctx context.Context, ccbillTransactionId string) (*billing.AccountTransaction, error) {
+
+	var transaction accountTransactions
+
+	if err := r.session.
+		Query(accountTransactionByCcbillTransactionIdTable.Get()).
+		BindStruct(&accountTransactions{
+			CCBillTransactionId: &ccbillTransactionId,
+		}).
+		Get(&transaction); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, billing.ErrAccountTransactionNotFound
+		}
+
+		return nil, fmt.Errorf("failed to account transaction by ccbill transaction id: %v", err)
+	}
+
+	return r.GetAccountTransactionByIdOperator(ctx, transaction.Id)
+}
+
 func (r BillingCassandraElasticsearchRepository) GetAccountTransactionById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*billing.AccountTransaction, error) {
 
 	transaction, err := r.GetAccountTransactionByIdOperator(ctx, transactionHistoryId)
@@ -1497,6 +1557,16 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperato
 		return fmt.Errorf("failed to create account transaction: %v", err)
 	}
 
+	if marshalled.CCBillTransactionId != nil {
+		// create a table that will be used to look up the transaction by a ccbill transaction
+		if err := r.session.
+			Query(accountTransactionByCcbillTransactionIdTable.Insert()).
+			BindStruct(marshalled).
+			ExecRelease(); err != nil {
+			return fmt.Errorf("failed to create account transaction by ccbill transaction id: %v", err)
+		}
+	}
+
 	if err := r.indexAccountTransaction(ctx, transaction); err != nil {
 		return err
 	}
@@ -1581,7 +1651,7 @@ func (r BillingCassandraElasticsearchRepository) GetCCBillSubscriptionDetailsByI
 		ccbillSubscription.AccountingInitialPrice,
 		ccbillSubscription.AccountingRecurringPrice,
 		ccbillSubscription.AccountingCurrency,
-		ccbillSubscription.IdempotencyKey,
+		ccbillSubscription.AccountClubSupporterSubscriptionId,
 		ccbillSubscription.Duplicate,
 	), nil
 }
@@ -1594,19 +1664,61 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		return err
 	}
 
-	applied, err := ccbillSubscriptionDetailsTable.
-		InsertBuilder().
-		Unique().
-		Query(r.session).
-		BindStruct(marshalled).
-		ExecCAS()
+	var lockedSub accountClubSupporterSubscriptionLock
 
-	if err != nil {
-		return fmt.Errorf("failed to create ccbill subscription: %v", err)
+	err = r.session.Query(accountClubSupporterSubscriptionLockTable.Get()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountClubSupporterSubscriptionLock{ClubId: subscription.ClubId(), AccountId: subscription.ClubId()}).
+		Get(&lockedSub)
+
+	if err != nil && err != gocql.ErrNotFound {
+		return fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
 	}
 
-	if !applied {
-		return errors.New("could not create ccbill subscription")
+	if err == nil {
+		// LOCKED subscription, still create the subscription, but update the "duplicate" field
+		if lockedSub.AccountClubSupporterSubscriptionId != subscription.AccountClubSupporterSubscriptionId() {
+
+			marshalled.Duplicate = true
+
+			if err := r.session.Query(ccbillSubscriptionDetailsTable.Insert()).
+				BindStruct(marshalled).
+				ExecRelease(); err != nil {
+				return fmt.Errorf("failed to create ccbill subscription: %v", err)
+			}
+
+			return billing.ErrAccountClubSupportSubscriptionDuplicate
+		}
+	}
+
+	// if we did find the subscription, it would still create it
+	if err == gocql.ErrNotFound {
+		// no locked subscription
+		applied, err := accountClubSupporterSubscriptionLockTable.InsertBuilder().
+			Unique().
+			Query(r.session).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(accountClubSupporterSubscriptionLock{
+				ClubId:                             marshalled.SupportingClubId,
+				AccountId:                          marshalled.InitiatorAccountId,
+				CCBillSubscriptionId:               &marshalled.CCBillSubscriptionId,
+				AccountClubSupporterSubscriptionId: marshalled.AccountClubSupporterSubscriptionId,
+			}).
+			ExecCAS()
+
+		if err != nil {
+			return fmt.Errorf("failed to lock account club supporter subscription: %v", err)
+		}
+
+		if !applied {
+			return fmt.Errorf("failed to lock account club supporter subscription")
+		}
+	}
+
+	if err := r.session.Query(ccbillSubscriptionDetailsTable.Insert()).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to create ccbill subscription: %v", err)
 	}
 
 	return nil

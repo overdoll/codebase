@@ -13,7 +13,7 @@ type ClubSupporterSubscriptionRefunded struct {
 	ClubId         string
 	SubscriptionId string
 	TransactionId  string
-	Amount         int64
+	Amount         uint64
 	Currency       string
 }
 

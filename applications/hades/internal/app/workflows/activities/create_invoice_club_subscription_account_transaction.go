@@ -9,8 +9,9 @@ import (
 )
 
 type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
+	Id                                 string
 	AccountId                          string
-	TransactionId                      string
+	CCBillTransactionId                string
 	AccountClubSupporterSubscriptionId string
 
 	Timestamp time.Time
@@ -51,7 +52,8 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 
 	transaction, err := billing.NewInvoicePaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
-		input.TransactionId,
+		input.Id,
+		input.CCBillTransactionId,
 		input.AccountClubSupporterSubscriptionId,
 		input.Timestamp,
 		input.BillingDate,

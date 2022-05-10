@@ -5,13 +5,13 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 )
 
-type GenerateClubSupporterPaymentReceiptFromAccountTransactionHistoryInput struct {
-	AccountTransactionHistoryId string
+type GenerateClubSupporterPaymentReceiptFromAccountTransactionInput struct {
+	AccountTransactionId string
 }
 
-func (h *Activities) GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory(ctx context.Context, input GenerateClubSupporterPaymentReceiptFromAccountTransactionHistoryInput) error {
+func (h *Activities) GenerateClubSupporterPaymentReceiptFromAccountTransaction(ctx context.Context, input GenerateClubSupporterPaymentReceiptFromAccountTransactionInput) error {
 
-	transactionHistory, err := h.billing.GetAccountTransactionByIdOperator(ctx, input.AccountTransactionHistoryId)
+	transactionHistory, err := h.billing.GetAccountTransactionByIdOperator(ctx, input.AccountTransactionId)
 
 	if err != nil {
 		return err

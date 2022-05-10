@@ -157,6 +157,9 @@ type CCBillSubscriptionDetails {
   """Whether or not this is recurring, or a one-time charge."""
   isRecurring: Boolean!
 
+  """Whether or not this subscription was a duplicate."""
+  isDuplicate: Boolean!
+
   """The amount of rebills that occurred."""
   timesRebilled: Int!
 

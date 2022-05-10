@@ -186,7 +186,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
 	require.Equal(t, ccbillTransactionId, *transaction.CcbillTransaction.CcbillTransactionID, "correct ccbill transaction id")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 

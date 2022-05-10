@@ -39,6 +39,7 @@ type Repository interface {
 	UpdateAccountSavedPaymentMethodOperator(ctx context.Context, accountId, id string, updateFn func(savedPaymentMethod *SavedPaymentMethod) error) (*SavedPaymentMethod, error)
 
 	GetAccountTransactionById(ctx context.Context, requester *principal.Principal, transactionHistoryId string) (*AccountTransaction, error)
+	GetAccountTransactionByCCBillTransactionIdOperator(ctx context.Context, ccbillTransactionId string) (*AccountTransaction, error)
 	CreateAccountTransactionOperator(ctx context.Context, accountHistory *AccountTransaction) error
 	GetAccountTransactionByIdOperator(ctx context.Context, transactionHistoryId string) (*AccountTransaction, error)
 	UpdateAccountTransactionOperator(ctx context.Context, id string, updateFn func(transaction *AccountTransaction) error) (*AccountTransaction, error)

@@ -8,11 +8,11 @@ import (
 )
 
 type CreateAccountClubSupportSubscriptionInput struct {
-	SavePaymentDetails bool
-
-	AccountId            string
-	ClubId               string
-	CCBillSubscriptionId *string
+	SavePaymentDetails                 bool
+	AccountClubSupporterSubscriptionId string
+	AccountId                          string
+	ClubId                             string
+	CCBillSubscriptionId               *string
 
 	Timestamp time.Time
 
@@ -62,6 +62,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 	}
 
 	newSubscription, err := billing.NewAccountClubSupporterSubscriptionFromCCBill(
+		input.AccountClubSupporterSubscriptionId,
 		input.AccountId,
 		input.ClubId,
 		*input.CCBillSubscriptionId,

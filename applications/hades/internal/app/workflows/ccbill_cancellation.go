@@ -27,6 +27,11 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return err
 	}
 
+	// ignore duplicate subscriptions
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -36,7 +41,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 	// mark as cancelled to tell the user the new state
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionCancelled,
 		activities.MarkAccountClubSupporterSubscriptionCancelledInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			CancelledAt:                        timestamp,
 		},
 	).Get(ctx, nil); err != nil {
@@ -46,7 +51,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 	// send cancellation notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionCancellationNotification,
 		activities.SendAccountClubSupporterSubscriptionCancellationNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

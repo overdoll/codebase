@@ -6,11 +6,12 @@ import (
 )
 
 type GetCCBillSubscriptionDetailsPayload struct {
-	ClubId    string
-	AccountId string
-	Duplicate bool
-	Currency  money.Currency
-	Amount    uint64
+	ClubId                             string
+	AccountId                          string
+	AccountClubSupporterSubscriptionId string
+	Duplicate                          bool
+	Currency                           money.Currency
+	Amount                             uint64
 }
 
 func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSubscriptionId string) (*GetCCBillSubscriptionDetailsPayload, error) {
@@ -22,10 +23,11 @@ func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSub
 	}
 
 	return &GetCCBillSubscriptionDetailsPayload{
-		ClubId:    details.ClubId(),
-		AccountId: details.AccountId(),
-		Duplicate: details.Duplicate(),
-		Currency:  details.AccountingCurrency(),
-		Amount:    details.AccountingInitialPrice(),
+		ClubId:                             details.ClubId(),
+		AccountId:                          details.AccountId(),
+		Duplicate:                          details.Duplicate(),
+		Currency:                           details.AccountingCurrency(),
+		Amount:                             details.AccountingInitialPrice(),
+		AccountClubSupporterSubscriptionId: details.CCBillSubscriptionId(),
 	}, nil
 }

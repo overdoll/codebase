@@ -48,7 +48,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupporterSubscriptionCCBillFailure,
 		activities.UpdateAccountClubSupporterSubscriptionCCBillFailureInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			Timestamp:                          timestamp,
 			CCBillErrorText:                    input.FailureReason,
 			CCBillErrorCode:                    input.FailureCode,
@@ -61,7 +61,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 	// send failure notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionFailureNotification,
 		activities.SendAccountClubSupporterSubscriptionFailureNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

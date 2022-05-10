@@ -41,6 +41,14 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return nil
 	}
 
+	// get details of the transaction, so we know the original id
+	var transactionDetails *activities.GetCCBillTransactionDetailsPayload
+
+	// get subscription details so we know the club
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -50,9 +58,9 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 	// update void - mark subscription as voided
 	if err := workflow.ExecuteActivity(ctx, a.UpdateVoidClubSubscriptionAccountTransaction,
 		activities.UpdateVoidClubSubscriptionAccountTransactionInput{
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Reason:        input.Reason,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -85,12 +93,12 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 	// send a payment indicating a deduction for this club
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      accountingCurrency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Amount:               accountingAmount,
+			Currency:             accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

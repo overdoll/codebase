@@ -32,12 +32,10 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 		return err
 	}
 
-	paymentId := *uniqueId
-
 	// create a pending deduction
 	if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeduction,
 		activities.CreatePendingClubPaymentDeductionInput{
-			Id:                          paymentId,
+			Id:                          uniqueId,
 			AccountTransactionId:        input.AccountTransactionId,
 			SourceAccountId:             input.SourceAccountId,
 			DestinationClubId:           input.DestinationClubId,
@@ -54,7 +52,7 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 
 	// get payment details to be used in the next workflows
 	if err := workflow.ExecuteActivity(ctx, a.GetClubPaymentDetails,
-		paymentId,
+		uniqueId,
 	).Get(ctx, &pendingPayment); err != nil {
 		return err
 	}
@@ -77,7 +75,7 @@ func ClubPaymentDeduction(ctx workflow.Context, input ClubPaymentDeductionInput)
 	// update the payment to be ready for a payout
 	if err := workflow.ExecuteActivity(ctx, a.MakeClubPaymentReadyForPayout,
 		activities.MakeClubPaymentReadyForPayout{
-			PaymentId: paymentId,
+			PaymentId: uniqueId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -200,10 +200,10 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 			ID:        workflowId,
 		}
 
-		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory,
-			workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistoryInput{
-				AccountTransactionHistoryId:      history.Id(),
-				AccountTransactionHistoryEventId: eventId,
+		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterRefundReceiptFromAccountTransaction,
+			workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionInput{
+				AccountTransactionId:      history.Id(),
+				AccountTransactionEventId: eventId,
 			},
 		); err != nil {
 			return nil, err
@@ -253,7 +253,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 			ID:        workflowId,
 		}
 
-		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistoryInput{AccountTransactionHistoryId: history.Id()}); err != nil {
+		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput{AccountTransactionId: history.Id()}); err != nil {
 			return nil, err
 		}
 

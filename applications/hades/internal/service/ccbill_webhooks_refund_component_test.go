@@ -111,7 +111,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.NoError(t, err, "no error looking up transaction")
 	require.NotNil(t, accountTransaction.AccountTransaction, "account transaction history should exist")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterRefundReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 

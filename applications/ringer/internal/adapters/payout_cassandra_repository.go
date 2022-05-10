@@ -286,20 +286,22 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 		}
 	}
 
-	// no locked payout, do an insert
-	applied, err := clubLockedPayoutTable.InsertBuilder().
-		Unique().
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubLockedPayout{ClubId: payout.ClubId(), PayoutId: payout.Id()}).
-		ExecCAS()
+	if err == gocql.ErrNotFound {
+		// no locked payout, do an insert
+		applied, err := clubLockedPayoutTable.InsertBuilder().
+			Unique().
+			Query(r.session).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubLockedPayout{ClubId: payout.ClubId(), PayoutId: payout.Id()}).
+			ExecCAS()
 
-	if err != nil {
-		return fmt.Errorf("failed to lock club payout: %v", err)
-	}
+		if err != nil {
+			return fmt.Errorf("failed to lock club payout: %v", err)
+		}
 
-	if !applied {
-		return fmt.Errorf("failed to lock club payout")
+		if !applied {
+			return fmt.Errorf("failed to lock club payout")
+		}
 	}
 
 	marshalled, err := marshalClubPayoutToDatabase(ctx, payout)

@@ -29,6 +29,11 @@ func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationIn
 		return err
 	}
 
+	// ignore duplicate subscriptions
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
@@ -38,7 +43,7 @@ func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationIn
 	// update supporter status to display the new reactivation
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionReactivated,
 		activities.MarkAccountClubSupporterSubscriptionReactivatedInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {

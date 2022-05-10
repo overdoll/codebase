@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateChargebackClubSubscriptionAccountTransactionRecordInput struct {
-	TransactionId string
+	AccountTransactionId string
 
 	Id        string
 	Timestamp time.Time
@@ -20,7 +20,7 @@ type UpdateChargebackClubSubscriptionAccountTransactionRecordInput struct {
 
 func (h *Activities) UpdateChargebackClubSubscriptionAccountTransaction(ctx context.Context, input UpdateChargebackClubSubscriptionAccountTransactionRecordInput) error {
 
-	_, err := h.billing.UpdateAccountTransactionOperator(ctx, input.TransactionId, func(transaction *billing.AccountTransaction) error {
+	_, err := h.billing.UpdateAccountTransactionOperator(ctx, input.AccountTransactionId, func(transaction *billing.AccountTransaction) error {
 		return transaction.MakeChargeback(input.Id, input.Timestamp, input.Amount, input.Currency, input.Reason)
 	})
 

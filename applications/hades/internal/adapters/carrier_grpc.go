@@ -31,6 +31,17 @@ func (s CarrierGrpc) NewClubSupporterSubscription(ctx context.Context, subscript
 	return err
 }
 
+func (s CarrierGrpc) ClubSupporterSubscriptionDuplicate(ctx context.Context, accountId string, clubId string, amount uint64, currency money.Currency) error {
+
+	_, err := s.client.ClubSupporterSubscriptionDuplicate(ctx, &carrier.ClubSupporterSubscriptionDuplicateRequest{
+		Account: &carrier.Account{Id: accountId},
+		Club:    &carrier.Club{Id: clubId},
+		Payment: &carrier.Payment{Amount: amount, Currency: currency.String()},
+	})
+
+	return err
+}
+
 func (s CarrierGrpc) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
 
 	_, err := s.client.ClubSupporterSubscriptionCancelled(ctx, &carrier.ClubSupporterSubscriptionCancelledRequest{

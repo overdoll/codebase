@@ -48,6 +48,14 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return nil
 	}
 
+	// get details of the transaction, so we know the original id
+	var transactionDetails *activities.GetCCBillTransactionDetailsPayload
+
+	// get subscription details so we know the club
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {
@@ -75,12 +83,12 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	// create refund record
 	if err := workflow.ExecuteActivity(ctx, a.UpdateRefundClubSubscriptionAccountTransaction,
 		activities.UpdateRefundClubSubscriptionAccountTransactionInput{
-			Id:            *uniqueId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Currency:      currency,
-			Amount:        amount,
-			Reason:        input.Reason,
+			Id:                   uniqueId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Currency:             currency,
+			Amount:               amount,
+			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -89,10 +97,10 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	// send cancellation notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionRefundNotification,
 		activities.SendAccountClubSupporterSubscriptionRefundNotificationInput{
-			SubscriptionId: input.SubscriptionId,
-			TransactionId:  input.TransactionId,
-			Currency:       currency,
-			Amount:         amount,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
+			AccountTransactionId:               transactionDetails.TransactionId,
+			Currency:                           currency,
+			Amount:                             amount,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -113,12 +121,12 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      accountingCurrency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Amount:               accountingAmount,
+			Currency:             accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -126,7 +134,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + *uniqueId,
+		WorkflowID:        "ClubTransactionMetric_" + uniqueId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 
@@ -134,7 +142,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		ClubTransactionMetricInput{
 			ClubId:    subscriptionDetails.ClubId,
 			Timestamp: timestamp,
-			Id:        *uniqueId,
+			Id:        uniqueId,
 			Amount:    accountingAmount,
 			Currency:  accountingCurrency,
 			IsRefund:  true,

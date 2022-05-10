@@ -11,7 +11,7 @@ type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
 	ClubId               string
 	CCBillSubscriptionId string
 
-	IdempotencyKey string
+	AccountClubSupporterSubscriptionId string
 
 	CardBin            string
 	CardType           string
@@ -43,44 +43,12 @@ type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
 }
 
 type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload struct {
-	DuplicateSupportSameSubscription      bool
-	DuplicateSupportDifferentSubscription bool
+	Duplicate bool
 }
 
 func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx context.Context, input GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput) (*GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload, error) {
 
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.CCBillSubscriptionId)
-
-	if err != nil && err != billing.ErrCCBillSubscriptionNotFound {
-		return nil, err
-	}
-
-	// exiting ccbill subscription found
-	if ccbillSubscription != nil {
-		// not the same idempotency key - same subscription requested twice
-		if ccbillSubscription.IdempotencyKey() != input.IdempotencyKey {
-			return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
-				DuplicateSupportSameSubscription:      true,
-				DuplicateSupportDifferentSubscription: false,
-			}, nil
-		}
-
-		// brand-new subscription that failed along the way - continue
-		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
-			DuplicateSupportSameSubscription:      false,
-			DuplicateSupportDifferentSubscription: false,
-		}, nil
-	}
-
-	// ccbill subscription is nil - so we didn't have ccbill duplicate subscription ids come in.
-	// now, we need to check the actual account subscription for duplicates
-	subscription, err := h.billing.HasExistingAccountClubSupporterSubscriptionOperator(ctx, input.AccountId, input.ClubId)
-
-	if err != nil && err != billing.ErrAccountClubSupportSubscriptionNotFound {
-		return nil, err
-	}
-
-	// if we reached here, we have a brand new subscription, so we construct it
+	// if we reached here, we have a brand-new subscription, so we construct it
 
 	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)
 
@@ -142,7 +110,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
-	ccbillSubscription, err = billing.NewCCBillSubscriptionDetails(
+	ccbillSubscription, err := billing.NewCCBillSubscriptionDetails(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
@@ -156,8 +124,7 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		accountingInitialPrice,
 		accountingRecurringPrice,
 		input.AccountingCurrency,
-		input.IdempotencyKey,
-		subscription != nil,
+		input.AccountClubSupporterSubscriptionId,
 	)
 
 	if err != nil {
@@ -165,20 +132,18 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 	}
 
 	if err := h.billing.CreateCCBillSubscriptionDetailsOperator(ctx, ccbillSubscription); err != nil {
-		return nil, err
-	}
 
-	// an existing subscription was found, so we need to tell it to void this new subscription
-	if ccbillSubscription.Duplicate() {
-		return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
-			DuplicateSupportSameSubscription:      false,
-			DuplicateSupportDifferentSubscription: true,
-		}, nil
+		if err == billing.ErrAccountClubSupportSubscriptionDuplicate {
+			return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
+				Duplicate: true,
+			}, nil
+		}
+
+		return nil, err
 	}
 
 	// new ccbill subscription record was created
 	return &GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload{
-		DuplicateSupportSameSubscription:      false,
-		DuplicateSupportDifferentSubscription: false,
+		Duplicate: false,
 	}, nil
 }

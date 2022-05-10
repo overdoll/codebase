@@ -40,8 +40,8 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 	// expire the club supporter subscription
 	if err := workflow.ExecuteActivity(ctx, a.ExpireAccountClubSupportSubscription,
 		activities.ExpireAccountClubSupportSubscriptionInput{
-			SubscriptionId: input.SubscriptionId,
-			ExpiredAt:      timestamp,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
+			ExpiredAt:                          timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

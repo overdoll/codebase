@@ -8,9 +8,9 @@ import (
 )
 
 type NewClubSupporterSubscriptionPaymentDepositInput struct {
-	AccountId     string
-	ClubId        string
-	TransactionId string
+	AccountId            string
+	ClubId               string
+	AccountTransactionId string
 
 	Amount    uint64
 	Currency  money.Currency
@@ -22,7 +22,7 @@ func (h *Activities) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Cont
 		ctx,
 		input.AccountId,
 		input.ClubId,
-		input.TransactionId,
+		input.AccountTransactionId,
 		input.Timestamp,
 		billing.UnmarshalPricingFromDatabase(input.Currency, input.Amount),
 	)

@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows/activities"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
+	"overdoll/libraries/support"
 	"strings"
 )
 
@@ -44,6 +45,12 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
+	uniqueTransactionId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
 
 	if err != nil {
@@ -73,9 +80,10 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransaction,
 		activities.CreateInvoiceClubSubscriptionAccountTransactionInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			Id:                                 uniqueTransactionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			AccountId:                          subscriptionDetails.AccountId,
-			TransactionId:                      input.TransactionId,
+			CCBillTransactionId:                input.TransactionId,
 			Timestamp:                          timestamp,
 			CardLast4:                          input.Last4,
 			CardType:                           input.CardType,
@@ -92,7 +100,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
@@ -114,12 +122,12 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      accountingCurrency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: uniqueTransactionId,
+			Timestamp:            timestamp,
+			Amount:               accountingAmount,
+			Currency:             accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -127,7 +135,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + input.TransactionId,
+		WorkflowID:        "ClubTransactionMetric_" + uniqueTransactionId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 
@@ -135,7 +143,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		ClubTransactionMetricInput{
 			ClubId:    subscriptionDetails.ClubId,
 			Timestamp: timestamp,
-			Id:        input.TransactionId,
+			Id:        uniqueTransactionId,
 			Amount:    accountingAmount,
 			Currency:  accountingCurrency,
 		},

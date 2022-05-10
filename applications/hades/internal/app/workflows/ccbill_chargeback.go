@@ -43,6 +43,18 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 		return err
 	}
 
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
+	// get details of the transaction, so we know the original id
+	var transactionDetails *activities.GetCCBillTransactionDetailsPayload
+
+	// get subscription details so we know the club
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &subscriptionDetails); err != nil {
+		return err
+	}
+
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -70,12 +82,12 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 	// create chargeback record
 	if err := workflow.ExecuteActivity(ctx, a.UpdateChargebackClubSubscriptionAccountTransaction,
 		activities.UpdateChargebackClubSubscriptionAccountTransactionRecordInput{
-			Id:            *uniqueId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Currency:      currency,
-			Amount:        amount,
-			Reason:        input.Reason,
+			Id:                   uniqueId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Currency:             currency,
+			Amount:               amount,
+			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -96,12 +108,12 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      accountingCurrency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            timestamp,
+			Amount:               accountingAmount,
+			Currency:             accountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -109,7 +121,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + *uniqueId,
+		WorkflowID:        "ClubTransactionMetric_" + uniqueId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 
@@ -117,7 +129,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 		ClubTransactionMetricInput{
 			ClubId:       subscriptionDetails.ClubId,
 			Timestamp:    timestamp,
-			Id:           *uniqueId,
+			Id:           uniqueId,
 			Amount:       accountingAmount,
 			Currency:     accountingCurrency,
 			IsChargeback: true,

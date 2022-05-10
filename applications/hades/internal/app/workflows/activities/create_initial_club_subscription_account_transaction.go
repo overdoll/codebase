@@ -9,6 +9,7 @@ import (
 )
 
 type CreateInitialClubSubscriptionAccountTransactionInput struct {
+	Id                                 string
 	AccountId                          string
 	TransactionId                      string
 	AccountClubSupporterSubscriptionId string
@@ -35,6 +36,7 @@ func (h *Activities) CreateInitialClubSubscriptionAccountTransaction(ctx context
 
 	transaction, err := billing.NewInitialPaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
+		input.Id,
 		input.TransactionId,
 		input.AccountClubSupporterSubscriptionId,
 		input.Timestamp,

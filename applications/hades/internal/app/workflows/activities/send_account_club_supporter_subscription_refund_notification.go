@@ -6,8 +6,8 @@ import (
 )
 
 type SendAccountClubSupporterSubscriptionRefundNotificationInput struct {
-	SubscriptionId string
-	TransactionId  string
+	AccountClubSupporterSubscriptionId string
+	AccountTransactionId               string
 
 	Currency money.Currency
 	Amount   uint64
@@ -15,13 +15,13 @@ type SendAccountClubSupporterSubscriptionRefundNotificationInput struct {
 
 func (h *Activities) SendAccountClubSupporterSubscriptionRefundNotification(ctx context.Context, input SendAccountClubSupporterSubscriptionRefundNotificationInput) error {
 
-	subscription, err := h.billing.GetAccountClubSupporterSubscriptionByIdOperator(ctx, input.SubscriptionId)
+	subscription, err := h.billing.GetAccountClubSupporterSubscriptionByIdOperator(ctx, input.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
 		return err
 	}
 
-	transaction, err := h.billing.GetAccountTransactionByIdOperator(ctx, input.TransactionId)
+	transaction, err := h.billing.GetAccountTransactionByIdOperator(ctx, input.AccountTransactionId)
 
 	if err != nil {
 		return err

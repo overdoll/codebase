@@ -22,9 +22,8 @@ type CCBillSubscriptionDetails struct {
 
 	paymentMethod *PaymentMethod
 
-	ccbillSubscriptionId string
-
-	idempotencyKey string
+	ccbillSubscriptionId               string
+	accountClubSupporterSubscriptionId string
 
 	subscriptionInitialPrice   uint64
 	subscriptionRecurringPrice uint64
@@ -45,7 +44,7 @@ func NewCCBillSubscriptionDetails(accountId, clubId, ccbillSubscriptionId string
 	subscriptionInitialPrice, subscriptionRecurringPrice uint64, subscriptionCurrency string,
 	billedInitialPrice, billedRecurringPrice uint64, billedCurrency string,
 	accountingInitialPrice, accountingRecurringPrice uint64, accountingCurrency string,
-	idempotencyKey string, duplicate bool) (*CCBillSubscriptionDetails, error) {
+	accountClubSupporterSubscriptionId string) (*CCBillSubscriptionDetails, error) {
 
 	crsub, _ := money.CurrencyFromString(subscriptionCurrency)
 
@@ -69,11 +68,11 @@ func NewCCBillSubscriptionDetails(accountId, clubId, ccbillSubscriptionId string
 		accountingInitialPrice:   accountingInitialPrice,
 		accountingRecurringPrice: accountingRecurringPrice,
 
-		paymentMethod:        paymentMethod,
-		ccbillSubscriptionId: ccbillSubscriptionId,
-		idempotencyKey:       idempotencyKey,
-		updatedAt:            time.Now(),
-		duplicate:            duplicate,
+		paymentMethod:                      paymentMethod,
+		ccbillSubscriptionId:               ccbillSubscriptionId,
+		accountClubSupporterSubscriptionId: accountClubSupporterSubscriptionId,
+		updatedAt:                          time.Now(),
+		duplicate:                          false,
 	}, nil
 }
 
@@ -137,8 +136,8 @@ func (c *CCBillSubscriptionDetails) AccountingCurrency() money.Currency {
 	return c.accountingCurrency
 }
 
-func (c *CCBillSubscriptionDetails) IdempotencyKey() string {
-	return c.idempotencyKey
+func (c *CCBillSubscriptionDetails) AccountClubSupporterSubscriptionId() string {
+	return c.accountClubSupporterSubscriptionId
 }
 
 func (c *CCBillSubscriptionDetails) UpdatePaymentMethod(paymentMethod *PaymentMethod) error {
@@ -158,7 +157,7 @@ func (c *CCBillSubscriptionDetails) CanView(requester *principal.Principal) erro
 func UnmarshalCCBillSubscriptionDetailsFromDatabase(accountId, clubId, ccbillSubscriptionId string, paymentMethod *PaymentMethod, updatedAt time.Time,
 	subscriptionInitialPrice, subscriptionRecurringPrice uint64, subscriptionCurrency string,
 	billedInitialPrice, billedRecurringPrice uint64, billedCurrency string,
-	accountingInitialPrice, accountingRecurringPrice uint64, accountingCurrency string, idempotencyKey string, duplicate bool) *CCBillSubscriptionDetails {
+	accountingInitialPrice, accountingRecurringPrice uint64, accountingCurrency string, accountClubSupporterSubscriptionId string, duplicate bool) *CCBillSubscriptionDetails {
 
 	crsub, _ := money.CurrencyFromString(subscriptionCurrency)
 
@@ -177,13 +176,13 @@ func UnmarshalCCBillSubscriptionDetailsFromDatabase(accountId, clubId, ccbillSub
 		billedInitialPrice:   billedInitialPrice,
 		billedRecurringPrice: billedRecurringPrice,
 
-		accountingCurrency:       craccounting,
-		accountingInitialPrice:   accountingInitialPrice,
-		accountingRecurringPrice: accountingRecurringPrice,
-		paymentMethod:            paymentMethod,
-		ccbillSubscriptionId:     ccbillSubscriptionId,
-		updatedAt:                updatedAt,
-		idempotencyKey:           idempotencyKey,
+		accountingCurrency:                 craccounting,
+		accountingInitialPrice:             accountingInitialPrice,
+		accountingRecurringPrice:           accountingRecurringPrice,
+		paymentMethod:                      paymentMethod,
+		ccbillSubscriptionId:               ccbillSubscriptionId,
+		updatedAt:                          updatedAt,
+		accountClubSupporterSubscriptionId: accountClubSupporterSubscriptionId,
 
 		duplicate: duplicate,
 	}

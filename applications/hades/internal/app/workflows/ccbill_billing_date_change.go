@@ -27,6 +27,10 @@ func CCBillBillingDateChange(ctx workflow.Context, input CCBillBillingDateChange
 		return err
 	}
 
+	if subscriptionDetails.Duplicate {
+		return nil
+	}
+
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
@@ -36,7 +40,7 @@ func CCBillBillingDateChange(ctx workflow.Context, input CCBillBillingDateChange
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			NextBillingDate:                    nextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {

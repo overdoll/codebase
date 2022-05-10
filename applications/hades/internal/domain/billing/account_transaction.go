@@ -41,7 +41,7 @@ type AccountTransaction struct {
 	events []*AccountTransactionEvent
 }
 
-func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
+func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTransactionId, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -53,12 +53,12 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		currency:                    currency,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
-		ccbillTransactionId:         &id,
+		ccbillTransactionId:         &ccbillTransactionId,
 		paymentMethod:               paymentMethod,
 	}, nil
 }
 
-func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
+func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTransactionId, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -68,7 +68,7 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, subscrip
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
 		currency:                    currency,
-		ccbillTransactionId:         &id,
+		ccbillTransactionId:         &ccbillTransactionId,
 		clubSupporterSubscriptionId: &subscriptionId,
 		ccbillSubscriptionId:        &subscriptionId,
 		paymentMethod:               paymentMethod,

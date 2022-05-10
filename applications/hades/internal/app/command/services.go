@@ -33,5 +33,6 @@ type CarrierService interface {
 	ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount uint64, currency money.Currency) error
 	ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
 	NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error
+	ClubSupporterSubscriptionDuplicate(ctx context.Context, accountId string, clubId string, amount uint64, currency money.Currency) error
 	ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error
 }

@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	ErrAccountClubSupportSubscriptionNotFound = errors.New("account club support subscription not found")
+	ErrAccountClubSupportSubscriptionNotFound  = errors.New("account club support subscription not found")
+	ErrAccountClubSupportSubscriptionDuplicate = errors.New("account club support subscription is duplicate")
 )
 
 type AccountClubSupporterSubscription struct {
@@ -48,11 +49,11 @@ type AccountClubSupporterSubscription struct {
 	billingFailureNextRetryDate *time.Time
 }
 
-func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
+func NewAccountClubSupporterSubscriptionFromCCBill(id, accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
 	return &AccountClubSupporterSubscription{
 		accountId:            accountId,
 		clubId:               clubId,
-		id:                   ccbillSubscriptionId,
+		id:                   id,
 		status:               Active,
 		supporterSince:       supporterSince,
 		lastBillingDate:      lastBillingDate,
