@@ -41,11 +41,7 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

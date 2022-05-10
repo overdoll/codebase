@@ -5,12 +5,12 @@ import (
 	"embed"
 	"fmt"
 	htmlTemplate "html/template"
+	"jaytaylor.com/html2text"
 	textTemplate "text/template"
 )
 
 //go:embed views/support/*.gohtml views/templates/**/*.gohtml
 var htmlTmplFS embed.FS
-var htmlTemplates *htmlTemplate.Template
 
 //go:embed views/templates/**/*.gotmpl
 var textTmplFS embed.FS
@@ -22,25 +22,11 @@ type Template struct {
 	subject string
 }
 
-func init() {
-	htmlTemplates = htmlTemplate.Must(htmlTemplate.New("layouts").ParseFS(htmlTmplFS, "views/support/*.gohtml"))
-}
-
 func NewTemplate(template string, args interface{}) (*Template, error) {
 
-	htmlTemplateClone, err := htmlTemplates.Clone()
-	if err != nil {
-		return nil, fmt.Errorf("failed to clone templates: %s", err)
-	}
-
-	htmlTemplatedResult, err := htmlTemplateClone.New("email.gohtml").ParseFS(htmlTmplFS, "views/templates/"+template+"/email.gohtml")
+	htmlTemplatedResult, err := htmlTemplate.New("email.gohtml").ParseFS(htmlTmplFS, "views/templates/"+template+"/email.gohtml")
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse html templates: %s", err)
-	}
-
-	textTemplatedResult, err := textTemplate.New("plaintext.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/plaintext.gotmpl")
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse plaintext templates: %s", err)
 	}
 
 	textTemplatedSubjectResult, err := textTemplate.New("subject.gotmpl").ParseFS(textTmplFS, "views/templates/"+template+"/subject.gotmpl")
@@ -49,21 +35,22 @@ func NewTemplate(template string, args interface{}) (*Template, error) {
 	}
 
 	var htmlBody bytes.Buffer
-	var textBody bytes.Buffer
 	var subjectRaw bytes.Buffer
 
 	if err := htmlTemplatedResult.Execute(&htmlBody, args); err != nil {
 		return nil, fmt.Errorf("failed to execute html body template: %s", err)
 	}
-	if err := textTemplatedResult.Execute(&textBody, args); err != nil {
-		return nil, fmt.Errorf("failed to execute plaintext body template: %s", err)
-	}
 	if err := textTemplatedSubjectResult.Execute(&subjectRaw, args); err != nil {
 		return nil, fmt.Errorf("failed to execute subject template: %s", err)
 	}
 
+	text, err := html2text.FromString(htmlBody.String(), html2text.Options{PrettyTables: true})
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert html to string: %s", err)
+	}
+
 	return &Template{
-		bodyText: textBody.String(),
+		bodyText: text,
 		bodyHtml: htmlBody.String(),
 		subject:  subjectRaw.String(),
 	}, nil

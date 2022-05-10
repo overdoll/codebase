@@ -1134,6 +1134,13 @@ def go_repositories():
         sum = "h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=",
         version = "v0.0.14",
     )
+    go_repository(
+        name = "com_github_mattn_go_runewidth",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mattn/go-runewidth",
+        sum = "h1:Lm995f3rfxdpd6TSmuVCHVb/QhupuXlYr8sCI/QdE+0=",
+        version = "v0.0.9",
+    )
 
     go_repository(
         name = "com_github_matttproud_golang_protobuf_extensions",
@@ -1285,6 +1292,13 @@ def go_repositories():
         importpath = "github.com/oklog/ulid",
         sum = "h1:EGfNDEx6MqHz8B3uNV6QAib1UR2Lm97sHi3ocA6ESJ4=",
         version = "v1.3.1",
+    )
+    go_repository(
+        name = "com_github_olekukonko_tablewriter",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/olekukonko/tablewriter",
+        sum = "h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=",
+        version = "v0.0.5",
     )
 
     go_repository(
@@ -1681,6 +1695,13 @@ def go_repositories():
         sum = "h1:pM5oEahlgWv/WnHXpgbKz7iLIxRf65tye2Ci+XFK5sk=",
         version = "v1.7.1",
     )
+    go_repository(
+        name = "com_github_ssor_bom",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/ssor/bom",
+        sum = "h1:pvbZ0lM0XWPBqUKqFU8cmavspvIl9nulOYwdy6IFRRo=",
+        version = "v0.0.0-20170718123548-6386211fdfcf",
+    )
 
     go_repository(
         name = "com_github_stretchr_objx",
@@ -1884,6 +1905,13 @@ def go_repositories():
         importpath = "cloud.google.com/go/storage",
         sum = "h1:VV2nUM3wwLLGh9lSABFgZMjInyUbJeaRSE64WuAIQ+4=",
         version = "v1.0.0",
+    )
+    go_repository(
+        name = "com_jaytaylor_html2text",
+        build_file_proto_mode = "disable",
+        importpath = "jaytaylor.com/html2text",
+        sum = "h1:3xhBI8FZepFq4YtdqlW6Z8YzdKM3nAV9xpOvgzWX+us=",
+        version = "v0.0.0-20211105163654-bc68cce691ba",
     )
 
     go_repository(

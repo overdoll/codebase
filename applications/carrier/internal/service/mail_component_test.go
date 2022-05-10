@@ -1,9 +1,8 @@
 package service_test
 
 import (
-	"bytes"
 	"context"
-	"github.com/PuerkitoBio/goquery"
+	"fmt"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
@@ -17,15 +16,17 @@ const (
 	testmailApiEndpoint = "https://api.testmail.app/api/graphql"
 )
 
+type Content struct {
+	Subject string
+	Html    string
+	Text    string
+}
+
 type Inbox struct {
 	Inbox struct {
 		Result string
 		Count  int
-		Emails []struct {
-			Subject string
-			Html    string
-			Text    string
-		}
+		Emails []Content
 	} `graphql:"inbox(namespace: $namespace, tag: $tag, timestamp_from: $timestamp_from, livequery: true)"`
 }
 
@@ -41,7 +42,7 @@ func generateEmail(name string) string {
 	return os.Getenv("TESTMAIL_NAMESPACE") + "." + name + "@inbox.testmail.app"
 }
 
-func waitForEmailAndGetDocument(t *testing.T, email string, timestampFrom time.Time) *goquery.Document {
+func waitForEmailAndGetResponse(t *testing.T, email string, timestampFrom time.Time) Content {
 
 	parts := strings.Split(email, "@")
 	main := strings.Split(parts[0], ".")
@@ -56,19 +57,13 @@ func waitForEmailAndGetDocument(t *testing.T, email string, timestampFrom time.T
 	err := gClient.Query(context.Background(), &queryInbox, map[string]interface{}{
 		"namespace":      graphql.String(os.Getenv("TESTMAIL_NAMESPACE")),
 		"tag":            graphql.String(tag),
-		"timestamp_from": graphql.Float(float64(timestampFrom.UnixMilli())),
+		"timestamp_from": graphql.Float(timestampFrom.UnixMilli()),
 	})
 
 	require.NoError(t, err, "no error for waiting for email to arrive")
 	require.Equal(t, 1, queryInbox.Inbox.Count)
 	require.Equal(t, "success", queryInbox.Inbox.Result)
+	fmt.Println(queryInbox.Inbox.Emails[0])
 
-	// convert byte slice to io.Reader
-	reader := bytes.NewReader([]byte(queryInbox.Inbox.Emails[0].Html))
-
-	doc, err := goquery.NewDocumentFromReader(reader)
-
-	require.NoError(t, err, "no error for parsing html document")
-
-	return doc
+	return queryInbox.Inbox.Emails[0]
 }

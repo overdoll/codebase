@@ -43,10 +43,7 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

@@ -65,11 +65,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(ctx, nil); err != nil {
-			// ignore already started errors
-			if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-				return nil
-			}
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 			return err
 		}
 	}

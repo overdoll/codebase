@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	_ "embed"
 	"github.com/stretchr/testify/require"
 	"os"
 	carrier "overdoll/applications/carrier/proto"
@@ -9,6 +10,18 @@ import (
 	"testing"
 	"time"
 )
+
+//go:embed file_fixtures/account_deleted_test.html
+var clubOverChargebackThresholdHtml string
+
+//go:embed file_fixtures/account_deleted_test.txt
+var clubOverChargebackThresholdText string
+
+//go:embed file_fixtures/account_deleted_test.html
+var clubSupporterNoPostsHtml string
+
+//go:embed file_fixtures/account_deleted_test.txt
+var clubSupporterNoPostsText string
 
 func TestInternalEmails(t *testing.T) {
 	t.Parallel()
@@ -26,10 +39,11 @@ func TestInternalEmails(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending club over chargeback threshold")
 
-	doc := waitForEmailAndGetDocument(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
+	content := waitForEmailAndGetResponse(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
 
-	title := doc.Find("head").Find("title").First()
-	require.Equal(t, "Club Over Chargeback Threshold", title.Text(), "has the correct email title")
+	require.Equal(t, "", content.Subject, "correct subject for the email")
+	require.Equal(t, clubOverChargebackThresholdHtml, content.Html, "correct content for the email html")
+	require.Equal(t, clubOverChargebackThresholdText, content.Text, "correct content for the email text")
 
 	// need a sleep function here or else the emails conflict
 	time.Sleep(time.Second)
@@ -42,8 +56,9 @@ func TestInternalEmails(t *testing.T) {
 
 	require.NoError(t, err, "no error for sending club supporter no posts")
 
-	doc = waitForEmailAndGetDocument(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
+	content = waitForEmailAndGetResponse(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
 
-	title = doc.Find("head").Find("title").First()
-	require.Equal(t, "Supporter No Posts", title.Text(), "has the correct email title")
+	require.Equal(t, "", content.Subject, "correct subject for the email")
+	require.Equal(t, clubSupporterNoPostsHtml, content.Html, "correct content for the email html")
+	require.Equal(t, clubSupporterNoPostsText, content.Text, "correct content for the email text")
 }

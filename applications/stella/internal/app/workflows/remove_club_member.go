@@ -43,11 +43,7 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
-		// ignore already started errors
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

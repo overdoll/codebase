@@ -93,7 +93,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	event := transaction.Events[0]
 
-	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.CreatedAt.String(), "correct timestamp")
 	require.Equal(t, 699, event.Amount, "correct amount")
 	require.Equal(t, graphql1.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", event.Reason, "correct reason")

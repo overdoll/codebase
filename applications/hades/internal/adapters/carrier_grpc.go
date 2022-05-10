@@ -18,17 +18,7 @@ func NewCarrierGrpc(client carrier.CarrierClient) CarrierGrpc {
 }
 
 func (s CarrierGrpc) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-
-	_, err := s.client.NewClubSupporterSubscription(ctx, &carrier.NewClubSupporterSubscriptionRequest{
-		Account:         &carrier.Account{Id: subscription.AccountId()},
-		Club:            &carrier.Club{Id: subscription.ClubId()},
-		Subscription:    &carrier.Subscription{Id: subscription.Id()},
-		Payment:         &carrier.Payment{Amount: subscription.BillingAmount(), Currency: subscription.BillingCurrency().String()},
-		BillingDate:     timestamppb.New(subscription.LastBillingDate()),
-		NextBillingDate: timestamppb.New(subscription.NextBillingDate()),
-	})
-
-	return err
+	return nil
 }
 
 func (s CarrierGrpc) ClubSupporterSubscriptionDuplicate(ctx context.Context, accountId string, clubId string, amount uint64, currency money.Currency) error {
@@ -43,15 +33,7 @@ func (s CarrierGrpc) ClubSupporterSubscriptionDuplicate(ctx context.Context, acc
 }
 
 func (s CarrierGrpc) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-
-	_, err := s.client.ClubSupporterSubscriptionCancelled(ctx, &carrier.ClubSupporterSubscriptionCancelledRequest{
-		Account:        &carrier.Account{Id: subscription.AccountId()},
-		Club:           &carrier.Club{Id: subscription.ClubId()},
-		Subscription:   &carrier.Subscription{Id: subscription.Id()},
-		ExpirationDate: timestamppb.New(subscription.NextBillingDate()),
-	})
-
-	return err
+	return nil
 }
 
 func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount uint64, currency money.Currency) error {

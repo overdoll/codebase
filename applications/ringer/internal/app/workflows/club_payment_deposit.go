@@ -26,13 +26,11 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 
 	var a *activities.Activities
 
-	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
+	paymentId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
 		return err
 	}
-
-	paymentId := *uniqueId
 
 	// create a pending deposit
 	if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeposit,
@@ -101,11 +99,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 
