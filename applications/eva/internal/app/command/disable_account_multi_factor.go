@@ -24,16 +24,10 @@ func NewDisableAccountMultiFactorHandler(mr multi_factor.Repository, ar account.
 func (h DisableAccountMultiFactorHandler) Handle(ctx context.Context, cmd DisableAccountMultiFactor) (*account.Account, error) {
 
 	acc, err := h.ar.UpdateAccount(ctx, cmd.Principal.AccountId(), func(a *account.Account) error {
-
-		if !a.MultiFactorEnabled() {
-			return nil
-		}
-
 		// if user toggled "off", delete TOTP settings
 		if err := h.mr.DeleteAccountMultiFactorTOTP(ctx, cmd.Principal, a.ID()); err != nil {
 			return err
 		}
-
 		return a.DisableMultiFactor()
 	})
 

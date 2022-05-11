@@ -158,8 +158,8 @@ func (r *MutationResolver) GenerateClubSupporterPaymentReceiptFromAccountTransac
 		Handle(
 			ctx,
 			command.GenerateClubSupporterPaymentReceiptFromAccountTransaction{
-				Principal:                   principal.FromContext(ctx),
-				AccountTransactionHistoryId: input.TransactionID.GetID(),
+				Principal:            principal.FromContext(ctx),
+				AccountTransactionId: input.TransactionID.GetID(),
 			},
 		)
 
@@ -184,9 +184,9 @@ func (r *MutationResolver) GenerateClubSupporterRefundReceiptFromAccountTransact
 		Handle(
 			ctx,
 			command.GenerateClubSupporterRefundReceiptFromAccountTransaction{
-				Principal:                        principal.FromContext(ctx),
-				AccountTransactionHistoryId:      input.TransactionID.GetID(),
-				AccountTransactionHistoryEventId: input.TransactionEventID.GetID(),
+				Principal:                 principal.FromContext(ctx),
+				AccountTransactionId:      input.TransactionID.GetID(),
+				AccountTransactionEventId: input.TransactionEventID.GetID(),
 			},
 		)
 

@@ -179,6 +179,10 @@ func (c *AccountTransaction) GetTotalRefunded() uint64 {
 
 func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amount uint64) error {
 
+	if !requester.IsStaff() {
+		return errors.New("only staff can issue refunds")
+	}
+
 	if c.transaction != Payment && c.transaction != Refund {
 		return errors.New("transaction in incorrect state")
 	}
@@ -187,10 +191,6 @@ func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amoun
 
 	if sum+amount > c.amount {
 		return errors.New("over refund threshold")
-	}
-
-	if !requester.IsStaff() {
-		return errors.New("only staff can issue refunds")
 	}
 
 	return nil
