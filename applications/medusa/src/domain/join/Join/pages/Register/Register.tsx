@@ -17,6 +17,7 @@ import Head from 'next/head'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
 import { prepareViewer } from '../../support/support'
+import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -31,6 +32,10 @@ const RegisterMutationGQL = graphql`
         username
         isModerator
         isStaff
+        isArtist
+        deleting {
+          __typename
+        }
         lock {
           __typename
         }
@@ -45,7 +50,9 @@ const RegisterMutationGQL = graphql`
 
 const RegisterFragment = graphql`
   fragment RegisterFragment on AuthenticationToken {
+    id
     token
+    ...RevokeTokenButtonFragment
   }
 `
 
@@ -163,6 +170,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
               </Trans>
             </Text>
           </Stack>
+          <RevokeTokenButton queryRef={data} />
         </Stack>
       </PageWrapper>
     </>

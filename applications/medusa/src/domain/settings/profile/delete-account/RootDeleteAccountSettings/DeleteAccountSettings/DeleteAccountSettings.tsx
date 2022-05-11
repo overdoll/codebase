@@ -10,6 +10,7 @@ import { Trans } from '@lingui/macro'
 import DeleteAccountForm from './DeleteAccountForm/DeleteAccountForm'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import CancelAccountDeletionButton from './CancelAccountDeletionButton/CancelAccountDeletionButton'
 
 interface Props {
   query: PreloadedQuery<DeleteAccountSettingsQuery>
@@ -18,13 +19,13 @@ interface Props {
 const Query = graphql`
   query DeleteAccountSettingsQuery @preloadable {
     viewer @required(action: THROW) {
-      isDeleted
       deleting {
         scheduledDeletion
       }
       hasActiveOrCancelledAccountClubSupporterSubscriptions
       hasNonTerminatedClubs
       ...DeleteAccountFormFragment
+      ...CancelAccountDeletionButtonFragment
     }
   }
 `
@@ -64,7 +65,6 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
           {queryData.viewer.hasActiveOrCancelledAccountClubSupporterSubscriptions && (
             <Alert
               status='warning'
-              mb={2}
             >
               <Flex
                 w='100%'
@@ -95,7 +95,6 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
           {queryData.viewer.hasNonTerminatedClubs && (
             <Alert
               status='warning'
-              mb={2}
             >
               <HStack spacing={0} align='center'>
                 <AlertIcon />
@@ -123,13 +122,22 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
     )
   }
 
-  // TODO add cancel account deletion when its fixed
-
   const scheduledDeletion = format(new Date(queryData.viewer.deleting.scheduledDeletion as Date), dateFormatWithTime, { locale })
 
   return (
     <Stack spacing={4}>
-      <>{queryData.viewer.isDeleted}</>
+      <Alert>
+        <HStack spacing={0} align='center'>
+          <AlertIcon />
+          <AlertDescription>
+            <Trans>
+              You have requested to delete your account. Unless you cancel the action, your account is scheduled to be
+              deleted on {scheduledDeletion}.
+            </Trans>
+          </AlertDescription>
+        </HStack>
+      </Alert>
+      <CancelAccountDeletionButton query={queryData.viewer} />
     </Stack>
   )
 }

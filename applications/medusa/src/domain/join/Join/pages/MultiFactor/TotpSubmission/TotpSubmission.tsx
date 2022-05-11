@@ -49,6 +49,10 @@ const Mutation = graphql`
         username
         isModerator
         isStaff
+        isArtist
+        deleting {
+          __typename
+        }
         lock {
           __typename
         }

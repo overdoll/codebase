@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f9cf70e007eb0358127d56e1e92d11e1>>
- * @relayHash a393e49e1bb15c41e1510388e1148699
+ * @generated SignedSource<<39eccc6d89d194b99eec8d9c092dd871>>
+ * @relayHash ae09ad848f04439a37da94e88c6e732d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a393e49e1bb15c41e1510388e1148699
+// @relayRequestID ae09ad848f04439a37da94e88c6e732d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,13 +17,12 @@ export type DeleteAccountSettingsQuery$variables = {};
 export type DeleteAccountSettingsQueryVariables = DeleteAccountSettingsQuery$variables;
 export type DeleteAccountSettingsQuery$data = {
   readonly viewer: {
-    readonly isDeleted: boolean;
     readonly deleting: {
       readonly scheduledDeletion: any;
     } | null;
     readonly hasActiveOrCancelledAccountClubSupporterSubscriptions: boolean;
     readonly hasNonTerminatedClubs: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"DeleteAccountFormFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"DeleteAccountFormFragment" | "CancelAccountDeletionButtonFragment">;
   };
 };
 export type DeleteAccountSettingsQueryResponse = DeleteAccountSettingsQuery$data;
@@ -34,13 +33,6 @@ export type DeleteAccountSettingsQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isDeleted",
-  "storageKey": null
-},
-v1 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountDeleting",
@@ -58,14 +50,14 @@ v1 = {
   ],
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "hasActiveOrCancelledAccountClubSupporterSubscriptions",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -92,11 +84,15 @@ return {
             (v0/*: any*/),
             (v1/*: any*/),
             (v2/*: any*/),
-            (v3/*: any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
               "name": "DeleteAccountFormFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "CancelAccountDeletionButtonFragment"
             }
           ],
           "storageKey": null
@@ -125,7 +121,6 @@ return {
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -146,7 +141,7 @@ return {
     ]
   },
   "params": {
-    "id": "a393e49e1bb15c41e1510388e1148699",
+    "id": "ae09ad848f04439a37da94e88c6e732d",
     "metadata": {},
     "name": "DeleteAccountSettingsQuery",
     "operationKind": "query",
@@ -155,7 +150,7 @@ return {
 };
 })();
 
-(node as any).hash = "b0328f260fdfd14b7bac1737dd824cda";
+(node as any).hash = "0cfb980f7f9fdc7cf70df0d4b5a8df47";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

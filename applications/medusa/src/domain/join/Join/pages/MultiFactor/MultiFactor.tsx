@@ -9,6 +9,7 @@ import { Trans } from '@lingui/macro'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons/interface'
 import Head from 'next/head'
+import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 
 interface Props {
   queryRef: MultiFactorFragment$key
@@ -23,6 +24,7 @@ const MultiFactorFragmentGQL = graphql`
     }
     ...TotpSubmissionFragment
     ...RecoveryCodeFragment
+    ...RevokeTokenButtonFragment
   }
 `
 
@@ -59,6 +61,7 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
           >
             <RecoveryCode queryRef={data} />
           </Collapse>
+          <RevokeTokenButton queryRef={data} />
         </Stack>
       </PageWrapper>
     </>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c98eed13404d304b3eeb70ca68ecef0e>>
- * @relayHash 284de0f9501058588e14b14e8c720e07
+ * @generated SignedSource<<8b750970ddabaace944aa61207430c21>>
+ * @relayHash d45e3939d8830ab0ab6174186505a23e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 284de0f9501058588e14b14e8c720e07
+// @relayRequestID d45e3939d8830ab0ab6174186505a23e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -29,6 +29,10 @@ export type GrantMutation$data = {
       readonly username: string;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isArtist: boolean;
+      readonly deleting: {
+        readonly __typename: string;
+      } | null;
       readonly lock: {
         readonly __typename: string;
       } | null;
@@ -97,22 +101,40 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v8 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
+],
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountDeleting",
+  "kind": "LinkedField",
+  "name": "deleting",
+  "plural": false,
+  "selections": (v8/*: any*/),
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__typename",
-      "storageKey": null
-    }
-  ],
+  "selections": (v8/*: any*/),
   "storageKey": null
 },
-v8 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -148,6 +170,8 @@ return {
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -207,6 +231,8 @@ return {
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -223,7 +249,7 @@ return {
                     "name": "urls",
                     "plural": true,
                     "selections": [
-                      (v8/*: any*/),
+                      (v11/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -242,7 +268,7 @@ return {
                     "name": "videoThumbnail",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/)
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -273,7 +299,7 @@ return {
     ]
   },
   "params": {
-    "id": "284de0f9501058588e14b14e8c720e07",
+    "id": "d45e3939d8830ab0ab6174186505a23e",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -282,6 +308,6 @@ return {
 };
 })();
 
-(node as any).hash = "3fd669a64d27c9aa24c350bb0d9d9ba1";
+(node as any).hash = "de1b48f1396d17d451d0f7013971509a";
 
 export default node;

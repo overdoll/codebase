@@ -67,6 +67,11 @@ export default function RevokeTokenButton ({
       onCompleted () {
         onClose()
         removeCookie('token')
+      },
+      updater: (store, payload) => {
+        if (payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId != null) {
+          store.delete(payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)
+        }
       }
     })
   }
@@ -104,8 +109,7 @@ export default function RevokeTokenButton ({
             <Text>
               <Trans>
                 If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the
-                email
-                will be invalidated. Are you sure?
+                email will be invalidated. Are you sure?
               </Trans>
             </Text>
           </AlertDialogBody>
