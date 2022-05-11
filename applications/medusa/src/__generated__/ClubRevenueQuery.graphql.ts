@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b64ecf565e9eeb61e838df470dd660c5>>
- * @relayHash d3057bdbe26e7cdf37f33b848d564224
+ * @generated SignedSource<<4c3f4cae96664b8b795d02e8a1e140e4>>
+ * @relayHash 0b41df491fba677437c21a0b61aba669
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d3057bdbe26e7cdf37f33b848d564224
+// @relayRequestID 0b41df491fba677437c21a0b61aba669
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -303,6 +303,18 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "concreteType": "AccountLock",
+                "kind": "LinkedField",
+                "name": "lock",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": null,
                 "kind": "LinkedField",
                 "name": "payoutMethod",
@@ -426,7 +438,7 @@ return {
     ]
   },
   "params": {
-    "id": "d3057bdbe26e7cdf37f33b848d564224",
+    "id": "0b41df491fba677437c21a0b61aba669",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",

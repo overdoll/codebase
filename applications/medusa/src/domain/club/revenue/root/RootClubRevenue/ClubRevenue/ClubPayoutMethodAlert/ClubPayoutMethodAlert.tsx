@@ -12,6 +12,9 @@ interface Props {
 const Fragment = graphql`
   fragment ClubPayoutMethodAlertFragment on Club {
     owner {
+      lock {
+        __typename
+      }
       payoutMethod {
         __typename
       }
@@ -21,6 +24,28 @@ const Fragment = graphql`
 
 export default function ClubPayoutMethodAlert ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  if (data.owner.lock != null) {
+    return (
+      <Alert mb={2} status='warning'>
+        <HStack justify='space-between'>
+          <HStack>
+            <AlertIcon />
+            <AlertDescription>
+              <Trans>
+                Your account is locked. You cannot collect payouts.
+              </Trans>
+            </AlertDescription>
+          </HStack>
+          <LinkButton variant='solid' size='sm' colorScheme='orange' href='/settings/payouts'>
+            <Trans>
+              View Details
+            </Trans>
+          </LinkButton>
+        </HStack>
+      </Alert>
+    )
+  }
 
   if (data.owner.payoutMethod != null) return <></>
 

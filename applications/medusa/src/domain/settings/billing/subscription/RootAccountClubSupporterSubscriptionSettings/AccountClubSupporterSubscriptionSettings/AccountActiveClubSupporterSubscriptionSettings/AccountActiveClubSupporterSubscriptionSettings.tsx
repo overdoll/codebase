@@ -3,7 +3,7 @@ import type {
   AccountActiveClubSupporterSubscriptionSettingsFragment$key
 } from '@//:artifacts/AccountActiveClubSupporterSubscriptionSettingsFragment.graphql'
 import { LargeBackgroundBox, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
-import { Box, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import ManageActiveSubscriptionButton from './ManageActiveSubscriptionButton/ManageActiveSubscriptionButton'
 import { ConnectionProp } from '@//:types/components'
@@ -21,6 +21,7 @@ const Fragment = graphql`
   fragment AccountActiveClubSupporterSubscriptionSettingsFragment on AccountActiveClubSupporterSubscription {
     ...AccountActiveClubSupporterSubscriptionDetailsFragment
     ...ManageActiveSubscriptionButtonFragment
+    reference
     club {
       slug
       ...ClubExclusivePostsFragment
@@ -52,17 +53,22 @@ export default function AccountActiveClubSupporterSubscriptionSettings ({
                 View Club
               </Trans>
             </LinkButton>
+            <Text fontSize='sm' color='gray.200'>
+              <Trans>
+                Subscription #{data.reference}
+              </Trans>
+            </Text>
           </Stack>
         </LargeBackgroundBox>
       </Box>
-      <Box>
+      <Stack>
         <ClubExclusivePosts query={data.club} />
-        <Text fontSize='sm' color='gray.200'>
+        <Heading fontSize='md' color='gray.200'>
           <Trans>
-            As a supporter, you have access to all exclusive content from this club.
+            As a supporter, you have access to all exclusive content from this club
           </Trans>
-        </Text>
-      </Box>
+        </Heading>
+      </Stack>
       <ManageActiveSubscriptionButton connectionId={connectionId} query={data} />
     </Stack>
   )

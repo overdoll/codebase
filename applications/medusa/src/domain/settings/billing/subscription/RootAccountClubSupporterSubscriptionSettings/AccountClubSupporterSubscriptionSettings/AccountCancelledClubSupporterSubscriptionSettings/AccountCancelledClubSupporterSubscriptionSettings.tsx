@@ -18,6 +18,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment AccountCancelledClubSupporterSubscriptionSettingsFragment on AccountCancelledClubSupporterSubscription {
+    reference
     ...AccountCancelledClubSupporterSubscriptionDetailsFragment
     ...ManageCancelledSubscriptionButtonFragment
     club {
@@ -50,6 +51,11 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
                 View Club
               </Trans>
             </LinkButton>
+            <Text fontSize='sm' color='gray.200'>
+              <Trans>
+                Subscription #{data.reference}
+              </Trans>
+            </Text>
           </Stack>
         </LargeBackgroundBox>
       </Box>
@@ -57,7 +63,7 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
         <ClubExclusivePosts query={data.club} />
         <Text fontSize='sm' color='gray.200'>
           <Trans>
-            As a supporter, you have access to all exclusive content from this club.
+            As a supporter, you have access to all exclusive content from this club
           </Trans>
         </Text>
       </Box>
