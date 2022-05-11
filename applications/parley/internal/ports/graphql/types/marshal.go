@@ -107,13 +107,13 @@ func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*post
 
 func MarshalPostReportToGraphQL(ctx context.Context, result *report.PostReport) *PostReport {
 	return &PostReport{
-		ID:      relay.NewID(PostReport{}, result.PostID(), result.ID()),
+		ID:      relay.NewID(PostReport{}, result.PostId(), result.ReportingAccountId()),
 		Account: &Account{ID: relay.NewID(Account{}, result.ReportingAccountId())},
 		Rule: &Rule{
 			ID: relay.NewID(Rule{}, result.RuleId()),
 		},
 		Post: &Post{
-			ID: relay.NewID(Post{}, result.PostID()),
+			ID: relay.NewID(Post{}, result.PostId()),
 		},
 	}
 }

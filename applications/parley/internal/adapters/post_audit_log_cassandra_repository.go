@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
@@ -110,7 +111,7 @@ func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCass
 
 func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLog, error) {
 
-	buck, err := bucket.MakeWeeklyBucketFromUUID(auditLog.ID())
+	parsed, err := ksuid.Parse(auditLog.ID())
 
 	if err != nil {
 		return nil, err
@@ -118,7 +119,7 @@ func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*post
 
 	return &postAuditLog{
 		Id:                 auditLog.ID(),
-		Bucket:             buck,
+		Bucket:             bucket.MakeWeeklyBucketFromTimestamp(parsed.Time()),
 		PostId:             auditLog.PostId(),
 		ModeratorAccountId: auditLog.ModeratorId(),
 		Action:             auditLog.Action().String(),

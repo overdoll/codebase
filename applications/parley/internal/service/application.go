@@ -58,12 +58,13 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func(), 
 func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
+	esClient := bootstrap.InitializeElasticSearchSession()
 
 	clubInfractionRepo := adapters.NewClubInfractionCassandraRepository(session)
 	postAuditLogRepo := adapters.NewPostAuditLogCassandraRepository(session)
 
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
-	reportRepo := adapters.NewReportCassandraRepository(session)
+	reportRepo := adapters.NewReportCassandraElasticsearchRepository(session, esClient)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	ruleRepo := adapters.NewRuleCassandraRepository(session)
@@ -90,6 +91,8 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, stella),
 			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
+
+			DeleteAndRecreatePostReportsIndex: command.NewDeleteAndRecreateClubMembersIndexHandler(reportRepo),
 		},
 		Queries: app.Queries{
 			ClubInfractionHistory: query.NewClubInfractionHistoryByAccountHandler(clubInfractionRepo),
@@ -101,13 +104,12 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 			SearchPostModeratorQueue: query.NewSearchPostModeratorQueueHandler(moderatorRepo),
 
-			PostReportById:             query.NewPostReportByIdHandler(reportRepo),
-			PostReportByAccountAndPost: query.NewPostReportByAccountAndPostHandler(reportRepo),
-			SearchPostReports:          query.NewSearchPostReportsHandler(reportRepo),
-			SearchPostAuditLogs:        query.NewSearchPostAuditLogsHandler(postAuditLogRepo, eva),
-			ClubInfractionHistoryById:  query.NewClubInfractionHistoryByIdHandler(clubInfractionRepo),
-			PostAuditLogById:           query.NewPostAuditLogByIdHandler(postAuditLogRepo),
-			ModeratorById:              query.NewModeratorByIdHandler(moderatorRepo),
+			PostReportById:            query.NewPostReportByIdHandler(reportRepo),
+			SearchPostReports:         query.NewSearchPostReportsHandler(reportRepo),
+			SearchPostAuditLogs:       query.NewSearchPostAuditLogsHandler(postAuditLogRepo, eva),
+			ClubInfractionHistoryById: query.NewClubInfractionHistoryByIdHandler(clubInfractionRepo),
+			PostAuditLogById:          query.NewPostAuditLogByIdHandler(postAuditLogRepo),
+			ModeratorById:             query.NewModeratorByIdHandler(moderatorRepo),
 		},
 		Activities: activities.NewActivitiesHandler(moderatorRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, stella),
 	}

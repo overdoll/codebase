@@ -104,72 +104,27 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator_buckets
 
 CREATE TABLE IF NOT EXISTS post_reports
 (
-    id                   text,
     post_id              text,
     bucket               int,
     reporting_account_id text,
     rule_id              text,
-    primary key ( id ),
-);
-
-CREATE TABLE IF NOT EXISTS post_reports_by_post
-(
-    post_id              text,
-    bucket               int,
-    id                   text,
-    reporting_account_id text,
-    rule_id              text,
-    primary key ( (post_id, bucket), id ),
-) WITH CLUSTERING ORDER BY (id DESC);
-
-CREATE TABLE IF NOT EXISTS post_report_by_post_buckets
-(
-    post_id text,
-    bucket  int,
-    primary key ( (post_id), bucket ),
-);
-
-CREATE TABLE IF NOT EXISTS post_reports_buckets
-(
-    init   int,
-    bucket int,
-    primary key ( (init), bucket ),
-) WITH CLUSTERING ORDER BY (bucket DESC);
-
-CREATE TABLE IF NOT EXISTS post_reports_by_bucket
-(
-    post_id              text,
-    bucket               int,
-    id                   text,
-    reporting_account_id text,
-    rule_id              text,
-    primary key ( (bucket), id ),
-) WITH CLUSTERING ORDER BY (id DESC);
-
-
-CREATE TABLE IF NOT EXISTS post_report_for_account_and_post
-(
-    post_id              text,
-    reporting_account_id text,
-    bucket               int,
-    id                   text,
-    rule_id              text,
+    created_at           timestamp,
     primary key ( (post_id, reporting_account_id) ),
 );
 
-CREATE TABLE IF NOT EXISTS post_report_by_account_and_bucket
+CREATE TABLE IF NOT EXISTS post_report_by_account_buckets
+(
+    reporting_account_id text,
+    bucket               int,
+    primary key ( reporting_account_id, bucket ),
+);
+
+CREATE TABLE IF NOT EXISTS post_report_by_account
 (
     post_id              text,
     reporting_account_id text,
     bucket               int,
-    id                   text,
     rule_id              text,
-    primary key ( (bucket, reporting_account_id), id ),
-);
-
-CREATE TABLE IF NOT EXISTS post_report_by_account_and_bucket_buckets
-(
-    reporting_account_id text,
-    bucket               int,
-    primary key ( (reporting_account_id), bucket ),
+    created_at           timestamp,
+    primary key ( (bucket, reporting_account_id), post_id ),
 );

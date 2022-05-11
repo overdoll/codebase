@@ -27,6 +27,10 @@ func init() {
 			if err := application.Commands.DeleteAndRecreateAccountTransactionsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
+
+			if err := application.Commands.DeleteAndRecreateAccountClubSupporterSubscriptionsIndex.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 
@@ -42,6 +46,23 @@ func init() {
 			defer cleanup()
 
 			if err := application.Commands.DeleteAndRecreateAccountTransactionsIndex.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+		},
+	})
+
+	Cli.AddCommand(&cobra.Command{
+		Use:   "account-club-supporter-subscriptions",
+		Short: "Index the whole account_club_supporter_subscriptions table into elasticsearch",
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+			defer cancelFn()
+
+			application, cleanup := service.NewApplication(ctx)
+
+			defer cleanup()
+
+			if err := application.Commands.DeleteAndRecreateAccountClubSupporterSubscriptionsIndex.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

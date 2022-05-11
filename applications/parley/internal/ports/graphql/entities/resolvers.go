@@ -85,7 +85,8 @@ func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*t
 
 	mod, err := r.App.Queries.PostReportById.Handle(ctx, query.PostReportById{
 		Principal: principal.FromContext(ctx),
-		Id:        id.GetID(),
+		AccountId: id.GetCompositePartID(0),
+		PostId:    id.GetCompositePartID(1),
 	})
 
 	if err != nil {
