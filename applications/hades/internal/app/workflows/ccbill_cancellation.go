@@ -3,15 +3,13 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CCBillCancellationInput struct {
-	SubscriptionId string `json:"subscriptionId"`
-	ClientAccnum   string `json:"clientAccnum"`
-	ClientSubacc   string `json:"clientSubacc"`
-	Timestamp      string `json:"timestamp"`
-	Reason         string `json:"reason"`
+	SubscriptionId string
+	Timestamp      time.Time
+	Reason         string
 }
 
 func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) error {
@@ -32,17 +30,11 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return nil
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
 	// mark as cancelled to tell the user the new state
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionCancelled,
 		activities.MarkAccountClubSupporterSubscriptionCancelledInput{
 			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
-			CancelledAt:                        timestamp,
+			CancelledAt:                        input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

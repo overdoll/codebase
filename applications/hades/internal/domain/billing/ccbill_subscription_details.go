@@ -41,30 +41,24 @@ type CCBillSubscriptionDetails struct {
 }
 
 func NewCCBillSubscriptionDetails(accountId, clubId, ccbillSubscriptionId string, paymentMethod *PaymentMethod,
-	subscriptionInitialPrice, subscriptionRecurringPrice uint64, subscriptionCurrency string,
-	billedInitialPrice, billedRecurringPrice uint64, billedCurrency string,
-	accountingInitialPrice, accountingRecurringPrice uint64, accountingCurrency string,
+	subscriptionInitialPrice, subscriptionRecurringPrice uint64, subscriptionCurrency money.Currency,
+	billedInitialPrice, billedRecurringPrice uint64, billedCurrency money.Currency,
+	accountingInitialPrice, accountingRecurringPrice uint64, accountingCurrency money.Currency,
 	accountClubSupporterSubscriptionId string) (*CCBillSubscriptionDetails, error) {
-
-	crsub, _ := money.CurrencyFromString(subscriptionCurrency)
-
-	crbilled, _ := money.CurrencyFromString(billedCurrency)
-
-	craccounting, _ := money.CurrencyFromString(accountingCurrency)
 
 	return &CCBillSubscriptionDetails{
 		accountId: accountId,
 		clubId:    clubId,
 
 		subscriptionInitialPrice:   subscriptionInitialPrice,
-		subscriptionCurrency:       crsub,
+		subscriptionCurrency:       subscriptionCurrency,
 		subscriptionRecurringPrice: subscriptionRecurringPrice,
 
-		billedCurrency:       crbilled,
+		billedCurrency:       billedCurrency,
 		billedInitialPrice:   billedInitialPrice,
 		billedRecurringPrice: billedRecurringPrice,
 
-		accountingCurrency:       craccounting,
+		accountingCurrency:       accountingCurrency,
 		accountingInitialPrice:   accountingInitialPrice,
 		accountingRecurringPrice: accountingRecurringPrice,
 

@@ -5,29 +5,23 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
 	"overdoll/libraries/support"
+	"time"
 )
 
 type CCBillRefundInput struct {
-	TransactionId          string `json:"transactionId"`
-	SubscriptionId         string `json:"subscriptionId"`
-	ClientAccnum           string `json:"clientAccnum"`
-	ClientSubacc           string `json:"clientSubacc"`
-	Timestamp              string `json:"timestamp"`
-	Currency               string `json:"currency"`
-	CurrencyCode           string `json:"currencyCode"`
-	Amount                 string `json:"amount"`
-	AccountingCurrency     string `json:"accountingCurrency"`
-	AccountingCurrencyCode string `json:"accountingCurrencyCode"`
-	AccountingAmount       string `json:"accountingAmount"`
-	Reason                 string `json:"reason"`
-	CardType               string `json:"cardType"`
-	PaymentAccount         string `json:"paymentAccount"`
-	PaymentType            string `json:"paymentType"`
-	Last4                  string `json:"last4"`
-	ExpDate                string `json:"expDate"`
+	TransactionId      string
+	SubscriptionId     string
+	Timestamp          time.Time
+	Currency           money.Currency
+	Amount             uint64
+	AccountingCurrency money.Currency
+	AccountingAmount   uint64
+	Reason             string
+	CardType           string
+	Last4              string
+	ExpDate            string
 }
 
 func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
@@ -56,24 +50,6 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		return err
 	}
 
-	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
-
-	if err != nil {
-		return err
-	}
-
-	currency, err := money.CurrencyFromString(input.Currency)
-
-	if err != nil {
-		return err
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
 	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
@@ -85,9 +61,9 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		activities.UpdateRefundClubSubscriptionAccountTransactionInput{
 			Id:                   uniqueId,
 			AccountTransactionId: transactionDetails.TransactionId,
-			Timestamp:            timestamp,
-			Currency:             currency,
-			Amount:               amount,
+			Timestamp:            input.Timestamp,
+			Currency:             input.Currency,
+			Amount:               input.Amount,
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
@@ -99,22 +75,10 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 		activities.SendAccountClubSupporterSubscriptionRefundNotificationInput{
 			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			AccountTransactionId:               transactionDetails.TransactionId,
-			Currency:                           currency,
-			Amount:                             amount,
+			Currency:                           input.Currency,
+			Amount:                             input.Amount,
 		},
 	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
-
-	if err != nil {
-		return err
-	}
-
-	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
-
-	if err != nil {
 		return err
 	}
 
@@ -124,9 +88,9 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			AccountTransactionId: transactionDetails.TransactionId,
-			Timestamp:            timestamp,
-			Amount:               accountingAmount,
-			Currency:             accountingCurrency,
+			Timestamp:            input.Timestamp,
+			Amount:               input.Amount,
+			Currency:             input.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -141,10 +105,10 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
 		ClubTransactionMetricInput{
 			ClubId:    subscriptionDetails.ClubId,
-			Timestamp: timestamp,
+			Timestamp: input.Timestamp,
 			Id:        uniqueId,
-			Amount:    accountingAmount,
-			Currency:  accountingCurrency,
+			Amount:    input.Amount,
+			Currency:  input.Currency,
 			IsRefund:  true,
 		},
 	).

@@ -3,11 +3,12 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"time"
 )
 
 type UpdateCCBillSubscriptionDetailsInput struct {
 	CCBillSubscriptionId string
-	Timestamp            string
+	Timestamp            time.Time
 
 	CardBin            string
 	CardType           string

@@ -67,7 +67,7 @@ func NewReportCassandraElasticsearchRepository(session gocqlx.Session, client *e
 func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error) {
 
 	return &postReport{
-		Bucket:             bucket.MakeWeeklyBucketFromTimestamp(report.CreatedAt()),
+		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(report.CreatedAt()),
 		PostId:             report.PostId(),
 		ReportingAccountId: report.ReportingAccountId(),
 		RuleId:             report.RuleId(),

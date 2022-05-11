@@ -3,24 +3,14 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"overdoll/libraries/money"
-	"strconv"
+	"time"
 )
 
 type CCBillVoidInput struct {
-	TransactionId          string `json:"transactionId"`
-	SubscriptionId         string `json:"subscriptionId"`
-	ClientAccnum           string `json:"clientAccnum"`
-	ClientSubacc           string `json:"clientSubacc"`
-	Timestamp              string `json:"timestamp"`
-	Currency               string `json:"currency"`
-	CurrencyCode           string `json:"currencyCode"`
-	Amount                 string `json:"amount"`
-	AccountingCurrency     string `json:"accountingCurrency"`
-	AccountingCurrencyCode string `json:"accountingCurrencyCode"`
-	AccountingAmount       string `json:"accountingAmount"`
-	Reason                 string `json:"reason"`
+	TransactionId  string
+	SubscriptionId string
+	Timestamp      time.Time
+	Reason         string
 }
 
 func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
@@ -49,44 +39,14 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
 	// update void - mark subscription as voided
 	if err := workflow.ExecuteActivity(ctx, a.UpdateVoidClubSubscriptionAccountTransaction,
 		activities.UpdateVoidClubSubscriptionAccountTransactionInput{
 			AccountTransactionId: transactionDetails.TransactionId,
-			Timestamp:            timestamp,
+			Timestamp:            input.Timestamp,
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	currency := input.AccountingCurrency
-
-	if currency == "" {
-		currency = subscriptionDetails.Currency.String()
-	}
-
-	amount := input.AccountingAmount
-
-	if amount == "" {
-		amount = strconv.Itoa(int(subscriptionDetails.Amount))
-	}
-
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(amount, currency)
-
-	if err != nil {
-		return err
-	}
-
-	accountingCurrency, err := money.CurrencyFromString(currency)
-
-	if err != nil {
 		return err
 	}
 
@@ -96,9 +56,9 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			AccountTransactionId: transactionDetails.TransactionId,
-			Timestamp:            timestamp,
-			Amount:               accountingAmount,
-			Currency:             accountingCurrency,
+			Timestamp:            input.Timestamp,
+			Amount:               subscriptionDetails.Amount,
+			Currency:             subscriptionDetails.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -3,15 +3,12 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CCBillBillingDateChangeInput struct {
-	SubscriptionId  string `json:"subscriptionId"`
-	ClientAccnum    string `json:"clientAccnum"`
-	ClientSubacc    string `json:"clientSubacc"`
-	Timestamp       string `json:"timestamp"`
-	NextRenewalDate string `json:"nextRenewalDate"`
+	SubscriptionId  string
+	NextBillingDate time.Time
 }
 
 func CCBillBillingDateChange(ctx workflow.Context, input CCBillBillingDateChangeInput) error {
@@ -31,17 +28,11 @@ func CCBillBillingDateChange(ctx workflow.Context, input CCBillBillingDateChange
 		return nil
 	}
 
-	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
-
-	if err != nil {
-		return err
-	}
-
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
 			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
-			NextBillingDate:                    nextBillingDate,
+			NextBillingDate:                    input.NextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

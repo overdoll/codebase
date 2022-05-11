@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/money"
 )
 
 type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
@@ -18,17 +18,17 @@ type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput struct {
 	CardLast4          string
 	CardExpirationDate string
 
-	AccountingCurrency       string
-	AccountingInitialPrice   string
-	AccountingRecurringPrice string
+	AccountingCurrency       money.Currency
+	AccountingInitialPrice   uint64
+	AccountingRecurringPrice uint64
 
-	BilledCurrency       string
-	BilledInitialPrice   string
-	BilledRecurringPrice string
+	BilledCurrency       money.Currency
+	BilledInitialPrice   uint64
+	BilledRecurringPrice uint64
 
-	SubscriptionCurrency       string
-	SubscriptionInitialPrice   string
-	SubscriptionRecurringPrice string
+	SubscriptionCurrency       money.Currency
+	SubscriptionInitialPrice   uint64
+	SubscriptionRecurringPrice uint64
 
 	FirstName   string
 	Email       string
@@ -74,55 +74,19 @@ func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx cont
 		return nil, err
 	}
 
-	accountingInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
-	accountingRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingRecurringPrice, input.AccountingCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
-	subscriptionInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionInitialPrice, input.SubscriptionCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
-	subscriptionRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionRecurringPrice, input.SubscriptionCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
-	billedInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledInitialPrice, input.BilledCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
-	billedRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledRecurringPrice, input.BilledCurrency)
-
-	if err != nil {
-		return nil, err
-	}
-
 	ccbillSubscription, err := billing.NewCCBillSubscriptionDetails(
 		input.AccountId,
 		input.ClubId,
 		input.CCBillSubscriptionId,
 		paymentMethod,
-		subscriptionInitialPrice,
-		subscriptionRecurringPrice,
+		input.SubscriptionInitialPrice,
+		input.SubscriptionRecurringPrice,
 		input.SubscriptionCurrency,
-		billedInitialPrice,
-		billedRecurringPrice,
+		input.BilledInitialPrice,
+		input.BilledRecurringPrice,
 		input.BilledCurrency,
-		accountingInitialPrice,
-		accountingRecurringPrice,
+		input.AccountingInitialPrice,
+		input.AccountingRecurringPrice,
 		input.AccountingCurrency,
 		input.AccountClubSupporterSubscriptionId,
 	)
