@@ -1,4 +1,4 @@
-package multi_factor
+package account
 
 import (
 	"crypto/rand"
@@ -48,7 +48,7 @@ func randomString() (string, error) {
 	return string(bytes), nil
 }
 
-// generate a set of recovery codes (for initial setups and generating new pairs)
+// GenerateRecoveryCodeSet generate a set of recovery codes (for initial setups and generating new pairs)
 func GenerateRecoveryCodeSet() ([]*RecoveryCode, error) {
 	var recoveryCodes []*RecoveryCode
 

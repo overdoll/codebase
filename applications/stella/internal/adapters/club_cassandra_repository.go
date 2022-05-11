@@ -631,6 +631,32 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubsCount(ctx context.C
 	return r.getAccountClubsCount(ctx, accountId)
 }
 
+func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cla *clubs) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := clubTable.Delete()
+
+	// create actual club table entry
+	batch.Query(stmt, cla.Id)
+
+	stmt, _ = accountClubsTable.Delete()
+
+	// create entry for account's clubs
+	batch.Query(stmt, cla.OwnerAccountId, cla.Id)
+
+	if err := r.addDeleteInitialClubMemberToBatch(ctx, batch, cla.Id, cla.OwnerAccountId); err != nil {
+		return err
+	}
+
+	// execute batch.
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete club batch: %v", err)
+	}
+
+	return nil
+}
+
 func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)
@@ -671,6 +697,17 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	}
 
 	if err := r.indexClub(ctx, club); err != nil {
+
+		// if fails, release unique slug
+		if err := r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
+			return err
+		}
+
+		// also delete the club records
+		if err := r.deleteClub(ctx, cla); err != nil {
+			return err
+		}
+
 		return err
 	}
 

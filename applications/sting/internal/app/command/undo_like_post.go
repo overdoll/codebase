@@ -35,12 +35,7 @@ func (h UndoLikePostHandler) Handle(ctx context.Context, cmd UndoLikePost) error
 		return err
 	}
 
-	// delete the like
-	if err := h.pr.DeletePostLike(ctx, cmd.Principal, postLike); err != nil {
-		return err
-	}
-
-	if err := h.event.RemovePostLike(ctx, cmd.PostId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.RemovePostLike(ctx, postLike); err != nil {
 		return err
 	}
 

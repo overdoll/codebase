@@ -48,10 +48,5 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 		return nil, err
 	}
 
-	// create post report record
-	if err := h.rr.CreatePostReport(ctx, postReport); err != nil {
-		return nil, err
-	}
-
 	return postReport, nil
 }

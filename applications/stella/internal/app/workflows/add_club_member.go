@@ -5,11 +5,13 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
+	"time"
 )
 
 type AddClubMemberInput struct {
 	ClubId    string
 	AccountId string
+	JoinedAt  time.Time
 }
 
 func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {

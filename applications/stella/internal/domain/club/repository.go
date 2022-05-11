@@ -30,9 +30,7 @@ type Repository interface {
 
 	GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*Member, error)
 	CreateClubMember(ctx context.Context, member *Member) error
-	DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error
-	RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error
-	AddClubMemberToList(ctx context.Context, clubId, accountId string) error
+	DeleteClubMember(ctx context.Context, member *Member) error
 
 	UpdateClubMembersTotalCount(ctx context.Context, clubId string) error
 	UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *Member) error) (*Member, error)

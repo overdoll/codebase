@@ -21,6 +21,7 @@ type authenticationToken struct {
 	Email     string                `json:"email"`
 	Verified  int                   `json:"verified"`
 	IP        string                `json:"ip"`
+	UniqueId  string                `json:"uniqueId"`
 	DeviceId  string                `json:"deviceId"`
 	UserAgent string                `json:"userAgent"`
 	Location  location.Serializable `json:"location"`
@@ -68,6 +69,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 		cookieItem.IP,
 		cookieItem.DeviceId,
 		location.UnmarshalLocationFromSerialized(cookieItem.Location),
+		cookieItem.UniqueId,
 	)
 
 	if err := instance.CanView(passport, secret); err != nil {
@@ -110,6 +112,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		UserAgent: instance.UserAgent(),
 		DeviceId:  instance.DeviceId(),
 		Location:  location.Serialize(instance.Location()),
+		UniqueId:  instance.UniqueId(),
 	}
 
 	val, err := json.Marshal(authCookie)

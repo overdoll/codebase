@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS club_members
     joined_at         timestamp,
     is_supporter      boolean,
     supporter_since   timestamp,
-    deleted           boolean,
     primary key ( (club_id, member_account_id) )
 );
 

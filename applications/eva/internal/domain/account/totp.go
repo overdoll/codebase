@@ -1,4 +1,4 @@
-package multi_factor
+package account
 
 import (
 	"bytes"
@@ -27,7 +27,6 @@ const (
 var (
 	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
 	ErrTOTPNotConfigured          = errors.New("TOTP not configured")
-	ErrMultiFactorRequired        = errors.New("multi-factor required")
 	ErrRecoveryCodesNotConfigured = errors.New("recovery codes not configured")
 	ErrRecoveryCodeInvalid        = errors.New("recovery code invalid")
 )
@@ -121,7 +120,7 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 	}, nil
 }
 
-// should be used when enrolling users in OTP
+// EnrollTOTP should be used when enrolling users in OTP
 func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
 
 	secret, err := crypt.Decrypt(id)
@@ -145,26 +144,26 @@ func EnrollTOTP(recoveryCodes []*RecoveryCode, id, code string) (*TOTP, error) {
 	}, nil
 }
 
-func CanCreateTOTPForAccount(requester *principal.Principal, accountId string) error {
+func CanCreateTOTPForAccount(requester *principal.Principal, acc *Account) error {
 
 	if requester.IsDeleting() {
 		return principal.ErrNotAuthorized
 	}
 
-	if err := requester.BelongsToAccount(accountId); err != nil {
+	if err := requester.BelongsToAccount(acc.id); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func CanDeleteTOTPForAccount(requester *principal.Principal, accountId string) error {
+func CanDeleteTOTPForAccount(requester *principal.Principal, acc *Account) error {
 
 	if requester.IsDeleting() {
 		return principal.ErrNotAuthorized
 	}
 
-	if err := requester.BelongsToAccount(accountId); err != nil {
+	if err := requester.BelongsToAccount(acc.id); err != nil {
 		return err
 	}
 

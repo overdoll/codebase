@@ -18,6 +18,15 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 
 	var a *activities.Activities
 
+	if err := workflow.ExecuteActivity(ctx, a.DeletePostLike,
+		activities.DeletePostLikeInput{
+			PostId:    input.PostId,
+			AccountId: input.AccountId,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.RemoveLikeFromPost,
 		activities.RemoveLikeFromPostInput{
 			PostId: input.PostId,

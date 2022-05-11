@@ -3,8 +3,10 @@ package adapters
 import (
 	"context"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/workflows"
+	"overdoll/applications/sting/internal/domain/post"
 	"time"
 )
 
@@ -143,16 +145,18 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, postId string, 
 	return nil
 }
 
-func (r EventTemporalRepository) AddPostLike(ctx context.Context, postId, accountId string) error {
+func (r EventTemporalRepository) AddPostLike(ctx context.Context, like *post.Like) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddPostLike_" + postId + "_" + accountId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "AddPostLike_" + like.PostId() + "_" + like.AccountId(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddPostLike, workflows.AddPostLikeInput{
-		PostId:    postId,
-		AccountId: accountId,
+		PostId:    like.PostId(),
+		AccountId: like.AccountId(),
+		LikedAt:   like.LikedAt(),
 	})
 
 	if err != nil {
@@ -162,16 +166,17 @@ func (r EventTemporalRepository) AddPostLike(ctx context.Context, postId, accoun
 	return nil
 }
 
-func (r EventTemporalRepository) RemovePostLike(ctx context.Context, postId, accountId string) error {
+func (r EventTemporalRepository) RemovePostLike(ctx context.Context, like *post.Like) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemovePostLike_" + postId + "_" + accountId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "RemovePostLike_" + like.PostId() + "_" + like.AccountId(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePostLike, workflows.RemovePostLikeInput{
-		PostId:    postId,
-		AccountId: accountId,
+		PostId:    like.PostId(),
+		AccountId: like.AccountId(),
 	})
 
 	if err != nil {

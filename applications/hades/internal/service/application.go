@@ -93,7 +93,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			ProcessCCBillWebhook:                                             command.NewProcessCCBillWebhookHandler(eventRepo),
 			GenerateProratedRefundAmountForAccountTransaction:                command.NewGenerateProratedRefundAmountForAccountTransactionHandler(billingRepo),
 			BecomeClubSupporterWithAccountSavedPaymentMethod:                 command.NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(billingRepo, pricingRepo, ccbillRepo, stella, eva),
-			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, ccbillRepo, cancelRepo),
+			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, cancelRepo),
 			DeleteAccountSavedPaymentMethod:                                  command.NewDeleteAccountSavedPaymentMethodHandler(billingRepo),
 			RefundAccountTransaction:                                         command.NewRefundAccountTransactionHandler(billingRepo, ccbillRepo),
 			GenerateClubSupporterRefundReceiptFromAccountTransactionHistory:  command.NewGenerateClubSupporterRefundReceiptFromAccountTransaction(billingRepo, billingFileRepo),
@@ -128,6 +128,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CanDeleteAccountData:   query.NewCanDeleteAccountDataHandler(billingRepo),
 			ClubTransactionMetrics: query.NewClubTransactionMetricsHandler(metricRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, cancelRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
 }

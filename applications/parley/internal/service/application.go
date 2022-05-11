@@ -111,6 +111,6 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			PostAuditLogById:          query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:             query.NewModeratorByIdHandler(moderatorRepo),
 		},
-		Activities: activities.NewActivitiesHandler(moderatorRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, stella),
+		Activities: activities.NewActivitiesHandler(moderatorRepo, reportRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, stella),
 	}
 }

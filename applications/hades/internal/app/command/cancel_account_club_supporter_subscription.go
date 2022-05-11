@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/cancellation"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/applications/hades/internal/domain/event"
 	"overdoll/libraries/principal"
 )
 
@@ -15,13 +15,13 @@ type CancelAccountClubSupporterSubscription struct {
 }
 
 type CancelAccountClubSupporterSubscriptionHandler struct {
-	br  billing.Repository
-	cr  ccbill.Repository
-	car cancellation.Repository
+	br    billing.Repository
+	car   cancellation.Repository
+	event event.Repository
 }
 
-func NewCancelAccountClubSupporterSubscriptionHandler(br billing.Repository, cr ccbill.Repository, car cancellation.Repository) CancelAccountClubSupporterSubscriptionHandler {
-	return CancelAccountClubSupporterSubscriptionHandler{br: br, cr: cr, car: car}
+func NewCancelAccountClubSupporterSubscriptionHandler(br billing.Repository, car cancellation.Repository) CancelAccountClubSupporterSubscriptionHandler {
+	return CancelAccountClubSupporterSubscriptionHandler{br: br, car: car}
 }
 
 func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd CancelAccountClubSupporterSubscription) (*billing.AccountClubSupporterSubscription, error) {
@@ -32,18 +32,15 @@ func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Contex
 		return nil, err
 	}
 
-	clubSupporterSubscription, err := h.br.UpdateAccountClubSupporterCancel(ctx, cmd.Principal, cmd.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
-
-		if err := h.cr.CancelSubscription(ctx, *subscription.CCBillSubscriptionId()); err != nil {
-			return err
-		}
-
-		return subscription.RequestCancel(cmd.Principal, cancellationReason)
-	})
+	subscription, err := h.br.GetAccountClubSupporterSubscriptionById(ctx, cmd.Principal, cmd.AccountClubSupporterSubscriptionId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return clubSupporterSubscription, nil
+	if err := h.event.CancelAccountClubSupporterSubscription(ctx, cmd.Principal, subscription, cancellationReason); err != nil {
+		return nil, err
+	}
+
+	return subscription, nil
 }

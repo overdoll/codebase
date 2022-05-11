@@ -152,6 +152,16 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 	}
 
 	if err := r.indexPost(ctx, pending); err != nil {
+
+		// failed to index post - delete the post record
+		if err := r.session.
+			Query(postTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(pst).
+			ExecRelease(); err != nil {
+			return err
+		}
+
 		return err
 	}
 

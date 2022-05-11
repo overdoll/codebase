@@ -932,7 +932,7 @@ func (r BillingCassandraElasticsearchRepository) updateAccountClubSupporterSubsc
 	return subscription, nil
 }
 
-func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterCancel(ctx context.Context, requester *principal.Principal, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
+func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterCancelOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
 	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"cancellation_reason_id"})
 }
 

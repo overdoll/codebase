@@ -58,7 +58,7 @@ type postLikeBucket struct {
 	LikedAccountId string `db:"liked_account_id"`
 }
 
-func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Context, requester *principal.Principal, like *post.Like) error {
+func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Context, like *post.Like) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -88,7 +88,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, requester *principal.Principal, like *post.Like) error {
+func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, like *post.Like) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -149,15 +149,15 @@ func (r PostsCassandraElasticsearchRepository) GetPostLikeById(ctx context.Conte
 	return lk, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DeleteAccountPostLike(ctx context.Context, accountId, postId string) error {
+func (r PostsCassandraElasticsearchRepository) GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*post.Like, error) {
 
 	lk, err := r.getPostLikeById(ctx, postId, accountId)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return r.DeletePostLike(ctx, nil, lk)
+	return lk, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx context.Context, accountId string) ([]int, error) {

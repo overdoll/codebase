@@ -147,6 +147,18 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Conte
 	return r.getCategoryById(ctx, categoryId)
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx context.Context, categoryId, slug string) error {
+
+	if err := r.session.
+		Query(categorySlugTable.DeleteBuilder().Existing().ToCql()).
+		BindStruct(categorySlugs{Slug: strings.ToLower(slug), CategoryId: categoryId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to release category slug: %v", err)
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
 
 	pst, err := marshalCategoryToDatabase(category)
@@ -177,10 +189,31 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
+
+		// release the slug
+		if err := r.deleteUniqueCategorySlug(ctx, pst.Id, pst.Slug); err != nil {
+			return err
+		}
+
 		return err
 	}
 
 	if err := r.indexCategory(ctx, category); err != nil {
+
+		// release the slug
+		if err := r.deleteUniqueCategorySlug(ctx, pst.Id, pst.Slug); err != nil {
+			return err
+		}
+
+		// failed to index category - delete category record
+		if err := r.session.
+			Query(categoryTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(pst).
+			ExecRelease(); err != nil {
+			return err
+		}
+
 		return err
 	}
 

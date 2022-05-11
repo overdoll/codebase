@@ -214,6 +214,18 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 	return results, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx context.Context, audienceId, slug string) error {
+
+	if err := r.session.
+		Query(audienceSlugTable.DeleteBuilder().Existing().ToCql()).
+		BindStruct(audienceSlug{Slug: strings.ToLower(slug), AudienceId: audienceId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to release audience slug: %v", err)
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
 
 	aud, err := marshalAudienceToDatabase(audience)
@@ -244,10 +256,30 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 		Consistency(gocql.LocalQuorum).
 		BindStruct(aud).
 		ExecRelease(); err != nil {
+
+		if err := r.deleteUniqueAudienceSlug(ctx, aud.Id, aud.Slug); err != nil {
+			return err
+		}
+
 		return err
 	}
 
-	if err := r.indexAllAudience(ctx); err != nil {
+	if err := r.indexAudience(ctx, audience); err != nil {
+
+		// release the slug
+		if err := r.deleteUniqueAudienceSlug(ctx, aud.Id, aud.Slug); err != nil {
+			return err
+		}
+
+		// failed to index audience - delete audience record
+		if err := r.session.
+			Query(audienceTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(aud).
+			ExecRelease(); err != nil {
+			return err
+		}
+
 		return err
 	}
 

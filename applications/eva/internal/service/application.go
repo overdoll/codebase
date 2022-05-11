@@ -95,14 +95,13 @@ func createApplication(
 	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session)
 	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
-	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return app.Application{
 		Commands: app.Commands{
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
-			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
+			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccount:                               command.NewLockAccountHandler(accountRepo),
@@ -112,10 +111,10 @@ func createApplication(
 			UpdateAccountUsername:                     command.NewUpdateAccountUsernameHandler(accountRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),
-			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(mfaRepo),
-			GenerateAccountMultiFactorTOTP:            command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
-			EnrollAccountMultiFactorTOTP:              command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
-			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
+			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(accountRepo),
+			GenerateAccountMultiFactorTOTP:            command.NewGenerateAccountMultiFactorTOTP(accountRepo),
+			EnrollAccountMultiFactorTOTP:              command.NewEnrollAccountMultiFactorTOTPHandler(accountRepo),
+			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
 
@@ -142,18 +141,17 @@ func createApplication(
 			AccountEmailByEmail:    query.NewAccountEmailByEmailHandler(accountRepo),
 			AccountSessionById:     query.NewAccountSessionByIdHandler(sessionRepo),
 
-			AreAccountMultiFactorRecoveryCodesGenerated: query.NewAreAccountMultiFactorRecoveryCodesGeneratedHandler(mfaRepo),
+			AreAccountMultiFactorRecoveryCodesGenerated: query.NewAreAccountMultiFactorRecoveryCodesGeneratedHandler(accountRepo),
 			AccountSessionsByAccount:                    query.NewAccountSessionsByAccountHandler(sessionRepo),
-			AccountRecoveryCodesByAccount:               query.NewAccountRecoveryCodesByAccountHandler(mfaRepo),
-			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(mfaRepo),
-			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
+			AccountRecoveryCodesByAccount:               query.NewAccountRecoveryCodesByAccountHandler(accountRepo),
+			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(accountRepo),
+			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo),
 			AccountEmailsLimit:                          query.NewAccountEmailsLimitHandler(accountRepo),
 
 			LocationFromIp: query.NewLocationFromIpHandler(locationRepo),
 		},
 		Activities: activities.NewActivitiesHandler(
 			accountRepo,
-			mfaRepo,
 			sessionRepo,
 			hades,
 			stella,

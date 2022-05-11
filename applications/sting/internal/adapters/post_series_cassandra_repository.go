@@ -186,6 +186,18 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 	return medias, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx context.Context, id, slug string) error {
+
+	if err := r.session.
+		Query(seriesSlugTable.DeleteBuilder().Existing().ToCql()).
+		BindStruct(seriesSlug{Slug: strings.ToLower(slug), SeriesId: id}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to release series slug: %v", err)
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
 
 	ser, err := marshalSeriesToDatabase(series)
@@ -216,10 +228,29 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 		Consistency(gocql.LocalQuorum).
 		BindStruct(ser).
 		ExecRelease(); err != nil {
+
+		if err := r.deleteUniqueSeriesSlug(ctx, ser.Id, ser.Slug); err != nil {
+			return err
+		}
+
 		return err
 	}
 
 	if err := r.indexSeries(ctx, series); err != nil {
+
+		if err := r.deleteUniqueSeriesSlug(ctx, ser.Id, ser.Slug); err != nil {
+			return err
+		}
+
+		// failed to index series - delete series record
+		if err := r.session.
+			Query(seriesTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(ser).
+			ExecRelease(); err != nil {
+			return err
+		}
+
 		return err
 	}
 
@@ -250,9 +281,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	err = updateFn(series)
-
-	if err != nil {
+	if err = updateFn(series); err != nil {
 		return nil, err
 	}
 

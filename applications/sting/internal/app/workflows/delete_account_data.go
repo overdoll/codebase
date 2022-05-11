@@ -40,16 +40,6 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 	// for each post ID, we delete the post likes
 	for _, postId := range payload.PostIds {
 
-		// delete like record
-		if err := workflow.ExecuteActivity(ctx, a.DeleteAccountPostLike,
-			activities.DeleteAccountPostLikeInput{
-				AccountId: input.AccountId,
-				PostId:    postId,
-			},
-		).Get(ctx, nil); err != nil {
-			return err
-		}
-
 		// spawn a child workflow that will delete the post like
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
 			WorkflowID:        "RemovePostLike_" + postId + "_" + input.AccountId,

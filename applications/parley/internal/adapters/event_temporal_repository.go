@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/parley/internal/app/workflows"
+	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/principal"
 )
 
@@ -25,6 +26,27 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.PutPostIntoModeratorQueue, workflows.PutPostIntoModeratorQueueInput{
 		PostId: postId,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.PostReport) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "ReportPost_" + report.PostId() + "_" + report.ReportingAccountId(),
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ReportPost, workflows.ReportPostInput{
+		AccountId: report.ReportingAccountId(),
+		PostId:    report.PostId(),
+		RuleId:    report.RuleId(),
+		CreatedAt: report.CreatedAt(),
 	})
 
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -108,7 +107,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 	})
 
 	if err != nil {
-		if err == multi_factor.ErrTOTPCodeInvalid {
+		if err == account.ErrTOTPCodeInvalid {
 			expired := types.EnrollAccountMultiFactorTotpValidationInvalidCode
 			return &types.EnrollAccountMultiFactorTotpPayload{Validation: &expired}, nil
 		}

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/principal"
 )
 
@@ -16,12 +15,11 @@ type EnrollAccountMultiFactorTOTP struct {
 }
 
 type EnrollAccountMultiFactorTOTPHandler struct {
-	mr multi_factor.Repository
 	ar account.Repository
 }
 
-func NewEnrollAccountMultiFactorTOTPHandler(mr multi_factor.Repository, ar account.Repository) EnrollAccountMultiFactorTOTPHandler {
-	return EnrollAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
+func NewEnrollAccountMultiFactorTOTPHandler(ar account.Repository) EnrollAccountMultiFactorTOTPHandler {
+	return EnrollAccountMultiFactorTOTPHandler{ar: ar}
 }
 
 func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd EnrollAccountMultiFactorTOTP) (*account.Account, error) {
@@ -32,31 +30,22 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 		return nil, err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId())
+	codes, err := h.ar.GetAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err
 	}
 
 	// enroll TOTP
-	mfa, err := multi_factor.EnrollTOTP(codes, cmd.ID, cmd.Code)
+	mfa, err := account.EnrollTOTP(codes, cmd.ID, cmd.Code)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// create the TOTP
-	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, cmd.Principal, cmd.Principal.AccountId(), mfa); err != nil {
+	if err := h.ar.CreateAccountMultiFactorTOTP(ctx, cmd.Principal, acc, mfa); err != nil {
 		return nil, err
-	}
-
-	// if user doesn't have 2FA enabled, enable it
-	if !acc.MultiFactorEnabled() {
-		if _, err := h.ar.UpdateAccount(ctx, acc.ID(), func(a *account.Account) error {
-			return a.EnableMultiFactor()
-		}); err != nil {
-			return nil, err
-		}
 	}
 
 	return acc, nil

@@ -189,6 +189,14 @@ func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) erro
 	return nil
 }
 
+func (c *AccountClubSupporterSubscription) Cancel(cancellationReason *cancellation.Reason) error {
+
+	id := cancellationReason.ID()
+	c.cancellationReasonId = &id
+
+	return c.MarkCancelled(time.Now())
+}
+
 func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
 
 	if !requester.IsStaff() {
@@ -197,10 +205,7 @@ func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Pr
 		}
 	}
 
-	id := cancellationReason.ID()
-	c.cancellationReasonId = &id
-
-	return c.MarkCancelled(time.Now())
+	return c.Cancel(cancellationReason)
 }
 
 func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Principal, days int) error {

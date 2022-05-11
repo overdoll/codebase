@@ -5,11 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"os"
 	"overdoll/applications/hades/internal/app/workflows"
+	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"strings"
 )
@@ -180,8 +184,9 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleOrUpSaleSuccess, &workflows.CCBillNewSaleOrUpSaleSuccessInput{
@@ -300,8 +305,9 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillRenewalSuccess, workflows.CCBillRenewalSuccessInput{
@@ -387,8 +393,9 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillChargeback, workflows.CCBillChargebackInput{
@@ -473,8 +480,9 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillRefund, workflows.CCBillRefundInput{
@@ -530,8 +538,9 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillVoid, workflows.CCBillVoidInput{
@@ -849,6 +858,27 @@ func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx c
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelActiveSupporterSubscriptionsForClub, workflows.CancelActiveSupporterSubscriptionsForClubInput{
 		ClubId: clubId,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) CancelAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, subscription *billing.AccountClubSupporterSubscription, cancellationReason *cancellation.Reason) error {
+
+	if err := subscription.RequestCancel(requester, cancellationReason); err != nil {
+		return err
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "CancelAccountClubSupporterSubscription_" + subscription.Id(),
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelAccountClubSupporterSubscription, workflows.CancelAccountClubSupporterSubscriptionInput{
+		AccountClubSupporterSubscriptionId: subscription.Id(),
+		CancellationReasonId:               cancellationReason.ID(),
 	}); err != nil {
 		return err
 	}

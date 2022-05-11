@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
+	"overdoll/applications/stella/internal/domain/club"
 	"time"
 )
 
@@ -16,16 +17,17 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) AddClubMember(ctx context.Context, clubId, accountId string) error {
+func (r EventTemporalRepository) AddClubMember(ctx context.Context, member *club.Member) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddClubMember_" + clubId + "_" + accountId,
+		ID:        "AddClubMember_" + member.ClubId() + "_" + member.AccountId(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, workflows.AddClubMemberInput{
-		ClubId:    clubId,
-		AccountId: accountId,
+		ClubId:    member.ClubId(),
+		AccountId: member.AccountId(),
+		JoinedAt:  member.JoinedAt(),
 	}); err != nil {
 		return err
 	}
@@ -33,16 +35,16 @@ func (r EventTemporalRepository) AddClubMember(ctx context.Context, clubId, acco
 	return nil
 }
 
-func (r EventTemporalRepository) RemoveClubMember(ctx context.Context, clubId, accountId string) error {
+func (r EventTemporalRepository) RemoveClubMember(ctx context.Context, member *club.Member) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemoveClubMember_" + clubId + "_" + accountId,
+		ID:        "RemoveClubMember_" + member.ClubId() + "_" + member.AccountId(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, workflows.RemoveClubMemberInput{
-		ClubId:    clubId,
-		AccountId: accountId,
+		ClubId:    member.ClubId(),
+		AccountId: member.AccountId(),
 	}); err != nil {
 		return err
 	}

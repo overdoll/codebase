@@ -210,6 +210,18 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Cont
 	return r.getCharacterById(ctx, characterId)
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx context.Context, seriesId, id, slug string) error {
+
+	if err := r.session.
+		Query(charactersSlugTable.DeleteBuilder().Existing().ToCql()).
+		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesId: seriesId}).
+		ExecRelease(); err != nil {
+		return fmt.Errorf("failed to release character slug: %v", err)
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
 
 	char, err := marshalCharacterToDatabase(character)
@@ -240,10 +252,31 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		Consistency(gocql.LocalQuorum).
 		BindStruct(char).
 		ExecRelease(); err != nil {
+
+		// release the slug
+		if err := r.deleteUniqueCharacterSlug(ctx, char.SeriesId, char.Id, char.Slug); err != nil {
+			return err
+		}
+
 		return err
 	}
 
 	if err := r.indexCharacter(ctx, character); err != nil {
+
+		// release the slug
+		if err := r.deleteUniqueCharacterSlug(ctx, char.SeriesId, char.Id, char.Slug); err != nil {
+			return err
+		}
+
+		// failed to index character - delete character record
+		if err := r.session.
+			Query(characterTable.Delete()).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(char).
+			ExecRelease(); err != nil {
+			return err
+		}
+
 		return err
 	}
 

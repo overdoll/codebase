@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
@@ -35,7 +34,6 @@ var clubMembersTable = table.New(table.Metadata{
 		"joined_at",
 		"is_supporter",
 		"supporter_since",
-		"deleted",
 	},
 	PartKey: []string{"club_id", "member_account_id"},
 	SortKey: []string{},
@@ -47,7 +45,6 @@ type clubMember struct {
 	JoinedAt        time.Time  `db:"joined_at"`
 	IsSupporter     bool       `db:"is_supporter"`
 	SupporterSince  *time.Time `db:"supporter_since"`
-	Deleted         bool       `db:"deleted"`
 }
 
 var clubMembersByAccountTable = table.New(table.Metadata{
@@ -65,6 +62,22 @@ type clubMembersByAccount struct {
 	MemberAccountId string `db:"member_account_id"`
 }
 
+func (r ClubCassandraElasticsearchRepository) addDeleteInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string) error {
+	stmt, _ := clubMembersTable.Delete()
+
+	batch.Query(stmt, clubId, accountId)
+
+	// insert into account's club list
+	stmt, _ = clubMembersByAccountTable.Delete()
+	batch.Query(stmt, clubId, accountId)
+
+	// insert into account's supported clubs
+	stmt, _ = accountSupportedClubsTable.Delete()
+	batch.Query(stmt, accountId, clubId)
+
+	return nil
+}
+
 func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, timestamp time.Time) error {
 
 	stmt, _ := clubMembersTable.Insert()
@@ -79,27 +92,34 @@ func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx co
 	stmt, _ = accountSupportedClubsTable.Insert()
 	batch.Query(stmt, accountId, clubId)
 
-	if err := r.indexClubMember(ctx, club.UnmarshalMemberFromDatabase(accountId, clubId, timestamp, true, &timestamp)); err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Context, member *club.Member) error {
 
-	if err := r.session.
-		Query(clubMembersTable.Insert()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMember{
-			ClubId:          member.ClubId(),
-			MemberAccountId: member.AccountId(),
-			JoinedAt:        member.JoinedAt(),
-			IsSupporter:     member.IsSupporter(),
-			SupporterSince:  member.SupporterSince(),
-			Deleted:         false,
-		}).
-		ExecRelease(); err != nil {
+	marshalled := clubMember{
+		ClubId:          member.ClubId(),
+		MemberAccountId: member.AccountId(),
+		JoinedAt:        member.JoinedAt(),
+		IsSupporter:     member.IsSupporter(),
+		SupporterSince:  member.SupporterSince(),
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	stmt, _ := clubMembersTable.Insert()
+	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId, marshalled.JoinedAt, marshalled.IsSupporter, marshalled.SupporterSince)
+
+	// insert into account's club list
+	stmt, _ = clubMembersByAccountTable.Insert()
+	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId)
+
+	// execute batch
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to add member to list: %v", err)
+	}
+
+	if err := r.indexClubMember(ctx, member); err != nil {
 		return err
 	}
 
@@ -124,19 +144,6 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 	}
 
 	return &clubMem, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) deleteClubMemberById(ctx context.Context, clubId, accountId string) error {
-
-	if err := r.session.
-		Query(clubMembersTable.Delete()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
-		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to get club member by id: %v", err)
-	}
-
-	return nil
 }
 
 func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx context.Context, accountId string) error {
@@ -210,73 +217,39 @@ func (r ClubCassandraElasticsearchRepository) GetClubMemberById(ctx context.Cont
 		return nil, err
 	}
 
-	// if deleted, return nil
-	if clb.Deleted {
-		return nil, club.ErrClubMemberNotFound
-	}
-
 	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince), nil
 }
 
-func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Context, requester *principal.Principal, clubId, accountId string) error {
+func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Context, member *club.Member) error {
 
-	mclub, err := r.GetClubById(ctx, clubId)
-
-	if err != nil {
-		return err
+	marshalled := clubMember{
+		ClubId:          member.ClubId(),
+		MemberAccountId: member.AccountId(),
+		JoinedAt:        member.JoinedAt(),
+		IsSupporter:     member.IsSupporter(),
+		SupporterSince:  member.SupporterSince(),
 	}
 
-	clb, err := r.getClubMemberById(ctx, clubId, accountId)
-
-	if err != nil {
-		return err
-	}
-
-	clubMembership := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
-
-	if err := clubMembership.CanRevokeClubMembership(requester, mclub); err != nil {
-		return err
-	}
-
-	if err := r.session.
-		Query(clubMembersTable.Update("deleted")).
-		BindStruct(clubMember{
-			ClubId:          clubId,
-			MemberAccountId: accountId,
-			// we don't delete the club member, since we require the entry to delete it from the list, so we mark it as "deleted" and
-			// the "client" will now see it as deleted while we do other background jobs
-			Deleted: true,
-		}).
-		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete club member by id: %v", err)
-	}
-
-	return nil
-}
-
-func (r ClubCassandraElasticsearchRepository) AddClubMemberToList(ctx context.Context, clubId, accountId string) error {
-
-	clb, err := r.getClubMemberById(ctx, clubId, accountId)
-
-	if err != nil {
+	// delete the index record
+	if err := r.deleteClubMemberIndexById(ctx, marshalled.ClubId, marshalled.MemberAccountId); err != nil {
 		return err
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	// insert into account's club list
-	stmt, _ := clubMembersByAccountTable.Insert()
-	batch.Query(stmt, clb.ClubId, clb.MemberAccountId)
+	// delete from account's club list
+	stmt, _ := clubMembersByAccountTable.Delete()
+	batch.Query(stmt, marshalled.MemberAccountId, marshalled.ClubId)
+
+	stmt, _ = clubMembersTable.Delete()
+	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId)
+
+	stmt, _ = accountSupportedClubsTable.Delete()
+	batch.Query(stmt, marshalled.MemberAccountId, marshalled.ClubId)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to add member to list: %v", err)
-	}
-
-	currentClub := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
-
-	if err := r.indexClubMember(ctx, currentClub); err != nil {
-		return err
+		return fmt.Errorf("failed to delete member from lists: %v", err)
 	}
 
 	return nil
@@ -336,37 +309,6 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx
 	return clubMembersCount.Count, nil
 }
 
-func (r ClubCassandraElasticsearchRepository) RemoveClubMemberFromlist(ctx context.Context, clubId, accountId string) error {
-
-	clb, err := r.getClubMemberById(ctx, clubId, accountId)
-
-	if err != nil {
-		return err
-	}
-
-	if !clb.Deleted {
-		return errors.New("ran delete when delete was not requested")
-	}
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// delete from account's club list
-	stmt, _ := clubMembersByAccountTable.Delete()
-	batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
-
-	// execute batch
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete member from lists: %v", err)
-	}
-
-	if err := r.deleteClubMemberIndexById(ctx, clubId, accountId); err != nil {
-		return err
-	}
-
-	// delete the final record
-	return r.deleteClubMemberById(ctx, clubId, accountId)
-}
-
 func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *club.Member) error) (*club.Member, error) {
 
 	clb, err := r.getClubMemberById(ctx, clubId, accountId)
@@ -389,7 +331,6 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 		JoinedAt:        clb.JoinedAt,
 		IsSupporter:     currentClub.IsSupporter(),
 		SupporterSince:  currentClub.SupporterSince(),
-		Deleted:         false,
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)

@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/passport"
 )
@@ -19,12 +18,11 @@ type GrantAccountAccessWithAuthenticationToken struct {
 
 type GrantAccountAccessWithAuthenticationTokenHandler struct {
 	cr token.Repository
-	ur account.Repository
-	mr multi_factor.Repository
+	ar account.Repository
 }
 
-func NewGrantAccountAccessWithAuthenticationTokenHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) GrantAccountAccessWithAuthenticationTokenHandler {
-	return GrantAccountAccessWithAuthenticationTokenHandler{cr: cr, ur: ur, mr: mr}
+func NewGrantAccountAccessWithAuthenticationTokenHandler(cr token.Repository, ar account.Repository) GrantAccountAccessWithAuthenticationTokenHandler {
+	return GrantAccountAccessWithAuthenticationTokenHandler{cr: cr, ar: ar}
 }
 
 // Handle consume authentication token and return the account assigned to this token
@@ -46,7 +44,7 @@ func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Con
 	}
 
 	// make sure that this account exists
-	acc, err := h.ur.GetAccountByEmail(ctx, em)
+	acc, err := h.ar.GetAccountByEmail(ctx, em)
 
 	if err != nil {
 		return nil, err
@@ -57,18 +55,18 @@ func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Con
 
 		// not configured
 		if !acc.MultiFactorEnabled() {
-			return nil, multi_factor.ErrTOTPNotConfigured
+			return nil, account.ErrTOTPNotConfigured
 		}
 
 		// get TOTP
-		totp, err := h.mr.GetAccountMultiFactorTOTP(ctx, acc.ID())
+		totp, err := h.ar.GetAccountMultiFactorTOTP(ctx, acc.ID())
 
 		if err != nil {
 			return nil, err
 		}
 
 		if cmd.RecoveryCode != nil {
-			if err := h.mr.VerifyAccountRecoveryCode(ctx, acc.ID(), multi_factor.NewRecoveryCode(*cmd.RecoveryCode)); err != nil {
+			if err := h.ar.VerifyAccountRecoveryCode(ctx, acc.ID(), account.NewRecoveryCode(*cmd.RecoveryCode)); err != nil {
 				return nil, err
 			}
 		} else {
@@ -80,7 +78,7 @@ func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Con
 	} else {
 		// authenticating regularly - just make sure MFA is not enabled
 		if acc.MultiFactorEnabled() {
-			return nil, multi_factor.ErrMultiFactorRequired
+			return nil, account.ErrMultiFactorRequired
 		}
 	}
 

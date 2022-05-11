@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/domain/account"
 
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/principal"
 )
 
@@ -12,23 +12,23 @@ type GenerateAccountMultiFactorRecoveryCodes struct {
 }
 
 type GenerateAccountMultiFactorRecoveryCodesHandler struct {
-	mr multi_factor.Repository
+	ar account.Repository
 }
 
-func NewGenerateAccountMultiFactorRecoveryCodesHandler(mr multi_factor.Repository) GenerateAccountMultiFactorRecoveryCodesHandler {
-	return GenerateAccountMultiFactorRecoveryCodesHandler{mr: mr}
+func NewGenerateAccountMultiFactorRecoveryCodesHandler(ar account.Repository) GenerateAccountMultiFactorRecoveryCodesHandler {
+	return GenerateAccountMultiFactorRecoveryCodesHandler{ar: ar}
 }
 
-func (h GenerateAccountMultiFactorRecoveryCodesHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorRecoveryCodes) ([]*multi_factor.RecoveryCode, error) {
+func (h GenerateAccountMultiFactorRecoveryCodesHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorRecoveryCodes) ([]*account.RecoveryCode, error) {
 
 	// generate a set of recovery codes for the account
-	set, err := multi_factor.GenerateRecoveryCodeSet()
+	set, err := account.GenerateRecoveryCodeSet()
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := h.mr.CreateAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId(), set); err != nil {
+	if err := h.ar.CreateAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId(), set); err != nil {
 		return nil, err
 	}
 

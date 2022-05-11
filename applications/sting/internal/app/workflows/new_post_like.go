@@ -5,11 +5,13 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
+	"time"
 )
 
 type AddPostLikeInput struct {
 	PostId    string
 	AccountId string
+	LikedAt   time.Time
 }
 
 func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
