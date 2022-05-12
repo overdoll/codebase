@@ -1,32 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"github.com/hashicorp/go-hclog"
-	"net/rpc"
-	"os/exec"
-
 	"github.com/hashicorp/go-plugin"
 	commonpb "go.temporal.io/api/common/v1"
 	"go.temporal.io/sdk/converter"
+	"net/rpc"
 )
 
 type DataConverterRPC struct {
 	client *rpc.Client
-}
-
-func NewDataConverterPlugin(name string) (converter.DataConverter, error) {
-	client, err := newPluginClient(DataConverterPluginType, name)
-	if err != nil {
-		return nil, fmt.Errorf("unable to register plugin: %w", err)
-	}
-
-	dataConverter, ok := client.(converter.DataConverter)
-	if !ok {
-		return nil, fmt.Errorf("constructed plugin client type %T doesn't implement converter.DataConverter interface", client)
-	}
-
-	return dataConverter, nil
 }
 
 func (g *DataConverterRPC) FromPayload(payload *commonpb.Payload, valuePtr interface{}) error {
@@ -148,32 +130,4 @@ var (
 		MagicCookieKey:   "TEMPORAL_CLI_PLUGIN",
 		MagicCookieValue: "abb3e448baf947eba1847b10a38554db",
 	}
-
-	pluginMap = map[string]plugin.Plugin{
-		DataConverterPluginType: &DataConverterPlugin{},
-	}
 )
-
-func newPluginClient(kind string, name string) (interface{}, error) {
-	pluginClient := plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig: PluginHandshakeConfig,
-		Plugins:         pluginMap,
-		Cmd:             exec.Command(name),
-		Managed:         true,
-		Logger: hclog.New(&hclog.LoggerOptions{
-			Name:  "tctl",
-			Level: hclog.LevelFromString("INFO"),
-		}),
-	})
-
-	rpcClient, err := pluginClient.Client()
-	if err != nil {
-		return nil, fmt.Errorf("unable to create plugin client: %w", err)
-	}
-
-	return rpcClient.Dispense(kind)
-}
-
-func StopPlugins() {
-	plugin.CleanupClients()
-}

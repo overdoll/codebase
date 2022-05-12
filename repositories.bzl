@@ -440,8 +440,8 @@ def go_repositories():
         name = "com_github_fsnotify_fsnotify",
         build_file_proto_mode = "disable",
         importpath = "github.com/fsnotify/fsnotify",
-        sum = "h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=",
-        version = "v1.4.9",
+        sum = "h1:vNFpj2z7YIbwh2bw7x35sqYpp2wfuq+pivKbWG09B8c=",
+        version = "v1.5.3",
     )
 
     go_repository(
@@ -2099,15 +2099,15 @@ def go_repositories():
         name = "io_temporal_go_api",
         build_file_proto_mode = "disable",
         importpath = "go.temporal.io/api",
-        sum = "h1:TN/PQNywCnOG/hXLHKkKKOQQtpi7JHBDD8fpv8H8JiA=",
-        version = "v1.6.1-0.20211110205628-60c98e9cbfe2",
+        sum = "h1:SgkeoCikBXMd/3fNNtymIfhpxk8o/E3zIZFBFkHzTtU=",
+        version = "v1.7.1-0.20220223032354-6e6fe738916a",
     )
     go_repository(
         name = "io_temporal_go_sdk",
         build_file_proto_mode = "disable",
         importpath = "go.temporal.io/sdk",
-        sum = "h1:8PW27o/uYAf1C1u8WUd6LNa6He2nYkBhdUX3c5gif5o=",
-        version = "v1.13.0",
+        sum = "h1:7tJO72gK4xmsZ8W3Xp1rwKYdkwQ/mgnKN5LmROyZTac=",
+        version = "v1.14.0",
     )
 
     go_repository(

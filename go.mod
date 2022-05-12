@@ -62,8 +62,8 @@ require (
 	github.com/vektah/gqlparser/v2 v2.4.1
 	github.com/yuin/goldmark v1.4.4
 	go.opentelemetry.io/otel/internal/metric v0.27.0 // indirect
-	go.temporal.io/api v1.6.1-0.20211110205628-60c98e9cbfe2
-	go.temporal.io/sdk v1.13.0
+	go.temporal.io/api v1.7.1-0.20220223032354-6e6fe738916a
+	go.temporal.io/sdk v1.14.0
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
