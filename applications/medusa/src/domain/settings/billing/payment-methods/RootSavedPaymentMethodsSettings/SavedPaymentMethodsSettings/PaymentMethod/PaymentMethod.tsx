@@ -30,12 +30,12 @@ export default function PaymentMethod ({
         <DisplayCard query={data.card} />
       </TableBodyColumn>
       <TableBodyColumn column={1}>
-        <Text w='100%' align='center' isTruncated fontFamily='mono' fontSize='lg' color='gray.00'>
+        <Text w='100%' align='center' noOfLines={1} fontFamily='mono' fontSize='lg' color='gray.00'>
           **** {data.card.last4}
         </Text>
       </TableBodyColumn>
       <TableBodyColumn column={1}>
-        <Text w='100%' align='end' isTruncated fontFamily='mono' fontSize='lg' color='gray.00'>
+        <Text w='100%' align='end' noOfLines={1} fontFamily='mono' fontSize='lg' color='gray.00'>
           {data.card.expiration}
         </Text>
       </TableBodyColumn>

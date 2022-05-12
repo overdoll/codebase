@@ -110,7 +110,7 @@ export function TableBodyColumnText ({
 }: TableRowColumnProps): JSX.Element {
   return (
     <GridItem overflow='hidden' colSpan={column}>
-      <Text noOfLines={1} isTruncated fontSize='sm'>
+      <Text noOfLines={1} fontSize='sm'>
         {children}
       </Text>
     </GridItem>
@@ -156,7 +156,7 @@ export function TableHeaderColumnText ({
       <Heading
         color='gray.200'
         textAlign='left'
-        isTruncated
+        noOfLines={1}
         fontSize='md'
       >
         {children}

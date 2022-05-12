@@ -48,7 +48,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
 
   // Urls - when upload is complete we have semi-public urls
   useEffect(() => {
-    uppy.on('upload-success', (file, response) => {
+    const callBackFn = (file, response): void => {
       // only want the ID from URL
       if (file.source !== 'already-uploaded') {
         const url = response.uploadURL as string
@@ -58,12 +58,18 @@ export default function PostCreator ({ query }: Props): JSX.Element {
           transform: 'ADD'
         })
       }
-    })
+    }
+
+    uppy.on('upload-success', callBackFn)
+
+    return () => {
+      uppy.off('upload-success', callBackFn)
+    }
   }, [uppy])
 
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
-    uppy.on('upload-progress', (file, progress) => {
+    const callBackFn = (file, progress): void => {
       if (file.source !== 'already-uploaded') {
         dispatch({
           type: 'progress',
@@ -76,12 +82,17 @@ export default function PostCreator ({ query }: Props): JSX.Element {
           transform: 'ADD'
         })
       }
-    })
+    }
+    uppy.on('upload-progress', callBackFn)
+
+    return () => {
+      uppy.off('upload-progress', callBackFn)
+    }
   }, [uppy])
 
   // file-added- uppy file was added
   useEffect(() => {
-    uppy.on('file-added', file => {
+    const callBackFn = (file): void => {
       // remove uploaded file and emit error if upload limit is hit
       if (file.source !== 'already-uploaded') {
         dispatch({
@@ -93,12 +104,17 @@ export default function PostCreator ({ query }: Props): JSX.Element {
           transform: 'ADD'
         })
       }
-    })
+    }
+
+    uppy.on('file-added', callBackFn)
+    return () => {
+      uppy.off('file-added', callBackFn)
+    }
   }, [uppy])
 
   // Event for errors
   useEffect(() => {
-    uppy.on('info-visible', () => {
+    const callBackFn = (file): void => {
       const info = uppy.getState().info
 
       if (info == null) return
@@ -109,7 +125,13 @@ export default function PostCreator ({ query }: Props): JSX.Element {
         status: 'error',
         title: message
       })
-    })
+    }
+
+    uppy.on('info-visible', callBackFn)
+
+    return () => {
+      uppy.off('info-visible', callBackFn)
+    }
   }, [uppy])
 
   if (data?.club?.viewerIsOwner === false) {

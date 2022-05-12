@@ -70,8 +70,6 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     queryData.club
   )
 
-  console.log(queryData)
-
   if (queryData?.club == null) {
     return <NotFoundClub />
   }

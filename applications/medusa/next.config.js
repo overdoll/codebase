@@ -57,6 +57,7 @@ module.exports = withBundleAnalyzer({
   distDir: 'build',
   generateEtags: false,
   poweredByHeader: false,
+  reactStrictMode: true,
   i18n: {
     locales: ['en'],
     defaultLocale: 'en'

@@ -62,7 +62,7 @@ export default function AccountCancelledClubSupporterSubscriptionDetails ({
             query={data?.club.thumbnail}
           />
           <Heading
-            isTruncated
+            noOfLines={1}
             fontSize='2xl'
             color='gray.00'
           >
