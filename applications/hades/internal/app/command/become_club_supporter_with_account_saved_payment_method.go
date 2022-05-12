@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"errors"
+	errors2 "github.com/pkg/errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
@@ -23,11 +24,10 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodHandler struct {
 	pr     billing.PricingRepository
 	cr     ccbill.Repository
 	stella StellaService
-	eva    EvaService
 }
 
-func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StellaService, eva EvaService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
-	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella, eva: eva}
+func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StellaService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
+	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella}
 }
 
 func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*string, error) {
@@ -35,7 +35,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
-		return nil, err
+		return nil, errors2.Wrap(err, "failed to get club by id")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination

@@ -244,7 +244,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 
 func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res []*resource.Resource) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	for _, r := range res {
 		// remove selected resources
@@ -325,10 +325,11 @@ func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, it
 		Select(resourcesTable.Name()).
 		Where(qb.In("item_id")).
 		Query(r.session).
+		WithContext(ctx).
 		BindMap(map[string]interface{}{
 			"item_id": itemId,
 		}).
-		Select(&b); err != nil {
+		SelectRelease(&b); err != nil {
 		return nil, fmt.Errorf("failed to get resources by ids: %v", err)
 	}
 
@@ -376,9 +377,10 @@ func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, item
 
 	if err := r.session.
 		Query(resourcesTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		BindStruct(resources{ItemId: itemId, ResourceId: resourceId}).
-		Get(&i); err != nil {
+		GetRelease(&i); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, resource.ErrResourceNotFound
@@ -403,7 +405,7 @@ func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, item
 
 func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res []*resource.Resource) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	for _, r := range res {
 		stmt, _ := resourcesTable.Update(
@@ -478,7 +480,7 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 		}
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	for _, r := range resources {
 		// remove selected resources

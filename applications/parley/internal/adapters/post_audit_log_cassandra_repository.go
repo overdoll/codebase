@@ -136,7 +136,7 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	stmt, _ := postAuditLogTable.Insert()
 
@@ -203,11 +203,12 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 
 	if err := r.session.
 		Query(postAuditLogTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postAuditLog{
 			Id: logId,
 		}).
-		Get(&postAudit); err != nil {
+		GetRelease(&postAudit); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post_audit_log.ErrPostAuditLogNotFound
@@ -252,11 +253,12 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 
 	if err := r.session.
 		Query(postRuleTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postRule{
 			PostId: postId,
 		}).
-		Get(&postR); err != nil {
+		GetRelease(&postR); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, rule.ErrRuleNotFound
@@ -273,11 +275,12 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogBucketsForAccount(ctx co
 	var buckets []postAuditLogBucket
 
 	if err := r.session.Query(postAuditLogByModeratorBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postAuditLogBucket{
 			ModeratorAccountId: accountId,
 		}).
-		Select(&buckets); err != nil {
+		SelectRelease(&buckets); err != nil {
 		return nil, fmt.Errorf("failed to get post audit log buckets: %v", err)
 	}
 
@@ -312,8 +315,9 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 
 		if err := builder.
 			Query(r.session).
+			WithContext(ctx).
 			BindStruct(postAuditLog{PostId: *filter.PostId()}).
-			Select(&results); err != nil {
+			SelectRelease(&results); err != nil {
 			return nil, fmt.Errorf("failed to search audit logs for post: %v", err)
 		}
 
@@ -370,8 +374,9 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 
 		if err := builder.
 			Query(r.session).
+			WithContext(ctx).
 			BindStruct(postAuditLog{Bucket: bucketId, ModeratorAccountId: *filter.ModeratorId()}).
-			Select(&results); err != nil {
+			SelectRelease(&results); err != nil {
 			return nil, fmt.Errorf("failed to search audit logs: %v", err)
 		}
 

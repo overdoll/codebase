@@ -20,18 +20,16 @@ type RemovePost struct {
 }
 
 type RemovePostHandler struct {
-	pr     post_audit_log.Repository
-	rr     rule.Repository
-	cr     club_infraction.Repository
-	mr     moderator.Repository
-	event  event.Repository
-	eva    EvaService
-	sting  StingService
-	stella StellaService
+	pr    post_audit_log.Repository
+	rr    rule.Repository
+	cr    club_infraction.Repository
+	mr    moderator.Repository
+	event event.Repository
+	sting StingService
 }
 
-func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService, stella StellaService) RemovePostHandler {
-	return RemovePostHandler{sting: sting, eva: eva, pr: pr, rr: rr, mr: mr, cr: cr, stella: stella, event: event}
+func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, sting StingService) RemovePostHandler {
+	return RemovePostHandler{sting: sting, pr: pr, rr: rr, mr: mr, cr: cr, event: event}
 }
 
 func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {

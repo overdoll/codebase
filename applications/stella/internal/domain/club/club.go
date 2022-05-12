@@ -49,6 +49,23 @@ type Club struct {
 	ownerAccountId string
 }
 
+func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
+
+	lc, _ := localization.NewDefaultTranslation(name)
+
+	return &Club{
+		id:                          id,
+		slug:                        slug,
+		name:                        lc,
+		slugAliases:                 []string{},
+		thumbnailResourceId:         nil,
+		membersCount:                1,
+		ownerAccountId:              ownerAccountId,
+		hasCreatedSupporterOnlyPost: false,
+		terminated:                  false,
+	}
+}
+
 func NewClub(requester *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
 
 	if requester.IsLocked() {

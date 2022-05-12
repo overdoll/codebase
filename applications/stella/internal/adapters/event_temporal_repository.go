@@ -113,6 +113,47 @@ func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *pri
 	return nil
 }
 
+func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *club.Club, accountId *string, endTime time.Time, reason string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "SuspendClub_" + club.ID(),
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.SuspendClub, workflows.SuspendClubInput{
+		ClubId:    club.ID(),
+		AccountId: accountId,
+		Reason:    reason,
+		EndTime:   endTime,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	// should only have 1 create club workflow running at a time for any account
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "CreateClub_" + clb.OwnerAccountId(),
+		// this will ensure that if we try to create another club, we will error out
+		WorkflowExecutionErrorWhenAlreadyStarted: true,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CreateClub, workflows.CreateClubInput{
+		ClubId:         clb.ID(),
+		Slug:           clb.Slug(),
+		Name:           clb.Name().TranslateDefault(""),
+		OwnerAccountId: clb.OwnerAccountId(),
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
 	if err := clb.CanUnSuspend(requester); err != nil {

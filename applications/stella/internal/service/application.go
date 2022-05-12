@@ -75,7 +75,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 		Commands: app.Commands{
 			DeleteAndRecreateClubsIndex:       command.NewDeleteAndRecreateClubsIndex(clubRepo),
 			DeleteAndRecreateClubMembersIndex: command.NewDeleteAndRecreateClubMembersIndexHandler(clubRepo),
-			CreateClub:                        command.NewCreateClubHandler(clubRepo),
+			CreateClub:                        command.NewCreateClubHandler(clubRepo, eventRepo),
 			AddClubSlugAlias:                  command.NewAddClubSlugAliasHandler(clubRepo),
 			RemoveClubSlugAlias:               command.NewRemoveClubSlugAliasHandler(clubRepo),
 			UpdateClubName:                    command.NewUpdateClubNameHandler(clubRepo),

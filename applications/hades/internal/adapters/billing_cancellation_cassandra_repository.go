@@ -42,6 +42,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCancellationReason(ctx co
 
 	if err := r.session.
 		Query(cancellationReasonsTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(reasonItem)).
 		ExecRelease(); err != nil {
@@ -67,9 +68,10 @@ func (r BillingCassandraElasticsearchRepository) GetCancellationReasons(ctx cont
 
 	if err := builder.
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
-		Select(&dbRules); err != nil {
+		SelectRelease(&dbRules); err != nil {
 		return nil, fmt.Errorf("failed to get cancellationReason: %v", err)
 	}
 
@@ -99,9 +101,10 @@ func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx c
 
 	if err := r.session.
 		Query(cancellationReasonsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&cancellationReason{Id: reasonId, Bucket: 0}).
-		Get(&ruleSingle); err != nil {
+		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, billing.ErrReasonNotFound
@@ -139,6 +142,7 @@ func (r BillingCassandraElasticsearchRepository) updateCancellationReason(ctx co
 		Query(cancellationReasonsTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(ruleItem)).
 		ExecRelease(); err != nil {

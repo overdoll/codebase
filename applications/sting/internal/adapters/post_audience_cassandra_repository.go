@@ -84,9 +84,10 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx conte
 	if err := qb.Select(audienceSlugTable.Name()).
 		Where(qb.In("slug")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
-		Select(&audienceSlugResults); err != nil {
+		SelectRelease(&audienceSlugResults); err != nil {
 		return nil, fmt.Errorf("failed to get audience slugs: %v", err)
 	}
 
@@ -105,9 +106,10 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 
 	if err := r.session.
 		Query(audienceSlugTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(audienceSlug{Slug: strings.ToLower(slug)}).
-		Get(&b); err != nil {
+		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrAudienceNotFound
@@ -133,9 +135,10 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 	if err := qb.Select(audienceTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		Bind(audienceIds).
-		Select(&audienceModels); err != nil {
+		SelectRelease(&audienceModels); err != nil {
 		return nil, fmt.Errorf("failed to get audiences by id: %v", err)
 	}
 
@@ -160,9 +163,10 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 
 	if err := r.session.
 		Query(audienceTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(audience{Id: audienceId}).
-		Get(&b); err != nil {
+		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrAudienceNotFound
@@ -192,8 +196,9 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 
 	if err := r.session.
 		Query(audienceTable.SelectAll()).
+		WithContext(ctx).
 		Consistency(gocql.One).
-		Select(&res); err != nil {
+		SelectRelease(&res); err != nil {
 		return nil, fmt.Errorf("failed to get audiences: %v", err)
 	}
 
@@ -218,6 +223,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx cont
 
 	if err := r.session.
 		Query(audienceSlugTable.DeleteBuilder().Existing().ToCql()).
+		WithContext(ctx).
 		BindStruct(audienceSlug{Slug: strings.ToLower(slug), AudienceId: audienceId}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to release audience slug: %v", err)
@@ -239,9 +245,10 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 		InsertBuilder().
 		Unique().
 		Query(r.session).
+		WithContext(ctx).
 		SerialConsistency(gocql.Serial).
 		BindStruct(audienceSlug{Slug: strings.ToLower(aud.Slug), AudienceId: aud.Id}).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to create unique audience slug: %v", err)
@@ -253,6 +260,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 
 	if err := r.session.
 		Query(audienceTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(aud).
 		ExecRelease(); err != nil {
@@ -274,6 +282,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 		// failed to index audience - delete audience record
 		if err := r.session.
 			Query(audienceTable.Delete()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(aud).
 			ExecRelease(); err != nil {
@@ -330,6 +339,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 		Query(audienceTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {

@@ -64,6 +64,7 @@ func (r ClubInfractionCassandraRepository) CreateClubInfractionHistory(ctx conte
 
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
@@ -81,6 +82,7 @@ func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx conte
 
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
@@ -96,9 +98,10 @@ func (r ClubInfractionCassandraRepository) GetAllClubInfractionHistoryByClubIdOp
 
 	if err := clubInfractionHistoryTable.SelectBuilder().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubInfractionHistory{ClubId: accountId}).
-		Select(&dbClubInfractionHistory); err != nil {
+		SelectRelease(&dbClubInfractionHistory); err != nil {
 		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
 	}
 
@@ -140,9 +143,10 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx 
 
 	if err := builder.
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
-		Select(&dbClubInfractionHistory); err != nil {
+		SelectRelease(&dbClubInfractionHistory); err != nil {
 		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
 	}
 
@@ -186,9 +190,10 @@ func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx cont
 
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubInfractionHistory{Id: id, ClubId: userId}).
-		Get(&dbAccountInfractionHistory); err != nil {
+		GetRelease(&dbAccountInfractionHistory); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, club_infraction.ErrClubInfractionHistoryNotFound

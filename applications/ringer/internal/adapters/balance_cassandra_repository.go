@@ -57,8 +57,9 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 
 	if err := r.session.
 		Query(table.Get()).
+		WithContext(ctx).
 		BindStruct(clubBalance{ClubId: clubId}).
-		Get(&clubBal); err != nil {
+		GetRelease(&clubBal); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return balance.NewDefaultBalance(clubId)
@@ -88,8 +89,9 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 
 	if err := r.session.
 		Query(clubPaymentsTable.Get()).
+		WithContext(ctx).
 		BindStruct(clubPayment{Id: paymentId}).
-		Get(&clubPay); err != nil {
+		GetRelease(&clubPay); err != nil {
 		return nil, fmt.Errorf("failed to get club payment by id: %v", err)
 	}
 
@@ -120,8 +122,9 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 	// if we can't find it, we create a new one, using a unique insert on purpose
 	err := r.session.
 		Query(table.Get()).
+		WithContext(ctx).
 		BindStruct(clubBalance{ClubId: clubId}).
-		Get(&b)
+		GetRelease(&b)
 
 	if err != nil && err != gocql.ErrNotFound {
 		return fmt.Errorf("failed to get club balance: %v", err)
@@ -139,9 +142,10 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 		applied, err := table.InsertBuilder().
 			Unique().
 			Query(r.session).
+			WithContext(ctx).
 			SerialConsistency(gocql.Serial).
 			BindStruct(b).
-			ExecCAS()
+			ExecCASRelease()
 
 		if err != nil {
 			return fmt.Errorf("failed to create club balance: %v", err)
@@ -162,9 +166,10 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 	ok, err := table.UpdateBuilder("last_insert_id", "amount").
 		If(qb.EqLit("last_insert_id", b.LastInsertId.String())).
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(clubBalance{ClubId: clubId, LastInsertId: gocql.TimeUUID(), Amount: marshalled.Amount()}).
 		SerialConsistency(gocql.Serial).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to update balance: %v", err)

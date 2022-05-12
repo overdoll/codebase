@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	errors2 "github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/applications/parley/internal/domain/event"
 	"overdoll/applications/parley/internal/domain/rule"
@@ -31,7 +32,7 @@ func NewIssueClubInfractionHandler(cr club_infraction.Repository, rr rule.Reposi
 func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInfraction) (*club_infraction.ClubInfractionHistory, error) {
 
 	if err := h.stella.GetClubById(ctx, cmd.ClubId); err != nil {
-		return nil, err
+		return nil, errors2.Wrap(err, "failed to get club by id")
 	}
 
 	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)

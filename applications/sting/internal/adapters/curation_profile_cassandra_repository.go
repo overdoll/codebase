@@ -50,9 +50,10 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 
 	if err := r.session.
 		Query(curationProfileTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
-		Get(&personalProfile); err != nil {
+		GetRelease(&personalProfile); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return curation.UnmarshalProfileFromDatabase(
@@ -111,6 +112,7 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 		Query(curationProfileTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&curationProfile{
 			AccountId:          profile.AccountId(),
@@ -144,6 +146,7 @@ func (r CurationProfileCassandraRepository) DeleteProfileOperator(ctx context.Co
 
 	if err := r.session.
 		Query(curationProfileTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
 		ExecRelease(); err != nil {

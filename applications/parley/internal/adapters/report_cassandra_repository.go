@@ -82,7 +82,7 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	stmt, _ := postReportTable.Insert()
 
@@ -124,12 +124,13 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 
 	if err := r.session.
 		Query(postReportTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postReport{
 			PostId:             postId,
 			ReportingAccountId: accountId,
 		}).
-		Get(&postRep); err != nil {
+		GetRelease(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, report.ErrPostReportNotFound
@@ -157,11 +158,12 @@ func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(c
 	var buckets []postReport
 
 	if err := r.session.Query(postReportsByAccountBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,
 		}).
-		Select(&buckets); err != nil {
+		SelectRelease(&buckets); err != nil {
 		return nil, fmt.Errorf("failed to get post reports by account buckets: %v", err)
 	}
 
@@ -191,8 +193,9 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 
 		if err := builder.
 			Query(r.session).
+			WithContext(ctx).
 			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
-			Select(&results); err != nil {
+			SelectRelease(&results); err != nil {
 			return fmt.Errorf("failed to search post reports: %v", err)
 		}
 
@@ -227,11 +230,12 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		Delete(postReportsByAccountBucketsTable.Name()).
 		Where(qb.Eq("account_id")).
 		ToCql()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,
 		}).
-		Select(&buckets); err != nil {
+		SelectRelease(&buckets); err != nil {
 		return fmt.Errorf("failed to delete post reports by account buckets: %v", err)
 	}
 

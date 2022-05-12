@@ -134,11 +134,12 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 
 	if err := r.session.
 		Query(accountTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalOne).
 		BindStruct(&accounts{
 			Id: id,
 		}).
-		Get(&accountInstance); err != nil {
+		GetRelease(&accountInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -186,9 +187,10 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 		Select(accountTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalOne).
 		Bind(ids).
-		Select(&accountInstances); err != nil {
+		SelectRelease(&accountInstances); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -229,6 +231,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 
 	if err := r.session.
 		Query(accountEmailTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountEmail{
 			Email: strings.ToLower(email),
@@ -260,6 +263,7 @@ func (r AccountCassandraRepository) createUniqueAccountUsername(ctx context.Cont
 		InsertBuilder().
 		Unique().
 		Query(r.session).
+		WithContext(ctx).
 		SerialConsistency(gocql.LocalSerial).
 		BindStruct(AccountUsername{
 			AccountId: instance.ID(),
@@ -267,7 +271,7 @@ func (r AccountCassandraRepository) createUniqueAccountUsername(ctx context.Cont
 			// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 			Username: strings.ToLower(username),
 		}).
-		ExecCAS()
+		ExecCASRelease()
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
@@ -288,11 +292,12 @@ func (r AccountCassandraRepository) deleteAccountUsername(ctx context.Context, a
 		DeleteBuilder().
 		Existing().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(AccountUsername{
 			Username: strings.TrimSpace(strings.ToLower(username)),
 		}).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to delete unique username: %v", err)
@@ -311,12 +316,13 @@ func (r AccountCassandraRepository) createUniqueAccountEmail(ctx context.Context
 		InsertBuilder().
 		Unique().
 		Query(r.session).
+		WithContext(ctx).
 		SerialConsistency(gocql.Serial).
 		BindStruct(accountEmail{
 			Email:     strings.ToLower(email),
 			AccountId: accountId,
 		}).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to create unique email: %v", err)
@@ -346,11 +352,12 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 		DeleteBuilder().
 		Existing().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountEmail{
 			Email: strings.ToLower(email),
 		}).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to delete account email: %v", err)
@@ -388,7 +395,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	// create a table that holds all the user's emails
 	stmt, names := emailByAccountTable.Insert()
@@ -462,6 +469,7 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 				columns...,
 			),
 		).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalUserToDatabase(currentUser)).
 		ExecRelease(); err != nil {
@@ -516,6 +524,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 
 	if err := r.session.
 		Query(emailByAccountTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
@@ -537,6 +546,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 				"avatar_resource_id",
 			),
 		).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(acc).
 		ExecRelease(); err != nil {
@@ -609,7 +619,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 			}
 		}
 
-		batch := r.session.NewBatch(gocql.LoggedBatch)
+		batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 		// finally, update account
 		stmt, names := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
@@ -644,6 +654,7 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 	// check if email is in use
 	if err := r.session.
 		Query(accountUsernameTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&AccountUsername{
 			Username: strings.ToLower(username),
@@ -675,6 +686,7 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 	// get account emails and status
 	if err := r.session.
 		Query(emailByAccountTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
@@ -719,10 +731,12 @@ func (r AccountCassandraRepository) GetAccountEmails(ctx context.Context, reques
 		}
 	}
 
-	if err := builder.Query(r.session).
+	if err := builder.
+		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
-		Select(&accountEmails); err != nil {
+		SelectRelease(&accountEmails); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -799,7 +813,7 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 		return nil, nil, errors.New("email not found")
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	// delete emails by account
 	stmt, _ := qb.Update(emailByAccountTable.Name()).
@@ -845,6 +859,7 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 
 	if err := r.session.
 		Query(emailByAccountTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(emailByAccount{
 			Email:     email.Email(),
@@ -852,7 +867,11 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 			Status:    1,
 		}).
 		ExecRelease(); err != nil {
-		_ = r.deleteAccountEmail(ctx, email.AccountId(), email.Email())
+
+		if err := r.deleteAccountEmail(ctx, email.AccountId(), email.Email()); err != nil {
+			return err
+		}
+
 		return fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 

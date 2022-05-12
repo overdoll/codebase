@@ -78,11 +78,12 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 	if err := receiptFilesTable.
 		SelectBuilder().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id: id,
 		}).
-		Get(&receiptFile); err != nil {
+		GetRelease(&receiptFile); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, billing.ErrClubSupporterReceiptNotFound
@@ -143,6 +144,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	// update db
 	if err := r.session.
 		Query(receiptFilesTable.Update("file_path")).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id:       receiptFile.Id,
@@ -185,6 +187,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
 			Consistency(gocql.LocalQuorum).
+			WithContext(ctx).
 			BindStruct(&receiptFiles{
 				Id:                        id,
 				AccountTransactionId:      history.Id(),
@@ -238,6 +241,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(&receiptFiles{
 				Id:                   history.Id(),

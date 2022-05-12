@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/parley/internal/app/workflows"
 	"overdoll/applications/parley/internal/domain/club_infraction"
@@ -42,8 +43,9 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.PostReport) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "ReportPost_" + report.PostId() + "_" + report.ReportingAccountId(),
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "ReportPost_" + report.PostId() + "_" + report.ReportingAccountId(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ReportPost, workflows.ReportPostInput{

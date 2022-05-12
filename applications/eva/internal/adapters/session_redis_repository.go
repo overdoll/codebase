@@ -41,7 +41,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 // getSessionById - get session by ID
 func (r SessionRepository) getSessionById(ctx context.Context, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
-	val, err := r.client.Get(ctx, sessionPrefix+sessionId).Result()
+	val, err := r.client.WithContext(ctx).Get(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 
@@ -111,7 +111,7 @@ func (r SessionRepository) scanKeys(ctx context.Context, accountId string, count
 
 	getKeys := func() ([]string, uint64, error) {
 		// infinite scan
-		newKeys, newCursor, err := r.client.Scan(ctx, uint64(curse), sessionPrefix+session.GetSearchTermForAccounts(accountId), count).Result()
+		newKeys, newCursor, err := r.client.WithContext(ctx).Scan(ctx, uint64(curse), sessionPrefix+session.GetSearchTermForAccounts(accountId), count).Result()
 
 		if err != nil {
 
@@ -154,7 +154,7 @@ func (r SessionRepository) DeleteAccountSessionData(ctx context.Context, account
 
 	for _, key := range keys {
 
-		_, err := r.client.Del(ctx, key).Result()
+		_, err := r.client.WithContext(ctx).Del(ctx, key).Result()
 
 		if err != nil {
 			return fmt.Errorf("failed to delete session: %v", err)
@@ -209,7 +209,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 func (r SessionRepository) revokeSessionById(ctx context.Context, sessionId string) error {
 
 	// make sure that we delete the session that belongs to this user only
-	_, err := r.client.Del(ctx, sessionPrefix+sessionId).Result()
+	_, err := r.client.WithContext(ctx).Del(ctx, sessionPrefix+sessionId).Result()
 
 	if err != nil {
 
@@ -259,7 +259,7 @@ func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *s
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
+	ok, err := r.client.WithContext(ctx).SetNX(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
 		return err
@@ -302,7 +302,7 @@ func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId 
 		return nil, err
 	}
 
-	_, err = r.client.Set(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
+	_, err = r.client.WithContext(ctx).Set(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
 		return nil, err

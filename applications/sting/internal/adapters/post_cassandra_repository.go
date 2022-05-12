@@ -145,6 +145,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 
 	if err := r.session.
 		Query(postTable.Insert()).
+		WithContext(ctx).
 		BindStruct(pst).
 		Consistency(gocql.LocalQuorum).
 		ExecRelease(); err != nil {
@@ -156,6 +157,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 		// failed to index post - delete the post record
 		if err := r.session.
 			Query(postTable.Delete()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
@@ -172,6 +174,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 
 	if err := r.session.
 		Query(postTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
 		ExecRelease(); err != nil {
@@ -199,9 +202,10 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 	if err := qb.Select(postTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		Bind(postIds).
-		Select(&postsModels); err != nil {
+		SelectRelease(&postsModels); err != nil {
 		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
 	}
 
@@ -222,9 +226,10 @@ func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, 
 
 	if err := r.session.
 		Query(postTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
-		Get(&postPending); err != nil {
+		GetRelease(&postPending); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrNotFound
@@ -254,9 +259,10 @@ func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.
 	if err := qb.Select(terminatedClubsTable.Name()).
 		Where(qb.Eq("bucket")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0}).
-		Select(&suspendedClub); err != nil {
+		SelectRelease(&suspendedClub); err != nil {
 		return nil, fmt.Errorf("failed to get suspended clubs: %v", err)
 	}
 
@@ -273,6 +279,7 @@ func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Con
 
 	if err := r.session.
 		Query(terminatedClubsTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
@@ -286,6 +293,7 @@ func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.
 
 	if err := r.session.
 		Query(terminatedClubsTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
@@ -347,6 +355,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 			"state",
 			"posted_at",
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -388,6 +397,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 		Query(postTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -441,6 +451,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		Query(postTable.Update(
 			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status",
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -477,9 +488,10 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id").
 		If(qb.EqLit("likes_last_update_id", postPending.LikesLastUpdateId.String())).
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID()}).
 		SerialConsistency(gocql.Serial).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to update post likes: %v", err)

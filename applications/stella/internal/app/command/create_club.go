@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/applications/stella/internal/domain/event"
 
 	"overdoll/libraries/principal"
 )
@@ -14,11 +15,12 @@ type CreateClub struct {
 }
 
 type CreateClubHandler struct {
-	cr club.Repository
+	cr    club.Repository
+	event event.Repository
 }
 
-func NewCreateClubHandler(cr club.Repository) CreateClubHandler {
-	return CreateClubHandler{cr: cr}
+func NewCreateClubHandler(cr club.Repository, event event.Repository) CreateClubHandler {
+	return CreateClubHandler{cr: cr, event: event}
 }
 
 func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Club, error) {
@@ -36,7 +38,18 @@ func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Cl
 		return nil, err
 	}
 
-	if err := h.cr.CreateClub(ctx, clb); err != nil {
+	// reserve the slug for the club
+	if err := h.cr.ReserveSlugForClub(ctx, clb); err != nil {
+		return nil, err
+	}
+
+	if err := h.event.CreateClub(ctx, cmd.Principal, clb); err != nil {
+
+		// if creating the club failed, delete the reserved slug, so it can be tried again
+		if err := h.cr.DeleteReservedSlugForClub(ctx, clb); err != nil {
+			return nil, err
+		}
+
 		return nil, err
 	}
 

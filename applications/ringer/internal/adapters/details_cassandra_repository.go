@@ -59,7 +59,7 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 		Query(accountDetailsTable.Get()).
 		WithContext(ctx).
 		BindStruct(accountDetails{AccountId: accountId}).
-		Get(&accDetails); err != nil {
+		GetRelease(&accDetails); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, details.ErrAccountDetailsNotFound
@@ -141,6 +141,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 
 	if err := r.session.
 		Query(accountDetailsTable.Update("first_name", "last_name", "country_of_residence_iso3166_alpha3")).
+		WithContext(ctx).
 		BindStruct(&accountDetails{
 			AccountId:          detail.AccountId(),
 			FirstName:          encryptedFirstName,

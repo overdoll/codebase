@@ -152,6 +152,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	// first, create transaction record
 	if err := r.session.Query(table.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
@@ -176,6 +177,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	if met == nil {
 
 		if err := r.session.Query(clubTransactionMetricsBucketsTable.Insert()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubTransactionMetricsBuckets{ClubId: metric.ClubId(), Bucket: bucket}).
 			ExecRelease(); err != nil {
@@ -199,9 +201,10 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		}
 
 		applied, err := r.session.Query(clubTransactionMetricsTable.InsertBuilder().Unique().ToCql()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(target).
-			ExecCAS()
+			ExecCASRelease()
 
 		if err != nil {
 			return fmt.Errorf("failed to insert club transaction metric: %v", err)
@@ -229,12 +232,13 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		CountAll().
 		Max("timestamp").
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
 			Bucket:    bucket,
 			Timestamp: newInsertTimestamp,
 		}).
-		Get(&res); err != nil {
+		GetRelease(&res); err != nil {
 		return fmt.Errorf("failed to count: %v", err)
 	}
 
@@ -278,8 +282,9 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	// apply the count
 	applied, err := metricsBuilder.
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(metricsStruct).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to update count: %v", err)
@@ -297,12 +302,13 @@ func (r MetricsCassandraRepository) getClubTransactionMetrics(ctx context.Contex
 	var met clubTransactionMetrics
 
 	if err := r.session.Query(clubTransactionMetricsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetrics{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
 		}).
-		Get(&met); err != nil {
+		GetRelease(&met); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, gocql.ErrNotFound
@@ -339,11 +345,12 @@ func (r MetricsCassandraRepository) getClubTransactionMetricsBuckets(ctx context
 	var buckets []clubTransactionMetricsBuckets
 
 	if err := r.session.Query(clubTransactionMetricsBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetricsBuckets{
 			ClubId: clubId,
 		}).
-		Select(&buckets); err != nil {
+		SelectRelease(&buckets); err != nil {
 		return nil, fmt.Errorf("failed to get club transaction metric buckets: %v", err)
 	}
 
@@ -378,11 +385,12 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 		if err := qb.Select(clubTransactionMetricsTable.Name()).
 			Where(qb.Eq("bucket"), qb.Eq("club_id")).
 			Query(r.session).
+			WithContext(ctx).
 			BindStruct(clubTransactionMetrics{
 				Bucket: bucketId,
 				ClubId: clubId,
 			}).
-			Get(&met); err != nil {
+			GetRelease(&met); err != nil {
 
 			// if we didn't find any transaction metric, skip this iteration
 			if err == gocql.ErrNotFound {
@@ -421,12 +429,13 @@ func (r MetricsCassandraRepository) IsClubAlreadySuspended(ctx context.Context, 
 
 	// first, create transaction record
 	if err := r.session.Query(clubChargebackSuspensionsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
 		}).
-		Get(&suspensionChargeback); err != nil {
+		GetRelease(&suspensionChargeback); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return false, nil
@@ -442,6 +451,7 @@ func (r MetricsCassandraRepository) AddClubAlreadySuspended(ctx context.Context,
 
 	if err := clubChargebackSuspensionsTable.InsertBuilder().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,

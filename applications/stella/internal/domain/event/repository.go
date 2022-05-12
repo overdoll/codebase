@@ -17,6 +17,8 @@ type Repository interface {
 	UnSuspendClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 	NewSupporterPost(ctx context.Context, clubId string) error
 
+	CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+
 	TerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 	UnTerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 }

@@ -38,7 +38,7 @@ func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationT
 // GetAuthenticationToken - Get authentication cookie by ID
 func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Context, passport *passport.Passport, tk string, secret *string) (*token.AuthenticationToken, error) {
 
-	val, err := r.client.Get(ctx, authenticationTokenPrefix+tk).Result()
+	val, err := r.client.WithContext(ctx).Get(ctx, authenticationTokenPrefix+tk).Result()
 
 	if err != nil {
 
@@ -92,7 +92,7 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Con
 		return err
 	}
 
-	_, err = r.client.Del(ctx, authenticationTokenPrefix+id).Result()
+	_, err = r.client.WithContext(ctx).Del(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
 		return fmt.Errorf("failed to delete token: %v", err)
@@ -127,7 +127,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		return fmt.Errorf("failed to encrypt token: %v", err)
 	}
 
-	ok, err := r.client.SetNX(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
+	ok, err := r.client.WithContext(ctx).SetNX(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return fmt.Errorf("failed to create token: %v", err)
@@ -188,7 +188,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		return nil, fmt.Errorf("failed to encrypt token: %v", err)
 	}
 
-	_, err = r.client.Set(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
+	_, err = r.client.WithContext(ctx).Set(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to update token: %v", err)

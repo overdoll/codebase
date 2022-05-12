@@ -81,12 +81,13 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	if err := qb.Select(charactersSlugTable.Name()).
 		Where(qb.In("slug"), qb.In("series_id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		BindMap(map[string]interface{}{
 			"slug":      lowercaseSlugs,
 			"series_id": seriesIds,
 		}).
-		Select(&characterSlugResults); err != nil {
+		SelectRelease(&characterSlugResults); err != nil {
 		return nil, fmt.Errorf("failed to get character slugs: %v", err)
 	}
 
@@ -112,12 +113,13 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 
 	if err := r.session.
 		Query(charactersSlugTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
 			Slug:     strings.ToLower(slug),
 			SeriesId: series.SeriesId,
 		}).
-		Get(&b); err != nil {
+		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCharacterNotFound
@@ -143,9 +145,10 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 	if err := qb.Select(characterTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		Bind(chars).
-		Select(&characterModels); err != nil {
+		SelectRelease(&characterModels); err != nil {
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
@@ -164,9 +167,10 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 	if err := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		Bind(mediaIds).
-		Select(&mediaModels); err != nil {
+		SelectRelease(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
@@ -214,6 +218,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 
 	if err := r.session.
 		Query(charactersSlugTable.DeleteBuilder().Existing().ToCql()).
+		WithContext(ctx).
 		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesId: seriesId}).
 		ExecRelease(); err != nil {
 		return fmt.Errorf("failed to release character slug: %v", err)
@@ -235,9 +240,10 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		InsertBuilder().
 		Unique().
 		Query(r.session).
+		WithContext(ctx).
 		SerialConsistency(gocql.Serial).
 		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesId: char.SeriesId}).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to create unique character slug: %v", err)
@@ -249,6 +255,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 
 	if err := r.session.
 		Query(characterTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(char).
 		ExecRelease(); err != nil {
@@ -271,6 +278,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		// failed to index character - delete character record
 		if err := r.session.
 			Query(characterTable.Delete()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(char).
 			ExecRelease(); err != nil {
@@ -323,6 +331,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 		Query(characterTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -342,9 +351,10 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 
 	if err := r.session.
 		Query(characterTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(character{Id: characterId}).
-		Get(&char); err != nil {
+		GetRelease(&char); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrCharacterNotFound

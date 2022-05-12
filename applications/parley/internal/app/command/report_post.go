@@ -18,12 +18,11 @@ type ReportPost struct {
 type ReportPostHandler struct {
 	rr    report.Repository
 	rur   rule.Repository
-	eva   EvaService
 	sting StingService
 }
 
-func NewReportPostHandler(rr report.Repository, rur rule.Repository, eva EvaService, sting StingService) ReportPostHandler {
-	return ReportPostHandler{sting: sting, eva: eva, rr: rr, rur: rur}
+func NewReportPostHandler(rr report.Repository, rur rule.Repository, sting StingService) ReportPostHandler {
+	return ReportPostHandler{sting: sting, rr: rr, rur: rur}
 }
 
 func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.PostReport, error) {

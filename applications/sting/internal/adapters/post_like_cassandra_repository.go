@@ -60,7 +60,7 @@ type postLikeBucket struct {
 
 func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Context, like *post.Like) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	postLike := postLike{
 		Bucket:         bucket.MakeWeeklyBucketFromTimestamp(like.LikedAt()),
@@ -90,7 +90,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 
 func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, like *post.Like) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	postLike := postLike{
 		Bucket:         bucket.MakeWeeklyBucketFromTimestamp(like.LikedAt()),
@@ -120,9 +120,10 @@ func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Conte
 
 	if err := r.session.
 		Query(postLikeTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.One).
 		BindStruct(postLike{PostId: postId, LikedAccountId: accountId}).
-		Get(&pstLike); err != nil {
+		GetRelease(&pstLike); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post.ErrLikeNotFound
@@ -166,9 +167,10 @@ func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx co
 
 	if err := r.session.
 		Query(accountPostLikeBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postLikeBucket{LikedAccountId: accountId}).
-		Select(&pstLike); err != nil {
+		SelectRelease(&pstLike); err != nil {
 		return nil, fmt.Errorf("failed to get post like buckets: %v", err)
 	}
 
@@ -208,8 +210,9 @@ func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.C
 
 		if err := builder.
 			Query(r.session).
+			WithContext(ctx).
 			BindMap(info).
-			Select(&postL); err != nil {
+			SelectRelease(&postL); err != nil {
 			return nil, fmt.Errorf("failed to get post likes: %v", err)
 		}
 

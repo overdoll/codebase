@@ -14,6 +14,9 @@ type Repository interface {
 
 	CreateClub(ctx context.Context, club *Club) error
 
+	ReserveSlugForClub(ctx context.Context, club *Club) error
+	DeleteReservedSlugForClub(ctx context.Context, club *Club) error
+
 	UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
