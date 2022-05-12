@@ -5,7 +5,11 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/parley/internal/app/workflows"
+	"overdoll/applications/parley/internal/domain/club_infraction"
+	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/report"
+	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/principal"
 )
 
@@ -56,7 +60,11 @@ func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.
 	return nil
 }
 
-func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, requester *principal.Principal, clubId, ruleId string) error {
+func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, requester *principal.Principal, clubId string, rule *rule.Rule) error {
+
+	if err := club_infraction.CanIssueInfraction(requester, rule); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -66,7 +74,7 @@ func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, reques
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.IssueClubInfraction, workflows.IssueClubInfractionInput{
 		AccountId: requester.AccountId(),
 		ClubId:    clubId,
-		RuleId:    ruleId,
+		RuleId:    rule.ID(),
 	})
 
 	if err != nil {
@@ -76,7 +84,11 @@ func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, reques
 	return nil
 }
 
-func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *principal.Principal, clubId, postId, ruleId string, notes *string) error {
+func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *principal.Principal, moderator *moderator.PostModerator, clubId, postId string, rule *rule.Rule, notes *string) error {
+
+	if err := moderator.CanRejectPost(requester, rule); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -87,7 +99,7 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 		AccountId: requester.AccountId(),
 		PostId:    postId,
 		ClubId:    clubId,
-		RuleId:    ruleId,
+		RuleId:    rule.ID(),
 		Notes:     notes,
 	})
 
@@ -98,7 +110,11 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	return nil
 }
 
-func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *principal.Principal, clubId, postId, ruleId string, notes *string) error {
+func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *principal.Principal, clubId, postId string, rule *rule.Rule, notes *string) error {
+
+	if err := post_audit_log.CanRemovePost(requester, rule); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -108,7 +124,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, workflows.RemovePostInput{
 		AccountId: requester.AccountId(),
 		PostId:    postId,
-		RuleId:    ruleId,
+		RuleId:    rule.ID(),
 		ClubId:    clubId,
 		Notes:     notes,
 	})
@@ -120,7 +136,11 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 	return nil
 }
 
-func (r EventTemporalRepository) ApprovePost(ctx context.Context, requester *principal.Principal, postId string) error {
+func (r EventTemporalRepository) ApprovePost(ctx context.Context, requester *principal.Principal, moderator *moderator.PostModerator, postId string) error {
+
+	if err := moderator.CanApprovePost(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),

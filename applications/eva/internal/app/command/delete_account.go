@@ -32,10 +32,6 @@ func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*a
 		return nil, err
 	}
 
-	if err := acc.CanDelete(cmd.Principal); err != nil {
-		return nil, err
-	}
-
 	ok, err := h.hades.CanDeleteAccountData(ctx, cmd.AccountId)
 
 	if err != nil {
@@ -56,7 +52,7 @@ func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*a
 		return nil, errors.New("cannot delete account")
 	}
 
-	if err := h.event.DeleteAccount(ctx, cmd.AccountId); err != nil {
+	if err := h.event.DeleteAccount(ctx, cmd.Principal, acc); err != nil {
 		return nil, err
 	}
 

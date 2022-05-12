@@ -41,11 +41,7 @@ func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
 		return err
 	}
 
-	if err := postModerator.CanApprovePost(cmd.Principal); err != nil {
-		return err
-	}
-
-	if err := h.event.ApprovePost(ctx, cmd.Principal, cmd.PostId); err != nil {
+	if err := h.event.ApprovePost(ctx, cmd.Principal, postModerator, cmd.PostId); err != nil {
 		return err
 	}
 

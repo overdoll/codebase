@@ -79,21 +79,20 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	pricingRepo := adapters.NewBillingPricingRepository()
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
-	cancelRepo := adapters.NewCancellationCassandraRepository(session)
 	metricRepo := adapters.NewMetricsCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			CreateCancellationReason:                                         command.NewCreateCancellationReasonHandler(cancelRepo),
-			UpdateCancellationReasonDeprecated:                               command.NewUpdateCancellationReasonDeprecatedHandler(cancelRepo),
-			UpdateCancellationReasonTitle:                                    command.NewUpdateCancellationReasonTitleHandler(cancelRepo),
+			CreateCancellationReason:                                         command.NewCreateCancellationReasonHandler(billingRepo),
+			UpdateCancellationReasonDeprecated:                               command.NewUpdateCancellationReasonDeprecatedHandler(billingRepo),
+			UpdateCancellationReasonTitle:                                    command.NewUpdateCancellationReasonTitleHandler(billingRepo),
 			GenerateCCBillFlexFormsPaymentLink:                               command.NewGenerateCCBillFlexFormsPaymentLink(),
 			ParseCCBillFlexFormsResponseAndGenerateTemplate:                  command.NewParseCCBillFlexFormsResponseAndGenerateTemplate(),
 			GenerateCCBillClubSupporterPaymentLink:                           command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella, eva),
 			ProcessCCBillWebhook:                                             command.NewProcessCCBillWebhookHandler(eventRepo),
 			GenerateProratedRefundAmountForAccountTransaction:                command.NewGenerateProratedRefundAmountForAccountTransactionHandler(billingRepo),
 			BecomeClubSupporterWithAccountSavedPaymentMethod:                 command.NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(billingRepo, pricingRepo, ccbillRepo, stella, eva),
-			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, cancelRepo),
+			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo),
 			DeleteAccountSavedPaymentMethod:                                  command.NewDeleteAccountSavedPaymentMethodHandler(billingRepo),
 			RefundAccountTransaction:                                         command.NewRefundAccountTransactionHandler(billingRepo, ccbillRepo),
 			GenerateClubSupporterRefundReceiptFromAccountTransactionHistory:  command.NewGenerateClubSupporterRefundReceiptFromAccountTransaction(billingRepo, billingFileRepo),
@@ -113,8 +112,8 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			AccountSavedPaymentMethods:                         query.NewAccountSavedPaymentMethodsHandler(billingRepo),
 			CCBillSubscriptionDetails:                          query.NewCCBillSubscriptionDetailsHandler(billingRepo, ccbillRepo),
 			ClubSupporterPricing:                               query.NewClubSupporterPricingHandler(pricingRepo, eva),
-			CancellationReasonById:                             query.NewCancellationReasonByIdHandler(cancelRepo),
-			CancellationReasons:                                query.NewCancellationReasonsHandler(cancelRepo),
+			CancellationReasonById:                             query.NewCancellationReasonByIdHandler(billingRepo),
+			CancellationReasons:                                query.NewCancellationReasonsHandler(billingRepo),
 			CCBillTransactionDetails:                           query.NewCCBillTransactionDetailsHandler(),
 
 			AccountTransactionById:             query.NewAccountTransactionByIdHandler(billingRepo),
@@ -128,6 +127,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CanDeleteAccountData:   query.NewCanDeleteAccountDataHandler(billingRepo),
 			ClubTransactionMetrics: query.NewClubTransactionMetricsHandler(metricRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, cancelRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
 	}
 }

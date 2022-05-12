@@ -29,11 +29,7 @@ func (h TerminateClubHandler) Handle(ctx context.Context, cmd TerminateClub) (*c
 		return nil, err
 	}
 
-	if err := clb.CanTerminate(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.TerminateClub(ctx, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.TerminateClub(ctx, cmd.Principal, clb); err != nil {
 		return nil, err
 	}
 

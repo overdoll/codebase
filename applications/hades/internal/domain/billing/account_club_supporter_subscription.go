@@ -2,7 +2,6 @@ package billing
 
 import (
 	"errors"
-	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -189,7 +188,7 @@ func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) erro
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) Cancel(cancellationReason *cancellation.Reason) error {
+func (c *AccountClubSupporterSubscription) Cancel(cancellationReason *CancellationReason) error {
 
 	id := cancellationReason.ID()
 	c.cancellationReasonId = &id
@@ -197,7 +196,7 @@ func (c *AccountClubSupporterSubscription) Cancel(cancellationReason *cancellati
 	return c.MarkCancelled(time.Now())
 }
 
-func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
+func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *CancellationReason) error {
 
 	if !requester.IsStaff() {
 		if err := requester.BelongsToAccount(c.accountId); err != nil {

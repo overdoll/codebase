@@ -40,11 +40,7 @@ func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInf
 		return nil, err
 	}
 
-	if err := club_infraction.CanIssueInfraction(cmd.Principal, ruleItem); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.IssueClubInfraction(ctx, cmd.Principal, cmd.ClubId, cmd.RuleId); err != nil {
+	if err := h.event.IssueClubInfraction(ctx, cmd.Principal, cmd.ClubId, ruleItem); err != nil {
 		return nil, err
 	}
 

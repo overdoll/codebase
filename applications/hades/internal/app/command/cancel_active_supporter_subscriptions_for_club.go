@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/event"
 	"overdoll/libraries/principal"
 )
@@ -21,10 +20,5 @@ func NewCancelActiveSubscriptionsForClubHandler(event event.Repository) CancelAc
 }
 
 func (h CancelActiveSupporterSubscriptionsForClubHandler) Handle(ctx context.Context, cmd CancelActiveSupporterSubscriptionsForClub) error {
-
-	if err := billing.CanCancelActiveSubscriptionsForClub(cmd.Principal); err != nil {
-		return err
-	}
-
-	return h.event.CancelActiveSupporterSubscriptionsForClub(ctx, cmd.ClubId)
+	return h.event.CancelActiveSupporterSubscriptionsForClub(ctx, cmd.Principal, cmd.ClubId)
 }

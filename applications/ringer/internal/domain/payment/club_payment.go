@@ -47,7 +47,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
 
-	settlementDate := timestamp.Add(time.Minute)
+	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 	existingId := existingPayment.id
 
 	return &ClubPayment{
@@ -73,7 +73,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatform
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
-	settlementDate := timestamp.Add(time.Minute)
+	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 
 	return &ClubPayment{
 		id:                       id,

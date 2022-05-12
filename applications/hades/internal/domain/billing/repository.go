@@ -54,6 +54,13 @@ type Repository interface {
 	DeleteAccountData(ctx context.Context, accountId string) error
 
 	GetActiveClubSupporterSubscriptionsForClub(ctx context.Context, clubId string) ([]string, error)
+
+	GetCancellationReasonById(ctx context.Context, id string) (*CancellationReason, error)
+	GetCancellationReasons(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*CancellationReason, error)
+
+	CreateCancellationReason(ctx context.Context, reason *CancellationReason) error
+	UpdateCancellationReasonTitle(ctx context.Context, reasonId string, updateFn func(reason *CancellationReason) error) (*CancellationReason, error)
+	UpdateCancellationReasonDeprecated(ctx context.Context, reasonId string, updateFn func(reason *CancellationReason) error) (*CancellationReason, error)
 }
 
 type FileRepository interface {

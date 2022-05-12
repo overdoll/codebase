@@ -48,11 +48,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 		return err
 	}
 
-	if err := post_audit_log.CanRemovePost(cmd.Principal, ruleItem); err != nil {
-		return err
-	}
-
-	if err := h.event.RemovePost(ctx, cmd.Principal, clubId, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+	if err := h.event.RemovePost(ctx, cmd.Principal, clubId, cmd.PostId, ruleItem, cmd.Notes); err != nil {
 		return err
 	}
 

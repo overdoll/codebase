@@ -1,8 +1,12 @@
 package event
 
-import "context"
+import (
+	"context"
+	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
+)
 
 type Repository interface {
-	DeleteAccount(ctx context.Context, accountId string) error
-	CancelAccountDeletion(ctx context.Context, workflowId string) error
+	DeleteAccount(ctx context.Context, requester *principal.Principal, acc *account.Account) error
+	CancelAccountDeletion(ctx context.Context, requester *principal.Principal, acc *account.Account) error
 }

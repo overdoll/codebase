@@ -14,7 +14,7 @@ func (h *Activities) AppendCancellationReasonToAccountClubSupporterSubscription(
 
 	_, err := h.billing.UpdateAccountClubSupporterCancelOperator(ctx, input.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 
-		cancellationReason, err := h.cr.GetReasonById(ctx, input.CancellationReasonId)
+		cancellationReason, err := h.billing.GetCancellationReasonById(ctx, input.CancellationReasonId)
 
 		if err != nil {
 			return err

@@ -1,4 +1,4 @@
-package cancellation
+package billing
 
 import (
 	"errors"
@@ -14,7 +14,7 @@ var (
 	ErrReasonDeprecated = errors.New("cancellation reason is deprecated")
 )
 
-type Reason struct {
+type CancellationReason struct {
 	*paging.Node
 
 	deprecated bool
@@ -22,7 +22,7 @@ type Reason struct {
 	title      *localization.Translation
 }
 
-func NewReason(requester *principal.Principal, title string) (*Reason, error) {
+func NewCancellationReason(requester *principal.Principal, title string) (*CancellationReason, error) {
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
@@ -41,26 +41,26 @@ func NewReason(requester *principal.Principal, title string) (*Reason, error) {
 		return nil, err
 	}
 
-	return &Reason{
+	return &CancellationReason{
 		id:         uuid.New().String(),
 		title:      titleT,
 		deprecated: false,
 	}, nil
 }
 
-func (m *Reason) ID() string {
+func (m *CancellationReason) ID() string {
 	return m.id
 }
 
-func (m *Reason) Title() *localization.Translation {
+func (m *CancellationReason) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *Reason) Deprecated() bool {
+func (m *CancellationReason) Deprecated() bool {
 	return m.deprecated
 }
 
-func (m *Reason) UpdateTitle(requester *principal.Principal, title, locale string) error {
+func (m *CancellationReason) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
@@ -77,7 +77,7 @@ func (m *Reason) UpdateTitle(requester *principal.Principal, title, locale strin
 	return nil
 }
 
-func (m *Reason) UpdateDeprecated(requester *principal.Principal, deprecated bool) error {
+func (m *CancellationReason) UpdateDeprecated(requester *principal.Principal, deprecated bool) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
@@ -87,7 +87,7 @@ func (m *Reason) UpdateDeprecated(requester *principal.Principal, deprecated boo
 	return nil
 }
 
-func (m *Reason) canUpdate(requester *principal.Principal) error {
+func (m *CancellationReason) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
@@ -111,8 +111,8 @@ func validateTitle(title string) error {
 	return nil
 }
 
-func UnmarshalReasonFromDatabase(id string, title map[string]string, deprecated bool) *Reason {
-	return &Reason{
+func UnmarshalCancellationReasonFromDatabase(id string, title map[string]string, deprecated bool) *CancellationReason {
+	return &CancellationReason{
 		id:         id,
 		title:      localization.UnmarshalTranslationFromDatabase(title),
 		deprecated: deprecated,

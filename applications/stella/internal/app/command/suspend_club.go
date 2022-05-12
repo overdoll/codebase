@@ -31,13 +31,7 @@ func (h SuspendClubHandler) Handle(ctx context.Context, cmd SuspendClub) (*club.
 		return nil, err
 	}
 
-	if err := clb.CanSuspend(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	accountRequester := cmd.Principal.AccountId()
-
-	if err := h.event.SuspendClub(ctx, cmd.ClubId, &accountRequester, cmd.EndTime, club.Manual.String()); err != nil {
+	if err := h.event.SuspendClub(ctx, cmd.Principal, clb, cmd.EndTime, club.Manual.String()); err != nil {
 		return nil, err
 	}
 

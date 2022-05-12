@@ -47,7 +47,7 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 		return nil, err
 	}
 
-	if err := h.event.SubmitPost(ctx, pst.ID(), time.Now()); err != nil {
+	if err := h.event.SubmitPost(ctx, cmd.Principal, pst, time.Now()); err != nil {
 		return nil, err
 	}
 

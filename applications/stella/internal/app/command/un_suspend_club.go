@@ -30,11 +30,7 @@ func (h UnSuspendClubHandler) Handle(ctx context.Context, cmd UnSuspendClub) (*c
 		return nil, err
 	}
 
-	if err := clb.CanUnSuspend(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.UnSuspendClub(ctx, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.UnSuspendClub(ctx, cmd.Principal, clb); err != nil {
 		return nil, err
 	}
 

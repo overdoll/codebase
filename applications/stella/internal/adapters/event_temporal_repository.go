@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/principal"
 	"time"
 )
 
@@ -87,16 +88,22 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 	return nil
 }
 
-func (r EventTemporalRepository) SuspendClub(ctx context.Context, clubId string, accountId *string, endTime time.Time, reason string) error {
+func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *principal.Principal, club *club.Club, endTime time.Time, reason string) error {
+
+	if err := club.CanSuspend(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SuspendClub_" + clubId,
+		ID:        "SuspendClub_" + club.ID(),
 	}
 
+	accId := requester.AccountId()
+
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.SuspendClub, workflows.SuspendClubInput{
-		ClubId:    clubId,
-		AccountId: accountId,
+		ClubId:    club.ID(),
+		AccountId: &accId,
 		Reason:    reason,
 		EndTime:   endTime,
 	}); err != nil {
@@ -106,16 +113,20 @@ func (r EventTemporalRepository) SuspendClub(ctx context.Context, clubId string,
 	return nil
 }
 
-func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, clubId, accountId string) error {
+func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	if err := clb.CanUnSuspend(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "UnSuspendClub_" + clubId,
+		ID:        "UnSuspendClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnSuspendClub, workflows.UnSuspendClubInput{
-		ClubId:    clubId,
-		AccountId: accountId,
+		ClubId:    clb.ID(),
+		AccountId: requester.AccountId(),
 	}); err != nil {
 		return err
 	}
@@ -139,16 +150,20 @@ func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId st
 	return nil
 }
 
-func (r EventTemporalRepository) TerminateClub(ctx context.Context, clubId, accountId string) error {
+func (r EventTemporalRepository) TerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	if err := clb.CanTerminate(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "TerminateClub_" + clubId,
+		ID:        "TerminateClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.TerminateClub, workflows.TerminateClubInput{
-		ClubId:    clubId,
-		AccountId: accountId,
+		ClubId:    clb.ID(),
+		AccountId: requester.AccountId(),
 	}); err != nil {
 		return err
 	}
@@ -156,15 +171,19 @@ func (r EventTemporalRepository) TerminateClub(ctx context.Context, clubId, acco
 	return nil
 }
 
-func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, clubId string) error {
+func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	if err := clb.CanUnTerminate(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "UnTerminateClub_" + clubId,
+		ID:        "UnTerminateClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnTerminateClub, workflows.UnTerminateClubInput{
-		ClubId: clubId,
+		ClubId: clb.ID(),
 	}); err != nil {
 		return err
 	}

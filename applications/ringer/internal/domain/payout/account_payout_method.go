@@ -29,6 +29,10 @@ func NewPaxumAccountPayoutMethod(requester *principal.Principal, accountId, emai
 		return nil, principal.ErrNotAuthorized
 	}
 
+	if !requester.IsSecure() {
+		return nil, principal.ErrNotAuthorized
+	}
+
 	return &AccountPayoutMethod{
 		accountId:  accountId,
 		method:     Paxum,
@@ -87,8 +91,7 @@ func (p *AccountPayoutMethod) Validate(requester *principal.Principal, amount ui
 	}
 
 	// check threshold - at least $100 in ready payments
-	// TODO: remove temporary field here after testing is done
-	if amount < 5 {
+	if amount < 10000 {
 		return false
 	}
 

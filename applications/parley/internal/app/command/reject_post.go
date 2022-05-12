@@ -55,11 +55,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 		return err
 	}
 
-	if err := postModerator.CanRejectPost(cmd.Principal, ruleItem); err != nil {
-		return err
-	}
-
-	if err := h.event.RejectPost(ctx, cmd.Principal, clubId, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+	if err := h.event.RejectPost(ctx, cmd.Principal, postModerator, clubId, cmd.PostId, ruleItem, cmd.Notes); err != nil {
 		return err
 	}
 

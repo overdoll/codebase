@@ -10,7 +10,6 @@ import (
 	"os"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
@@ -849,7 +848,11 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 	return nil
 }
 
-func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx context.Context, clubId string) error {
+func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx context.Context, requester *principal.Principal, clubId string) error {
+
+	if err := billing.CanCancelActiveSubscriptionsForClub(requester); err != nil {
+		return err
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -865,7 +868,7 @@ func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx c
 	return nil
 }
 
-func (r EventTemporalRepository) CancelAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, subscription *billing.AccountClubSupporterSubscription, cancellationReason *cancellation.Reason) error {
+func (r EventTemporalRepository) CancelAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, subscription *billing.AccountClubSupporterSubscription, cancellationReason *billing.CancellationReason) error {
 
 	if err := subscription.RequestCancel(requester, cancellationReason); err != nil {
 		return err

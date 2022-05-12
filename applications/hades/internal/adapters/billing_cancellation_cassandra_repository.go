@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -30,15 +29,7 @@ type cancellationReason struct {
 	Title      map[string]string `db:"title"`
 }
 
-type CancellationCassandraRepository struct {
-	session gocqlx.Session
-}
-
-func NewCancellationCassandraRepository(session gocqlx.Session) CancellationCassandraRepository {
-	return CancellationCassandraRepository{session: session}
-}
-
-func marshalCancellationReasonToDatabase(clubInfractionRs *cancellation.Reason) *cancellationReason {
+func marshalCancellationReasonToDatabase(clubInfractionRs *billing.CancellationReason) *cancellationReason {
 	return &cancellationReason{
 		Id:         clubInfractionRs.ID(),
 		Deprecated: clubInfractionRs.Deprecated(),
@@ -47,7 +38,7 @@ func marshalCancellationReasonToDatabase(clubInfractionRs *cancellation.Reason) 
 	}
 }
 
-func (r CancellationCassandraRepository) CreateReason(ctx context.Context, reasonItem *cancellation.Reason) error {
+func (r BillingCassandraElasticsearchRepository) CreateCancellationReason(ctx context.Context, reasonItem *billing.CancellationReason) error {
 
 	if err := r.session.
 		Query(cancellationReasonsTable.Insert()).
@@ -60,7 +51,7 @@ func (r CancellationCassandraRepository) CreateReason(ctx context.Context, reaso
 	return nil
 }
 
-func (r CancellationCassandraRepository) GetReasons(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*cancellation.Reason, error) {
+func (r BillingCassandraElasticsearchRepository) GetCancellationReasons(ctx context.Context, cursor *paging.Cursor, deprecated bool) ([]*billing.CancellationReason, error) {
 
 	builder := cancellationReasonsTable.SelectBuilder()
 
@@ -82,7 +73,7 @@ func (r CancellationCassandraRepository) GetReasons(ctx context.Context, cursor 
 		return nil, fmt.Errorf("failed to get cancellationReason: %v", err)
 	}
 
-	var rulesItems []*cancellation.Reason
+	var rulesItems []*billing.CancellationReason
 	for _, ruleSingle := range dbRules {
 
 		// skip over deprecated
@@ -90,7 +81,7 @@ func (r CancellationCassandraRepository) GetReasons(ctx context.Context, cursor 
 			continue
 		}
 
-		reason := cancellation.UnmarshalReasonFromDatabase(
+		reason := billing.UnmarshalCancellationReasonFromDatabase(
 			ruleSingle.Id,
 			ruleSingle.Title,
 			ruleSingle.Deprecated,
@@ -102,7 +93,7 @@ func (r CancellationCassandraRepository) GetReasons(ctx context.Context, cursor 
 	return rulesItems, nil
 }
 
-func (r CancellationCassandraRepository) getReasonById(ctx context.Context, reasonId string) (*cancellation.Reason, error) {
+func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx context.Context, reasonId string) (*billing.CancellationReason, error) {
 
 	var ruleSingle cancellationReason
 
@@ -113,26 +104,26 @@ func (r CancellationCassandraRepository) getReasonById(ctx context.Context, reas
 		Get(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, cancellation.ErrReasonNotFound
+			return nil, billing.ErrReasonNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get cancellation reason by id: %v", err)
 	}
 
-	return cancellation.UnmarshalReasonFromDatabase(
+	return billing.UnmarshalCancellationReasonFromDatabase(
 		ruleSingle.Id,
 		ruleSingle.Title,
 		ruleSingle.Deprecated,
 	), nil
 }
 
-func (r CancellationCassandraRepository) GetReasonById(ctx context.Context, id string) (*cancellation.Reason, error) {
-	return r.getReasonById(ctx, id)
+func (r BillingCassandraElasticsearchRepository) GetCancellationReasonById(ctx context.Context, id string) (*billing.CancellationReason, error) {
+	return r.getCancellationReasonById(ctx, id)
 }
 
-func (r CancellationCassandraRepository) updateReason(ctx context.Context, ruleId string, updateFn func(reason *cancellation.Reason) error, columns []string) (*cancellation.Reason, error) {
+func (r BillingCassandraElasticsearchRepository) updateCancellationReason(ctx context.Context, ruleId string, updateFn func(reason *billing.CancellationReason) error, columns []string) (*billing.CancellationReason, error) {
 
-	ruleItem, err := r.getReasonById(ctx, ruleId)
+	ruleItem, err := r.getCancellationReasonById(ctx, ruleId)
 
 	if err != nil {
 		return nil, err
@@ -157,10 +148,10 @@ func (r CancellationCassandraRepository) updateReason(ctx context.Context, ruleI
 	return ruleItem, nil
 }
 
-func (r CancellationCassandraRepository) UpdateReasonDeprecated(ctx context.Context, reasonId string, updateFn func(reason *cancellation.Reason) error) (*cancellation.Reason, error) {
-	return r.updateReason(ctx, reasonId, updateFn, []string{"deprecated"})
+func (r BillingCassandraElasticsearchRepository) UpdateCancellationReasonDeprecated(ctx context.Context, reasonId string, updateFn func(reason *billing.CancellationReason) error) (*billing.CancellationReason, error) {
+	return r.updateCancellationReason(ctx, reasonId, updateFn, []string{"deprecated"})
 }
 
-func (r CancellationCassandraRepository) UpdateReasonTitle(ctx context.Context, reasonId string, updateFn func(reason *cancellation.Reason) error) (*cancellation.Reason, error) {
-	return r.updateReason(ctx, reasonId, updateFn, []string{"title"})
+func (r BillingCassandraElasticsearchRepository) UpdateCancellationReasonTitle(ctx context.Context, reasonId string, updateFn func(reason *billing.CancellationReason) error) (*billing.CancellationReason, error) {
+	return r.updateCancellationReason(ctx, reasonId, updateFn, []string{"title"})
 }
