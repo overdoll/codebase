@@ -5,7 +5,6 @@ import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import StaffAssignArtistButton from './StaffAssignArtistButton/StaffAssignArtistButton'
 import StaffRevokeArtistButton from './StaffRevokeArtistButton/StaffRevokeArtistButton'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   query: StaffAssignArtistFragment$key
@@ -14,7 +13,6 @@ interface Props {
 const Fragment = graphql`
   fragment StaffAssignArtistFragment on Account {
     isArtist
-    isSecure
     ...StaffAssignArtistButtonFragment
     ...StaffRevokeArtistButtonFragment
   }
@@ -53,16 +51,6 @@ export default function StaffAssignArtist ({ query }: Props): JSX.Element {
               </Trans>
             </Text>
           </LargeBackgroundBox>)}
-      {!data.isSecure && (
-        <Alert status='info'>
-          <AlertIcon />
-          <AlertDescription>
-            <Trans>
-              Account must enable multi factor before assigning artist role
-            </Trans>
-          </AlertDescription>
-        </Alert>
-      )}
       {data.isArtist
         ? <StaffRevokeArtistButton query={data} />
         : <StaffAssignArtistButton query={data} />}

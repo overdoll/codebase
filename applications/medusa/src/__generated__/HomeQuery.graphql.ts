@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<94ac5169c940d8a2ef25e54dc8084663>>
- * @relayHash 927c8c9b0eeaeceafff19ea3fcd160f9
+ * @generated SignedSource<<5280b63819017b63e6d9f755dfedd520>>
+ * @relayHash f79ce9826cb339b87a1d72084a8f7bd0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 927c8c9b0eeaeceafff19ea3fcd160f9
+// @relayRequestID f79ce9826cb339b87a1d72084a8f7bd0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type HomeQuery$variables = {};
 export type HomeQueryVariables = HomeQuery$variables;
 export type HomeQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "NewAccountModalFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "CurationProfileAlertFragment" | "AccountInformationBannerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
@@ -163,7 +163,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "NewAccountModalFragment"
+            "name": "CurationProfileAlertFragment"
           },
           {
             "args": null,
@@ -431,6 +431,26 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
+          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CurationProfile",
+            "kind": "LinkedField",
+            "name": "curationProfile",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "completed",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -475,7 +495,7 @@ return {
     ]
   },
   "params": {
-    "id": "927c8c9b0eeaeceafff19ea3fcd160f9",
+    "id": "f79ce9826cb339b87a1d72084a8f7bd0",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",
@@ -484,7 +504,7 @@ return {
 };
 })();
 
-(node as any).hash = "8842850138f490b31d9e747161281b02";
+(node as any).hash = "9bc24789394f12164280f786417c33e0";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

@@ -237,3 +237,59 @@ Cypress.Commands.add('createClub', (name: string) => {
       expect(body.data.createClub.club).to.not.equal(null)
     })
 })
+
+Cypress.Commands.add('assignArtistRole', (username: string) => {
+  const getAccountIdByUsername = `query AccountQuery($username: $string!) {
+    account(username: $username) {
+      id
+      username
+    }
+  }`
+
+  const assignArtistRoleMutation = `mutation ArtistMutation($input: AssignAccountArtistRole!) {
+    assignAccountArtistRole(input: $input) {
+      account {
+        id
+        username
+        isArtist
+      }
+    }
+  }`
+
+  cy.joinWithNewAccount('0eclipse')
+
+  cy
+    .request(
+      {
+        ...getGraphqlRequest(),
+        body: {
+          query: getAccountIdByUsername,
+          variables: {
+            input: {
+              username: username
+            }
+          }
+        },
+        retryOnNetworkFailure: false
+      }
+    ).then(({ body }) => {
+      expect(body.data.account).to.not.equal(null)
+      cy
+        .request(
+          {
+            ...getGraphqlRequest(),
+            body: {
+              query: assignArtistRoleMutation,
+              variables: {
+                input: {
+                  accountId: body.data.account.id
+                }
+              }
+            },
+            retryOnNetworkFailure: false
+          }
+        ).then(({ body }) => {
+          expect(body.data.assignAccountArtistRole.account.isArtist).to.equal(true)
+        })
+    })
+})

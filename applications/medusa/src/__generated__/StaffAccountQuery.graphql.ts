@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7bea6ed5046f7f5aec7d158b3e0a4964>>
- * @relayHash 0d5fdb2076a68f37708f776151c19c25
+ * @generated SignedSource<<7c6ab8a6963671ab12c456b46237bc06>>
+ * @relayHash 8987f5aacdbe50652246dd8b8a7ff701
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0d5fdb2076a68f37708f776151c19c25
+// @relayRequestID 8987f5aacdbe50652246dd8b8a7ff701
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -300,13 +300,6 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "isArtist",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isSecure",
             "storageKey": null
           },
           {
@@ -696,7 +689,7 @@ return {
     ]
   },
   "params": {
-    "id": "0d5fdb2076a68f37708f776151c19c25",
+    "id": "8987f5aacdbe50652246dd8b8a7ff701",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

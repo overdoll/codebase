@@ -13,7 +13,6 @@ interface Props {
 const Fragment = graphql`
   fragment StaffAssignArtistButtonFragment on Account {
     id
-    isSecure
   }
 `
 
@@ -63,7 +62,6 @@ export default function StaffAssignArtistButton ({
   return (
     <Button
       isLoading={isInFlight}
-      isDisabled={!data.isSecure}
       onClick={onSubmit}
       w='100%'
       size='md'

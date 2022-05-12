@@ -43,7 +43,7 @@ const InviteOnly: PageProps<{}> = () => {
                 In order to create posts and collect subscription revenue,
                 <HighlightInline {...HIGHLIGHT_PROPS}> you must submit an application and get
                   approved to be an Aritst on the platform
-                </HighlightInline>. For anything else, access is unrestricted.
+                </HighlightInline>. For everything else, access is unrestricted.
               </Trans>
             </Text>
           </Stack>
@@ -129,8 +129,8 @@ const InviteOnly: PageProps<{}> = () => {
                 <Trans>
                   Regardless of whether you are a fan or an artist, feel free to create an account and start exploring
                   the
-                  platform. If you know any artists, you may also link them this page to encourage them to submit an
-                  application
+                  platform. If you know any interested artists, you may also link them this page to encourage them to
+                  submit an application.
                 </Trans>
               </Text>
             </Stack>

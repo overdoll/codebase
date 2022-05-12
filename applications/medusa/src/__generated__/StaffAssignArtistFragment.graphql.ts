@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8ccc75afd3eefbd0722286720c64ddf>>
+ * @generated SignedSource<<e4de921e0bf99217f8792cf751876c9b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffAssignArtistFragment$data = {
   readonly isArtist: boolean;
-  readonly isSecure: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAssignArtistButtonFragment" | "StaffRevokeArtistButtonFragment">;
   readonly " $fragmentType": "StaffAssignArtistFragment";
 };
@@ -36,13 +35,6 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "isSecure",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffAssignArtistButtonFragment"
@@ -57,6 +49,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "72f7f8d1951463dc3fa95f5593cada92";
+(node as any).hash = "a622bacc410cd914778e0f0221a9c98e";
 
 export default node;
