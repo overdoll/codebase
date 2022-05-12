@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"strings"
 	"time"
 
@@ -365,8 +366,6 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 // CreateAccount - Ensure we create a unique user by using lightweight transactions
 func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance *account.Account) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
 	// TODO: it would be nice if this was part of the batch statement but it seems like gocql and cassandra
 	// TODO: are overloaded or timeout because it's a unique insert
 	if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
@@ -389,31 +388,39 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 		return err
 	}
 
-	// create a table that holds all the user's emails
-	stmt, _ := emailByAccountTable.Insert()
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	batch.Query(stmt, instance.ID(), instance.Email(), 2)
+	// create a table that holds all the user's emails
+	stmt, names := emailByAccountTable.Insert()
+
+	batch.Query(stmt,
+		support.BindStructFromArgs(names, emailByAccount{
+			Email:     instance.Email(),
+			AccountId: instance.ID(),
+			Status:    2,
+		})...,
+	)
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
-	stmt, _ = accountTable.Insert()
+	stmt, names = accountTable.Insert()
 
-	batch.Query(stmt,
-		instance.ID(),
-		instance.Username(),
-		instance.Email(),
-		instance.RolesAsString(),
-		instance.Verified(),
-		instance.AvatarResourceId(),
-		instance.Locked(),
-		instance.LockedUntil(),
-		instance.IsDeleting(),
-		instance.ScheduledDeletionAt(),
-		instance.ScheduledDeletionWorkflowId(),
-		instance.IsDeleted(),
-		instance.LastUsernameEdit(),
-		instance.MultiFactorEnabled(),
-	)
+	batch.Query(stmt, support.BindStructFromArgs(names, accounts{
+		Id:                          instance.ID(),
+		Username:                    instance.Username(),
+		Email:                       instance.Email(),
+		Roles:                       instance.RolesAsString(),
+		Verified:                    instance.Verified(),
+		AvatarResourceId:            instance.AvatarResourceId(),
+		Locked:                      instance.Locked(),
+		LockedUntil:                 instance.LockedUntil(),
+		Deleting:                    instance.IsDeleting(),
+		ScheduledDeletionAt:         instance.ScheduledDeletionAt(),
+		ScheduledDeletionWorkflowId: instance.ScheduledDeletionWorkflowId(),
+		Deleted:                     instance.IsDeleted(),
+		LastUsernameEdit:            instance.LastUsernameEdit(),
+		MultiFactorEnabled:          instance.MultiFactorEnabled(),
+	})...)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
@@ -605,8 +612,12 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 		batch := r.session.NewBatch(gocql.LoggedBatch)
 
 		// finally, update account
-		stmt, _ := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
-		batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
+		stmt, names := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
+		batch.Query(stmt, support.BindStructFromArgs(names, accounts{
+			Id:               instance.ID(),
+			Username:         instance.Username(),
+			LastUsernameEdit: instance.LastUsernameEdit(),
+		})...)
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
 
