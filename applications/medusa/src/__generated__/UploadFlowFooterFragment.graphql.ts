@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e3cedaa3785cffa4b24d77595b904ce>>
+ * @generated SignedSource<<10b3f25b12e43ec52b30d962f504a701>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadFlowFooterFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"UpdateContentButtonFragment" | "UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "SubmitPostButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "SubmitPostButtonFragment">;
   readonly " $fragmentType": "UploadFlowFooterFragment";
 };
 export type UploadFlowFooterFragment = UploadFlowFooterFragment$data;
@@ -26,11 +26,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "UploadFlowFooterFragment",
   "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UpdateContentButtonFragment"
-    },
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -56,6 +51,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "51b3f4d05c345fccbeea5ea0491b989d";
+(node as any).hash = "6912d711114df27c502ac180a276085a";
 
 export default node;

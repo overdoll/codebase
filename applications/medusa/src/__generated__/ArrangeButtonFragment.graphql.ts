@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83b665abeee9c87b576861d3299515c9>>
+ * @generated SignedSource<<f4e9112b54eb6262d81cfce11bb3cba4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,17 +10,18 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UpdateContentButtonFragment$data = {
+export type ArrangeButtonFragment$data = {
   readonly id: string;
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly __typename: string;
   }>;
-  readonly " $fragmentType": "UpdateContentButtonFragment";
+  readonly " $fragmentType": "ArrangeButtonFragment";
 };
-export type UpdateContentButtonFragment = UpdateContentButtonFragment$data;
-export type UpdateContentButtonFragment$key = {
-  readonly " $data"?: UpdateContentButtonFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UpdateContentButtonFragment">;
+export type ArrangeButtonFragment = ArrangeButtonFragment$data;
+export type ArrangeButtonFragment$key = {
+  readonly " $data"?: ArrangeButtonFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ArrangeButtonFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -35,7 +36,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "UpdateContentButtonFragment",
+  "name": "ArrangeButtonFragment",
   "selections": [
     (v0/*: any*/),
     {
@@ -46,7 +47,14 @@ return {
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "__typename",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -56,6 +64,6 @@ return {
 };
 })();
 
-(node as any).hash = "bd3c18f89bc80017d72e0511fcb9ef6b";
+(node as any).hash = "a5b783ab61a8d54f4186470f117d0286";
 
 export default node;

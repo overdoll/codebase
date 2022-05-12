@@ -19,6 +19,8 @@ import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { resetServerContext } from 'react-beautiful-dnd'
 
 interface Props {
   queryRefs: {
@@ -54,6 +56,7 @@ interface SequenceProps {
   isProcessing: boolean
   isInReview: boolean
   isSubmitted: boolean
+  isRearranging: boolean
 }
 
 const defaultValue: SequenceProps = {
@@ -66,7 +69,8 @@ const defaultValue: SequenceProps = {
   categories: {},
   isProcessing: false,
   isInReview: false,
-  isSubmitted: false
+  isSubmitted: false,
+  isRearranging: false
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
@@ -79,7 +83,8 @@ const resolver: SequenceResolver<SequenceProps> = {
   categories: ObjectResolver(),
   isProcessing: ValueResolver(),
   isInReview: ValueResolver(),
-  isSubmitted: ValueResolver()
+  isSubmitted: ValueResolver(),
+  isRearranging: ValueResolver()
 }
 
 const CreatePost: PageProps<Props> = (props: Props) => {
@@ -131,6 +136,12 @@ const CreatePost: PageProps<Props> = (props: Props) => {
       </PageWrapper>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  resetServerContext()
+
+  return { props: { data: [] } }
 }
 
 export default CreatePost

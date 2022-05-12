@@ -7,7 +7,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
 import { Icon } from '@//:modules/content/PageLayout'
-import { PremiumStar, PremiumStarHollow } from '@//:assets/icons'
+import { DragReorder, PremiumStar, PremiumStarHollow } from '@//:assets/icons'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 
 interface Props {
@@ -17,7 +17,6 @@ interface Props {
   dragDisabled: boolean
   query: DraggableContentFragment$key
   isSupportingContent: boolean
-  removeDisabled: boolean
   h: number
 }
 
@@ -36,7 +35,6 @@ export default function DraggableContent ({
   index,
   dragDisabled,
   query,
-  removeDisabled,
   onSupport,
   h,
   isSupportingContent
@@ -69,40 +67,52 @@ export default function DraggableContent ({
             <ResourceInfo query={data} />
           </Flex>
           <Flex align='center' justify='center' w='38%'>
-            <Tooltip
-              placement='bottom'
-              label={(
-                <Trans>
-                  Mark this content as Supporter Only
-                </Trans>)}
-            >
-              <IconButton
-                aria-label={i18n._(t`Supporter Only`)}
-                borderRadius='xl'
-                size='lg'
-                isLoading={isSupportingContent}
-                variant='ghost'
-                icon={(
-                  <Icon
-                    p={2}
-                    icon={data.isSupporterOnly ? PremiumStar : PremiumStarHollow}
-                    fill={data.isSupporterOnly ? 'orange.400' : 'gray.200'}
-                    h='100%'
-                    w='100%'
-                  />)}
-                onClick={() => onSupport(data.resource.id, !data.isSupporterOnly)}
-              />
-            </Tooltip>
+            {dragDisabled && (
+              <Tooltip
+                placement='bottom'
+                label={(
+                  <Trans>
+                    Mark this content as Supporter Only
+                  </Trans>)}
+              >
+                <IconButton
+                  aria-label={i18n._(t`Supporter Only`)}
+                  borderRadius='xl'
+                  size='lg'
+                  isLoading={isSupportingContent}
+                  variant='ghost'
+                  icon={(
+                    <Icon
+                      p={2}
+                      icon={data.isSupporterOnly ? PremiumStar : PremiumStarHollow}
+                      fill={data.isSupporterOnly ? 'orange.400' : 'gray.200'}
+                      h='100%'
+                      w='100%'
+                    />)}
+                  onClick={() => onSupport(data.resource.id, !data.isSupporterOnly)}
+                />
+              </Tooltip>
+            )}
+
           </Flex>
-          <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>
-            {!removeDisabled &&
-              <CloseButton
-                size='md'
-                aria-label={i18n._(t`Remove Upload`)}
-                m={2}
-                isDisabled={dragDisabled}
-                onClick={() => onRemove(data.resource.id)}
-              />}
+          <Flex align='center' bg='gray.700' w='12%' justify='center'>
+            {dragDisabled
+              ? (
+                <CloseButton
+                  isDisabled={isSupportingContent}
+                  size='md'
+                  aria-label={i18n._(t`Remove Upload`)}
+                  m={2}
+                  onClick={() => onRemove(data.resource.id)}
+                />)
+              : (
+                <Icon
+                  icon={DragReorder}
+                  fill='gray.400'
+                  h={8}
+                  w={8}
+                />
+                )}
           </Flex>
         </Flex>
       )}

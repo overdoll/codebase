@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<07e57f61d8657f138f798326a18cbb70>>
- * @relayHash 3f9ead09ba7b3ff6dbe83df766038b23
+ * @generated SignedSource<<fc4d749856050e22be38601686c5dedc>>
+ * @relayHash b967fc979637ab4b3429d5fbf634d9d7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3f9ead09ba7b3ff6dbe83df766038b23
+// @relayRequestID b967fc979637ab4b3429d5fbf634d9d7
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -17,11 +17,11 @@ export type UpdatePostContentOrderInput = {
   contentIds: ReadonlyArray<string>;
   id: string;
 };
-export type UpdateContentButtonMutation$variables = {
+export type ArrangeButtonMutation$variables = {
   input: UpdatePostContentOrderInput;
 };
-export type UpdateContentButtonMutationVariables = UpdateContentButtonMutation$variables;
-export type UpdateContentButtonMutation$data = {
+export type ArrangeButtonMutationVariables = ArrangeButtonMutation$variables;
+export type ArrangeButtonMutation$data = {
   readonly updatePostContentOrder: {
     readonly post: {
       readonly id: string;
@@ -39,10 +39,10 @@ export type UpdateContentButtonMutation$data = {
     } | null;
   } | null;
 };
-export type UpdateContentButtonMutationResponse = UpdateContentButtonMutation$data;
-export type UpdateContentButtonMutation = {
-  variables: UpdateContentButtonMutationVariables;
-  response: UpdateContentButtonMutation$data;
+export type ArrangeButtonMutationResponse = ArrangeButtonMutation$data;
+export type ArrangeButtonMutation = {
+  variables: ArrangeButtonMutationVariables;
+  response: ArrangeButtonMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -111,7 +111,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "UpdateContentButtonMutation",
+    "name": "ArrangeButtonMutation",
     "selections": [
       {
         "alias": null,
@@ -170,7 +170,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "UpdateContentButtonMutation",
+    "name": "ArrangeButtonMutation",
     "selections": [
       {
         "alias": null,
@@ -225,15 +225,15 @@ return {
     ]
   },
   "params": {
-    "id": "3f9ead09ba7b3ff6dbe83df766038b23",
+    "id": "b967fc979637ab4b3429d5fbf634d9d7",
     "metadata": {},
-    "name": "UpdateContentButtonMutation",
+    "name": "ArrangeButtonMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "332f558c862f6ea71bdfb9cef3fc973c";
+(node as any).hash = "20159bd194fd6dfdde504dee75a0bb0a";
 
 export default node;
