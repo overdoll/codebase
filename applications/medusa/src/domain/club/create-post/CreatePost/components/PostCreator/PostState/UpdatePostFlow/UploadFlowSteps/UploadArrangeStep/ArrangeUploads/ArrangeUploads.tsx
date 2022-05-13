@@ -1,7 +1,6 @@
-import { Box, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import DraggableContent from './DraggableContent/DraggableContent'
 import { useContext, useEffect, useState } from 'react'
 import { UppyContext } from '../../../../../../../context'
@@ -9,6 +8,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import ArrangeButton from './ArrangeButton/ArrangeButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { t } from '@lingui/macro'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: ArrangeUploadsFragment$key
@@ -177,7 +177,7 @@ export default function ArrangeUploads ({
     })
   }, [displayData])
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     setDisplayData(data.content)
   }, [data.content])
 
@@ -190,33 +190,24 @@ export default function ArrangeUploads ({
   return (
     <Stack spacing={2}>
       <ArrangeButton isDisabled={isRemovingContent || isSupportingContent} query={data} />
-      <Box>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId='upload'>
-            {(provided) => (
-              <Stack
-                spacing={2}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {displayData.map((item, index) => (
-                  <DraggableContent
-                    dragDisabled={!(state.isRearranging as boolean)}
-                    isSupportingContent={isSupportingContent}
-                    key={index}
-                    index={index}
-                    query={item}
-                    onRemove={onRemoveContent}
-                    onSupport={onSupporterContent}
-                    h={getHeight()}
-                  />
-                ))}
-                {provided.placeholder}
-              </Stack>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </Box>
+      <Stack
+        spacing={2}
+      >
+        {displayData.map((item, index) => (
+          <DraggableContent
+            onDragEnd={onDragEnd}
+            dragDisabled={!(state.isRearranging as boolean)}
+            isSupportingContent={isSupportingContent}
+            key={index}
+            index={index}
+            total={data.content.length}
+            query={item}
+            onRemove={onRemoveContent}
+            onSupport={onSupporterContent}
+            h={getHeight()}
+          />
+        ))}
+      </Stack>
     </Stack>
   )
 }
