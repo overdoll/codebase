@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"math"
 	"time"
 
@@ -32,65 +33,6 @@ type postDocument struct {
 	CreatedAt                       time.Time         `json:"created_at"`
 	PostedAt                        *time.Time        `json:"posted_at"`
 }
-
-const postIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"state": {
-					"type": "keyword"
-				},
-				"supporter_only_status": {
-					"type": "keyword"
-				},
-				"likes": {
-					"type": "integer"
-				},
-				"contributor_id": {
-					"type": "keyword"
-				},
-				"audience_id": {
-					"type": "keyword"
-				},
-                "club_id": {
-					"type": "keyword"
-				},
-				"category_ids": {
-					"type": "keyword"
-				},
-				"character_ids": {
-					"type": "keyword"
-				},
-				"series_ids": {
-					"type": "keyword"
-				},
-				"content_resource_ids": {
-                     "type": "keyword"
-				},
-				"content_supporter_only": {
-                     "type": "object",
-					 "dynamic": true
-				},
-				"content_supporter_only_resource_ids": {
-                     "type": "object",
-					 "dynamic": true
-				},
-				"created_at": {
-                     "type": "date"
-				},			
-				"posted_at": {
-                     "type": "date"
-				},
-				"reassignment_at": {
-                     "type": "date"
-				}
-			}
-	}
-}`
 
 const PostIndexName = "posts"
 
@@ -202,6 +144,8 @@ func (r PostsCassandraElasticsearchRepository) indexPost(ctx context.Context, po
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index post: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return fmt.Errorf("failed to index post: %v", err)
 	}
 
@@ -220,6 +164,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total likes for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -239,6 +185,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCharacterOperator
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total posts for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -257,6 +205,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForAudienceOperator(
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total likes for audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -276,6 +226,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForAudienceOperator(
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total posts for audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -294,6 +246,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForSeriesOperator(ct
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total likes for series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -313,6 +267,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ct
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total posts for series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -331,6 +287,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total likes for category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -350,6 +308,8 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to get total posts for category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 
@@ -393,6 +353,8 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search club members post feed: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
@@ -469,11 +431,9 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search posts feed: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed to search posts: %v", err)
-	}
-
-	if err != nil {
-		return nil, err
 	}
 
 	var posts []*post.Post
@@ -522,6 +482,8 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search posts: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, err
 	}
 
@@ -601,7 +563,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 	return posts, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllPosts(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -670,35 +632,4 @@ func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.C
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deletePostIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(PostIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(PostIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(PostIndexName).BodyString(postIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreatePostIndex(ctx context.Context) error {
-
-	if err := r.deletePostIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllPosts(ctx)
 }

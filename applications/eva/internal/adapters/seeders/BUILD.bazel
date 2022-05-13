@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "seeders",
+    srcs = ["seeders.go"],
+    embedsrcs = [
+        "data/account_emails.json",
+        "data/account_usernames.json",
+        "data/accounts.json",
+        "data/emails_by_account.json",
+    ],
+    importpath = "overdoll/applications/eva/internal/adapters/seeders",
+    visibility = ["//applications/eva:__subpackages__"],
+    deps = [
+        "//libraries/database",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+    ],
+)

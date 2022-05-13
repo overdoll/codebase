@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -71,6 +72,8 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return err
 	}
 
@@ -127,6 +130,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, err
 	}
 

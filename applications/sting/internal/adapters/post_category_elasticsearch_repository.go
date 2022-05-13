@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -63,6 +64,8 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return fmt.Errorf("failed to index category: %v", err)
 	}
 
@@ -117,6 +120,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	response, err := builder.Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search categories: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed to search categories: %v", err)
 	}
 

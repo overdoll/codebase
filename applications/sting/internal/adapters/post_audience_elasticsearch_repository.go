@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -103,6 +104,8 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search audiences: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed search audiences: %v", err)
 	}
 
@@ -143,6 +146,8 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return err
 	}
 

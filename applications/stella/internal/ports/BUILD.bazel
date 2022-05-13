@@ -3,7 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "ports",
     srcs = [
-        "cli.go",
         "grpc.go",
         "http.go",
         "worker.go",
@@ -17,14 +16,12 @@ go_library(
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/ports/graphql",
         "//applications/stella/internal/ports/graphql/dataloader",
-        "//applications/stella/internal/service",
         "//applications/stella/proto:v1_go_proto",
         "//libraries/clients",
         "//libraries/graphql",
         "//libraries/principal",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
-        "@com_github_spf13_cobra//:cobra",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//worker",

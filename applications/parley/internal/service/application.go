@@ -72,12 +72,12 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 	return app.Application{
 		Commands: app.Commands{
 			PutPostIntoModeratorQueueOrPublish: command.NewPutPostIntoModeratorQueueOrPublishHandler(moderatorRepo, eventRepo, sting),
-			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo, eva),
+			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo),
 			RemoveModeratorFromPostQueue:       command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
 			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting, stella),
-			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, moderatorRepo, eventRepo, eva, sting),
-			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting, stella),
+			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, moderatorRepo, eventRepo, sting),
+			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, sting),
 
 			CreateRule:            command.NewCreateRuleHandler(ruleRepo),
 			UpdateRuleInfraction:  command.NewUpdateRuleInfractionHandler(ruleRepo),
@@ -87,12 +87,10 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 			DeleteAccountData: command.NewDeleteAccountDataHandler(reportRepo),
 
-			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, eva, sting),
+			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, sting),
 
 			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, stella),
 			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
-
-			DeleteAndRecreatePostReportsIndex: command.NewDeleteAndRecreateClubMembersIndexHandler(reportRepo),
 		},
 		Queries: app.Queries{
 			ClubInfractionHistory: query.NewClubInfractionHistoryByAccountHandler(clubInfractionRepo),

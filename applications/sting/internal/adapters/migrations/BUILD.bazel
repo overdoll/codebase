@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "audience.go",
+        "category.go",
+        "character.go",
+        "migrations.go",
+        "series.go",
+    ],
+    embedsrcs = ["cql/1614606770_create_posts.cql"],
+    importpath = "overdoll/applications/sting/internal/adapters/migrations",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//applications/sting/internal/adapters",
+        "//libraries/bootstrap",
+        "//libraries/database",
+        "//libraries/localization",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+    ],
+)

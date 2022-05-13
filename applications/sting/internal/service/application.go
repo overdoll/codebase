@@ -85,12 +85,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AddTerminatedClub:    command.NewAddTerminatedClubHandler(postRepo),
 			RemoveTerminatedClub: command.NewRemoveTerminatedClubHandler(postRepo),
 
-			DeleteAndRecreatePostsIndex:      command.NewDeleteAndRecreatePostsIndexHandler(postRepo),
-			DeleteAndRecreateSeriesIndex:     command.NewDeleteAndRecreateSeriesIndexHandler(postRepo),
-			DeleteAndRecreateCharactersIndex: command.NewDeleteAndRecreateCharactersIndexHandler(postRepo),
-			DeleteAndRecreateCategoriesIndex: command.NewDeleteAndRecreateCategoriesIndexHandler(postRepo),
-			DeleteAndRecreateAudienceIndex:   command.NewDeleteAndRecreateAudienceIndexHandler(postRepo),
-
 			AddPostContent:                   command.NewAddPostContentHandler(postRepo, loader),
 			RemovePostContent:                command.NewRemovePostContentHandler(postRepo),
 			UpdatePostContentOrder:           command.NewUpdatePostContentOrderHandler(postRepo),

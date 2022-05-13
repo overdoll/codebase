@@ -37,6 +37,7 @@ go_library(
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/scan",
+        "//libraries/support",
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_olivere_elastic_v7//:elastic",

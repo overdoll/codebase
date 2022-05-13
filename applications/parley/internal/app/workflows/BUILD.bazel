@@ -9,6 +9,7 @@ go_library(
         "put_post_into_moderator_queue.go",
         "reject_post.go",
         "remove_post.go",
+        "report_post.go",
     ],
     importpath = "overdoll/applications/parley/internal/app/workflows",
     visibility = ["//applications/parley:__subpackages__"],

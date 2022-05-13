@@ -5,5 +5,4 @@ go_library(
     srcs = ["bucket.go"],
     importpath = "overdoll/libraries/bucket",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_segmentio_ksuid//:ksuid"],
 )

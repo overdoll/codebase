@@ -5,5 +5,10 @@ go_library(
     srcs = ["repository.go"],
     importpath = "overdoll/applications/parley/internal/domain/event",
     visibility = ["//applications/parley:__subpackages__"],
-    deps = ["//libraries/principal"],
+    deps = [
+        "//applications/parley/internal/domain/moderator",
+        "//applications/parley/internal/domain/report",
+        "//applications/parley/internal/domain/rule",
+        "//libraries/principal",
+    ],
 )

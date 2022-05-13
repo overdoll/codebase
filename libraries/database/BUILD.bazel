@@ -18,3 +18,23 @@ go_library(
         "@org_uber_go_zap//:zap",
     ],
 )
+
+go_library(
+    name = "database",
+    srcs = [
+        "config.go",
+        "db.go",
+        "migrate.go",
+        "seed.go",
+    ],
+    importpath = "overdoll/libraries/database",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/bootstrap",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_uber_go_zap//:zap",
+    ],
+)

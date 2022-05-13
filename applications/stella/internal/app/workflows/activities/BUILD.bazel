@@ -4,11 +4,12 @@ go_library(
     name = "activities",
     srcs = [
         "activities.go",
-        "add_club_member_if_not_exists.go",
         "add_club_member_to_list.go",
         "add_terminated_club.go",
+        "check_if_account_is_club_member.go",
         "club_supporter_no_posts.go",
         "club_supporter_required_post_reminder.go",
+        "create_club.go",
         "mark_club_member_as_supporter.go",
         "remove_club_member_from_list.go",
         "remove_terminated_club.go",
