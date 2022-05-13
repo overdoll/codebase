@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -84,27 +85,25 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := postReportTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.PostId,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.RuleId,
+	stmt, names := postReportTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
-	stmt, _ = postReportsByAccountBucketsTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.Bucket,
+	stmt, names = postReportsByAccountBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
-	stmt, _ = postReportsByPostBucketsTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.PostId,
-		marshalledPostReport.Bucket,
+	stmt, names = postReportsByPostBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

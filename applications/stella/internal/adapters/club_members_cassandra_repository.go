@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -63,34 +64,77 @@ type clubMembersByAccount struct {
 }
 
 func (r ClubCassandraElasticsearchRepository) addDeleteInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string) error {
-	stmt, _ := clubMembersTable.Delete()
-
-	batch.Query(stmt, clubId, accountId)
+	stmt, names := clubMembersTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMember{
+			ClubId:          clubId,
+			MemberAccountId: accountId,
+		},
+	)
 
 	// insert into account's club list
-	stmt, _ = clubMembersByAccountTable.Delete()
-	batch.Query(stmt, clubId, accountId)
+	stmt, names = clubMembersByAccountTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMembersByAccount{
+			ClubId:          clubId,
+			MemberAccountId: accountId,
+		},
+	)
 
 	// insert into account's supported clubs
-	stmt, _ = accountSupportedClubsTable.Delete()
-	batch.Query(stmt, accountId, clubId)
+	stmt, names = accountSupportedClubsTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountSupportedClubs{
+			ClubId:    clubId,
+			AccountId: accountId,
+		},
+	)
 
 	return nil
 }
 
 func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, timestamp time.Time) error {
 
-	stmt, _ := clubMembersTable.Insert()
-
-	batch.Query(stmt, clubId, accountId, timestamp, true, timestamp, false)
+	stmt, names := clubMembersTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMember{
+			ClubId:          clubId,
+			MemberAccountId: accountId,
+			JoinedAt:        timestamp,
+			IsSupporter:     true,
+			SupporterSince:  &timestamp,
+		},
+	)
 
 	// insert into account's club list
-	stmt, _ = clubMembersByAccountTable.Insert()
-	batch.Query(stmt, clubId, accountId)
+	stmt, names = clubMembersByAccountTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMembersByAccount{
+			ClubId:          clubId,
+			MemberAccountId: accountId,
+		},
+	)
 
 	// insert into account's supported clubs
-	stmt, _ = accountSupportedClubsTable.Insert()
-	batch.Query(stmt, accountId, clubId)
+	stmt, names = accountSupportedClubsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountSupportedClubs{
+			ClubId:    clubId,
+			AccountId: accountId,
+		},
+	)
 
 	return nil
 }
@@ -107,12 +151,23 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := clubMembersTable.Insert()
-	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId, marshalled.JoinedAt, marshalled.IsSupporter, marshalled.SupporterSince)
+	stmt, names := clubMembersTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
+	)
 
 	// insert into account's club list
-	stmt, _ = clubMembersByAccountTable.Insert()
-	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId)
+	stmt, names = clubMembersByAccountTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMembersByAccount{
+			ClubId:          marshalled.ClubId,
+			MemberAccountId: marshalled.MemberAccountId,
+		},
+	)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -180,17 +235,34 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 		batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 		// delete from club members table
-		stmt, _ := clubMembersTable.Delete()
-
-		batch.Query(stmt, clubId, accountId)
+		stmt, names := clubMembersTable.Delete()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			member,
+		)
 
 		// delete from club members by account
-		stmt, _ = clubMembersByAccountTable.Delete()
-		batch.Query(stmt, accountId, clubId)
+		stmt, names = clubMembersByAccountTable.Delete()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			clubMembersByAccount{
+				ClubId:          clubId,
+				MemberAccountId: accountId,
+			},
+		)
 
 		// delete from supported clubs
-		stmt, _ = accountSupportedClubsTable.Delete()
-		batch.Query(stmt, accountId, clubId)
+		stmt, names = accountSupportedClubsTable.Delete()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			accountSupportedClubs{
+				ClubId:    clubId,
+				AccountId: accountId,
+			},
+		)
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
 			return fmt.Errorf("failed to delete account club memberships: %v", err)
@@ -240,14 +312,32 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	// delete from account's club list
-	stmt, _ := clubMembersByAccountTable.Delete()
-	batch.Query(stmt, marshalled.MemberAccountId, marshalled.ClubId)
+	stmt, names := clubMembersByAccountTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMembersByAccount{
+			ClubId:          marshalled.ClubId,
+			MemberAccountId: marshalled.MemberAccountId,
+		},
+	)
 
-	stmt, _ = clubMembersTable.Delete()
-	batch.Query(stmt, marshalled.ClubId, marshalled.MemberAccountId)
+	stmt, names = clubMembersTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
+	)
 
-	stmt, _ = accountSupportedClubsTable.Delete()
-	batch.Query(stmt, marshalled.MemberAccountId, marshalled.ClubId)
+	stmt, names = accountSupportedClubsTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountSupportedClubs{
+			ClubId:    marshalled.ClubId,
+			AccountId: marshalled.MemberAccountId,
+		},
+	)
 
 	// execute batch
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -338,15 +428,34 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := clubMembersTable.Update("is_supporter", "supporter_since")
-	batch.Query(stmt, clb.IsSupporter, clb.SupporterSince, clb.ClubId, clb.MemberAccountId)
+	stmt, names := clubMembersTable.Update("is_supporter", "supporter_since")
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clb,
+	)
 
 	if clb.IsSupporter {
-		stmt, _ = accountSupportedClubsTable.Insert()
-		batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
+		stmt, names = accountSupportedClubsTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			accountSupportedClubs{
+				ClubId:    clb.ClubId,
+				AccountId: clb.MemberAccountId,
+			},
+		)
+
 	} else {
-		stmt, _ = accountSupportedClubsTable.Delete()
-		batch.Query(stmt, clb.MemberAccountId, clb.ClubId)
+		stmt, names = accountSupportedClubsTable.Delete()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			accountSupportedClubs{
+				ClubId:    clb.ClubId,
+				AccountId: clb.MemberAccountId,
+			},
+		)
 	}
 
 	if err := r.indexClubMember(ctx, currentClub); err != nil {

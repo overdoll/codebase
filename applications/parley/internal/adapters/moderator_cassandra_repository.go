@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/support"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -135,24 +136,18 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 		SortKey:        gocql.UUIDFromTime(queue.PlacedAt()),
 	}
 
-	stmt, _ := accountPostModeratorsQueueTable.Insert()
-
-	batch.Query(stmt,
-		postModerator.AccountId,
-		postModerator.SortKey,
-		postModerator.PostId,
-		postModerator.PlacedAt,
-		postModerator.ReassignmentAt,
+	stmt, names := accountPostModeratorsQueueTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postModerator,
 	)
 
-	stmt, _ = postModeratorsTable.Insert()
-
-	batch.Query(stmt,
-		postModerator.PostId,
-		postModerator.AccountId,
-		postModerator.SortKey,
-		postModerator.PlacedAt,
-		postModerator.ReassignmentAt,
+	stmt, names = postModeratorsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postModerator,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

@@ -13,6 +13,7 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"strings"
 	"time"
 )
@@ -369,17 +370,35 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 	// put the new slug
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := clubTable.UpdateBuilder().Remove("slug_aliases").ToCql()
-
-	batch.Query(stmt, []string{aliasDefault}, clubId)
+	stmt, names := clubTable.UpdateBuilder().Remove("slug_aliases").ToCql()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubs{
+			Id:          clubId,
+			SlugAliases: []string{aliasDefault},
+		},
+	)
 
 	stmt, _ = clubTable.UpdateBuilder().Add("slug_aliases").ToCql()
-
-	batch.Query(stmt, []string{oldAliasDefault}, clubId)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubs{
+			Id:          clubId,
+			SlugAliases: []string{oldAliasDefault},
+		},
+	)
 
 	stmt, _ = clubTable.UpdateBuilder().Set("slug").ToCql()
-
-	batch.Query(stmt, aliasDefault, clubId)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubs{
+			Id:   clubId,
+			Slug: aliasDefault,
+		},
+	)
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -706,15 +725,23 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := clubTable.Insert()
+	stmt, names := clubTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		cla,
+	)
 
 	// create actual club table entry
-	batch.Query(stmt, cla.Id, cla.Slug, cla.SlugAliases, cla.Name, cla.ThumbnailResourceId, cla.MembersCount, cla.MembersCountLastUpdateId, cla.OwnerAccountId, cla.Suspended, cla.SuspendedUntil, cla.NextSupporterPostTime, cla.HasCreatedSupporterOnlyPost, cla.Terminated, cla.TerminatedByAccountId)
-
-	stmt, _ = accountClubsTable.Insert()
-
-	// create entry for account's clubs
-	batch.Query(stmt, cla.OwnerAccountId, cla.Id)
+	stmt, names = accountClubsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountClubs{
+			ClubId:    cla.Id,
+			AccountId: cla.OwnerAccountId,
+		},
+	)
 
 	if err := r.addInitialClubMemberToBatch(ctx, batch, cla.Id, cla.OwnerAccountId, time.Now()); err != nil {
 		return err

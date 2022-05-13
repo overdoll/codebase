@@ -14,6 +14,7 @@ import (
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -499,36 +500,18 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		LastInsertId:       gocql.UUIDFromTime(deposit.Timestamp()),
 	}
 
-	stmt, _ := depositRequestsTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Bucket,
-		marshalled.Id,
-		marshalled.LastDateForDeposit,
-		marshalled.BaseAmount,
-		marshalled.EstimatedFeeAmount,
-		marshalled.TotalAmount,
-		marshalled.Currency,
-		marshalled.PayoutMethod,
-		marshalled.PayoutIds,
-		marshalled.CreatedAt,
-		marshalled.LastInsertId,
+	stmt, names := depositRequestsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
-	stmt, _ = depositRequestsByMonthTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Bucket,
-		marshalled.Id,
-		marshalled.LastDateForDeposit,
-		marshalled.BaseAmount,
-		marshalled.EstimatedFeeAmount,
-		marshalled.TotalAmount,
-		marshalled.Currency,
-		marshalled.PayoutMethod,
-		marshalled.PayoutIds,
-		marshalled.CreatedAt,
-		marshalled.LastInsertId,
+	stmt, names = depositRequestsByMonthTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
 	stmt, _ = depositRequestsByMonthBucketsTable.Insert()

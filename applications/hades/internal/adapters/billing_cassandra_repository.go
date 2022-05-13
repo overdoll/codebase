@@ -15,6 +15,7 @@ import (
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -750,45 +751,30 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	stmt, _ := accountClubSupporterSubscriptionsTable.Insert()
-
-	batch.Query(stmt,
-		target.Id,
-		target.AccountId,
-		target.ClubId,
-		target.Status,
-		target.SupporterSince,
-		target.LastBillingDate,
-		target.NextBillingDate,
-		target.BillingAmount,
-		target.BillingCurrency,
-		target.CreatedAt,
-		target.CancelledAt,
-		target.ExpiredAt,
-		target.FailedAt,
-		target.CCBillErrorText,
-		target.CCBillErrorCode,
-		target.BillingFailureNextRetryDate,
-		target.EncryptedPaymentMethod,
-		target.CCBillSubscriptionId,
-		target.UpdatedAt,
-		target.CancellationReasonId,
-	)
-
 	bucket := bucket2.MakeMonthlyBucketFromTimestamp(target.CreatedAt)
 
-	stmt, _ = clubActiveSupporterSubscriptionsTable.Insert()
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	batch.Query(stmt,
-		bucket,
-		target.ClubId,
-		target.Id,
-		target.CCBillSubscriptionId,
+	stmt, names := accountClubSupporterSubscriptionsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		target,
 	)
 
-	stmt, _ = clubActiveSupporterSubscriptionsBucketsTable.Insert()
+	stmt, names = clubActiveSupporterSubscriptionsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubActiveSupporterSubscriptions{
+			ClubId:               target.ClubId,
+			Id:                   target.Id,
+			Bucket:               bucket,
+			CCBillSubscriptionId: target.CCBillSubscriptionId,
+		},
+	)
+
+	stmt, names = clubActiveSupporterSubscriptionsBucketsTable.Insert()
 
 	batch.Query(stmt,
 		target.ClubId,

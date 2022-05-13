@@ -14,6 +14,7 @@ import (
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 type postRule struct {
@@ -138,55 +139,43 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := postAuditLogTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names := postAuditLogTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
-	stmt, _ = postAuditLogByPostTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names = postAuditLogByPostTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
-	stmt, _ = postAuditLogByModeratorTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names = postAuditLogByModeratorTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
-	stmt, _ = postAuditLogByModeratorBucketsTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Bucket,
+	stmt, names = postAuditLogByModeratorBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
 	if marshalledAuditLog.RuleId != nil {
-		stmt, _ = postRuleTable.Insert()
-
-		batch.Query(stmt,
-			marshalledAuditLog.PostId,
-			*marshalledAuditLog.RuleId,
+		stmt, names = postRuleTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			postRule{
+				PostId: marshalledAuditLog.PostId,
+				RuleId: *marshalledAuditLog.RuleId,
+			},
 		)
 	}
 

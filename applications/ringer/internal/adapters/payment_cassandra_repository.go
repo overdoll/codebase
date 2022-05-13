@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -154,31 +155,18 @@ func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx contex
 		return err
 	}
 
-	stmt, _ := clubPaymentsTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Id,
-		marshalled.Source,
-		marshalled.Status,
-		marshalled.SettlementDate,
-		marshalled.SourceAccountId,
-		marshalled.AccountTransactionId,
-		marshalled.DestinationClubId,
-		marshalled.Currency,
-		marshalled.BaseAmount,
-		marshalled.PlatformFeeAmount,
-		marshalled.FinalAmount,
-		marshalled.IsDeduction,
-		marshalled.DeductionSourcePaymentId,
-		marshalled.CreatedAt,
-		marshalled.ClubPayoutIds,
+	stmt, names := clubPaymentsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
-	stmt, _ = clubPaymentsByTransactionTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.AccountTransactionId,
-		marshalled.Id,
+	stmt, names = clubPaymentsByTransactionTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

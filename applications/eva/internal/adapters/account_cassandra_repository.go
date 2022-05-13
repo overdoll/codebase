@@ -399,35 +399,39 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 
 	// create a table that holds all the user's emails
 	stmt, names := emailByAccountTable.Insert()
-
-	batch.Query(stmt,
-		support.BindStructFromArgs(names, emailByAccount{
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		emailByAccount{
 			Email:     instance.Email(),
 			AccountId: instance.ID(),
 			Status:    2,
-		})...,
+		},
 	)
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, names = accountTable.Insert()
-
-	batch.Query(stmt, support.BindStructFromArgs(names, accounts{
-		Id:                          instance.ID(),
-		Username:                    instance.Username(),
-		Email:                       instance.Email(),
-		Roles:                       instance.RolesAsString(),
-		Verified:                    instance.Verified(),
-		AvatarResourceId:            instance.AvatarResourceId(),
-		Locked:                      instance.Locked(),
-		LockedUntil:                 instance.LockedUntil(),
-		Deleting:                    instance.IsDeleting(),
-		ScheduledDeletionAt:         instance.ScheduledDeletionAt(),
-		ScheduledDeletionWorkflowId: instance.ScheduledDeletionWorkflowId(),
-		Deleted:                     instance.IsDeleted(),
-		LastUsernameEdit:            instance.LastUsernameEdit(),
-		MultiFactorEnabled:          instance.MultiFactorEnabled(),
-	})...)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accounts{
+			Id:                          instance.ID(),
+			Username:                    instance.Username(),
+			Email:                       instance.Email(),
+			Roles:                       instance.RolesAsString(),
+			Verified:                    instance.Verified(),
+			AvatarResourceId:            instance.AvatarResourceId(),
+			Locked:                      instance.Locked(),
+			LockedUntil:                 instance.LockedUntil(),
+			Deleting:                    instance.IsDeleting(),
+			ScheduledDeletionAt:         instance.ScheduledDeletionAt(),
+			ScheduledDeletionWorkflowId: instance.ScheduledDeletionWorkflowId(),
+			Deleted:                     instance.IsDeleted(),
+			LastUsernameEdit:            instance.LastUsernameEdit(),
+			MultiFactorEnabled:          instance.MultiFactorEnabled(),
+		},
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
@@ -621,13 +625,17 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 
 		batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-		// finally, update account
 		stmt, names := accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
-		batch.Query(stmt, support.BindStructFromArgs(names, accounts{
-			Id:               instance.ID(),
-			Username:         instance.Username(),
-			LastUsernameEdit: instance.LastUsernameEdit(),
-		})...)
+
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			accounts{
+				Id:               instance.ID(),
+				Username:         instance.Username(),
+				LastUsernameEdit: instance.LastUsernameEdit(),
+			},
+		)
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
 

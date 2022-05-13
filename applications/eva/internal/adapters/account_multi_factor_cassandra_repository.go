@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 var accountMultiFactorTotpTable = table.New(table.Metadata{
@@ -65,7 +66,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 
 	// insert recovery codes
 	for _, code := range codes {
-		stmt, _ := accountMultiFactorRecoveryCodeTable.Insert()
+		stmt, names := accountMultiFactorRecoveryCodeTable.Insert()
 
 		encrypt, err := crypt.Encrypt(code.Code())
 
@@ -73,7 +74,14 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 			return fmt.Errorf("failed to encrypt recovery code: %v", err)
 		}
 
-		batch.Query(stmt, accountId, encrypt)
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			accountMultiFactorRecoveryCodes{
+				AccountId: accountId,
+				Code:      encrypt,
+			},
+		)
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -239,13 +247,27 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := accountMultiFactorTotpTable.Insert()
+	stmt, names := accountMultiFactorTotpTable.Insert()
 
-	batch.Query(stmt, acc.ID(), encryptedOTP)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountMultiFactorTOTP{
+			AccountId: acc.ID(),
+			Secret:    encryptedOTP,
+		},
+	)
 
-	stmt, _ = accountTable.Update("multi_factor_enabled")
+	stmt, names = accountTable.Update("multi_factor_enabled")
 
-	batch.Query(stmt, acc.ID(), true)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accounts{
+			Id:                 acc.ID(),
+			MultiFactorEnabled: true,
+		},
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create multi factor account: %v", err)
@@ -262,13 +284,26 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := accountMultiFactorTotpTable.Delete()
+	stmt, names := accountMultiFactorTotpTable.Delete()
 
-	batch.Query(stmt, acc.ID())
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountMultiFactorTOTP{
+			AccountId: acc.ID(),
+		},
+	)
 
-	stmt, _ = accountTable.Update("multi_factor_enabled")
+	stmt, names = accountTable.Update("multi_factor_enabled")
 
-	batch.Query(stmt, acc.ID(), false)
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accounts{
+			Id:                 acc.ID(),
+			MultiFactorEnabled: true,
+		},
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to delete multi factor account: %v", err)

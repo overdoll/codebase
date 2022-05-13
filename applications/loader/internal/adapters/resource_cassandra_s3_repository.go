@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -248,23 +249,11 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 
 	for _, r := range res {
 		// remove selected resources
-		stmt, _ := resourcesTable.Insert()
-
-		marshalled := marshalResourceToDatabase(r)
-
-		batch.Query(stmt,
-			marshalled.ItemId,
-			marshalled.ResourceId,
-			marshalled.Type,
-			marshalled.IsPrivate,
-			marshalled.MimeTypes,
-			marshalled.Processed,
-			marshalled.ProcessedId,
-			marshalled.VideoDuration,
-			marshalled.VideoThumbnail,
-			marshalled.VideoThumbnailMimeType,
-			marshalled.Width,
-			marshalled.Height,
+		stmt, names := resourcesTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			marshalResourceToDatabase(r),
 		)
 	}
 
@@ -408,7 +397,8 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	for _, r := range res {
-		stmt, _ := resourcesTable.Update(
+
+		stmt, names := resourcesTable.Update(
 			"mime_types",
 			"processed",
 			"processed_id",
@@ -419,7 +409,11 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"height",
 		)
 
-		batch.Query(stmt, r.MimeTypes(), r.IsProcessed(), r.ProcessedId(), r.VideoDuration(), r.VideoThumbnail(), r.VideoThumbnailMimeType(), r.Width(), r.Height(), r.ItemId(), r.ID())
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			marshalResourceToDatabase(r),
+		)
 	}
 
 	// execute batch.

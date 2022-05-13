@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -69,17 +70,26 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 		LikedAt:        like.LikedAt(),
 	}
 
-	stmt, _ := postLikeTable.Insert()
+	stmt, names := postLikeTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postLike,
+	)
 
-	batch.Query(stmt, postLike.PostId, postLike.LikedAccountId, postLike.LikedAt, postLike.Bucket)
+	stmt, names = accountPostLikeTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postLike,
+	)
 
-	stmt, _ = accountPostLikeTable.Insert()
-
-	batch.Query(stmt, postLike.Bucket, postLike.LikedAccountId, postLike.PostId, postLike.LikedAt)
-
-	stmt, _ = accountPostLikeBucketsTable.Insert()
-
-	batch.Query(stmt, postLike.LikedAccountId, postLike.Bucket)
+	stmt, names = accountPostLikeBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postLike,
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create post like: %v", err)
@@ -99,13 +109,19 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 		LikedAt:        like.LikedAt(),
 	}
 
-	stmt, _ := postLikeTable.Delete()
+	stmt, names := postLikeTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postLike,
+	)
 
-	batch.Query(stmt, postLike.PostId, postLike.LikedAccountId)
-
-	stmt, _ = accountPostLikeTable.Delete()
-
-	batch.Query(stmt, postLike.Bucket, postLike.LikedAccountId, postLike.PostId)
+	stmt, names = accountPostLikeTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		postLike,
+	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to delete post like: %v", err)
