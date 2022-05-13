@@ -13,9 +13,6 @@ type Application struct {
 }
 
 type Commands struct {
-	DeleteAndRecreateClubsIndex       command.DeleteAndRecreateClubsIndexHandler
-	DeleteAndRecreateClubMembersIndex command.DeleteAndRecreateClubMembersIndexHandler
-
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
 	UpdateClubThumbnail           command.UpdateClubThumbnailHandler

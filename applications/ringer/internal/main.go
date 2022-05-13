@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/ringer/internal/adapters/migrations"
+	"overdoll/applications/ringer/internal/adapters/seeders"
 	"overdoll/applications/ringer/internal/ports"
 	"overdoll/applications/ringer/internal/service"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -13,7 +16,6 @@ import (
 
 	ringer "overdoll/applications/ringer/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -25,8 +27,8 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/ringer")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,

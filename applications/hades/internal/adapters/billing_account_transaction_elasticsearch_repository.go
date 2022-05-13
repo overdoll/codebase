@@ -39,77 +39,6 @@ type accountTransactionDocument struct {
 	Events                      []accountTransactionEventDocument `json:"events"`
 }
 
-const accountTransactionIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"account_id": {
-					"type": "keyword"
-				},
-				"id": {
-					"type": "keyword"
-				},
-				"created_at": {
-					"type": "date"
-				},
-				"transaction_type": {
-					"type": "keyword"
-				},
-				"club_supporter_subscription_id": {
-					"type": "keyword"
-				},
-				"encrypted_payment_method": {
-					"type": "keyword"
-				},
-				"amount": {
-					"type": "integer"
-				},
-				"currency": {
-					"type": "keyword"
-				},
-				"voided_at": {
-					"type": "date"
-				},
-				"void_reason": {
-					"type": "keyword"
-				},
-				"billed_at_date": {
-					"type": "date"
-				},
-				"next_billing_date": {
-					"type": "date"
-				},
-				"ccbill_subscription_id": {
-					"type": "keyword"
-				},
-				"ccbill_transaction_id": {
-					"type": "keyword"
-				},
-				"events": {
-					"type": "nested",
-					"properties":{
-						"id": {
-							"type": "keyword"
-						},
-						"created_at": {
-							"type": "date"
-						},
-						"amount": {
-							"type": "integer"
-						},
-						"currency": {
-							"type": "keyword"
-						},
-						"reason": {
-							"type": "keyword"
-						}
-					}
-				}
-		}
-	}
-}`
-
 const AccountTransactionsIndexName = "account_transactions"
 
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
@@ -288,7 +217,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 	return transactions, nil
 }
 
-func (r BillingCassandraElasticsearchRepository) indexAllAccountTransactions(ctx context.Context) error {
+func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -361,37 +290,6 @@ func (r BillingCassandraElasticsearchRepository) indexAllAccountTransactions(ctx
 	}
 
 	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) deleteAccountTransactionsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(AccountTransactionsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(AccountTransactionsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(AccountTransactionsIndexName).BodyString(accountTransactionIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error {
-
-	if err := r.deleteAccountTransactionsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllAccountTransactions(ctx)
 }
 
 func (r BillingCassandraElasticsearchRepository) indexAccountTransaction(ctx context.Context, transaction *billing.AccountTransaction) error {

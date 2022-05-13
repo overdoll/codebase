@@ -5,6 +5,8 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"overdoll/applications/eva/internal/adapters/migrations"
+	"overdoll/applications/eva/internal/adapters/seeders"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -13,8 +15,8 @@ import (
 	"overdoll/applications/eva/internal/service"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
+	"overdoll/libraries/database"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,7 +27,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/eva")
 
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "grpc",
 		Run: RunGrpc,

@@ -26,38 +26,6 @@ type seriesDocument struct {
 	TotalPosts          int               `json:"total_posts"`
 }
 
-const seriesIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"title":  ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const seriesIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + seriesIndexProperties + `
-	}
-}`
-
 const SeriesIndexName = "series"
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
@@ -189,7 +157,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllSeries(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -240,35 +208,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllSeries(ctx context.Contex
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteSeriesIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(SeriesIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(SeriesIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(SeriesIndexName).BodyString(seriesIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateSeriesIndex(ctx context.Context) error {
-
-	if err := r.deleteSeriesIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllSeries(ctx)
 }

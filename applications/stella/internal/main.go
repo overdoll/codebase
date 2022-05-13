@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/stella/internal/adapters/migrations"
+	"overdoll/applications/stella/internal/adapters/seeders"
 	"overdoll/applications/stella/internal/ports"
 	"overdoll/applications/stella/internal/service"
 	stella "overdoll/applications/stella/proto"
@@ -13,8 +15,8 @@ import (
 	"google.golang.org/grpc"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
+	"overdoll/libraries/database"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,8 +27,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/stella")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,

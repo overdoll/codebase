@@ -39,75 +39,6 @@ type accountClubSupporterSubscriptionDocument struct {
 	CancellationReasonId   *string   `json:"cancellation_reason_id"`
 }
 
-const subscriptionsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"account_id": {
-					"type": "keyword"
-				},
-				"id": {
-					"type": "keyword"
-				},
-				"created_at": {
-					"type": "date"
-				},
-				"cancelled_at": {
-					"type": "date"
-				},
-				"expired_at": {
-					"type": "date"
-				},
-				"updated_at": {
-					"type": "date"
-				},
-				"failed_at": {
-					"type": "date"
-				},
-				"failed_at": {
-					"type": "date"
-				},
-				"ccbill_error_text": {
-					"type": "keyword"
-				},
-				"ccbill_error_code": {
-					"type": "keyword"
-				},
-				"billing_failure_next_retry_date": {
-					"type": "date"
-				},
-				"status": {
-					"type": "keyword"
-				},
-				"supporter_since": {
-					"type": "date"
-				},
-				"last_billing_date": {
-					"type": "date"
-				},
-				"next_billing_date": {
-					"type": "date"
-				},
-				"billing_amount": {
-					"type": "integer"
-				},
-				"billing_currency": {
-					"type": "keyword"
-				},
-				"encrypted_payment_method": {
-					"type": "keyword"
-				},
-				"ccbill_subscription_id": {
-					"type": "keyword"
-				},
-				"cancellation_reason_id": {
-					"type": "keyword"
-				}
-		}
-	}
-}`
-
 const SubscriptionsIndexName = "club_supporter_subscriptions"
 
 func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (*billing.AccountClubSupporterSubscription, error) {
@@ -253,7 +184,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	return subscriptions, nil
 }
 
-func (r BillingCassandraElasticsearchRepository) indexAllAccountClubSupporterSubscriptions(ctx context.Context) error {
+func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSubscriptions(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -312,37 +243,6 @@ func (r BillingCassandraElasticsearchRepository) indexAllAccountClubSupporterSub
 	}
 
 	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) deleteAccountClubSupporterSubscriptionsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(SubscriptionsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(SubscriptionsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(SubscriptionsIndexName).BodyString(subscriptionsIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r BillingCassandraElasticsearchRepository) DeleteAndRecreateAccountClubSupporterSubscriptionsIndex(ctx context.Context) error {
-
-	if err := r.deleteAccountClubSupporterSubscriptionsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllAccountClubSupporterSubscriptions(ctx)
 }
 
 func (r BillingCassandraElasticsearchRepository) indexAccountClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {

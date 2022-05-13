@@ -26,38 +26,6 @@ type categoryDocument struct {
 	TotalPosts          int               `json:"total_posts"`
 }
 
-const categoryIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"title":  ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const categoryIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + categoryIndexProperties + `
-	}
-}`
-
 const CategoryIndexName = "categories"
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
@@ -180,7 +148,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	return cats, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllCategories(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -231,35 +199,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllCategories(ctx context.Co
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteCategoryIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(CategoryIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(CategoryIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(CategoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateCategoriesIndex(ctx context.Context) error {
-
-	if err := r.deleteCategoryIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllCategories(ctx)
 }

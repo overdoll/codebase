@@ -4,16 +4,18 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/loader/internal/adapters/migrations"
+	"overdoll/applications/loader/internal/adapters/seeders"
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -25,7 +27,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/loader")
 
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,

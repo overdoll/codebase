@@ -13,60 +13,6 @@ import (
 	"time"
 )
 
-const clubPaymentsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"source": {
-					"type": "keyword"
-				},
-				"status": {
-					"type": "keyword"
-				},
-				"settlement_date": {
-					"type": "date"
-				},
-				"source_account_id": {
-					"type": "keyword"
-				},
-				"destination_club_id": {
-					"type": "keyword"
-				},
-				"account_transaction_id": {
-					"type": "keyword"
-				},
-				"currency": {
-					"type": "keyword"
-				},
-				"base_amount": {
-					"type": "integer"
-				},
-				"platform_fee_amount": {
-					"type": "integer"
-				},
-				"final_amount": {
-					"type": "integer"
-				},
-				"is_deduction": {
-					"type": "boolean"
-				},
-				"deduction_source_payment_id": {
-					"type": "keyword"
-				},
-				"club_payout_ids": {
-					"type": "keyword"
-				},
-				"created_at": {
-					"type": "date"
-				}
-		}
-	}
-}`
-
 type clubPaymentDocument struct {
 	Id                       string    `json:"id"`
 	Source                   string    `json:"source"`
@@ -215,7 +161,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 	return pays, nil
 }
 
-func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx context.Context) error {
+func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -271,28 +217,6 @@ func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx contex
 	return nil
 }
 
-func (r PaymentCassandraElasticsearchRepository) deleteClubPaymentsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubPaymentsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubPaymentsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubPaymentsIndexName).BodyString(clubPaymentsIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Context, pay *payment.ClubPayment) error {
 
 	pst, err := marshalClubPaymentToDocument(pay)
@@ -327,13 +251,4 @@ func (r PaymentCassandraElasticsearchRepository) updateIndexClubPaymentsComplete
 	}
 
 	return nil
-}
-
-func (r PaymentCassandraElasticsearchRepository) DeleteAndRecreateClubPaymentsIndex(ctx context.Context) error {
-
-	if err := r.deleteClubPaymentsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubPayments(ctx)
 }

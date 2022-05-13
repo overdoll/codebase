@@ -27,41 +27,6 @@ type audienceDocument struct {
 	CreatedAt           string            `json:"created_at"`
 }
 
-const audienceIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"standard": {
-		"type": "integer"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"title": ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const audienceIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + audienceIndexProperties + `
-	}
-}`
-
 const AudienceIndexName = "audience"
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
@@ -184,7 +149,7 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllAudience(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -236,35 +201,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllAudience(ctx context.Cont
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteAudienceIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(AudienceIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(AudienceIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(AudienceIndexName).BodyString(audienceIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateAudienceIndex(ctx context.Context) error {
-
-	if err := r.deleteAudienceIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllAudience(ctx)
 }

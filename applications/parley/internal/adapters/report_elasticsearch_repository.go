@@ -22,35 +22,6 @@ type postReportDocument struct {
 	CreatedAt          time.Time `json:"joined_at"`
 }
 
-const postReportIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"reporting_account_id": {
-		"type": "keyword"
-	},
-	"post_id": {
-		"type": "keyword"
-	},
-	"rule_id": {
-		"type": "keyword"
-	},
-	"created_at": {
-		"type": "date"
-	},
-
-}
-`
-
-const postReportsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties":` + postReportIndexProperties + `
-	}
-}`
-
 const PostReportsIndexName = "post_reports"
 
 func marshalPostReportToDocument(cat *report.PostReport) (*postReportDocument, error) {
@@ -141,7 +112,7 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 	return nil
 }
 
-func (r ReportCassandraElasticsearchRepository) indexAllPostReports(ctx context.Context) error {
+func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -181,36 +152,6 @@ func (r ReportCassandraElasticsearchRepository) indexAllPostReports(ctx context.
 	})
 
 	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r ReportCassandraElasticsearchRepository) DeleteAndRecreatePostReportsIndex(ctx context.Context) error {
-	if err := r.deletePostReportsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllPostReports(ctx)
-}
-
-func (r ReportCassandraElasticsearchRepository) deletePostReportsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(PostReportsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(PostReportsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(PostReportsIndexName).BodyString(postReportsIndex).Do(ctx); err != nil {
 		return err
 	}
 

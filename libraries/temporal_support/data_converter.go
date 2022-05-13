@@ -1,157 +1,233 @@
 package temporal_support
 
 import (
-	"context"
+	"errors"
 	"fmt"
-	"os"
 
 	commonpb "go.temporal.io/api/common/v1"
-
 	"go.temporal.io/sdk/converter"
-	"go.temporal.io/sdk/workflow"
 )
 
 const (
-	// MetadataEncodingEncrypted is "binary/encrypted"
-	MetadataEncodingEncrypted = "binary/encrypted"
-
-	// MetadataEncryptionKeyID is "encryption-key-id"
-	MetadataEncryptionKeyID = "encryption-key-id"
+	metadataEncryptionKey  = "encryption"
+	metadataEncryptedAESV1 = "AES-GCM-V1"
 )
 
-type DataConverter struct {
-	// Until EncodingDataConverter supports workflow.ContextAware we'll store parent here.
-	parent converter.DataConverter
-	converter.DataConverter
-	options DataConverterOptions
+type Options struct {
+	// EncryptionKey is the encryption key used to encrypt the payloads
+	// this key must be 16, 24, 32 characters in length
+	EncryptionKey []byte
 }
 
-type DataConverterOptions struct {
-	KeyID string
-	// Enable ZLib compression before encryption.
-	Compress bool
+// custom data converter taken from https://github.com/nightfallai/nightfall-blog-posts/tree/main/12-13-21_temporal_encryption_payload_converter
+type encryptDataConverterV1 struct {
+	encryptionService *AESEncryptionServiceV1
+	payloadConverters map[string]converter.PayloadConverter
+	orderedEncodings  []string
 }
 
-// Codec implements PayloadCodec using AES Crypt.
-type Codec struct {
-	KeyID string
+type temporalEncodings struct {
+	encoding string
+	isAESV1  bool
 }
 
-// WithWorkflowContext TODO: Implement workflow.ContextAware in CodecDataConverter
-// Note that you only need to implement this function if you need to vary the encryption KeyID per workflow.
-func (dc *DataConverter) WithWorkflowContext(ctx workflow.Context) converter.DataConverter {
-	if val, ok := ctx.Value(PropagateKey).(CryptContext); ok {
-		parent := dc.parent
-		if parentWithContext, ok := parent.(workflow.ContextAware); ok {
-			parent = parentWithContext.WithWorkflowContext(ctx)
-		}
+var (
 
-		options := dc.options
-		options.KeyID = val.KeyID
+	// ErrMetadataIsNotSet is returned when metadata is not set.
+	ErrMetadataIsNotSet = errors.New("metadata is not set")
+	// ErrEncodingIsNotSet is returned when payload encoding metadata is not set.
+	ErrEncodingIsNotSet = errors.New("payload encoding metadata is not set")
+	// ErrEncodingIsNotSupported is returned when payload encoding is not supported.
+	ErrEncodingIsNotSupported = errors.New("payload encoding is not supported")
+	//ErrUnableToFindConverter is return when payload converter is not found
+	ErrUnableToFindConverter = errors.New("payload converter is not found")
+)
 
-		return NewEncryptionDataConverter(parent, options)
+// NewEncryptDataConverterV1 - Temporal provides a default unencrypted DataConverter however
+// for some of our needs we need a DataConverter to encrypt maybe sensitive information
+// into workflows. EncryptDataConverterV1 allows the ability to encrypt maybe sensitive
+// workflows without compromising sensitive info we send to our temporal service.
+func NewEncryptDataConverterV1(opts Options) (converter.DataConverter, error) {
+	defaultTemporalPayloadConverters := []converter.PayloadConverter{
+		converter.NewNilPayloadConverter(),
+		converter.NewByteSlicePayloadConverter(),
+
+		// Order is important here. Both ProtoJsonPayload and ProtoPayload converters check for the same proto.Message
+		// interface. The first match (ProtoJsonPayload in this case) will always be used for serialization.
+		// Deserialization is controlled by metadata, therefore both converters can deserialize corresponding data format
+		// (JSON or binary proto).
+		converter.NewProtoJSONPayloadConverter(),
+		converter.NewProtoPayloadConverter(),
+
+		converter.NewJSONPayloadConverter(),
+	}
+	encryptionService, err := newAESEncryptionServiceV1(opts)
+	if err != nil {
+		return nil, err
 	}
 
-	return dc
-}
+	// add zlib compression
+	codecs := []converter.PayloadCodec{converter.NewZlibCodec(converter.ZlibCodecOptions{AlwaysEncode: true})}
 
-// WithContext TODO: Implement workflow.ContextAware in EncodingDataConverter
-// Note that you only need to implement this function if you need to vary the encryption KeyID per workflow.
-func (dc *DataConverter) WithContext(ctx context.Context) converter.DataConverter {
-	if val, ok := ctx.Value(PropagateKey).(CryptContext); ok {
-		parent := dc.parent
-		if parentWithContext, ok := parent.(workflow.ContextAware); ok {
-			parent = parentWithContext.WithContext(ctx)
-		}
-
-		options := dc.options
-		options.KeyID = val.KeyID
-
-		return NewEncryptionDataConverter(parent, options)
+	dc := &encryptDataConverterV1{
+		payloadConverters: make(map[string]converter.PayloadConverter, len(defaultTemporalPayloadConverters)),
+		orderedEncodings:  make([]string, len(defaultTemporalPayloadConverters)),
+		encryptionService: encryptionService,
+	}
+	for i, payloadConverter := range defaultTemporalPayloadConverters {
+		dc.payloadConverters[payloadConverter.Encoding()] = payloadConverter
+		dc.orderedEncodings[i] = payloadConverter.Encoding()
 	}
 
-	return dc
+	// codecs
+	return converter.NewCodecDataConverter(dc, codecs...), nil
 }
 
-func (e *Codec) getKey(keyID string) (key []byte) {
-	return []byte(os.Getenv("TEMPORAL_ENCRYPTION_KEY"))
-}
-
-// NewEncryptionDataConverter creates a new instance of EncryptionDataConverter wrapping a DataConverter
-func NewEncryptionDataConverter(dataConverter converter.DataConverter, options DataConverterOptions) *DataConverter {
-	codecs := []converter.PayloadCodec{
-		&Codec{KeyID: options.KeyID},
-	}
-	// Enable compression if requested.
-	// Note that this must be done before encryption to provide any value. Encrypted data should by design not compress very well.
-	// This means the compression codec must come after the encryption codec here as codecs are applied last -> first.
-	if options.Compress {
-		codecs = append(codecs, converter.NewZlibCodec(converter.ZlibCodecOptions{AlwaysEncode: true}))
+func (dc *encryptDataConverterV1) ToPayloads(values ...interface{}) (*commonpb.Payloads, error) {
+	if len(values) == 0 {
+		return nil, nil
 	}
 
-	return &DataConverter{
-		parent:        dataConverter,
-		DataConverter: converter.NewCodecDataConverter(dataConverter, codecs...),
-		options:       options,
+	result := &commonpb.Payloads{
+		Payloads: make([]*commonpb.Payload, len(values)),
 	}
-}
-
-// Encode implements converter.PayloadCodec.Encode.
-func (e *Codec) Encode(payloads []*commonpb.Payload) ([]*commonpb.Payload, error) {
-	result := make([]*commonpb.Payload, len(payloads))
-	for i, p := range payloads {
-		origBytes, err := p.Marshal()
+	for i := range values {
+		payload, err := dc.ToPayload(values[i])
 		if err != nil {
-			return payloads, err
+			return nil, fmt.Errorf("values[%d]: %w", i, err)
 		}
-
-		key := e.getKey(e.KeyID)
-
-		b, err := encrypt(origBytes, key)
-		if err != nil {
-			return payloads, err
-		}
-
-		result[i] = &commonpb.Payload{
-			Metadata: map[string][]byte{
-				converter.MetadataEncoding: []byte(MetadataEncodingEncrypted),
-				MetadataEncryptionKeyID:    []byte(e.KeyID),
-			},
-			Data: b,
-		}
+		result.Payloads[i] = payload
 	}
 
 	return result, nil
 }
 
-// Decode implements converter.PayloadCodec.Decode.
-func (e *Codec) Decode(payloads []*commonpb.Payload) ([]*commonpb.Payload, error) {
-	result := make([]*commonpb.Payload, len(payloads))
-	for i, p := range payloads {
-		// Only if it's encrypted
-		if string(p.Metadata[converter.MetadataEncoding]) != MetadataEncodingEncrypted {
-			result[i] = p
-			continue
+// FromPayloads converts to a list of values of different types.
+func (dc *encryptDataConverterV1) FromPayloads(payloads *commonpb.Payloads, valuePtrs ...interface{}) error {
+	if payloads == nil {
+		return nil
+	}
+
+	for i, payload := range payloads.GetPayloads() {
+		if i >= len(valuePtrs) {
+			break
 		}
 
-		keyID, ok := p.Metadata[MetadataEncryptionKeyID]
-		if !ok {
-			return payloads, fmt.Errorf("no encryption key id")
-		}
-
-		key := e.getKey(string(keyID))
-
-		b, err := decrypt(p.Data, key)
+		err := dc.FromPayload(payload, valuePtrs[i])
 		if err != nil {
-			return payloads, err
-		}
-
-		result[i] = &commonpb.Payload{}
-		err = result[i].Unmarshal(b)
-		if err != nil {
-			return payloads, err
+			return fmt.Errorf("payload item %d: %w", i, err)
 		}
 	}
 
-	return result, nil
+	return nil
+}
+
+// ToPayload converts single value to payload.
+func (dc *encryptDataConverterV1) ToPayload(value interface{}) (*commonpb.Payload, error) {
+	for _, enc := range dc.orderedEncodings {
+		unencryptedPayload, err := dc.payloadConverters[enc].ToPayload(value)
+		if err != nil {
+			return nil, err
+		}
+		if unencryptedPayload != nil {
+			return dc.encryptPayload(unencryptedPayload)
+		}
+	}
+
+	return nil, fmt.Errorf("value: %v of type: %T: %w", value, value, ErrUnableToFindConverter)
+}
+
+// FromPayload converts single value from payload.
+func (dc *encryptDataConverterV1) FromPayload(payload *commonpb.Payload, valuePtr interface{}) error {
+	if payload == nil {
+		return nil
+	}
+	nightfallEncodings, err := dc.decryptPayload(payload)
+	if err != nil {
+		return err
+	}
+	payloadConverter, ok := dc.payloadConverters[nightfallEncodings.encoding]
+	if !ok {
+		return fmt.Errorf("encoding %s: %w", nightfallEncodings.encoding, ErrEncodingIsNotSupported)
+	}
+
+	return payloadConverter.FromPayload(payload, valuePtr)
+}
+
+// ToString converts payload object into human readable string.
+func (dc *encryptDataConverterV1) ToString(payload *commonpb.Payload) string {
+	if payload == nil {
+		return ""
+	}
+	nightfallEncodings, err := dc.decryptPayload(payload)
+	if err != nil {
+		return err.Error()
+	}
+	payloadConverter, ok := dc.payloadConverters[nightfallEncodings.encoding]
+	if !ok {
+		return fmt.Errorf("encoding %s: %w", nightfallEncodings.encoding, ErrEncodingIsNotSupported).Error()
+	}
+
+	return payloadConverter.ToString(payload)
+}
+
+// ToStrings converts payloads object into human-readable strings.
+func (dc *encryptDataConverterV1) ToStrings(payloads *commonpb.Payloads) []string {
+	if payloads == nil {
+		return nil
+	}
+
+	result := make([]string, len(payloads.GetPayloads()))
+	for idx := range payloads.GetPayloads() {
+		result[idx] = dc.ToString(payloads.GetPayloads()[idx])
+	}
+
+	return result
+}
+
+// the unencrypted payload isn't mutable and need to reconstruct the payload.
+func (dc *encryptDataConverterV1) encryptPayload(unencryptedPayload *commonpb.Payload) (*commonpb.Payload, error) {
+	newMetadata := unencryptedPayload.GetMetadata()
+	if newMetadata == nil {
+		newMetadata = make(map[string][]byte)
+	}
+	newMetadata[metadataEncryptionKey] = []byte(metadataEncryptedAESV1)
+	encryptedBytes, err := dc.encryptionService.Encrypt(unencryptedPayload.GetData())
+	if err != nil {
+		return &commonpb.Payload{}, err
+	}
+
+	return &commonpb.Payload{
+		Metadata: newMetadata,
+		Data:     encryptedBytes,
+	}, nil
+}
+
+// decryptPayload figures out from metadata whether the payload needs to be decrypted
+func (dc *encryptDataConverterV1) decryptPayload(payload *commonpb.Payload) (temporalEncodings, error) {
+	encodings, err := encoding(payload)
+	if err != nil {
+		return temporalEncodings{}, err
+	}
+	if encodings.isAESV1 {
+		if payload.Data, err = dc.encryptionService.Decrypt(payload.GetData()); err != nil {
+			return temporalEncodings{}, err
+		}
+	}
+	return encodings, nil
+}
+
+func encoding(payload *commonpb.Payload) (temporalEncodings, error) {
+	metadata := payload.GetMetadata()
+	if metadata == nil {
+		return temporalEncodings{}, ErrMetadataIsNotSet
+	}
+	encryptionType, hasEncryption := metadata[metadataEncryptionKey]
+	if encoding, ok := metadata[converter.MetadataEncoding]; ok {
+		return temporalEncodings{
+			encoding: string(encoding),
+			isAESV1:  hasEncryption && (string(encryptionType) == metadataEncryptedAESV1),
+		}, nil
+	}
+	return temporalEncodings{}, ErrEncodingIsNotSet
 }

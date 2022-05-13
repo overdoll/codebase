@@ -13,59 +13,6 @@ import (
 	"time"
 )
 
-const clubPayoutsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"status": {
-					"type": "keyword"
-				},
-				"deposit_date": {
-					"type": "date"
-				},
-				"club_id": {
-					"type": "keyword"
-				},
-				"currency": {
-					"type": "keyword"
-				},
-				"amount": {
-					"type": "integer"
-				},
-				"payout_account_id": {
-					"type": "keyword"
-				},
-				"deposit_request_id": {
-					"type": "keyword"
-				},
-				"created_at": {
-					"type": "date"
-				},
-				"temporal_workflow_id": {
-					"type": "keyword"
-				},
-				"events": {
-					"type": "nested",
-					"properties":{
-						"id": {
-							"type": "keyword"
-						},
-						"created_at": {
-							"type": "date"
-						},
-						"error": {
-							"type": "keyword"
-						}
-					}
-				}
-		}
-	}
-}`
-
 type clubPayoutEventDocument struct {
 	Id        string    `json:"id"`
 	Timestamp time.Time `json:"timestamp"`
@@ -236,7 +183,7 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 	return pays, nil
 }
 
-func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.Context) error {
+func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -305,28 +252,6 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 	return nil
 }
 
-func (r PayoutCassandraElasticsearchRepository) deleteClubPayoutsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubPayoutsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubPayoutsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubPayoutsIndexName).BodyString(clubPayoutsIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
 
 	pst, err := marshalClubPayoutToDocument(pay)
@@ -347,13 +272,4 @@ func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Cont
 	}
 
 	return nil
-}
-
-func (r PayoutCassandraElasticsearchRepository) DeleteAndRecreateClubPayoutsIndex(ctx context.Context) error {
-
-	if err := r.deleteClubPayoutsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubPayouts(ctx)
 }

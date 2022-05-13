@@ -45,8 +45,6 @@ type Repository interface {
 	GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*SuspensionLog, error)
 
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
-	DeleteAndRecreateClubsIndex(ctx context.Context) error
-	DeleteAndRecreateClubMembersIndex(ctx context.Context) error
 
 	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
 

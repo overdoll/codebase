@@ -24,6 +24,5 @@ type Repository interface {
 	AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error
 	UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error
 
-	DeleteAndRecreateClubPaymentsIndex(ctx context.Context) error
 	SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ClubPaymentsFilters) ([]*ClubPayment, error)
 }

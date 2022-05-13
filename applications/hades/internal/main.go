@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"os"
+	"overdoll/applications/hades/internal/adapters/migrations"
+	"overdoll/applications/hades/internal/adapters/seeders"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/service"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -24,8 +26,11 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/hades")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(
+		migrations.MigrateConfig,
+		seeders.SeederConfig,
+	))
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,

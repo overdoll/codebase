@@ -48,8 +48,6 @@ type Repository interface {
 
 	GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []Transaction) (*int64, error)
 	SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *AccountTransactionHistoryFilters) ([]*AccountTransaction, error)
-	DeleteAndRecreateAccountTransactionsIndex(ctx context.Context) error
-	DeleteAndRecreateAccountClubSupporterSubscriptionsIndex(ctx context.Context) error
 
 	DeleteAccountData(ctx context.Context, accountId string) error
 

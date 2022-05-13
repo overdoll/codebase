@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/parley/internal/adapters/migrations"
+	"overdoll/applications/parley/internal/adapters/seeders"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -12,7 +15,6 @@ import (
 	"overdoll/applications/parley/internal/service"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -24,8 +26,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/parley")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,

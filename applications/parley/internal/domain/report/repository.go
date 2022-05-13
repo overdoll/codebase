@@ -11,6 +11,5 @@ type Repository interface {
 	CreatePostReport(ctx context.Context, report *PostReport) error
 	GetPostReportById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*PostReport, error)
 	SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *PostReportFilters) ([]*PostReport, error)
-	DeleteAndRecreatePostReportsIndex(ctx context.Context) error
 	DeleteAccountData(ctx context.Context, accountId string) error
 }
