@@ -2,14 +2,9 @@ package migrations
 
 import (
 	"github.com/scylladb/gocqlx/v2/migrate"
+	"overdoll/applications/eva/internal/adapters/migrations/cql"
 	"overdoll/libraries/database"
 )
-
-import "embed"
-
-// Files contains *.cql schema migration files.
-//go:embed cql/*.cql
-var files embed.FS
 
 func registerCallbacks() migrate.CallbackRegister {
 	var reg = migrate.CallbackRegister{}
@@ -17,7 +12,7 @@ func registerCallbacks() migrate.CallbackRegister {
 }
 
 var MigrateConfig = database.MigrateConfig{
-	MigrationFiles:     files,
+	MigrationFiles:     cql.Files,
 	Keyspace:           `CREATE KEYSPACE IF NOT EXISTS eva WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};`,
 	MigrationCallbacks: registerCallbacks(),
 }

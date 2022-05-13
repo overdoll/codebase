@@ -21,7 +21,6 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w.RegisterWorkflow(workflows.ClubPaymentDeduction)
 	w.RegisterWorkflow(workflows.ClubPaymentDeposit)
-	w.RegisterWorkflow(workflows.CancelClubPayout)
 	w.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	w.RegisterWorkflow(workflows.ProcessClubPayout)
 	w.RegisterWorkflow(workflows.RetryClubPayout)

@@ -34,8 +34,6 @@ type Commands struct {
 	RemoveModeratorFromPostQueue command.RemoveModeratorFromPostQueueHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
-
-	DeleteAndRecreatePostReportsIndex command.DeleteAndRecreatePostReportsIndexHandler
 }
 
 type Queries struct {

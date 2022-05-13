@@ -866,6 +866,9 @@ type AccountTransaction implements Node
   """
   clubSupporterSubscription: AccountClubSupporterSubscription @join__field(graph: HADES)
 
+  """When this transaction occurred."""
+  createdAt: Time! @join__field(graph: HADES)
+
   """The currency voided in."""
   currency: Currency! @join__field(graph: HADES)
 
@@ -890,8 +893,8 @@ type AccountTransaction implements Node
   """A reference, used to look up this transaction."""
   reference: String! @join__field(graph: HADES)
 
-  """When this transaction occurred."""
-  timestamp: Time! @join__field(graph: HADES)
+  """The total amount refunded, if any."""
+  totalRefunded: Int! @join__field(graph: HADES)
 
   """The type of account transaction history, or what it belongs to."""
   type: AccountTransactionType! @join__field(graph: HADES)
@@ -913,6 +916,9 @@ type AccountTransactionEvent {
   """The amount."""
   amount: Int!
 
+  """When this event occurred."""
+  createdAt: Time!
+
   """The currency."""
   currency: Currency!
 
@@ -921,9 +927,6 @@ type AccountTransactionEvent {
 
   """The reason for this event."""
   reason: String!
-
-  """When this event occurred."""
-  timestamp: Time!
 }
 
 enum AccountTransactionType {
@@ -1236,7 +1239,7 @@ type Balance {
   currency: Currency!
 
   """When the balance was last updated."""
-  updatedAt: Time!
+  updatedAt: Time
 }
 
 """Become club supporter with saved payment method."""
@@ -1335,6 +1338,9 @@ type CCBillSubscriptionDetails {
 
   """The ID of the subscription."""
   id: ID!
+
+  """Whether or not this subscription was a duplicate."""
+  isDuplicate: Boolean!
 
   """Whether or not this is recurring, or a one-time charge."""
   isRecurring: Boolean!
@@ -1765,6 +1771,9 @@ type Club implements Node
   """The total amount of members in this club."""
   membersCount: Int! @join__field(graph: STELLA)
 
+  """The total amount of members in this club, who are supporters."""
+  membersIsSupporterCount: Int! @join__field(graph: STELLA)
+
   """A name for this club."""
   name: String! @join__field(graph: STELLA)
 
@@ -1882,6 +1891,26 @@ type Club implements Node
 
   """A supporter subscription price for this club."""
   supporterSubscriptionPrice: LocalizedPricingPoint! @join__field(graph: HADES)
+
+  """Club supporter subscriptions linked to this club."""
+  supporterSubscriptions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of account club supporter subscription status."""
+    status: [AccountClubSupporterSubscriptionStatus!]
+  ): AccountClubSupporterSubscriptionConnection! @join__field(graph: HADES)
 
   """Whether or not this club is suspended."""
   suspension: ClubSuspension @join__field(graph: STELLA)
@@ -2015,12 +2044,22 @@ type ClubIssuedSuspensionLog {
 type ClubMember implements Node
   @join__owner(graph: STELLA)
   @join__type(graph: STELLA, key: "id")
+  @join__type(graph: HADES, key: "id")
 {
   """The account that belongs to this membership."""
   account: Account! @join__field(graph: STELLA)
 
   """The club that this membership belongs to."""
   club: Club! @join__field(graph: STELLA)
+
+  """
+  The subscription linked to this club member.
+  
+  Note that an account can have multiple subscriptions for the same club, due to the fact that we keep expired subscriptions.
+  
+  So this will just grab the most recent active subscription for this club.
+  """
+  clubSupporterSubscription: AccountClubSupporterSubscription @join__field(graph: HADES)
 
   """An ID pointing to this club member."""
   id: ID! @join__field(graph: STELLA)
@@ -2065,6 +2104,9 @@ type ClubPayment implements Node
 
   """The base amount this payment was originally made in."""
   baseAmount: Int! @join__field(graph: RINGER)
+
+  """When this payment was created."""
+  createdAt: Time! @join__field(graph: RINGER)
 
   """The currency this payment was made in."""
   currency: Currency! @join__field(graph: RINGER)
@@ -2213,14 +2255,14 @@ type ClubPayoutEdge {
 }
 
 type ClubPayoutEvent {
+  """When this event occurred."""
+  createdAt: Time!
+
   """The error that occurred."""
   error: String!
 
   """An ID to uniquely identify this club payout event."""
   id: ID!
-
-  """When this event occurred."""
-  timestamp: Time!
 }
 
 """The status of the payout."""
@@ -2829,8 +2871,8 @@ type DepositRequestEdge {
 
 """Payload for disabling account multi factor"""
 type DisableAccountMultiFactorPayload {
-  """TOTP that was removed from this account, if it was removed"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was disabled."""
+  account: Account
 }
 
 """Input for enrolling the account into TOTP"""
@@ -2844,8 +2886,8 @@ input EnrollAccountMultiFactorTotpInput {
 
 """Payload of the enrolled totp payload"""
 type EnrollAccountMultiFactorTotpPayload {
-  """TOTP that belongs to this account now"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was enrolled."""
+  account: Account
 
   """Validation for enrolling TOTP"""
   validation: EnrollAccountMultiFactorTotpValidation

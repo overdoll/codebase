@@ -46,6 +46,7 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
+        "@org_uber_go_zap//:zap",
     ],
 )
 

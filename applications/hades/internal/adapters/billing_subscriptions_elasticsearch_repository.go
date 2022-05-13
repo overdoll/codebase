@@ -117,6 +117,43 @@ func marshalAccountClubSupporterSubscriptionToDocument(subscription *billing.Acc
 	}, nil
 }
 
+func (r BillingCassandraElasticsearchRepository) GetAccountActiveClubSupporterSubscriptionsOperator(ctx context.Context, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
+
+	builder := r.client.Search().
+		Index(AccountTransactionsIndexName)
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("account_id", accountId))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("status", billing.Active.String()))
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to search account active club supporter subscriptions: %v", err)
+	}
+
+	var subscriptions []*billing.AccountClubSupporterSubscription
+
+	for _, hit := range response.Hits.Hits {
+
+		newSubscription, err := unmarshalAccountClubSupporterSubscriptionDocument(hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		subscriptions = append(subscriptions, newSubscription)
+	}
+
+	return subscriptions, nil
+}
+
 func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountClubSupporterSubscriptionFilters) ([]*billing.AccountClubSupporterSubscription, error) {
 
 	if err := billing.CanViewAccountClubSupporterSubscription(requester, filters.AccountId(), filters.ClubId()); err != nil {
@@ -165,7 +202,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search account transactions: %v", err)
+		return nil, fmt.Errorf("failed to search account club supporter subscriptions: %v", err)
 	}
 
 	var subscriptions []*billing.AccountClubSupporterSubscription

@@ -13,6 +13,8 @@ type Repository interface {
 	GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*AccountClubSupporterSubscription, error)
 	HasActiveOrCancelledAccountClubSupporterSubscriptions(ctx context.Context, requester *principal.Principal, accountId string) (*bool, error)
 
+	GetAccountActiveClubSupporterSubscriptionsOperator(ctx context.Context, accountId string) ([]*AccountClubSupporterSubscription, error)
+
 	GetAccountSavedPaymentMethods(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*SavedPaymentMethod, error)
 	DeleteAccountSavedPaymentMethod(ctx context.Context, requester *principal.Principal, accountId, id string) error
 	GetCCBillSubscriptionDetailsById(ctx context.Context, requester *principal.Principal, ccbillSubscriptionId string) (*CCBillSubscriptionDetails, error)
