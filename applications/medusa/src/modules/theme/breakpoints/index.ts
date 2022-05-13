@@ -8,7 +8,8 @@ const breakpoints = createBreakpoints({
   md: '48em',
   lg: '62em',
   xl: '80em',
-  '2xl': '96em'
+  '2xl': '96em',
+  '3xl': '116em'
 })
 
 export default breakpoints

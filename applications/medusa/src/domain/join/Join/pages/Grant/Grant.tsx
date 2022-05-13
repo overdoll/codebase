@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { prepareViewer } from '../../support/support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
@@ -113,38 +113,32 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       <Head>
         <title>Logging In... :: overdoll</title>
       </Head>
-      <Flex
-        mt={40}
-        h='100%'
-        align='center'
-        justify='center'
-        direction='column'
-      >
+      <Stack spacing={6}>
         <Spinner
           mb={6}
           thickness='4px'
-          w={20}
-          h={20}
+          w={24}
+          h={24}
           color='primary.400'
         />
-        <Heading
-          mb={1}
-          size='md'
-          color='gray.00'
-        >
-          <Trans>
-            Logging in
-          </Trans>
-        </Heading>
-        <Text
-          size='sm'
-          color='gray.100'
-        >
-          <Trans>
-            Please wait while we log you in...
-          </Trans>
-        </Text>
-      </Flex>
+        <Box>
+          <Heading
+            textAlign='center'
+            fontSize='xl'
+            color='gray.00'
+            mb={1}
+          >
+            <Trans>
+              Logging in
+            </Trans>
+          </Heading>
+          <Heading textAlign='center' color='gray.300' fontSize='sm'>
+            <Trans>
+              Please wait while we log you in...
+            </Trans>
+          </Heading>
+        </Box>
+      </Stack>
     </>
   )
 }

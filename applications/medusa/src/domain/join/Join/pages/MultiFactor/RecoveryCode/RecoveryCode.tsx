@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
@@ -9,20 +9,21 @@ import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.gra
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import {
   Form,
   FormInput,
   FormSubmitButton,
   InputBody,
+  InputFeedback,
   InputFooter,
-  InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
 import { useCookies } from 'react-cookie'
+import Icon from '../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import { Barcode } from '@//:assets/icons'
 
 interface CodeValues {
   code: string
@@ -140,45 +141,56 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
   }
 
   return (
-    <Stack spacing={3}>
-      <Alert colorScheme='teal' status='info'>
-        <AlertIcon />
-        <AlertDescription
-          align='center'
-          lineHeight={5}
-          fontSize='sm'
+    <>
+      <Icon
+        icon={Barcode}
+        w={16}
+        h={16}
+        fill='primary.400'
+      />
+      <Box>
+        <Heading
+          textAlign='center'
+          fontSize='xl'
+          color='gray.00'
+          mb={1}
         >
+          <Trans>
+            Enter an 8-character recovery code
+          </Trans>
+        </Heading>
+        <Heading textAlign='center' color='gray.300' fontSize='sm'>
           <Trans>
             If you lost access to your two-factor device, you can use one of the recovery codes you downloaded
             when you set up two-factor authentication.
           </Trans>
-        </AlertDescription>
-      </Alert>
+        </Heading>
+      </Box>
       <Form {...methods} onSubmit={onSubmitCode}>
-        <HStack spacing={2} justify='space-between'>
-          <FormInput size='md' id='code'>
-            <InputHeader>
-              <Trans>
-                Code
-              </Trans>
-            </InputHeader>
+        <Stack spacing={4} justify='space-between'>
+          <FormInput size='lg' id='code'>
             <InputBody>
-              <TextInput placeholder={i18n._(t`An 8-character recovery code`)} />
+              <TextInput
+                borderColor='transparent'
+                variant='outline'
+                placeholder={i18n._(t`An 8-character recovery code`)}
+              />
+              <InputFeedback />
             </InputBody>
             <InputFooter />
           </FormInput>
           <FormSubmitButton
-            size='md'
+            size='lg'
             variant='solid'
-            colorScheme='gray'
+            colorScheme='primary'
             isLoading={isSubmittingCode}
           >
             <Trans>
               Submit
             </Trans>
           </FormSubmitButton>
-        </HStack>
+        </Stack>
       </Form>
-    </Stack>
+    </>
   )
 }

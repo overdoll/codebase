@@ -1,6 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useRef } from 'react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +10,6 @@ import {
   AlertDialogOverlay,
   Text
 } from '@chakra-ui/react'
-import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import type { RevokeTokenButtonFragment$key } from '@//:artifacts/RevokeTokenButtonFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
@@ -66,11 +64,11 @@ export default function RevokeTokenButton ({
       },
       onCompleted () {
         onClose()
-        removeCookie('token')
       },
       updater: (store, payload) => {
         if (payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId != null) {
           store.delete(payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)
+          removeCookie('token')
         }
       }
     })
@@ -78,15 +76,14 @@ export default function RevokeTokenButton ({
 
   return (
     <>
-      <Button
-        leftIcon={<Icon w={4} h={4} icon={SafetyExitDoorLeft} fill='inherit' />}
+      <CloseButton
         size='lg'
         onClick={onOpen}
       >
         <Trans>
           Cancel
         </Trans>
-      </Button>
+      </CloseButton>
       <AlertDialog
         preserveScrollBarGap
         isCentered
@@ -98,7 +95,7 @@ export default function RevokeTokenButton ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <Trans>
-              Confirm Cancel Join
+              Confirm Join Cancellation
             </Trans>
           </AlertDialogHeader>
           <AlertDialogCloseButton
@@ -108,7 +105,8 @@ export default function RevokeTokenButton ({
           <AlertDialogBody>
             <Text>
               <Trans>
-                If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the
+                If you cancel the joining flow, you'll be brought back to the initial login page and the link sent in
+                the
                 email will be invalidated. Are you sure?
               </Trans>
             </Text>

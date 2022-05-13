@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import Button from '@//:modules/form/Button/Button'
@@ -7,6 +7,11 @@ import { ConfirmFragment$key } from '@//:artifacts/ConfirmFragment.graphql'
 import { Trans } from '@lingui/macro'
 import UAParser from 'ua-parser-js'
 import Head from 'next/head'
+import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
+import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdvert/AdvertBoxWrapper/AdvertBoxWrapper'
+import { Icon } from '@//:modules/content/PageLayout'
+import { WarningTriangle } from '@//:assets/icons'
+import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
 
 interface Props {
   verify: () => void
@@ -64,60 +69,92 @@ export default function Confirm ({
   return (
     <>
       <Head>
-        <title>Verify Login :: overdoll</title>
+        <title>Verify login :: overdoll</title>
       </Head>
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
-          <Heading mb={8} textAlign='center' fontSize='xl' color='gray.00'>
-            <Trans>
-              Please confirm that you are attempting to login from the following device & location
-            </Trans>
-          </Heading>
-          <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
-            <Center>
-              <Text fontSize='lg' color='green.300'>
-                <>
-                  {cookieText.browser.name} {cookieText.browser.major},{' '}
-                  {cookieText.os.name} {cookieText.os.version}
-                </>
-              </Text>
-            </Center>
-          </Box>
-          <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
-            <Center>
-              <Text fontSize='lg' color='pink.300'>
-                {data.location.city}, {data.location.subdivision} ({data.location.country})
-              </Text>
-            </Center>
-          </Box>
+      <BackgroundPatternWrapper>
+        <PageWrapperDesktop>
           <Center>
-            <Stack spacing={4} direction='row' align='center'>
-              <Button
-                size='md'
-                variant='ghost'
-                isDisabled={isVerifying}
-                isLoading={isRevokingToken}
-                onClick={revoke}
-              >
-                <Trans>
-                  No, this is not me
-                </Trans>
-              </Button>
-              <Button
-                size='md'
-                colorScheme='pink'
-                isDisabled={isRevokingToken}
-                isLoading={isVerifying}
-                onClick={verify}
-              >
-                <Trans>
-                  Yes, this is me
-                </Trans>
-              </Button>
-            </Stack>
+            <AdvertBoxWrapper>
+              <Stack justify='center' h='100%' spacing={6}>
+                <Icon
+                  icon={WarningTriangle}
+                  w={16}
+                  h={16}
+                  fill='orange.400'
+                />
+                <Box>
+                  <Heading
+                    textAlign='center'
+                    fontSize='xl'
+                    color='gray.00'
+                  >
+                    <Trans>
+                      Please confirm that you are attempting to login from the following device and location
+                    </Trans>
+                  </Heading>
+                </Box>
+                <Flex
+                  justify='center'
+                  align='center'
+                  wordBreak='break-all'
+                  p={3}
+                  borderRadius='md'
+                  bg='gray.900'
+                  w='100%'
+                >
+                  <Heading
+                    textAlign='center'
+                    fontSize='md'
+                    color='orange.400'
+                  >
+                    <>
+                      {cookieText.browser.name} {cookieText.browser.major},{' '}
+                      {cookieText.os.name} {cookieText.os.version}
+                    </>
+                  </Heading>
+                  <Heading
+                    textAlign='center'
+                    fontSize='md'
+                    color='orange.400'
+                  >
+                    <>
+                      {data.location.city}, {data.location.subdivision} ({data.location.country})
+                    </>
+                  </Heading>
+                </Flex>
+                <Center>
+                  <Stack spacing={4} direction='row' align='center'>
+                    <Button
+                      size='md'
+                      colorScheme='green'
+                      variant='solid'
+                      isDisabled={isRevokingToken}
+                      isLoading={isVerifying}
+                      onClick={verify}
+                    >
+                      <Trans>
+                        Yes, this is me
+                      </Trans>
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='solid'
+                      colorScheme='orange'
+                      isDisabled={isVerifying}
+                      isLoading={isRevokingToken}
+                      onClick={revoke}
+                    >
+                      <Trans>
+                        No, this is not me
+                      </Trans>
+                    </Button>
+                  </Stack>
+                </Center>
+              </Stack>
+            </AdvertBoxWrapper>
           </Center>
-        </Flex>
-      </Center>
+        </PageWrapperDesktop>
+      </BackgroundPatternWrapper>
     </>
   )
 }

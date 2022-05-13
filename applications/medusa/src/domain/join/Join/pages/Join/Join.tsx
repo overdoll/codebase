@@ -2,9 +2,8 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
-import { BadgeCircle } from '@//:assets/icons/navigation'
+import { OverdollLogo } from '@//:assets/logos'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import { useCookies } from 'react-cookie'
 import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
@@ -106,41 +105,38 @@ export default function Join ({
       <Head>
         <title>Join :: overdoll</title>
       </Head>
-      <PageWrapper>
-        <Stack spacing={8}>
-          <Icon
-            icon={BadgeCircle}
-            w={100}
-            h={100}
-            fill='primary.500'
-            ml='auto'
-            mr='auto'
-          />
-          {(data == null && hadGrant) && (
-            <Alert
-              status='warning'
-            >
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>
-                  The login code has previously expired or is no longer valid. Try again?
-                </Trans>
-              </AlertDescription>
-              <AlertCloseButton
-                position='absolute'
-                size='sm'
-                right={2}
-                top={2}
-                onClick={clearGrant}
-              />
-            </Alert>
-          )}
-          <JoinForm
-            onSubmit={onSubmit}
-            loading={isInFlight}
-          />
-        </Stack>
-      </PageWrapper>
+      <Stack h='100%' justify='center' align='center' spacing={4}>
+        {(data == null && hadGrant) && (
+          <Alert
+            mb={2}
+            status='warning'
+          >
+            <AlertIcon />
+            <AlertDescription>
+              <Trans>
+                The login link has previously expired or is no longer valid. Please try logging in again.
+              </Trans>
+            </AlertDescription>
+            <AlertCloseButton
+              position='absolute'
+              size='sm'
+              right={2}
+              top={2}
+              onClick={clearGrant}
+            />
+          </Alert>
+        )}
+        <Icon
+          icon={OverdollLogo}
+          w={32}
+          h={32}
+          fill='primary.400'
+        />
+        <JoinForm
+          onSubmit={onSubmit}
+          loading={isInFlight}
+        />
+      </Stack>
     </>
   )
 }

@@ -1,7 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { BadgeCircle } from '@//:assets/icons/navigation'
 import { prepareViewer } from '../../../support/support'
 import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
 import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
@@ -19,12 +18,13 @@ import {
   FormSubmitButton,
   InputBody,
   InputFooter,
-  InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
 import { useCookies } from 'react-cookie'
+import { MobilePhone, WarningTriangle } from '@//:assets/icons'
+import { FlowBuilderNextButton } from '@//:modules/content/PageLayout'
 
 interface CodeValues {
   code: string
@@ -132,51 +132,44 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
 
   return (
     <>
+      <Icon
+        icon={MobilePhone}
+        w={16}
+        h={16}
+        fill='primary.400'
+      />
       <Box>
-        <Icon
-          icon={BadgeCircle}
-          w={100}
-          h={100}
-          fill='primary.500'
-          ml='auto'
-          mr='auto'
-          mb={8}
-        />
         <Heading
           textAlign='center'
           fontSize='xl'
           color='gray.00'
+          mb={1}
         >
           <Trans>
             Enter the 6-digit code from your Authenticator app
           </Trans>
         </Heading>
-        <Text
-          align='center'
-          fontSize='sm'
-          color='gray.200'
-        >
+        <Heading textAlign='center' color='gray.300' fontSize='sm'>
           <Trans>
-            You can find this in the same app you used to set up two-factor authentication
+            You can find this code in the same app you used to set up two-factor authentication
           </Trans>
-        </Text>
+        </Heading>
       </Box>
       <Form {...methods} onSubmit={onSubmitTotp}>
         <Stack spacing={3}>
-          <FormInput size='xl' id='code'>
-            <InputHeader>
-              <Trans>
-                Code
-              </Trans>
-            </InputHeader>
+          <FormInput size='lg' id='code'>
             <InputBody>
-              <TextInput placeholder='123456' />
+              <TextInput
+                borderColor='transparent'
+                variant='outline'
+                placeholder='123456'
+              />
             </InputBody>
             <InputFooter />
           </FormInput>
           <FormSubmitButton
-            size='xl'
-            variant='outline'
+            size='lg'
+            variant='solid'
             colorScheme='primary'
             isLoading={isSubmittingTotp}
           >
@@ -186,6 +179,14 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
           </FormSubmitButton>
         </Stack>
       </Form>
+      <FlowBuilderNextButton
+        size='md'
+        rightIcon={<Icon w={4} h={4} icon={WarningTriangle} fill='inherit' />}
+      >
+        <Trans>
+          I lost access to my device
+        </Trans>
+      </FlowBuilderNextButton>
     </>
   )
 }

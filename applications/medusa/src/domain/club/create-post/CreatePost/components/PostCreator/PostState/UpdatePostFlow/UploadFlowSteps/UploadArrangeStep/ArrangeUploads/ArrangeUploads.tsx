@@ -178,8 +178,10 @@ export default function ArrangeUploads ({
   }, [displayData])
 
   useUpdateEffect(() => {
-    setDisplayData(data.content)
-  }, [data.content])
+    if (state.isRearranging === false) {
+      setDisplayData(data.content)
+    }
+  }, [data.content, state.isRearranging])
 
   if (displayData.length < 1) {
     return (

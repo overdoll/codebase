@@ -9,6 +9,9 @@ import MultiFactor from './pages/MultiFactor/MultiFactor'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import { PageProps } from '@//:types/app'
+import BackgroundPatternWrapper from './components/BackgroundPatternWrapper/BackgroundPatternWrapper'
+import PageWrapperDesktop from '../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
+import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/PlatformBenefitsAdvert'
 
 interface Props {
   queryRefs: {
@@ -86,43 +89,55 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     setHadGrant(false)
   }
 
-  // when authentication not initiated
-  if (!authenticationInitiated) {
-    return (
-      <Join
-        hadGrant={hadGrant}
-        clearGrant={clearGrant}
-        queryRef={data}
-      />
-    )
+  const JoinFragment = (): JSX.Element => {
+    // when authentication not initiated
+    if (!authenticationInitiated) {
+      return (
+        <Join
+          hadGrant={hadGrant}
+          clearGrant={clearGrant}
+          queryRef={data}
+        />
+      )
+    }
+
+    if (!authenticationTokenVerified) {
+      return (
+        <QueryErrorBoundary
+          loadQuery={() => loadQuery({ token: data?.token }, { fetchPolicy: 'network-only' })}
+        >
+          <Suspense fallback={SkeletonStack}>
+            <Lobby
+              queryRef={data}
+              refresh={refresh}
+            />
+          </Suspense>
+        </QueryErrorBoundary>
+      )
+    }
+
+    if (data?.accountStatus?.registered === false) {
+      return <Register queryRef={data} />
+    }
+
+    // Check if the user has multi-factor enabled and show them the flow if they do
+    if (multiFactorEnabled) {
+      return <MultiFactor queryRef={data} />
+    }
+
+    // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
+    return (<Grant queryRef={data} />)
   }
 
-  if (!authenticationTokenVerified) {
-    return (
-      <QueryErrorBoundary
-        loadQuery={() => loadQuery({ token: data?.token }, { fetchPolicy: 'network-only' })}
-      >
-        <Suspense fallback={SkeletonStack}>
-          <Lobby
-            queryRef={data}
-            refresh={refresh}
-          />
-        </Suspense>
-      </QueryErrorBoundary>
-    )
-  }
-
-  if (data?.accountStatus?.registered === false) {
-    return <Register queryRef={data} />
-  }
-
-  // Check if the user has multi-factor enabled and show them the flow if they do
-  if (multiFactorEnabled) {
-    return <MultiFactor queryRef={data} />
-  }
-
-  // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
-  return (<Grant queryRef={data} />)
+  return (
+    <BackgroundPatternWrapper>
+      <PageWrapperDesktop>
+        <PlatformBenefitsAdvert>
+          <JoinFragment />
+        </PlatformBenefitsAdvert>
+      </PageWrapperDesktop>
+    </BackgroundPatternWrapper>
+  )
 }
 
 export default JoinRoot

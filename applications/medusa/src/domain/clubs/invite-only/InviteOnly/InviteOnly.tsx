@@ -7,6 +7,8 @@ import { ExternalLink } from '@//:modules/routing'
 import { Heading, Stack, Text } from '@chakra-ui/react'
 import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/HighlightInline'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { OverdollLogo } from '@//:assets/logos'
+import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
 
 const InviteOnly: PageProps<{}> = () => {
   const HEADER_PROPS = {
@@ -32,6 +34,12 @@ const InviteOnly: PageProps<{}> = () => {
       </Head>
       <PageWrapper>
         <Stack spacing={16}>
+          <Icon
+            icon={OverdollLogo}
+            w={40}
+            h={40}
+            fill='primary.400'
+          />
           <Stack spacing={1}>
             <Heading {...HEADER_PROPS}>
               <Trans>
@@ -59,7 +67,7 @@ const InviteOnly: PageProps<{}> = () => {
                 <HighlightInline {...HIGHLIGHT_PROPS}> Building a great platform in the adult entertainment space is
                   infinitely more challenging.
                 </HighlightInline> With a select group of artists, we believe that we can collect constructive
-                feedback from you and build a great platform that adult content artists and their fans truly deserve.
+                feedback and build a great platform that adult content artists and their fans truly deserve.
               </Trans>
             </Text>
           </Stack>

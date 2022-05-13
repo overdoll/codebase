@@ -1,14 +1,13 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { useEffect, useMemo } from 'react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '@//:assets/icons/navigation'
+import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { Trans } from '@lingui/macro'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import Head from 'next/head'
+import { MailEnvelope } from '@//:assets/icons'
 
 interface Props {
   refresh: () => void
@@ -22,6 +21,8 @@ const LobbyFragment = graphql`
   }
 `
 
+let timeout = null
+
 export default function Lobby ({
   queryRef,
   refresh
@@ -31,6 +32,7 @@ export default function Lobby ({
   const [cookies] = useCookies<string>(['token'])
 
   // in case email isn't available, we get our fallback (read from cookie)
+  // TODO causes a router mismatch error
   const email = useMemo(() => {
     const emailCookie = cookies.token
 
@@ -42,61 +44,76 @@ export default function Lobby ({
   }, [cookies])
 
   // poll for result
+  // TODO figure out a way to stub it since it will keep running even if its on another route
+  // TODO needs a return to clear it
   useEffect(() => {
     const refreshLoop = (): void => {
+      console.log('refreshing from lobby')
       refresh()
-      setTimeout(refreshLoop, 2000)
+      timeout = setTimeout(refreshLoop, 2000)
     }
 
-    setTimeout(refreshLoop, 2000)
+    timeout = setTimeout(refreshLoop, 2000)
+
+    return () => {
+      if (timeout != null) {
+        clearTimeout(timeout)
+      }
+    }
   }, [])
 
   return (
     <>
       <Head>
-        <title>Waiting For Authentication :: overdoll</title>
+        <title>Waiting for authentication... :: overdoll</title>
       </Head>
-      <PageWrapper>
-        <Stack spacing={8}>
+      <Flex align='center' h='100%' position='relative'>
+        <Flex top={0} position='absolute' w='100%' justify='flex-end'>
+          <RevokeTokenButton queryRef={data} />
+        </Flex>
+        <Stack spacing={6}>
           <Icon
-            icon={BadgeCircle}
-            w={100}
-            h={100}
-            fill='purple.300'
-            ml='auto'
-            mr='auto'
+            icon={MailEnvelope}
+            w={16}
+            h={16}
+            fill='purple.400'
           />
-          <Heading
-            textAlign='center'
-            size='md'
-            color='gray.00'
-          >
-            <Trans>
-              Tap on the link you received in your email inbox to continue
-            </Trans>
-          </Heading>
+          <Box>
+            <Heading
+              textAlign='center'
+              fontSize='xl'
+              color='gray.00'
+              mb={1}
+            >
+              <Trans>
+                Tap on the link you received in your email inbox to continue
+              </Trans>
+            </Heading>
+            <Heading textAlign='center' color='gray.300' fontSize='sm'>
+              <Trans>
+                Make sure to check your spam!
+              </Trans>
+            </Heading>
+          </Box>
           <Flex
             justify='center'
+            align='center'
             wordBreak='break-all'
-            pt={3}
-            pb={3}
-            pr={2}
-            borderRadius={5}
-            bg='gray.800'
+            p={3}
+            borderRadius='md'
+            bg='gray.900'
             w='100%'
           >
-            <Text
-              fontSize='lg'
+            <Heading
+              textAlign='center'
+              fontSize='md'
               color='purple.300'
             >
-              {email ?? data.email}
-            </Text>
-          </Flex>
-          <Flex w='100%' justify='center'>
-            <RevokeTokenButton queryRef={data} />
+              {data.email}
+            </Heading>
           </Flex>
         </Stack>
-      </PageWrapper>
+      </Flex>
     </>
   )
 }

@@ -19,6 +19,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import HorizontalNavigation from '../HorizontalNavigation'
+import SiteLinkLogo from '../../../../../domain/app/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 
 interface Props {
   children: ReactNode
@@ -73,6 +74,7 @@ const HorizontalNavigationDropdownMenu = ({
           >
             <ModalOverlay />
             <ModalContent>
+              <SiteLinkLogo />
               <ModalBody
                 px={3}
               >
