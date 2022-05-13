@@ -59,9 +59,11 @@ export default function DraggableContent ({
           {...provided.dragHandleProps}
         >
           <Flex align='center' w='12%' justify='center'>
-            <Heading fontSize='lg'>
-              {index + 1}
-            </Heading>
+            <Flex borderRadius='full' bg='gray.600' w={10} h={10} align='center' justify='center'>
+              <Heading fontSize='xl'>
+                {index + 1}
+              </Heading>
+            </Flex>
           </Flex>
           <Flex align='center' justify='center' w='38%'>
             <ResourceInfo query={data} />

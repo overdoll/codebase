@@ -290,6 +290,7 @@ Cypress.Commands.add('assignArtistRole', (username: string) => {
           }
         ).then(({ body }) => {
           expect(body.data.assignAccountArtistRole.account.isArtist).to.equal(true)
+          // TODO logout here
         })
     })
 })

@@ -7,6 +7,8 @@ import { useContext, useEffect, useState } from 'react'
 import { UppyContext } from '../../../../../../../context'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import ArrangeButton from './ArrangeButton/ArrangeButton'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import { t } from '@lingui/macro'
 
 interface Props {
   query: ArrangeUploadsFragment$key
@@ -100,6 +102,8 @@ export default function ArrangeUploads ({
 
   const [displayData, setDisplayData] = useState(data.content)
 
+  const notify = useToast()
+
   const onRemoveContent = (id: string): void => {
     removeContent({
       variables: {
@@ -111,8 +115,11 @@ export default function ArrangeUploads ({
       onCompleted () {
         uppy.removeFile(id)
       },
-      onError (data) {
-        console.log(data)
+      onError () {
+        notify({
+          status: 'error',
+          title: t`Error removing content ${id}`
+        })
       }
     })
   }
@@ -126,8 +133,11 @@ export default function ArrangeUploads ({
           isSupporterOnly: isSupporterOnly
         }
       },
-      onError (data) {
-        console.log(data)
+      onError () {
+        notify({
+          status: 'error',
+          title: t`Error marking content ${id} as supporter only`
+        })
       }
     })
   }
