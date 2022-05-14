@@ -5,3 +5,4 @@ nameOverride: "hades"
 
 service: true
 http: true
+grpc: true
