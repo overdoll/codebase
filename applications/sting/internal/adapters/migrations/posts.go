@@ -71,7 +71,7 @@ func createPostsIndex(ctx context.Context, session gocqlx.Session, ev migrate.Ca
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.PostIndexName).Index(postIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.PostIndexName).BodyString(postIndex).Do(ctx)
 
 	if err != nil {
 		return err

@@ -3,21 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "seeders",
     srcs = ["seeders.go"],
-    embedsrcs = [
-        "data/audience.json",
-        "data/audience_slugs.json",
-        "data/categories.json",
-        "data/categories_slugs.json",
-        "data/characters.json",
-        "data/characters_slugs.json",
-        "data/posts.json",
-        "data/series.json",
-        "data/series_slugs.json",
-    ],
     importpath = "overdoll/applications/sting/internal/adapters/seeders",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/adapters",
+        "//applications/sting/internal/adapters/seeders/data",
         "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

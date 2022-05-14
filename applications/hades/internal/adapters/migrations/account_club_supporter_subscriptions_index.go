@@ -16,6 +16,9 @@ const subscriptionsIndex = `
 				"account_id": {
 					"type": "keyword"
 				},
+				"club_id": {
+					"type": "keyword"
+				},
 				"id": {
 					"type": "keyword"
 				},
@@ -29,9 +32,6 @@ const subscriptionsIndex = `
 					"type": "date"
 				},
 				"updated_at": {
-					"type": "date"
-				},
-				"failed_at": {
 					"type": "date"
 				},
 				"failed_at": {
@@ -81,7 +81,7 @@ func createAccountClubSupporterSubscriptionsIndex(ctx context.Context, session g
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.SubscriptionsIndexName).Index(subscriptionsIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.SubscriptionsIndexName).BodyString(subscriptionsIndex).Do(ctx)
 
 	if err != nil {
 		return err

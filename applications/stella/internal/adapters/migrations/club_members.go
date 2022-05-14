@@ -43,7 +43,7 @@ func createClubMembersIndex(ctx context.Context, session gocqlx.Session, ev migr
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.ClubMembersIndexName).Index(clubMembersIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.ClubMembersIndexName).BodyString(clubMembersIndex).Do(ctx)
 
 	if err != nil {
 		return err

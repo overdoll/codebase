@@ -6,11 +6,11 @@ go_library(
         "migrations.go",
         "post_reports.go",
     ],
-    embedsrcs = ["cql/1608755525914_create_moderation.cql"],
     importpath = "overdoll/applications/parley/internal/adapters/migrations",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
         "//applications/parley/internal/adapters",
+        "//applications/parley/internal/adapters/migrations/cql",
         "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

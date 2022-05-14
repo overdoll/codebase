@@ -24,7 +24,7 @@ const postReportIndexProperties = `
 	},
 	"created_at": {
 		"type": "date"
-	},
+	}
 }
 `
 
@@ -40,7 +40,7 @@ func createPostReportsIndex(ctx context.Context, session gocqlx.Session, ev migr
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.PostReportsIndexName).Index(postReportsIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.PostReportsIndexName).BodyString(postReportsIndex).Do(ctx)
 
 	if err != nil {
 		return err

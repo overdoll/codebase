@@ -3,14 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "seeders",
     srcs = ["seeders.go"],
-    embedsrcs = [
-        "data/moderators.json",
-        "data/rules.json",
-    ],
     importpath = "overdoll/applications/parley/internal/adapters/seeders",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
         "//applications/parley/internal/adapters",
+        "//applications/parley/internal/adapters/seeders/data",
         "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

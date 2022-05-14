@@ -39,7 +39,7 @@ type accountClubSupporterSubscriptionDocument struct {
 	CancellationReasonId   *string   `json:"cancellation_reason_id"`
 }
 
-const SubscriptionsIndexName = "club_supporter_subscriptions"
+const SubscriptionsIndexName = "account_club_supporter_subscriptions"
 
 func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (*billing.AccountClubSupporterSubscription, error) {
 

@@ -3,11 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "seeders",
     srcs = ["seeders.go"],
-    embedsrcs = ["data/cancellation_reasons.json"],
     importpath = "overdoll/applications/hades/internal/adapters/seeders",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/adapters",
+        "//applications/hades/internal/adapters/seeders/data",
         "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

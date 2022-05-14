@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS ccbill_subscription_details
     primary key ( ccbill_subscription_id )
 );
 
-CREATE TABLE IF NOT EXISTS account_active_or_cancelled_supporter_subscriptions
+CREATE TABLE IF NOT EXISTS acc_active_or_cancelled_supporter_subs
 (
     account_id text,
     club_id    text,

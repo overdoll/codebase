@@ -45,7 +45,7 @@ func createSeriesIndex(ctx context.Context, session gocqlx.Session, ev migrate.C
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.SeriesIndexName).Index(seriesIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.SeriesIndexName).BodyString(seriesIndex).Do(ctx)
 
 	if err != nil {
 		return err

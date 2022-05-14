@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "data",
+    srcs = ["embed.go"],
+    embedsrcs = [
+        "moderators.json",
+        "rules.json",
+    ],
+    importpath = "overdoll/applications/parley/internal/adapters/seeders/data",
+    visibility = ["//applications/parley:__subpackages__"],
+)

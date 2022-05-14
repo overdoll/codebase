@@ -83,7 +83,7 @@ func createAccountTransactionsIndex(ctx context.Context, session gocqlx.Session,
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.AccountTransactionsIndexName).Index(accountTransactionIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.AccountTransactionsIndexName).BodyString(accountTransactionIndex).Do(ctx)
 
 	if err != nil {
 		return err

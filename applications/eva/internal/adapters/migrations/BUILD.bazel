@@ -3,10 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "migrations",
     srcs = ["migrations.go"],
-    embedsrcs = ["cql/1608755525914_create_accounts.cql"],
     importpath = "overdoll/applications/eva/internal/adapters/migrations",
     visibility = ["//applications/eva:__subpackages__"],
     deps = [
+        "//applications/eva/internal/adapters/migrations/cql",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//migrate",
     ],

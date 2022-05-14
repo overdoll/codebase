@@ -49,7 +49,7 @@ func createCharacterIndex(ctx context.Context, session gocqlx.Session, ev migrat
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.CharacterIndexName).Index(characterIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.CharacterIndexName).BodyString(characterIndex).Do(ctx)
 
 	if err != nil {
 		return err

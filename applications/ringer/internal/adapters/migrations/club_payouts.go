@@ -65,7 +65,7 @@ func createClubPayoutsIndex(ctx context.Context, session gocqlx.Session, ev migr
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.ClubPayoutsIndexName).Index(clubPayoutsIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.ClubPayoutsIndexName).BodyString(clubPayoutsIndex).Do(ctx)
 
 	if err != nil {
 		return err

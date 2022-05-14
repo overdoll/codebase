@@ -65,7 +65,7 @@ type accountSavedPaymentMethod struct {
 }
 
 var accountActiveOrCancelledSupporterSubscriptionsTable = table.New(table.Metadata{
-	Name: "account_active_or_cancelled_supporter_subscriptions",
+	Name: "acc_active_or_cancelled_supporter_subs",
 	Columns: []string{
 		"account_id",
 		"club_id",

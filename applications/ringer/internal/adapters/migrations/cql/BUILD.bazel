@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cql",
+    srcs = ["embed.go"],
+    embedsrcs = ["1614606770_create_payments.cql"],
+    importpath = "overdoll/applications/ringer/internal/adapters/migrations/cql",
+    visibility = ["//applications/ringer:__subpackages__"],
+)

@@ -10,11 +10,11 @@ go_library(
         "posts.go",
         "series.go",
     ],
-    embedsrcs = ["cql/1614606770_create_posts.cql"],
     importpath = "overdoll/applications/sting/internal/adapters/migrations",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/adapters",
+        "//applications/sting/internal/adapters/migrations/cql",
         "//libraries/bootstrap",
         "//libraries/database",
         "//libraries/localization",

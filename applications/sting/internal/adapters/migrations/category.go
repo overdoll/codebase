@@ -45,7 +45,7 @@ func createCategoryIndex(ctx context.Context, session gocqlx.Session, ev migrate
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.CategoryIndexName).Index(categoryIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.CategoryIndexName).BodyString(categoryIndex).Do(ctx)
 
 	if err != nil {
 		return err

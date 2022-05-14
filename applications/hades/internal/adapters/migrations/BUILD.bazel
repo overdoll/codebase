@@ -7,11 +7,11 @@ go_library(
         "account_transactions_index.go",
         "migrations.go",
     ],
-    embedsrcs = ["cql/1614606770_create_billing.cql"],
     importpath = "overdoll/applications/hades/internal/adapters/migrations",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/adapters",
+        "//applications/hades/internal/adapters/migrations/cql",
         "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

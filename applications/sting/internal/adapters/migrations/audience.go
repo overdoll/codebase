@@ -48,7 +48,7 @@ func createAudienceIndex(ctx context.Context, session gocqlx.Session, ev migrate
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.CreateIndex(adapters.AudienceIndexName).Index(audienceIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.AudienceIndexName).BodyString(audienceIndex).Do(ctx)
 
 	if err != nil {
 		return err
