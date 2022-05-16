@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS club_payments
     status                      text,
     settlement_date             timestamp,
     source_account_id           text,
-    club_payout_ids             list<text>,
+    club_payout_ids             set<text>,
     account_transaction_id      text,
     destination_club_id         text,
     currency                    text,

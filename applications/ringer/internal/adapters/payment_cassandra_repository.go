@@ -328,10 +328,6 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentStatus(ctx con
 	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"status"})
 }
 
-func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
-	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"club_payout_ids"})
-}
-
 func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {
 
 	if err := r.session.
@@ -403,19 +399,45 @@ func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx c
 
 func (r PaymentCassandraElasticsearchRepository) AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+	chunkSize := 100
 
-	stmt, _ := clubPaymentsByPayoutTable.Insert()
+	var chunks [][]string
+	for i := 0; i < len(paymentIds); i += chunkSize {
+		end := i + chunkSize
 
-	for _, id := range paymentIds {
-		batch.Query(stmt,
-			payoutId,
-			id,
-		)
+		// necessary check to avoid slicing beyond
+		// slice capacity
+		if end > len(paymentIds) {
+			end = len(paymentIds)
+		}
+
+		chunks = append(chunks, paymentIds[i:end])
 	}
 
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new club payment: %v", err)
+	for _, chunk := range chunks {
+
+		batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+
+		stmt, _ := clubPaymentsByPayoutTable.Insert()
+
+		for _, id := range chunk {
+			batch.Query(stmt,
+				payoutId,
+				id,
+			)
+
+			stmt, _ := clubPaymentsTable.UpdateBuilder("club_payout_ids").AddLit("club_payout_ids", `'`+id+`'`).ToCql()
+			batch.Query(stmt)
+		}
+
+		if err := r.session.ExecuteBatch(batch); err != nil {
+			return fmt.Errorf("failed to append new club payment to payout: %v", err)
+		}
+
+		// update our index to reflect changes
+		if err := r.updateIndexPaymentPayoutId(ctx, payoutId, chunk); err != nil {
+			return err
+		}
 	}
 
 	return nil

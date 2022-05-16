@@ -161,6 +161,19 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 	return pays, nil
 }
 
+func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx context.Context, payoutId string, paymentIds []string) error {
+	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
+		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
+		Script(elastic.NewScript("ctx._source.club_payout_ids.contains(payoutId) ? (ctx.op = \"none\") : ctx._source.club_payout_ids += payoutId").Param("payoutId", payoutId).Lang("painless")).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("failed to update index append club payments payout id: %v", err)
+	}
+
+	return nil
+}
+
 func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
