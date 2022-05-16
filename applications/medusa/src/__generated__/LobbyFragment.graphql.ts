@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac0772f211f9ec3e9c67ff4f6b218150>>
+ * @generated SignedSource<<cb7a535da0ddb9fe7e04aaf1123359e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LobbyFragment$data = {
+  readonly token: string;
   readonly email: string | null;
   readonly " $fragmentSpreads": FragmentRefs<"RevokeTokenButtonFragment">;
   readonly " $fragmentType": "LobbyFragment";
@@ -27,6 +28,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "LobbyFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "token",
+      "storageKey": null
+    },
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -49,6 +57,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a73b0d03a38dfc747205017591853b23";
+(node as any).hash = "f0bb252b4cee1c2012dbb12af08c861a";
 
 export default node;

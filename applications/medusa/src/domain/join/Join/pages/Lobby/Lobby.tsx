@@ -1,55 +1,54 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useEffect, useMemo } from 'react'
+import { Suspense, useEffect } from 'react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
-import { useCookies } from 'react-cookie'
 import { Trans } from '@lingui/macro'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import Head from 'next/head'
 import { MailEnvelope } from '@//:assets/icons'
+import { Timeout } from '@//:types/components'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+
+import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
+import RefreshLobby from './RefreshLobby/RefreshLobby'
 
 interface Props {
-  refresh: () => void
   queryRef: LobbyFragment$key
+}
+
+interface SearchProps {
+  token: string
 }
 
 const LobbyFragment = graphql`
   fragment LobbyFragment on AuthenticationToken {
+    token
     email
     ...RevokeTokenButtonFragment
   }
 `
 
-let timeout = null
+let timeout: null | Timeout = null
 
 export default function Lobby ({
-  queryRef,
-  refresh
+  queryRef
 }: Props): JSX.Element {
   const data = useFragment(LobbyFragment, queryRef)
 
-  const [cookies] = useCookies<string>(['token'])
-
-  // in case email isn't available, we get our fallback (read from cookie)
-  // TODO causes a router mismatch error
-  const email = useMemo(() => {
-    const emailCookie = cookies.token
-
-    if (emailCookie != null) {
-      return emailCookie.split(';')[1]
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      token: data.token
     }
-
-    return ''
-  }, [cookies])
+  })
 
   // poll for result
-  // TODO figure out a way to stub it since it will keep running even if its on another route
-  // TODO needs a return to clear it
   useEffect(() => {
     const refreshLoop = (): void => {
-      console.log('refreshing from lobby')
-      refresh()
+      loadQuery()
       timeout = setTimeout(refreshLoop, 2000)
     }
 
@@ -112,6 +111,11 @@ export default function Lobby ({
               {data.email}
             </Heading>
           </Flex>
+          <QueryErrorBoundary loadQuery={loadQuery}>
+            <Suspense fallback={<></>}>
+              <RefreshLobby searchArguments={searchArguments} />
+            </Suspense>
+          </QueryErrorBoundary>
         </Stack>
       </Flex>
     </>

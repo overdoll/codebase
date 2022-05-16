@@ -85,7 +85,7 @@ export default function PostState ({
                   href={CLUB_GUIDELINES}
                 >
                   Club Guidelines
-                </Link>{' '}carefully before posting
+                </Link>{' '}carefully. Creating and submitting a post also means you agree to these guidelines.
               </Trans>
             </Text>
           </Box>

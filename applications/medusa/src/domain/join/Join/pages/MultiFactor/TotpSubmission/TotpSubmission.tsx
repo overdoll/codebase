@@ -36,6 +36,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment TotpSubmissionFragment on AuthenticationToken {
+    id
     token
   }
 `
@@ -43,6 +44,7 @@ const Fragment = graphql`
 const Mutation = graphql`
   mutation TotpSubmissionMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
+      revokedAuthenticationTokenId
       validation
       account {
         id
@@ -114,8 +116,14 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.validation === 'TOKEN_INVALID') {
+          store.get(data.id)?.invalidateRecord()
+          removeCookie('token')
+        }
+
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id != null) {
           const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id)
+          store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.revokedAuthenticationTokenId)?.invalidateRecord()
           prepareViewer(store, account)
           removeCookie('token')
           void router.push(redirect != null ? redirect : '/')

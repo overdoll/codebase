@@ -83,6 +83,11 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
       },
       updater: (store, payload) => {
+        if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
+          store.get(data.id)?.invalidateRecord()
+          removeCookie('token')
+        }
+
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
@@ -109,7 +114,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an issue with registration.`,
+          title: t`There was an issue with registration`,
           isClosable: true
         })
       }

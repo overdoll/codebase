@@ -1,5 +1,5 @@
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import { Suspense, useCallback, useEffect, useState, useTransition } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Register from './pages/Register/Register'
 import Lobby from './pages/Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
@@ -12,6 +12,8 @@ import { PageProps } from '@//:types/app'
 import BackgroundPatternWrapper from './components/BackgroundPatternWrapper/BackgroundPatternWrapper'
 import PageWrapperDesktop from '../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
 import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/PlatformBenefitsAdvert'
+import { useCookies } from 'react-cookie'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   queryRefs: {
@@ -49,6 +51,8 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     props.queryRefs.joinQuery
   )
 
+  const [cookies] = useCookies<string>(['token'])
+
   const ref = usePreloadedQuery<JoinRootQuery>(JoinTokenStatus, queryRef as PreloadedQuery<JoinRootQuery>)
 
   const data = ref.viewAuthenticationToken
@@ -58,24 +62,16 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
   const authenticationInitiated = !(data == null)
   const authenticationTokenVerified = data?.verified === true
 
+  // Keep track of the cookie here
+  let tokenCookie = cookies.token
+
+  if (tokenCookie != null) {
+    tokenCookie = tokenCookie.split(';')[0]
+  }
+
   // used to track whether there was previously a token grant, so that if
   // an invalid token was returned, we can show an "expired" token page
   const [hadGrant, setHadGrant] = useState<boolean>(false)
-
-  // transition used to prevent flickering caused by refetch
-  // @ts-expect-error
-  const [, startTransition] = useTransition({
-    timeoutMs: 7000
-  })
-
-  // a refresh query - used mainly for polling
-  const refresh = useCallback(() => {
-    if (data?.verified !== true) {
-      startTransition(() => {
-        loadQuery({ token: data?.token as string }, { fetchPolicy: 'network-only' })
-      })
-    }
-  }, [data])
 
   // when a new join is started, we want to make sure that we save the fact that
   // there was one, so we can tell the user if the login code expired
@@ -88,6 +84,12 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
   const clearGrant = (): void => {
     setHadGrant(false)
   }
+
+  useUpdateEffect(() => {
+    if (tokenCookie != null) {
+      loadQuery({ token: tokenCookie })
+    }
+  }, [tokenCookie])
 
   const JoinFragment = (): JSX.Element => {
     // when authentication not initiated
@@ -104,12 +106,11 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     if (!authenticationTokenVerified) {
       return (
         <QueryErrorBoundary
-          loadQuery={() => loadQuery({ token: data?.token }, { fetchPolicy: 'network-only' })}
+          loadQuery={() => loadQuery({ token: tokenCookie }, { fetchPolicy: 'network-only' })}
         >
           <Suspense fallback={SkeletonStack}>
             <Lobby
               queryRef={data}
-              refresh={refresh}
             />
           </Suspense>
         </QueryErrorBoundary>

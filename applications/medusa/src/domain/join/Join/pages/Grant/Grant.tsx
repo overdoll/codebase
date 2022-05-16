@@ -21,6 +21,7 @@ const GrantAction = graphql`
   mutation GrantMutation($input: GrantAccountAccessWithAuthenticationTokenInput!) {
     grantAccountAccessWithAuthenticationToken(input: $input) {
       validation
+      revokedAuthenticationTokenId
       account {
         id
         username
@@ -83,6 +84,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
             status: 'error',
             title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
           })
+          removeCookie('token')
           return
         }
         notify({
@@ -93,9 +95,11 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationToken?.account?.id != null) {
           const account = store.get(payload?.grantAccountAccessWithAuthenticationToken?.account?.id)
+          store.get(payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
           prepareViewer(store, account)
-          removeCookie('token')
-          void router.push(redirect != null ? redirect : '/')
+          void router.push(redirect != null ? redirect : '/').then(() => {
+            removeCookie('token')
+          })
         }
       },
       onError (data) {
@@ -113,12 +117,11 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       <Head>
         <title>Logging In... :: overdoll</title>
       </Head>
-      <Stack spacing={6}>
+      <Stack align='center' justify='center' h='100%' spacing={6}>
         <Spinner
-          mb={6}
-          thickness='4px'
-          w={24}
-          h={24}
+          thickness='6px'
+          w={16}
+          h={16}
           color='primary.400'
         />
         <Box>

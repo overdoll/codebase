@@ -17,4 +17,6 @@ export interface InputPlaceholder {
   placeholder: string
 }
 
+export type Timeout = ReturnType<typeof setTimeout>
+
 export type ColorScheme = ThemeTypings['colorSchemes'] | (string & {})

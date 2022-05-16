@@ -36,6 +36,7 @@ interface Props {
 const RecoveryCodeMutationGQL = graphql`
   mutation RecoveryCodeMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
+      revokedAuthenticationTokenId
       validation
       account {
         id
@@ -60,6 +61,7 @@ const RecoveryCodeMutationGQL = graphql`
 
 const RecoveryCodeFragment = graphql`
   fragment RecoveryCodeFragment on AuthenticationToken {
+    id
     token
   }
 `
@@ -124,8 +126,13 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
+        if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.validation === 'TOKEN_INVALID') {
+          store.get(fragment.id)?.invalidateRecord()
+          removeCookie('token')
+        }
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id != null) {
           const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id)
+          store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.revokedAuthenticationTokenId)?.invalidateRecord()
           prepareViewer(store, account)
           removeCookie('token')
           void router.push(redirect != null ? redirect : '/')

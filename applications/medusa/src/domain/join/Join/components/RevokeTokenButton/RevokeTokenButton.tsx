@@ -67,7 +67,7 @@ export default function RevokeTokenButton ({
       },
       updater: (store, payload) => {
         if (payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId != null) {
-          store.delete(payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)
+          store.get(payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
           removeCookie('token')
         }
       }
