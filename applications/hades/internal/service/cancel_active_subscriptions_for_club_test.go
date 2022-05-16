@@ -32,7 +32,7 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CancelActiveSupporterSubscriptionsForClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CancelActiveSupporterSubscriptionsForClub, mock.Anything)
 
 	var cancelActiveSubscriptions CancelActiveSupporterSubscriptionsForClub
 

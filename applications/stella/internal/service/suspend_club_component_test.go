@@ -76,7 +76,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	relayId := convertClubIdToRelayId(clb.ID())
 	clubId := clb.ID()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SuspendClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	var suspendClub SuspendClub
 	err := client.Mutate(context.Background(), &suspendClub, map[string]interface{}{
@@ -101,7 +101,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	require.Len(t, updatedClb.Club.SuspensionLogs.Edges, 1, "should have 1 suspension log")
 	require.Equal(t, types.ClubSuspensionReasonManual, updatedClb.Club.SuspensionLogs.Edges[0].Node.ItemIssued.Reason, "should have 1 suspension log")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	_, err = grpcClient.SuspendClub(context.Background(), &stella.SuspendClubRequest{
 		ClubId:      clubId,
@@ -115,7 +115,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnSuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnSuspendClub, mock.Anything)
 
 	var unSuspendClub UnSuspendClub
 	err = client.Mutate(context.Background(), &unSuspendClub, map[string]interface{}{

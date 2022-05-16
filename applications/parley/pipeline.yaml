@@ -25,12 +25,6 @@ steps:
       - name: parley.component
         paths:
           - ./applications/parley/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/parley/docker-compose.ci.yaml
-    network_dependencies:
-      - host: parley
-        port: 8000
     targets:
       - //applications/parley/internal/adapters/...
       - //applications/parley/internal/service/...

@@ -22,7 +22,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillChargeback, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillChargeback, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Chargeback", map[string]string{
@@ -75,7 +75,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	event := transaction.Events[0]
 
-	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", event.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-27 03:18:00 +0000 UTC", event.CreatedAt.String(), "correct timestamp")
 	require.Equal(t, 699, event.Amount, "correct amount")
 	require.Equal(t, graphql.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "IDK LOL", event.Reason, "correct reason")

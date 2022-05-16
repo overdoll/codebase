@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/oschwald/geoip2-golang"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
@@ -15,6 +15,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	"overdoll/libraries/testing_tools/mocks"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -46,26 +47,47 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+type ComponentTestApplication struct {
+	App            app.Application
+	TemporalClient *temporalmocks.Client
+	CarrierClient  *mocks.MockCarrierClient
+	HadesClient    *mocks.MockHadesClient
+	StellaClient   *mocks.MockStellaClient
+	RingerClient   *mocks.MockRingerClient
+	ParleyClient   *mocks.MockParleyClient
+	StingClient    *mocks.MockStingClient
+}
 
-	// mock out carrier so we don't have to send emails in tests
-	// we "send" emails by placing them inside of a redis DB to be read later from tests
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
 
-	temporalClient := &mocks.Client{}
+	carrierClient := &mocks.MockCarrierClient{}
+	hadesClient := &mocks.MockHadesClient{}
+	stellaClient := &mocks.MockStellaClient{}
+	ringerClient := &mocks.MockRingerClient{}
+	parleyClient := &mocks.MockParleyClient{}
+	stingClient := &mocks.MockStingClient{}
 
-	return createApplication(
+	return &ComponentTestApplication{
+		App: createApplication(
 			ctx,
-			NewCarrierServiceMock(),
-			HadesServiceMock{},
-			StellaServiceMock{},
-			RingerServiceMock{},
-			ParleyServiceMock{},
-			StingServiceMock{},
-			temporalClient,
+			adapters.NewCarrierGrpc(carrierClient),
+			adapters.NewHadesGrpc(hadesClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewRingerGrpc(ringerClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStingGrpc(stingClient),
+			clients.NewTemporalClient(ctx),
 		),
-		func() {
-		},
-		temporalClient
+		TemporalClient: temporalClient,
+		CarrierClient:  carrierClient,
+		HadesClient:    hadesClient,
+		StellaClient:   stellaClient,
+		RingerClient:   ringerClient,
+		ParleyClient:   parleyClient,
+		StingClient:    stingClient,
+	}
 }
 
 func createApplication(

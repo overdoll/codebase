@@ -26,7 +26,7 @@ func TestClubSupport(t *testing.T) {
 	// do a new supporter post grpc call
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.NewSupporterPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.NewSupporterPost, mock.Anything)
 
 	_, err := grpcClient.NewSupporterPost(context.Background(), &stella.NewSupporterPostRequest{
 		ClubId: clb.ID(),

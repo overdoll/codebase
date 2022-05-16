@@ -34,7 +34,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	clb := seedClub(t, regularAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.TerminateClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.TerminateClub, mock.Anything)
 
 	var terminateClub TerminateClub
 	err := client.Mutate(context.Background(), &terminateClub, map[string]interface{}{
@@ -66,7 +66,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.Nil(t, updatedClb.Club, "club should not be found")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnTerminateClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnTerminateClub, mock.Anything)
 
 	var unTerminateClub UnTerminateClub
 	err = client.Mutate(context.Background(), &unTerminateClub, map[string]interface{}{

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/shurcooL/graphql"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -32,10 +31,6 @@ const HadesGrpcClientAddr = "localhost:6247"
 
 const HadesGraphqlClientAddr = "http://:6666/api/graphql"
 
-var (
-	temporalClientMock *mocks.Client
-)
-
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
 	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
@@ -54,8 +49,8 @@ func convertClubIdIdToRelayId(clubId string) relay.ID {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	app := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(app.App.Activities)
 
 	return env
 }
@@ -70,11 +65,9 @@ func getGrpcClient(t *testing.T) hades.HadesClient {
 func startService() bool {
 	config.Read("applications/hades")
 
-	application, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
-
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(&app.App)
 
 	go bootstrap.InitializeHttpServer(HadesHttpAddr, srv, func() {})
 
@@ -84,7 +77,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(&app.App)
 
 	go bootstrap.InitializeGRPCServer(HadesGrpcAddr, func(server *grpc.Server) {
 		hades.RegisterHadesServer(server, s)
@@ -96,6 +89,8 @@ func startService() bool {
 		log.Println("timed out waiting for hades GRPC to come up")
 		return false
 	}
+
+	mockServices(app)
 
 	return true
 }

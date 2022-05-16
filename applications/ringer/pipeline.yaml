@@ -25,12 +25,6 @@ steps:
       - name: ringer.component
         paths:
           - ./applications/ringer/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/ringer/docker-compose.ci.yaml
-    network_dependencies:
-      - host: ringer
-        port: 8000
     targets:
       - //applications/ringer/internal/adapters/...
       - //applications/ringer/internal/service/...
@@ -38,7 +32,6 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/ringer/docker-compose.ci.yaml
         - ./applications/ringer/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: ringer

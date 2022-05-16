@@ -83,7 +83,7 @@ type LeaveClub struct {
 
 func joinClub(t *testing.T, client *graphql.Client, clubId, accountId string) {
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubMember, workflows.AddClubMemberInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddClubMember, workflows.AddClubMemberInput{
 		ClubId:    clubId,
 		AccountId: accountId,
 	})
@@ -160,7 +160,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	require.Equal(t, clubId, res.ClubMembershipIds[0], "should have a matching club ID")
 
-	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddClubSupporter, mock.Anything)
+	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.AddClubSupporter(context.Background(), &stella.AddClubSupporterRequest{
@@ -181,7 +181,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
 
-	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemoveClubSupporter, mock.Anything)
+	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.RemoveClubSupporter(context.Background(), &stella.RemoveClubSupporterRequest{
@@ -200,7 +200,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
 
-	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemoveClubMember, mock.Anything)
+	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubMember, mock.Anything)
 
 	// withdraw club membership
 	var leaveClub LeaveClub

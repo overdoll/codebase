@@ -37,7 +37,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRefund, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillRefund, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Refund", map[string]string{
@@ -111,7 +111,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.NoError(t, err, "no error looking up transaction")
 	require.NotNil(t, accountTransaction.AccountTransaction, "account transaction history should exist")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterRefundReceiptFromAccountTransaction, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubSupporterRefundReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -119,7 +119,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		On("Get", mock.Anything, mock.Anything).
 		Return(nil)
 
-	temporalClientMock.
+	application.TemporalClient.
 		On("GetWorkflow", mock.Anything, "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed

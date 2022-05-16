@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"net/http"
 	"os"
 	"overdoll/applications/hades/internal/adapters"
@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/hades/internal/app/command"
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/libraries/testing_tools/mocks"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
@@ -44,28 +45,40 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+type ComponentTestApplication struct {
+	App            app.Application
+	TemporalClient *temporalmocks.Client
+	EvaClient      *mocks.MockEvaClient
+	CarrierClient  *mocks.MockCarrierClient
+	StellaClient   *mocks.MockStellaClient
+	RingerClient   *mocks.MockRingerClient
+}
 
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
 
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	evaClient := &mocks.MockEvaClient{}
+	stellaClient := &mocks.MockStellaClient{}
+	carrierClient := &mocks.MockCarrierClient{}
+	ringerClient := &mocks.MockRingerClient{}
 
-	temporalClient := &mocks.Client{}
-
-	return createApplication(ctx,
-			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-			// this makes testing easier because we can get reproducible tests with each run
-			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			StellaServiceMock{},
-			CarrierServiceMock{},
-			RingerServiceMock{},
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewCarrierGrpc(carrierClient),
+			adapters.NewRingerGrpc(ringerClient),
 			MockCCBillHttpClient{},
 			temporalClient,
 		),
-		func() {
-			cleanup()
-		},
-		temporalClient
+		TemporalClient: temporalClient,
+		EvaClient:      evaClient,
+		CarrierClient:  carrierClient,
+		StellaClient:   stellaClient,
+		RingerClient:   ringerClient,
+	}
 }
 
 func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {

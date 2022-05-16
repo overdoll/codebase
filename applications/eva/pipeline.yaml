@@ -25,12 +25,6 @@ steps:
       - name: eva.component
         paths:
           - ./applications/eva/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/eva/docker-compose.ci.yaml
-    network_dependencies:
-      - host: eva
-        port: 8000
     targets:
       - //applications/eva/internal/adapters/...
       - //applications/eva/internal/service/...

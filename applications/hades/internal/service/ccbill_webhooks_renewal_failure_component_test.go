@@ -20,7 +20,7 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalFailure, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillRenewalFailure, mock.Anything)
 
 	// run webhook - renewal failure
 	runWebhookAction(t, "RenewalFailure", map[string]string{

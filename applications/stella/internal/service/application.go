@@ -3,24 +3,21 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/stella/internal/app/query"
-
 	"overdoll/applications/stella/internal/app/workflows/activities"
+	"overdoll/libraries/testing_tools/mocks"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
-
-	// bootstrap application
 	bootstrap.NewBootstrap(ctx)
-
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
@@ -40,27 +37,39 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+type ComponentTestApplication struct {
+	App            app.Application
+	TemporalClient *temporalmocks.Client
+	EvaClient      *mocks.MockEvaClient
+	CarrierClient  *mocks.MockCarrierClient
+	StingClient    *mocks.MockStingClient
+	LoaderClient   *mocks.MockLoaderClient
+}
 
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
 
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	evaClient := &mocks.MockEvaClient{}
+	loaderClient := &mocks.MockLoaderClient{}
+	stingClient := &mocks.MockStingClient{}
+	carrierClient := &mocks.MockCarrierClient{}
 
-	temporalClient := &mocks.Client{}
-
-	return createApplication(ctx,
-			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-			// this makes testing easier because we can get reproducible tests with each run
-			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			LoaderServiceMock{},
-			StingServiceMock{},
-			CarrierServiceMock{},
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewLoaderGrpc(loaderClient),
+			adapters.NewStingGrpc(stingClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			temporalClient,
 		),
-		func() {
-			cleanup()
-		},
-		temporalClient
+		TemporalClient: temporalClient,
+		EvaClient:      evaClient,
+		LoaderClient:   loaderClient,
+		CarrierClient:  carrierClient,
+		StingClient:    stingClient,
+	}
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) app.Application {

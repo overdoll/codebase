@@ -54,7 +54,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.NoError(t, err, "no error encrypting a new token")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillNewSaleOrUpSaleSuccess, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillNewSaleOrUpSaleSuccess, mock.Anything)
 
 	runWebhookAction(t, "NewSaleSuccess", map[string]string{
 		"accountingCurrency":             "USD",
@@ -186,7 +186,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
 	require.Equal(t, ccbillTransactionId, *transaction.CcbillTransaction.CcbillTransactionID, "correct ccbill transaction id")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -194,7 +194,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		On("Get", mock.Anything, mock.Anything).
 		Return(nil)
 
-	temporalClientMock.
+	application.TemporalClient.
 		On("GetWorkflow", mock.Anything, "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed

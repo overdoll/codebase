@@ -327,7 +327,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.Error(t, err)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SubmitPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SubmitPost, mock.Anything)
 
 	// finally, submit the post for review
 	var submitPost SubmitPost
@@ -468,7 +468,7 @@ func TestCreatePost_Publish(t *testing.T) {
 
 	stingClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.PublishPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.PublishPost, mock.Anything)
 
 	_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
@@ -498,7 +498,7 @@ func TestCreatePost_Discard(t *testing.T) {
 
 	stingClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DiscardPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DiscardPost, mock.Anything)
 
 	// "discard" pending post
 	_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
@@ -546,7 +546,7 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 	// make sure post is in rejected state
 	require.Equal(t, types.PostStateRejected, post.Post.State)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeletePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeletePost, mock.Anything)
 
 	var deletePost DeletePost
 
@@ -578,7 +578,7 @@ func TestCreatePost_Remove(t *testing.T) {
 	pst := seedPublishingPost(t, testingAccountId)
 	postId := pst.ID()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePost, mock.Anything)
 
 	stingClient := getGrpcClient(t)
 

@@ -21,7 +21,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCustomerDataUpdate, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillCustomerDataUpdate, mock.Anything)
 
 	// run webhook - customer data update
 	runWebhookAction(t, "CustomerDataUpdate", map[string]string{

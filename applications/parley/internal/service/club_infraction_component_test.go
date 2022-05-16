@@ -32,7 +32,7 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.IssueClubInfraction, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.IssueClubInfraction, mock.Anything)
 
 	var issueClubInfraction IssueClubInfraction
 

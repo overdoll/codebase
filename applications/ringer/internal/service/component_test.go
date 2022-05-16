@@ -6,7 +6,6 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -37,10 +36,6 @@ const RingerGrpcAddr = "localhost:7278"
 const RingerGrpcClientAddr = "localhost:7278"
 
 var (
-	temporalClientMock *mocks.Client
-)
-
-var (
 	delayedCallback = time.Minute
 )
 
@@ -65,8 +60,8 @@ func getGrpcClient(t *testing.T) ringer.RingerClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	app := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(app.App)
 
 	return env
 }
@@ -89,12 +84,12 @@ func convertAccountIdToRelayId(ruleId string) relay.ID {
 
 func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string, count int) {
 
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
 	for i := 0; i < count; i++ {
 
 		env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-		env.RegisterActivity(newApp.Activities)
+		env.RegisterActivity(app.App.Activities)
 
 		seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
 	}
@@ -205,11 +200,9 @@ func refreshPaymentsIndex(t *testing.T) {
 func startService() bool {
 	config.Read("applications/ringer")
 
-	app, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
-
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(&app.App)
 
 	go bootstrap.InitializeHttpServer(RingerHttpAddr, srv, func() {})
 
@@ -218,7 +211,7 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(&app.App)
 
 	go bootstrap.InitializeGRPCServer(RingerGrpcAddr, func(server *grpc.Server) {
 		ringer.RegisterRingerServer(server, s)
@@ -229,6 +222,8 @@ func startService() bool {
 	if !ok {
 		log.Println("Timed out waiting for eva GRPC to come up")
 	}
+
+	mockServices(app)
 
 	return true
 }

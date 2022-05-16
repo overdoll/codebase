@@ -21,7 +21,7 @@ func TestBillingFlow_Void(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillVoid, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillVoid, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Void", map[string]string{

@@ -22,7 +22,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalSuccess, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillRenewalSuccess, mock.Anything)
 
 	newTransactionId := uuid.New().String()
 

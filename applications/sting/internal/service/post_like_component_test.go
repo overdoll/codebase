@@ -81,7 +81,7 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, workflows.AddPostLikeInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, workflows.AddPostLikeInput{
 		PostId:    postId,
 		AccountId: testingAccountId,
 	})
@@ -105,7 +105,7 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should not be nil")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccountData, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, mock.Anything)
 
 	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error deleting account data")
@@ -133,7 +133,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.AddPostLike, workflows.AddPostLikeInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, workflows.AddPostLikeInput{
 		PostId:    postId,
 		AccountId: testingAccountId,
 	})
@@ -163,7 +163,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	require.Equal(t, 1, postAfterLiked.Post.Likes, "post has 1 like")
 
-	removeLikeWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePostLike, mock.Anything)
+	removeLikeWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePostLike, mock.Anything)
 
 	var undoLikePost UndoLikePost
 

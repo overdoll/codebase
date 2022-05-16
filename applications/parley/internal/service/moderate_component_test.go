@@ -148,7 +148,7 @@ func TestModeratePost_remove(t *testing.T) {
 	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePost, mock.Anything)
 
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{
@@ -209,7 +209,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	var rejectPost RejectPost
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
 		ClubId:    postId,
@@ -273,7 +273,7 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 	postModeratorQueue := accountPostModeratorQueue(t, client, accountId)
 	require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 1, "should be in queue")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
 		ClubId:    postId,
@@ -360,7 +360,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 	postId := uuid.New().String()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.PutPostIntoModeratorQueue, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.PutPostIntoModeratorQueue, mock.Anything)
 
 	res, err := grpcClient.PutPostIntoModeratorQueueOrPublish(context.Background(), &parley.PutPostIntoModeratorQueueOrPublishRequest{
 		PostId: postId,
@@ -382,7 +382,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 		require.Len(t, postModeratorQueue.Entities, 1, "should have found 1 entity")
 		require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 1, "should have found 1 item in queue")
 
-		approveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ApprovePost, mock.Anything)
+		approveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ApprovePost, mock.Anything)
 
 		// now, go through the motion of actually approving our post
 		var approvePost ApprovePost

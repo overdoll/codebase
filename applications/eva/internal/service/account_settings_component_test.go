@@ -350,7 +350,7 @@ func TestAccount_delete(t *testing.T) {
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, workflows.DeleteAccountInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccount, workflows.DeleteAccountInput{
 		AccountId:  accountId,
 		WorkflowId: "DeleteAccount_" + accountId,
 		CanCancel:  true,
@@ -391,7 +391,7 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	client, _ := getHttpClientWithAuthenticatedAccount(t, accountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteAccount, workflows.DeleteAccountInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccount, workflows.DeleteAccountInput{
 		AccountId:  accountId,
 		WorkflowId: "DeleteAccount_" + accountId,
 		CanCancel:  true,
@@ -409,7 +409,7 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	env.RegisterDelayedCallback(func() {
 
-		temporalClientMock.On("CancelWorkflow", mock.Anything, mock.Anything, mock.Anything).
+		application.TemporalClient.On("CancelWorkflow", mock.Anything, mock.Anything, mock.Anything).
 			Run(
 				func(args mock.Arguments) {
 					env.CancelWorkflow()

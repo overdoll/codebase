@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
 	stella "overdoll/applications/stella/proto"
@@ -29,10 +28,6 @@ import (
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
-)
-
-var (
-	temporalClientMock *mocks.Client
 )
 
 const StingHttpAddr = ":4564"
@@ -174,20 +169,18 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	app := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(app.App.Activities)
 
 	return env
 }
 
-func startService() bool {
+func startService(m *testing.M) bool {
 	config.Read("applications/sting")
 
-	application, _, newTClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = newTClient
-
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(&app.App)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
@@ -197,7 +190,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(&app.App)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)
@@ -210,11 +203,13 @@ func startService() bool {
 		return false
 	}
 
+	mockServices(app)
+
 	return true
 }
 
 func TestMain(m *testing.M) {
-	if !startService() {
+	if !startService(m) {
 		os.Exit(1)
 	}
 

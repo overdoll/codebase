@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/parley/internal/adapters"
 	"overdoll/applications/parley/internal/app"
@@ -12,6 +12,7 @@ import (
 	"overdoll/applications/parley/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/testing_tools/mocks"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -33,26 +34,36 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+type ComponentTestApplication struct {
+	App            app.Application
+	TemporalClient *temporalmocks.Client
+	EvaClient      *mocks.MockEvaClient
+	StingClient    *mocks.MockStingClient
+	StellaClient   *mocks.MockStellaClient
+}
 
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap(ctx)
 
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	temporalClient := &temporalmocks.Client{}
 
-	temporalClient := &mocks.Client{}
+	evaClient := &mocks.MockEvaClient{}
+	stingClient := &mocks.MockStingClient{}
+	stellaClient := &mocks.MockStellaClient{}
 
-	// mock sting, because it performs destructive operations and we dont want to
-	// re-seed data every single time we run this test
-	// also, the endpoints are already tested on sting, so we don't worry about potential failures
-	return createApplication(ctx,
-			EvaServiceMock{adapters.NewEvaGrpc(evaClient)},
-			StellaServiceMock{},
-			StingServiceMock{},
-			temporalClient),
-		func() {
-			cleanup()
-		},
-		temporalClient
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
+			temporalClient,
+		),
+		TemporalClient: temporalClient,
+		EvaClient:      evaClient,
+		StingClient:    stingClient,
+		StellaClient:   stellaClient,
+	}
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) app.Application {

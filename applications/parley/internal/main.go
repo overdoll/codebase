@@ -35,6 +35,10 @@ func init() {
 		Use: "grpc",
 		Run: RunGrpc,
 	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "worker",
+		Run: RunWorker,
+	})
 }
 
 func main() {
@@ -46,11 +50,7 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
-
-	if os.Getenv("DISABLE_WORKER") == "" {
-		go RunWorker(cmd, args)
-	}
-
+	go RunWorker(cmd, args)
 	RunGrpc(cmd, args)
 }
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
@@ -18,17 +18,21 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
-	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {
-
-	}
+	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
-	bootstrap.NewBootstrap(ctx)
-	temporalClient := &mocks.Client{}
-	return createApplication(ctx, temporalClient), func() {
+type ComponentTestApplication struct {
+	App            app.Application
+	TemporalClient *temporalmocks.Client
+}
 
-	}, temporalClient
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
+	return &ComponentTestApplication{
+		App:            createApplication(ctx, temporalClient),
+		TemporalClient: temporalClient,
+	}
 }
 
 func createApplication(ctx context.Context, client client.Client) app.Application {

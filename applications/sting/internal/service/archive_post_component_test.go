@@ -32,7 +32,7 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ArchivePost, workflows.ArchivePostInput{PostId: postId})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ArchivePost, workflows.ArchivePostInput{PostId: postId})
 
 	var archivePost ArchivePost
 
@@ -54,7 +54,7 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	require.Equal(t, types.PostStateArchived, post.Post.State, "post is in archived state")
 
-	unArchiveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnArchivePost, workflows.UnArchivePostInput{PostId: postId})
+	unArchiveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnArchivePost, workflows.UnArchivePostInput{PostId: postId})
 
 	var unArchivePost UnArchivePost
 

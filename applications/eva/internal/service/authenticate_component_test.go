@@ -208,7 +208,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTotpEnabled, "TOTP is enabled")
+	require.True(t, enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.Account.MultiFactorTotpConfigured, "TOTP is enabled")
 
 	// get new settings
 	settings = viewerAccountSettings(t, client)

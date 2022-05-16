@@ -20,7 +20,7 @@ func TestBillingFlow_BillingDateChanged(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillBillingDateChange, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillBillingDateChange, mock.Anything)
 
 	// run webhook - customer data update
 	runWebhookAction(t, "BillingDateChange", map[string]string{

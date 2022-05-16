@@ -118,7 +118,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.NoError(t, err, "no error checking if can delete account data")
 	require.False(t, res.CanDelete, "cannot delete account data with active subscription")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCancellation, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillCancellation, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Cancellation", map[string]string{
@@ -161,7 +161,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.Len(t, subscription.Transactions.Edges, 1, "should have 1 transaction")
 
-	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillExpiration, mock.Anything)
+	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillExpiration, mock.Anything)
 
 	// run webhook - expiration
 	runWebhookAction(t, "Expiration", map[string]string{

@@ -44,7 +44,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -245,7 +245,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -449,7 +449,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 4, processedAssertions, "expected to have checked 4 files")
 
-	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteResources, mock.Anything)
+	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteResources, mock.Anything)
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{

@@ -30,9 +30,9 @@ func startService() bool {
 	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/carrier")
 
-	app, _ := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewGrpcServer(&app)
+	srv := ports.NewGrpcServer(&app.App)
 
 	go bootstrap.InitializeGRPCServer(CarrierGrpcAddress, func(server *grpc.Server) {
 		carrier.RegisterCarrierServer(server, srv)
@@ -43,6 +43,8 @@ func startService() bool {
 	if !ok {
 		log.Println("Timed out waiting for carrier GRPC to come up")
 	}
+
+	mockServices(app)
 
 	return true
 }

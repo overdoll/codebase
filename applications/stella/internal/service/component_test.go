@@ -6,7 +6,6 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -26,10 +25,6 @@ import (
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
-)
-
-var (
-	temporalClientMock *mocks.Client
 )
 
 const StellaHttpAddr = ":2222"
@@ -55,8 +50,8 @@ func getGrpcClient(t *testing.T) stella.StellaClient {
 func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	app := service.NewComponentTestApplication(context.Background())
+	env.RegisterActivity(app.App.Activities)
 
 	return env
 }
@@ -122,12 +117,11 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 func startService() bool {
 	config.Read("applications/stella")
 
-	application, _, newTClient := service.NewComponentTestApplication(context.Background())
-	temporalClientMock = newTClient
+	app := service.NewComponentTestApplication(context.Background())
 
 	client := clients.NewTemporalClient(context.Background())
 
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(&app.App)
 
 	go bootstrap.InitializeHttpServer(StellaHttpAddr, srv, func() {})
 
@@ -137,7 +131,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application, client)
+	s := ports.NewGrpcServer(&app.App, client)
 
 	go bootstrap.InitializeGRPCServer(StellaGrpcAddr, func(server *grpc.Server) {
 		stella.RegisterStellaServer(server, s)
@@ -149,6 +143,8 @@ func startService() bool {
 		log.Println("timed out waiting for sting GRPC to come up")
 		return false
 	}
+
+	mockServices(app)
 
 	return true
 }

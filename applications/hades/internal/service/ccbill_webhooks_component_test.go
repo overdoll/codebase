@@ -11,87 +11,68 @@ import (
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/money"
 	"testing"
 )
 
 func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId string, customToken *string) {
 
-	var token *string
-
-	if customToken != nil {
-		token = customToken
-	} else {
-		// generate a new unique payment token
-		encrypted, err := ccbill.EncryptCCBillPayment(&hades.CCBillPayment{
-			HeaderConfiguration: &hades.HeaderConfiguration{
-				SavePaymentDetails: true,
-				CreatedAt:          timestamppb.Now(),
-			},
-			CcbillClubSupporter: &hades.CCBillClubSupporter{
-				ClubId: clubId,
-			},
-			AccountInitiator: &hades.AccountInitiator{
-				AccountId: accountId,
-			},
-		})
-
-		require.NoError(t, err, "no error encrypting a new token")
-
-		token = encrypted
+	token := &hades.CCBillPayment{
+		HeaderConfiguration: &hades.HeaderConfiguration{
+			SavePaymentDetails: true,
+			CreatedAt:          timestamppb.Now(),
+		},
+		CcbillClubSupporter: &hades.CCBillClubSupporter{
+			ClubId: clubId,
+		},
+		AccountInitiator: &hades.AccountInitiator{
+			AccountId: accountId,
+		},
 	}
 
 	env := getWorkflowEnvironment(t)
 	env.SetDetachedChildWait(false)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	env.RegisterWorkflow(workflows.ClubTransactionMetric)
+
+	timestamp, err := ccbill.ParseCCBillDateWithTime("2022-02-26 08:21:49")
+	require.NoError(t, err, "no error parsing time")
+
+	billedAt, err := ccbill.ParseCCBillDate("2022-02-26")
+	require.NoError(t, err, "no error parsing date")
+
+	nextBilledAt, err := ccbill.ParseCCBillDate("2022-03-28")
+	require.NoError(t, err, "no error parsing date")
+
 	// execute a new sale success workflow so we can seed data for this test
-	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpsaleSuccessInput{
-		AccountingCurrency:             "USD",
-		AccountingCurrencyCode:         "840",
-		AccountingInitialPrice:         "6.99",
-		AccountingRecurringPrice:       "6.99",
-		Address1:                       "Test Address",
-		BilledCurrency:                 "USD",
-		BilledCurrencyCode:             "840",
-		BilledInitialPrice:             "6.99",
-		BilledRecurringPrice:           "6.99",
-		Bin:                            "411111",
-		CardType:                       "VISA",
-		City:                           "Test City",
-		ClientAccnum:                   "951492",
-		ClientSubacc:                   "0101",
-		Country:                        "CA",
-		DynamicPricingValidationDigest: "5e118a92ac1ff6cec8bbe64e13acb7c5",
-		Email:                          "nikita@overdoll.com",
-		ExpDate:                        "0423",
-		FirstName:                      "Test",
-		FlexId:                         "d09af907-c198-44f2-b14e-eb9e1533cb45",
-		FormName:                       "101 102",
-		InitialPeriod:                  "30",
-		IpAddress:                      "192.168.1.1",
-		Last4:                          "1111",
-		LastName:                       "Person",
-		NextRenewalDate:                "2022-03-28",
-		PaymentAccount:                 "693a3b8d0d888c3d04800000004bacd",
-		PaymentType:                    "CREDIT",
-		PostalCode:                     "M4N5S1",
-		PriceDescription:               "$6.99(USD) for 30 days then $6.99(USD) recurring every 30 days",
-		Rebills:                        "99",
-		RecurringPeriod:                "30",
-		RecurringPriceDescription:      "$6.99(USD) recurring every 30 days",
-		ReferringUrl:                   "none",
-		State:                          "NT",
-		SubscriptionCurrency:           "USD",
-		SubscriptionCurrencyCode:       "840",
-		SubscriptionInitialPrice:       "6.99",
-		SubscriptionRecurringPrice:     "6.99",
-		SubscriptionTypeId:             "0000001458",
-		Timestamp:                      "2022-02-26 08:21:49",
-		TransactionId:                  ccbillTransactionId,
-		XFormDigest:                    "5e118a92ac1ff6cec8bbe64e13acb7c5",
-		XCurrencyCode:                  "840",
-		SubscriptionId:                 ccbillSubscriptionId,
-		XOverdollPaymentToken:          *token,
+	env.ExecuteWorkflow(workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpSaleSuccessInput{
+		SubscriptionId:             ccbillSubscriptionId,
+		TransactionId:              ccbillTransactionId,
+		AccountingInitialPrice:     699,
+		AccountingRecurringPrice:   699,
+		AccountingCurrency:         money.USD,
+		SubscriptionInitialPrice:   699,
+		SubscriptionRecurringPrice: 699,
+		SubscriptionCurrency:       money.USD,
+		BilledInitialPrice:         699,
+		BilledRecurringPrice:       699,
+		BilledCurrency:             money.USD,
+		PaymentToken:               token,
+		Timestamp:                  timestamp,
+		NextBillingDate:            nextBilledAt,
+		BilledAtDate:               billedAt,
+		AddressLine1:               "Test Address",
+		Bin:                        "411111",
+		CardType:                   "VISA",
+		City:                       "Test City",
+		Country:                    "CA",
+		Email:                      "nikita@overdoll.com",
+		ExpDate:                    "0423",
+		FirstName:                  "Test",
+		Last4:                      "1111",
+		LastName:                   "Person",
+		PostalCode:                 "M4N5S1",
+		State:                      "NT",
 	})
 
 	require.True(t, env.IsWorkflowCompleted())

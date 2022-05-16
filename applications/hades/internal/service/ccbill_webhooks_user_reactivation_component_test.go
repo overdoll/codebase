@@ -20,7 +20,7 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillUserReactivation, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillUserReactivation, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "UserReactivation", map[string]string{
