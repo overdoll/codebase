@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"overdoll/applications/stella/internal/adapters"
+	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports"
 	"overdoll/applications/stella/internal/ports/graphql/types"
@@ -47,11 +48,13 @@ func getGrpcClient(t *testing.T) stella.StellaClient {
 	return stellaClient
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	app := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(app.App.Activities)
+	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
+	env.RegisterWorkflow(workflows.AddClubMember)
 
 	return env
 }

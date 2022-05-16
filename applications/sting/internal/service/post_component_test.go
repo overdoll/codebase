@@ -342,12 +342,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	postId := submitPost.SubmitPost.Post.Reference
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.PublishPost)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
@@ -473,11 +468,7 @@ func TestCreatePost_Publish(t *testing.T) {
 	_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
@@ -504,10 +495,7 @@ func TestCreatePost_Discard(t *testing.T) {
 	_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
@@ -558,11 +546,7 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 
 	require.NoError(t, err, "no error deleting")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post = getPost(t, client, postId)
 
@@ -586,11 +570,7 @@ func TestCreatePost_Remove(t *testing.T) {
 	_, e := stingClient.RemovePost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 

@@ -46,10 +46,7 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	require.NoError(t, err, "no error issuing manual infraction")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "issue manual infraction correct")
-	require.NoError(t, env.GetWorkflowError(), "issue manual infraction no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 

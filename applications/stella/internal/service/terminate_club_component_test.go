@@ -45,10 +45,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error terminating club")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	refreshClubESIndex(t)
 
@@ -77,10 +74,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error un terminating")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Termination, "club is no longer suspended")

@@ -30,10 +30,9 @@ func ccbillNewSaleSuccessSeeder(t *testing.T, accountId, ccbillSubscriptionId, c
 		},
 	}
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.SetDetachedChildWait(false)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime("2022-02-26 08:21:49")
 	require.NoError(t, err, "no error parsing time")

@@ -114,7 +114,7 @@ func seedRule(t *testing.T, infraction bool) *rule.Rule {
 	return pst
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	newApp := service.NewComponentTestApplication(context.Background())

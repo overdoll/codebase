@@ -96,11 +96,7 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 
 	require.NoError(t, err, "no error liking a post")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should not be nil")
@@ -110,13 +106,7 @@ func TestLikePost_and_delete_account_data(t *testing.T) {
 	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error deleting account data")
 
-	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.RemovePost)
-	env.RegisterWorkflow(workflows.RemovePostLike)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	postAfterLiked = getPostWithViewerLike(t, testingAccountId, postId)
 	require.Nil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should be nil")
@@ -148,11 +138,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error liking a post")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
@@ -175,11 +161,7 @@ func TestLikePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error removing like from post")
 
-	newEnv := getWorkflowEnvironment(t)
-	newEnv.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	removeLikeWorkflowExecution.FindAndExecuteWorkflow(t, newEnv)
-	require.True(t, newEnv.IsWorkflowCompleted())
-	require.NoError(t, newEnv.GetWorkflowError())
+	removeLikeWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	postAfterLikeRemoved := getPostWithViewerLike(t, testingAccountId, postId)
 

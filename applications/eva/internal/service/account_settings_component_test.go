@@ -373,8 +373,6 @@ func TestAccount_delete(t *testing.T) {
 	}, time.Hour)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
 
 	acc := getAccountByUsername(t, client, accountUsername)
 
@@ -428,7 +426,7 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 		require.NoError(t, err)
 	}, time.Hour)
 
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflowWithoutAssertion(t, env)
 	require.True(t, env.IsWorkflowCompleted())
 	require.True(t, temporal.IsCanceledError(env.GetWorkflowError()), "should have been a cancelled error")
 

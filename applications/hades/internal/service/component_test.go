@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"os"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/applications/hades/internal/service"
@@ -46,11 +47,12 @@ func convertClubIdIdToRelayId(clubId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	app := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(app.App.Activities)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 
 	return env
 }

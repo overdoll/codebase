@@ -2,10 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = [
-        "application.go",
-        "mocks.go",
-    ],
+    srcs = ["application.go"],
     importpath = "overdoll/applications/eva/internal/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -17,7 +14,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
-        "//libraries/testing_tools",
+        "//libraries/testing_tools/mocks",
         "@com_github_oschwald_geoip2_golang//:geoip2-golang",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//mocks",
@@ -34,6 +31,7 @@ go_test(
         "component_test.go",
         "language_component_test.go",
         "location_component_test.go",
+        "mocks_component_test.go",
         "staff_component_test.go",
     ],
     data = [
@@ -42,12 +40,14 @@ go_test(
     ],
     deps = [
         ":service",
+        "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/internal/adapters",
         "//applications/eva/internal/app/workflows",
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/ports",
         "//applications/eva/internal/ports/graphql/types",
         "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/graphql",
@@ -60,9 +60,9 @@ go_test(
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
-        "@io_temporal_go_sdk//mocks",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//testsuite",
         "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_protobuf//types/known/emptypb",
     ],
 )

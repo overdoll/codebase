@@ -95,11 +95,7 @@ func joinClub(t *testing.T, client *graphql.Client, clubId, accountId string) {
 	})
 	require.NoError(t, err, "no error becoming a club member")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 }
 
 // TestCreateClub_edit_name - create a club and edit the name
@@ -171,12 +167,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error making a club member a supporter")
 
 	// run supporter method
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	env.RegisterWorkflow(workflows.AddClubMember)
-	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
@@ -191,11 +182,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error making a club member a supporter")
 
 	// run supporter method
-	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	removeSupporterWorkflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	removeSupporterWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
@@ -209,11 +196,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	})
 	require.NoError(t, err, "no error withdrawing club membership")
 
-	env = getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
-	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	refreshClubESIndex(t)
 

@@ -2,23 +2,17 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = [
-        "application.go",
-        "mocks.go",
-    ],
+    srcs = ["application.go"],
     importpath = "overdoll/applications/carrier/internal/service",
     visibility = ["//applications/carrier:__subpackages__"],
     deps = [
         "//applications/carrier/internal/adapters",
         "//applications/carrier/internal/app",
         "//applications/carrier/internal/app/command",
-        "//applications/carrier/internal/domain/club",
-        "//applications/carrier/internal/domain/identifier",
         "//libraries/bootstrap",
         "//libraries/clients",
+        "//libraries/testing_tools/mocks",
         "@com_github_aws_aws_sdk_go//service/ses",
-        "@org_golang_google_grpc//codes",
-        "@org_golang_google_grpc//status",
     ],
 )
 
@@ -38,6 +32,7 @@ go_test(
         "confirm_account_email_test.go",
         "internal_emails_test.go",
         "mail_component_test.go",
+        "mocks_component_test.go",
         "new_club_supporter_subscription_test.go",
         "new_login_token_email_test.go",
         "upcoming_club_supporter_subscription_renewals_test.go",
@@ -75,6 +70,8 @@ go_test(
         ":service",
         "//applications/carrier/internal/ports",
         "//applications/carrier/proto:v1_go_proto",
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
@@ -82,6 +79,7 @@ go_test(
         "//libraries/uuid",
         "@com_github_puerkitobio_goquery//:goquery",
         "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
         "@org_golang_google_grpc//:go_default_library",
         "@org_golang_google_protobuf//types/known/timestamppb",

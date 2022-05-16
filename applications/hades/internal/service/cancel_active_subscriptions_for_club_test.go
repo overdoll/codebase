@@ -42,10 +42,7 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 
 	require.NoError(t, err, "no error cancelling active subscriptions")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	var accountClubSupporterSubscriptions AccountCancelledClubSupporterSubscriptions
 

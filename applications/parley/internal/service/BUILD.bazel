@@ -2,10 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = [
-        "application.go",
-        "mocks.go",
-    ],
+    srcs = ["application.go"],
     importpath = "overdoll/applications/parley/internal/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -16,12 +13,9 @@ go_library(
         "//applications/parley/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
-        "//libraries/principal",
-        "//libraries/testing_tools",
+        "//libraries/testing_tools/mocks",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//mocks",
-        "@org_golang_google_grpc//codes",
-        "@org_golang_google_grpc//status",
     ],
 )
 
@@ -31,6 +25,7 @@ go_test(
         "account_settings_component_test.go",
         "club_infraction_component_test.go",
         "component_test.go",
+        "mocks_component_test.go",
         "moderate_component_test.go",
         "report_component_test.go",
         "rule_component_test.go",
@@ -38,6 +33,7 @@ go_test(
     data = ["//applications/parley:config.toml"],
     deps = [
         ":service",
+        "//applications/eva/proto:v1_go_proto",
         "//applications/parley/internal/adapters",
         "//applications/parley/internal/app/workflows",
         "//applications/parley/internal/domain/moderator",
@@ -56,8 +52,8 @@ go_test(
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
-        "@io_temporal_go_sdk//mocks",
         "@io_temporal_go_sdk//testsuite",
         "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_protobuf//types/known/emptypb",
     ],
 )

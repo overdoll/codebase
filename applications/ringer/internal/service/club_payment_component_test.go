@@ -92,7 +92,7 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ClubPaymentDeposit, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ClubPaymentDeposit, mock.Anything)
 
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
@@ -112,7 +112,7 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	// ensure it doesn't get stuck waiting for a cron
 	env.SetDetachedChildWait(false)
@@ -147,8 +147,6 @@ func TestClubPaymentDeposit(t *testing.T) {
 	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
-	require.NoError(t, env.GetWorkflowError(), "club payment deposit no error")
 
 	// query the state after the payment has been settled
 	payment := getClubPayment(t, gClient, paymentId)
@@ -183,7 +181,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ClubPaymentDeduction, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ClubPaymentDeduction, mock.Anything)
 
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
@@ -207,7 +205,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	paymentId := ""
 
@@ -239,8 +237,6 @@ func TestClubPaymentDeduction(t *testing.T) {
 	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
-	require.NoError(t, env.GetWorkflowError(), "club payment deposit no error")
 
 	// query the state after the payment has been settled
 	payment := getClubPayment(t, gClient, paymentId)

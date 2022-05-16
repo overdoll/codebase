@@ -34,10 +34,7 @@ func TestBillingFlow_Void(t *testing.T) {
 		"timestamp":      "2022-02-26 20:18:00",
 	})
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)

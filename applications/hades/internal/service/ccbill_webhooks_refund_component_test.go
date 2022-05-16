@@ -60,11 +60,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		"timestamp":              "2022-02-28 20:27:56",
 	})
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -125,10 +121,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				env = getWorkflowEnvironment(t)
-				receiptWorkflowExecution.FindAndExecuteWorkflow(t, env)
-				require.True(t, env.IsWorkflowCompleted())
-				require.NoError(t, env.GetWorkflowError())
+				receiptWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 			},
 		).
 		Return(flowRun)

@@ -97,7 +97,7 @@ func getGrpcClient(t *testing.T) loader.LoaderClient {
 	return loaderClient
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	app := service.NewComponentTestApplication(context.Background())

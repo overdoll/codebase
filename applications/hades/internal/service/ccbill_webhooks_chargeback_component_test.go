@@ -42,11 +42,7 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 		"transactionId":          ccbillTransactionId,
 	})
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)

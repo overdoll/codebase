@@ -167,7 +167,7 @@ func TestClubPayout(t *testing.T) {
 
 	require.Equal(t, 10500, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
 		ClubId:     clubId,
 		FutureTime: nil,
 		WorkflowId: "GenerateClubMonthlyPayout_Manual_" + clubId,
@@ -184,7 +184,7 @@ func TestClubPayout(t *testing.T) {
 	require.NoError(t, err, "no error initiating a manual payout")
 
 	// run a workflow to create a payout for this club
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
 	payoutId := ""
 
@@ -218,8 +218,6 @@ func TestClubPayout(t *testing.T) {
 
 	// generate the payout
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
-	require.NoError(t, env.GetWorkflowError(), "payout seeded without errors")
 
 	require.True(t, ranCallback, "callback should have been called")
 
@@ -321,7 +319,7 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
@@ -347,7 +345,7 @@ func TestClubPayout_simulate_error(t *testing.T) {
 
 	var retry RetryClubPayout
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RetryClubPayout, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RetryClubPayout, mock.Anything)
 
 	// retry our payout. it should now succeed because of the way we set up our mocks
 	err := gClient.Mutate(context.Background(), &retry, map[string]interface{}{
@@ -358,11 +356,9 @@ func TestClubPayout_simulate_error(t *testing.T) {
 
 	require.NoError(t, err, "no error retrying a payout")
 
-	env = getWorkflowEnvironment(t)
+	env = getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "retry workflow succeeded")
-	require.NoError(t, env.GetWorkflowError(), "retry workflow succeeded without errors")
 
 	payments = getPayoutsForClub(t, gClient, clubId)
 
@@ -395,14 +391,21 @@ func TestClubPayout_cancel(t *testing.T) {
 	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
 	env.RegisterDelayedCallback(func() {
 		payments := getPayoutsForClub(t, gClient, clubId)
 
-		workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CancelClubPayout, mock.Anything)
+		application.TemporalClient.On("CancelWorkflow", mock.Anything, mock.Anything, mock.Anything).
+			Run(
+				func(args mock.Arguments) {
+					env.CancelWorkflow()
+				},
+			).
+			Return(nil).
+			Once()
 
 		var cancel CancelClubPayout
 
@@ -411,24 +414,7 @@ func TestClubPayout_cancel(t *testing.T) {
 			"input": types.CancelClubPayoutInput{PayoutID: payments.Entities[0].Club.Payouts.Edges[0].Node.Id},
 		})
 
-		require.NoError(t, err, "no error retrying a payout")
-
-		newEnd := getWorkflowEnvironment(t)
-
-		newEnd.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
-			Run(
-				func(args mock.Arguments) {
-					// cancel our workflow because it won't actually be cancelled by temporal
-					env.CancelWorkflow()
-				},
-			).
-			Return(nil).
-			Once()
-
-		// run the actual cancel workflow - this should prevent the monthly payout workflow from continuing
-		workflowExecution.FindAndExecuteWorkflow(t, newEnd)
-		require.True(t, newEnd.IsWorkflowCompleted(), "cancel workflow succeeded")
-		require.NoError(t, newEnd.GetWorkflowError(), "cancel workflow succeeded without errors")
+		require.NoError(t, err, "no error cancelling a payout")
 
 	}, delayedCallback)
 
@@ -470,7 +456,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
 
 	// run a workflow to create a payout for this club
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
 
@@ -485,7 +471,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 		payoutRelayId := payments.Entities[0].Club.Payouts.Edges[0].Node.Id
 		payoutId = payments.Entities[0].Club.Payouts.Edges[0].Node.Reference
 
-		temporalClientMock.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.UpdatePayoutDateSignal, mock.Anything).
+		application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.UpdatePayoutDateSignal, mock.Anything).
 			Run(
 				func(args mock.Arguments) {
 					env.SignalWorkflow(workflows.UpdatePayoutDateSignal, newTime)

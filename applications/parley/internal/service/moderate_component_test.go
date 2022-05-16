@@ -159,10 +159,7 @@ func TestModeratePost_remove(t *testing.T) {
 
 	require.NoError(t, err, "no error removing post")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "remove post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "remove post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	logs := auditLogsForModeratorAccount(t, client, accountId)
 
@@ -227,10 +224,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	require.NoError(t, err, "no error rejecting post")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "reject post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "reject post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	logs := auditLogsForModeratorAccount(t, client, accountId)
 
@@ -292,10 +286,7 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 
 	require.NoError(t, err, "no error rejecting a post with infraction")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "reject post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "reject post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 
@@ -369,7 +360,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 	require.NoError(t, err, "no error putting post into moderator queue or publishing")
 	require.True(t, res.PutIntoReview, "should have been put into review")
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	// during our delayed callback, we want to make sure the post is being "moderated"
 	env.RegisterDelayedCallback(func() {
@@ -395,10 +386,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 		require.NoError(t, err, "no error approving post")
 
-		envApprove := getWorkflowEnvironment(t)
-		approveWorkflowExecution.FindAndExecuteWorkflow(t, envApprove)
-		require.True(t, envApprove.IsWorkflowCompleted(), "approve post workflow correct")
-		require.NoError(t, envApprove.GetWorkflowError(), "approve post workflow no error")
+		approveWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 		// make sure it shows up in the moderator logs as well
 		logs := auditLogsForModeratorAccount(t, client, accountId)
@@ -418,9 +406,6 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 	}, time.Hour*24)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-
-	require.True(t, env.IsWorkflowCompleted(), "put post into moderator queue workflow complete")
-	require.NoError(t, env.GetWorkflowError(), "put post into moderator queue workflow no error")
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 

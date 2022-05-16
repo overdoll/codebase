@@ -44,11 +44,7 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error archiving a post")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post := getPost(t, client, postId)
 
@@ -66,11 +62,7 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error un archiving a post")
 
-	unArchiveEnvironment := getWorkflowEnvironment(t)
-	unArchiveEnvironment.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	unArchiveWorkflowExecution.FindAndExecuteWorkflow(t, unArchiveEnvironment)
-	require.True(t, unArchiveEnvironment.IsWorkflowCompleted())
-	require.NoError(t, unArchiveEnvironment.GetWorkflowError())
+	unArchiveWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post = getPost(t, client, postId)
 

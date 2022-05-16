@@ -109,13 +109,11 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		"X-overdollPaymentToken":         *encrypted,
 	})
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	env.SetDetachedChildWait(false)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -200,10 +198,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				env = getWorkflowEnvironment(t)
-				receiptWorkflowExecution.FindAndExecuteWorkflow(t, env)
-				require.True(t, env.IsWorkflowCompleted())
-				require.NoError(t, env.GetWorkflowError())
+				receiptWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 			},
 		).
 		Return(flowRun)

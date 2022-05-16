@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
 
@@ -166,11 +167,17 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	app := service.NewComponentTestApplication(context.Background())
 	env.RegisterActivity(app.App.Activities)
+	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
+	env.RegisterWorkflow(workflows.PublishPost)
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	env.RegisterWorkflow(workflows.RemovePost)
+	env.RegisterWorkflow(workflows.RemovePostLike)
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 
 	return env
 }

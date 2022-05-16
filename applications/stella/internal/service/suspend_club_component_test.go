@@ -88,10 +88,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	refreshClubESIndex(t)
 
@@ -110,10 +107,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnSuspendClub, mock.Anything)
 
@@ -126,10 +120,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error un suspending club")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getSuspensionClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Suspension, "club is suspended")

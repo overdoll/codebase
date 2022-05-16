@@ -33,7 +33,7 @@ func TestClubSupport(t *testing.T) {
 	})
 	require.NoError(t, err, "no error for new supporter post")
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
 		Run(
@@ -46,8 +46,6 @@ func TestClubSupport(t *testing.T) {
 
 	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
 
 	clubViewer = getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
