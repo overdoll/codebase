@@ -293,5 +293,16 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	os.Exit(m.Run())
+	exitCode := m.Run()
+
+	t := &testing.T{}
+	assertMocksWereCalled(t)
+
+	// ensure mocks were called at the end of the test
+	if t.Failed() {
+		os.Exit(1)
+		return
+	}
+
+	os.Exit(exitCode)
 }

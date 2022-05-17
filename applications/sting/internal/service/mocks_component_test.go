@@ -8,6 +8,7 @@ import (
 	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/service"
 	"overdoll/libraries/uuid"
+	"testing"
 )
 
 var application *service.ComponentTestApplication
@@ -31,4 +32,12 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.LoaderClient.On("DeleteResources", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: true}, nil)
+}
+
+func assertMocksWereCalled(t *testing.T) {
+	application.TemporalClient.AssertExpectations(t)
+	application.EvaClient.AssertExpectations(t)
+	application.StellaClient.AssertExpectations(t)
+	application.LoaderClient.AssertExpectations(t)
+	application.ParleyClient.AssertExpectations(t)
 }

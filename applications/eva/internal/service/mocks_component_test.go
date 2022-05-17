@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/eva/internal/service"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/testing_tools"
+	"testing"
 )
 
 const (
@@ -51,6 +52,16 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.StingClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.RingerClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+}
+
+func assertMocksWereCalled(t *testing.T) {
+	application.TemporalClient.AssertExpectations(t)
+	application.ParleyClient.AssertExpectations(t)
+	application.HadesClient.AssertExpectations(t)
+	application.CarrierClient.AssertExpectations(t)
+	application.RingerClient.AssertExpectations(t)
+	application.StellaClient.AssertExpectations(t)
+	application.StingClient.AssertExpectations(t)
 }
 
 func GetAuthTokenAndSecretFromEmail(email string) (string, string, error) {

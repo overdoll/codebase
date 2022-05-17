@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/hades/internal/service"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/uuid"
+	"testing"
 )
 
 var application *service.ComponentTestApplication
@@ -49,4 +50,12 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 		OwnerClubIds:      []string{},
 	}, nil)
 	application.StellaClient.On("GetClubById", mock.Anything, mock.Anything).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: ""}}, nil)
+}
+
+func assertMocksWereCalled(t *testing.T) {
+	application.TemporalClient.AssertExpectations(t)
+	application.EvaClient.AssertExpectations(t)
+	application.StellaClient.AssertExpectations(t)
+	application.RingerClient.AssertExpectations(t)
+	application.CarrierClient.AssertExpectations(t)
 }

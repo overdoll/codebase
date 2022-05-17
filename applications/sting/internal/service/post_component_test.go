@@ -114,6 +114,7 @@ type SubmitPost struct {
 		Post *PostModified
 	} `graphql:"submitPost(input: $input)"`
 }
+
 type AccountPosts struct {
 	Entities []struct {
 		Account struct {
@@ -124,6 +125,19 @@ type AccountPosts struct {
 				}
 			} `graphql:"posts(state: $state)"`
 		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type ClubPosts struct {
+	Entities []struct {
+		Club struct {
+			ID    string
+			Posts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			} `graphql:"posts(supporterOnlyStatus: $supporterOnlyStatus)"`
+		} `graphql:"... on Club"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -317,7 +331,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"state": types.PostStateDraft,
 	})
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(accountPosts.Entities[0].Account.Posts.Edges), 1)
+	require.Equal(t, 1, len(accountPosts.Entities[0].Account.Posts.Edges))
 
 	// make sure we got an error for viewing a post unauthenticated
 	client2 := getGraphqlClient(t)
@@ -466,6 +480,32 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.NoError(t, err, "no error grabbing entities")
 
 	require.Len(t, postsEntities.Entities, 1, "should have found the post")
+
+	var clubPosts ClubPosts
+
+	err = client.Query(context.Background(), &clubPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdToRelayId(clubId),
+			},
+		},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusNone},
+	})
+	require.NoError(t, err)
+	require.Equal(t, 0, len(accountPosts.Entities[0].Account.Posts.Edges), "no posts for none supporter status")
+
+	err = client.Query(context.Background(), &clubPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdToRelayId(clubId),
+			},
+		},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial, types.SupporterOnlyStatusFull},
+	})
+	require.NoError(t, err)
+	require.Equal(t, 1, len(accountPosts.Entities[0].Account.Posts.Edges), "1 post for supporter only status partial")
 }
 
 func TestCreatePost_Publish(t *testing.T) {
