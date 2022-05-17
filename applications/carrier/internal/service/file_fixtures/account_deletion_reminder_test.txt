@@ -1,1 +1,27 @@
-package file_fixtures
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+-------------------------
+Account Deletion Reminder
+-------------------------
+
+Hello !
+
+We're just letting you know one more time that your account is scheduled to be deleted on January 01
+
+You may ignore this email if you are aware of this action and we will proceed with the deletion.
+
+Your account can be restored using the link below at any time.
+
+Restore Account ( https://ci.overdoll.dev/settings/account )
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )

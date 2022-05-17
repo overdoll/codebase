@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"github.com/stretchr/testify/require"
 	carrier "overdoll/applications/carrier/proto"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -21,7 +22,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 	client := getGrpcClient()
 	timestampFrom := time.Now()
 
-	email := generateEmail("carrier-new_login_token")
+	email := generateEmail("carrier-" + uuid.New().String())
 	token := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
 	secret := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
 
@@ -31,7 +32,12 @@ func TestNewLoginTokenEmail(t *testing.T) {
 
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
-	require.Equal(t, "New Login Token", content.Subject, "correct subject for the email")
-	//	require.Equal(t, newLoginTokenHtml, content.Html, "correct content for the email html")
-	require.Equal(t, newLoginTokenText, content.Text, "correct content for the email text")
+	if generateEmailFileFixturesRequest() {
+		generateEmailFileFixture("new_login_token_test.html", content.Html)
+		generateEmailFileFixture("new_login_token_test.txt", content.Text)
+	} else {
+		require.Equal(t, "New Login Token", content.Subject, "correct subject for the email")
+		require.Equal(t, newLoginTokenHtml, content.Html, "correct content for the email html")
+		require.Equal(t, newLoginTokenText, content.Text, "correct content for the email text")
+	}
 }

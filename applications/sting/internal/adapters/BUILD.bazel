@@ -53,7 +53,12 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
+        "post_audience_repository_test.go",
+        "post_category_repository_test.go",
+        "post_character_repository_test.go",
         "post_elasticsearch_repository_test.go",
+        "post_repository_test.go",
+        "post_series_repository_test.go",
         "repository_test.go",
     ],
     data = ["//applications/sting:config.toml"],
@@ -65,6 +70,8 @@ go_test(
         "//libraries/paging",
         "//libraries/testing_tools",
         "//libraries/uuid",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_stretchr_testify//require",
     ],
 )

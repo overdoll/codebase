@@ -58,6 +58,7 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
+        "billing_cassandra_repository_test.go",
         "ccbill_http_repository_test.go",
         "repository_test.go",
     ],
@@ -67,10 +68,12 @@ go_test(
         "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/club",
+        "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/money",
         "//libraries/testing_tools",
         "//libraries/uuid",
+        "@com_github_stretchr_testify//assert",
         "@com_github_stretchr_testify//require",
     ],
 )

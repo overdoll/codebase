@@ -3,8 +3,12 @@ package service_test
 import (
 	"context"
 	_ "embed"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	carrier "overdoll/applications/carrier/proto"
+	eva "overdoll/applications/eva/proto"
+	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -21,12 +25,16 @@ func TestClubSupporterSubscriptionDuplicate(t *testing.T) {
 	client := getGrpcClient()
 	timestampFrom := time.Now()
 
-	accountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6_subscription_duplicate"
+	accountId := uuid.New().String()
+	clubId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
+
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email}, nil).Once()
+	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
 
 	_, err := client.ClubSupporterSubscriptionDuplicate(context.Background(), &carrier.ClubSupporterSubscriptionDuplicateRequest{
 		Account: &carrier.Account{Id: accountId},
-		Club:    &carrier.Club{Id: "25WqY2AZfmlykwqKhQagxmI9gtd"},
+		Club:    &carrier.Club{Id: clubId},
 		Payment: &carrier.Payment{
 			Amount:   699,
 			Currency: "USD",
@@ -37,7 +45,12 @@ func TestClubSupporterSubscriptionDuplicate(t *testing.T) {
 
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
-	require.Equal(t, "Duplicate subscription for testclub", content.Subject, "correct subject for the email")
-	//require.Equal(t, clubSupporterSubscriptionDuplicateHtml, content.Html, "correct content for the email html")
-	require.Equal(t, clubSupporterSubscriptionDuplicateText, content.Text, "correct content for the email text")
+	if generateEmailFileFixturesRequest() {
+		generateEmailFileFixture("club_supporter_subscription_duplicate_test.html", content.Html)
+		generateEmailFileFixture("club_supporter_subscription_duplicate_test.txt", content.Text)
+	} else {
+		require.Equal(t, "Duplicate subscription for test a club", content.Subject, "correct subject for the email")
+		require.Equal(t, clubSupporterSubscriptionDuplicateHtml, content.Html, "correct content for the email html")
+		require.Equal(t, clubSupporterSubscriptionDuplicateText, content.Text, "correct content for the email text")
+	}
 }

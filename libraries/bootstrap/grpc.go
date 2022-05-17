@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/support"
 	"syscall"
 	"time"
 
@@ -20,18 +21,33 @@ import (
 
 func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
-	grpc_zap.ReplaceGrpcLoggerV2(zap.L())
+	// only enable zap logging in production since it can get quite verbose
+	if !support.IsDebug() {
+		grpc_zap.ReplaceGrpcLoggerV2(zap.L())
+	}
+
+	logUnaryInterceptor := BlankUnaryServerInterceptor()
+
+	if !support.IsDebug() {
+		logUnaryInterceptor = grpc_zap.UnaryServerInterceptor(zap.L())
+	}
+
+	logStreamInterceptor := BlankStreamServerInterceptor()
+
+	if !support.IsDebug() {
+		logStreamInterceptor = grpc_zap.StreamServerInterceptor(zap.L())
+	}
 
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			passport.UnaryServerInterceptor(),
-			grpc_zap.UnaryServerInterceptor(zap.L()),
+			logUnaryInterceptor,
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			passport.StreamServerInterceptor(),
-			grpc_zap.StreamServerInterceptor(zap.L()),
+			logStreamInterceptor,
 		),
 	)
 
@@ -66,4 +82,16 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	<-ctx.Done()
 	os.Exit(0)
+}
+
+func BlankUnaryServerInterceptor() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		return handler(ctx, req)
+	}
+}
+
+func BlankStreamServerInterceptor() grpc.StreamServerInterceptor {
+	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		return handler(srv, stream)
+	}
 }

@@ -4,13 +4,11 @@ overdoll
 
 Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
 
-*********************
-Confirm Account Email
-*********************
+--------------------------------------
+Club Has No Supporter Posts in 30 Days
+--------------------------------------
 
-You requested to add a new email to your account. Please tap the button below to confirm it.
-
-Confirm Email ( https://ci.overdoll.dev/confirm-email?id=1q7MJ3JkhcdcJJNqZezdfQt5pZ6&secret=1q7MJ3JkhcdcJJNqZezdfQt5pZ6 )
+The club test a club (https://ci.overdoll.dev/test-club) has not had a supporter post for almost 30 days.
 
 overdoll Inc.
 

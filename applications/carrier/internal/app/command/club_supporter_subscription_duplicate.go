@@ -52,7 +52,7 @@ func (h ClubSupporterSubscriptionDuplicateHandler) Handle(ctx context.Context, c
 	}
 
 	template, err := mailing.NewTemplate(
-		"club_supporter_duplicate",
+		"club_supporter_subscription_duplicate",
 		map[string]interface{}{
 			"Username":        acc.Username(),
 			"ClubName":        clubDetails.Name(),

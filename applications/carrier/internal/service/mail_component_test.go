@@ -1,14 +1,11 @@
 package service_test
 
 import (
-	"bytes"
 	"context"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -78,18 +75,19 @@ func waitForEmailAndGetResponse(t *testing.T, email string, timestampFrom time.T
 	require.Equal(t, 1, queryInbox.Inbox.Count)
 	require.Equal(t, "success", queryInbox.Inbox.Result)
 
-	return queryInbox.Inbox.Emails[0]
+	response := queryInbox.Inbox.Emails[0]
+	response.Text += "\n"
+
+	return response
 }
 
-func compareHtml(t *testing.T, expected string, actual string) bool {
+func generateEmailFileFixturesRequest() bool {
+	return os.Getenv("GENERATE_EMAIL_MOCKS") == "true"
+}
 
-	expectedReader := bytes.NewReader([]byte(expected))
-	expectedDoc, err := goquery.NewDocumentFromReader(expectedReader)
-	require.NoError(t, err, "no error for parsing html document for expected")
-
-	actualReader := bytes.NewReader([]byte(actual))
-	actualDoc, err := goquery.NewDocumentFromReader(actualReader)
-	require.NoError(t, err, "no error for parsing html document for actual")
-
-	return reflect.DeepEqual(expectedDoc, actualDoc)
+func generateEmailFileFixture(path string, content string) {
+	os.Mkdir("/tmp/carrier_file_fixtures", 0755)
+	f, _ := os.Create("/tmp/carrier_file_fixtures/" + path)
+	f.Write([]byte(content))
+	f.Close()
 }

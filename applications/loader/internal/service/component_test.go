@@ -140,6 +140,8 @@ func startService() bool {
 		return false
 	}
 
+	mockServices(app)
+
 	return true
 }
 

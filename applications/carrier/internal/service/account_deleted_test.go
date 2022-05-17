@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"github.com/stretchr/testify/require"
 	carrier "overdoll/applications/carrier/proto"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -22,19 +23,25 @@ func TestAccountDeleted(t *testing.T) {
 
 	timestampFrom := time.Now()
 
-	accountId := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6_deleted"
+	accountUsername := "test user"
+	accountId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
 
 	_, err := client.AccountDeleted(context.Background(), &carrier.AccountDeletedRequest{
 		Email:    email,
-		Username: accountId,
+		Username: accountUsername,
 	})
 
 	require.NoError(t, err, "no error for sending account deleted")
 
 	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
-	require.Equal(t, "Account deleted", content.Subject, "correct subject for the email")
-	//require.True(t, compareHtml(t, accountDeletedHtml, content.Html), "correct content for the email html")
-	require.Equal(t, accountDeletedText, content.Text, "correct content for the email text")
+	if generateEmailFileFixturesRequest() {
+		generateEmailFileFixture("account_deleted_test.html", content.Html)
+		generateEmailFileFixture("account_deleted_test.txt", content.Text)
+	} else {
+		require.Equal(t, "Account deleted", content.Subject, "correct subject for the email")
+		require.Equal(t, accountDeletedHtml, content.Html, "correct content for the email html")
+		require.Equal(t, accountDeletedText, content.Text, "correct content for the email text")
+	}
 }

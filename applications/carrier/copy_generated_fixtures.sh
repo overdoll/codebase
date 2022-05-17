@@ -7,4 +7,4 @@ parent_path=$(
 )
 cd "$parent_path"
 
-rover supergraph compose --config ./supergraph.yaml >./schema/schema.graphql
+cp /tmp/carrier_file_fixtures/* internal/service/file_fixtures
