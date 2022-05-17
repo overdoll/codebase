@@ -37,7 +37,6 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 			// notify bug tracker?
 			zap.S().Error("resolver failed ", err)
-
 			return errors.New("internal server error")
 		})
 

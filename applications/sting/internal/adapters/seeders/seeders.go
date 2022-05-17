@@ -29,6 +29,10 @@ func afterSeeders(ctx context.Context, session gocqlx.Session) error {
 		return err
 	}
 
+	if err := repository.IndexAllPosts(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
 

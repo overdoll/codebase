@@ -220,6 +220,10 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 		return err
 	}
 
+	if len(createdCursor) == 0 {
+		return nil
+	}
+
 	var valueStr string
 	var valueUUID gocql.UUID
 

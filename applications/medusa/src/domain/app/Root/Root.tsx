@@ -1,6 +1,5 @@
 import { ReactNode, Suspense } from 'react'
-import type { PreloadedQuery } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
@@ -10,14 +9,11 @@ import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
 
 interface Props {
-  queryRefs: {
-    rootQuery: PreloadedQuery<RootQueryType>
-  }
   children: ReactNode
 }
 
 const Query = graphql`
-  query RootQuery @preloadable {
+  query RootQuery {
     viewer {
       ...AccountAuthorizerFragment
       ...UniversalNavigatorFragment
@@ -26,9 +22,9 @@ const Query = graphql`
 `
 
 const Root: PageProps<Props> = (props: Props): JSX.Element => {
-  const data = usePreloadedQuery<RootQueryType>(
+  const data = useLazyLoadQuery<RootQueryType>(
     Query,
-    props.queryRefs.rootQuery
+    {}
   )
 
   return (

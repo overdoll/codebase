@@ -8,10 +8,6 @@ import (
 
 type URI string
 
-func NewURI(uri string) URI {
-	return URI(uri)
-}
-
 func (y *URI) String() string {
 	return string(*y)
 }

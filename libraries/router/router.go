@@ -8,18 +8,12 @@ import (
 )
 
 func NewGinRouter() *gin.Engine {
-
 	router := NewRawGinRouter()
-
-	router.Use(GinContextToContextMiddleware())
 	router.Use(passport.GinPassportRequestMiddleware())
-	router.Use(CassandraQueryObserverToContext())
-	router.Use(CassandraQueryObserverGetMetrics())
-
 	return router
 }
 
-// Gin router, but without middleware
+// NewRawGinRouter Gin router, but without middleware
 func NewRawGinRouter() *gin.Engine {
 
 	router := gin.Default()
