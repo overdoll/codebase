@@ -17,7 +17,6 @@ go_library(
         "bind_struct.go",
         "debug.go",
         "generate_unique_id_for_workflow.go",
-        "gin.go",
         "ip.go",
         "rsa.go",
     ],
@@ -25,7 +24,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/uuid",
-        "@com_github_gin_gonic_gin//:gin",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_go_reflectx//:go-reflectx",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

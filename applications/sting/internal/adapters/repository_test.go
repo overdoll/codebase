@@ -1,11 +1,14 @@
 package adapters_test
 
 import (
-	"context"
+	"github.com/bxcodec/faker/v3"
+	"github.com/olivere/elastic/v7"
+	"github.com/stretchr/testify/require"
 	"os"
-	"testing"
-
+	"overdoll/applications/sting/internal/adapters"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
+	"testing"
 )
 
 // create buckets before running tests
@@ -23,24 +26,27 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-type StellaServiceMock struct{}
-
-func (s StellaServiceMock) GetClubMembershipsForAccount(ctx context.Context, accountId string) ([]string, error) {
-	return []string{}, nil
+type TestSlug struct {
+	Slug string `faker:"username"`
 }
 
-func (s StellaServiceMock) CanAccountViewPostUnderClub(ctx context.Context, postId, accountId string) (bool, error) {
-	return true, nil
+func createFakeSlug(t *testing.T) string {
+	fake := TestSlug{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err, "no error creating fake slug")
+	return fake.Slug
 }
 
-func (s StellaServiceMock) GetSuspendedClubs(ctx context.Context) ([]string, error) {
-	return []string{}, nil
+func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession())
 }
 
-func (s StellaServiceMock) CanAccountCreatePostUnderClub(ctx context.Context, clubId string, accountId string) (bool, error) {
-	return true, nil
-}
+func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
 
-func (s StellaServiceMock) GetAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
-	return []string{}, nil
+	// set up some sort of client that is going to fail when making ES calls
+	client, _ := elastic.NewClient(
+		elastic.SetURL("asdasdasdas-basdurlas-dasdas"),
+	)
+
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client)
 }

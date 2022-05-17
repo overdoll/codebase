@@ -206,16 +206,14 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
 	}
 
-	infractionReason := post_audit_log.UnmarshalPostAuditLogFromDatabase(
+	return post_audit_log.UnmarshalPostAuditLogFromDatabase(
 		postAudit.Id,
 		postAudit.PostId,
 		postAudit.ModeratorAccountId,
 		postAudit.Action,
 		postAudit.RuleId,
 		postAudit.Notes,
-	)
-
-	return infractionReason, nil
+	), nil
 }
 
 func (r PostAuditLogCassandraRepository) GetPostAuditLogByIdOperator(ctx context.Context, logId string) (*post_audit_log.PostAuditLog, error) {

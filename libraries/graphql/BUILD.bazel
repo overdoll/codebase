@@ -8,7 +8,6 @@ go_library(
         "date.go",
         "locale.go",
         "new.go",
-        "preloads.go",
         "uri.go",
     ],
     importpath = "overdoll/libraries/graphql",
