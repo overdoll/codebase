@@ -37,7 +37,7 @@ export default function ClubsFeed (props: Props): JSX.Element {
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
             <Trans>
-              Clubs Feed
+              Your Clubs Feed
             </Trans>
           </Heading>
           <HStack spacing={2}>
