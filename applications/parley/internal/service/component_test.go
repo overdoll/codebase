@@ -117,8 +117,7 @@ func seedRule(t *testing.T, infraction bool) *rule.Rule {
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.App.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -142,7 +141,7 @@ func startService() bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewHttpServer(&app.App)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(ParleyHttpAddr, srv, func() {})
 
@@ -152,7 +151,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&app.App)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(ParleyGrpcAddr, func(server *grpc.Server) {
 		parley.RegisterParleyServer(server, s)
@@ -174,16 +173,5 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	exitCode := m.Run()
-
-	t := &testing.T{}
-	assertMocksWereCalled(t)
-
-	// ensure mocks were called at the end of the test
-	if t.Failed() {
-		os.Exit(1)
-		return
-	}
-
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }

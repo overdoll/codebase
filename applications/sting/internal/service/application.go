@@ -15,7 +15,7 @@ import (
 	"overdoll/libraries/testing_tools/mocks"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
@@ -37,7 +37,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	ParleyClient   *mocks.MockParleyClient
@@ -71,7 +71,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -80,7 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	postRepo := adapters.NewPostsCassandraRepository(session, esClient)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CreatePost:    command.NewCreatePostHandler(postRepo, stella),
 			PublishPost:   command.NewPublishPostHandler(postRepo, eventRepo),

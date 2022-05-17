@@ -60,8 +60,7 @@ func getGrpcClient(t *testing.T) ringer.RingerClient {
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	app := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(app.App)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -194,7 +193,7 @@ func startService() bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewHttpServer(&app.App)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(RingerHttpAddr, srv, func() {})
 
@@ -203,7 +202,7 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
-	s := ports.NewGrpcServer(&app.App)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(RingerGrpcAddr, func(server *grpc.Server) {
 		ringer.RegisterRingerServer(server, s)
@@ -225,16 +224,5 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	exitCode := m.Run()
-
-	t := &testing.T{}
-	assertMocksWereCalled(t)
-
-	// ensure mocks were called at the end of the test
-	if t.Failed() {
-		os.Exit(1)
-		return
-	}
-
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }

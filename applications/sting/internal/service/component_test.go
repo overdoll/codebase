@@ -170,8 +170,7 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	app := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(app.App.Activities)
+	env.RegisterActivity(application.App.Activities)
 	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
 	env.RegisterWorkflow(workflows.PublishPost)
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
@@ -187,7 +186,7 @@ func startService(m *testing.M) bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewHttpServer(&app.App)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
@@ -197,7 +196,7 @@ func startService(m *testing.M) bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&app.App)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)
@@ -220,16 +219,5 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	exitCode := m.Run()
-
-	t := &testing.T{}
-	assertMocksWereCalled(t)
-
-	// ensure mocks were called at the end of the test
-	if t.Failed() {
-		os.Exit(1)
-		return
-	}
-
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }

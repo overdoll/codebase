@@ -100,8 +100,7 @@ func getGrpcClient(t *testing.T) loader.LoaderClient {
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	app := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(app.App.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -111,7 +110,7 @@ func startService() bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewHttpServer(&app.App)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(LoaderHttpAddr, srv, func() {})
 
@@ -121,7 +120,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&app.App)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(LoaderGrpcAddr, func(server *grpc.Server) {
 		loader.RegisterLoaderServer(server, s)

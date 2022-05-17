@@ -16,13 +16,13 @@ import (
 	"overdoll/libraries/support"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
 	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {}
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 }
 
@@ -35,7 +35,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, client client.Client) app.Application {
+func createApplication(ctx context.Context, client client.Client) *app.Application {
 
 	s := bootstrap.InitializeDatabaseSession()
 
@@ -53,7 +53,7 @@ func createApplication(ctx context.Context, client client.Client) app.Applicatio
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			TusComposer:                        command.NewTusComposerHandler(resourceRepo),
 			DeleteResources:                    command.NewDeleteResourcesHandler(eventRepo),

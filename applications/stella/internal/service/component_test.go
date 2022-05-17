@@ -51,8 +51,7 @@ func getGrpcClient(t *testing.T) stella.StellaClient {
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	app := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(app.App.Activities)
+	env.RegisterActivity(application.App.Activities)
 	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
 	env.RegisterWorkflow(workflows.AddClubMember)
 
@@ -124,9 +123,7 @@ func startService() bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	client := clients.NewTemporalClient(context.Background())
-
-	srv := ports.NewHttpServer(&app.App)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(StellaHttpAddr, srv, func() {})
 
@@ -136,7 +133,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&app.App, client)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(StellaGrpcAddr, func(server *grpc.Server) {
 		stella.RegisterStellaServer(server, s)
@@ -159,16 +156,5 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	exitCode := m.Run()
-
-	t := &testing.T{}
-	assertMocksWereCalled(t)
-
-	// ensure mocks were called at the end of the test
-	if t.Failed() {
-		os.Exit(1)
-		return
-	}
-
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }

@@ -17,7 +17,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
@@ -38,7 +38,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	StellaClient   *mocks.MockStellaClient
@@ -64,7 +64,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 		StellaClient:   stellaClient,
 	}
 }
-func createApplication(ctx context.Context, eva query.EvaService, stella query.StellaService, client client.Client, paxumClient adapters.PaxumHttpClient) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, stella query.StellaService, client client.Client, paxumClient adapters.PaxumHttpClient) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -77,7 +77,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
 	paxumRepo := adapters.NewPaxumHttpCassandraRepository(paxumClient)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CancelClubPayout:            command.NewCancelClubPayoutHandler(payoutRepo, eventRepo),
 			ClubPaymentDeduction:        command.NewClubPaymentDeductionHandler(eventRepo),

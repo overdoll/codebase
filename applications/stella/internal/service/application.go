@@ -16,7 +16,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
@@ -38,7 +38,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	CarrierClient  *mocks.MockCarrierClient
@@ -72,7 +72,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -80,7 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
 			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),

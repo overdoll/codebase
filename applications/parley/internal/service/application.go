@@ -15,7 +15,7 @@ import (
 	"overdoll/libraries/testing_tools/mocks"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -35,7 +35,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	StingClient    *mocks.MockStingClient
@@ -66,7 +66,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -80,7 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 	ruleRepo := adapters.NewRuleCassandraRepository(session)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			PutPostIntoModeratorQueueOrPublish: command.NewPutPostIntoModeratorQueueOrPublishHandler(moderatorRepo, eventRepo, sting),
 			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo),

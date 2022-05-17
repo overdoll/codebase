@@ -14,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/database"
 )
@@ -61,7 +60,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv, cleanup := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(app)
 
 	defer cleanup()
 
@@ -76,7 +75,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
@@ -89,11 +88,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	client := clients.NewTemporalClient(ctx)
-
-	defer client.Close()
-
-	s := ports.NewGrpcServer(&app, client)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		stella.RegisterStellaServer(server, s)

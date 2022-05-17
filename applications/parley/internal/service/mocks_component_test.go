@@ -6,7 +6,6 @@ import (
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/parley/internal/service"
 	"overdoll/libraries/uuid"
-	"testing"
 )
 
 var application *service.ComponentTestApplication
@@ -25,11 +24,4 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.StingClient.On("UndoPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StingClient.On("RemovePost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StellaClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-}
-
-func assertMocksWereCalled(t *testing.T) {
-	application.TemporalClient.AssertExpectations(t)
-	application.EvaClient.AssertExpectations(t)
-	application.StellaClient.AssertExpectations(t)
-	application.StingClient.AssertExpectations(t)
 }
