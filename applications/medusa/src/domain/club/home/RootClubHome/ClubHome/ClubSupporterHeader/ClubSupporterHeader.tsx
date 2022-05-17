@@ -32,6 +32,8 @@ const Fragment = graphql`
 export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const supporterCount = data.membersCount
+
   const supporters = (data.membersCount).toLocaleString()
 
   const { query: { slug } } = useRouter()
@@ -40,6 +42,23 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
   const locale = dateFnsLocaleFromI18n(i18n)
 
   const nextSupporterPostTime = format(new Date(data.nextSupporterPostTime as Date), dateFormat, { locale })
+
+  if (data.suspension !== null && supporterCount < 1) {
+    return (
+      <TextHeader
+        colorScheme='orange'
+        icon={WarningTriangle}
+        title={(
+          <Trans>
+            Cannot Collect Subscriptions
+          </Trans>)}
+      >
+        <Trans>
+          In order to collect supporter subscription payments, your club must not be suspended.
+        </Trans>
+      </TextHeader>
+    )
+  }
 
   if (!data.canSupport && data.suspension == null) {
     return (
@@ -77,27 +96,38 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
       >
         {supporters}
       </StatisticHeader>
-      <LargeBackgroundBox>
-        <HStack spacing={4} justify='space-between'>
-          <Heading fontSize='sm' color='gray.200'>
-            <Trans>
-              Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters
-            </Trans>
-          </Heading>
-          <LinkButton
-            size='sm'
-            variant='solid'
-            href={{
-              pathname: '/club/[slug]/create-post',
-              query: { slug: slug }
-            }}
-          >
-            <Trans>
-              Create Post
-            </Trans>
-          </LinkButton>
-        </HStack>
-      </LargeBackgroundBox>
+      {data.suspension == null
+        ? (
+          <LargeBackgroundBox>
+            <HStack spacing={4} justify='space-between'>
+              <Heading fontSize='sm' color='gray.200'>
+                <Trans>
+                  Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters
+                </Trans>
+              </Heading>
+              <LinkButton
+                size='sm'
+                variant='solid'
+                href={{
+                  pathname: '/club/[slug]/create-post',
+                  query: { slug: slug }
+                }}
+              >
+                <Trans>
+                  Create Post
+                </Trans>
+              </LinkButton>
+            </HStack>
+          </LargeBackgroundBox>)
+        : (
+          <LargeBackgroundBox>
+            <Heading fontSize='sm' color='gray.200'>
+              <Trans>
+                You cannot collect new supporters because your club is suspended
+              </Trans>
+            </Heading>
+          </LargeBackgroundBox>
+          )}
     </Stack>
   )
 }
