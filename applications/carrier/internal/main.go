@@ -47,7 +47,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		carrier.RegisterCarrierServer(server, s)

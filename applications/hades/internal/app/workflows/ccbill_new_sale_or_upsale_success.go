@@ -185,7 +185,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 	// send success notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionSuccessNotification,
 		activities.SendAccountClubSupporterSubscriptionSuccessNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -19,7 +19,8 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/frankban/quicktest v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.3 // indirect
-	github.com/gin-gonic/gin v1.7.2
+	github.com/gin-contrib/zap v0.0.2 // indirect
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gocql/gocql v0.0.0-20211222173705-d73e6b1002a7

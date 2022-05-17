@@ -303,7 +303,7 @@ var ccbillSubscriptionDetailsTable = table.New(table.Metadata{
 		"accounting_recurring_price",
 		"accounting_currency",
 
-		"idempotency_key",
+		"account_club_supporter_subscription_id",
 
 		"duplicate",
 	},
@@ -832,9 +832,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 
 	var accountClubSupported accountClubSupporterSubscription
 
-	if err := accountClubSupporterSubscriptionsTable.
-		SelectBuilder().
-		Query(r.session).
+	if err := r.session.Query(accountClubSupporterSubscriptionsTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountClubSupporterSubscription{

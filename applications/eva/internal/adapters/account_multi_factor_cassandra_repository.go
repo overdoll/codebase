@@ -301,7 +301,7 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 		stmt, names,
 		accounts{
 			Id:                 acc.ID(),
-			MultiFactorEnabled: true,
+			MultiFactorEnabled: false,
 		},
 	)
 

@@ -4,7 +4,7 @@ go_library(
     name = "service",
     srcs = ["application.go"],
     importpath = "overdoll/applications/eva/internal/service",
-    visibility = ["//visibility:public"],
+    visibility = ["//applications/eva:__subpackages__"],
     deps = [
         "//applications/eva/internal/adapters",
         "//applications/eva/internal/app",
@@ -48,6 +48,7 @@ go_test(
         "//applications/eva/internal/ports/graphql/types",
         "//applications/eva/proto:v1_go_proto",
         "//applications/hades/proto:v1_go_proto",
+        "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/graphql",

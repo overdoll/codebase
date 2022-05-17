@@ -7,8 +7,8 @@ import (
 	carrier "overdoll/applications/carrier/proto"
 	"overdoll/applications/eva/internal/service"
 	hades "overdoll/applications/hades/proto"
+	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/testing_tools"
-	"testing"
 )
 
 const (
@@ -45,23 +45,13 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.HadesClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&hades.CanDeleteAccountDataResponse{CanDelete: true}, nil)
 
 	application.StellaClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.StellaClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&hades.CanDeleteAccountDataResponse{CanDelete: true}, nil)
+	application.StellaClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&stella.CanDeleteAccountDataResponse{CanDelete: true}, nil)
 
 	application.ParleyClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.StingClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.RingerClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-}
-
-func assertMocksWereCalled(t *testing.T) {
-	application.TemporalClient.AssertExpectations(t)
-	application.ParleyClient.AssertExpectations(t)
-	application.HadesClient.AssertExpectations(t)
-	application.CarrierClient.AssertExpectations(t)
-	application.RingerClient.AssertExpectations(t)
-	application.StellaClient.AssertExpectations(t)
-	application.StingClient.AssertExpectations(t)
 }
 
 func GetAuthTokenAndSecretFromEmail(email string) (string, string, error) {

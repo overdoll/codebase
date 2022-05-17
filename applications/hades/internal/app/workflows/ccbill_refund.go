@@ -46,7 +46,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	var transactionDetails *activities.GetCCBillTransactionDetailsPayload
 
 	// get subscription details so we know the club
-	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &subscriptionDetails); err != nil {
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &transactionDetails); err != nil {
 		return err
 	}
 

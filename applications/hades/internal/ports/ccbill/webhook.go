@@ -64,7 +64,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 
 		eventType := c.Request.URL.Query()["eventType"][0]
 
-		zap.S().Info("incoming ccbill webhook", zap.String("payload", string(body)), zap.String("event", eventType))
+		zap.S().Infow("incoming ccbill webhook", zap.String("payload", string(body)), zap.String("event", eventType))
 
 		if err := app.Commands.ProcessCCBillWebhook.Handle(c.Request.Context(), command.ProcessCCBillWebhook{
 			Payload:   body,

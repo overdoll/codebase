@@ -459,11 +459,19 @@ def go_repositories():
         version = "v0.1.0",
     )
     go_repository(
+        name = "com_github_gin_contrib_zap",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/gin-contrib/zap",
+        sum = "h1:VnIucI+kUsxgzmcrX0gMk19a2I12KirTxi+ufuT2xZk=",
+        version = "v0.0.2",
+    )
+
+    go_repository(
         name = "com_github_gin_gonic_gin",
         build_file_proto_mode = "disable",
         importpath = "github.com/gin-gonic/gin",
-        sum = "h1:Tg03T9yM2xa8j6I3Z3oqLaQRSmKvxPd6g/2HJ6zICFA=",
-        version = "v1.7.2",
+        sum = "h1:3DoBmSbJbZAWqXJC3SLjAPfutPJJRN1U5pALB7EeTTs=",
+        version = "v1.7.7",
     )
 
     go_repository(

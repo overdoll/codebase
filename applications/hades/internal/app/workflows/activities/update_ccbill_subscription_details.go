@@ -65,7 +65,7 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, input 
 			return err
 		}
 
-		_, err = h.billing.UpdateAccountClubSupporterPaymentMethodOperator(ctx, input.CCBillSubscriptionId, func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
+		_, err = h.billing.UpdateAccountClubSupporterPaymentMethodOperator(ctx, subscription.AccountClubSupporterSubscriptionId(), func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
 			return accountClubSupport.UpdatePaymentMethod(paymentMethod)
 		})
 

@@ -174,6 +174,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		Email:     email,
 		UserAgent: instance.UserAgent(),
 		Location:  location.Serialize(instance.Location()),
+		UniqueId:  instance.UniqueId(),
 	}
 
 	val, err := json.Marshal(authCookie)

@@ -15,7 +15,7 @@ import (
 
 type accountTransactionEventDocument struct {
 	Id        string    `json:"id"`
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"created_at"`
 	Amount    uint64    `json:"amount"`
 	Currency  string    `json:"currency"`
 	Reason    string    `json:"reason"`
@@ -62,7 +62,7 @@ func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.Accou
 	for _, e := range doc.Events {
 		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
 			e.Id,
-			e.Timestamp,
+			e.CreatedAt,
 			e.Amount,
 			e.Currency,
 			e.Reason,
@@ -98,7 +98,7 @@ func marshalAccountTransactionToDocument(transaction *billing.AccountTransaction
 	for _, e := range transaction.Events() {
 		events = append(events, accountTransactionEventDocument{
 			Id:        e.Id(),
-			Timestamp: e.CreatedAt(),
+			CreatedAt: e.CreatedAt(),
 			Amount:    e.Amount(),
 			Currency:  e.Currency().String(),
 			Reason:    e.Reason(),
@@ -245,7 +245,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 
 				events = append(events, accountTransactionEventDocument{
 					Id:        unmarshal.Id,
-					Timestamp: unmarshal.CreatedAt,
+					CreatedAt: unmarshal.CreatedAt,
 					Amount:    unmarshal.Amount,
 					Currency:  unmarshal.Currency,
 					Reason:    unmarshal.Reason,

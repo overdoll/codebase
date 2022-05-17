@@ -18,7 +18,7 @@ import (
 	"overdoll/libraries/testing_tools/mocks"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	carrierClient, cleanup := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	hadesClient, cleanup2 := clients.NewHadesClient(ctx, os.Getenv("HADES_SERVICE"))
@@ -48,7 +48,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	CarrierClient  *mocks.MockCarrierClient
 	HadesClient    *mocks.MockHadesClient
@@ -78,7 +78,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 			adapters.NewRingerGrpc(ringerClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewStingGrpc(stingClient),
-			clients.NewTemporalClient(ctx),
+			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		CarrierClient:  carrierClient,
@@ -99,7 +99,7 @@ func createApplication(
 	parley command.ParleyService,
 	sting command.StingService,
 	client client.Client,
-) app.Application {
+) *app.Application {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -120,7 +120,7 @@ func createApplication(
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo),

@@ -17,7 +17,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	// bootstrap application
 	bootstrap.NewBootstrap(ctx)
@@ -46,7 +46,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App            app.Application
+	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	CarrierClient  *mocks.MockCarrierClient
@@ -81,7 +81,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -94,7 +94,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	metricRepo := adapters.NewMetricsCassandraRepository(session)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CreateCancellationReason:                                         command.NewCreateCancellationReasonHandler(billingRepo),
 			UpdateCancellationReasonDeprecated:                               command.NewUpdateCancellationReasonDeprecatedHandler(billingRepo),

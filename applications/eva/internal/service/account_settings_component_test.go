@@ -9,7 +9,6 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"overdoll/applications/eva/internal/app/workflows"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/applications/eva/internal/service"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
@@ -19,7 +18,7 @@ import (
 )
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) (string, string) {
-	res, sec, err := service.GetEmailConfirmationTokenFromEmail(email)
+	res, sec, err := GetEmailConfirmationTokenFromEmail(email)
 	require.NoError(t, err, "no error for grabbing confirmation token")
 	return res, sec
 }
@@ -364,7 +363,7 @@ func TestAccount_delete(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	env.RegisterDelayedCallback(func() {
 		// see that the account is deleting status
@@ -403,7 +402,7 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	env.RegisterDelayedCallback(func() {
 

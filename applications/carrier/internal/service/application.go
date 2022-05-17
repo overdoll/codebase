@@ -13,7 +13,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -28,7 +28,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App          app.Application
+	App          *app.Application
 	EvaClient    *mocks.MockEvaClient
 	StellaClient *mocks.MockStellaClient
 }
@@ -50,14 +50,14 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) *app.Application {
 
 	awsSession := bootstrap.InitializeAWSSession()
 	client := ses.New(awsSession)
 
 	mailingRepo := adapters.NewMailingSESRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(mailingRepo, eva),
 			NewLoginToken:                             command.NewNewLoginTokenHandler(mailingRepo),

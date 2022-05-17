@@ -28,6 +28,6 @@ func (h *Activities) GetCCBillSubscriptionDetails(ctx context.Context, ccbillSub
 		Duplicate:                          details.Duplicate(),
 		Currency:                           details.AccountingCurrency(),
 		Amount:                             details.AccountingInitialPrice(),
-		AccountClubSupporterSubscriptionId: details.CCBillSubscriptionId(),
+		AccountClubSupporterSubscriptionId: details.AccountClubSupporterSubscriptionId(),
 	}, nil
 }

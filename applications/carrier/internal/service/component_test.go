@@ -32,7 +32,7 @@ func startService() bool {
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewGrpcServer(&app.App)
+	srv := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(CarrierGrpcAddress, func(server *grpc.Server) {
 		carrier.RegisterCarrierServer(server, srv)

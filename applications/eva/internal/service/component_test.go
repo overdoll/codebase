@@ -209,16 +209,15 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 }
 
 func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {
-	token, secret, err := service.GetAuthTokenAndSecretFromEmail(email)
+	token, secret, err := GetAuthTokenAndSecretFromEmail(email)
 	require.NoError(t, err)
 	return token, secret
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	app := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(app.App)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -256,12 +255,13 @@ func getGrpcClient(t *testing.T) (eva.EvaClient, context.Context) {
 }
 
 func startService() bool {
-	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/eva")
 
 	app := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewHttpServer(&app.App)
+	mockServices(app)
+
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(EvaHttpAddr, srv, func() {})
 
@@ -270,7 +270,7 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
-	s := ports.NewGrpcServer(&app.App)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(EvaGrpcAddr, func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
@@ -282,27 +282,13 @@ func startService() bool {
 		log.Println("Timed out waiting for eva GRPC to come up")
 	}
 
-	mockServices(app)
-
 	return true
 }
 
 func TestMain(m *testing.M) {
-
 	if !startService() {
 		os.Exit(1)
 	}
 
-	exitCode := m.Run()
-
-	t := &testing.T{}
-	assertMocksWereCalled(t)
-
-	// ensure mocks were called at the end of the test
-	if t.Failed() {
-		os.Exit(1)
-		return
-	}
-
-	os.Exit(exitCode)
+	os.Exit(m.Run())
 }

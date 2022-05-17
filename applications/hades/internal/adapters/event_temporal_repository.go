@@ -188,7 +188,7 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleOrUpSaleSuccess, &workflows.CCBillNewSaleOrUpSaleSuccessInput{
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillNewSaleOrUpSaleSuccess, workflows.CCBillNewSaleOrUpSaleSuccessInput{
 		SubscriptionId:             input.SubscriptionId,
 		TransactionId:              input.TransactionId,
 		AccountingInitialPrice:     accountingInitialPrice,
