@@ -29,10 +29,11 @@ type ClubMemberModified struct {
 }
 
 type ClubViewerMember struct {
-	ID           string
-	ViewerMember *ClubMemberModified
-	MembersCount int
-	Members      struct {
+	ID                      string
+	ViewerMember            *ClubMemberModified
+	MembersCount            int
+	MembersIsSupporterCount int
+	Members                 struct {
 		Edges []struct {
 			Node ClubMemberModified
 		}
@@ -58,6 +59,8 @@ type AccountClubDetails struct {
 }
 
 func getClubViewer(t *testing.T, client *graphql.Client, id string) ClubViewer {
+	refreshClubMembersESIndex(t)
+
 	var club ClubViewer
 
 	err := client.Query(context.Background(), &club, map[string]interface{}{
@@ -119,6 +122,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	// make sure count is "2"
 	require.Equal(t, 2, clubViewer.Club.MembersCount, "two club members total, including the original owner")
+	require.Equal(t, 0, clubViewer.Club.MembersIsSupporterCount, "no supporters")
 
 	// grab account ID so we can look through club members
 	accountId := clubViewer.Club.ViewerMember.Account.ID
@@ -171,6 +175,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
+	require.Equal(t, 1, clubViewer.Club.MembersIsSupporterCount, "1 supporter")
 
 	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubSupporter, mock.Anything)
 
@@ -186,6 +191,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
+	require.Equal(t, 0, clubViewer.Club.MembersIsSupporterCount, "0 supporter")
 
 	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubMember, mock.Anything)
 

@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
 	"os"
+	"overdoll/applications/hades/internal/adapters"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/ports/graphql/types"
@@ -45,6 +47,18 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 
 func convertClubIdIdToRelayId(clubId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
+}
+
+func convertClubMemberIdIdToRelayId(clubId, accountId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ClubMember{}, clubId, accountId))))
+}
+
+func refreshSubscriptionsIndex(t *testing.T) {
+
+	// refresh transactions index so we get the most up-to-date values
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.SubscriptionsIndexName).Do(context.Background())
+	require.NoError(t, err)
 }
 
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {

@@ -121,14 +121,6 @@ func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAc
 	seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
 }
 
-func cleanupDepositRequests(t *testing.T) {
-	session := bootstrap.InitializeDatabaseSession()
-	err := session.Query("TRUNCATE deposit_requests", nil).ExecRelease()
-	require.NoError(t, err)
-	err = session.Query("TRUNCATE deposit_requests_by_month", nil).ExecRelease()
-	require.NoError(t, err)
-}
-
 func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()

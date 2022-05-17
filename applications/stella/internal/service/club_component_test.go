@@ -4,10 +4,13 @@ import (
 	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
 )
@@ -92,6 +95,8 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CreateClub, mock.Anything)
+
 	var createClub CreateClub
 
 	fake := TestClub{}
@@ -104,6 +109,9 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 			Name: fake.Name,
 		},
 	})
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	refreshClubESIndex(t)
 
 	require.NoError(t, err)
 

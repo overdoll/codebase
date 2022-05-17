@@ -64,7 +64,7 @@ type Posts struct {
 		Edges []*struct {
 			Node PostModified
 		}
-	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
+	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state, supporterOnlyStatus: $supporterOnlyStatus)"`
 }
 
 type AddPostContent struct {
@@ -390,48 +390,63 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var posts Posts
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"categorySlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
-		"characterSlugs": []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for published")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in published state")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"categorySlugs":  []graphql.String{"Alter"},
-		"characterSlugs": []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"categorySlugs":       []graphql.String{"Alter"},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for category")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"characterSlugs": []graphql.String{"AarushHills"},
-		"categorySlugs":  []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"characterSlugs":      []graphql.String{"AarushHills"},
+		"categorySlugs":       []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for character")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"audienceSlugs":  []graphql.String{"StandardAudience"},
-		"characterSlugs": []graphql.String{},
-		"categorySlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"audienceSlugs":       []graphql.String{"StandardAudience"},
+		"characterSlugs":      []graphql.String{},
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for audience")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial},
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+	})
+
+	require.NoError(t, err, "no error searching for supporter only status")
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in supporter only state")
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)

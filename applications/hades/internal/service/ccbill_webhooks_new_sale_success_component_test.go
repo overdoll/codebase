@@ -215,6 +215,20 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	fileUrl := generateReceipt.GenerateClubSupporterPaymentReceiptFromAccountTransaction.Link.String()
 	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
+
+	// get subscriptions for the current club
+	clubSubscriptions := getClubActiveAccountClubSupporterSubscriptions(t, gqlClient, clubId)
+	require.Len(t, clubSubscriptions.Entities[0].Club.SupporterSubscriptions.Edges, 1, "should have 1 subscription")
+	subscription = clubSubscriptions.Entities[0].Club.SupporterSubscriptions.Edges[0].Node.Item
+
+	require.Equal(t, graphql1.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
+
+	// check the club member subscription is visible
+	clubMemberSubscription := getClubMemberSubscription(t, gqlClient, clubId, accountId)
+	require.NotNil(t, clubMemberSubscription.Entities[0].ClubMember.ClubSupporterSubscription, "should have a subscription attached to the club member")
+	require.Equal(t, subscription.Id, clubMemberSubscription.Entities[0].ClubMember.ClubSupporterSubscription.Item.Id, "should have a subscription attached to the club member")
 }
 
 func assertNewSaleSuccessCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {

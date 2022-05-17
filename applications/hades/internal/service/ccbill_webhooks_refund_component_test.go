@@ -93,6 +93,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.Equal(t, 699, event.Amount, "correct amount")
 	require.Equal(t, graphql1.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", event.Reason, "correct reason")
+	require.Equal(t, 699, transaction.TotalRefunded, "total refunded is now maximum")
 
 	sDec, _ := base64.StdEncoding.DecodeString(event.ID.GetID())
 	eventId := relay.ID(sDec).GetID()

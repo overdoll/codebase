@@ -100,7 +100,9 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	es := bootstrap.InitializeElasticSearchSession()
 
 	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es)
-	err := adapter.CreateClub(context.Background(), pst)
+	err := adapter.ReserveSlugForClub(context.Background(), pst)
+	require.NoError(t, err)
+	err = adapter.CreateClub(context.Background(), pst)
 	require.NoError(t, err)
 	return pst
 }
