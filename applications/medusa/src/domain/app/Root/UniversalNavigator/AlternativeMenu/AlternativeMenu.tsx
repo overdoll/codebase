@@ -86,7 +86,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can I='staff' a='Entity'>
           <HorizontalNavigationDropdownMenu.Button
-            href='/staff/entity/character/search'
+            href='/staff/entity'
             colorScheme='purple'
             icon={LoginKeys}
             label={
