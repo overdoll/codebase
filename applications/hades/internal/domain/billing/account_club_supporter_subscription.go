@@ -218,6 +218,7 @@ func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Pr
 }
 
 func (c *AccountClubSupporterSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
+	c.lastBillingDate = c.nextBillingDate
 	c.nextBillingDate = nextBillingDate
 	c.failedAt = nil
 	c.ccbillErrorText = nil

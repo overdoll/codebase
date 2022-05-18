@@ -42,7 +42,7 @@ func (m *MockWorkflow) onWorkflowExecution() *mock.Call {
 	ret = append(ret, mock.IsType(m.method))
 	ret = append(ret, m.args...)
 
-	return m.client.On("ExecuteWorkflow", ret...)
+	return m.client.On("ExecuteWorkflow", ret...).Once()
 }
 
 func (m *MockWorkflow) getArgumentsForWorkflowCall() ([]interface{}, error) {

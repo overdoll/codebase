@@ -82,19 +82,34 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
+	var supporterOnlyStatus SupporterOnlyStatus
+
+	if result.SupporterOnlyStatus() == post.Full {
+		supporterOnlyStatus = SupporterOnlyStatusFull
+	}
+
+	if result.SupporterOnlyStatus() == post.None {
+		supporterOnlyStatus = SupporterOnlyStatusNone
+	}
+
+	if result.SupporterOnlyStatus() == post.Partial {
+		supporterOnlyStatus = SupporterOnlyStatusPartial
+	}
+
 	return &Post{
-		ID:          relay.NewID(Post{}, result.ID()),
-		Reference:   result.ID(),
-		Contributor: &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:        &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Audience:    audience,
-		State:       state,
-		Content:     content,
-		Categories:  categories,
-		Characters:  characters,
-		CreatedAt:   result.CreatedAt(),
-		PostedAt:    result.PostedAt(),
-		Likes:       result.Likes(),
+		ID:                  relay.NewID(Post{}, result.ID()),
+		SupporterOnlyStatus: supporterOnlyStatus,
+		Reference:           result.ID(),
+		Contributor:         &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Club:                &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Audience:            audience,
+		State:               state,
+		Content:             content,
+		Categories:          categories,
+		Characters:          characters,
+		CreatedAt:           result.CreatedAt(),
+		PostedAt:            result.PostedAt(),
+		Likes:               result.Likes(),
 	}
 }
 

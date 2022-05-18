@@ -50,14 +50,15 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:             cursor,
-		CharacterSlugs:     []string{obj.Slug},
-		Principal:          principal.FromContext(ctx),
-		State:              stateModified,
-		AudienceSlugs:      audienceSlugs,
-		CategorySlugs:      categorySlugs,
-		SortBy:             sortBy.String(),
-		ShowSuspendedClubs: false,
+		Cursor:              cursor,
+		CharacterSlugs:      []string{obj.Slug},
+		Principal:           principal.FromContext(ctx),
+		State:               stateModified,
+		SupporterOnlyStatus: supporterOnly,
+		AudienceSlugs:       audienceSlugs,
+		CategorySlugs:       categorySlugs,
+		SortBy:              sortBy.String(),
+		ShowSuspendedClubs:  false,
 	})
 
 	if err != nil {

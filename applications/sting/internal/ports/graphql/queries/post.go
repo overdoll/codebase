@@ -52,16 +52,17 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:             cursor,
-		ContributorId:      nil,
-		AudienceSlugs:      audienceSlugs,
-		CategorySlugs:      categorySlugs,
-		CharacterSlugs:     characterSlugs,
-		SeriesSlugs:        seriesSlugs,
-		State:              stateModified,
-		SortBy:             sortBy.String(),
-		Principal:          principal.FromContext(ctx),
-		ShowSuspendedClubs: false,
+		Cursor:              cursor,
+		ContributorId:       nil,
+		SupporterOnlyStatus: supporterOnly,
+		AudienceSlugs:       audienceSlugs,
+		CategorySlugs:       categorySlugs,
+		CharacterSlugs:      characterSlugs,
+		SeriesSlugs:         seriesSlugs,
+		State:               stateModified,
+		SortBy:              sortBy.String(),
+		Principal:           principal.FromContext(ctx),
+		ShowSuspendedClubs:  false,
 	})
 
 	if err != nil {

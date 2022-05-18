@@ -15,7 +15,6 @@ go_library(
         "terminate_club.go",
         "un_suspend_club.go",
         "un_terminate_club.go",
-        "update_club_member_total_count.go",
     ],
     importpath = "overdoll/applications/stella/internal/app/workflows",
     visibility = ["//applications/stella:__subpackages__"],

@@ -63,6 +63,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	require.Equal(t, graphql.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2022-03-28", subscription.LastBillingDate, "correct next billing date")
 	require.Equal(t, "2024-03-28", subscription.NextBillingDate, "correct next billing date")
 
 	accountTransactionsInvoice := getAccountTransactions(t, gqlClient, accountId)

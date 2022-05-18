@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 
@@ -69,64 +70,22 @@ func getPostWithViewerLike(t *testing.T, accountId, id string) PostWithViewer {
 	return post
 }
 
-func TestLikePost_and_delete_account_data(t *testing.T) {
+// TestLikePost_and_undo - like a post, check viewer, and then also undo the like, as well as liking again + deleting
+func TestLikePost_and_undo_and_delete(t *testing.T) {
 	t.Parallel()
 
-	grpcClient := getGrpcClient(t)
-
 	testingAccountId := newFakeAccount(t)
-	publishedPost := seedPublishedPost(t, testingAccountId)
+	clubId := uuid.New().String()
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestNormal(t, testingAccountId)
+
+	publishedPost := seedPublishedPost(t, uuid.New().String(), clubId)
 	postId := publishedPost.ID()
 	relayId := convertPostIdToRelayId(postId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, workflows.AddPostLikeInput{
-		PostId:    postId,
-		AccountId: testingAccountId,
-	})
-
-	var likePost LikePost
-
-	err := client.Mutate(context.Background(), &likePost, map[string]interface{}{
-		"input": types.LikePostInput{
-			ID: relayId,
-		},
-	})
-
-	require.NoError(t, err, "no error liking a post")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	postAfterLiked := getPostWithViewerLike(t, testingAccountId, postId)
-	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should not be nil")
-
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, mock.Anything)
-
-	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
-	require.NoError(t, err, "no error deleting account data")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	postAfterLiked = getPostWithViewerLike(t, testingAccountId, postId)
-	require.Nil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should be nil")
-}
-
-// TestLikePost_and_undo - like a post, check viewer, and then also undo the like
-func TestLikePost_and_undo(t *testing.T) {
-	t.Parallel()
-
-	testingAccountId := newFakeAccount(t)
-	publishedPost := seedPublishedPost(t, testingAccountId)
-	postId := publishedPost.ID()
-	relayId := convertPostIdToRelayId(postId)
-
-	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, workflows.AddPostLikeInput{
-		PostId:    postId,
-		AccountId: testingAccountId,
-	})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, mock.Anything)
 
 	var likePost LikePost
 
@@ -164,6 +123,32 @@ func TestLikePost_and_undo(t *testing.T) {
 	removeLikeWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	postAfterLikeRemoved := getPostWithViewerLike(t, testingAccountId, postId)
+
+	require.Equal(t, 0, postAfterLikeRemoved.Post.Likes, "post has 0 likes")
+	require.Nil(t, postAfterLikeRemoved.Post.ViewerLiked, "viewer like object should no longer exist")
+
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddPostLike, mock.Anything)
+
+	err = client.Mutate(context.Background(), &likePost, map[string]interface{}{
+		"input": types.LikePostInput{
+			ID: relayId,
+		},
+	})
+
+	require.NoError(t, err, "no error liking a post")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, mock.Anything)
+
+	grpcClient := getGrpcClient(t)
+
+	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
+	require.NoError(t, err, "no error deleting account data")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	postAfterLikeRemoved = getPostWithViewerLike(t, testingAccountId, postId)
 
 	require.Equal(t, 0, postAfterLikeRemoved.Post.Likes, "post has 0 likes")
 	require.Nil(t, postAfterLikeRemoved.Post.ViewerLiked, "viewer like object should no longer exist")

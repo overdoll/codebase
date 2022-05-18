@@ -931,7 +931,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterCance
 }
 
 func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterBillingDateOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {
-	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"next_billing_date"})
+	return r.updateAccountClubSupporterSubscription(ctx, id, updateFn, []string{"next_billing_date", "last_billing_date"})
 }
 
 func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubscriptionStatusOperator(ctx context.Context, id string, updateFn func(subscription *billing.AccountClubSupporterSubscription) error) (*billing.AccountClubSupporterSubscription, error) {

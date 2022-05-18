@@ -495,7 +495,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	var filterQueries []elastic.Query
 
-	if !filter.ShowSuspendedClubs() {
+	if !filter.ShowTerminatedClubs() {
 		filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubIds...)))
 	}
 
@@ -508,6 +508,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		for _, status := range filter.SupporterOnlyStatus() {
 			supporterStatus = append(supporterStatus, status.String())
 		}
+
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", supporterStatus...))
 	}
 

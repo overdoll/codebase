@@ -79,9 +79,9 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	return pst
 }
 
-func newPublishedPost(t *testing.T, accountId string) *post.Post {
+func newPublishedPost(t *testing.T, accountId, clubId string) *post.Post {
 
-	publishingPost := newPublishingPost(t, accountId, uuid.New().String())
+	publishingPost := newPublishingPost(t, accountId, clubId)
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -89,9 +89,9 @@ func newPublishedPost(t *testing.T, accountId string) *post.Post {
 	return publishingPost
 }
 
-func newPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
+func newPublishedPostWithClub(t *testing.T, accountId, clubId string) *post.Post {
 
-	publishingPost := newPublishingPost(t, accountId, accountId)
+	publishingPost := newPublishingPost(t, accountId, clubId)
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -116,26 +116,26 @@ func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	return pst
 }
 
-func seedPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
-	pst := newPublishedPostWithClub(t, accountId)
+func seedPublishedPostWithClub(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishedPostWithClub(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedPublishedPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishedPost(t, accountId)
+func seedPublishedPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishedPost(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedPublishingPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId, uuid.New().String())
+func seedPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishingPost(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedReviewPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId, uuid.New().String())
+func seedReviewPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishingPost(t, accountId, clubId)
 	err := pst.MakeReview()
 	require.NoError(t, err)
 	seedPost(t, pst)
@@ -176,7 +176,6 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 	env.RegisterWorkflow(workflows.RemovePost)
 	env.RegisterWorkflow(workflows.RemovePostLike)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 
 	return env
 }

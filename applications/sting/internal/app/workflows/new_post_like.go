@@ -20,6 +20,16 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 
 	var a *activities.Activities
 
+	if err := workflow.ExecuteActivity(ctx, a.CreatePostLike,
+		activities.CreatePostLikeInput{
+			PostId:    input.PostId,
+			AccountId: input.AccountId,
+			LikedAt:   input.LikedAt,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.AddLikeToPost,
 		activities.AddLikeToPostInput{
 			PostId: input.PostId,
