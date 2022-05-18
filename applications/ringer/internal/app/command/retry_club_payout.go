@@ -29,7 +29,7 @@ func (h RetryClubPayoutHandler) Handle(ctx context.Context, cmd RetryClubPayout)
 		return nil, err
 	}
 
-	if err := h.event.RetryClubPayout(ctx, pay); err != nil {
+	if err := h.event.RetryClubPayout(ctx, cmd.Principal, pay); err != nil {
 		return nil, err
 	}
 

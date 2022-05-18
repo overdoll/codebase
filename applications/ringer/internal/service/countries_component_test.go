@@ -16,6 +16,9 @@ func TestGetCountries(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+
+	mockAccountArtist(t, accountId)
+	mockAccountDigestDefault(t, accountId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	var countries Countries

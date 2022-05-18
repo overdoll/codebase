@@ -426,8 +426,8 @@ func (r PaymentCassandraElasticsearchRepository) AddClubPaymentsToPayout(ctx con
 				id,
 			)
 
-			stmt, _ := clubPaymentsTable.UpdateBuilder("club_payout_ids").AddLit("club_payout_ids", `'`+id+`'`).ToCql()
-			batch.Query(stmt)
+			stmt, _ := clubPaymentsTable.UpdateBuilder().AddLit("club_payout_ids", `{'`+payoutId+`'}`).ToCql()
+			batch.Query(stmt, id)
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {

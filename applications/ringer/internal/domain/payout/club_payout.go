@@ -147,7 +147,11 @@ func (p *ClubPayout) UpdateDepositDate(t time.Time) error {
 	return nil
 }
 
-func (p *ClubPayout) CanCancel() error {
+func (p *ClubPayout) CanCancel(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if p.status != Queued {
 		return errors.New("can only cancel a queued payout")
@@ -156,7 +160,11 @@ func (p *ClubPayout) CanCancel() error {
 	return nil
 }
 
-func (p *ClubPayout) CanRetry() error {
+func (p *ClubPayout) CanRetry(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if p.status != Failed {
 		return errors.New("can only retry a failed payout")

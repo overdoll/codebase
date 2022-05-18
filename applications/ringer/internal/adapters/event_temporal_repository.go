@@ -70,9 +70,9 @@ func (r EventTemporalRepository) ClubPaymentDeduction(ctx context.Context, reque
 	return nil
 }
 
-func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
+func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, requester *principal.Principal, pay *payout.ClubPayout) error {
 
-	if err := pay.CanCancel(); err != nil {
+	if err := pay.CanCancel(requester); err != nil {
 		return err
 	}
 
@@ -106,9 +106,9 @@ func (r EventTemporalRepository) InitiateClubPayout(ctx context.Context, clubId 
 	return nil
 }
 
-func (r EventTemporalRepository) RetryClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
+func (r EventTemporalRepository) RetryClubPayout(ctx context.Context, requester *principal.Principal, pay *payout.ClubPayout) error {
 
-	if err := pay.CanRetry(); err != nil {
+	if err := pay.CanRetry(requester); err != nil {
 		return err
 	}
 

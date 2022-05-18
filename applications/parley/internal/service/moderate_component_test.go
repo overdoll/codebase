@@ -139,6 +139,7 @@ func TestModeratePost_remove(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -189,6 +190,7 @@ func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountModerator(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -250,9 +252,9 @@ func TestModeratePost_reject(t *testing.T) {
 }
 
 func TestModeratePost_reject_with_infraction(t *testing.T) {
-	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountModerator(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -341,11 +343,11 @@ func accountPostModeratorQueue(t *testing.T, client *graphql.Client, accountId s
 }
 
 func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
-	t.Parallel()
 
 	// clear moderators table, and add a new moderator that will be used for this test
 	accountId := uuid.New().String()
 	clearModeratorsTableAndSeedModerator(t, accountId)
+	mockAccountModerator(t, accountId)
 
 	grpcClient := getGrpcClient(t)
 

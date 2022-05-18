@@ -30,7 +30,10 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	clubId := convertClubIdToRelayId(uuid.New().String())
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
+
+	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.IssueClubInfraction, mock.Anything)
 

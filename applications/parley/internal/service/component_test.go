@@ -114,6 +114,14 @@ func seedRule(t *testing.T, infraction bool) *rule.Rule {
 	return pst
 }
 
+func refreshReportsIndex(t *testing.T) {
+
+	// refresh transactions index so we get the most up-to-date values
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.PostReportsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()

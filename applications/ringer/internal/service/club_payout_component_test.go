@@ -156,6 +156,9 @@ func TestClubPayout(t *testing.T) {
 
 	clubId := uuid.New().String()
 	accountId := clubId
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
@@ -171,6 +174,7 @@ func TestClubPayout(t *testing.T) {
 		ClubId:     clubId,
 		FutureTime: nil,
 		WorkflowId: "GenerateClubMonthlyPayout_Manual_" + clubId,
+		CanCancel:  true,
 	})
 
 	var initiate InitiateClubPayout
@@ -311,6 +315,9 @@ func TestClubPayout_simulate_error(t *testing.T) {
 
 	clubId := uuid.New().String()
 	accountId := clubId
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigestDefault(t, accountId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
@@ -328,6 +335,7 @@ func TestClubPayout_simulate_error(t *testing.T) {
 		ClubId:     clubId,
 		FutureTime: nil,
 		WorkflowId: "TestWorkflowID_123",
+		CanCancel:  true,
 	})
 
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
@@ -383,6 +391,9 @@ func TestClubPayout_cancel(t *testing.T) {
 
 	clubId := uuid.New().String()
 	accountId := clubId
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigestDefault(t, accountId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
@@ -423,6 +434,7 @@ func TestClubPayout_cancel(t *testing.T) {
 		ClubId:     clubId,
 		FutureTime: nil,
 		WorkflowId: "TestWorkflowID_123",
+		CanCancel:  true,
 	})
 
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
@@ -448,6 +460,9 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 
 	accountId := uuid.New().String()
 	clubId := accountId
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigestDefault(t, accountId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// seed a payout method for this account or else the payout won't work
@@ -498,6 +513,7 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 		ClubId:     clubId,
 		FutureTime: nil,
 		WorkflowId: "TestWorkflowID_123",
+		CanCancel:  true,
 	})
 
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -164,10 +165,22 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx context.Context, payoutId string, paymentIds []string) error {
 	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
 		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
-		Script(elastic.NewScript("ctx._source.club_payout_ids.contains(payoutId) ? (ctx.op = \"none\") : ctx._source.club_payout_ids += payoutId").Param("payoutId", payoutId).Lang("painless")).
+		Script(elastic.NewScript(`
+
+		if (ctx._source.club_payout_ids == null) {
+			ctx._source.club_payout_ids = new ArrayList();
+		}
+
+		if (!ctx._source.club_payout_ids.contains(params.payoutId)) { 
+			ctx._source.club_payout_ids.add(params.payoutId) 
+		} 
+
+	`).Param("payoutId", payoutId).Lang("painless")).
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Errorw("failed to update index append club payments payout id: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return fmt.Errorf("failed to update index append club payments payout id: %v", err)
 	}
 

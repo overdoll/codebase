@@ -1486,7 +1486,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 	err = r.session.Query(accountClubSupporterSubscriptionLockTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(accountClubSupporterSubscriptionLock{ClubId: subscription.ClubId(), AccountId: subscription.ClubId()}).
+		BindStruct(accountClubSupporterSubscriptionLock{ClubId: marshalled.SupportingClubId, AccountId: marshalled.InitiatorAccountId}).
 		GetRelease(&lockedSub)
 
 	if err != nil && err != gocql.ErrNotFound {

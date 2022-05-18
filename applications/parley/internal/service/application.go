@@ -98,7 +98,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 			DeleteAccountData: command.NewDeleteAccountDataHandler(reportRepo),
 
-			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, sting),
+			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, sting, eventRepo),
 
 			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, stella),
 			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),

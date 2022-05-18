@@ -96,6 +96,9 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
+
+	mockAccountArtist(t, accountId)
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	_, err := client.ClubPaymentDeposit(context.Background(), &ringer.ClubPaymentDepositRequest{
@@ -186,6 +189,9 @@ func TestClubPaymentDeduction(t *testing.T) {
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
 	accountTransactionId := uuid.New().String()
+
+	mockAccountArtist(t, accountId)
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// we need to first seed a payment with the exact values as the one below because a deduction relies on an existing payment

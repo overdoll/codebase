@@ -46,14 +46,17 @@ var postReportsByAccountBucketsTable = table.New(table.Metadata{
 	SortKey: []string{"bucket"},
 })
 
-var postReportsByPostBucketsTable = table.New(table.Metadata{
-	Name: "post_report_by_post_buckets",
+var postReportsByAccountTable = table.New(table.Metadata{
+	Name: "post_report_by_account",
 	Columns: []string{
 		"post_id",
+		"reporting_account_id",
 		"bucket",
+		"rule_id",
+		"created_at",
 	},
-	PartKey: []string{"post_id"},
-	SortKey: []string{"bucket"},
+	PartKey: []string{"bucket", "reporting_account_id"},
+	SortKey: []string{"post_id"},
 })
 
 type ReportCassandraElasticsearchRepository struct {
@@ -99,7 +102,7 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 		marshalledPostReport,
 	)
 
-	stmt, names = postReportsByPostBucketsTable.Insert()
+	stmt, names = postReportsByAccountTable.Insert()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -185,7 +188,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 	// iterate through all buckets starting from x bucket until we have enough values
 	for _, bucketId := range buckets {
 
-		builder := qb.Select(postReportsByAccountBucketsTable.Name()).
+		builder := qb.Select(postReportsByAccountTable.Name()).
 			Where(qb.Eq("bucket"), qb.Eq("reporting_account_id"))
 
 		var results []*postReport
@@ -227,7 +230,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 	// delete all buckets for this account as well
 	if err := r.session.Query(qb.
 		Delete(postReportsByAccountBucketsTable.Name()).
-		Where(qb.Eq("account_id")).
+		Where(qb.Eq("reporting_account_id")).
 		ToCql()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).

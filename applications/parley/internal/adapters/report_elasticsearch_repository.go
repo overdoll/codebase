@@ -19,7 +19,7 @@ type postReportDocument struct {
 	PostId             string    `json:"post_id"`
 	ReportingAccountId string    `json:"reporting_account_id"`
 	RuleId             string    `json:"rule_id"`
-	CreatedAt          time.Time `json:"joined_at"`
+	CreatedAt          time.Time `json:"created_at"`
 }
 
 const PostReportsIndexName = "post_reports"

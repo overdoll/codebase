@@ -124,10 +124,10 @@ func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
 
-	principal := testing_tools.NewArtistPrincipal(accountId)
+	principal := testing_tools.NewArtistSecurePrincipal(accountId)
 
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
-	_, err := detailsRepo.UpdateAccountDetails(context.Background(), testing_tools.NewStaffPrincipal(accountId), accountId, func(id *details.AccountDetails) error {
+	_, err := detailsRepo.UpdateAccountDetails(context.Background(), principal, accountId, func(id *details.AccountDetails) error {
 		id.UpdateFirstName(principal, "test")
 		id.UpdateLastName(principal, "test")
 		id.UpdateCountry(principal, "USA")

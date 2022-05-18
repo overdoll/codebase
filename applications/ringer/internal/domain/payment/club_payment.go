@@ -90,6 +90,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatform
 		deductionSourcePaymentId: nil,
 		createdAt:                timestamp,
 		settlementDate:           settlementDate,
+		clubPayoutIds:            []string{},
 	}, nil
 }
 
