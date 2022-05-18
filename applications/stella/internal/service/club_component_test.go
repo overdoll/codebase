@@ -86,6 +86,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	grpcClient := getGrpcClient(t)
 
@@ -152,7 +153,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 club")
 	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
-	require.Equal(t, 3, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
 
 	require.True(t, accountClubs.Entities[0].Account.HasNonTerminatedClubs, "has non terminated clubs")
 }
@@ -180,7 +181,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
-
+	mockAccountNormal(t, testingAccountId)
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
@@ -273,6 +274,7 @@ func TestCreateClub_edit_name(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)
@@ -310,6 +312,7 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)

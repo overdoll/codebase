@@ -19,7 +19,6 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
-	w.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
 	w.RegisterWorkflow(workflows.AddClubMember)
 	w.RegisterWorkflow(workflows.RemoveClubMember)
 	w.RegisterWorkflow(workflows.AddClubSupporter)

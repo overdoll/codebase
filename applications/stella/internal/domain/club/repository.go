@@ -18,6 +18,7 @@ type Repository interface {
 	DeleteReservedSlugForClub(ctx context.Context, club *Club) error
 
 	UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *Club) error) error
 	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
@@ -35,7 +36,6 @@ type Repository interface {
 	CreateClubMember(ctx context.Context, member *Member) error
 	DeleteClubMember(ctx context.Context, member *Member) error
 
-	UpdateClubMembersTotalCount(ctx context.Context, clubId string) error
 	UpdateClubMemberIsSupporter(ctx context.Context, clubId, accountId string, updateFn func(member *Member) error) (*Member, error)
 
 	GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error)

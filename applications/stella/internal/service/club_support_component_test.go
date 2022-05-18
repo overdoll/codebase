@@ -15,6 +15,7 @@ func TestClubSupport(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, uuid.New().String())

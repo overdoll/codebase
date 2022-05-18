@@ -52,7 +52,6 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 	env.RegisterActivity(application.App.Activities)
-	env.RegisterWorkflow(workflows.UpdateClubMemberTotalCount)
 	env.RegisterWorkflow(workflows.AddClubMember)
 
 	return env

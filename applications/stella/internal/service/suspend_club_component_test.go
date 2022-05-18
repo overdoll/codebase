@@ -10,6 +10,7 @@ import (
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -68,7 +69,8 @@ func getSuspensionClub(t *testing.T, client *graphql.Client, id string) Suspensi
 func TestSuspendClub_and_unsuspend(t *testing.T) {
 	t.Parallel()
 
-	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	grpcClient := getGrpcClient(t)

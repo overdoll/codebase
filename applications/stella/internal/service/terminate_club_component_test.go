@@ -27,8 +27,11 @@ type UnTerminateClub struct {
 func TestTerminateClub_and_unTerminate(t *testing.T) {
 	t.Parallel()
 
-	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
+
 	regularAccountId := uuid.New().String()
+	mockAccountNormal(t, regularAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	clb := seedClub(t, regularAccountId)
@@ -59,7 +62,12 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	require.True(t, can.CanDelete, "should be able to delete")
 
 	// should not be able to find the club publicly
-	randomUserGraphqlClient := getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+
+	randomUser := uuid.New().String()
+	mockAccountNormal(t, randomUser)
+
+	randomUserGraphqlClient := getGraphqlClientWithAuthenticatedAccount(t, randomUser)
+
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.Nil(t, updatedClb.Club, "club should not be found")
 
@@ -80,7 +88,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	require.Nil(t, updatedClb.Club.Termination, "club is no longer suspended")
 
 	// should be able to find the club again
-	randomUserGraphqlClient = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	randomUserGraphqlClient = getGraphqlClientWithAuthenticatedAccount(t, randomUser)
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.NotNil(t, updatedClb.Club, "club should be found")
 }

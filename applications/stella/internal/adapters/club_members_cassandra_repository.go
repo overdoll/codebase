@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
-	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/principal"
@@ -101,17 +100,19 @@ func (r ClubCassandraElasticsearchRepository) addDeleteInitialClubMemberToBatch(
 
 func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, timestamp time.Time) error {
 
+	clubMemb := clubMember{
+		ClubId:          clubId,
+		MemberAccountId: accountId,
+		JoinedAt:        timestamp,
+		IsSupporter:     true,
+		SupporterSince:  &timestamp,
+	}
+
 	stmt, names := clubMembersTable.Insert()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
-		clubMember{
-			ClubId:          clubId,
-			MemberAccountId: accountId,
-			JoinedAt:        timestamp,
-			IsSupporter:     true,
-			SupporterSince:  &timestamp,
-		},
+		clubMemb,
 	)
 
 	// insert into account's club list
@@ -135,6 +136,16 @@ func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx co
 			AccountId: accountId,
 		},
 	)
+
+	if err := r.indexClubMember(ctx, club.UnmarshalMemberFromDatabase(
+		clubMemb.MemberAccountId,
+		clubMemb.ClubId,
+		clubMemb.JoinedAt,
+		clubMemb.IsSupporter,
+		clubMemb.SupporterSince,
+	)); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -345,33 +356,6 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	}
 
 	return nil
-}
-
-func (r ClubCassandraElasticsearchRepository) UpdateClubMembersTotalCount(ctx context.Context, clubId string) error {
-
-	_, err := r.client.
-		Refresh().
-		Index(ClubMembersIndexName).
-		Do(ctx)
-
-	if err != nil {
-		return fmt.Errorf("failed to refresh club members index: %v", err)
-	}
-
-	count, err := r.client.Count().
-		Index(ClubMembersIndexName).
-		Query(elastic.NewBoolQuery().
-			Filter(
-				elastic.NewTermsQueryFromStrings("club_id", clubId),
-			)).
-		Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	// update club member count
-	return r.updateClubMemberCount(ctx, clubId, int(count))
 }
 
 func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx context.Context, requester *principal.Principal, accountId string) (int, error) {

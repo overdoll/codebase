@@ -380,7 +380,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 		},
 	)
 
-	stmt, _ = clubTable.UpdateBuilder().Add("slug_aliases").ToCql()
+	stmt, names = clubTable.UpdateBuilder().Add("slug_aliases").ToCql()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -390,7 +390,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 		},
 	)
 
-	stmt, _ = clubTable.UpdateBuilder().Set("slug").ToCql()
+	stmt, names = clubTable.UpdateBuilder().Set("slug").ToCql()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -551,7 +551,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubTerminationStatus(ctx co
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"terminated", "terminated_by_account_id"})
 }
 
-func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.Context, clubId string, count int) error {
+func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) error {
 
 	clb, err := r.getClubById(ctx, clubId)
 
@@ -559,23 +559,7 @@ func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.
 		return err
 	}
 
-	ok, err := clubTable.UpdateBuilder("members_count", "members_count_last_update_id").
-		If(qb.EqLit("members_count_last_update_id", clb.MembersCountLastUpdateId.String())).
-		Query(r.session).
-		WithContext(ctx).
-		BindStruct(clubs{Id: clubId, MembersCount: count, MembersCountLastUpdateId: gocql.TimeUUID()}).
-		SerialConsistency(gocql.Serial).
-		ExecCASRelease()
-
-	if err != nil {
-		return fmt.Errorf("failed to update club member count: %v", err)
-	}
-
-	if !ok {
-		return fmt.Errorf("failed to update club member count")
-	}
-
-	return r.indexClub(ctx, club.UnmarshalClubFromDatabase(
+	unmarshalled := club.UnmarshalClubFromDatabase(
 		clb.Id,
 		clb.Slug,
 		clb.SlugAliases,
@@ -589,7 +573,29 @@ func (r ClubCassandraElasticsearchRepository) updateClubMemberCount(ctx context.
 		clb.HasCreatedSupporterOnlyPost,
 		clb.Terminated,
 		clb.TerminatedByAccountId,
-	))
+	)
+
+	if err := updateFn(unmarshalled); err != nil {
+		return err
+	}
+
+	ok, err := clubTable.UpdateBuilder("members_count", "members_count_last_update_id").
+		If(qb.EqLit("members_count_last_update_id", clb.MembersCountLastUpdateId.String())).
+		Query(r.session).
+		WithContext(ctx).
+		BindStruct(clubs{Id: clubId, MembersCount: unmarshalled.MembersCount(), MembersCountLastUpdateId: gocql.TimeUUID()}).
+		SerialConsistency(gocql.Serial).
+		ExecCASRelease()
+
+	if err != nil {
+		return fmt.Errorf("failed to update club member count: %v", err)
+	}
+
+	if !ok {
+		return fmt.Errorf("failed to update club member count")
+	}
+
+	return r.indexClub(ctx, unmarshalled)
 }
 
 func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Context, clubId string, updateFn func(cl *club.Club) error, columns []string) (*club.Club, error) {
