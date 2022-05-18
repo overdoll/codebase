@@ -83,12 +83,10 @@ func convertAccountIdToRelayId(ruleId string) relay.ID {
 
 func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string, count int) {
 
-	app := service.NewComponentTestApplication(context.Background())
-
 	for i := 0; i < count; i++ {
 
 		env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-		env.RegisterActivity(app.App.Activities)
+		env.RegisterActivity(application.App.Activities)
 
 		seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
 	}

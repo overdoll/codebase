@@ -42,7 +42,6 @@ func (h *Activities) GetReadyPaymentsForClubAndAppend(ctx context.Context, input
 		}
 
 		return nil, err
-
 	}
 
 	type paymentGroup struct {
@@ -76,16 +75,18 @@ func (h *Activities) GetReadyPaymentsForClubAndAppend(ctx context.Context, input
 		return nil, err
 	}
 
-	result := &GetReadyPaymentsForClubAndAppendPayload{}
+	var result *GetReadyPaymentsForClubAndAppendPayload
 
 	for currency, val := range currencyMap {
 
 		// payout method was validated correctly
 		if method.Validate(acc, val.totalAmount, currency) {
 
-			result.AccountPayoutMethodId = method.AccountId()
-			result.Currency = currency
-			result.TotalAmount = val.totalAmount
+			result = &GetReadyPaymentsForClubAndAppendPayload{
+				AccountPayoutMethodId: method.AccountId(),
+				Currency:              currency,
+				TotalAmount:           val.totalAmount,
+			}
 
 			if err := h.pr.AddClubPaymentsToPayout(ctx, input.PayoutId, val.paymentIds); err != nil {
 				return nil, err

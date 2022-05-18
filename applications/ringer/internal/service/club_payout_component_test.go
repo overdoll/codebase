@@ -314,16 +314,16 @@ func TestClubPayout_simulate_error(t *testing.T) {
 	t.Parallel()
 
 	clubId := uuid.New().String()
-	accountId := clubId
+	accountId := uuid.New().String()
 
 	mockAccountStaff(t, accountId)
-	mockAccountDigestDefault(t, accountId)
-	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
-
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	// seed a payout method for this account or else the payout won't work
 	setupPayoutMethodForAccount(t, accountId, "test-failure@test.com")
 
-	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
+	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment()
@@ -390,21 +390,20 @@ func TestClubPayout_cancel(t *testing.T) {
 	t.Parallel()
 
 	clubId := uuid.New().String()
-	accountId := clubId
+	accountId := uuid.New().String()
 
 	mockAccountStaff(t, accountId)
-	mockAccountDigestDefault(t, accountId)
+	mockAccountDigestDefault(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
-	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId, "test@test.com")
-
-	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
+	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	env.RegisterWorkflow(workflows.ProcessClubPayout)
+
+	callback := false
 
 	env.RegisterDelayedCallback(func() {
 		payments := getPayoutsForClub(t, gClient, clubId)
@@ -427,6 +426,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 		require.NoError(t, err, "no error cancelling a payout")
 
+		callback = true
+
 	}, delayedCallback)
 
 	// generate the payout
@@ -439,6 +440,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 	require.True(t, env.IsWorkflowCompleted(), "payout successfully seeded")
 	require.Error(t, env.GetWorkflowError(), "payout had a cancel error")
+
+	require.True(t, callback, "callback should have been called")
 
 	// check actual status of payouts
 	payments := getPayoutsForClub(t, gClient, clubId)
@@ -459,16 +462,13 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
-	clubId := accountId
+	clubId := uuid.New().String()
 
 	mockAccountStaff(t, accountId)
-	mockAccountDigestDefault(t, accountId)
+	mockAccountDigestDefault(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
-	// seed a payout method for this account or else the payout won't work
-	setupPayoutMethodForAccount(t, accountId, "test@test.com")
-
-	seedPayments(t, uuid.New().String(), clubId, accountId, 10)
+	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment()

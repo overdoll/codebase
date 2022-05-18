@@ -15,7 +15,7 @@ import (
 
 type clubPayoutEventDocument struct {
 	Id        string    `json:"id"`
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"created_at"`
 	Error     string    `json:"error"`
 }
 
@@ -50,7 +50,7 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 	for _, evt := range doc.Events {
 		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
 			evt.Id,
-			evt.Timestamp,
+			evt.CreatedAt,
 			evt.Error,
 		))
 	}
@@ -81,7 +81,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 	for _, e := range pay.Events() {
 		events = append(events, clubPayoutEventDocument{
 			Id:        e.Id(),
-			Timestamp: e.CreatedAt(),
+			CreatedAt: e.CreatedAt(),
 			Error:     e.Error(),
 		})
 	}
@@ -211,7 +211,7 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 
 				events = append(events, clubPayoutEventDocument{
 					Id:        unmarshal.Id,
-					Timestamp: unmarshal.CreatedAt,
+					CreatedAt: unmarshal.CreatedAt,
 					Error:     unmarshal.Error,
 				})
 			}

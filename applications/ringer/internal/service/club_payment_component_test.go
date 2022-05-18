@@ -168,6 +168,12 @@ func TestClubPaymentDeposit(t *testing.T) {
 	require.Equal(t, 70, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
 
+	// get graphql client as a staff member
+	accountId = uuid.New().String()
+	mockAccountStaff(t, accountId)
+	mockAccountDigestDefault(t, accountId, clubId)
+	gClient = getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
 	var allPayments Payments
 
 	err = gClient.Query(context.Background(), &allPayments, map[string]interface{}{

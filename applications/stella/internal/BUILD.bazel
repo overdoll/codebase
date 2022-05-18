@@ -17,7 +17,6 @@ go_library(
         "//applications/stella/internal/service",
         "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
-        "//libraries/clients",
         "//libraries/config",
         "//libraries/database",
         "@com_github_spf13_cobra//:cobra",

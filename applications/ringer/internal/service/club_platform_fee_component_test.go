@@ -47,7 +47,7 @@ func TestGetAndUpdatePlatformFee(t *testing.T) {
 	clubId := uuid.New().String()
 
 	mockAccountStaff(t, accountId)
-	mockAccountDigestDefault(t, accountId)
+	mockAccountDigestDefault(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	platformFee := getClubPlatformFee(t, gClient, clubId)
