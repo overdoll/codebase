@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"math"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -66,39 +67,19 @@ func (m *ClubTransactionMetrics) Currency() money.Currency {
 }
 
 func (m *ClubTransactionMetrics) ChargebacksCountRatio() float64 {
-
-	if m.totalTransactionsCount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsCount / m.totalTransactionsCount)
+	return toFixed(float64(m.chargebacksCount)/float64(m.totalTransactionsCount), 4)
 }
 
 func (m *ClubTransactionMetrics) ChargebacksAmountRatio() float64 {
-
-	if m.totalChargebacksAmount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsAmount / m.totalChargebacksAmount)
+	return toFixed(float64(m.totalChargebacksAmount)/float64(m.totalTransactionsAmount), 4)
 }
 
 func (m *ClubTransactionMetrics) RefundsAmountRatio() float64 {
-
-	if m.totalRefundsAmount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsAmount / m.totalRefundsAmount)
+	return toFixed(float64(m.totalRefundsAmount)/float64(m.totalTransactionsAmount), 4)
 }
 
 func (m *ClubTransactionMetrics) RefundsCountRatio() float64 {
-
-	if m.refundsCount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsCount / m.refundsCount)
+	return toFixed(float64(m.refundsCount)/float64(m.totalTransactionsCount), 4)
 }
 
 func (m *ClubTransactionMetrics) TotalTransactions() uint64 {
@@ -145,4 +126,13 @@ func CanViewClubTransactionMetrics(requester *principal.Principal, clubId string
 	}
 
 	return nil
+}
+
+func round(num float64) int {
+	return int(num + math.Copysign(0.5, num))
+}
+
+func toFixed(num float64, precision int) float64 {
+	output := math.Pow(10, float64(precision))
+	return float64(round(num*output)) / output
 }

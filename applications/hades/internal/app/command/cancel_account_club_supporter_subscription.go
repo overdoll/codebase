@@ -18,8 +18,8 @@ type CancelAccountClubSupporterSubscriptionHandler struct {
 	event event.Repository
 }
 
-func NewCancelAccountClubSupporterSubscriptionHandler(br billing.Repository) CancelAccountClubSupporterSubscriptionHandler {
-	return CancelAccountClubSupporterSubscriptionHandler{br: br}
+func NewCancelAccountClubSupporterSubscriptionHandler(br billing.Repository, event event.Repository) CancelAccountClubSupporterSubscriptionHandler {
+	return CancelAccountClubSupporterSubscriptionHandler{br: br, event: event}
 }
 
 func (h CancelAccountClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd CancelAccountClubSupporterSubscription) (*billing.AccountClubSupporterSubscription, error) {

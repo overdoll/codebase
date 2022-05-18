@@ -3,11 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/spf13/viper"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
-	"os"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
@@ -23,14 +21,6 @@ type EventTemporalRepository struct {
 
 func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
-}
-
-func validateAccNumber(accNumber string) error {
-	if accNumber != os.Getenv("CCBILL_ACCOUNT_NUMBER") {
-		return errors.New("invalid account number")
-	}
-
-	return nil
 }
 
 type CCBillNewSaleOrUpSaleSuccess struct {
@@ -97,10 +87,6 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 	var input CCBillNewSaleOrUpSaleSuccess
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
-	}
-
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
 		return err
 	}
 
@@ -257,10 +243,6 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
 
 	if err != nil {
@@ -357,10 +339,6 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -444,10 +422,6 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {
@@ -526,10 +500,6 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -570,10 +540,6 @@ func (r EventTemporalRepository) CCBillCancellation(ctx context.Context, payload
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -608,10 +574,6 @@ func (r EventTemporalRepository) CCBillExpiration(ctx context.Context, payload [
 	var input CCBillExpiration
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
-	}
-
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
 		return err
 	}
 
@@ -654,10 +616,6 @@ func (r EventTemporalRepository) CCBillUserReactivation(ctx context.Context, pay
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
@@ -693,10 +651,6 @@ func (r EventTemporalRepository) CCBillBillingDateChange(ctx context.Context, pa
 	var input CCBillBillingDateChange
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
-	}
-
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
 		return err
 	}
 
@@ -753,10 +707,6 @@ func (r EventTemporalRepository) CCBillCustomerDataUpdate(ctx context.Context, p
 		return err
 	}
 
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
-		return err
-	}
-
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
@@ -810,10 +760,6 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 	var input CCBillRenewalFailure
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
-	}
-
-	if err := validateAccNumber(input.ClientAccnum); err != nil {
 		return err
 	}
 

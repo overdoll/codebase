@@ -50,6 +50,9 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
@@ -71,7 +74,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	transaction := accountTransactionsInvoice.Entities[0].Account.Transactions.Edges[0].Node
 
 	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
-	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.CreatedAt.String(), "correct timestamp")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, graphql.CurrencyUsd, transaction.Currency, "correct currency")
 

@@ -62,9 +62,11 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
-
 	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
 
 	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")

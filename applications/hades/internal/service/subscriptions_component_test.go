@@ -143,7 +143,7 @@ type AccountTransactions struct {
 						Reference         string
 						Type              types.AccountTransactionType
 						Events            []*types.AccountTransactionEvent
-						Timestamp         time.Time
+						CreatedAt         time.Time
 						Amount            int
 						TotalRefunded     int
 						Currency          graphql1.Currency

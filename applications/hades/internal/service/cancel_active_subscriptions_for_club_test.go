@@ -28,6 +28,9 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	graphqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)

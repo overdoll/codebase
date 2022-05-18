@@ -94,7 +94,12 @@ func TestMetrics_create_multiple(t *testing.T) {
 	require.True(t, env.IsWorkflowCompleted(), "metric successfully seeded")
 	require.NoError(t, env.GetWorkflowError(), "metric seeded without errors")
 
-	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	accountId := uuid.New().String()
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
+	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
 
 	require.Equal(t, 10, metrics.TotalTransactionsCount, "should have 10 transaction count")
@@ -104,7 +109,7 @@ func TestMetrics_create_multiple(t *testing.T) {
 	require.Equal(t, 399, metrics.RefundsAmount, "should have 1 refunds amount")
 	require.Equal(t, 1, metrics.RefundsCount, "should have 1 refunds count")
 	require.Equal(t, 0.1, metrics.RefundsCountRatio, "should have correct refunds ratio")
-	require.Equal(t, 0.05708, metrics.RefundsAmountRatio, "should have correct refunds amount")
+	require.Equal(t, 0.0571, metrics.RefundsAmountRatio, "should have correct refunds amount")
 
 	require.Equal(t, 699, metrics.ChargebacksAmount, "should have 1 chargebacks amount")
 	require.Equal(t, 1, metrics.ChargebacksCount, "should have 1 chargebacks count")

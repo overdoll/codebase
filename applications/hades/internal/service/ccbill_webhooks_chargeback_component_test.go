@@ -44,6 +44,9 @@ func TestBillingFlow_Chargeback(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

@@ -50,6 +50,9 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 	env := getWorkflowEnvironment()
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

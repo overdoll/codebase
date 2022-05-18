@@ -95,5 +95,6 @@ func runWebhookAction(t *testing.T, event string, payload interface{}) {
 
 	require.Equal(t, 200, response.StatusCode, fmt.Sprintf("error calling webhook: %s", string(b)))
 
+	refreshSubscriptionsIndex(t)
 	refreshAccountTransactionIndex(t)
 }

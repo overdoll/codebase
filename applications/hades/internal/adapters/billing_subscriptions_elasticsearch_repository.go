@@ -120,7 +120,7 @@ func marshalAccountClubSupporterSubscriptionToDocument(subscription *billing.Acc
 func (r BillingCassandraElasticsearchRepository) GetAccountActiveClubSupporterSubscriptionsOperator(ctx context.Context, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
 
 	builder := r.client.Search().
-		Index(AccountTransactionsIndexName)
+		Index(SubscriptionsIndexName)
 
 	query := elastic.NewBoolQuery()
 
@@ -161,7 +161,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	}
 
 	builder := r.client.Search().
-		Index(AccountTransactionsIndexName)
+		Index(SubscriptionsIndexName)
 
 	if cursor == nil {
 		return nil, fmt.Errorf("cursor must be present")

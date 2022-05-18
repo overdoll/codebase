@@ -41,7 +41,7 @@ type AccountTransaction struct {
 	events []*AccountTransactionEvent
 }
 
-func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTransactionId, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
+func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, clubSupporterSubscriptionId, ccbillTransactionId, ccbillSubscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -51,14 +51,14 @@ func NewInitialPaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTr
 		billedAtDate:                billedAtDate,
 		nextBillingDate:             nextBillingDate,
 		currency:                    currency,
-		clubSupporterSubscriptionId: &subscriptionId,
-		ccbillSubscriptionId:        &subscriptionId,
+		clubSupporterSubscriptionId: &clubSupporterSubscriptionId,
+		ccbillSubscriptionId:        &ccbillSubscriptionId,
 		ccbillTransactionId:         &ccbillTransactionId,
 		paymentMethod:               paymentMethod,
 	}, nil
 }
 
-func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTransactionId, subscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
+func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, clubSupporterSubscriptionId, ccbillTransactionId, ccbillSubscriptionId string, timestamp, billedAtDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod) (*AccountTransaction, error) {
 	return &AccountTransaction{
 		accountId:                   accountId,
 		id:                          id,
@@ -69,8 +69,8 @@ func NewInvoicePaymentClubSubscriptionAccountTransaction(accountId, id, ccbillTr
 		nextBillingDate:             nextBillingDate,
 		currency:                    currency,
 		ccbillTransactionId:         &ccbillTransactionId,
-		clubSupporterSubscriptionId: &subscriptionId,
-		ccbillSubscriptionId:        &subscriptionId,
+		clubSupporterSubscriptionId: &clubSupporterSubscriptionId,
+		ccbillSubscriptionId:        &ccbillSubscriptionId,
 		paymentMethod:               paymentMethod,
 	}, nil
 }
@@ -220,6 +220,10 @@ func (c *AccountTransaction) CanView(requester *principal.Principal) error {
 
 func (c *AccountTransaction) GenerateProratedRefundAmount(requester *principal.Principal) (*RefundAmount, error) {
 
+	if !requester.IsStaff() {
+		return nil, principal.ErrNotAuthorized
+	}
+
 	// subtract the amount already refunded from the total amount
 	newAmount := c.Amount() - c.GetTotalRefunded()
 
@@ -260,10 +264,35 @@ func UnmarshalAccountTransactionFromDatabase(accountId, id string, timestamp tim
 	}
 }
 
-func CanViewAccountTransactionHistory(requester *principal.Principal, accountId string) error {
+func CanViewAccountTransactionsCount(requester *principal.Principal, accountId string) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
 
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func CanViewAccountTransactions(requester *principal.Principal, filters *AccountTransactionsFilters, subscription *AccountClubSupporterSubscription) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	if filters.AccountId() != nil {
+		if err := requester.BelongsToAccount(*filters.AccountId()); err != nil {
+			return err
+		}
+	}
+
+	if subscription != nil {
+		if err := requester.BelongsToAccount(subscription.AccountId()); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -36,6 +36,9 @@ func TestBillingFlow_Void(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
@@ -45,5 +48,5 @@ func TestBillingFlow_Void(t *testing.T) {
 	transaction := accountTransactionsVoid.Entities[0].Account.Transactions.Edges[0].Node
 
 	require.Equal(t, types.AccountTransactionTypeVoid, transaction.Type, "correct transaction type")
-	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.CreatedAt.String(), "correct timestamp")
 }

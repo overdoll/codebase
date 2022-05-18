@@ -114,6 +114,9 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	env.SetDetachedChildWait(false)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

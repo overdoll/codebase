@@ -70,7 +70,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 			Payload:   body,
 			EventType: eventType,
 		}); err != nil {
-			zap.S().Error("ccbill webhook failed", zap.Error(err))
+			zap.S().Errorw("ccbill webhook failed", zap.Error(err))
 			c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 			return
 		}

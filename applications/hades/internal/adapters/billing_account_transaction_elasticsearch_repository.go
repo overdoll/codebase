@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -132,6 +133,10 @@ func marshalAccountTransactionToDocument(transaction *billing.AccountTransaction
 
 func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx context.Context, requester *principal.Principal, accountId string, states []billing.Transaction) (*int64, error) {
 
+	if err := billing.CanViewAccountTransactionsCount(requester, accountId); err != nil {
+		return nil, err
+	}
+
 	builder := r.client.Count().
 		Index(AccountTransactionsIndexName)
 
@@ -160,7 +165,21 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx
 	return &response, nil
 }
 
-func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionHistoryFilters) ([]*billing.AccountTransaction, error) {
+func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *billing.AccountTransactionsFilters) ([]*billing.AccountTransaction, error) {
+
+	var subscription *billing.AccountClubSupporterSubscription
+	var err error
+
+	if filters.AccountClubSupporterSubscriptionId() != nil {
+		subscription, err = r.GetAccountClubSupporterSubscriptionById(ctx, requester, *filters.AccountClubSupporterSubscriptionId())
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if err := billing.CanViewAccountTransactions(requester, filters, subscription); err != nil {
+		return nil, err
+	}
 
 	builder := r.client.Search().
 		Index(AccountTransactionsIndexName)
@@ -169,7 +188,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -198,6 +217,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Errorw("failed to search account transactions: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed to search account transactions: %v", err)
 	}
 

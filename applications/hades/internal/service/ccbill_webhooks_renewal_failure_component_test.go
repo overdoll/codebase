@@ -35,6 +35,9 @@ func TestBillingFlow_RenewalFailure(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

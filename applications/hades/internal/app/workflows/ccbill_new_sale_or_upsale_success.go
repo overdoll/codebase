@@ -139,8 +139,9 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 	if err := workflow.ExecuteActivity(ctx, a.CreateInitialClubSubscriptionAccountTransaction,
 		activities.CreateInitialClubSubscriptionAccountTransactionInput{
 			Id:                                 uniqueTransactionId,
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
-			TransactionId:                      input.TransactionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
+			CCBillSubscriptionId:               input.SubscriptionId,
+			CCBillTransactionId:                input.TransactionId,
 			AccountId:                          input.PaymentToken.AccountInitiator.AccountId,
 			Timestamp:                          input.Timestamp,
 			Amount:                             input.BilledRecurringPrice,

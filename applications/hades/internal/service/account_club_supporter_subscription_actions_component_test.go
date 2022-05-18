@@ -3,10 +3,13 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -53,10 +56,15 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 
 	// since we know internally how these IDs are created, we create the ID here without having to grab it through an API call
 	savedPaymentMethodId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId))))
-	accountClubSupporterSubscriptionId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountActiveClubSupporterSubscription{}, accountId, clubId, ccbillSubscriptionId))))
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, "")
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	subscriptions := getActiveAccountClubSupporterSubscriptions(t, gqlClient, accountId)
+	accountClubSupporterSubscriptionId := subscriptions.Entities[0].Account.ClubSupporterSubscriptions.Edges[0].Node.Item.Id
 
 	var becomeSupporter BecomeClubSupporterWithAccountSavedPaymentMethod
 
@@ -98,6 +106,8 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	require.NoError(t, err, "no error extending club supporter subscription")
 	require.Equal(t, "2022-03-31", extendClubSupporterSubscription.ExtendAccountClubSupporterSubscription.ClubSupporterSubscription.Item.NextBillingDate, "should be extended")
 
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CancelAccountClubSupporterSubscription, mock.Anything)
+
 	// cancel account club supporter subscription
 	var cancel CancelAccountClubSupporterSubscription
 
@@ -109,4 +119,6 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error cancelling")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 }

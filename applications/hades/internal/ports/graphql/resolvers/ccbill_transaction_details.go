@@ -22,7 +22,7 @@ func (r CCBillTransactionDetailsResolver) LinkedAccountClubSupporterSubscription
 
 	result, err := r.App.Queries.AccountClubSupporterSubscriptionByAccountAndClubId.Handle(ctx, query.AccountClubSupporterSubscriptionByAccountAndClubId{
 		Principal: principal.FromContext(ctx),
-		AccountId: obj.ID.GetCompositePartID(0),
+		AccountId: obj.ID.GetCompositePartID(2),
 		ClubId:    obj.ID.GetCompositePartID(1),
 	})
 

@@ -273,7 +273,7 @@ func CanViewAccountClubSupporterSubscription(requester *principal.Principal, acc
 		return nil
 	}
 
-	if accountId == nil && clubId == nil && !requester.IsStaff() {
+	if accountId == nil && clubId == nil {
 		return principal.ErrNotAuthorized
 	}
 
@@ -281,6 +281,8 @@ func CanViewAccountClubSupporterSubscription(requester *principal.Principal, acc
 		if err := requester.BelongsToAccount(*accountId); err != nil {
 			return err
 		}
+
+		return nil
 	}
 
 	if clubId != nil {

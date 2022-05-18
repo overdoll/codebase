@@ -59,8 +59,9 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 	transaction, err := billing.NewInvoicePaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
 		input.Id,
-		input.CCBillTransactionId,
 		input.AccountClubSupporterSubscriptionId,
+		input.CCBillTransactionId,
+		ccbillSubscription.CCBillSubscriptionId(),
 		input.Timestamp,
 		input.BillingDate,
 		input.NextBillingDate,

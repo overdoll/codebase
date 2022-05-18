@@ -1090,7 +1090,7 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		return nil, fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
 	}
 
-	var accountClubSupported *accountClubSupporterSubscription
+	var accountClubSupported accountClubSupporterSubscription
 
 	if err := r.session.Query(accountClubSupporterSubscriptionsTable.Get()).
 		WithContext(ctx).

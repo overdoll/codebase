@@ -165,7 +165,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator
 
 	if err != nil {
 		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total likes for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
+		zap.S().Errorw("failed to get total likes for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return 0, nil
 	}
 

@@ -132,6 +132,9 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
@@ -174,6 +177,8 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	res, err = grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
 	require.NoError(t, err, "no error checking if can delete account data")
 	require.True(t, res.CanDelete, "can delete account data with no active subscriptions")
+
+	refreshSubscriptionsIndex(t)
 
 	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
 

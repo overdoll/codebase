@@ -1,6 +1,7 @@
 package billing
 
 import (
+	"math"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -20,10 +21,10 @@ func newRefundAmountWithProrated(originalAmount uint64, currency money.Currency,
 	daysDifferenceCurrent := nextBillingDate.Sub(time.Now()).Hours() / 24
 
 	// get percentage difference, so maybe 0.4
-	difference := uint64(daysDifferenceCurrent / daysDifferenceBilling)
+	difference := daysDifferenceBilling / daysDifferenceCurrent * -1
 
 	// our final prorated maxAmount, rounded down to 2 decimal places
-	proratedAmount := originalAmount * difference * 100 / 100
+	proratedAmount := uint64(math.Floor(float64(originalAmount) * difference * 100 / 100))
 
 	return &RefundAmount{
 		maxAmount:      originalAmount,
