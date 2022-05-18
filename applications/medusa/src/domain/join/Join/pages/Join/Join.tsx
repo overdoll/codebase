@@ -39,7 +39,7 @@ const JoinFragment = graphql`
 export default function Join ({
   queryRef,
   hadGrant,
-  clearGrant,
+  clearGrant
 }: Props): JSX.Element {
   const [commit, isInFlight] = useMutation<JoinMutation>(JoinAction)
 
@@ -53,8 +53,8 @@ export default function Join ({
     commit({
       variables: {
         input: {
-          email: email,
-        },
+          email: email
+        }
       },
       updater: (store, payload) => {
         if (payload.grantAuthenticationToken?.authenticationToken == null) {
@@ -87,15 +87,15 @@ export default function Join ({
         setCookie('token', `${token};${email as string}`, {
           path: '/',
           secure: true,
-          sameSite: 'lax',
+          sameSite: 'lax'
         })
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error with joining`,
+          title: t`There was an error with joining`
         })
-      },
+      }
     })
   }
 
@@ -105,7 +105,7 @@ export default function Join ({
       <Head>
         <title>Join :: overdoll</title>
       </Head>
-      <Stack h='100%' justify='center' align='center' spacing={4}>
+      <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
         {(data == null && hadGrant) && (
           <Alert
             mb={2}

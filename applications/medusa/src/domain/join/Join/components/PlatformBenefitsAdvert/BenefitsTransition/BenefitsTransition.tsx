@@ -45,7 +45,7 @@ export default function BenefitsTransition (): JSX.Element {
   return (
     <AdvertBoxWrapper>
       <Tabs index={index} variant='soft-rounded' colorScheme='gray' isFitted>
-        <Box h={425}>
+        <Box w='100%' h={425}>
           <TabPanels h='100%'>
             <TabPanel h='100%' py={0}>
               <Fade style={{ height: '100%' }} in={index === 0}>

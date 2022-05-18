@@ -12,6 +12,7 @@ import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
 import RefreshLobby from './RefreshLobby/RefreshLobby'
+import { useCookies } from 'react-cookie'
 
 interface Props {
   queryRef: LobbyFragment$key
@@ -35,6 +36,8 @@ export default function Lobby ({
   queryRef
 }: Props): JSX.Element {
   const data = useFragment(LobbyFragment, queryRef)
+
+  const [cookies] = useCookies<string>(['token'])
 
   const {
     searchArguments,
@@ -108,7 +111,7 @@ export default function Lobby ({
               fontSize='md'
               color='purple.300'
             >
-              {data.email}
+              {data.email ?? cookies.token.split(';')[1]}
             </Heading>
           </Flex>
           <QueryErrorBoundary loadQuery={loadQuery}>

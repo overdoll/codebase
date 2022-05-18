@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { CacheProvider } from '@emotion/react'
 import theme from '../modules/theme'
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { I18nProvider } from '@lingui/react'
 import { i18n as i18nGlobal, setupI18n } from '@lingui/core'
 import NextApp from 'next/app'
@@ -76,6 +76,20 @@ const MyApp = ({
   if (CanUseDOM) {
     globalRelayEnvironment = environment
   }
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(
+          function (registration) {
+          },
+          function (err) {
+            console.log('Service Worker registration failed: ', err)
+          }
+        )
+      })
+    }
+  }, [])
 
   return (
     <>

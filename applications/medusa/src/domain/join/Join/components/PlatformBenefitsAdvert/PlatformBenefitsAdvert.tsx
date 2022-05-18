@@ -18,10 +18,10 @@ export default function PlatformBenefitsAdvert ({ children }: Props): JSX.Elemen
       justify='center'
       align='center'
     >
-      <Center>
+      <Center w='100%'>
         <BenefitsTransition />
       </Center>
-      <Center>
+      <Center w='100%'>
         <AdvertBoxWrapper>
           {children}
         </AdvertBoxWrapper>
