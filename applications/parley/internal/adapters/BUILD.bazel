@@ -51,6 +51,7 @@ go_test(
         "post_audit_log_repository_test.go",
         "repository_test.go",
     ],
+    data = ["//applications/parley:config.toml"],
     deps = [
         ":adapters",
         "//applications/parley/internal/domain/post_audit_log",

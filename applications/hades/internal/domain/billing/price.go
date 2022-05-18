@@ -1,6 +1,8 @@
 package billing
 
-import "overdoll/libraries/money"
+import (
+	"overdoll/libraries/money"
+)
 
 type Price struct {
 	currency money.Currency

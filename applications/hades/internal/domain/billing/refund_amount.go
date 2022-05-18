@@ -21,10 +21,17 @@ func newRefundAmountWithProrated(originalAmount uint64, currency money.Currency,
 	daysDifferenceCurrent := nextBillingDate.Sub(time.Now()).Hours() / 24
 
 	// get percentage difference, so maybe 0.4
-	difference := daysDifferenceBilling / daysDifferenceCurrent * -1
+	difference := daysDifferenceCurrent / daysDifferenceBilling
 
-	// our final prorated maxAmount, rounded down to 2 decimal places
-	proratedAmount := uint64(math.Floor(float64(originalAmount) * difference * 100 / 100))
+	var proratedAmount uint64
+
+	if difference <= 0 {
+		// if we got a negative difference, prorated should be 0 since the subscription already lapsed
+		proratedAmount = 0
+	} else {
+		// our final prorated maxAmount, rounded down to 2 decimal places
+		proratedAmount = uint64(math.Floor(float64(originalAmount) * difference * 100 / 100))
+	}
 
 	return &RefundAmount{
 		maxAmount:      originalAmount,

@@ -15,9 +15,6 @@ type Node struct {
 	cursor string
 }
 
-func init() {
-}
-
 func NewNode(cursorValue interface{}) *Node {
 
 	buf := new(bytes.Buffer)
@@ -214,34 +211,41 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column, tieB
 
 func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascending bool) error {
 
-	createdCursor, err := c.GetCursor()
+	var createdCursorString string
+	var createdCursorTimeUUID gocql.UUID
 
-	if err != nil {
-		return err
+	hasCursor := false
+
+	if c.After() != nil {
+		err := c.After().Decode(&createdCursorString)
+
+		if err != nil {
+			c.After().Decode(&createdCursorTimeUUID)
+		}
+
+		hasCursor = true
 	}
 
-	if len(createdCursor) == 0 {
+	if c.Before() != nil {
+		err := c.Before().Decode(&createdCursorString)
+
+		if err != nil {
+			c.Before().Decode(&createdCursorTimeUUID)
+		}
+
+		hasCursor = true
+	}
+
+	if !hasCursor {
 		return nil
-	}
-
-	var valueStr string
-	var valueUUID gocql.UUID
-
-	switch g := createdCursor[0].(type) {
-	case string:
-		valueStr = g
-	case gocql.UUID:
-		valueUUID = g
-	default:
-		return errors.New("unsupported cursor type")
 	}
 
 	var value string
 
-	if valueStr != "" {
-		value = `'` + valueStr + `'`
+	if createdCursorString != "" {
+		value = `'` + createdCursorString + `'`
 	} else {
-		value = valueUUID.String()
+		value = createdCursorTimeUUID.String()
 	}
 
 	if c.After() != nil {

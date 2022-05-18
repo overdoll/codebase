@@ -405,6 +405,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 	callback := false
 
+	var payoutId string
+
 	env.RegisterDelayedCallback(func() {
 		payments := getPayoutsForClub(t, gClient, clubId)
 
@@ -428,6 +430,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 		callback = true
 
+		payoutId = payments.Entities[0].Club.Payouts.Edges[0].Node.Reference
+
 	}, delayedCallback)
 
 	// generate the payout
@@ -443,11 +447,8 @@ func TestClubPayout_cancel(t *testing.T) {
 
 	require.True(t, callback, "callback should have been called")
 
-	// check actual status of payouts
-	payments := getPayoutsForClub(t, gClient, clubId)
-	require.Len(t, payments.Entities[0].Club.Payouts.Edges, 1, "should have 1 payout")
-	targetPayout := payments.Entities[0].Club.Payouts.Edges[0].Node
-	require.Equal(t, types.ClubPayoutStatusCancelled, targetPayout.Status, "payout changed to cancelled")
+	payout := getClubPayout(t, gClient, payoutId)
+	require.Equal(t, types.ClubPayoutStatusCancelled, payout.ClubPayout.Status, "payout changed to cancelled")
 }
 
 type UpdateClubPayoutDepositDate struct {

@@ -73,7 +73,7 @@ func TestConvertAmountToCCBillFloat(t *testing.T) {
 type parseFloatTest struct {
 	currency       string
 	amount         string
-	expectedAmount int64
+	expectedAmount uint64
 }
 
 func TestParseCCBillCurrencyAmount(t *testing.T) {
