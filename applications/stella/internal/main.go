@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/stella/internal/adapters/migrations"
+	"overdoll/applications/stella/internal/adapters/seeders"
 	"overdoll/applications/stella/internal/ports"
 	"overdoll/applications/stella/internal/service"
 	stella "overdoll/applications/stella/proto"
@@ -12,9 +14,8 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/clients"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
+	"overdoll/libraries/database"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,8 +26,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/stella")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,
@@ -50,11 +50,7 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
-
-	if os.Getenv("DISABLE_WORKER") == "" {
-		go RunWorker(cmd, args)
-	}
-
+	go RunWorker(cmd, args)
 	RunGrpc(cmd, args)
 }
 
@@ -64,7 +60,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv, cleanup := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(app)
 
 	defer cleanup()
 
@@ -79,7 +75,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
@@ -92,11 +88,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	client := clients.NewTemporalClient(ctx)
-
-	defer client.Close()
-
-	s := ports.NewGrpcServer(&app, client)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		stella.RegisterStellaServer(server, s)

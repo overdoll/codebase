@@ -44,7 +44,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -58,12 +58,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	env := getWorkflowEnvironment(t)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-
-	require.True(t, env.IsWorkflowCompleted(), "processed resources")
-	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -245,7 +240,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -344,10 +339,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 2, assertions, "expected to have checked 2 files")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "processed resources")
-	require.NoError(t, env.GetWorkflowError(), "processed resources without error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// then, run grpc call once again to make sure its processed
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
@@ -449,7 +441,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 4, processedAssertions, "expected to have checked 4 files")
 
-	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeleteResources, mock.Anything)
+	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteResources, mock.Anything)
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
@@ -459,10 +451,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.NoError(t, err)
 
 	// run workflow to delete resources
-	env = getWorkflowEnvironment(t)
-	deleteWorkflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "deleted resources")
-	require.NoError(t, env.GetWorkflowError(), "deleted resources without error")
+	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// run grpc and see that we didnt find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{

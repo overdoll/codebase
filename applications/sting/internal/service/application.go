@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
@@ -12,13 +12,11 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/testing_tools/mocks"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
-
-	// bootstrap application
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
-
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
 	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
@@ -38,30 +36,42 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
-
-	bootstrap.NewBootstrap(ctx)
-
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-
-	temporalClient := &mocks.Client{}
-
-	return createApplication(ctx,
-			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-			// this makes testing easier because we can get reproducible tests with each run
-			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			ParleyServiceMock{},
-			StellaServiceMock{},
-			LoaderServiceMock{},
-			temporalClient,
-		),
-		func() {
-			cleanup()
-		},
-		temporalClient
+type ComponentTestApplication struct {
+	App            *app.Application
+	TemporalClient *temporalmocks.Client
+	EvaClient      *mocks.MockEvaClient
+	ParleyClient   *mocks.MockParleyClient
+	StellaClient   *mocks.MockStellaClient
+	LoaderClient   *mocks.MockLoaderClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) app.Application {
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+
+	evaClient := &mocks.MockEvaClient{}
+	parleyClient := &mocks.MockParleyClient{}
+	stellaClient := &mocks.MockStellaClient{}
+	loaderClient := &mocks.MockLoaderClient{}
+	temporalClient := &temporalmocks.Client{}
+
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewLoaderGrpc(loaderClient),
+			temporalClient,
+		),
+		TemporalClient: temporalClient,
+		EvaClient:      evaClient,
+		ParleyClient:   parleyClient,
+		StellaClient:   stellaClient,
+		LoaderClient:   loaderClient,
+	}
+}
+
+func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -70,7 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	postRepo := adapters.NewPostsCassandraRepository(session, esClient)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			CreatePost:    command.NewCreatePostHandler(postRepo, stella),
 			PublishPost:   command.NewPublishPostHandler(postRepo, eventRepo),
@@ -84,12 +94,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			AddTerminatedClub:    command.NewAddTerminatedClubHandler(postRepo),
 			RemoveTerminatedClub: command.NewRemoveTerminatedClubHandler(postRepo),
-
-			DeleteAndRecreatePostsIndex:      command.NewDeleteAndRecreatePostsIndexHandler(postRepo),
-			DeleteAndRecreateSeriesIndex:     command.NewDeleteAndRecreateSeriesIndexHandler(postRepo),
-			DeleteAndRecreateCharactersIndex: command.NewDeleteAndRecreateCharactersIndexHandler(postRepo),
-			DeleteAndRecreateCategoriesIndex: command.NewDeleteAndRecreateCategoriesIndexHandler(postRepo),
-			DeleteAndRecreateAudienceIndex:   command.NewDeleteAndRecreateAudienceIndexHandler(postRepo),
 
 			AddPostContent:                   command.NewAddPostContentHandler(postRepo, loader),
 			RemovePostContent:                command.NewRemovePostContentHandler(postRepo),

@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/principal"
 )
 
@@ -14,16 +14,16 @@ type UpdateCancellationReasonTitle struct {
 }
 
 type UpdateCancellationReasonTitleHandler struct {
-	cr cancellation.Repository
+	br billing.Repository
 }
 
-func NewUpdateCancellationReasonTitleHandler(cr cancellation.Repository) UpdateCancellationReasonTitleHandler {
-	return UpdateCancellationReasonTitleHandler{cr: cr}
+func NewUpdateCancellationReasonTitleHandler(br billing.Repository) UpdateCancellationReasonTitleHandler {
+	return UpdateCancellationReasonTitleHandler{br: br}
 }
 
-func (h UpdateCancellationReasonTitleHandler) Handle(ctx context.Context, cmd UpdateCancellationReasonTitle) (*cancellation.Reason, error) {
+func (h UpdateCancellationReasonTitleHandler) Handle(ctx context.Context, cmd UpdateCancellationReasonTitle) (*billing.CancellationReason, error) {
 
-	reasonItem, err := h.cr.UpdateReasonTitle(ctx, cmd.ReasonId, func(reason *cancellation.Reason) error {
+	reasonItem, err := h.br.UpdateCancellationReasonTitle(ctx, cmd.ReasonId, func(reason *billing.CancellationReason) error {
 		return reason.UpdateTitle(cmd.Principal, cmd.Title, cmd.Locale)
 	})
 

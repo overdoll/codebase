@@ -13,7 +13,7 @@ type CreatePendingClubPaymentDepositInput struct {
 	AccountTransactionId        string
 	SourceAccountId             string
 	DestinationClubId           string
-	Amount                      int64
+	Amount                      uint64
 	Currency                    money.Currency
 	Timestamp                   time.Time
 	IsClubSupporterSubscription bool

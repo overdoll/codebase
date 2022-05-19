@@ -1,0 +1,27 @@
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+------------------------
+Account Deletion Request
+------------------------
+
+Hello !
+
+As requested, we have scheduled a deletion of your account on January 01.
+
+We will send you one more reminder letting you know that your account is being deleted before fully confirming the action. You may ignore this and subsequent reminders if you are aware of the action.
+
+Until then, you can restore your account using the button below.
+
+Restore Account ( https://ci.overdoll.dev/settings/account )
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )

@@ -3,10 +3,10 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"go.temporal.io/sdk/mocks"
 	"log"
 	"os"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
 
@@ -29,10 +29,6 @@ import (
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
-)
-
-var (
-	temporalClientMock *mocks.Client
 )
 
 const StingHttpAddr = ":4564"
@@ -83,9 +79,9 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	return pst
 }
 
-func newPublishedPost(t *testing.T, accountId string) *post.Post {
+func newPublishedPost(t *testing.T, accountId, clubId string) *post.Post {
 
-	publishingPost := newPublishingPost(t, accountId, uuid.New().String())
+	publishingPost := newPublishingPost(t, accountId, clubId)
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -93,9 +89,9 @@ func newPublishedPost(t *testing.T, accountId string) *post.Post {
 	return publishingPost
 }
 
-func newPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
+func newPublishedPostWithClub(t *testing.T, accountId, clubId string) *post.Post {
 
-	publishingPost := newPublishingPost(t, accountId, accountId)
+	publishingPost := newPublishingPost(t, accountId, clubId)
 
 	err := publishingPost.MakePublish()
 	require.NoError(t, err)
@@ -120,26 +116,26 @@ func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	return pst
 }
 
-func seedPublishedPostWithClub(t *testing.T, accountId string) *post.Post {
-	pst := newPublishedPostWithClub(t, accountId)
+func seedPublishedPostWithClub(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishedPostWithClub(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedPublishedPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishedPost(t, accountId)
+func seedPublishedPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishedPost(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedPublishingPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId, uuid.New().String())
+func seedPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishingPost(t, accountId, clubId)
 	seedPost(t, pst)
 	return pst
 }
 
-func seedReviewPost(t *testing.T, accountId string) *post.Post {
-	pst := newPublishingPost(t, accountId, uuid.New().String())
+func seedReviewPost(t *testing.T, accountId, clubId string) *post.Post {
+	pst := newPublishingPost(t, accountId, clubId)
 	err := pst.MakeReview()
 	require.NoError(t, err)
 	seedPost(t, pst)
@@ -171,23 +167,25 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
+	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
+	env.RegisterWorkflow(workflows.PublishPost)
+	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
+	env.RegisterWorkflow(workflows.RemovePost)
+	env.RegisterWorkflow(workflows.RemovePostLike)
 
 	return env
 }
 
-func startService() bool {
+func startService(m *testing.M) bool {
 	config.Read("applications/sting")
 
-	application, _, newTClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = newTClient
-
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
@@ -197,7 +195,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)
@@ -210,11 +208,13 @@ func startService() bool {
 		return false
 	}
 
+	mockServices(app)
+
 	return true
 }
 
 func TestMain(m *testing.M) {
-	if !startService() {
+	if !startService(m) {
 		os.Exit(1)
 	}
 

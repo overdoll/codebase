@@ -30,11 +30,7 @@ func (h DeletePostHandler) Handle(ctx context.Context, cmd DeletePost) error {
 		return err
 	}
 
-	if err := pst.CanDelete(cmd.Principal); err != nil {
-		return err
-	}
-
-	if err := h.event.DeletePost(ctx, pst.ID()); err != nil {
+	if err := h.event.DeletePost(ctx, cmd.Principal, pst); err != nil {
 		return err
 	}
 

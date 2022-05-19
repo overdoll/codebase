@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "commands",
+    srcs = [
+        "db.go",
+        "migrate.go",
+        "seed.go",
+    ],
+    importpath = "overdoll/libraries/commands",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/bootstrap",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_viper//:viper",
+        "@org_uber_go_zap//:zap",
+    ],
+)
+
+go_library(
+    name = "database",
+    srcs = [
+        "config.go",
+        "db.go",
+        "migrate.go",
+        "seed.go",
+    ],
+    importpath = "overdoll/libraries/database",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/bootstrap",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_uber_go_zap//:zap",
+    ],
+)

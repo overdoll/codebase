@@ -40,12 +40,10 @@ go_library(
         "//applications/eva/internal/domain/confirm_email",
         "//applications/eva/internal/domain/event",
         "//applications/eva/internal/domain/location",
-        "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
         "//libraries/passport",
         "//libraries/principal",
-        "//libraries/uuid",
         "@com_github_pkg_errors//:errors",
     ],
 )

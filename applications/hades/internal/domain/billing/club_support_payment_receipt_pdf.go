@@ -22,7 +22,7 @@ func (doc *ClubSupporterPaymentReceiptPdf) Build(history *AccountTransaction) (*
 		35,
 		35,
 	)
-	doc.pdf.SetCreationDate(history.Timestamp())
+	doc.pdf.SetCreationDate(history.CreatedAt())
 
 	doc.pdf.AddPage()
 	doc.pdf.SetFont("Arial", "B", 16)

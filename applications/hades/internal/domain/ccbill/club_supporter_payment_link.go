@@ -18,7 +18,7 @@ type ClubSupporterPaymentLink struct {
 	accountId          string
 	email              string
 
-	amount   int64
+	amount   uint64
 	currency int
 }
 

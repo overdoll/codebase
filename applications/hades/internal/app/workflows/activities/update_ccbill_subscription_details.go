@@ -3,11 +3,12 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"time"
 )
 
 type UpdateCCBillSubscriptionDetailsInput struct {
 	CCBillSubscriptionId string
-	Timestamp            string
+	Timestamp            time.Time
 
 	CardBin            string
 	CardType           string
@@ -64,7 +65,7 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, input 
 			return err
 		}
 
-		_, err = h.billing.UpdateAccountClubSupporterPaymentMethodOperator(ctx, input.CCBillSubscriptionId, func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
+		_, err = h.billing.UpdateAccountClubSupporterPaymentMethodOperator(ctx, subscription.AccountClubSupporterSubscriptionId(), func(accountClubSupport *billing.AccountClubSupporterSubscription) error {
 			return accountClubSupport.UpdatePaymentMethod(paymentMethod)
 		})
 

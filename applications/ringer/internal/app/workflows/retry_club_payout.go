@@ -17,13 +17,6 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	var a *activities.Activities
 
-	var payoutDetails *activities.GetClubPayoutDetailsPayload
-
-	// get payout ID
-	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutDetails, input.PayoutId).Get(ctx, &payoutDetails); err != nil {
-		return err
-	}
-
 	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutProcessing,
 		activities.MarkClubPayoutProcessingInput{
 			PayoutId: input.PayoutId,
@@ -46,11 +39,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

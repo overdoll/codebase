@@ -12,7 +12,7 @@ type PaymentRequest struct {
 	sourceAccountId             string
 	destinationClubId           string
 
-	amount   int64
+	amount   uint64
 	currency money.Currency
 
 	timestamp time.Time
@@ -20,7 +20,7 @@ type PaymentRequest struct {
 	isDeduction bool
 }
 
-func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
 
 	if currency != money.USD {
 		return nil, errors.New("deposits are only accepted in USD")
@@ -37,7 +37,7 @@ func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sou
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
 
 	if currency != money.USD {
 		return nil, errors.New("deductions are only accepted in USD")
@@ -71,7 +71,7 @@ func (p *PaymentRequest) DestinationClubId() string {
 	return p.destinationClubId
 }
 
-func (p *PaymentRequest) Amount() int64 {
+func (p *PaymentRequest) Amount() uint64 {
 	return p.amount
 }
 

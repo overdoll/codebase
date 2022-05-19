@@ -3,20 +3,21 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 	"time"
 )
 
 type CreateAccountClubSupportSubscriptionInput struct {
-	SavePaymentDetails bool
-
-	AccountId            string
-	ClubId               string
-	CCBillSubscriptionId *string
+	SavePaymentDetails                 bool
+	AccountClubSupporterSubscriptionId string
+	AccountId                          string
+	ClubId                             string
+	CCBillSubscriptionId               *string
 
 	Timestamp time.Time
 
-	Amount   int64
-	Currency string
+	Amount   uint64
+	Currency money.Currency
 
 	LastRenewalDate time.Time
 	NextRenewalDate time.Time
@@ -61,6 +62,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 	}
 
 	newSubscription, err := billing.NewAccountClubSupporterSubscriptionFromCCBill(
+		input.AccountClubSupporterSubscriptionId,
 		input.AccountId,
 		input.ClubId,
 		*input.CCBillSubscriptionId,

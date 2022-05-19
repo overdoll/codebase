@@ -86,6 +86,8 @@ func TestCreateAndCompleteCurationProfile(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestNormal(t, testingAccountId)
 
 	personalProfile := getAccountCuration(t, testingAccountId)
 

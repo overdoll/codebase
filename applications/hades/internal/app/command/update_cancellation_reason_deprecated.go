@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/principal"
 )
 
@@ -13,16 +13,16 @@ type UpdateCancellationReasonDeprecated struct {
 }
 
 type UpdateCancellationReasonDeprecatedHandler struct {
-	cr cancellation.Repository
+	br billing.Repository
 }
 
-func NewUpdateCancellationReasonDeprecatedHandler(cr cancellation.Repository) UpdateCancellationReasonDeprecatedHandler {
-	return UpdateCancellationReasonDeprecatedHandler{cr: cr}
+func NewUpdateCancellationReasonDeprecatedHandler(br billing.Repository) UpdateCancellationReasonDeprecatedHandler {
+	return UpdateCancellationReasonDeprecatedHandler{br: br}
 }
 
-func (h UpdateCancellationReasonDeprecatedHandler) Handle(ctx context.Context, cmd UpdateCancellationReasonDeprecated) (*cancellation.Reason, error) {
+func (h UpdateCancellationReasonDeprecatedHandler) Handle(ctx context.Context, cmd UpdateCancellationReasonDeprecated) (*billing.CancellationReason, error) {
 
-	reasonItem, err := h.cr.UpdateReasonDeprecated(ctx, cmd.ReasonId, func(reason *cancellation.Reason) error {
+	reasonItem, err := h.br.UpdateCancellationReasonDeprecated(ctx, cmd.ReasonId, func(reason *billing.CancellationReason) error {
 		return reason.UpdateDeprecated(cmd.Principal, cmd.Deprecated)
 	})
 

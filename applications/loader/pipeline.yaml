@@ -25,12 +25,6 @@ steps:
       - name: loader.component
         paths:
           - ./applications/loader/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/loader/docker-compose.ci.yaml
-    network_dependencies:
-      - host: loader
-        port: 8000
     targets:
       - //applications/loader/internal/adapters/...
       - //applications/loader/internal/service/...

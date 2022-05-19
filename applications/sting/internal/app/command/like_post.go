@@ -35,12 +35,7 @@ func (h LikePostHandler) Handle(ctx context.Context, cmd LikePost) (*post.Like, 
 		return nil, err
 	}
 
-	// create a new post like
-	if err := h.pr.CreatePostLike(ctx, cmd.Principal, newLike); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.AddPostLike(ctx, cmd.PostId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.AddPostLike(ctx, newLike); err != nil {
 		return nil, err
 	}
 

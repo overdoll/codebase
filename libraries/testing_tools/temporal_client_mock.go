@@ -42,7 +42,7 @@ func (m *MockWorkflow) onWorkflowExecution() *mock.Call {
 	ret = append(ret, mock.IsType(m.method))
 	ret = append(ret, m.args...)
 
-	return m.client.On("ExecuteWorkflow", ret...)
+	return m.client.On("ExecuteWorkflow", ret...).Once()
 }
 
 func (m *MockWorkflow) getArgumentsForWorkflowCall() ([]interface{}, error) {
@@ -69,11 +69,21 @@ func (m *MockWorkflow) getArgumentsForWorkflowCall() ([]interface{}, error) {
 	return nil, fmt.Errorf("function call: %s not called during execution. double check your function name / test", funcName)
 }
 
-func (m *MockWorkflow) FindAndExecuteWorkflow(t *testing.T, env *testsuite.TestWorkflowEnvironment) {
+func (m *MockWorkflow) findAndExecuteWorkflow(t *testing.T, env *testsuite.TestWorkflowEnvironment) {
 
 	args, err := m.getArgumentsForWorkflowCall()
 
 	require.NoError(t, err)
 
 	env.ExecuteWorkflow(m.method, args...)
+}
+
+func (m *MockWorkflow) FindAndExecuteWorkflow(t *testing.T, env *testsuite.TestWorkflowEnvironment) {
+	m.findAndExecuteWorkflow(t, env)
+	require.True(t, env.IsWorkflowCompleted(), "workflow should be completed")
+	require.NoError(t, env.GetWorkflowError(), "no error executing the workflow")
+}
+
+func (m *MockWorkflow) FindAndExecuteWorkflowWithoutAssertion(t *testing.T, env *testsuite.TestWorkflowEnvironment) {
+	m.findAndExecuteWorkflow(t, env)
 }

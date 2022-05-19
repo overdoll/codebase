@@ -4,6 +4,7 @@ import (
 	"github.com/gocql/gocql"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/libraries/money"
 	"time"
 )
 
@@ -11,8 +12,8 @@ type ClubTransactionMetricInput struct {
 	ClubId    string
 	Timestamp time.Time
 	Id        string
-	Amount    int64
-	Currency  string
+	Amount    uint64
+	Currency  money.Currency
 
 	IsRefund     bool
 	IsChargeback bool

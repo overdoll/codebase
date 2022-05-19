@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/principal"
 )
 
@@ -14,15 +13,14 @@ type GenerateAccountMultiFactorTOTP struct {
 }
 
 type GenerateAccountMultiFactorTOTPHandler struct {
-	mr multi_factor.Repository
 	ar account.Repository
 }
 
-func NewGenerateAccountMultiFactorTOTP(mr multi_factor.Repository, ar account.Repository) GenerateAccountMultiFactorTOTPHandler {
-	return GenerateAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
+func NewGenerateAccountMultiFactorTOTP(ar account.Repository) GenerateAccountMultiFactorTOTPHandler {
+	return GenerateAccountMultiFactorTOTPHandler{ar: ar}
 }
 
-func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorTOTP) (*multi_factor.TOTP, error) {
+func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorTOTP) (*account.TOTP, error) {
 
 	usr, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
@@ -30,14 +28,14 @@ func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd G
 		return nil, err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, cmd.Principal, usr.ID())
+	codes, err := h.ar.GetAccountRecoveryCodes(ctx, cmd.Principal, usr.ID())
 
 	if err != nil {
 		return nil, err
 	}
 
 	// create a new TOTP instance
-	mfa, err := multi_factor.NewTOTP(codes, usr.Username())
+	mfa, err := account.NewTOTP(codes, usr.Username())
 
 	if err != nil {
 		return nil, err

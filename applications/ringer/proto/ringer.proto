@@ -21,7 +21,7 @@ enum PaymentSource {
 }
 
 message Payment {
-  int64 amount = 1;
+  uint64 amount = 1;
   string currency = 2;
 }
 

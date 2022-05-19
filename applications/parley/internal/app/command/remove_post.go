@@ -20,18 +20,16 @@ type RemovePost struct {
 }
 
 type RemovePostHandler struct {
-	pr     post_audit_log.Repository
-	rr     rule.Repository
-	cr     club_infraction.Repository
-	mr     moderator.Repository
-	event  event.Repository
-	eva    EvaService
-	sting  StingService
-	stella StellaService
+	pr    post_audit_log.Repository
+	rr    rule.Repository
+	cr    club_infraction.Repository
+	mr    moderator.Repository
+	event event.Repository
+	sting StingService
 }
 
-func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService, stella StellaService) RemovePostHandler {
-	return RemovePostHandler{sting: sting, eva: eva, pr: pr, rr: rr, mr: mr, cr: cr, stella: stella, event: event}
+func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, sting StingService) RemovePostHandler {
+	return RemovePostHandler{sting: sting, pr: pr, rr: rr, mr: mr, cr: cr, event: event}
 }
 
 func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
@@ -48,11 +46,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 		return err
 	}
 
-	if err := post_audit_log.CanRemovePost(cmd.Principal, ruleItem); err != nil {
-		return err
-	}
-
-	if err := h.event.RemovePost(ctx, cmd.Principal, clubId, cmd.PostId, cmd.RuleId, cmd.Notes); err != nil {
+	if err := h.event.RemovePost(ctx, cmd.Principal, clubId, cmd.PostId, ruleItem, cmd.Notes); err != nil {
 		return err
 	}
 

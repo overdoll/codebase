@@ -28,6 +28,9 @@ func TestCCBillClubSupporterPaymentFlow(t *testing.T) {
 
 	httpClient := http.Client{}
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

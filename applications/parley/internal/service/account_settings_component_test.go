@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"overdoll/libraries/uuid"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -32,13 +33,17 @@ type RemoveModeratorFromPostQueue struct {
 func TestToggleModeratorStatus(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+
+	mockAccountModerator(t, accountId)
+
+	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	var addModeratorToPostQueue AddModeratorToPostQueue
 
 	err := client.Mutate(context.Background(), &addModeratorToPostQueue, map[string]interface{}{
 		"input": types.AddModeratorToPostQueueInput{
-			AccountID: "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+			AccountID: convertAccountIdToRelayId(accountId),
 		},
 	})
 

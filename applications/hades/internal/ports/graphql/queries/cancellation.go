@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/hades/internal/app/query"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -17,7 +17,7 @@ func (r QueryResolver) CancellationReason(ctx context.Context, reference string)
 
 	if err != nil {
 
-		if err == cancellation.ErrReasonNotFound {
+		if err == billing.ErrReasonNotFound {
 			return nil, nil
 		}
 

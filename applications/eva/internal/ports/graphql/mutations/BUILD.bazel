@@ -16,7 +16,6 @@ go_library(
         "//applications/eva/internal/app/command",
         "//applications/eva/internal/app/query",
         "//applications/eva/internal/domain/account",
-        "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
         "//libraries/graphql/relay",

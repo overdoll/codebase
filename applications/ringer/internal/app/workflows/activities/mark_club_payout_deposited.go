@@ -11,7 +11,7 @@ type MarkClubPayoutDepositedInput struct {
 }
 
 type MarkClubPayoutDepositedPayload struct {
-	Amount   int64
+	Amount   uint64
 	Currency money.Currency
 	ClubId   string
 }

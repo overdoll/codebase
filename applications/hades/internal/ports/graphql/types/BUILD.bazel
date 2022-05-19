@@ -10,7 +10,6 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/domain/billing",
-        "//applications/hades/internal/domain/cancellation",
         "//applications/hades/internal/domain/metrics",
         "//libraries/graphql",
         "//libraries/graphql/relay",

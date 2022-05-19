@@ -18,51 +18,60 @@ type GenerateClubMonthlyPayoutInput struct {
 	ClubId     string
 	FutureTime *time.Time
 	WorkflowId string
+	CanCancel  bool
 }
 
 func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPayoutInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
-	var readyPayments *activities.GetReadyPaymentsForClubPayload
+	// generate a unique payout ID
+	payoutId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	// if workflow is cancelled, we want to clean up by cancelling the payout
+	defer func() {
+
+		if !errors.Is(ctx.Err(), workflow.ErrCanceled) {
+			return
+		}
+
+		if !input.CanCancel {
+			return
+		}
+
+		newCtx, _ := workflow.NewDisconnectedContext(ctx)
+
+		if err := workflow.ExecuteActivity(newCtx, a.MarkClubPayoutCancelled,
+			activities.MarkClubPayoutCancelledInput{
+				PayoutId: payoutId,
+			},
+		).Get(newCtx, nil); err != nil {
+			logger.Error("failed to cleanup cancel generate club monthly payout", "Error", err)
+			return
+		}
+	}()
+
+	var readyPayments *activities.GetReadyPaymentsForClubAndAppendPayload
 
 	// create a pending deposit
-	if err := workflow.ExecuteActivity(ctx, a.GetReadyPaymentsForClub,
-		activities.GetReadyPaymentsForClubInput{
-			ClubId: input.ClubId,
+	if err := workflow.ExecuteActivity(ctx, a.GetReadyPaymentsForClubAndAppend,
+		activities.GetReadyPaymentsForClubAndAppendInput{
+			ClubId:   input.ClubId,
+			PayoutId: payoutId,
 		},
 	).Get(ctx, &readyPayments); err != nil {
 		return err
 	}
 
-	// only go through payments that are ready
-	if len(readyPayments.PaymentsGroup) == 0 {
-		return nil
-	}
-
-	if len(readyPayments.PaymentsGroup) != 1 {
-		return errors.New("payment group should only be 1")
-	}
-
-	group := readyPayments.PaymentsGroup[0]
-
-	var payoutMethod *activities.GetClubPayoutMethodsPayload
-
-	// get payout method, if created
-	if err := workflow.ExecuteActivity(ctx, a.GetClubPayoutMethods,
-		activities.GetClubPayoutMethodsInput{
-			ClubId:   input.ClubId,
-			Amount:   group.TotalAmount,
-			Currency: group.Currency,
-		},
-	).Get(ctx, &payoutMethod); err != nil {
-		return err
-	}
-
-	// skip payout, we can't get any payout methods
-	if payoutMethod == nil {
+	if readyPayments == nil {
+		logger.Info("workflow exited due to no ready payments")
 		return nil
 	}
 
@@ -79,19 +88,12 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	// create a deposit request or append to an existing one for this month
 	if err := workflow.ExecuteActivity(ctx, a.GetOrCreateDepositRequest,
 		activities.GetOrCreateDepositRequestInput{
-			DepositId:             *depositId,
-			Currency:              group.Currency,
-			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
+			DepositId:             depositId,
+			Currency:              readyPayments.Currency,
+			AccountPayoutMethodId: readyPayments.AccountPayoutMethodId,
 			Timestamp:             ts,
 		},
 	).Get(ctx, &depositPayload); err != nil {
-		return err
-	}
-
-	// generate a unique payout ID
-	payoutId, err := support.GenerateUniqueIdForWorkflow(ctx)
-
-	if err != nil {
 		return err
 	}
 
@@ -102,35 +104,25 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		activities.CreatePayoutForClubInput{
 			TemporalWorkflowId:    input.WorkflowId,
 			DepositRequestId:      depositPayload.DepositRequestId,
-			PayoutId:              *payoutId,
-			Amount:                group.TotalAmount,
-			Currency:              group.Currency,
+			PayoutId:              payoutId,
+			Amount:                readyPayments.TotalAmount,
+			Currency:              readyPayments.Currency,
 			ClubId:                input.ClubId,
 			Timestamp:             ts,
 			DepositDate:           input.FutureTime,
-			AccountPayoutMethodId: payoutMethod.AccountPayoutMethodId,
+			AccountPayoutMethodId: readyPayments.AccountPayoutMethodId,
 		},
 	).Get(ctx, &createPayload); err != nil {
-		return err
-	}
-
-	// append these payments to the payout
-	if err := workflow.ExecuteActivity(ctx, a.AppendClubPaymentsToPayout,
-		activities.AppendClubPaymentsToPayoutInput{
-			PayoutId:   *payoutId,
-			PaymentIds: group.PaymentIds,
-		},
-	).Get(ctx, nil); err != nil {
 		return err
 	}
 
 	// append to deposit request
 	if err := workflow.ExecuteActivity(ctx, a.AppendToDepositRequest,
 		activities.AppendToDepositRequestInput{
-			PayoutId:  *payoutId,
+			PayoutId:  payoutId,
 			DepositId: depositPayload.DepositRequestId,
-			Amount:    group.TotalAmount,
-			Currency:  group.Currency,
+			Amount:    readyPayments.TotalAmount,
+			Currency:  readyPayments.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -169,7 +161,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			// schedule an activity to update settlement date for the payout
 			if err := workflow.ExecuteActivity(ctx, a.UpdateClubPayoutDepositDate,
 				activities.UpdateClubPayoutDepositDateInput{
-					PayoutId:    *payoutId,
+					PayoutId:    payoutId,
 					DepositDate: *input.FutureTime,
 				},
 			).Get(ctx, nil); err != nil {
@@ -178,10 +170,12 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 		}
 	}
 
+	input.CanCancel = false
+
 	// mark the payout as "processing" - our initial period of x days until deposit has passed
 	if err := workflow.ExecuteActivity(ctx, a.MarkClubPayoutProcessing,
 		activities.MarkClubPayoutProcessingInput{
-			PayoutId: *payoutId,
+			PayoutId: payoutId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -189,7 +183,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 	// spawn a child workflow to process the payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "ProcessClubPayout_" + *payoutId,
+		WorkflowID:        "ProcessClubPayout_" + payoutId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
@@ -197,15 +191,11 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, ProcessClubPayout,
 		ProcessClubPayoutInput{
-			PayoutId: *payoutId,
+			PayoutId: payoutId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

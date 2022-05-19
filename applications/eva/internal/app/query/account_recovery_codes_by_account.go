@@ -2,8 +2,8 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/domain/account"
 
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/principal"
 )
 
@@ -14,16 +14,16 @@ type AccountRecoveryCodesByAccount struct {
 }
 
 type AccountRecoveryCodesByAccountHandler struct {
-	mr multi_factor.Repository
+	ar account.Repository
 }
 
-func NewAccountRecoveryCodesByAccountHandler(mr multi_factor.Repository) AccountRecoveryCodesByAccountHandler {
-	return AccountRecoveryCodesByAccountHandler{mr: mr}
+func NewAccountRecoveryCodesByAccountHandler(ar account.Repository) AccountRecoveryCodesByAccountHandler {
+	return AccountRecoveryCodesByAccountHandler{ar: ar}
 }
 
-func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, query AccountRecoveryCodesByAccount) ([]*multi_factor.RecoveryCode, error) {
+func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, query AccountRecoveryCodesByAccount) ([]*account.RecoveryCode, error) {
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, query.Principal, query.AccountId)
+	codes, err := h.ar.GetAccountRecoveryCodes(ctx, query.Principal, query.AccountId)
 
 	if err != nil {
 		return nil, err

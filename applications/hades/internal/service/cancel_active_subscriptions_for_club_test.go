@@ -28,11 +28,14 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 	ccbillTransactionId := uuid.New().String()
 	clubId := uuid.New().String()
 
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	graphqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CancelActiveSupporterSubscriptionsForClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CancelActiveSupporterSubscriptionsForClub, mock.Anything)
 
 	var cancelActiveSubscriptions CancelActiveSupporterSubscriptionsForClub
 
@@ -42,10 +45,7 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 
 	require.NoError(t, err, "no error cancelling active subscriptions")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	var accountClubSupporterSubscriptions AccountCancelledClubSupporterSubscriptions
 

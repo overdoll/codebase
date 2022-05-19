@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -27,42 +28,6 @@ type characterDocument struct {
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
-
-const characterIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"name": ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"series": {
-		"type": "nested",
-		"properties": ` + seriesIndexProperties + ` 
-	}
-}
-`
-
-const characterIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + characterIndexProperties + `
-	}
-}`
 
 const CharacterIndexName = "characters"
 
@@ -107,6 +72,8 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return err
 	}
 
@@ -163,6 +130,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, err
 	}
 
@@ -201,7 +170,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	return characters, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllCharacters(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -275,35 +244,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllCharacters(ctx context.Co
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteCharacterIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(CharacterIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(CharacterIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(CharacterIndexName).BodyString(characterIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateCharactersIndex(ctx context.Context) error {
-
-	if err := r.deleteCharacterIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllCharacters(ctx)
 }

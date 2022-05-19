@@ -118,7 +118,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	require.NoError(t, err, "no error checking if can delete account data")
 	require.False(t, res.CanDelete, "cannot delete account data with active subscription")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCancellation, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillCancellation, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Cancellation", map[string]string{
@@ -130,10 +130,10 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-26 20:18:00",
 	})
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -161,7 +161,7 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 
 	require.Len(t, subscription.Transactions.Edges, 1, "should have 1 transaction")
 
-	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillExpiration, mock.Anything)
+	expiredWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillExpiration, mock.Anything)
 
 	// run webhook - expiration
 	runWebhookAction(t, "Expiration", map[string]string{
@@ -171,15 +171,14 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 		"timestamp":      "2022-02-28 20:18:00",
 	})
 
-	env = getWorkflowEnvironment(t)
-	expiredWorkflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	expiredWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// CHECK FOR ACCOUNT DELETION
 	res, err = grpcClient.CanDeleteAccountData(context.Background(), &hades.CanDeleteAccountDataRequest{AccountId: accountId})
 	require.NoError(t, err, "no error checking if can delete account data")
 	require.True(t, res.CanDelete, "can delete account data with no active subscriptions")
+
+	refreshSubscriptionsIndex(t)
 
 	var expiredSubscriptions AccountExpiredClubSupporterSubscriptions
 

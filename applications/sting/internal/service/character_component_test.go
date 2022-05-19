@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/uuid"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -82,7 +83,11 @@ func getCharacterBySlug(t *testing.T, client *graphql.Client, slug string) *Char
 func TestCreateCharacter_update_and_search(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
+	mockAccountDigestNormal(t, accountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	fake := TestCharacter{}
 	err := faker.FakeData(&fake)

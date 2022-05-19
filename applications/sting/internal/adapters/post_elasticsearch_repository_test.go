@@ -3,7 +3,6 @@ package adapters_test
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/testing_tools"
@@ -11,8 +10,6 @@ import (
 	"sort"
 	"testing"
 	"time"
-
-	"overdoll/libraries/bootstrap"
 )
 
 func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
@@ -39,8 +36,8 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 		newPost :=
 			post.UnmarshalPostFromDatabase(
 				id.String(),
-				"published",
-				"none",
+				"PUBLISHED",
+				"NONE",
 				0,
 				testClubId,
 				nil,
@@ -136,7 +133,8 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	}
 
 	// go through list and see that it's backwards now
-	// 	require.Equal(t, newOrderedPostsCursors, orderedPostsCursors, "expected the list to be in reverse order")
+	// TODO: fix inconsistencies with reverse ordering?
+	//require.Equal(t, newOrderedPostsCursors, orderedPostsCursors, "expected the list to be in reverse order")
 
 	// get last cursor
 	lastCursor = results[4].Cursor()
@@ -149,11 +147,4 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 	require.NoError(t, err, "no error searching posts")
 
 	require.Len(t, results, 1, "should have found only the last post")
-}
-
-func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
-	session := bootstrap.InitializeDatabaseSession()
-	es := bootstrap.InitializeElasticSearchSession()
-
-	return adapters.NewPostsCassandraRepository(session, es)
 }

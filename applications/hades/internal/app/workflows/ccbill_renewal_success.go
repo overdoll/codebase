@@ -5,29 +5,24 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strings"
+	"overdoll/libraries/money"
+	"overdoll/libraries/support"
+	"time"
 )
 
 type CCBillRenewalSuccessInput struct {
-	TransactionId          string `json:"transactionId"`
-	SubscriptionId         string `json:"subscriptionId"`
-	ClientAccnum           string `json:"clientAccnum"`
-	ClientSubacc           string `json:"clientSubacc"`
-	Timestamp              string `json:"timestamp"`
-	BilledCurrency         string `json:"billedCurrency"`
-	BilledCurrencyCode     string `json:"billedCurrencyCode"`
-	BilledAmount           string `json:"billedAmount"`
-	AccountingCurrency     string `json:"accountingCurrency"`
-	AccountingCurrencyCode string `json:"accountingCurrencyCode"`
-	AccountingAmount       string `json:"accountingAmount"`
-	RenewalDate            string `json:"renewalDate"`
-	NextRenewalDate        string `json:"nextRenewalDate"`
-	PaymentAccount         string `json:"paymentAccount"`
-	PaymentType            string `json:"paymentType"`
-	CardType               string `json:"cardType"`
-	Last4                  string `json:"last4"`
-	ExpDate                string `json:"expDate"`
+	TransactionId      string
+	SubscriptionId     string
+	Timestamp          time.Time
+	BilledCurrency     money.Currency
+	BilledAmount       uint64
+	AccountingCurrency money.Currency
+	AccountingAmount   uint64
+	BilledAtDate       time.Time
+	NextBillingDate    time.Time
+	CardType           string
+	Last4              string
+	ExpDate            string
 }
 
 func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput) error {
@@ -43,40 +38,27 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 		return err
 	}
 
-	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
+	uniqueTransactionId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
 		return err
 	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.RenewalDate, " ")[0])
-
-	if err != nil {
-		return err
-	}
-
-	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	// create record for failed transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInvoiceClubSubscriptionAccountTransaction,
 		activities.CreateInvoiceClubSubscriptionAccountTransactionInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			Id:                                 uniqueTransactionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 			AccountId:                          subscriptionDetails.AccountId,
-			TransactionId:                      input.TransactionId,
-			Timestamp:                          timestamp,
+			CCBillTransactionId:                input.TransactionId,
+			Timestamp:                          input.Timestamp,
 			CardLast4:                          input.Last4,
 			CardType:                           input.CardType,
 			CardExpirationDate:                 input.ExpDate,
-			Amount:                             amount,
+			Amount:                             input.BilledAmount,
 			Currency:                           input.BilledCurrency,
-			BillingDate:                        billedAtDate,
-			NextBillingDate:                    nextBillingDate,
+			BillingDate:                        input.BilledAtDate,
+			NextBillingDate:                    input.NextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -85,28 +67,22 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupportBillingDate,
 		activities.UpdateAccountClubSupportBillingDateInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
-			NextBillingDate:                    nextBillingDate,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
+			NextBillingDate:                    input.NextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
-
-	if err != nil {
 		return err
 	}
 
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: uniqueTransactionId,
+			Timestamp:            input.Timestamp,
+			Amount:               input.AccountingAmount,
+			Currency:             input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -114,25 +90,21 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + input.TransactionId,
+		WorkflowID:        "ClubTransactionMetric_" + uniqueTransactionId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
 		ClubTransactionMetricInput{
 			ClubId:    subscriptionDetails.ClubId,
-			Timestamp: timestamp,
-			Id:        input.TransactionId,
-			Amount:    accountingAmount,
+			Timestamp: input.Timestamp,
+			Id:        uniqueTransactionId,
+			Amount:    input.AccountingAmount,
 			Currency:  input.AccountingCurrency,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

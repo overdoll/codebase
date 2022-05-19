@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cql",
+    srcs = ["embed.go"],
+    embedsrcs = ["1614606770_create_resources.cql"],
+    importpath = "overdoll/applications/loader/internal/adapters/migrations/cql",
+    visibility = ["//applications/loader:__subpackages__"],
+)

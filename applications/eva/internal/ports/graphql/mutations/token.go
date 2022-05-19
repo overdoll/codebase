@@ -5,7 +5,6 @@ import (
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
@@ -176,7 +175,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Validation: &invalid}, nil
 		}
 
-		if err == multi_factor.ErrTOTPCodeInvalid {
+		if err == account.ErrTOTPCodeInvalid {
 			invalid := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationCodeInvalid
 			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Validation: &invalid}, nil
 		}
@@ -214,7 +213,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Validation: &invalid}, nil
 		}
 
-		if err == multi_factor.ErrRecoveryCodeInvalid {
+		if err == account.ErrRecoveryCodeInvalid {
 			invalid := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationRecoveryCodeInvalid
 			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Validation: &invalid}, nil
 		}

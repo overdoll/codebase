@@ -1,6 +1,7 @@
 package balance
 
 import (
+	"github.com/pkg/errors"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -10,7 +11,7 @@ type ClubBalance struct {
 
 	amount    int64
 	currency  money.Currency
-	updatedAt time.Time
+	updatedAt *time.Time
 }
 
 func NewDefaultBalance(clubId string) (*ClubBalance, error) {
@@ -18,7 +19,7 @@ func NewDefaultBalance(clubId string) (*ClubBalance, error) {
 		clubId:    clubId,
 		amount:    0,
 		currency:  money.USD,
-		updatedAt: time.Now(),
+		updatedAt: nil,
 	}, nil
 }
 
@@ -34,7 +35,29 @@ func (b *ClubBalance) Amount() int64 {
 	return b.amount
 }
 
-func (b *ClubBalance) UpdatedAt() time.Time {
+func (b *ClubBalance) Add(amount uint64, currency money.Currency) error {
+
+	if currency != b.currency {
+		return errors.New("invalid currency passed")
+	}
+
+	b.amount += int64(amount)
+
+	return nil
+}
+
+func (b *ClubBalance) Deduct(amount uint64, currency money.Currency) error {
+
+	if currency != b.currency {
+		return errors.New("invalid currency passed")
+	}
+
+	b.amount -= int64(amount)
+
+	return nil
+}
+
+func (b *ClubBalance) UpdatedAt() *time.Time {
 	return b.updatedAt
 }
 
@@ -44,6 +67,6 @@ func UnmarshalClubBalanceFromDatabase(clubId string, amount int64, currency stri
 		clubId:    clubId,
 		amount:    amount,
 		currency:  cur,
-		updatedAt: updatedAt,
+		updatedAt: &updatedAt,
 	}
 }

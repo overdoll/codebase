@@ -2,13 +2,21 @@ package service_test
 
 import (
 	"context"
+	_ "embed"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"os"
 	carrier "overdoll/applications/carrier/proto"
+	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
+
+//go:embed file_fixtures/confirm_account_email_test.html
+var confirmAccountEmailHtml string
+
+//go:embed file_fixtures/confirm_account_email_test.txt
+var confirmAccountEmailText string
 
 func TestConfirmAccountEmail(t *testing.T) {
 	t.Parallel()
@@ -16,21 +24,25 @@ func TestConfirmAccountEmail(t *testing.T) {
 	client := getGrpcClient()
 	timestampFrom := time.Now()
 
-	email := generateEmail("carrier-confirm_account_email")
-	token := uuid.New().String()
-	secret := uuid.New().String()
+	email := generateEmail("carrier-" + uuid.New().String())
+	token := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
+	secret := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
+
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}).Return(&eva.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, nil).Once()
 
 	_, err := client.ConfirmAccountEmail(context.Background(), &carrier.ConfirmAccountEmailRequest{
 		Account: &carrier.Account{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"}, Email: email, Id: token, Secret: secret})
 
 	require.NoError(t, err, "no error for sending confirm account email")
 
-	doc := waitForEmailAndGetDocument(t, email, timestampFrom)
+	content := waitForEmailAndGetResponse(t, email, timestampFrom)
 
-	link := doc.Find("a").First()
-
-	val, exists := link.Attr("href")
-	require.True(t, exists)
-
-	require.Contains(t, os.Getenv("APP_URL")+"/confirm-email?id="+token+"&secret="+secret, val)
+	if generateEmailFileFixturesRequest() {
+		generateEmailFileFixture("confirm_account_email_test.html", content.Html)
+		generateEmailFileFixture("confirm_account_email_test.txt", content.Text)
+	} else {
+		require.Equal(t, "Confirm Email", content.Subject, "correct subject for the email")
+		require.Equal(t, confirmAccountEmailHtml, content.Html, "correct content for the email html")
+		require.Equal(t, confirmAccountEmailText, content.Text, "correct content for the email text")
+	}
 }

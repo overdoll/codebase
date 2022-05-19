@@ -3,7 +3,6 @@ package types
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/applications/hades/internal/domain/metrics"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
@@ -86,7 +85,7 @@ func MarshalClubTransactionMetricsToGraphQLConnection(ctx context.Context, resul
 	return conn
 }
 
-func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results []*cancellation.Reason, cursor *paging.Cursor) *CancellationReasonConnection {
+func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results []*billing.CancellationReason, cursor *paging.Cursor) *CancellationReasonConnection {
 
 	var cancellationReasons []*CancellationReasonEdge
 
@@ -112,15 +111,15 @@ func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results 
 		results = results[:len(results)-1]
 	}
 
-	var nodeAt func(int) *cancellation.Reason
+	var nodeAt func(int) *billing.CancellationReason
 
 	if cursor != nil && cursor.Last() != nil {
 		n := len(results) - 1
-		nodeAt = func(i int) *cancellation.Reason {
+		nodeAt = func(i int) *billing.CancellationReason {
 			return results[n-i]
 		}
 	} else {
-		nodeAt = func(i int) *cancellation.Reason {
+		nodeAt = func(i int) *billing.CancellationReason {
 			return results[i]
 		}
 	}
@@ -145,7 +144,7 @@ func MarshalCancellationReasonsToGraphQLConnection(ctx context.Context, results 
 	return conn
 }
 
-func MarshalCancellationReasonToGraphQL(ctx context.Context, result *cancellation.Reason) *CancellationReason {
+func MarshalCancellationReasonToGraphQL(ctx context.Context, result *billing.CancellationReason) *CancellationReason {
 
 	var titleTranslations []*graphql.Translation
 
@@ -599,7 +598,7 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 			Amount:    int(event.Amount()),
 			Currency:  graphql.MarshalCurrencyToGraphQL(ctx, event.Currency()),
 			Reason:    event.Reason(),
-			Timestamp: event.Timestamp(),
+			CreatedAt: event.CreatedAt(),
 		})
 	}
 
@@ -610,12 +609,13 @@ func MarshalAccountTransactionToGraphQL(ctx context.Context, result *billing.Acc
 		Reference:                 result.Id(),
 		Type:                      tp,
 		Events:                    transactionEvents,
+		TotalRefunded:             int(result.GetTotalRefunded()),
 		Amount:                    int(result.Amount()),
 		Currency:                  graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
 		BilledAtDate:              result.BilledAtDate(),
 		NextBillingDate:           &date,
 		PaymentMethod:             MarshalPaymentMethodToGraphQL(ctx, result.PaymentMethod()),
-		Timestamp:                 result.Timestamp(),
+		CreatedAt:                 result.CreatedAt(),
 		CcbillTransaction:         subscriptionDetails,
 		ClubSupporterSubscription: clubSubscription,
 	}

@@ -13,6 +13,7 @@ go_library(
         "club_by_slug.go",
         "club_member_by_id.go",
         "club_slug_aliases_limit.go",
+        "club_supporter_members_count.go",
         "club_suspension_logs.go",
         "clubs_by_ids.go",
         "has_non_terminated_clubs.go",

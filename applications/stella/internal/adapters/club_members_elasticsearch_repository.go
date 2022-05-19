@@ -23,37 +23,6 @@ type clubMembersDocument struct {
 	SupporterSince  *time.Time `json:"supporter_since"`
 }
 
-const clubMembersIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"member_account_id": {
-		"type": "keyword"
-	},
-	"club_id": {
-		"type": "keyword"
-	},
-	"joined_at": {
-		"type": "date"
-	},
-	"is_supporter": {
-		"type": "boolean"
-	},
-	"supporter_since": {
-		"type": "date"
-	}
-}
-`
-
-const clubMembersIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties":` + clubMembersIndexProperties + `
-	}
-}`
-
 const ClubMembersIndexName = "club_members"
 
 func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error) {
@@ -65,6 +34,26 @@ func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error)
 		IsSupporter:     cat.IsSupporter(),
 		SupporterSince:  cat.SupporterSince(),
 	}, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(ctx context.Context, clubId string) (int64, error) {
+	builder := r.client.Count().
+		Index(ClubMembersIndexName)
+
+	query := elastic.NewBoolQuery()
+
+	query.Filter(elastic.NewTermQuery("club_id", clubId))
+	query.Filter(elastic.NewTermQuery("is_supporter", true))
+
+	builder.Query(query)
+
+	count, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to get club memberships supporter count: %v", err)
+	}
+
+	return count, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *club.MemberFilters) ([]*club.Member, error) {
@@ -184,7 +173,7 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 	return nil
 }
 
-func (r ClubCassandraElasticsearchRepository) indexAllClubMembers(ctx context.Context) error {
+func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -225,36 +214,6 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubMembers(ctx context.Co
 	})
 
 	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r ClubCassandraElasticsearchRepository) DeleteAndRecreateClubMembersIndex(ctx context.Context) error {
-	if err := r.deleteClubMembersIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubMembers(ctx)
-}
-
-func (r ClubCassandraElasticsearchRepository) deleteClubMembersIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubMembersIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubMembersIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubMembersIndexName).BodyString(clubMembersIndex).Do(ctx); err != nil {
 		return err
 	}
 

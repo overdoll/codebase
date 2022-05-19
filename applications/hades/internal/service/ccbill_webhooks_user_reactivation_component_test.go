@@ -20,7 +20,7 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillUserReactivation, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillUserReactivation, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "UserReactivation", map[string]string{
@@ -30,10 +30,10 @@ func TestBillingFlow_UserReactivation(t *testing.T) {
 		"clientSubacc":    "0101",
 	})
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)

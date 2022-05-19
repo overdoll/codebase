@@ -4,16 +4,18 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"overdoll/applications/loader/internal/adapters/migrations"
+	"overdoll/applications/loader/internal/adapters/seeders"
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -25,7 +27,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/loader")
 
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,
@@ -49,11 +51,7 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
-
-	if os.Getenv("DISABLE_WORKER") == "" {
-		go RunWorker(cmd, args)
-	}
-
+	go RunWorker(cmd, args)
 	RunGrpc(cmd, args)
 }
 
@@ -63,7 +61,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv, cleanup := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(app)
 
 	defer cleanup()
 
@@ -78,7 +76,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
@@ -91,7 +89,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		loader.RegisterLoaderServer(server, s)

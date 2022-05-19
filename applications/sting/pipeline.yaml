@@ -25,12 +25,6 @@ steps:
       - name: sting.component
         paths:
           - ./applications/sting/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/sting/docker-compose.ci.yaml
-    network_dependencies:
-      - host: sting
-        port: 8000
     targets:
       - //applications/sting/internal/adapters/...
       - //applications/sting/internal/service/...
@@ -38,7 +32,6 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/sting/docker-compose.ci.yaml
         - ./applications/sting/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: sting

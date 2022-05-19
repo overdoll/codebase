@@ -10,6 +10,7 @@ go_library(
         "club_supporter_no_posts.go",
         "club_supporter_required_post_reminder.go",
         "club_supporter_subscription_cancelled.go",
+        "club_supporter_subscription_duplicate.go",
         "club_supporter_subscription_payment_failure.go",
         "club_supporter_subscription_refunded.go",
         "club_suspended.go",

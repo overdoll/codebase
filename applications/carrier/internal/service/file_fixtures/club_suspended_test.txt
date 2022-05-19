@@ -1,0 +1,27 @@
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+--------------
+Club Suspended
+--------------
+
+Hello !
+
+Your club test a club (https://ci.overdoll.dev/test-club) has been suspended for violating the platform's club guidelines.
+
+During this time, you will not be able to collect new subscriptions or create any posts.
+
+The suspension will last until Mon, 01 Jan 0001 00:00:00 UTC, after which you will be able to unsuspend your club.
+
+Please contact hello@overdoll.com if you have any questions or concerns.
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )

@@ -11,6 +11,12 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+func (r EntityResolver) FindClubMemberByID(ctx context.Context, id relay.ID) (*types.ClubMember, error) {
+	return &types.ClubMember{
+		ID: id,
+	}, nil
+}
+
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
 	return &types.Account{
 		ID: id,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -25,38 +26,6 @@ type seriesDocument struct {
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
-
-const seriesIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"title":  ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const seriesIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + seriesIndexProperties + `
-	}
-}`
 
 const SeriesIndexName = "series"
 
@@ -127,7 +96,9 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search medias: %v", err)
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
+		return nil, fmt.Errorf("failed search series: %v", err)
 	}
 
 	var meds []*post.Series
@@ -174,6 +145,8 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return fmt.Errorf("failed to index series: %v", err)
 	}
 
@@ -183,13 +156,15 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return fmt.Errorf("failed to update index characters: %v", err)
 	}
 
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllSeries(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -240,35 +215,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllSeries(ctx context.Contex
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteSeriesIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(SeriesIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(SeriesIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(SeriesIndexName).BodyString(seriesIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateSeriesIndex(ctx context.Context) error {
-
-	if err := r.deleteSeriesIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllSeries(ctx)
 }

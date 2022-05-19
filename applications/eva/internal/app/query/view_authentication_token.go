@@ -5,7 +5,6 @@ import (
 	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
@@ -20,11 +19,10 @@ type ViewAuthenticationToken struct {
 type ViewAuthenticationTokenHandler struct {
 	tr token.Repository
 	ar account.Repository
-	mr multi_factor.Repository
 }
 
-func NewViewAuthenticationTokenHandler(tr token.Repository, ar account.Repository, mr multi_factor.Repository) ViewAuthenticationTokenHandler {
-	return ViewAuthenticationTokenHandler{tr: tr, ar: ar, mr: mr}
+func NewViewAuthenticationTokenHandler(tr token.Repository, ar account.Repository) ViewAuthenticationTokenHandler {
+	return ViewAuthenticationTokenHandler{tr: tr, ar: ar}
 }
 
 func (h ViewAuthenticationTokenHandler) Handle(ctx context.Context, query ViewAuthenticationToken) (*token.AuthenticationToken, *account.Account, error) {

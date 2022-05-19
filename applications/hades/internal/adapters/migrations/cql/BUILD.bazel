@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cql",
+    srcs = ["embed.go"],
+    embedsrcs = ["1614606770_create_billing.cql"],
+    importpath = "overdoll/applications/hades/internal/adapters/migrations/cql",
+    visibility = ["//applications/hades:__subpackages__"],
+)

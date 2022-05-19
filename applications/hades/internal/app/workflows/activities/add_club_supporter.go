@@ -2,22 +2,15 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type AddClubSupporterInput struct {
 	AccountId   string
 	ClubId      string
-	SupportedAt string
+	SupportedAt time.Time
 }
 
 func (h *Activities) AddClubSupporter(ctx context.Context, input AddClubSupporterInput) error {
-
-	res, err := ccbill.ParseCCBillDateWithTime(input.SupportedAt)
-
-	if err != nil {
-		return err
-	}
-
-	return h.stella.AddClubSupporter(ctx, input.ClubId, input.AccountId, res)
+	return h.stella.AddClubSupporter(ctx, input.ClubId, input.AccountId, input.SupportedAt)
 }

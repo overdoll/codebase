@@ -92,10 +92,13 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ClubPaymentDeposit, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ClubPaymentDeposit, mock.Anything)
 
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
+
+	mockAccountArtist(t, accountId)
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	_, err := client.ClubPaymentDeposit(context.Background(), &ringer.ClubPaymentDepositRequest{
@@ -112,7 +115,7 @@ func TestClubPaymentDeposit(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.GenerateClubMonthlyPayout)
 	// ensure it doesn't get stuck waiting for a cron
 	env.SetDetachedChildWait(false)
@@ -147,8 +150,6 @@ func TestClubPaymentDeposit(t *testing.T) {
 	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
-	require.NoError(t, env.GetWorkflowError(), "club payment deposit no error")
 
 	// query the state after the payment has been settled
 	payment := getClubPayment(t, gClient, paymentId)
@@ -167,6 +168,12 @@ func TestClubPaymentDeposit(t *testing.T) {
 	require.Equal(t, 70, balances.Entities[0].Club.Balance.Amount, "correct club balance")
 	require.Equal(t, graphql1.CurrencyUsd, balances.Entities[0].Club.Balance.Currency, "correct club balance currency")
 
+	// get graphql client as a staff member
+	accountId = uuid.New().String()
+	mockAccountStaff(t, accountId)
+	mockAccountDigestDefault(t, accountId, clubId)
+	gClient = getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
 	var allPayments Payments
 
 	err = gClient.Query(context.Background(), &allPayments, map[string]interface{}{
@@ -183,11 +190,14 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ClubPaymentDeduction, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ClubPaymentDeduction, mock.Anything)
 
 	clubId := uuid.New().String()
 	accountId := uuid.New().String()
 	accountTransactionId := uuid.New().String()
+
+	mockAccountArtist(t, accountId)
+	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	// we need to first seed a payment with the exact values as the one below because a deduction relies on an existing payment
@@ -207,7 +217,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 
 	require.NoError(t, err)
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	paymentId := ""
 
@@ -239,8 +249,6 @@ func TestClubPaymentDeduction(t *testing.T) {
 	}, time.Second)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "club payment deposit complete")
-	require.NoError(t, env.GetWorkflowError(), "club payment deposit no error")
 
 	// query the state after the payment has been settled
 	payment := getClubPayment(t, gClient, paymentId)

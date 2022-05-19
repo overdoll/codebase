@@ -29,8 +29,9 @@ type PostModified struct {
 	Club       struct {
 		Id string
 	}
-	Categories []CategoryModified
-	Content    []types.PostContent
+	Categories          []CategoryModified
+	Content             []types.PostContent
+	SupporterOnlyStatus types.SupporterOnlyStatus
 }
 
 type Post struct {
@@ -63,7 +64,7 @@ type Posts struct {
 		Edges []*struct {
 			Node PostModified
 		}
-	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state)"`
+	} `graphql:"posts(audienceSlugs: $audienceSlugs, categorySlugs: $categorySlugs, characterSlugs: $characterSlugs, seriesSlugs: $seriesSlugs, state: $state, supporterOnlyStatus: $supporterOnlyStatus)"`
 }
 
 type AddPostContent struct {
@@ -113,6 +114,7 @@ type SubmitPost struct {
 		Post *PostModified
 	} `graphql:"submitPost(input: $input)"`
 }
+
 type AccountPosts struct {
 	Entities []struct {
 		Account struct {
@@ -123,6 +125,19 @@ type AccountPosts struct {
 				}
 			} `graphql:"posts(state: $state)"`
 		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type ClubPosts struct {
+	Entities []struct {
+		Club struct {
+			ID    string
+			Posts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			} `graphql:"posts(supporterOnlyStatus: $supporterOnlyStatus)"`
+		} `graphql:"... on Club"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -137,13 +152,14 @@ type PostsEntities struct {
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	var createPost CreatePost
-
-	clubId := "1q7MJFMVgDPo4mFjsfNag6rRwRy"
 
 	relayId := convertClubIdToRelayId(clubId)
 
@@ -166,7 +182,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
 		"input": types.AddPostContentInput{
-			ID:      relay.ID(newPostId),
+			ID:      newPostId,
 			Content: []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"},
 		},
 	})
@@ -195,7 +211,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// update order
 	err = client.Mutate(context.Background(), &updatePostContentOrder, map[string]interface{}{
 		"input": types.UpdatePostContentOrderInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			ContentIds: reversedContentIds,
 		},
 	})
@@ -231,12 +247,20 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[0].ViewerCanViewSupporterOnlyContent, "should be able to view content #1")
 	require.True(t, updatePostContentIsSupporterOnly.UpdatePostContentIsSupporterOnly.Post.Content[1].ViewerCanViewSupporterOnlyContent, "should be able to view content #2")
 
+	var post Post
+	err = client.Query(context.Background(), &post, map[string]interface{}{
+		"reference": graphql.String(newPostReference),
+	})
+	require.NoError(t, err)
+
+	require.Equal(t, types.SupporterOnlyStatusPartial, post.Post.SupporterOnlyStatus, "should be partial supporter only status")
+
 	var removePostContent RemovePostContent
 
 	// remove 1 post content
 	err = client.Mutate(context.Background(), &removePostContent, map[string]interface{}{
 		"input": types.RemovePostContentInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			ContentIds: []relay.ID{addPostContent.AddPostContent.Post.Content[2].ID},
 		},
 	})
@@ -268,7 +292,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &updatePostCharacters, map[string]interface{}{
 		"input": types.UpdatePostCharactersInput{
-			ID:           relay.ID(newPostId),
+			ID:           newPostId,
 			CharacterIds: []relay.ID{"Q2hhcmFjdGVyOjFxN01KblFYQXR4ZXIwZmJvQk1IdGxDMEpNZQ=="},
 		},
 	})
@@ -283,7 +307,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &updatePostAudience, map[string]interface{}{
 		"input": types.UpdatePostAudienceInput{
-			ID:         relay.ID(newPostId),
+			ID:         newPostId,
 			AudienceID: "QXVkaWVuY2U6MXBjS2lRTDdkZ1VXOENJTjd1TzF3cUZhTXFs",
 		},
 	})
@@ -309,17 +333,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"state": types.PostStateDraft,
 	})
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, len(accountPosts.Entities[0].Account.Posts.Edges), 1)
+	require.Equal(t, 1, len(accountPosts.Entities[0].Account.Posts.Edges))
 
 	// make sure we got an error for viewing a post unauthenticated
 	client2 := getGraphqlClient(t)
-	var post Post
+
 	err = client2.Query(context.Background(), &post, map[string]interface{}{
 		"reference": graphql.String(newPostReference),
 	})
 	require.Error(t, err)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SubmitPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SubmitPost, mock.Anything)
 
 	// finally, submit the post for review
 	var submitPost SubmitPost
@@ -334,17 +358,15 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	postId := submitPost.SubmitPost.Post.Reference
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.PublishPost)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
 
-	client = getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	testAccount := uuid.New().String()
+	mockAccountNormal(t, testAccount)
+	mockAccountDigestNormal(t, testAccount)
+	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
 
 	post = getPost(t, client, postId)
 
@@ -353,7 +375,11 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, 2, len(post.Post.Content), "should have only 2 content at the end")
 
 	// this specific account ID will make sure that the club linked to this post will be part of its supporter list
-	client = getGraphqlClientWithAuthenticatedAccount(t, "1pcKiTRBqURVEdcw1cKhyiejFp7")
+
+	testAccountClubSupporter := uuid.New().String()
+	mockAccountNormal(t, testAccountClubSupporter)
+	mockAccountDigestSupporter(t, testAccountClubSupporter, clubId)
+	client = getGraphqlClientWithAuthenticatedAccount(t, testAccountClubSupporter)
 
 	post = getPost(t, client, postId)
 
@@ -366,7 +392,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	originalId := post.Post.Content[1].Resource.ID
 
 	// make a random client so we can test post permissions
-	client = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
 
 	post = getPost(t, client, postId)
 
@@ -387,48 +413,64 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var posts Posts
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"categorySlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
-		"characterSlugs": []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for published")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in published state")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"categorySlugs":  []graphql.String{"Alter"},
-		"characterSlugs": []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"categorySlugs":       []graphql.String{"Alter"},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for category")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with category")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"characterSlugs": []graphql.String{"AarushHills"},
-		"categorySlugs":  []graphql.String{},
-		"audienceSlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"characterSlugs":      []graphql.String{"AarushHills"},
+		"categorySlugs":       []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for character")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with character")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
-		"state":          types.PostStatePublished,
-		"audienceSlugs":  []graphql.String{"StandardAudience"},
-		"characterSlugs": []graphql.String{},
-		"categorySlugs":  []graphql.String{},
-		"seriesSlugs":    []graphql.String{},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"audienceSlugs":       []graphql.String{"StandardAudience"},
+		"characterSlugs":      []graphql.String{},
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
 	})
 
 	require.NoError(t, err, "no error searching for audience")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial},
+		"state":               types.PostStatePublished,
+		"categorySlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{},
+		"characterSlugs":      []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+	})
+
+	require.NoError(t, err, "no error searching for supporter only status")
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found the post in supporter only state")
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)
@@ -448,30 +490,55 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.NoError(t, err, "no error grabbing entities")
 
 	require.Len(t, postsEntities.Entities, 1, "should have found the post")
+
+	var clubPosts ClubPosts
+
+	err = client.Query(context.Background(), &clubPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdToRelayId(clubId),
+			},
+		},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusNone},
+	})
+	require.NoError(t, err)
+	require.Equal(t, 0, len(clubPosts.Entities[0].Club.Posts.Edges), "no posts for none supporter status")
+
+	err = client.Query(context.Background(), &clubPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdToRelayId(clubId),
+			},
+		},
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial, types.SupporterOnlyStatusFull},
+	})
+	require.NoError(t, err)
+	require.Equal(t, 1, len(clubPosts.Entities[0].Club.Posts.Edges), "1 post for supporter only status partial")
 }
 
 func TestCreatePost_Publish(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
-	pst := seedReviewPost(t, testingAccountId)
+	pst := seedReviewPost(t, testingAccountId, clubId)
 	postId := pst.ID()
 
 	stingClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.PublishPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.PublishPost, mock.Anything)
 
 	_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	post := getPost(t, client, postId)
 
@@ -483,25 +550,25 @@ func TestCreatePost_Publish(t *testing.T) {
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
-	pst := seedPublishingPost(t, testingAccountId)
+	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
 
 	stingClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DiscardPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DiscardPost, mock.Anything)
 
 	// "discard" pending post
 	_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	post := getPost(t, client, postId)
 
@@ -520,9 +587,12 @@ type DeletePost struct {
 func TestCreatePost_Reject_and_delete(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
-	pst := seedPublishingPost(t, testingAccountId)
+	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
 
 	stingClient := getGrpcClient(t)
@@ -538,7 +608,7 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 	// make sure post is in rejected state
 	require.Equal(t, types.PostStateRejected, post.Post.State)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.DeletePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeletePost, mock.Anything)
 
 	var deletePost DeletePost
 
@@ -550,11 +620,7 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 
 	require.NoError(t, err, "no error deleting")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post = getPost(t, client, postId)
 
@@ -565,12 +631,15 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
-	pst := seedPublishingPost(t, testingAccountId)
+	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePost, mock.Anything)
 
 	stingClient := getGrpcClient(t)
 
@@ -578,13 +647,9 @@ func TestCreatePost_Remove(t *testing.T) {
 	_, e := stingClient.RemovePost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
 	post := getPost(t, client, postId)
 

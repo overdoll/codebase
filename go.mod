@@ -18,7 +18,9 @@ require (
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/frankban/quicktest v1.13.0 // indirect
-	github.com/gin-gonic/gin v1.7.2
+	github.com/fsnotify/fsnotify v1.5.3 // indirect
+	github.com/gin-contrib/zap v0.0.2 // indirect
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gocql/gocql v0.0.0-20211222173705-d73e6b1002a7
@@ -40,6 +42,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/oklog/run v1.1.0 // indirect
+	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/olivere/elastic/v7 v7.0.31
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
@@ -51,6 +54,7 @@ require (
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
+	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.12.1
 	github.com/tidwall/sjson v1.2.3
@@ -59,8 +63,8 @@ require (
 	github.com/vektah/gqlparser/v2 v2.4.1
 	github.com/yuin/goldmark v1.4.4
 	go.opentelemetry.io/otel/internal/metric v0.27.0 // indirect
-	go.temporal.io/api v1.6.1-0.20211110205628-60c98e9cbfe2
-	go.temporal.io/sdk v1.13.0
+	go.temporal.io/api v1.7.1-0.20220223032354-6e6fe738916a
+	go.temporal.io/sdk v1.14.0
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
@@ -73,6 +77,7 @@ require (
 	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+	jaytaylor.com/html2text v0.0.0-20211105163654-bc68cce691ba
 )
 
 replace github.com/gocql/gocql => github.com/scylladb/gocql v0.0.0-20201029162719-81a4afe636ae

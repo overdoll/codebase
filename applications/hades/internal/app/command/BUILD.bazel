@@ -9,7 +9,6 @@ go_library(
         "create_cancellation_reason.go",
         "delete_account_data.go",
         "delete_account_saved_payment_method.go",
-        "delete_and_recreate_account_transactions_index.go",
         "extend_account_club_supporter_subscription.go",
         "generate_ccbill_club_supporter_payment_link.go",
         "generate_ccbill_flexforms_payment_link.go",
@@ -27,7 +26,6 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/domain/billing",
-        "//applications/hades/internal/domain/cancellation",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/club",
         "//applications/hades/internal/domain/event",
@@ -35,5 +33,6 @@ go_library(
         "//libraries/money",
         "//libraries/passport",
         "//libraries/principal",
+        "@com_github_pkg_errors//:errors",
     ],
 )

@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "data",
+    srcs = ["embed.go"],
+    embedsrcs = [
+        "audience.json",
+        "audience_slugs.json",
+        "categories.json",
+        "categories_slugs.json",
+        "characters.json",
+        "characters_slugs.json",
+        "posts.json",
+        "series.json",
+        "series_slugs.json",
+    ],
+    importpath = "overdoll/applications/sting/internal/adapters/seeders/data",
+    visibility = ["//applications/sting:__subpackages__"],
+)

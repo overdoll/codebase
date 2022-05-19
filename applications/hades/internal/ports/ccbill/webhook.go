@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
 	"net"
@@ -61,11 +62,15 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		tee := io.TeeReader(c.Request.Body, &buf)
 		body, _ := ioutil.ReadAll(tee)
 
+		eventType := c.Request.URL.Query()["eventType"][0]
+
+		zap.S().Infow("incoming ccbill webhook", zap.String("payload", string(body)), zap.String("event", eventType))
+
 		if err := app.Commands.ProcessCCBillWebhook.Handle(c.Request.Context(), command.ProcessCCBillWebhook{
 			Payload:   body,
-			EventType: c.Request.URL.Query()["eventType"][0],
+			EventType: eventType,
 		}); err != nil {
-			fmt.Println(err)
+			zap.S().Errorw("ccbill webhook failed", zap.Error(err))
 			c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 			return
 		}

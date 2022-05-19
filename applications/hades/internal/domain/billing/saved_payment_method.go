@@ -26,12 +26,11 @@ type SavedPaymentMethod struct {
 	ccbillSubscriptionId *string
 }
 
-func NewSavedPaymentMethodFromCCBill(accountId string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, currency string) (*SavedPaymentMethod, error) {
-	cr, _ := money.CurrencyFromString(currency)
+func NewSavedPaymentMethodFromCCBill(accountId string, ccbillSubscriptionId *string, paymentMethod *PaymentMethod, currency money.Currency) (*SavedPaymentMethod, error) {
 	return &SavedPaymentMethod{
 		accountId:            accountId,
 		id:                   *ccbillSubscriptionId,
-		currency:             cr,
+		currency:             currency,
 		paymentMethod:        paymentMethod,
 		ccbillSubscriptionId: ccbillSubscriptionId,
 		updatedAt:            time.Now(),

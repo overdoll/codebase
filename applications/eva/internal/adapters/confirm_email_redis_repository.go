@@ -35,7 +35,7 @@ func (r ConfirmEmailRedisRepository) DeleteConfirmEmail(ctx context.Context, req
 	}
 
 	// delete confirmation (it has been used up)
-	_, err := r.client.Del(ctx, confirmEmailPrefix+confirmEmail.ID()).Result()
+	_, err := r.client.WithContext(ctx).Del(ctx, confirmEmailPrefix+confirmEmail.ID()).Result()
 
 	if err != nil {
 		return fmt.Errorf("failed delete confirm email - delete redis key: %v", err)
@@ -63,7 +63,7 @@ func (r ConfirmEmailRedisRepository) AddConfirmEmail(ctx context.Context, confir
 		return fmt.Errorf("failed to add confirm email - encryption: %v", err)
 	}
 
-	ok, err := r.client.SetNX(ctx, confirmEmailPrefix+confirmEmail.ID(), valReal, confirmEmail.Expires()).Result()
+	ok, err := r.client.WithContext(ctx).SetNX(ctx, confirmEmailPrefix+confirmEmail.ID(), valReal, confirmEmail.Expires()).Result()
 
 	if err != nil {
 		return fmt.Errorf("failed to add confirm email - redis: %v", err)
@@ -78,7 +78,7 @@ func (r ConfirmEmailRedisRepository) AddConfirmEmail(ctx context.Context, confir
 
 func (r ConfirmEmailRedisRepository) GetConfirmEmail(ctx context.Context, requester *principal.Principal, id string) (*confirm_email.ConfirmEmail, error) {
 
-	val, err := r.client.Get(ctx, confirmEmailPrefix+id).Result()
+	val, err := r.client.WithContext(ctx).Get(ctx, confirmEmailPrefix+id).Result()
 
 	if err != nil {
 

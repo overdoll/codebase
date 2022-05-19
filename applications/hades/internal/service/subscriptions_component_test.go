@@ -13,6 +13,85 @@ import (
 	"time"
 )
 
+type ClubActiveSubscription struct {
+	Id                 relay.ID
+	Reference          string
+	LastBillingDate    string
+	NextBillingDate    string
+	BillingAmount      int
+	BillingCurrency    graphql1.Currency
+	PaymentMethod      types.PaymentMethod
+	CcbillSubscription types.CCBillSubscription
+	BillingError       *struct {
+		FailedAt        time.Time `json:"failedAt"`
+		CcbillErrorText *string   `json:"ccbillErrorText"`
+		CcbillErrorCode *string   `json:"ccbillErrorCode"`
+		NextRetryDate   string    `json:"nextRetryDate"`
+	}
+}
+
+type ClubMemberSubscription struct {
+	Entities []struct {
+		ClubMember struct {
+			Id                        relay.ID
+			ClubSupporterSubscription *struct {
+				Item ClubActiveSubscription `graphql:"... on AccountActiveClubSupporterSubscription"`
+			} `graphql:"clubSupporterSubscription"`
+		} `graphql:"... on ClubMember"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func getClubMemberSubscription(t *testing.T, client *graphql.Client, clubId, accountId string) ClubMemberSubscription {
+	var accountClubSupporterSubscriptions ClubMemberSubscription
+
+	err := client.Query(context.Background(), &accountClubSupporterSubscriptions, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "ClubMember",
+				"id":         convertClubMemberIdIdToRelayId(clubId, accountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing club member subscription")
+
+	return accountClubSupporterSubscriptions
+}
+
+type ClubActiveClubSupporterSubscriptions struct {
+	Entities []struct {
+		Club struct {
+			Id                     relay.ID
+			SupporterSubscriptions struct {
+				Edges []*struct {
+					Node struct {
+						Item ClubActiveSubscription `graphql:"... on AccountActiveClubSupporterSubscription"`
+					}
+				}
+			} `graphql:"supporterSubscriptions(status: [ACTIVE])"`
+		} `graphql:"... on Club"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func getClubActiveAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, clubId string) ClubActiveClubSupporterSubscriptions {
+	refreshSubscriptionsIndex(t)
+
+	var accountClubSupporterSubscriptions ClubActiveClubSupporterSubscriptions
+
+	err := client.Query(context.Background(), &accountClubSupporterSubscriptions, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdIdToRelayId(clubId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing subscriptions")
+
+	return accountClubSupporterSubscriptions
+}
+
 type AccountActiveClubSupporterSubscriptions struct {
 	Entities []struct {
 		Account struct {
@@ -20,22 +99,7 @@ type AccountActiveClubSupporterSubscriptions struct {
 			ClubSupporterSubscriptions struct {
 				Edges []*struct {
 					Node struct {
-						Item struct {
-							Id                 relay.ID
-							Reference          string
-							LastBillingDate    string
-							NextBillingDate    string
-							BillingAmount      int
-							BillingCurrency    graphql1.Currency
-							PaymentMethod      types.PaymentMethod
-							CcbillSubscription types.CCBillSubscription
-							BillingError       *struct {
-								FailedAt        time.Time `json:"failedAt"`
-								CcbillErrorText *string   `json:"ccbillErrorText"`
-								CcbillErrorCode *string   `json:"ccbillErrorCode"`
-								NextRetryDate   string    `json:"nextRetryDate"`
-							}
-						} `graphql:"... on AccountActiveClubSupporterSubscription"`
+						Item ClubActiveSubscription `graphql:"... on AccountActiveClubSupporterSubscription"`
 					}
 				}
 			} `graphql:"clubSupporterSubscriptions(status: [ACTIVE])"`
@@ -46,6 +110,7 @@ type AccountActiveClubSupporterSubscriptions struct {
 type _Any map[string]interface{}
 
 func getActiveAccountClubSupporterSubscriptions(t *testing.T, client *graphql.Client, accountId string) AccountActiveClubSupporterSubscriptions {
+	refreshSubscriptionsIndex(t)
 
 	var accountClubSupporterSubscriptions AccountActiveClubSupporterSubscriptions
 
@@ -78,8 +143,9 @@ type AccountTransactions struct {
 						Reference         string
 						Type              types.AccountTransactionType
 						Events            []*types.AccountTransactionEvent
-						Timestamp         time.Time
+						CreatedAt         time.Time
 						Amount            int
+						TotalRefunded     int
 						Currency          graphql1.Currency
 						BilledAtDate      string
 						NextBillingDate   string

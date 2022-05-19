@@ -1,97 +1,64 @@
 package workflows
 
 import (
-	"fmt"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
 	hades "overdoll/applications/hades/proto"
-	"overdoll/libraries/uuid"
-	"strings"
+	"overdoll/libraries/money"
+	"overdoll/libraries/support"
+	"time"
 )
 
-type CCBillNewSaleOrUpsaleSuccessInput struct {
-	AccountingCurrency       string `json:"accountingCurrency"`
-	AccountingCurrencyCode   string `json:"accountingCurrencyCode"`
-	AccountingInitialPrice   string `json:"accountingInitialPrice"`
-	AccountingRecurringPrice string `json:"accountingRecurringPrice"`
+type CCBillNewSaleOrUpSaleSuccessInput struct {
+	SubscriptionId string
+	TransactionId  string
 
-	BilledCurrency       string `json:"billedCurrency"`
-	BilledCurrencyCode   string `json:"billedCurrencyCode"`
-	BilledInitialPrice   string `json:"billedInitialPrice"`
-	BilledRecurringPrice string `json:"billedRecurringPrice"`
+	AccountingInitialPrice   uint64
+	AccountingRecurringPrice uint64
+	AccountingCurrency       money.Currency
 
-	SubscriptionCurrency       string `json:"subscriptionCurrency"`
-	SubscriptionCurrencyCode   string `json:"subscriptionCurrencyCode"`
-	SubscriptionInitialPrice   string `json:"subscriptionInitialPrice"`
-	SubscriptionRecurringPrice string `json:"subscriptionRecurringPrice"`
+	SubscriptionInitialPrice   uint64
+	SubscriptionRecurringPrice uint64
+	SubscriptionCurrency       money.Currency
 
-	Address1 string `json:"address1"`
+	BilledInitialPrice   uint64
+	BilledRecurringPrice uint64
+	BilledCurrency       money.Currency
 
-	Bin            string `json:"bin"`
-	CardType       string `json:"cardType"`
-	City           string `json:"city"`
-	Country        string `json:"country"`
-	Email          string `json:"email"`
-	ExpDate        string `json:"expDate"`
-	FirstName      string `json:"firstName"`
-	Last4          string `json:"last4"`
-	LastName       string `json:"lastName"`
-	PhoneNumber    string `json:"phoneNumber"`
-	PostalCode     string `json:"postalCode"`
-	State          string `json:"state"`
-	SubscriptionId string `json:"subscriptionId"`
+	PaymentToken *hades.CCBillPayment
 
-	ClientAccnum                   string `json:"clientAccnum"`
-	ClientSubacc                   string `json:"clientSubacc"`
-	DynamicPricingValidationDigest string `json:"dynamicPricingValidationDigest"`
+	Timestamp time.Time
 
-	FlexId        string `json:"flexId"`
-	FormName      string `json:"formName"`
-	InitialPeriod string `json:"initialPeriod"`
-	IpAddress     string `json:"ipAddress"`
+	NextBillingDate time.Time
+	BilledAtDate    time.Time
 
-	NextRenewalDate string `json:"nextRenewalDate"`
-	TransactionId   string `json:"transactionId"`
-	Timestamp       string `json:"timestamp"`
-
-	PaymentAccount            string `json:"paymentAccount"`
-	PaymentType               string `json:"paymentType"`
-	PriceDescription          string `json:"priceDescription"`
-	Rebills                   string `json:"rebills"`
-	RecurringPeriod           string `json:"recurringPeriod"`
-	RecurringPriceDescription string `json:"recurringPriceDescription"`
-	ReferringUrl              string `json:"referringUrl"`
-
-	SubscriptionTypeId    string `json:"subscriptionTypeId"`
-	XFormDigest           string `json:"X-formDigest"`
-	XCurrencyCode         string `json:"X-currencyCode"`
-	XOverdollPaymentToken string `json:"X-overdollPaymentToken"`
+	AddressLine1 string
+	Bin          string
+	CardType     string
+	City         string
+	Country      string
+	Email        string
+	ExpDate      string
+	FirstName    string
+	Last4        string
+	LastName     string
+	PhoneNumber  string
+	PostalCode   string
+	State        string
 }
 
-func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpsaleSuccessInput) error {
+func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpSaleSuccessInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
 
-	var details *hades.CCBillPayment
+	// create a subscription id even though the subscription may be a duplicate
+	uniqueSubscriptionId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
-	// unravel payment details
-	if err := workflow.ExecuteActivity(ctx, a.UnravelCCBillPaymentLink, input.XOverdollPaymentToken).Get(ctx, &details); err != nil {
-		return err
-	}
-
-	// create an idempotency key - in case the following activity fails but the record is still created
-	idempotencyKey := workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
-		return uuid.New().String()
-	})
-
-	var idempotentKey string
-
-	if err := idempotencyKey.Get(&idempotentKey); err != nil {
+	if err != nil {
 		return err
 	}
 
@@ -100,10 +67,10 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	// check for duplicate subscriptions - if the account already supports the club
 	if err := workflow.ExecuteActivity(ctx, a.GetOrCreateCCBillSubscriptionAndCheckForDuplicates,
 		activities.GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput{
-			AccountId:            details.AccountInitiator.AccountId,
-			ClubId:               details.CcbillClubSupporter.ClubId,
-			CCBillSubscriptionId: input.SubscriptionId,
-			IdempotencyKey:       idempotentKey,
+			AccountId:                          input.PaymentToken.AccountInitiator.AccountId,
+			ClubId:                             input.PaymentToken.CcbillClubSupporter.ClubId,
+			CCBillSubscriptionId:               input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
 
 			AccountingCurrency:       input.AccountingCurrency,
 			AccountingInitialPrice:   input.AccountingInitialPrice,
@@ -125,7 +92,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 			Email:              input.Email,
 			LastName:           input.LastName,
 			PhoneNumber:        input.PhoneNumber,
-			AddressLine1:       input.Address1,
+			AddressLine1:       input.AddressLine1,
 			City:               input.City,
 			Country:            input.Country,
 			State:              input.State,
@@ -136,58 +103,70 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	}
 
 	// a duplicate subscription detected
-	if existingClubSupport.DuplicateSupportSameSubscription || existingClubSupport.DuplicateSupportDifferentSubscription {
+	if existingClubSupport.Duplicate {
+
 		// basically, if the subscription ID that was passed in is not the one currently being used, then it will void/refund it
-		// otherwise, the subscription ID that was passed in is the same as the current subscription ID, so we don't want to accidentally cancel
-		// an existing CCBill subscription
-		if existingClubSupport.DuplicateSupportDifferentSubscription {
-			if err := workflow.ExecuteActivity(ctx, a.VoidCCBillSubscription,
-				activities.VoidCCBillSubscriptionInput{
-					CCBillSubscriptionId: input.SubscriptionId,
-				},
-			).Get(ctx, nil); err != nil {
-				return err
-			}
+		if err := workflow.ExecuteActivity(ctx, a.VoidCCBillTransaction,
+			activities.VoidCCBillTransactionInput{
+				CCBillTransactionId: input.TransactionId,
+			},
+		).Get(ctx, nil); err != nil {
+			return err
+		}
+
+		// send a notification to our account that we detected a duplicate subscription and that it was voided
+		if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionDuplicateNotification,
+			activities.SendAccountClubSupporterSubscriptionDuplicateNotificationInput{
+				AccountId: input.PaymentToken.AccountInitiator.AccountId,
+				ClubId:    input.PaymentToken.CcbillClubSupporter.ClubId,
+				Currency:  input.BilledCurrency,
+				Amount:    input.BilledRecurringPrice,
+			},
+		).Get(ctx, nil); err != nil {
+			return err
 		}
 
 		return nil
 	}
 
-	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledRecurringPrice, input.BilledCurrency)
+	uniqueTransactionId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to parse amount: %s", err)
-	}
-
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse timestamp: %s", err)
-	}
-
-	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.Timestamp, " ")[0])
-
-	if err != nil {
-		return fmt.Errorf("failed to parse date: %s", err)
-	}
-
-	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse date: %s", err)
+		return err
 	}
 
 	// create record for new transaction
 	if err := workflow.ExecuteActivity(ctx, a.CreateInitialClubSubscriptionAccountTransaction,
 		activities.CreateInitialClubSubscriptionAccountTransactionInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
-			TransactionId:                      input.TransactionId,
-			AccountId:                          details.AccountInitiator.AccountId,
-			Timestamp:                          timestamp,
-			Amount:                             amount,
+			Id:                                 uniqueTransactionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
+			CCBillSubscriptionId:               input.SubscriptionId,
+			CCBillTransactionId:                input.TransactionId,
+			AccountId:                          input.PaymentToken.AccountInitiator.AccountId,
+			Timestamp:                          input.Timestamp,
+			Amount:                             input.BilledRecurringPrice,
 			Currency:                           input.BilledCurrency,
-			NextBillingDate:                    nextBillingDate,
-			BillingDate:                        billedAtDate,
+			NextBillingDate:                    input.NextBillingDate,
+			BillingDate:                        input.BilledAtDate,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
+
+	// create a new account supporter record (this is done last because it serves as a "confirmation" that everything has been set up correctly)
+	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
+		activities.CreateAccountClubSupportSubscriptionInput{
+			// save payment details
+			SavePaymentDetails:                 input.PaymentToken.HeaderConfiguration != nil && input.PaymentToken.HeaderConfiguration.SavePaymentDetails,
+			CCBillSubscriptionId:               &input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
+			AccountId:                          input.PaymentToken.AccountInitiator.AccountId,
+			ClubId:                             input.PaymentToken.CcbillClubSupporter.ClubId,
+			LastRenewalDate:                    input.BilledAtDate,
+			NextRenewalDate:                    input.NextBillingDate,
+			Timestamp:                          input.Timestamp,
+			Amount:                             input.BilledRecurringPrice,
+			Currency:                           input.BilledCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -196,56 +175,32 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	// tell stella about this new supporter
 	if err := workflow.ExecuteActivity(ctx, a.AddClubSupporter,
 		activities.AddClubSupporterInput{
-			AccountId:   details.AccountInitiator.AccountId,
-			ClubId:      details.CcbillClubSupporter.ClubId,
+			AccountId:   input.PaymentToken.AccountInitiator.AccountId,
+			ClubId:      input.PaymentToken.CcbillClubSupporter.ClubId,
 			SupportedAt: input.Timestamp,
 		},
-	).Get(ctx, &details); err != nil {
-		return err
-	}
-
-	// create a new account supporter record (this is done last because it serves as a "confirmation" that everything has been set up correctly)
-	if err := workflow.ExecuteActivity(ctx, a.CreateAccountClubSupportSubscription,
-		activities.CreateAccountClubSupportSubscriptionInput{
-			// save payment details
-			SavePaymentDetails:   details.HeaderConfiguration != nil && details.HeaderConfiguration.SavePaymentDetails,
-			CCBillSubscriptionId: &input.SubscriptionId,
-			AccountId:            details.AccountInitiator.AccountId,
-			ClubId:               details.CcbillClubSupporter.ClubId,
-			LastRenewalDate:      billedAtDate,
-			NextRenewalDate:      nextBillingDate,
-			Timestamp:            timestamp,
-			Amount:               amount,
-			Currency:             input.BilledCurrency,
-		},
-	).Get(ctx, &details); err != nil {
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 
 	// send success notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionSuccessNotification,
 		activities.SendAccountClubSupporterSubscriptionSuccessNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
-
-	if err != nil {
-		return fmt.Errorf("failed to parse amount: %s", err)
-	}
-
 	// send a payment
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeposit,
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
-			AccountId:     details.AccountInitiator.AccountId,
-			ClubId:        details.CcbillClubSupporter.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      input.AccountingCurrency,
+			AccountId:            input.PaymentToken.AccountInitiator.AccountId,
+			ClubId:               input.PaymentToken.CcbillClubSupporter.ClubId,
+			AccountTransactionId: input.TransactionId,
+			Timestamp:            input.Timestamp,
+			Amount:               input.AccountingRecurringPrice,
+			Currency:             input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -255,7 +210,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 	// that will run this notification reminder at the beginning of each month to tell you how many subscriptions
 	// you have re-billing this month
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + details.AccountInitiator.AccountId,
+		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + input.PaymentToken.AccountInitiator.AccountId,
 		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 		CronSchedule:          "0 0 1 * *",
@@ -263,15 +218,11 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, UpcomingSubscriptionReminderNotification,
 		UpcomingSubscriptionReminderNotificationInput{
-			AccountId: details.AccountInitiator.AccountId,
+			AccountId: input.PaymentToken.AccountInitiator.AccountId,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 
@@ -283,19 +234,15 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUps
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, ClubTransactionMetric,
 		ClubTransactionMetricInput{
-			ClubId:    details.CcbillClubSupporter.ClubId,
-			Timestamp: timestamp,
+			ClubId:    input.PaymentToken.CcbillClubSupporter.ClubId,
+			Timestamp: input.Timestamp,
 			Id:        input.TransactionId,
-			Amount:    accountingAmount,
+			Amount:    input.AccountingRecurringPrice,
 			Currency:  input.AccountingCurrency,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

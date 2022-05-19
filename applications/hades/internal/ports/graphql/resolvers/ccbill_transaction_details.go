@@ -6,6 +6,8 @@ import (
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type CCBillTransactionDetailsResolver struct {
@@ -14,9 +16,14 @@ type CCBillTransactionDetailsResolver struct {
 
 func (r CCBillTransactionDetailsResolver) LinkedAccountClubSupporterSubscription(ctx context.Context, obj *types.CCBillTransactionDetails) (types.AccountClubSupporterSubscription, error) {
 
-	result, err := r.App.Queries.ClubSupporterSubscriptionFinalized.Handle(ctx, query.ClubSupporterSubscriptionFinalized{
-		ClubId:    obj.ID.GetCompositePartID(1),
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Queries.AccountClubSupporterSubscriptionByAccountAndClubId.Handle(ctx, query.AccountClubSupporterSubscriptionByAccountAndClubId{
+		Principal: principal.FromContext(ctx),
 		AccountId: obj.ID.GetCompositePartID(2),
+		ClubId:    obj.ID.GetCompositePartID(1),
 	})
 
 	if err != nil {

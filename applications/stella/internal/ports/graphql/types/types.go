@@ -91,6 +91,8 @@ type Club struct {
 	NextSupporterPostTime *time.Time `json:"nextSupporterPostTime"`
 	// Whether or not the viewer is a member of this club.
 	ViewerMember *ClubMember `json:"viewerMember"`
+	// The total amount of members in this club, who are supporters.
+	MembersIsSupporterCount int `json:"membersIsSupporterCount"`
 	// The total amount of members in this club.
 	MembersCount int `json:"membersCount"`
 	// Club members.

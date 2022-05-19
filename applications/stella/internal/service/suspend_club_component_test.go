@@ -10,6 +10,7 @@ import (
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -68,7 +69,8 @@ func getSuspensionClub(t *testing.T, client *graphql.Client, id string) Suspensi
 func TestSuspendClub_and_unsuspend(t *testing.T) {
 	t.Parallel()
 
-	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	grpcClient := getGrpcClient(t)
@@ -76,7 +78,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	relayId := convertClubIdToRelayId(clb.ID())
 	clubId := clb.ID()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SuspendClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	var suspendClub SuspendClub
 	err := client.Mutate(context.Background(), &suspendClub, map[string]interface{}{
@@ -88,10 +90,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	refreshClubESIndex(t)
 
@@ -101,7 +100,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	require.Len(t, updatedClb.Club.SuspensionLogs.Edges, 1, "should have 1 suspension log")
 	require.Equal(t, types.ClubSuspensionReasonManual, updatedClb.Club.SuspensionLogs.Edges[0].Node.ItemIssued.Reason, "should have 1 suspension log")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.SuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	_, err = grpcClient.SuspendClub(context.Background(), &stella.SuspendClubRequest{
 		ClubId:      clubId,
@@ -110,12 +109,9 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnSuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnSuspendClub, mock.Anything)
 
 	var unSuspendClub UnSuspendClub
 	err = client.Mutate(context.Background(), &unSuspendClub, map[string]interface{}{
@@ -126,10 +122,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error un suspending club")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getSuspensionClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Suspension, "club is suspended")

@@ -5,4 +5,8 @@ go_library(
     srcs = ["repository.go"],
     importpath = "overdoll/applications/eva/internal/domain/event",
     visibility = ["//applications/eva:__subpackages__"],
+    deps = [
+        "//applications/eva/internal/domain/account",
+        "//libraries/principal",
+    ],
 )

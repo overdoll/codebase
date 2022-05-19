@@ -5,11 +5,13 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
+	"time"
 )
 
 type AddPostLikeInput struct {
 	PostId    string
 	AccountId string
+	LikedAt   time.Time
 }
 
 func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
@@ -17,6 +19,16 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
+
+	if err := workflow.ExecuteActivity(ctx, a.CreatePostLike,
+		activities.CreatePostLikeInput{
+			PostId:    input.PostId,
+			AccountId: input.AccountId,
+			LikedAt:   input.LikedAt,
+		},
+	).Get(ctx, nil); err != nil {
+		return err
+	}
 
 	if err := workflow.ExecuteActivity(ctx, a.AddLikeToPost,
 		activities.AddLikeToPostInput{
@@ -41,11 +53,7 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

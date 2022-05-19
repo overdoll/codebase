@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/uuid"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -79,7 +80,11 @@ func getSeriesBySlug(t *testing.T, client *graphql.Client, slug string) *SeriesM
 func TestCreateSeries_update_and_search(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
+	mockAccountDigestNormal(t, accountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	fake := TestSeries{}
 	err := faker.FakeData(&fake)
@@ -154,7 +159,11 @@ func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
 	relaySeriesId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, seriesId))))
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
+	mockAccountDigestNormal(t, accountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	fake := TestCharacter{}
 	err := faker.FakeData(&fake)

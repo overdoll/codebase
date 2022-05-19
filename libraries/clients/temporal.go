@@ -2,36 +2,32 @@ package clients
 
 import (
 	"context"
+	"go.temporal.io/sdk/client"
+	"go.uber.org/zap"
 	"log"
 	"os"
-	"overdoll/libraries/temporal_dataconverter"
-	"time"
-
-	"go.temporal.io/sdk/client"
+	"overdoll/libraries/temporal_support"
 )
 
 func NewTemporalClient(ctx context.Context) client.Client {
 
-	encryptedDataConverter, err := temporal_dataconverter.NewEncryptDataConverterV1(temporal_dataconverter.Options{
-		EncryptionKey: []byte(os.Getenv("APP_KEY")),
+	data, err := temporal_support.NewEncryptDataConverterV1(temporal_support.Options{
+		EncryptionKey: []byte(os.Getenv("TEMPORAL_ENCRYPTION_KEY")),
 	})
 
 	if err != nil {
-		log.Fatalln("Unable to create encrypted data converter", err)
+		log.Fatalln("unable to create client", err)
 	}
 
 	c, err := client.NewClient(client.Options{
-		HostPort:  os.Getenv("TEMPORAL_URL"),
-		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
-		ConnectionOptions: client.ConnectionOptions{
-			HealthCheckTimeout: time.Second * 20,
-			//DisableHealthCheck: true,
-		},
-		DataConverter: encryptedDataConverter,
+		HostPort:      os.Getenv("TEMPORAL_URL"),
+		Namespace:     os.Getenv("TEMPORAL_NAMESPACE"),
+		DataConverter: data,
+		Logger:        temporal_support.NewZapAdapter(zap.L()),
 	})
 
 	if err != nil {
-		log.Fatalln("Unable to create client", err)
+		log.Fatalln("unable to create client", err)
 	}
 
 	return c

@@ -31,11 +31,7 @@ func (h UpdateClubPayoutDepositDateHandler) Handle(ctx context.Context, cmd Upda
 		return nil, err
 	}
 
-	if err := pay.CanUpdateDepositDate(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.UpdateClubPayoutDepositDate(ctx, pay, cmd.NewDate); err != nil {
+	if err := h.event.UpdateClubPayoutDepositDate(ctx, cmd.Principal, pay, cmd.NewDate); err != nil {
 		return nil, err
 	}
 

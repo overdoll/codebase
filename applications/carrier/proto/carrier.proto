@@ -9,6 +9,8 @@ service Carrier {
   rpc ConfirmAccountEmail(ConfirmAccountEmailRequest) returns (google.protobuf.Empty) {}
   rpc NewLoginToken(NewLoginTokenRequest) returns (google.protobuf.Empty) {}
 
+  rpc ClubSupporterSubscriptionDuplicate(ClubSupporterSubscriptionDuplicateRequest) returns (google.protobuf.Empty) {}
+
   rpc NewClubSupporterSubscription(NewClubSupporterSubscriptionRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionCancelled(ClubSupporterSubscriptionCancelledRequest) returns (google.protobuf.Empty) {}
   rpc ClubSupporterSubscriptionRefunded(ClubSupporterSubscriptionRefundedRequest) returns (google.protobuf.Empty) {}
@@ -77,7 +79,7 @@ message Transaction {
 }
 
 message Payment {
-  int64 amount = 1;
+  uint64 amount = 1;
   string currency = 2;
 }
 
@@ -99,6 +101,12 @@ message NewLoginTokenRequest {
   string email = 1;
   string token = 2;
   string secret = 3;
+}
+
+message ClubSupporterSubscriptionDuplicateRequest {
+  Account account = 1;
+  Club club = 2;
+  Payment payment = 3;
 }
 
 message NewClubSupporterSubscriptionRequest {

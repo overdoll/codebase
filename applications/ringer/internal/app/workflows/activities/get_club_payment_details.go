@@ -7,7 +7,7 @@ import (
 )
 
 type GetClubPaymentDetailsPayload struct {
-	FinalAmount    int64
+	FinalAmount    uint64
 	Currency       money.Currency
 	SettlementDate time.Time
 }

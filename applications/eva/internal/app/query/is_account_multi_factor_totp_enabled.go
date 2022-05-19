@@ -2,8 +2,8 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/domain/account"
 
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/principal"
 )
 
@@ -14,17 +14,17 @@ type IsAccountMultiFactorTOTPEnabled struct {
 }
 
 type IsAccountMultiFactorTOTPEnabledHandler struct {
-	mr multi_factor.Repository
+	ar account.Repository
 }
 
-func NewIsAccountMultiFactorTOTPEnabledHandler(mr multi_factor.Repository) IsAccountMultiFactorTOTPEnabledHandler {
-	return IsAccountMultiFactorTOTPEnabledHandler{mr: mr}
+func NewIsAccountMultiFactorTOTPEnabledHandler(ar account.Repository) IsAccountMultiFactorTOTPEnabledHandler {
+	return IsAccountMultiFactorTOTPEnabledHandler{ar: ar}
 }
 
 func (h IsAccountMultiFactorTOTPEnabledHandler) Handle(ctx context.Context, query IsAccountMultiFactorTOTPEnabled) (bool, error) {
-	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, query.AccountId); err != nil {
+	if _, err := h.ar.GetAccountMultiFactorTOTP(ctx, query.AccountId); err != nil {
 
-		if err == multi_factor.ErrTOTPNotConfigured {
+		if err == account.ErrTOTPNotConfigured {
 			return false, nil
 		}
 

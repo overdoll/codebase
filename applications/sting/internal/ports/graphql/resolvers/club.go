@@ -36,16 +36,17 @@ func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string,
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:             cursor,
-		ClubIds:            []string{obj.ID.GetID()},
-		Principal:          principal.FromContext(ctx),
-		AudienceSlugs:      audienceSlugs,
-		CategorySlugs:      categorySlugs,
-		CharacterSlugs:     characterSlugs,
-		SeriesSlugs:        seriesSlugs,
-		State:              stateModified,
-		SortBy:             sortBy.String(),
-		ShowSuspendedClubs: true,
+		Cursor:              cursor,
+		ClubIds:             []string{obj.ID.GetID()},
+		SupporterOnlyStatus: supporterOnly,
+		Principal:           principal.FromContext(ctx),
+		AudienceSlugs:       audienceSlugs,
+		CategorySlugs:       categorySlugs,
+		CharacterSlugs:      characterSlugs,
+		SeriesSlugs:         seriesSlugs,
+		State:               stateModified,
+		SortBy:              sortBy.String(),
+		ShowSuspendedClubs:  true,
 	})
 
 	if err != nil {

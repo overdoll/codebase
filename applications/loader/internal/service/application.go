@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
@@ -16,22 +16,26 @@ import (
 	"overdoll/libraries/support"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
-	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {
+	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {}
+}
 
+type ComponentTestApplication struct {
+	App            *app.Application
+	TemporalClient *temporalmocks.Client
+}
+
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
+	return &ComponentTestApplication{
+		App:            createApplication(ctx, temporalClient),
+		TemporalClient: temporalClient,
 	}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
-	bootstrap.NewBootstrap(ctx)
-	temporalClient := &mocks.Client{}
-	return createApplication(ctx, temporalClient), func() {
-
-	}, temporalClient
-}
-
-func createApplication(ctx context.Context, client client.Client) app.Application {
+func createApplication(ctx context.Context, client client.Client) *app.Application {
 
 	s := bootstrap.InitializeDatabaseSession()
 
@@ -49,7 +53,7 @@ func createApplication(ctx context.Context, client client.Client) app.Applicatio
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			TusComposer:                        command.NewTusComposerHandler(resourceRepo),
 			DeleteResources:                    command.NewDeleteResourcesHandler(eventRepo),

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "data",
+    srcs = ["embed.go"],
+    embedsrcs = [
+        "account_clubs.json",
+        "club_members.json",
+        "club_members_by_account.json",
+        "clubs.json",
+        "clubs_slugs.json",
+    ],
+    importpath = "overdoll/applications/stella/internal/adapters/seeders/data",
+    visibility = ["//applications/stella:__subpackages__"],
+)

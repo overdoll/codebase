@@ -54,7 +54,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	require.NoError(t, err, "no error encrypting a new token")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillNewSaleOrUpSaleSuccess, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillNewSaleOrUpSaleSuccess, mock.Anything)
 
 	runWebhookAction(t, "NewSaleSuccess", map[string]string{
 		"accountingCurrency":             "USD",
@@ -109,13 +109,13 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		"X-overdollPaymentToken":         *encrypted,
 	})
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
+	env := getWorkflowEnvironment()
 	env.RegisterWorkflow(workflows.UpcomingSubscriptionReminderNotification)
 	env.SetDetachedChildWait(false)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -186,7 +186,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 	require.Equal(t, ccbillSubscriptionId, transaction.CcbillTransaction.CcbillSubscriptionID, "correct ccbill subscription id")
 	require.Equal(t, ccbillTransactionId, *transaction.CcbillTransaction.CcbillTransactionID, "correct ccbill transaction id")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -194,16 +194,13 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		On("Get", mock.Anything, mock.Anything).
 		Return(nil)
 
-	temporalClientMock.
+	application.TemporalClient.
 		On("GetWorkflow", mock.Anything, "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				env = getWorkflowEnvironment(t)
-				receiptWorkflowExecution.FindAndExecuteWorkflow(t, env)
-				require.True(t, env.IsWorkflowCompleted())
-				require.NoError(t, env.GetWorkflowError())
+				receiptWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 			},
 		).
 		Return(flowRun)
@@ -220,6 +217,20 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 
 	fileUrl := generateReceipt.GenerateClubSupporterPaymentReceiptFromAccountTransaction.Link.String()
 	require.True(t, testing_tools.FileExists(fileUrl), "file should exist")
+
+	// get subscriptions for the current club
+	clubSubscriptions := getClubActiveAccountClubSupporterSubscriptions(t, gqlClient, clubId)
+	require.Len(t, clubSubscriptions.Entities[0].Club.SupporterSubscriptions.Edges, 1, "should have 1 subscription")
+	subscription = clubSubscriptions.Entities[0].Club.SupporterSubscriptions.Edges[0].Node.Item
+
+	require.Equal(t, graphql1.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
+	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2022-03-28", subscription.NextBillingDate, "correct next billing date")
+
+	// check the club member subscription is visible
+	clubMemberSubscription := getClubMemberSubscription(t, gqlClient, clubId, accountId)
+	require.NotNil(t, clubMemberSubscription.Entities[0].ClubMember.ClubSupporterSubscription, "should have a subscription attached to the club member")
+	require.Equal(t, subscription.Id, clubMemberSubscription.Entities[0].ClubMember.ClubSupporterSubscription.Item.Id, "should have a subscription attached to the club member")
 }
 
 func assertNewSaleSuccessCorrectPaymentMethodDetails(t *testing.T, paymentMethod types.PaymentMethod) {

@@ -10,5 +10,12 @@ type RemoveClubMemberFromListInput struct {
 }
 
 func (h *Activities) RemoveClubMemberFromList(ctx context.Context, input RemoveClubMemberFromListInput) error {
-	return h.cr.RemoveClubMemberFromlist(ctx, input.ClubId, input.AccountId)
+
+	member, err := h.cr.GetClubMemberByIdOperator(ctx, input.ClubId, input.AccountId)
+
+	if err != nil {
+		return err
+	}
+
+	return h.cr.DeleteClubMember(ctx, member)
 }

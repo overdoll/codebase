@@ -10,7 +10,7 @@ import (
 type RefundAccountTransaction struct {
 	Principal     *principal.Principal
 	TransactionId string
-	Amount        int64
+	Amount        uint64
 }
 
 type RefundAccountTransactionHandler struct {

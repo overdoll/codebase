@@ -56,13 +56,15 @@ func (r AccountResolver) ClubSupporterSubscriptions(ctx context.Context, obj *ty
 		newStatus = append(newStatus, s.String())
 	}
 
+	accId := obj.ID.GetID()
+
 	results, err := r.App.Queries.SearchAccountClubSupporterSubscriptions.
 		Handle(
 			ctx,
 			query.SearchAccountClubSupporterSubscriptions{
 				Principal: principal.FromContext(ctx),
 				Cursor:    cursor,
-				AccountId: obj.ID.GetID(),
+				AccountId: &accId,
 				Status:    newStatus,
 			},
 		)

@@ -13,12 +13,11 @@ type AddModeratorToPostQueue struct {
 }
 
 type AddModeratorToPostQueueHandler struct {
-	mr  moderator.Repository
-	eva EvaService
+	mr moderator.Repository
 }
 
-func NewAddModeratorToPostQueueHandler(mr moderator.Repository, eva EvaService) AddModeratorToPostQueueHandler {
-	return AddModeratorToPostQueueHandler{mr: mr, eva: eva}
+func NewAddModeratorToPostQueueHandler(mr moderator.Repository) AddModeratorToPostQueueHandler {
+	return AddModeratorToPostQueueHandler{mr: mr}
 }
 
 func (h AddModeratorToPostQueueHandler) Handle(ctx context.Context, cmd AddModeratorToPostQueue) error {

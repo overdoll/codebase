@@ -99,11 +99,20 @@ type GenerateAccountMultiFactorTotp struct {
 }
 
 type EnrollAccountMultiFactorTotp struct {
-	EnrollAccountMultiFactorTotp types.EnrollAccountMultiFactorTotpPayload `graphql:"enrollAccountMultiFactorTotp(input: $input)"`
+	EnrollAccountMultiFactorTotp struct {
+		Validation *types.EnrollAccountMultiFactorTotpValidation
+		Account    *struct {
+			MultiFactorTotpConfigured bool
+		}
+	} `graphql:"enrollAccountMultiFactorTotp(input: $input)"`
 }
 
 type DisableAccountMultiFactor struct {
-	DisableAccountMultiFactor types.DisableAccountMultiFactorPayload `graphql:"disableAccountMultiFactor()"`
+	DisableAccountMultiFactor struct {
+		Account *struct {
+			MultiFactorTotpConfigured bool
+		}
+	} `graphql:"disableAccountMultiFactor()"`
 }
 
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct {
@@ -208,7 +217,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTotpEnabled, "TOTP is enabled")
+	require.True(t, enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.Account.MultiFactorTotpConfigured, "TOTP is enabled")
 
 	// get new settings
 	settings = viewerAccountSettings(t, client)

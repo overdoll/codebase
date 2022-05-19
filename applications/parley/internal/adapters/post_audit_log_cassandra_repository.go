@@ -4,14 +4,17 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 type postRule struct {
@@ -84,6 +87,21 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+var postAuditLogByModeratorBucketsTable = table.New(table.Metadata{
+	Name: "post_audit_logs_by_moderator_buckets",
+	Columns: []string{
+		"moderator_account_id",
+		"bucket",
+	},
+	PartKey: []string{"moderator_account_id"},
+	SortKey: []string{"bucket"},
+})
+
+type postAuditLogBucket struct {
+	Bucket             int    `db:"bucket"`
+	ModeratorAccountId string `db:"moderator_account_id"`
+}
+
 type PostAuditLogCassandraRepository struct {
 	session gocqlx.Session
 }
@@ -94,7 +112,7 @@ func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCass
 
 func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLog, error) {
 
-	buck, err := bucket.MakeWeeklyBucketFromUUID(auditLog.ID())
+	parsed, err := ksuid.Parse(auditLog.ID())
 
 	if err != nil {
 		return nil, err
@@ -102,7 +120,7 @@ func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*post
 
 	return &postAuditLog{
 		Id:                 auditLog.ID(),
-		Bucket:             buck,
+		Bucket:             bucket.MakeWeeklyBucketFromTimestamp(parsed.Time()),
 		PostId:             auditLog.PostId(),
 		ModeratorAccountId: auditLog.ModeratorId(),
 		Action:             auditLog.Action().String(),
@@ -119,50 +137,45 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := postAuditLogTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names := postAuditLogTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
-	stmt, _ = postAuditLogByPostTable.Insert()
-
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names = postAuditLogByPostTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
-	stmt, _ = postAuditLogByModeratorTable.Insert()
+	stmt, names = postAuditLogByModeratorTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
+	)
 
-	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ModeratorAccountId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.RuleId,
-		marshalledAuditLog.Notes,
+	stmt, names = postAuditLogByModeratorBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledAuditLog,
 	)
 
 	if marshalledAuditLog.RuleId != nil {
-		stmt, _ = postRuleTable.Insert()
-
-		batch.Query(stmt,
-			marshalledAuditLog.PostId,
-			*marshalledAuditLog.RuleId,
+		stmt, names = postRuleTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			postRule{
+				PostId: marshalledAuditLog.PostId,
+				RuleId: *marshalledAuditLog.RuleId,
+			},
 		)
 	}
 
@@ -179,11 +192,12 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 
 	if err := r.session.
 		Query(postAuditLogTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postAuditLog{
 			Id: logId,
 		}).
-		Get(&postAudit); err != nil {
+		GetRelease(&postAudit); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, post_audit_log.ErrPostAuditLogNotFound
@@ -192,16 +206,14 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
 	}
 
-	infractionReason := post_audit_log.UnmarshalPostAuditLogFromDatabase(
+	return post_audit_log.UnmarshalPostAuditLogFromDatabase(
 		postAudit.Id,
 		postAudit.PostId,
 		postAudit.ModeratorAccountId,
 		postAudit.Action,
 		postAudit.RuleId,
 		postAudit.Notes,
-	)
-
-	return infractionReason, nil
+	), nil
 }
 
 func (r PostAuditLogCassandraRepository) GetPostAuditLogByIdOperator(ctx context.Context, logId string) (*post_audit_log.PostAuditLog, error) {
@@ -228,11 +240,12 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 
 	if err := r.session.
 		Query(postRuleTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postRule{
 			PostId: postId,
 		}).
-		Get(&postR); err != nil {
+		GetRelease(&postR); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, rule.ErrRuleNotFound
@@ -244,6 +257,29 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 	return &postR.RuleId, nil
 }
 
+func (r PostAuditLogCassandraRepository) getPostAuditLogBucketsForAccount(ctx context.Context, accountId string) ([]int, error) {
+
+	var buckets []postAuditLogBucket
+
+	if err := r.session.Query(postAuditLogByModeratorBucketsTable.Select()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postAuditLogBucket{
+			ModeratorAccountId: accountId,
+		}).
+		SelectRelease(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get post audit log buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
+}
+
 func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post_audit_log.PostAuditLogFilters) ([]*post_audit_log.PostAuditLog, error) {
 
 	var pendingPostAuditLogs []*post_audit_log.PostAuditLog
@@ -252,38 +288,11 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 		return nil, err
 	}
 
-	startingBucket := 1
-	endingBucket := 0
+	// only filter by post
+	if filter.PostId() != nil {
 
-	if filter.From() != nil {
-		startingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filter.From())
-	}
-
-	if filter.To() != nil {
-		endingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filter.To())
-	}
-
-	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
-
-		var builder *qb.SelectBuilder
-
-		info := map[string]interface{}{}
-
-		if filter.ModeratorId() != nil {
-			builder = qb.Select(postAuditLogByModeratorTable.Name()).
-				Where(qb.Eq("bucket"), qb.Eq("moderator_account_id"))
-
-			info["bucket"] = bucketId
-			info["moderator_account_id"] = *filter.ModeratorId()
-		}
-
-		if filter.PostId() != nil {
-			builder = qb.Select(postAuditLogByPostTable.Name()).
-				Where(qb.Eq("post_id"))
-
-			info["post_id"] = *filter.PostId()
-		}
+		builder := qb.Select(postAuditLogByPostTable.Name()).
+			Where(qb.Eq("post_id"))
 
 		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
 			return nil, err
@@ -293,8 +302,68 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 
 		if err := builder.
 			Query(r.session).
-			BindMap(info).
-			Select(&results); err != nil {
+			WithContext(ctx).
+			BindStruct(postAuditLog{PostId: *filter.PostId()}).
+			SelectRelease(&results); err != nil {
+			return nil, fmt.Errorf("failed to search audit logs for post: %v", err)
+		}
+
+		for _, auditLog := range results {
+
+			result := post_audit_log.UnmarshalPostAuditLogFromDatabase(
+				auditLog.Id,
+				auditLog.PostId,
+				auditLog.ModeratorAccountId,
+				auditLog.Action,
+				auditLog.RuleId,
+				auditLog.Notes,
+			)
+
+			result.Node = paging.NewNode(auditLog.Id)
+			pendingPostAuditLogs = append(pendingPostAuditLogs, result)
+		}
+
+		return pendingPostAuditLogs, nil
+	}
+
+	if filter.ModeratorId() == nil {
+		return nil, errors.New("must select either post or moderator for filtering")
+	}
+
+	buckets, err := r.getPostAuditLogBucketsForAccount(ctx, *filter.ModeratorId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	// iterate through all buckets starting from x bucket until we have enough values
+	for _, bucketId := range buckets {
+		if filter.From() != nil {
+			if bucketId > bucket.MakeWeeklyBucketFromTimestamp(*filter.From()) {
+				continue
+			}
+		}
+
+		if filter.To() != nil {
+			if bucketId < bucket.MakeWeeklyBucketFromTimestamp(*filter.To()) {
+				continue
+			}
+		}
+
+		builder := qb.Select(postAuditLogByModeratorTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("moderator_account_id"))
+
+		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
+			return nil, err
+		}
+
+		var results []*postAuditLog
+
+		if err := builder.
+			Query(r.session).
+			WithContext(ctx).
+			BindStruct(postAuditLog{Bucket: bucketId, ModeratorAccountId: *filter.ModeratorId()}).
+			SelectRelease(&results); err != nil {
 			return nil, fmt.Errorf("failed to search audit logs: %v", err)
 		}
 

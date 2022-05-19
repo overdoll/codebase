@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func parseCurrencyAmount(amount int64, currency string) (float64, error) {
+func parseCurrencyAmount(amount uint64, currency string) (float64, error) {
 	switch currency {
 	case "USD":
 		fallthrough
@@ -23,7 +23,7 @@ func parseCurrencyAmount(amount int64, currency string) (float64, error) {
 	return 0, fmt.Errorf("invalid currency passed: %s", currency)
 }
 
-func Currency(amount int64, currency string) (*string, error) {
+func Currency(amount uint64, currency string) (*string, error) {
 	amt, err := parseCurrencyAmount(amount, currency)
 
 	if err != nil {

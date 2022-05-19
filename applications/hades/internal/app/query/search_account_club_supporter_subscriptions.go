@@ -10,7 +10,8 @@ import (
 type SearchAccountClubSupporterSubscriptions struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
-	AccountId string
+	AccountId *string
+	ClubId    *string
 	Status    []string
 }
 
@@ -24,7 +25,7 @@ func NewSearchAccountClubSupporterSubscriptionsHandler(br billing.Repository) Se
 
 func (h SearchAccountClubSupporterSubscriptionsHandler) Handle(ctx context.Context, query SearchAccountClubSupporterSubscriptions) ([]*billing.AccountClubSupporterSubscription, error) {
 
-	filters, err := billing.NewAccountClubSupporterSubscriptionFilters(query.AccountId, query.Status)
+	filters, err := billing.NewAccountClubSupporterSubscriptionFilters(query.AccountId, query.ClubId, query.Status)
 
 	if err != nil {
 		return nil, err

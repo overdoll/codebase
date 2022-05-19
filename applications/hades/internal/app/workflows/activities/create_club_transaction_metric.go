@@ -13,8 +13,8 @@ type CreateClubTransactionMetricInput struct {
 
 	Timestamp gocql.UUID
 
-	Currency string
-	Amount   int64
+	Currency money.Currency
+	Amount   uint64
 
 	IsRefund     bool
 	IsChargeback bool
@@ -22,13 +22,8 @@ type CreateClubTransactionMetricInput struct {
 
 func (h *Activities) CreateClubTransactionMetric(ctx context.Context, input CreateClubTransactionMetricInput) error {
 
-	curr, err := money.CurrencyFromString(input.Currency)
-
-	if err != nil {
-		return err
-	}
-
 	var metric *metrics.ClubTransactionMetric
+	var err error
 
 	if input.IsRefund {
 
@@ -37,7 +32,7 @@ func (h *Activities) CreateClubTransactionMetric(ctx context.Context, input Crea
 			input.Timestamp,
 			input.Id,
 			input.Amount,
-			curr,
+			input.Currency,
 		)
 
 		if err != nil {
@@ -52,7 +47,7 @@ func (h *Activities) CreateClubTransactionMetric(ctx context.Context, input Crea
 			input.Timestamp,
 			input.Id,
 			input.Amount,
-			curr,
+			input.Currency,
 		)
 
 		if err != nil {
@@ -67,7 +62,7 @@ func (h *Activities) CreateClubTransactionMetric(ctx context.Context, input Crea
 			input.Timestamp,
 			input.Id,
 			input.Amount,
-			curr,
+			input.Currency,
 		)
 
 		if err != nil {

@@ -15,7 +15,10 @@ func TestAddClubAndRemoveClubFromTerminatedList(t *testing.T) {
 
 	testingAccountId := newFakeAccount(t)
 	clubId := uuid.New().String()
-	publishedPost := seedPublishedPost(t, clubId)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestNormal(t, testingAccountId)
+
+	publishedPost := seedPublishedPost(t, uuid.New().String(), clubId)
 	postId := publishedPost.ID()
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
@@ -29,7 +32,7 @@ func TestAddClubAndRemoveClubFromTerminatedList(t *testing.T) {
 	require.NoError(t, err, "no error terminating club")
 
 	// use a random account
-	randomAccountClient := getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	randomAccountClient := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	pst = getPost(t, randomAccountClient, postId)
 	// post should no longer be visible after terminating
 	require.Nil(t, pst.Post, "post should be nil")
@@ -38,7 +41,7 @@ func TestAddClubAndRemoveClubFromTerminatedList(t *testing.T) {
 	require.NoError(t, err, "no error terminating club")
 
 	// use a random account
-	randomAccountClient = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	randomAccountClient = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	pst = getPost(t, randomAccountClient, postId)
 	// post should now be visible once again
 	require.NotNil(t, pst.Post, "post is not nil")

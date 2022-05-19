@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/eva/internal/app/workflows"
+	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type EventTemporalRepository struct {
@@ -15,9 +17,13 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) DeleteAccount(ctx context.Context, accountId string) error {
+func (r EventTemporalRepository) DeleteAccount(ctx context.Context, requester *principal.Principal, acc *account.Account) error {
 
-	workflowId := "DeleteAccount_" + accountId
+	if err := acc.CanDelete(requester); err != nil {
+		return err
+	}
+
+	workflowId := "DeleteAccount_" + acc.ID()
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -25,7 +31,7 @@ func (r EventTemporalRepository) DeleteAccount(ctx context.Context, accountId st
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteAccount, workflows.DeleteAccountInput{
-		AccountId:  accountId,
+		AccountId:  acc.ID(),
 		WorkflowId: workflowId,
 		CanCancel:  true,
 	}); err != nil {
@@ -35,9 +41,13 @@ func (r EventTemporalRepository) DeleteAccount(ctx context.Context, accountId st
 	return nil
 }
 
-func (r EventTemporalRepository) CancelAccountDeletion(ctx context.Context, workflowId string) error {
+func (r EventTemporalRepository) CancelAccountDeletion(ctx context.Context, requester *principal.Principal, acc *account.Account) error {
 
-	if err := r.client.CancelWorkflow(ctx, workflowId, ""); err != nil {
+	if err := acc.CanCancelDeletion(requester); err != nil {
+		return err
+	}
+
+	if err := r.client.CancelWorkflow(ctx, *acc.ScheduledDeletionWorkflowId(), ""); err != nil {
 		return err
 	}
 

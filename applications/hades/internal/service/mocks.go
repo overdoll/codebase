@@ -2,83 +2,10 @@ package service
 
 import (
 	"bytes"
-	"context"
 	"fmt"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"io/ioutil"
 	"net/http"
-	"overdoll/applications/hades/internal/adapters"
-	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/applications/hades/internal/domain/club"
-	stella "overdoll/applications/stella/proto"
-	"overdoll/libraries/location"
-	"overdoll/libraries/principal"
-	"overdoll/libraries/testing_tools"
-	"time"
 )
-
-type EvaServiceMock struct {
-	adapter adapters.EvaGrpc
-}
-
-// GetAccount for testing purposes, we want to be able to use any accounts in order to have reproducible testing. so if an account
-// is not found, we just default back to a principal with some default details
-func (e EvaServiceMock) GetAccount(ctx context.Context, s string) (*principal.Principal, error) {
-
-	prin, err := e.adapter.GetAccount(ctx, s)
-
-	if err != nil {
-
-		if e, ok := status.FromError(err); ok {
-			switch e.Code() {
-			case codes.NotFound:
-				return testing_tools.NewStaffSecurePrincipal(s), nil
-			}
-		}
-
-		return nil, err
-	}
-
-	return prin, nil
-}
-
-func (e EvaServiceMock) LocationFromIp(ctx context.Context, ip string) (*location.Location, error) {
-	return location.UnmarshalLocationFromDatabase(
-		"test city",
-		"US",
-		"23412",
-		"division",
-		0,
-		0,
-	), nil
-}
-
-type StellaServiceMock struct{}
-
-func (s StellaServiceMock) GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error) {
-	return principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  nil,
-		ClubMembershipIds: nil,
-		OwnerClubIds:      nil,
-	})
-}
-
-func (s StellaServiceMock) SuspendClub(ctx context.Context, clubId string, isChargebacks bool) error {
-	return nil
-}
-
-func (s StellaServiceMock) GetClubById(ctx context.Context, clubId string) (*club.Club, error) {
-	return club.UnmarshalClubFromDatabase(clubId, "", "", false, true, ""), nil
-}
-
-func (s StellaServiceMock) AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error {
-	return nil
-}
-
-func (s StellaServiceMock) RemoveClubSupporter(ctx context.Context, clubId, accountId string) error {
-	return nil
-}
 
 type MockCCBillHttpClient struct {
 	DoFunc func(req *http.Request) (*http.Response, error)
@@ -113,40 +40,4 @@ func (m MockCCBillHttpClient) Do(req *http.Request) (*http.Response, error) {
 		Body:          ioutil.NopCloser(buff),
 		ContentLength: int64(buff.Len()),
 	}, nil
-}
-
-type CarrierServiceMock struct{}
-
-func (c CarrierServiceMock) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
-	return nil
-}
-
-func (c CarrierServiceMock) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
-	return nil
-}
-
-func (c CarrierServiceMock) ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-	return nil
-}
-
-func (c CarrierServiceMock) ClubSupporterSubscriptionRefunded(ctx context.Context, subscription *billing.AccountClubSupporterSubscription, transaction *billing.AccountTransaction, amount int64, currency string) error {
-	return nil
-}
-
-func (c CarrierServiceMock) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-	return nil
-}
-
-func (c CarrierServiceMock) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
-	return nil
-}
-
-type RingerServiceMock struct{}
-
-func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
-	return nil
-}
-
-func (r RingerServiceMock) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
-	return nil
 }

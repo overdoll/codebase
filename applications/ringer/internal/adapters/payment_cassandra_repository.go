@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -29,7 +30,7 @@ var clubPaymentsTable = table.New(table.Metadata{
 		"final_amount",
 		"is_deduction",
 		"deduction_source_payment_id",
-		"timestamp",
+		"created_at",
 		"club_payout_ids",
 	},
 	PartKey: []string{"id"},
@@ -78,12 +79,12 @@ type clubPayment struct {
 	AccountTransactionId     string    `db:"account_transaction_id"`
 	DestinationClubId        string    `db:"destination_club_id"`
 	Currency                 string    `db:"currency"`
-	BaseAmount               int64     `db:"base_amount"`
-	PlatformFeeAmount        int64     `db:"platform_fee_amount"`
-	FinalAmount              int64     `db:"final_amount"`
+	BaseAmount               uint64    `db:"base_amount"`
+	PlatformFeeAmount        uint64    `db:"platform_fee_amount"`
+	FinalAmount              uint64    `db:"final_amount"`
 	IsDeduction              bool      `db:"is_deduction"`
 	DeductionSourcePaymentId *string   `db:"deduction_source_payment_id"`
-	Timestamp                time.Time `db:"timestamp"`
+	CreatedAt                time.Time `db:"created_at"`
 	ClubPayoutIds            []string  `db:"club_payout_ids"`
 }
 
@@ -99,7 +100,7 @@ var clubPlatformFeeTable = table.New(table.Metadata{
 
 type clubPlatformFee struct {
 	ClubId  string `db:"club_id"`
-	Percent int64  `db:"percent"`
+	Percent uint64 `db:"percent"`
 }
 
 type PaymentCassandraElasticsearchRepository struct {
@@ -126,7 +127,7 @@ func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*c
 		FinalAmount:              pay.FinalAmount(),
 		IsDeduction:              pay.IsDeduction(),
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
-		Timestamp:                pay.Timestamp(),
+		CreatedAt:                pay.CreatedAt(),
 		ClubPayoutIds:            pay.ClubPayoutIds(),
 	}, nil
 }
@@ -146,7 +147,7 @@ func canViewSensitive(ctx context.Context, requester *principal.Principal, clubI
 
 func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx context.Context, payment *payment.ClubPayment) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	marshalled, err := marshalPaymentToDatabase(ctx, payment)
 
@@ -154,31 +155,18 @@ func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx contex
 		return err
 	}
 
-	stmt, _ := clubPaymentsTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Id,
-		marshalled.Source,
-		marshalled.Status,
-		marshalled.SettlementDate,
-		marshalled.SourceAccountId,
-		marshalled.AccountTransactionId,
-		marshalled.DestinationClubId,
-		marshalled.Currency,
-		marshalled.BaseAmount,
-		marshalled.PlatformFeeAmount,
-		marshalled.FinalAmount,
-		marshalled.IsDeduction,
-		marshalled.DeductionSourcePaymentId,
-		marshalled.Timestamp,
-		marshalled.ClubPayoutIds,
+	stmt, names := clubPaymentsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
-	stmt, _ = clubPaymentsByTransactionTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.AccountTransactionId,
-		marshalled.Id,
+	stmt, names = clubPaymentsByTransactionTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -198,8 +186,9 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 
 	if err := r.session.
 		Query(clubPaymentsTable.Get()).
+		WithContext(ctx).
 		BindStruct(clubPayment{Id: paymentId}).
-		Get(&clubPay); err != nil {
+		GetRelease(&clubPay); err != nil {
 		if err == gocql.ErrNotFound {
 			return nil, payment.ErrClubPaymentNotFound
 		}
@@ -219,7 +208,7 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 		clubPay.FinalAmount,
 		clubPay.IsDeduction,
 		clubPay.DeductionSourcePaymentId,
-		clubPay.Timestamp,
+		clubPay.CreatedAt,
 		clubPay.SettlementDate,
 		clubPay.ClubPayoutIds,
 	), nil
@@ -250,8 +239,9 @@ func (r PaymentCassandraElasticsearchRepository) GetClubPaymentByAccountTransact
 
 	if err := r.session.
 		Query(clubPaymentsByTransactionTable.Get()).
+		WithContext(ctx).
 		BindStruct(clubPayment{AccountTransactionId: accountTransactionId}).
-		Get(&clubPay); err != nil {
+		GetRelease(&clubPay); err != nil {
 		return nil, fmt.Errorf("failed to get club payment by transaction id: %v", err)
 	}
 
@@ -260,7 +250,7 @@ func (r PaymentCassandraElasticsearchRepository) GetClubPaymentByAccountTransact
 
 func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	// batch update all payments
 	for _, id := range paymentIds {
@@ -284,7 +274,7 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentsCompleted(ctx
 
 func (r PaymentCassandraElasticsearchRepository) RemoveClubPaymentsFromClubReadyList(ctx context.Context, clubId string, paymentIds []string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	// batch update all payments
 	for _, id := range paymentIds {
@@ -321,6 +311,7 @@ func (r PaymentCassandraElasticsearchRepository) updateClubPayment(ctx context.C
 
 	if err := r.session.
 		Query(clubPaymentsTable.Update(columns...)).
+		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update club payment status: %v", err)
@@ -335,10 +326,6 @@ func (r PaymentCassandraElasticsearchRepository) updateClubPayment(ctx context.C
 
 func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentStatus(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
 	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"status"})
-}
-
-func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentPayoutId(ctx context.Context, paymentId string, updateFn func(pay *payment.ClubPayment) error) (*payment.ClubPayment, error) {
-	return r.updateClubPayment(ctx, paymentId, updateFn, []string{"club_payout_ids"})
 }
 
 func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(ctx context.Context, payment *payment.ClubPayment) error {
@@ -361,12 +348,13 @@ func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(c
 	return nil
 }
 
-func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount int64, isDeduction bool, currency money.Currency)) error {
+func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx context.Context, clubId string, scanFn func(paymentId string, amount uint64, isDeduction bool, currency money.Currency)) error {
 
 	var page []byte
 
 	itr := r.session.
 		Query(clubReadyPaymentsTable.Select()).
+		WithContext(ctx).
 		BindMap(map[string]interface{}{
 			"club_id": clubId,
 		}).
@@ -411,19 +399,45 @@ func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx c
 
 func (r PaymentCassandraElasticsearchRepository) AddClubPaymentsToPayout(ctx context.Context, payoutId string, paymentIds []string) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	chunkSize := 100
 
-	stmt, _ := clubPaymentsByPayoutTable.Insert()
+	var chunks [][]string
+	for i := 0; i < len(paymentIds); i += chunkSize {
+		end := i + chunkSize
 
-	for _, id := range paymentIds {
-		batch.Query(stmt,
-			payoutId,
-			id,
-		)
+		// necessary check to avoid slicing beyond
+		// slice capacity
+		if end > len(paymentIds) {
+			end = len(paymentIds)
+		}
+
+		chunks = append(chunks, paymentIds[i:end])
 	}
 
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new club payment: %v", err)
+	for _, chunk := range chunks {
+
+		batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+
+		stmt, _ := clubPaymentsByPayoutTable.Insert()
+
+		for _, id := range chunk {
+			batch.Query(stmt,
+				payoutId,
+				id,
+			)
+
+			stmt, _ := clubPaymentsTable.UpdateBuilder().AddLit("club_payout_ids", `{'`+payoutId+`'}`).ToCql()
+			batch.Query(stmt, id)
+		}
+
+		if err := r.session.ExecuteBatch(batch); err != nil {
+			return fmt.Errorf("failed to append new club payment to payout: %v", err)
+		}
+
+		// update our index to reflect changes
+		if err := r.updateIndexPaymentPayoutId(ctx, payoutId, chunk); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -435,6 +449,7 @@ func (r PaymentCassandraElasticsearchRepository) ScanClubPaymentsListForPayout(c
 
 	itr := r.session.
 		Query(clubPaymentsByPayoutTable.Select()).
+		WithContext(ctx).
 		BindMap(map[string]interface{}{
 			"payout_id": payoutId,
 		}).
@@ -489,6 +504,7 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPlatformFee(ctx conte
 
 	if err := r.session.
 		Query(clubPlatformFeeTable.Insert()).
+		WithContext(ctx).
 		BindStruct(&clubPlatformFee{
 			ClubId:  pay.ClubId(),
 			Percent: pay.Percent(),
@@ -506,8 +522,9 @@ func (r PaymentCassandraElasticsearchRepository) getPlatformFeeForClub(ctx conte
 
 	if err := r.session.
 		Query(clubPlatformFeeTable.Get()).
+		WithContext(ctx).
 		BindStruct(clubPlatformFee{ClubId: clubId}).
-		Get(&platformFee); err != nil {
+		GetRelease(&platformFee); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return payment.NewDefaultPlatformFee(clubId)

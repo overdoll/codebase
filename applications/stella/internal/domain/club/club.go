@@ -20,7 +20,7 @@ var (
 
 const (
 	maxClubSlugLimit     = 5
-	maxAccountClubsLimit = 3
+	maxAccountClubsLimit = 1
 )
 
 type Club struct {
@@ -47,6 +47,23 @@ type Club struct {
 
 	membersCount   int
 	ownerAccountId string
+}
+
+func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
+
+	lc, _ := localization.NewDefaultTranslation(name)
+
+	return &Club{
+		id:                          id,
+		slug:                        slug,
+		name:                        lc,
+		slugAliases:                 []string{},
+		thumbnailResourceId:         nil,
+		membersCount:                1,
+		ownerAccountId:              ownerAccountId,
+		hasCreatedSupporterOnlyPost: false,
+		terminated:                  false,
+	}
 }
 
 func NewClub(requester *principal.Principal, slug, name string, currentClubCount int) (*Club, error) {
@@ -199,6 +216,10 @@ func (m *Club) CanSupport() bool {
 	return !m.suspended && m.hasCreatedSupporterOnlyPost && !m.terminated
 }
 
+func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
+	return requester.BelongsToAccount(m.ownerAccountId)
+}
+
 func (m *Club) CanSuspend(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
@@ -346,6 +367,16 @@ func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail string)
 	return nil
 }
 
+func (m *Club) AddMember() error {
+	m.membersCount += 1
+	return nil
+}
+
+func (m *Club) SubtractMember() error {
+	m.membersCount -= 1
+	return nil
+}
+
 func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 	if err := m.canUpdate(requester); err != nil {
@@ -365,16 +396,12 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 func (m *Club) canUpdate(requester *principal.Principal) error {
 
-	if requester.IsLocked() {
-		return principal.ErrLocked
-	}
-
-	if m.terminated {
-		return principal.ErrNotAuthorized
-	}
-
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	return nil
@@ -395,7 +422,7 @@ func (m *Club) CanView(requester *principal.Principal) bool {
 			return true
 		}
 
-		if err := m.canUpdate(requester); err != nil {
+		if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 			return false
 		}
 

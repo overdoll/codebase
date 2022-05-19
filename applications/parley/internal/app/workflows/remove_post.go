@@ -45,8 +45,8 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 
 		var clubSuspensionLength int64
 
-		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfractionPostModeration,
-			activities.IssueClubInfractionPostModerationInput{
+		if err := workflow.ExecuteActivity(ctx, a.IssueClubInfractionPostRemoval,
+			activities.IssueClubInfractionPostRemovalInput{
 				AccountId: input.AccountId,
 				ClubId:    input.ClubId,
 				RuleId:    input.RuleId,
@@ -62,7 +62,7 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 				IsPostRemoval:     true,
 				IsModerationQueue: false,
 			},
-		).Get(ctx, &clubSuspensionLength); err != nil {
+		).Get(ctx, nil); err != nil {
 			return err
 		}
 	}

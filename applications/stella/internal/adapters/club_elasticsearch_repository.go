@@ -35,59 +35,6 @@ type clubDocument struct {
 	TerminatedByAccountId       *string           `json:"terminated_by_account_id"`
 }
 
-const clubsIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"slug_aliases": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"name": ` + localization.ESIndex + `
-    "members_count": {
-		"type": "integer"
-	},
-    "owner_account_id": {
-		"type": "keyword"
-	},
-    "suspended": {
-		"type": "boolean"
-	},
-    "suspended_until": {
-		"type": "date"
-	},
-    "next_supporter_post_time": {
-		"type": "date"
-	},
-    "has_created_supporter_only_post": {
-		"type": "boolean"
-	},
-    "terminated": {
-		"type": "boolean"
-	},
-    "terminated_by_account_id": {
-		"type": "keyword"
-	},
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const clubsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties":` + clubsIndexProperties + `
-	}
-}`
-
 const ClubsIndexName = "clubs"
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
@@ -242,7 +189,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 	return brands, nil
 }
 
-func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context) error {
+func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -297,36 +244,6 @@ func (r ClubCassandraElasticsearchRepository) indexAllClubs(ctx context.Context)
 	})
 
 	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r ClubCassandraElasticsearchRepository) DeleteAndRecreateClubsIndex(ctx context.Context) error {
-	if err := r.deleteClubsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubs(ctx)
-}
-
-func (r ClubCassandraElasticsearchRepository) deleteClubsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubsIndexName).BodyString(clubsIndex).Do(ctx); err != nil {
 		return err
 	}
 

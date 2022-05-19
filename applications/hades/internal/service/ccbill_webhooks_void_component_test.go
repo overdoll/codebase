@@ -21,7 +21,7 @@ func TestBillingFlow_Void(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillVoid, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillVoid, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Void", map[string]string{
@@ -34,10 +34,10 @@ func TestBillingFlow_Void(t *testing.T) {
 		"timestamp":      "2022-02-26 20:18:00",
 	})
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -48,5 +48,5 @@ func TestBillingFlow_Void(t *testing.T) {
 	transaction := accountTransactionsVoid.Entities[0].Account.Transactions.Edges[0].Node
 
 	require.Equal(t, types.AccountTransactionTypeVoid, transaction.Type, "correct transaction type")
-	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-26 15:21:49 +0000 UTC", transaction.CreatedAt.String(), "correct timestamp")
 }

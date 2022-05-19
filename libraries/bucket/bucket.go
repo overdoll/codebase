@@ -2,8 +2,6 @@ package bucket
 
 import (
 	"time"
-
-	"github.com/segmentio/ksuid"
 )
 
 // Bucket package
@@ -30,24 +28,4 @@ func MakeWeeklyBucketFromTimestamp(tm time.Time) int {
 
 func MakeMonthlyBucketFromTimestamp(tm time.Time) int {
 	return timestampToMonthBucket(int(tm.Unix())*1000 - overdollEpoch)
-}
-
-func MakeWeeklyBucketFromUUID(target string) (int, error) {
-	id, err := ksuid.Parse(target)
-
-	if err != nil {
-		return 0, err
-	}
-
-	return timestampToWeekBucket(int(id.Time().Unix())*1000 - overdollEpoch), nil
-}
-
-func MakeMonthlyBucketFromUUID(target string) (int, error) {
-	id, err := ksuid.Parse(target)
-
-	if err != nil {
-		return 0, err
-	}
-
-	return timestampToMonthBucket(int(id.Time().Unix())*1000 - overdollEpoch), nil
 }

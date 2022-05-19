@@ -14,7 +14,7 @@ type ClubPaymentDepositInput struct {
 	AccountTransactionId        string
 	SourceAccountId             string
 	DestinationClubId           string
-	Amount                      int64
+	Amount                      uint64
 	Currency                    money.Currency
 	Timestamp                   time.Time
 	IsClubSupporterSubscription bool
@@ -26,13 +26,11 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 
 	var a *activities.Activities
 
-	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
+	paymentId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
 	if err != nil {
 		return err
 	}
-
-	paymentId := *uniqueId
 
 	// create a pending deposit
 	if err := workflow.ExecuteActivity(ctx, a.CreatePendingClubPaymentDeposit,
@@ -97,15 +95,12 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, GenerateClubMonthlyPayout,
 		GenerateClubMonthlyPayoutInput{
-			ClubId: input.DestinationClubId,
+			ClubId:    input.DestinationClubId,
+			CanCancel: true,
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
 		return err
 	}
 

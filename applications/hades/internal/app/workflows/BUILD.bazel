@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
+        "cancel_account_club_supporter_subscription.go",
         "cancel_active_supporter_subscriptions_for_club.go",
         "ccbill_billing_date_change.go",
         "ccbill_cancellation.go",
@@ -16,8 +17,8 @@ go_library(
         "ccbill_user_reactivation.go",
         "ccbill_void.go",
         "club_transaction_metric.go",
-        "generate_club_supporter_payment_receipt_from_account_transaction_history.go",
-        "generate_club_supporter_refund_receipt_from_account_transaction_history.go",
+        "generate_club_supporter_payment_receipt_from_account_transaction.go",
+        "generate_club_supporter_refund_receipt_from_account_transaction.go",
         "options.go",
         "upcoming_subscription_reminder_notification.go",
     ],
@@ -25,10 +26,9 @@ go_library(
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
         "//applications/hades/internal/app/workflows/activities",
-        "//applications/hades/internal/domain/ccbill",
         "//applications/hades/proto:v1_go_proto",
+        "//libraries/money",
         "//libraries/support",
-        "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//temporal",

@@ -50,15 +50,16 @@ func (r AudienceResolver) Posts(ctx context.Context, obj *types.Audience, after 
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:             cursor,
-		AudienceSlugs:      []string{obj.Slug},
-		CategorySlugs:      categorySlugs,
-		CharacterSlugs:     characterSlugs,
-		SeriesSlugs:        seriesSlugs,
-		Principal:          principal.FromContext(ctx),
-		State:              stateModified,
-		SortBy:             sortBy.String(),
-		ShowSuspendedClubs: false,
+		Cursor:              cursor,
+		AudienceSlugs:       []string{obj.Slug},
+		CategorySlugs:       categorySlugs,
+		SupporterOnlyStatus: supporterOnly,
+		CharacterSlugs:      characterSlugs,
+		SeriesSlugs:         seriesSlugs,
+		Principal:           principal.FromContext(ctx),
+		State:               stateModified,
+		SortBy:              sortBy.String(),
+		ShowSuspendedClubs:  false,
 	})
 
 	if err != nil {

@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/principal"
 )
 
@@ -12,16 +12,16 @@ type CreateCancellationReason struct {
 }
 
 type CreateCancellationReasonHandler struct {
-	cr cancellation.Repository
+	br billing.Repository
 }
 
-func NewCreateCancellationReasonHandler(cr cancellation.Repository) CreateCancellationReasonHandler {
-	return CreateCancellationReasonHandler{cr: cr}
+func NewCreateCancellationReasonHandler(br billing.Repository) CreateCancellationReasonHandler {
+	return CreateCancellationReasonHandler{br: br}
 }
 
-func (h CreateCancellationReasonHandler) Handle(ctx context.Context, cmd CreateCancellationReason) (*cancellation.Reason, error) {
+func (h CreateCancellationReasonHandler) Handle(ctx context.Context, cmd CreateCancellationReason) (*billing.CancellationReason, error) {
 
-	resultReason, err := cancellation.NewReason(
+	resultReason, err := billing.NewCancellationReason(
 		cmd.Principal,
 		cmd.Title,
 	)
@@ -30,7 +30,7 @@ func (h CreateCancellationReasonHandler) Handle(ctx context.Context, cmd CreateC
 		return nil, err
 	}
 
-	if err := h.cr.CreateReason(ctx, resultReason); err != nil {
+	if err := h.br.CreateCancellationReason(ctx, resultReason); err != nil {
 		return nil, err
 	}
 

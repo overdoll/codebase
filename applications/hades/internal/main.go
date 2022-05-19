@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"os"
+	"overdoll/applications/hades/internal/adapters/migrations"
+	"overdoll/applications/hades/internal/adapters/seeders"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/service"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/database"
 	"time"
 
 	"github.com/spf13/cobra"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
 
@@ -24,8 +26,11 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/hades")
 
-	rootCmd.AddCommand(ports.Cli)
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(
+		migrations.MigrateConfig,
+		seeders.SeederConfig,
+	))
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,
@@ -33,6 +38,10 @@ func init() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,
+	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "grpc",
+		Run: RunGrpc,
 	})
 }
 
@@ -44,11 +53,7 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
-
-	if os.Getenv("DISABLE_WORKER") == "" {
-		go RunWorker(cmd, args)
-	}
-
+	go RunWorker(cmd, args)
 	go RunGrpc(cmd, args)
 	RunHttp(cmd, args)
 }
@@ -59,7 +64,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv, cleanup := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(app)
 
 	defer cleanup()
 
@@ -74,7 +79,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		hades.RegisterHadesServer(server, s)
@@ -89,7 +94,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

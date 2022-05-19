@@ -70,6 +70,22 @@ func (s Server) NewClubSupporterSubscription(ctx context.Context, request *carri
 	return &empty.Empty{}, nil
 }
 
+func (s Server) ClubSupporterSubscriptionDuplicate(ctx context.Context, request *carrier.ClubSupporterSubscriptionDuplicateRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.ClubSupporterSubscriptionDuplicate.Handle(ctx,
+		command.ClubSupporterSubscriptionDuplicate{
+			AccountId: request.Account.Id,
+			ClubId:    request.Club.Id,
+			Amount:    request.Payment.Amount,
+			Currency:  request.Payment.Currency,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s Server) ClubSupporterSubscriptionCancelled(ctx context.Context, request *carrier.ClubSupporterSubscriptionCancelledRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.ClubSupporterSubscriptionCancelled.Handle(ctx,
@@ -124,7 +140,7 @@ func (s Server) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, r
 	var renewals []struct {
 		ClubId         string
 		SubscriptionId string
-		Amount         int64
+		Amount         uint64
 		Currency       string
 		BillingDate    time.Time
 	}
@@ -133,7 +149,7 @@ func (s Server) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, r
 		renewals = append(renewals, struct {
 			ClubId         string
 			SubscriptionId string
-			Amount         int64
+			Amount         uint64
 			Currency       string
 			BillingDate    time.Time
 		}{

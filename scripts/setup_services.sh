@@ -8,6 +8,8 @@ parent_path=$(
 )
 cd "$parent_path"
 
+sh cleanup/elasticsearch.sh
+
 sh cleanup/eva.sh
 sh setup/eva.sh
 

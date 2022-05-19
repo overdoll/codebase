@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/event"
 	"overdoll/applications/parley/internal/domain/rule"
 
 	"github.com/pkg/errors"
@@ -18,12 +19,12 @@ type ReportPost struct {
 type ReportPostHandler struct {
 	rr    report.Repository
 	rur   rule.Repository
-	eva   EvaService
 	sting StingService
+	event event.Repository
 }
 
-func NewReportPostHandler(rr report.Repository, rur rule.Repository, eva EvaService, sting StingService) ReportPostHandler {
-	return ReportPostHandler{sting: sting, eva: eva, rr: rr, rur: rur}
+func NewReportPostHandler(rr report.Repository, rur rule.Repository, sting StingService, event event.Repository) ReportPostHandler {
+	return ReportPostHandler{sting: sting, rr: rr, rur: rur, event: event}
 }
 
 func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.PostReport, error) {
@@ -48,8 +49,7 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 		return nil, err
 	}
 
-	// create post report record
-	if err := h.rr.CreatePostReport(ctx, postReport); err != nil {
+	if err := h.event.ReportPost(ctx, postReport); err != nil {
 		return nil, err
 	}
 

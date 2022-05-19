@@ -69,23 +69,24 @@ type ComplexityRoot struct {
 	}
 
 	Club struct {
-		CanSupport            func(childComplexity int) int
-		ID                    func(childComplexity int) int
-		Members               func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
-		MembersCount          func(childComplexity int) int
-		Name                  func(childComplexity int) int
-		NextSupporterPostTime func(childComplexity int) int
-		Owner                 func(childComplexity int) int
-		Reference             func(childComplexity int) int
-		Slug                  func(childComplexity int) int
-		SlugAliases           func(childComplexity int) int
-		SlugAliasesLimit      func(childComplexity int) int
-		Suspension            func(childComplexity int) int
-		SuspensionLogs        func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Termination           func(childComplexity int) int
-		Thumbnail             func(childComplexity int, size *int) int
-		ViewerIsOwner         func(childComplexity int) int
-		ViewerMember          func(childComplexity int) int
+		CanSupport              func(childComplexity int) int
+		ID                      func(childComplexity int) int
+		Members                 func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
+		MembersCount            func(childComplexity int) int
+		MembersIsSupporterCount func(childComplexity int) int
+		Name                    func(childComplexity int) int
+		NextSupporterPostTime   func(childComplexity int) int
+		Owner                   func(childComplexity int) int
+		Reference               func(childComplexity int) int
+		Slug                    func(childComplexity int) int
+		SlugAliases             func(childComplexity int) int
+		SlugAliasesLimit        func(childComplexity int) int
+		Suspension              func(childComplexity int) int
+		SuspensionLogs          func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Termination             func(childComplexity int) int
+		Thumbnail               func(childComplexity int, size *int) int
+		ViewerIsOwner           func(childComplexity int) int
+		ViewerMember            func(childComplexity int) int
 	}
 
 	ClubConnection struct {
@@ -267,6 +268,7 @@ type ClubResolver interface {
 	SuspensionLogs(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubSuspensionLogConnection, error)
 
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
+	MembersIsSupporterCount(ctx context.Context, obj *types.Club) (int, error)
 
 	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
 }
@@ -421,6 +423,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.MembersCount(childComplexity), true
+
+	case "Club.membersIsSupporterCount":
+		if e.complexity.Club.MembersIsSupporterCount == nil {
+			break
+		}
+
+		return e.complexity.Club.MembersIsSupporterCount(childComplexity), true
 
 	case "Club.name":
 		if e.complexity.Club.Name == nil {
@@ -1230,6 +1239,9 @@ var sources = []*ast.Source{
 
   """Whether or not the viewer is a member of this club."""
   viewerMember: ClubMember @goField(forceResolver: true)
+
+  """The total amount of members in this club, who are supporters."""
+  membersIsSupporterCount: Int! @goField(forceResolver: true)
 
   """The total amount of members in this club."""
   membersCount: Int!
@@ -3414,6 +3426,41 @@ func (ec *executionContext) _Club_viewerMember(ctx context.Context, field graphq
 	res := resTmp.(*types.ClubMember)
 	fc.Result = res
 	return ec.marshalOClubMember2ᚖoverdollᚋapplicationsᚋstellaᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Club_membersIsSupporterCount(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Club().MembersIsSupporterCount(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Club_membersCount(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
@@ -7976,6 +8023,26 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._Club_viewerMember(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "membersIsSupporterCount":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Club_membersIsSupporterCount(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 

@@ -26,7 +26,7 @@ func UnSuspendClub(ctx workflow.Context, input UnSuspendClubInput) error {
 	// suspend the club + create the log
 	if err := workflow.ExecuteActivity(ctx, a.UnSuspendClub,
 		activities.UnSuspendClubInput{
-			SuspensionLogId: *uniqueId,
+			SuspensionLogId: uniqueId,
 			ClubId:          input.ClubId,
 			AccountId:       input.AccountId,
 		},

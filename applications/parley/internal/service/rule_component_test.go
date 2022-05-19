@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"github.com/bxcodec/faker/v3"
+	"overdoll/libraries/uuid"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -45,8 +46,10 @@ type UpdateRuleDeprecated struct {
 
 func TestCreateRule_and_update(t *testing.T) {
 	t.Parallel()
+	accountId := uuid.New().String()
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	mockAccountStaff(t, accountId)
+	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	fake := TestRule{}
 	err := faker.FakeData(&fake)

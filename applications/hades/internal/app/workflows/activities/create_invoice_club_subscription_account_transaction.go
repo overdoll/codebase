@@ -4,18 +4,20 @@ import (
 	"context"
 	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/money"
 	"time"
 )
 
 type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
+	Id                                 string
 	AccountId                          string
-	TransactionId                      string
+	CCBillTransactionId                string
 	AccountClubSupporterSubscriptionId string
 
 	Timestamp time.Time
 
-	Currency string
-	Amount   int64
+	Currency money.Currency
+	Amount   uint64
 
 	BillingDate     time.Time
 	NextBillingDate time.Time
@@ -28,8 +30,14 @@ type CreateInvoiceClubSubscriptionAccountTransactionInput struct {
 
 func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context.Context, input CreateInvoiceClubSubscriptionAccountTransactionInput) error {
 
-	// get ccbill subscription ID so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
-	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, input.AccountClubSupporterSubscriptionId)
+	subscription, err := h.billing.GetAccountClubSupporterSubscriptionByIdOperator(ctx, input.AccountClubSupporterSubscriptionId)
+
+	if err != nil {
+		return err
+	}
+
+	// get ccbill subscription ID, so we can "fill in the blanks" about what billing address + contact was actually charged for the invoice
+	ccbillSubscription, err := h.billing.GetCCBillSubscriptionDetailsByIdOperator(ctx, *subscription.CCBillSubscriptionId())
 
 	if err != nil {
 		return err
@@ -50,8 +58,10 @@ func (h *Activities) CreateInvoiceClubSubscriptionAccountTransaction(ctx context
 
 	transaction, err := billing.NewInvoicePaymentClubSubscriptionAccountTransaction(
 		input.AccountId,
-		input.TransactionId,
+		input.Id,
 		input.AccountClubSupporterSubscriptionId,
+		input.CCBillTransactionId,
+		ccbillSubscription.CCBillSubscriptionId(),
 		input.Timestamp,
 		input.BillingDate,
 		input.NextBillingDate,

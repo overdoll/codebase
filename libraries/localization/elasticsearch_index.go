@@ -1,6 +1,6 @@
 package localization
 
-// elasticsearch index with language mappings
+// ESIndex elasticsearch index with language mappings
 const ESIndex = `
 {
 	"properties": {

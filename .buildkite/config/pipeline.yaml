@@ -40,3 +40,5 @@ steps:
         PAXUM_FROM_EMAIL: payer@domain.com
         PAXUM_SANDBOX: "true"
         PAXUM_SHARED_SECRET: "1234567890"
+        TEMPORAL_ENCRYPTION_KEY: AES256Key-32Characters1234567890
+

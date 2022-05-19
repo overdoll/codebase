@@ -42,7 +42,12 @@ type TestCancellationReason struct {
 func TestCreateCancellationReason(t *testing.T) {
 	t.Parallel()
 
-	client := getGraphqlClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	fake := TestCancellationReason{}
 	err := faker.FakeData(&fake)

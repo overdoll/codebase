@@ -229,6 +229,8 @@ type AccountTransaction struct {
 	//
 	// A positive integer representing the currency in the smallest currency unit.
 	Amount int `json:"amount"`
+	// The total amount refunded, if any.
+	TotalRefunded int `json:"totalRefunded"`
 	// The currency voided in.
 	Currency graphql1.Currency `json:"currency"`
 	// When the billing occurred.
@@ -238,7 +240,7 @@ type AccountTransaction struct {
 	// The payment method linked to this transaction.
 	PaymentMethod *PaymentMethod `json:"paymentMethod"`
 	// When this transaction occurred.
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 	// A ccbill transaction, if this transaction originated from ccbill.
 	CcbillTransaction *CCBillTransaction `json:"ccbillTransaction"`
 	// The subscription linked to this transaction, if it's a club supporter subscription.
@@ -270,7 +272,7 @@ type AccountTransactionEvent struct {
 	// The reason for this event.
 	Reason string `json:"reason"`
 	// When this event occurred.
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // Become club supporter with saved payment method.
@@ -347,6 +349,8 @@ type CCBillSubscriptionDetails struct {
 	AccountingCurrency       graphql1.Currency `json:"accountingCurrency"`
 	// Whether or not this is recurring, or a one-time charge.
 	IsRecurring bool `json:"isRecurring"`
+	// Whether or not this subscription was a duplicate.
+	IsDuplicate bool `json:"isDuplicate"`
 	// The amount of rebills that occurred.
 	TimesRebilled int `json:"timesRebilled"`
 	// The amount of chargebacks issued.
@@ -458,12 +462,26 @@ type Card struct {
 type Club struct {
 	// A supporter subscription price for this club.
 	SupporterSubscriptionPrice *LocalizedPricingPoint `json:"supporterSubscriptionPrice"`
+	// Club supporter subscriptions linked to this club.
+	SupporterSubscriptions *AccountClubSupporterSubscriptionConnection `json:"supporterSubscriptions"`
 	// Month-by-month transaction metrics of this club.
 	TransactionMetrics *ClubTransactionMetricConnection `json:"transactionMetrics"`
 	ID                 relay.ID                         `json:"id"`
 }
 
 func (Club) IsEntity() {}
+
+type ClubMember struct {
+	// The subscription linked to this club member.
+	//
+	// Note that an account can have multiple subscriptions for the same club, due to the fact that we keep expired subscriptions.
+	//
+	// So this will just grab the most recent active subscription for this club.
+	ClubSupporterSubscription AccountClubSupporterSubscription `json:"clubSupporterSubscription"`
+	ID                        relay.ID                         `json:"id"`
+}
+
+func (ClubMember) IsEntity() {}
 
 type ClubTransactionMetric struct {
 	// The month that this metric represents for this club.

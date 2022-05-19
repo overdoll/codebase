@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type AccountTransactionHistoryFilters struct {
+type AccountTransactionsFilters struct {
 	accountId                          *string
 	accountClubSupporterSubscriptionId *string
 	from                               *time.Time
@@ -12,7 +12,7 @@ type AccountTransactionHistoryFilters struct {
 	transaction                        *Transaction
 }
 
-func NewAccountTransactionHistoryFilters(accountId, accountClubSupporterSubscriptionId *string, from *time.Time, to *time.Time, transaction *string) (*AccountTransactionHistoryFilters, error) {
+func NewAccountTransactionsFilters(accountId, accountClubSupporterSubscriptionId *string, from *time.Time, to *time.Time, transaction *string) (*AccountTransactionsFilters, error) {
 
 	var trans *Transaction
 
@@ -24,7 +24,7 @@ func NewAccountTransactionHistoryFilters(accountId, accountClubSupporterSubscrip
 		trans = &t
 	}
 
-	return &AccountTransactionHistoryFilters{
+	return &AccountTransactionsFilters{
 		accountId:                          accountId,
 		accountClubSupporterSubscriptionId: accountClubSupporterSubscriptionId,
 		from:                               from,
@@ -33,22 +33,22 @@ func NewAccountTransactionHistoryFilters(accountId, accountClubSupporterSubscrip
 	}, nil
 }
 
-func (e *AccountTransactionHistoryFilters) AccountId() *string {
+func (e *AccountTransactionsFilters) AccountId() *string {
 	return e.accountId
 }
 
-func (e *AccountTransactionHistoryFilters) AccountClubSupporterSubscriptionId() *string {
+func (e *AccountTransactionsFilters) AccountClubSupporterSubscriptionId() *string {
 	return e.accountClubSupporterSubscriptionId
 }
 
-func (e *AccountTransactionHistoryFilters) From() *time.Time {
+func (e *AccountTransactionsFilters) From() *time.Time {
 	return e.from
 }
 
-func (e *AccountTransactionHistoryFilters) To() *time.Time {
+func (e *AccountTransactionsFilters) To() *time.Time {
 	return e.to
 }
 
-func (e *AccountTransactionHistoryFilters) TransactionType() *Transaction {
+func (e *AccountTransactionsFilters) TransactionType() *Transaction {
 	return e.transaction
 }

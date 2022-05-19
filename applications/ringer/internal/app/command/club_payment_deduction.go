@@ -12,7 +12,7 @@ type ClubPaymentDeduction struct {
 	AccountId                   string
 	ClubId                      string
 	AccountTransactionId        string
-	Amount                      int64
+	Amount                      uint64
 	Currency                    string
 	Timestamp                   time.Time
 	IsClubSupporterSubscription bool

@@ -10,7 +10,7 @@ type AppendToDepositRequestInput struct {
 	PayoutId  string
 	DepositId string
 	Currency  money.Currency
-	Amount    int64
+	Amount    uint64
 }
 
 func (h *Activities) AppendToDepositRequest(ctx context.Context, input AppendToDepositRequestInput) error {

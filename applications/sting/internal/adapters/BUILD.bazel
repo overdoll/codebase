@@ -37,6 +37,7 @@ go_library(
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/scan",
+        "//libraries/support",
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_olivere_elastic_v7//:elastic",
@@ -45,13 +46,19 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
 go_test(
     name = "adapters_test",
     srcs = [
+        "post_audience_repository_test.go",
+        "post_category_repository_test.go",
+        "post_character_repository_test.go",
         "post_elasticsearch_repository_test.go",
+        "post_repository_test.go",
+        "post_series_repository_test.go",
         "repository_test.go",
     ],
     data = ["//applications/sting:config.toml"],
@@ -63,6 +70,8 @@ go_test(
         "//libraries/paging",
         "//libraries/testing_tools",
         "//libraries/uuid",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_stretchr_testify//require",
     ],
 )

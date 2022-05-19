@@ -239,14 +239,14 @@ type EnrollAccountMultiFactorTotpPayload {
   """Validation for enrolling TOTP"""
   validation: EnrollAccountMultiFactorTotpValidation
 
-  """TOTP that belongs to this account now"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was enrolled."""
+  account: Account
 }
 
 """Payload for disabling account multi factor"""
 type DisableAccountMultiFactorPayload {
-  """TOTP that was removed from this account, if it was removed"""
-  accountMultiFactorTotpEnabled: Boolean
+  """The account that was disabled."""
+  account: Account
 }
 
 """Validation for confirming account email"""

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"log"
 	"os"
@@ -25,10 +24,6 @@ import (
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
-)
-
-var (
-	temporalClientMock *mocks.Client
 )
 
 const EvaHttpAddr = ":7777"
@@ -214,16 +209,15 @@ func convertAccountIdToRelayId(accountId string) relay.ID {
 }
 
 func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {
-	token, secret, err := service.GetAuthTokenAndSecretFromEmail(email)
+	token, secret, err := GetAuthTokenAndSecretFromEmail(email)
 	require.NoError(t, err)
 	return token, secret
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -261,14 +255,13 @@ func getGrpcClient(t *testing.T) (eva.EvaClient, context.Context) {
 }
 
 func startService() bool {
-	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/eva")
 
-	app, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
+	mockServices(app)
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(EvaHttpAddr, srv, func() {})
 
@@ -277,7 +270,7 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(EvaGrpcAddr, func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
@@ -293,7 +286,6 @@ func startService() bool {
 }
 
 func TestMain(m *testing.M) {
-
 	if !startService() {
 		os.Exit(1)
 	}

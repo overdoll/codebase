@@ -1,6 +1,10 @@
 package event
 
-import "context"
+import (
+	"context"
+	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/principal"
+)
 
 type Repository interface {
 	CCBillUpSaleSuccess(ctx context.Context, payload []byte) error
@@ -15,5 +19,6 @@ type Repository interface {
 	CCBillBillingDateChange(ctx context.Context, payload []byte) error
 	CCBillCustomerDataUpdate(ctx context.Context, payload []byte) error
 	CCBillRenewalFailure(ctx context.Context, payload []byte) error
-	CancelActiveSupporterSubscriptionsForClub(ctx context.Context, clubId string) error
+	CancelActiveSupporterSubscriptionsForClub(ctx context.Context, requester *principal.Principal, clubId string) error
+	CancelAccountClubSupporterSubscription(ctx context.Context, requester *principal.Principal, subscription *billing.AccountClubSupporterSubscription, cancellationReason *billing.CancellationReason) error
 }

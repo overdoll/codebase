@@ -421,8 +421,17 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 
 func (a *Account) AssignArtistRole(requester *principal.Principal) error {
 
-	if err := a.assignRoleCheck(requester); err != nil {
-		return err
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
+
+	// doesn't belong to account
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
 	}
 
 	if a.IsArtist() {

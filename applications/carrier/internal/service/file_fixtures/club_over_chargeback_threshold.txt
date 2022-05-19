@@ -1,0 +1,22 @@
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+---------------------------------------------------------------------------------------------
+Club Over Chargeback Threshold/h2>
+
+The club test a club (https://ci.overdoll.dev/test-club) has reached the chargeback threshold.
+
+Current chargeback ratio: 0.005000
+
+---------------------------------------------------------------------------------------------
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )
