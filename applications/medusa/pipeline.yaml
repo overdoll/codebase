@@ -1,30 +1,26 @@
-steps:
+frontend_steps:
   build:
     commands:
-      - bazel build //applications/medusa:packages
-      - npm run locale:compile
-      - npm run check:tsc
-      - npm run check:eslint
-    targets:
-      - //applications/medusa:bundle
+      - yarn run locale:compile
+      - yarn run check:tsc
+      - yarn run check:eslint
 
   unit_test:
     coverage:
       - name: medusa.unit
         paths:
-          - ./applications/medusa/unit/coverage.dat
-    targets:
-      - //applications/medusa:unit
+          - ./applications/medusa/coverage/coverage.dat
+    commands:
+      - yarn run jest
 
   push_image:
-    targets:
-      - //applications/medusa:publish-testing
+    commands:
+      - docker push -xxxx
 
   e2e_test:
     commands:
-      # compile localization files, push queries
-      - npm run locale:compile
-      - npm run push-all-queries
+      - yarn run locale:compile
+      - yarn run push-all-queries
     coverage:
       - name: medusa.e2e
         paths:
@@ -39,10 +35,3 @@ steps:
     artifacts:
       - cypress/**/*
       - cypress/*
-
-  publish_image:
-    commands:
-      # compile localization files
-      - npm run locale:compile
-    targets:
-      - //applications/medusa:publish

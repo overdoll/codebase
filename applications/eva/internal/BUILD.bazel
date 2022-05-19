@@ -51,20 +51,10 @@ go_image(
 )
 
 container_push(
-    name = "publish-testing",
-    format = "Docker",
-    image = ":image",
-    registry = "$(CONTAINER_REGISTRY)",
-    repository = "eva/dev",
-    tag = "$(CONTAINER_TAG)",
-)
-
-container_push(
     name = "publish",
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "eva",
-    skip_unchanged_digest = True,
+    repository = "eva/dev",
     tag = "$(CONTAINER_TAG)",
 )

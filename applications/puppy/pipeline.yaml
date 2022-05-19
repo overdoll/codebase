@@ -15,7 +15,7 @@ steps:
 
   push_image:
     targets:
-      - //applications/puppy/internal:publish-testing
+      - //applications/puppy/internal:publish
 
   integration_test:
     coverage:
@@ -37,7 +37,3 @@ steps:
       - host: puppy
         port: 8000
         priority: 0
-
-  publish_image:
-    targets:
-      - //applications/puppy/internal:publish

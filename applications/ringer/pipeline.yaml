@@ -15,7 +15,7 @@ steps:
 
   push_image:
     targets:
-      - //applications/ringer/internal:publish-testing
+      - //applications/ringer/internal:publish
 
   integration_test:
     coverage:
@@ -37,7 +37,3 @@ steps:
       - host: ringer
         port: 8000
         priority: 0
-
-  publish_image:
-    targets:
-      - //applications/ringer/internal:publish

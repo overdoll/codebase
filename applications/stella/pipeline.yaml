@@ -15,7 +15,7 @@ steps:
 
   push_image:
     targets:
-      - //applications/stella/internal:publish-testing
+      - //applications/stella/internal:publish
 
   integration_test:
     coverage:
@@ -37,7 +37,3 @@ steps:
       - host: stella
         port: 8000
         priority: 0
-
-  publish_image:
-    targets:
-      - //applications/stella/internal:publish

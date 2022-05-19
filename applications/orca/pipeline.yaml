@@ -1,11 +1,8 @@
-steps:
-  build:
-    targets:
-      - //applications/orca:internal
-
+services_steps:
   push_image:
     targets:
-      - //applications/orca:publish-testing
+      - //applications/orca:publish
+
   e2e_test:
     setup:
       dockerfile:
@@ -14,7 +11,3 @@ steps:
       - host: orca
         port: 8000
         priority: 0
-
-  publish_image:
-    targets:
-      - //applications/orca:publish

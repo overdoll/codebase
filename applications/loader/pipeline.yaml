@@ -1,4 +1,4 @@
-steps:
+services_steps:
   build:
     targets:
       - //applications/loader/internal:internal
@@ -15,7 +15,7 @@ steps:
 
   push_image:
     targets:
-      - //applications/loader/internal:publish-testing
+      - //applications/loader/internal:publish
 
   integration_test:
     coverage:
@@ -38,7 +38,3 @@ steps:
       - host: loader
         port: 8000
         priority: 0
-
-  publish_image:
-    targets:
-      - //applications/loader/internal:publish

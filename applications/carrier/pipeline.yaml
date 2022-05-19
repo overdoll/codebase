@@ -1,4 +1,4 @@
-steps:
+services_steps:
   build:
     targets:
       - //applications/carrier/internal:internal
@@ -15,7 +15,7 @@ steps:
 
   push_image:
     targets:
-      - //applications/carrier/internal:publish-testing
+      - //applications/carrier/internal:publish
 
   integration_test:
     setup:
@@ -36,7 +36,3 @@ steps:
     setup:
       dockerfile:
         - ./applications/carrier/docker-compose.ci.yaml
-
-  publish_image:
-    targets:
-      - //applications/carrier/internal:publish
