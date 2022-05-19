@@ -13,10 +13,6 @@ services_steps:
       - //applications/parley/internal/domain/...
       - //applications/parley/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/parley/internal:publish
-
   integration_test:
     coverage:
       - name: parley.integration
@@ -28,6 +24,10 @@ services_steps:
     targets:
       - //applications/parley/internal/adapters/...
       - //applications/parley/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/parley/internal:publish
 
   e2e_test:
     setup:

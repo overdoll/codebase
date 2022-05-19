@@ -1,7 +1,6 @@
 frontend_steps:
-  build:
+  check:
     commands:
-      - yarn run locale:compile
       - yarn run check:tsc
       - yarn run check:eslint
 
@@ -15,12 +14,13 @@ frontend_steps:
 
   push_image:
     commands:
-      - docker push -xxxx
+      - yarn install --frozen-lockfile
+      - docker build -t ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT} .
+      - docker push ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT}
 
   e2e_test:
     commands:
-      - yarn run locale:compile
-      - yarn run push-all-queries
+      - push queries script here!
     coverage:
       - name: medusa.e2e
         paths:

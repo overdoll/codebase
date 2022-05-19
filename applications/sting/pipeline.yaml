@@ -13,10 +13,6 @@ steps:
       - //applications/sting/internal/domain/...
       - //applications/sting/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/sting/internal:publish
-
   integration_test:
     coverage:
       - name: sting.integration
@@ -28,6 +24,10 @@ steps:
     targets:
       - //applications/sting/internal/adapters/...
       - //applications/sting/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/sting/internal:publish
 
   e2e_test:
     setup:

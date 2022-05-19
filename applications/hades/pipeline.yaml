@@ -13,10 +13,6 @@ services_steps:
       - //applications/hades/internal/domain/...
       - //applications/hades/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/hades/internal:publish
-
   integration_test:
     coverage:
       - name: hades.integration
@@ -28,6 +24,10 @@ services_steps:
     targets:
       - //applications/hades/internal/adapters/...
       - //applications/hades/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/hades/internal:publish
 
   e2e_test:
     setup:

@@ -13,10 +13,6 @@ steps:
       - //applications/ringer/internal/domain/...
       - //applications/ringer/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/ringer/internal:publish
-
   integration_test:
     coverage:
       - name: ringer.integration
@@ -28,6 +24,10 @@ steps:
     targets:
       - //applications/ringer/internal/adapters/...
       - //applications/ringer/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/ringer/internal:publish
 
   e2e_test:
     setup:

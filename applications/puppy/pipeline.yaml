@@ -13,10 +13,6 @@ steps:
       - //applications/puppy/internal/domain/...
       - //applications/puppy/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/puppy/internal:publish
-
   integration_test:
     coverage:
       - name: puppy.integration
@@ -28,6 +24,10 @@ steps:
     targets:
       - //applications/puppy/internal/adapters/...
       - //applications/puppy/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/puppy/internal:publish
 
   e2e_test:
     setup:

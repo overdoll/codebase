@@ -13,10 +13,6 @@ services_steps:
       - //applications/loader/internal/domain/...
       - //applications/loader/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/loader/internal:publish
-
   integration_test:
     coverage:
       - name: loader.integration
@@ -28,6 +24,10 @@ services_steps:
     targets:
       - //applications/loader/internal/adapters/...
       - //applications/loader/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/loader/internal:publish
 
   e2e_test:
     setup:

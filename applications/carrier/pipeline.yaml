@@ -13,10 +13,6 @@ services_steps:
       - //applications/carrier/internal/domain/...
       - //applications/carrier/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/carrier/internal:publish
-
   integration_test:
     setup:
       dockerfile:
@@ -31,6 +27,10 @@ services_steps:
     targets:
       - //applications/carrier/internal/adapters/...
       - //applications/carrier/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/carrier/internal:publish
 
   e2e_test:
     setup:

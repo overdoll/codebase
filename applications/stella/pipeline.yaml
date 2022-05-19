@@ -13,10 +13,6 @@ steps:
       - //applications/stella/internal/domain/...
       - //applications/stella/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/stella/internal:publish
-
   integration_test:
     coverage:
       - name: stella.integration
@@ -28,6 +24,10 @@ steps:
     targets:
       - //applications/stella/internal/adapters/...
       - //applications/stella/internal/service/...
+
+  push_image:
+    targets:
+      - //applications/stella/internal:publish
 
   e2e_test:
     setup:
