@@ -245,7 +245,7 @@ function matchQueryMiddleware (req, res, next): void {
       if (query != null) {
         req.body.query = query
       } else {
-        res.status(200).send({
+        res.status(400).send({
           data: null,
           errors: [
             {
