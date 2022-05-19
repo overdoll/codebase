@@ -23,20 +23,20 @@ type ClubPayment struct {
 
 	currency money.Currency
 
-	baseAmount        int64
-	platformFeeAmount int64
-	finalAmount       int64
+	baseAmount        uint64
+	platformFeeAmount uint64
+	finalAmount       uint64
 
 	isDeduction              bool
 	deductionSourcePaymentId *string
 
-	timestamp      time.Time
+	createdAt      time.Time
 	settlementDate time.Time
 
 	clubPayoutIds []string
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPayment, id, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 	// get percent of original platform fee
 	platformFee, err := NewClubPlatformFeeFromAmountAndFinalAmount(destinationClubId, existingPayment.baseAmount, existingPayment.finalAmount)
 
@@ -47,7 +47,7 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
 
-	settlementDate := timestamp.Add(time.Minute)
+	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 	existingId := existingPayment.id
 
 	return &ClubPayment{
@@ -63,17 +63,17 @@ func NewClubSupporterSubscriptionPendingPaymentDeduction(existingPayment *ClubPa
 		finalAmount:              amt,
 		isDeduction:              true,
 		deductionSourcePaymentId: &existingId,
-		timestamp:                timestamp,
+		createdAt:                timestamp,
 		settlementDate:           settlementDate,
 		clubPayoutIds:            nil,
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount int64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
+func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatformFee, id, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*ClubPayment, error) {
 
 	amt := platformFee.CalculateAmountAfterFee(amount)
 	fee := platformFee.CalculateFee(amount)
-	settlementDate := timestamp.Add(time.Minute)
+	settlementDate := timestamp.Add(time.Hour * 24 * 14)
 
 	return &ClubPayment{
 		id:                       id,
@@ -88,8 +88,9 @@ func NewClubSupporterSubscriptionPendingPaymentDeposit(platformFee *ClubPlatform
 		finalAmount:              amt,
 		isDeduction:              false,
 		deductionSourcePaymentId: nil,
-		timestamp:                timestamp,
+		createdAt:                timestamp,
 		settlementDate:           settlementDate,
+		clubPayoutIds:            []string{},
 	}, nil
 }
 
@@ -117,7 +118,7 @@ func (p *ClubPayment) DestinationClubId() string {
 	return p.destinationClubId
 }
 
-func (p *ClubPayment) BaseAmount() int64 {
+func (p *ClubPayment) BaseAmount() uint64 {
 	return p.baseAmount
 }
 
@@ -125,11 +126,11 @@ func (p *ClubPayment) Currency() money.Currency {
 	return p.currency
 }
 
-func (p *ClubPayment) PlatformFeeAmount() int64 {
+func (p *ClubPayment) PlatformFeeAmount() uint64 {
 	return p.platformFeeAmount
 }
 
-func (p *ClubPayment) FinalAmount() int64 {
+func (p *ClubPayment) FinalAmount() uint64 {
 	return p.finalAmount
 }
 
@@ -163,8 +164,8 @@ func (p *ClubPayment) DeductionSourcePaymentId() *string {
 	return p.deductionSourcePaymentId
 }
 
-func (p *ClubPayment) Timestamp() time.Time {
-	return p.timestamp
+func (p *ClubPayment) CreatedAt() time.Time {
+	return p.createdAt
 }
 
 func (p *ClubPayment) SettlementDate() time.Time {
@@ -202,14 +203,14 @@ func UnmarshalClubPaymentFromDatabase(
 
 	currency string,
 
-	baseAmount int64,
-	platformFeeAmount int64,
-	finalAmount int64,
+	baseAmount uint64,
+	platformFeeAmount uint64,
+	finalAmount uint64,
 
 	isDeduction bool,
 	deductionSourcePaymentId *string,
 
-	timestamp time.Time,
+	createdAt time.Time,
 	settlementDate time.Time,
 
 	clubPayoutIds []string,
@@ -230,7 +231,7 @@ func UnmarshalClubPaymentFromDatabase(
 		finalAmount:              finalAmount,
 		isDeduction:              isDeduction,
 		deductionSourcePaymentId: deductionSourcePaymentId,
-		timestamp:                timestamp,
+		createdAt:                createdAt,
 		settlementDate:           settlementDate,
 		clubPayoutIds:            clubPayoutIds,
 	}

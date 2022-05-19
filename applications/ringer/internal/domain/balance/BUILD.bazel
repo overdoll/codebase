@@ -11,5 +11,6 @@ go_library(
     deps = [
         "//libraries/money",
         "//libraries/principal",
+        "@com_github_pkg_errors//:errors",
     ],
 )

@@ -80,3 +80,9 @@ func (r *Resolver) CancellationReason() CancellationReasonResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) ClubMember() ClubMemberResolver {
+	return &resolvers.ClubMemberResolver{
+		App: r.app,
+	}
+}

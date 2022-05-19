@@ -25,12 +25,6 @@ steps:
       - name: stella.component
         paths:
           - ./applications/stella/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/stella/docker-compose.ci.yaml
-    network_dependencies:
-      - host: stella
-        port: 8000
     targets:
       - //applications/stella/internal/adapters/...
       - //applications/stella/internal/service/...
@@ -38,7 +32,6 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/stella/docker-compose.ci.yaml
         - ./applications/stella/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: stella

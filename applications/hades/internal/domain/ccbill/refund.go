@@ -9,12 +9,12 @@ var (
 )
 
 type Refund struct {
-	amount        *int64
+	amount        *uint64
 	currency      int
 	transactionId string
 }
 
-func NewRefundWithCustomAmount(transactionId string, customAmount int64, actualAmount int64, currency string) (*Refund, error) {
+func NewRefundWithCustomAmount(transactionId string, customAmount uint64, actualAmount uint64, currency string) (*Refund, error) {
 
 	if customAmount > actualAmount {
 		return nil, ErrInvalidRefundAmount

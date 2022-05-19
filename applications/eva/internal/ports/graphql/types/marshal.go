@@ -6,7 +6,6 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/confirm_email"
 	"overdoll/applications/eva/internal/domain/location"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/graphql"
@@ -277,7 +276,7 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor
 	return conn
 }
 
-func MarshalRecoveryCodesToGraphql(ctx context.Context, codes []*multi_factor.RecoveryCode) []*AccountMultiFactorRecoveryCode {
+func MarshalRecoveryCodesToGraphql(ctx context.Context, codes []*account.RecoveryCode) []*AccountMultiFactorRecoveryCode {
 
 	// sort so the order is consistent
 	sort.SliceStable(codes, func(i, j int) bool {

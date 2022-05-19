@@ -24,7 +24,6 @@ go_library(
     deps = [
         "//applications/eva/internal/app/command",
         "//applications/eva/internal/domain/account",
-        "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
     ],
 )

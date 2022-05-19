@@ -6,7 +6,6 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -37,10 +36,6 @@ const RingerGrpcAddr = "localhost:7278"
 const RingerGrpcClientAddr = "localhost:7278"
 
 var (
-	temporalClientMock *mocks.Client
-)
-
-var (
 	delayedCallback = time.Minute
 )
 
@@ -62,11 +57,10 @@ func getGrpcClient(t *testing.T) ringer.RingerClient {
 	return ringer.NewRingerClient(conn)
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -89,12 +83,10 @@ func convertAccountIdToRelayId(ruleId string) relay.ID {
 
 func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string, count int) {
 
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-
 	for i := 0; i < count; i++ {
 
 		env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-		env.RegisterActivity(newApp.Activities)
+		env.RegisterActivity(application.App.Activities)
 
 		seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
 	}
@@ -122,26 +114,18 @@ func seedPaymentWithEnv(t *testing.T, env *testsuite.TestWorkflowEnvironment, ac
 }
 
 func seedPayment(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string) {
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)
-}
-
-func cleanupDepositRequests(t *testing.T) {
-	session := bootstrap.InitializeDatabaseSession()
-	err := session.Query("TRUNCATE deposit_requests", nil).ExecRelease()
-	require.NoError(t, err)
-	err = session.Query("TRUNCATE deposit_requests_by_month", nil).ExecRelease()
-	require.NoError(t, err)
 }
 
 func setupPayoutMethodForAccount(t *testing.T, accountId, email string) {
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
 
-	principal := testing_tools.NewArtistPrincipal(accountId)
+	principal := testing_tools.NewArtistSecurePrincipal(accountId)
 
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
-	_, err := detailsRepo.UpdateAccountDetails(context.Background(), testing_tools.NewStaffPrincipal(accountId), accountId, func(id *details.AccountDetails) error {
+	_, err := detailsRepo.UpdateAccountDetails(context.Background(), principal, accountId, func(id *details.AccountDetails) error {
 		id.UpdateFirstName(principal, "test")
 		id.UpdateLastName(principal, "test")
 		id.UpdateCountry(principal, "USA")
@@ -205,11 +189,9 @@ func refreshPaymentsIndex(t *testing.T) {
 func startService() bool {
 	config.Read("applications/ringer")
 
-	app, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
-
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(RingerHttpAddr, srv, func() {})
 
@@ -218,7 +200,7 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(RingerGrpcAddr, func(server *grpc.Server) {
 		ringer.RegisterRingerServer(server, s)
@@ -230,11 +212,12 @@ func startService() bool {
 		log.Println("Timed out waiting for eva GRPC to come up")
 	}
 
+	mockServices(app)
+
 	return true
 }
 
 func TestMain(m *testing.M) {
-
 	if !startService() {
 		os.Exit(1)
 	}

@@ -24,13 +24,21 @@ func NewLeaveClubHandler(cr club.Repository, event event.Repository) LeaveClubHa
 
 func (h LeaveClubHandler) Handle(ctx context.Context, cmd LeaveClub) error {
 
-	if err := h.cr.DeleteClubMember(ctx, cmd.Principal, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
+	mclub, err := h.cr.GetClubById(ctx, cmd.ClubId)
+
+	if err != nil {
 		return err
 	}
 
-	if err := h.event.RemoveClubMember(ctx, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
+	clb, err := h.cr.GetClubMemberById(ctx, cmd.Principal, cmd.ClubId, cmd.Principal.AccountId())
+
+	if err != nil {
 		return err
 	}
 
-	return nil
+	if err := clb.CanRevokeClubMembership(cmd.Principal, mclub); err != nil {
+		return err
+	}
+
+	return h.event.RemoveClubMember(ctx, clb)
 }

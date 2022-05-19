@@ -1,0 +1,25 @@
+[
+  {
+    "id": "25WqmS7kgwotdDaxQDEa6I4CjuO",
+    "audience_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
+    "category_ids": [
+      "1q7MJ9eXjRsgWJNIbOMJ9qzg2S3",
+      "1q7MJFMVgDPo4mFjsfNag6rRwRy",
+      "1q7MJFk9Wof1qyQQORKBrJxGFhJ"
+    ],
+    "character_ids": [
+      "1q7MJfxuQNRslgmHqOdj35SWgrP"
+    ],
+    "club_id": "25WqY2AZfmlykwqKhQagxmI9gtd",
+    "content_resource_ids": [
+      "ef20e0221f1532267a9c7062152ff879"
+    ],
+    "contributor_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "created_at": "2022-02-23 21:55:48.437",
+    "posted_at": "2022-02-23 21:56:05.930",
+    "series_ids": [],
+    "state": "PUBLISHED",
+    "likes_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b",
+    "likes": 0
+  }
+]

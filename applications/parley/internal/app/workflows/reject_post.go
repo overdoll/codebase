@@ -76,7 +76,6 @@ func RejectPost(ctx workflow.Context, input RejectPostInput) error {
 		}
 
 	} else {
-
 		// otherwise, just reject this post
 		if err := workflow.ExecuteActivity(ctx, a.RejectPost,
 			activities.RejectPostInput{

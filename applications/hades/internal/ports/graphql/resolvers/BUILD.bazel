@@ -11,6 +11,7 @@ go_library(
         "cancellation_reason.go",
         "ccbill_transaction_details.go",
         "club.go",
+        "club_member.go",
     ],
     importpath = "overdoll/applications/hades/internal/ports/graphql/resolvers",
     visibility = ["//applications/hades:__subpackages__"],

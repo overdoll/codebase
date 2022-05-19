@@ -13,9 +13,6 @@ type Application struct {
 }
 
 type Commands struct {
-	DeleteAndRecreateClubsIndex       command.DeleteAndRecreateClubsIndexHandler
-	DeleteAndRecreateClubMembersIndex command.DeleteAndRecreateClubMembersIndexHandler
-
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
 	UpdateClubThumbnail           command.UpdateClubThumbnailHandler
@@ -64,4 +61,6 @@ type Queries struct {
 	CanDeleteAccountData query.CanDeleteAccountDataHandler
 
 	HasNonTerminatedClubs query.HasNonTerminatedClubsHandler
+
+	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 }

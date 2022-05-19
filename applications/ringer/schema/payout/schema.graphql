@@ -64,7 +64,7 @@ type ClubPayoutEvent {
   error: String!
 
   """When this event occurred."""
-  timestamp: Time!
+  createdAt: Time!
 }
 
 """

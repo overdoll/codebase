@@ -24,6 +24,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.PutPostIntoModeratorQueue)
 	w.RegisterWorkflow(workflows.RejectPost)
 	w.RegisterWorkflow(workflows.RemovePost)
+	w.RegisterWorkflow(workflows.ReportPost)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

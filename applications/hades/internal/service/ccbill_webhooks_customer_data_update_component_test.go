@@ -21,7 +21,7 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillCustomerDataUpdate, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillCustomerDataUpdate, mock.Anything)
 
 	// run webhook - customer data update
 	runWebhookAction(t, "CustomerDataUpdate", map[string]string{
@@ -47,10 +47,11 @@ func TestBillingFlow_CustomerDataUpdate(t *testing.T) {
 		"timestamp":      "2022-02-24 20:21:37",
 	})
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)

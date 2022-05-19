@@ -184,7 +184,7 @@ func newFakeAccount(t *testing.T) *account.Account {
 	return usr
 }
 
-func newAccountRepository(t *testing.T) adapters.AccountRepository {
+func newAccountRepository(t *testing.T) adapters.AccountCassandraRepository {
 	session := bootstrap.InitializeDatabaseSession()
 
 	return adapters.NewAccountCassandraRedisRepository(session)

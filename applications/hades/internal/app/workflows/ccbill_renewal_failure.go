@@ -3,21 +3,16 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CCBillRenewalFailureInput struct {
-	TransactionId  string `json:"transactionId"`
-	SubscriptionId string `json:"subscriptionId"`
-	ClientAccnum   string `json:"clientAccnum"`
-	ClientSubacc   string `json:"clientSubacc"`
-	Timestamp      string `json:"timestamp"`
-	RenewalDate    string `json:"renewalDate"`
-	CardType       string `json:"cardType"`
-	PaymentType    string `json:"paymentType"`
-	NextRetryDate  string `json:"nextRetryDate"`
-	FailureReason  string `json:"failureReason"`
-	FailureCode    string `json:"failureCode"`
+	TransactionId  string
+	SubscriptionId string
+	Timestamp      time.Time
+	NextRetryDate  time.Time
+	FailureReason  string
+	FailureCode    string
 }
 
 func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput) error {
@@ -33,26 +28,14 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
-	}
-
-	nextRetryDate, err := ccbill.ParseCCBillDate(input.NextRetryDate)
-
-	if err != nil {
-		return err
-	}
-
 	// update to new billing date
 	if err := workflow.ExecuteActivity(ctx, a.UpdateAccountClubSupporterSubscriptionCCBillFailure,
 		activities.UpdateAccountClubSupporterSubscriptionCCBillFailureInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
-			Timestamp:                          timestamp,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
+			Timestamp:                          input.Timestamp,
 			CCBillErrorText:                    input.FailureReason,
 			CCBillErrorCode:                    input.FailureCode,
-			NextRetryDate:                      nextRetryDate,
+			NextRetryDate:                      input.NextRetryDate,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -61,7 +44,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 	// send failure notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionFailureNotification,
 		activities.SendAccountClubSupporterSubscriptionFailureNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

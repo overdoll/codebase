@@ -7,8 +7,8 @@ import (
 )
 
 type GenerateClubSupporterPaymentReceiptFromAccountTransaction struct {
-	Principal                   *principal.Principal
-	AccountTransactionHistoryId string
+	Principal            *principal.Principal
+	AccountTransactionId string
 }
 
 type GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler struct {
@@ -22,7 +22,7 @@ func NewGenerateClubSupporterPaymentReceiptFromAccountTransaction(br billing.Rep
 
 func (h GenerateClubSupporterPaymentReceiptFromAccountTransactionHandler) Handle(ctx context.Context, cmd GenerateClubSupporterPaymentReceiptFromAccountTransaction) (*billing.ClubSupporterReceipt, error) {
 
-	transaction, err := h.br.GetAccountTransactionById(ctx, cmd.Principal, cmd.AccountTransactionHistoryId)
+	transaction, err := h.br.GetAccountTransactionById(ctx, cmd.Principal, cmd.AccountTransactionId)
 
 	if err != nil {
 		return nil, err

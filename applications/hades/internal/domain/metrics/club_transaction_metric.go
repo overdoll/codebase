@@ -10,14 +10,14 @@ type ClubTransactionMetric struct {
 	clubId    string
 	timestamp gocql.UUID
 	id        string
-	amount    int64
+	amount    uint64
 	currency  money.Currency
 
 	isRefund     bool
 	isChargeback bool
 }
 
-func NewInitialTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount int64, currency money.Currency) (*ClubTransactionMetric, error) {
+func NewInitialTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount uint64, currency money.Currency) (*ClubTransactionMetric, error) {
 
 	if currency != money.USD {
 		return nil, errors.New("only USD currency supported for metrics")
@@ -34,7 +34,7 @@ func NewInitialTransactionMetric(clubId string, timestamp gocql.UUID, id string,
 	}, nil
 }
 
-func NewRefundTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount int64, currency money.Currency) (*ClubTransactionMetric, error) {
+func NewRefundTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount uint64, currency money.Currency) (*ClubTransactionMetric, error) {
 
 	if currency != money.USD {
 		return nil, errors.New("only USD currency supported for metrics")
@@ -51,7 +51,7 @@ func NewRefundTransactionMetric(clubId string, timestamp gocql.UUID, id string, 
 	}, nil
 }
 
-func NewChargebackTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount int64, currency money.Currency) (*ClubTransactionMetric, error) {
+func NewChargebackTransactionMetric(clubId string, timestamp gocql.UUID, id string, amount uint64, currency money.Currency) (*ClubTransactionMetric, error) {
 
 	if currency != money.USD {
 		return nil, errors.New("only USD currency supported for metrics")
@@ -80,7 +80,7 @@ func (m *ClubTransactionMetric) Id() string {
 	return m.id
 }
 
-func (m *ClubTransactionMetric) Amount() int64 {
+func (m *ClubTransactionMetric) Amount() uint64 {
 	return m.amount
 }
 

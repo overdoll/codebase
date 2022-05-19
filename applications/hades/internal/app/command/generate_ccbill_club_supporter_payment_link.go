@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"errors"
+	errors2 "github.com/pkg/errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/libraries/money"
@@ -22,11 +23,10 @@ type GenerateCCBillClubSupportPaymentLinkHandler struct {
 	br     billing.Repository
 	pr     billing.PricingRepository
 	stella StellaService
-	eva    EvaService
 }
 
-func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, stella StellaService, eva EvaService) GenerateCCBillClubSupportPaymentLinkHandler {
-	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, pr: pr, stella: stella, eva: eva}
+func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, stella StellaService) GenerateCCBillClubSupportPaymentLinkHandler {
+	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, pr: pr, stella: stella}
 }
 
 func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupportPaymentLink) (*ccbill.ClubSupporterPaymentLink, error) {
@@ -34,7 +34,7 @@ func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context,
 	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
-		return nil, err
+		return nil, errors2.Wrap(err, "failed to get club by id")
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination

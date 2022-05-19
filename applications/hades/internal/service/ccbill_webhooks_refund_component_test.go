@@ -37,7 +37,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRefund, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillRefund, mock.Anything)
 
 	// run webhook - cancellation
 	runWebhookAction(t, "Refund", map[string]string{
@@ -60,15 +60,13 @@ func TestBillingFlow_Refund(t *testing.T) {
 		"timestamp":              "2022-02-28 20:27:56",
 	})
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, clubId)
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
-
 	metrics := getClubTransactionMetrics(t, gqlClient, clubId)
 
 	require.Equal(t, 1, metrics.TotalTransactionsCount, "should have 1 transaction count")
@@ -93,10 +91,11 @@ func TestBillingFlow_Refund(t *testing.T) {
 
 	event := transaction.Events[0]
 
-	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-03-01 03:27:56 +0000 UTC", event.CreatedAt.String(), "correct timestamp")
 	require.Equal(t, 699, event.Amount, "correct amount")
 	require.Equal(t, graphql1.CurrencyUsd, event.Currency, "correct currency")
 	require.Equal(t, "Refunded through Data Link: subscriptionManagement.cgi", event.Reason, "correct reason")
+	require.Equal(t, 699, transaction.TotalRefunded, "total refunded is now maximum")
 
 	sDec, _ := base64.StdEncoding.DecodeString(event.ID.GetID())
 	eventId := relay.ID(sDec).GetID()
@@ -111,7 +110,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 	require.NoError(t, err, "no error looking up transaction")
 	require.NotNil(t, accountTransaction.AccountTransaction, "account transaction history should exist")
 
-	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.GenerateClubSupporterRefundReceiptFromAccountTransactionHistory, mock.Anything)
+	receiptWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubSupporterRefundReceiptFromAccountTransaction, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -119,16 +118,13 @@ func TestBillingFlow_Refund(t *testing.T) {
 		On("Get", mock.Anything, mock.Anything).
 		Return(nil)
 
-	temporalClientMock.
+	application.TemporalClient.
 		On("GetWorkflow", mock.Anything, "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				env = getWorkflowEnvironment(t)
-				receiptWorkflowExecution.FindAndExecuteWorkflow(t, env)
-				require.True(t, env.IsWorkflowCompleted())
-				require.NoError(t, env.GetWorkflowError())
+				receiptWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 			},
 		).
 		Return(flowRun)

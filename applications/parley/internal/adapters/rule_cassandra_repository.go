@@ -57,6 +57,7 @@ func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.
 
 	if err := r.session.
 		Query(rulesTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
@@ -82,9 +83,10 @@ func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cu
 
 	if err := builder.
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
-		Select(&dbRules); err != nil {
+		SelectRelease(&dbRules); err != nil {
 		return nil, fmt.Errorf("failed to get rules: %v", err)
 	}
 
@@ -116,9 +118,10 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 
 	if err := r.session.
 		Query(rulesTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&rules{Id: ruleId, Bucket: 0}).
-		Get(&ruleSingle); err != nil {
+		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, rule.ErrRuleNotFound
@@ -158,6 +161,7 @@ func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, 
 		Query(rulesTable.Update(
 			columns...,
 		)).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
@@ -181,5 +185,4 @@ func (r RuleCassandraRepository) UpdateRuleDescription(ctx context.Context, rule
 
 func (r RuleCassandraRepository) UpdateRuleInfraction(ctx context.Context, ruleId string, updateFn func(rule *rule.Rule) error) (*rule.Rule, error) {
 	return r.updateRule(ctx, ruleId, updateFn, []string{"infraction"})
-
 }

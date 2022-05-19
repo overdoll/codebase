@@ -5,4 +5,8 @@ go_library(
     srcs = ["repository.go"],
     importpath = "overdoll/applications/hades/internal/domain/event",
     visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/domain/billing",
+        "//libraries/principal",
+    ],
 )

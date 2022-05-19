@@ -5,6 +5,8 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"overdoll/applications/eva/internal/adapters/migrations"
+	"overdoll/applications/eva/internal/adapters/seeders"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -13,8 +15,8 @@ import (
 	"overdoll/applications/eva/internal/service"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
+	"overdoll/libraries/database"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,7 +27,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/eva")
 
-	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "grpc",
 		Run: RunGrpc,
@@ -48,11 +50,7 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
-
-	if os.Getenv("DISABLE_WORKER") == "" {
-		go RunWorker(cmd, args)
-	}
-
+	go RunWorker(cmd, args)
 	go RunGrpc(cmd, args)
 	RunHttp(cmd, args)
 }
@@ -65,7 +63,7 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.NewGrpcServer(&app)
+	s := ports.NewGrpcServer(app)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
@@ -78,7 +76,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv, cleanup := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(app)
 
 	defer cleanup()
 
@@ -93,7 +91,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewHttpServer(&app)
+	srv := ports.NewHttpServer(app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

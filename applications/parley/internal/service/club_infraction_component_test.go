@@ -30,9 +30,12 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	clubId := convertClubIdToRelayId(uuid.New().String())
 
-	client := getHttpClientWithAuthenticatedAccount(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.IssueClubInfraction, mock.Anything)
+	client := getHttpClientWithAuthenticatedAccount(t, accountId)
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.IssueClubInfraction, mock.Anything)
 
 	var issueClubInfraction IssueClubInfraction
 
@@ -46,10 +49,7 @@ func TestIssueClubManualInfraction_and_remove(t *testing.T) {
 
 	require.NoError(t, err, "no error issuing manual infraction")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "issue manual infraction correct")
-	require.NoError(t, env.GetWorkflowError(), "issue manual infraction no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 

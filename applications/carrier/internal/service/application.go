@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go/service/ses"
 	"os"
+	"overdoll/libraries/testing_tools/mocks"
 
 	"overdoll/applications/carrier/internal/adapters"
 	"overdoll/applications/carrier/internal/app"
@@ -12,7 +13,7 @@ import (
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -26,31 +27,37 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
-
-	bootstrap.NewBootstrap(ctx)
-
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-
-	return createApplication(ctx,
-			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-			// this makes testing easier because we can get reproducible tests with each run
-			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			StellaServiceMock{},
-		),
-		func() {
-			cleanup()
-		}
+type ComponentTestApplication struct {
+	App          *app.Application
+	EvaClient    *mocks.MockEvaClient
+	StellaClient *mocks.MockStellaClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) app.Application {
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+
+	evaClient := &mocks.MockEvaClient{}
+	stellaClient := &mocks.MockStellaClient{}
+
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewStellaGrpc(stellaClient),
+		),
+		StellaClient: stellaClient,
+		EvaClient:    evaClient,
+	}
+}
+
+func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) *app.Application {
 
 	awsSession := bootstrap.InitializeAWSSession()
 	client := ses.New(awsSession)
 
 	mailingRepo := adapters.NewMailingSESRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(mailingRepo, eva),
 			NewLoginToken:                             command.NewNewLoginTokenHandler(mailingRepo),
@@ -66,6 +73,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AccountDeleted:                            command.NewAccountDeletedHandler(mailingRepo),
 			ClubSuspended:                             command.NewClubSuspendedHandler(mailingRepo, eva, stella),
 			ClubOverChargebackThreshold:               command.NewClubOverChargebackThresholdHandler(mailingRepo, eva, stella),
+			ClubSupporterSubscriptionDuplicate:        command.NewClubSupporterSubscriptionDuplicateHandler(mailingRepo, eva, stella),
 		},
 		Queries: app.Queries{},
 	}

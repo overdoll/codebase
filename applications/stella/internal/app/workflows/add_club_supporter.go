@@ -22,8 +22,8 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 	var alreadyAMember bool
 
 	// adds the club member if it doesn't exist
-	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberIfNotExists,
-		activities.AddClubMemberIfNotExistsInput{
+	if err := workflow.ExecuteActivity(ctx, a.CheckIfAccountIsClubMember,
+		activities.CheckIfAccountIsClubMemberInput{
 			ClubId:    input.ClubId,
 			AccountId: input.AccountId,
 		},

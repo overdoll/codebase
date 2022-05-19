@@ -28,9 +28,9 @@ func CancelActiveSupporterSubscriptionsForClub(ctx workflow.Context, input Cance
 
 	// cancel all subscriptions 1 by 1
 	for _, id := range payload.SubscriptionIds {
-		if err := workflow.ExecuteActivity(ctx, a.CancelClubSupporterSubscription,
-			activities.CancelClubSupporterSubscriptionInput{
-				Id: id,
+		if err := workflow.ExecuteActivity(ctx, a.CancelAccountClubSupporterSubscription,
+			activities.CancelAccountClubSupporterSubscriptionInput{
+				AccountClubSupporterSubscriptionId: id,
 			},
 		).Get(ctx, nil); err != nil {
 			return err

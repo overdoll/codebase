@@ -14,6 +14,7 @@ import (
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -45,7 +46,7 @@ var clubPayoutsTable = table.New(table.Metadata{
 		"amount",
 		"payout_account_id",
 		"deposit_request_id",
-		"timestamp",
+		"created_at",
 		"events",
 		"temporal_workflow_id",
 	},
@@ -55,7 +56,7 @@ var clubPayoutsTable = table.New(table.Metadata{
 
 type clubPayoutEvent struct {
 	Id        string
-	Timestamp time.Time
+	CreatedAt time.Time
 	Error     string
 }
 
@@ -65,10 +66,10 @@ type clubPayout struct {
 	DepositDate        time.Time `db:"deposit_date"`
 	ClubId             string    `db:"club_id"`
 	Currency           string    `db:"currency"`
-	Amount             int64     `db:"amount"`
+	Amount             uint64    `db:"amount"`
 	PayoutAccountId    string    `db:"payout_account_id"`
 	DepositRequestId   string    `db:"deposit_request_id"`
-	Timestamp          time.Time `db:"timestamp"`
+	CreatedAt          time.Time `db:"created_at"`
 	Events             []string  `db:"events"`
 	TemporalWorkflowId string    `db:"temporal_workflow_id"`
 }
@@ -98,7 +99,7 @@ var depositRequestsColumns = []string{
 	"currency",
 	"payout_method",
 	"payout_ids",
-	"timestamp",
+	"created_at",
 	"last_insert_id",
 }
 
@@ -116,17 +117,32 @@ var depositRequestsByMonthTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+var depositRequestsByMonthBucketsTable = table.New(table.Metadata{
+	Name: "deposit_requests_by_month_buckets",
+	Columns: []string{
+		"init",
+		"bucket",
+	},
+	PartKey: []string{"init"},
+	SortKey: []string{"bucket"},
+})
+
+type depositRequestsBuckets struct {
+	Init   int `db:"init"`
+	Bucket int `db:"bucket"`
+}
+
 type depositRequests struct {
 	Bucket             int        `db:"bucket"`
 	Id                 string     `db:"id"`
 	LastDateForDeposit time.Time  `db:"last_date_for_deposit"`
-	BaseAmount         int64      `db:"base_amount"`
-	EstimatedFeeAmount int64      `db:"estimated_fee_amount"`
-	TotalAmount        int64      `db:"total_amount"`
+	BaseAmount         uint64     `db:"base_amount"`
+	EstimatedFeeAmount uint64     `db:"estimated_fee_amount"`
+	TotalAmount        uint64     `db:"total_amount"`
 	Currency           string     `db:"currency"`
 	PayoutMethod       string     `db:"payout_method"`
 	PayoutIds          []string   `db:"payout_ids"`
-	Timestamp          time.Time  `db:"timestamp"`
+	CreatedAt          time.Time  `db:"created_at"`
 	LastInsertId       gocql.UUID `db:"last_insert_id"`
 }
 
@@ -146,7 +162,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 
 		data, err := json.Marshal(clubPayoutEvent{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			CreatedAt: e.CreatedAt(),
 			Error:     e.Error(),
 		})
 
@@ -166,7 +182,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 		Amount:             pay.Amount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
-		Timestamp:          pay.Timestamp(),
+		CreatedAt:          pay.CreatedAt(),
 		Events:             events,
 		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
@@ -175,6 +191,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 func (r PayoutCassandraElasticsearchRepository) UpdateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
 			AccountId:  pay.AccountId(),
@@ -196,6 +213,7 @@ func (r PayoutCassandraElasticsearchRepository) DeleteAccountPayoutMethodOperato
 func (r PayoutCassandraElasticsearchRepository) deleteAccountPayoutMethod(ctx context.Context, payoutMethodId string) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Delete()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
 			AccountId: payoutMethodId,
@@ -236,11 +254,12 @@ func (r PayoutCassandraElasticsearchRepository) GetAccountPayoutMethodByIdOperat
 	var accountPayout accountPayoutMethod
 
 	if err := r.session.Query(accountPayoutMethodTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountPayoutMethod{
 			AccountId: accountId,
 		}).
-		Get(&accountPayout); err != nil {
+		GetRelease(&accountPayout); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, payout.ErrAccountPayoutMethodNotFound
@@ -257,9 +276,10 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 	var lockedPay clubLockedPayout
 
 	err := r.session.Query(clubLockedPayoutTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubLockedPayout{ClubId: payout.ClubId()}).
-		Get(&lockedPay)
+		GetRelease(&lockedPay)
 
 	if err != nil && err != gocql.ErrNotFound {
 		return fmt.Errorf("failed to get club locked payout: %v", err)
@@ -271,20 +291,23 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 		}
 	}
 
-	// no locked payout, do an insert
-	applied, err := clubLockedPayoutTable.InsertBuilder().
-		Unique().
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubLockedPayout{ClubId: payout.ClubId(), PayoutId: payout.Id()}).
-		ExecCAS()
+	if err == gocql.ErrNotFound {
+		// no locked payout, do an insert
+		applied, err := clubLockedPayoutTable.InsertBuilder().
+			Unique().
+			Query(r.session).
+			WithContext(ctx).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubLockedPayout{ClubId: payout.ClubId(), PayoutId: payout.Id()}).
+			ExecCASRelease()
 
-	if err != nil {
-		return fmt.Errorf("failed to lock club payout: %v", err)
-	}
+		if err != nil {
+			return fmt.Errorf("failed to lock club payout: %v", err)
+		}
 
-	if !applied {
-		return fmt.Errorf("failed to lock club payout")
+		if !applied {
+			return fmt.Errorf("failed to lock club payout")
+		}
 	}
 
 	marshalled, err := marshalClubPayoutToDatabase(ctx, payout)
@@ -294,6 +317,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 	}
 
 	if err := r.session.Query(clubPayoutsTable.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
@@ -328,11 +352,12 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 	var clubPay clubPayout
 
 	if err := r.session.Query(clubPayoutsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubPayout{
 			Id: payoutId,
 		}).
-		Get(&clubPay); err != nil {
+		GetRelease(&clubPay); err != nil {
 		if err == gocql.ErrNotFound {
 			return nil, payout.ErrClubPayoutNotFound
 		}
@@ -351,7 +376,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 
 		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
 			unmarshal.Id,
-			unmarshal.Timestamp,
+			unmarshal.CreatedAt,
 			unmarshal.Error,
 		))
 	}
@@ -365,7 +390,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		clubPay.DepositDate,
 		clubPay.PayoutAccountId,
 		clubPay.DepositRequestId,
-		clubPay.Timestamp,
+		clubPay.CreatedAt,
 		events,
 		clubPay.TemporalWorkflowId,
 	), nil
@@ -391,6 +416,7 @@ func (r PayoutCassandraElasticsearchRepository) updateClubPayout(ctx context.Con
 
 	if err := r.session.
 		Query(clubPayoutsTable.Update(columns...)).
+		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update club payout: %v", err)
@@ -413,6 +439,7 @@ func (r PayoutCassandraElasticsearchRepository) UpdateClubPayoutStatus(ctx conte
 	// release lock if the final status is one of these
 	if pay.Status() == payout.Cancelled || pay.Status() == payout.Deposited || pay.Status() == payout.Failed {
 		if err := r.session.Query(clubLockedPayoutTable.Delete()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubLockedPayout{ClubId: pay.ClubId()}).
 			ExecRelease(); err != nil {
@@ -440,9 +467,10 @@ func (r PayoutCassandraElasticsearchRepository) CanInitiateClubPayout(ctx contex
 	var lock clubLockedPayout
 
 	if err := r.session.Query(clubLockedPayoutTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubLockedPayout{ClubId: clubId}).
-		Get(&lock); err != nil {
+		GetRelease(&lock); err != nil {
 		// can initiate - no lock found
 		if err == gocql.ErrNotFound {
 			return nil
@@ -456,7 +484,7 @@ func (r PayoutCassandraElasticsearchRepository) CanInitiateClubPayout(ctx contex
 
 func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context.Context, deposit *payout.DepositRequest) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	marshalled := depositRequests{
 		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(deposit.Timestamp()),
@@ -468,40 +496,29 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		Currency:           deposit.Currency().String(),
 		PayoutMethod:       deposit.AccountPayoutMethodKind().String(),
 		PayoutIds:          deposit.PayoutIds(),
-		Timestamp:          deposit.Timestamp(),
+		CreatedAt:          deposit.Timestamp(),
 		LastInsertId:       gocql.UUIDFromTime(deposit.Timestamp()),
 	}
 
-	stmt, _ := depositRequestsTable.Insert()
-
-	batch.Query(stmt,
-		marshalled.Bucket,
-		marshalled.Id,
-		marshalled.LastDateForDeposit,
-		marshalled.BaseAmount,
-		marshalled.EstimatedFeeAmount,
-		marshalled.TotalAmount,
-		marshalled.Currency,
-		marshalled.PayoutMethod,
-		marshalled.PayoutIds,
-		marshalled.Timestamp,
-		marshalled.LastInsertId,
+	stmt, names := depositRequestsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
 	)
 
-	stmt, _ = depositRequestsByMonthTable.Insert()
+	stmt, names = depositRequestsByMonthTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalled,
+	)
+
+	stmt, _ = depositRequestsByMonthBucketsTable.Insert()
 
 	batch.Query(stmt,
+		0,
 		marshalled.Bucket,
-		marshalled.Id,
-		marshalled.LastDateForDeposit,
-		marshalled.BaseAmount,
-		marshalled.EstimatedFeeAmount,
-		marshalled.TotalAmount,
-		marshalled.Currency,
-		marshalled.PayoutMethod,
-		marshalled.PayoutIds,
-		marshalled.Timestamp,
-		marshalled.LastInsertId,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -516,9 +533,10 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestById(ctx contex
 	var deposit depositRequests
 
 	if err := r.session.Query(depositRequestsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(depositRequests{Id: id}).
-		Get(&deposit); err != nil {
+		GetRelease(&deposit); err != nil {
 		if err == gocql.ErrNotFound {
 			return nil, payout.ErrDepositRequestNotFound
 		}
@@ -527,6 +545,29 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestById(ctx contex
 	}
 
 	return &deposit, nil
+}
+
+func (r PayoutCassandraElasticsearchRepository) getDepositRequestBuckets(ctx context.Context) ([]int, error) {
+
+	var buckets []depositRequestsBuckets
+
+	if err := r.session.Query(depositRequestsByMonthBucketsTable.Select()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(depositRequestsBuckets{
+			Init: 0,
+		}).
+		SelectRelease(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get deposit request buckets: %v", err)
+	}
+
+	var final []int
+
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
+	}
+
+	return final, nil
 }
 
 func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
@@ -545,7 +586,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ct
 		deposit.PayoutIds,
 		deposit.Currency,
 		deposit.PayoutMethod,
-		deposit.Timestamp,
+		deposit.CreatedAt,
 	), nil
 }
 
@@ -572,25 +613,15 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 
 	var depositResults []*payout.DepositRequest
 
-	startingBucket := bucket.MakeMonthlyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getDepositRequestBuckets(ctx)
 
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	if err != nil {
+		return nil, err
+	}
+	for _, bucketId := range buckets {
 
 		info := map[string]interface{}{
 			"bucket": bucketId,
-		}
-
-		if cursor != nil {
-			createdCursor, err := cursor.GetCursor()
-
-			if err != nil {
-				return nil, err
-			}
-
-			if createdCursor != nil {
-				info["id"] = createdCursor[0].(string)
-			}
 		}
 
 		builder := depositRequestsByMonthTable.SelectBuilder()
@@ -603,8 +634,9 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 
 		if err := r.session.
 			Query(builder.ToCql()).
+			WithContext(ctx).
 			BindMap(info).
-			Select(&results); err != nil {
+			SelectRelease(&results); err != nil {
 			return nil, fmt.Errorf("failed to search deposit requests %v", err)
 		}
 
@@ -619,7 +651,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 				request.PayoutIds,
 				request.Currency,
 				request.PayoutMethod,
-				request.Timestamp,
+				request.CreatedAt,
 			)
 
 			result.Node = paging.NewNode(request.Id)
@@ -642,8 +674,9 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestsForMonth(ctx c
 
 	if err := r.session.
 		Query(depositRequestsByMonthTable.Select()).
+		WithContext(ctx).
 		BindStruct(&depositRequests{Bucket: bucket.MakeMonthlyBucketFromTimestamp(time)}).
-		Select(&results); err != nil {
+		SelectRelease(&results); err != nil {
 		return nil, fmt.Errorf("failed to search deposit requests %v", err)
 	}
 
@@ -658,7 +691,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestsForMonth(ctx c
 			request.PayoutIds,
 			request.Currency,
 			request.PayoutMethod,
-			request.Timestamp,
+			request.CreatedAt,
 		)
 
 		result.Node = paging.NewNode(request.Id)
@@ -685,7 +718,7 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 		deposit.PayoutIds,
 		deposit.Currency,
 		deposit.PayoutMethod,
-		deposit.Timestamp,
+		deposit.CreatedAt,
 	)
 
 	if err = updateFn(depositRequest); err != nil {
@@ -707,9 +740,10 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 	applied, err := depositRequestsTable.UpdateBuilder(columns...).
 		If(qb.EqLit("last_insert_id", deposit.LastInsertId.String())).
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(marshalled).
 		SerialConsistency(gocql.Serial).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to update deposit request: %v", err)
@@ -722,9 +756,10 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 	applied, err = depositRequestsByMonthTable.UpdateBuilder(columns...).
 		If(qb.EqLit("last_insert_id", deposit.LastInsertId.String())).
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(marshalled).
 		SerialConsistency(gocql.Serial).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to update deposit request by month: %v", err)

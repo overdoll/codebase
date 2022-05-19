@@ -1,13 +1,19 @@
 version: '3.9'
 services:
-  hades-worker:
+  hades:
     image: $CONTAINER_REGISTRY/hades/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/hades/internal/image.binary db migrate keyspace && /app/applications/hades/internal/image.binary db seed && /app/applications/hades/internal/image.binary index all && /app/applications/hades/internal/image.binary worker"
+    command: /bin/sh -c "/app/applications/hades/internal/image.binary db migrate keyspace && /app/applications/hades/internal/image.binary db seed && /app/applications/hades/internal/image.binary"
     env_file: ../../applications/hades/.env.ci
     depends_on:
       - temporal
-      - elasticsearch
+    ports:
+      - 7532:8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hades.rule=PathPrefix(`/api/ccbill/`)"
+      - "traefik.http.routers.hades.entrypoints=web"
+      - "traefik.port=8000"
     environment:
       - CCBILL_FLEXFORMS_URL=${CCBILL_FLEXFORMS_URL}
       - CCBILL_SALT_KEY=${CCBILL_SALT_KEY}
@@ -19,7 +25,6 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 20
-
   run:
     depends_on:
-      - hades-worker
+      - hades

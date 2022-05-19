@@ -31,7 +31,7 @@ func (h SuspendClubOperatorHandler) Handle(ctx context.Context, cmd SuspendClubO
 		return err
 	}
 
-	if err := h.event.SuspendClub(ctx, clb.ID(), cmd.AccountId, cmd.EndTime, cmd.Reason); err != nil {
+	if err := h.event.SuspendClubOperator(ctx, clb, cmd.AccountId, cmd.EndTime, cmd.Reason); err != nil {
 		return err
 	}
 

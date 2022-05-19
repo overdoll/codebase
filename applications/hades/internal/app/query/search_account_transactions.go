@@ -28,7 +28,7 @@ func NewSearchAccountTransactionsHandler(bi billing.Repository) SearchAccountTra
 
 func (h SearchAccountTransactionsHandler) Handle(ctx context.Context, query SearchAccountTransactions) ([]*billing.AccountTransaction, error) {
 
-	filters, err := billing.NewAccountTransactionHistoryFilters(query.AccountId, query.AccountClubSupporterSubscriptionId, query.From, query.To, query.Type)
+	filters, err := billing.NewAccountTransactionsFilters(query.AccountId, query.AccountClubSupporterSubscriptionId, query.From, query.To, query.Type)
 
 	if err != nil {
 		return nil, err

@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/cancellation"
+	"overdoll/applications/hades/internal/domain/billing"
 )
 
 type CancellationReasonById struct {
@@ -10,16 +10,16 @@ type CancellationReasonById struct {
 }
 
 type CancellationReasonByIdHandler struct {
-	car cancellation.Repository
+	br billing.Repository
 }
 
-func NewCancellationReasonByIdHandler(car cancellation.Repository) CancellationReasonByIdHandler {
-	return CancellationReasonByIdHandler{car: car}
+func NewCancellationReasonByIdHandler(br billing.Repository) CancellationReasonByIdHandler {
+	return CancellationReasonByIdHandler{br: br}
 }
 
-func (h CancellationReasonByIdHandler) Handle(ctx context.Context, query CancellationReasonById) (*cancellation.Reason, error) {
+func (h CancellationReasonByIdHandler) Handle(ctx context.Context, query CancellationReasonById) (*billing.CancellationReason, error) {
 
-	reason, err := h.car.GetReasonById(ctx, query.ReasonId)
+	reason, err := h.br.GetCancellationReasonById(ctx, query.ReasonId)
 
 	if err != nil {
 		return nil, err

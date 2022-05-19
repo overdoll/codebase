@@ -14,7 +14,7 @@ type NewClubSupporterSubscription struct {
 	AccountId       string
 	ClubId          string
 	SubscriptionId  string
-	Amount          int64
+	Amount          uint64
 	Currency        string
 	BillingDate     time.Time
 	NextBillingDate time.Time

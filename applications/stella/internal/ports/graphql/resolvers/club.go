@@ -57,6 +57,24 @@ func (r ClubResolver) ViewerMember(ctx context.Context, obj *types.Club) (*types
 	return types.MarshalClubMemberToGraphql(ctx, clb), nil
 }
 
+func (r ClubResolver) MembersIsSupporterCount(ctx context.Context, obj *types.Club) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	count, err := r.App.Queries.ClubSupporterMembersCount.Handle(ctx, query.ClubSupporterMembersCount{
+		ClubId:    obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
+}
+
 func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

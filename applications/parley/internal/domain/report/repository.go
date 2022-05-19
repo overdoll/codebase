@@ -9,9 +9,7 @@ import (
 
 type Repository interface {
 	CreatePostReport(ctx context.Context, report *PostReport) error
-	GetPostReportById(ctx context.Context, requester *principal.Principal, logId string) (*PostReport, error)
+	GetPostReportById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*PostReport, error)
 	SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *PostReportFilters) ([]*PostReport, error)
-	GetPostReportForPostAndAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*PostReport, error)
-
 	DeleteAccountData(ctx context.Context, accountId string) error
 }

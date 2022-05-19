@@ -6,10 +6,6 @@ func NewStaffPrincipal(accountID string) *principal.Principal {
 	return principal.NewPrincipal(accountID, "", []string{"STAFF"}, false, false, false, false)
 }
 
-func NewStaffSecurePrincipal(accountID string) *principal.Principal {
-	return principal.NewPrincipal(accountID, "", []string{"STAFF"}, false, false, true, false)
-}
-
 func NewModeratorPrincipal(accountID string) *principal.Principal {
 	return principal.NewPrincipal(accountID, "", []string{"MODERATOR"}, false, false, false, false)
 }
@@ -20,4 +16,8 @@ func NewDefaultPrincipal(accountID string) *principal.Principal {
 
 func NewArtistPrincipal(accountID string) *principal.Principal {
 	return principal.NewPrincipal(accountID, "", []string{"ARTIST"}, false, false, false, false)
+}
+
+func NewArtistSecurePrincipal(accountID string) *principal.Principal {
+	return principal.NewPrincipal(accountID, "", []string{"ARTIST"}, false, false, true, false)
 }

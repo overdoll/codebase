@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "club_members.go",
+        "clubs.go",
+        "migrations.go",
+    ],
+    importpath = "overdoll/applications/stella/internal/adapters/migrations",
+    visibility = ["//applications/stella:__subpackages__"],
+    deps = [
+        "//applications/stella/internal/adapters",
+        "//applications/stella/internal/adapters/migrations/cql",
+        "//libraries/bootstrap",
+        "//libraries/database",
+        "//libraries/localization",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+    ],
+)

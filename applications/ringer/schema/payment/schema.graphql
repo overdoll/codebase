@@ -74,6 +74,9 @@ type ClubPayment implements Node @key(fields: "id") {
 
   """The account that made this payment."""
   sourceAccount: Account!
+
+  """When this payment was created."""
+  createdAt: Time!
 }
 
 """Edge of the the club payment."""

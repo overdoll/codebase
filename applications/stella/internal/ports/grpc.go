@@ -2,7 +2,6 @@ package ports
 
 import (
 	"context"
-	"go.temporal.io/sdk/client"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
@@ -12,14 +11,12 @@ import (
 )
 
 type Server struct {
-	app    *app.Application
-	client client.Client
+	app *app.Application
 }
 
-func NewGrpcServer(application *app.Application, client client.Client) *Server {
+func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
-		app:    application,
-		client: client,
+		app: application,
 	}
 }
 

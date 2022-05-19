@@ -2,11 +2,9 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -35,9 +33,13 @@ func TestAccountTransactionRefund(t *testing.T) {
 	// club ID will be a different ID because that's what the subscription is for
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, transactionId, clubId, nil)
 
-	accountTransactionRelayId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountTransaction{}, transactionId))))
+	mockAccountStaff(t, accountId)
+	mockAccountDigest(t, accountId, "")
 
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
+
+	transactions := getAccountTransactions(t, gqlClient, accountId)
+	accountTransactionRelayId := transactions.Entities[0].Account.Transactions.Edges[0].Node.Id
 
 	// generate a refund amount
 	var generateProratedRefund GenerateRefundAmountForAccountTransaction
@@ -49,7 +51,7 @@ func TestAccountTransactionRefund(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error generating prorated refund")
-	require.Less(t, generateProratedRefund.GenerateRefundAmountForAccountTransaction.RefundAmount.ProratedAmount, 699, "correct amount")
+	require.LessOrEqual(t, generateProratedRefund.GenerateRefundAmountForAccountTransaction.RefundAmount.ProratedAmount, 699, "correct amount")
 	require.Equal(t, 699, generateProratedRefund.GenerateRefundAmountForAccountTransaction.RefundAmount.MaximumAmount, "correct max amount")
 	require.Equal(t, graphql.CurrencyUsd, generateProratedRefund.GenerateRefundAmountForAccountTransaction.RefundAmount.Currency, "correct max amount")
 

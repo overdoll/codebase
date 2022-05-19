@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"log"
 	"os"
@@ -33,10 +32,6 @@ const ParleyHttpClientAddr = "http://:8888/api/graphql"
 
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
-
-var (
-	temporalClientMock *mocks.Client
-)
 
 type _Any map[string]interface{}
 
@@ -119,11 +114,18 @@ func seedRule(t *testing.T, infraction bool) *rule.Rule {
 	return pst
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func refreshReportsIndex(t *testing.T) {
+
+	// refresh transactions index so we get the most up-to-date values
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.PostReportsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -145,11 +147,9 @@ func getGrpcClient(t *testing.T) parley.ParleyClient {
 func startService() bool {
 	config.Read("applications/parley")
 
-	application, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
-
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(ParleyHttpAddr, srv, func() {})
 
@@ -159,7 +159,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(ParleyGrpcAddr, func(server *grpc.Server) {
 		parley.RegisterParleyServer(server, s)
@@ -170,6 +170,8 @@ func startService() bool {
 	if !ok {
 		log.Println("Timed out waiting for parley GRPC to come up")
 	}
+
+	mockServices(app)
 
 	return true
 }

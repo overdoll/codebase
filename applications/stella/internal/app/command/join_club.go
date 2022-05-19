@@ -43,15 +43,7 @@ func (h JoinClubHandler) Handle(ctx context.Context, cmd JoinClub) (*club.Member
 		return nil, err
 	}
 
-	if err := h.cr.CreateClubMember(ctx, member); err != nil {
-		return nil, err
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := h.event.AddClubMember(ctx, cmd.ClubId, cmd.Principal.AccountId()); err != nil {
+	if err := h.event.AddClubMember(ctx, member); err != nil {
 		return nil, err
 	}
 

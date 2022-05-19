@@ -2,7 +2,6 @@ package billing
 
 import (
 	"errors"
-	"overdoll/applications/hades/internal/domain/cancellation"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -10,7 +9,8 @@ import (
 )
 
 var (
-	ErrAccountClubSupportSubscriptionNotFound = errors.New("account club support subscription not found")
+	ErrAccountClubSupportSubscriptionNotFound  = errors.New("account club support subscription not found")
+	ErrAccountClubSupportSubscriptionDuplicate = errors.New("account club support subscription is duplicate")
 )
 
 type AccountClubSupporterSubscription struct {
@@ -33,7 +33,7 @@ type AccountClubSupporterSubscription struct {
 	cancelledAt *time.Time
 	expiredAt   *time.Time
 
-	billingAmount   int64
+	billingAmount   uint64
 	billingCurrency money.Currency
 
 	paymentMethod *PaymentMethod
@@ -48,18 +48,11 @@ type AccountClubSupporterSubscription struct {
 	billingFailureNextRetryDate *time.Time
 }
 
-func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount int64, currency string, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
-
-	currenc, err := money.CurrencyFromString(currency)
-
-	if err != nil {
-		return nil, err
-	}
-
+func NewAccountClubSupporterSubscriptionFromCCBill(id, accountId, clubId string, ccbillSubscriptionId string, supporterSince, lastBillingDate, nextBillingDate time.Time, amount uint64, currency money.Currency, paymentMethod *PaymentMethod, timestamp time.Time) (*AccountClubSupporterSubscription, error) {
 	return &AccountClubSupporterSubscription{
 		accountId:            accountId,
 		clubId:               clubId,
-		id:                   ccbillSubscriptionId,
+		id:                   id,
 		status:               Active,
 		supporterSince:       supporterSince,
 		lastBillingDate:      lastBillingDate,
@@ -68,7 +61,7 @@ func NewAccountClubSupporterSubscriptionFromCCBill(accountId, clubId string, ccb
 		expiredAt:            nil,
 		billingAmount:        amount,
 		createdAt:            timestamp,
-		billingCurrency:      currenc,
+		billingCurrency:      currency,
 		paymentMethod:        paymentMethod,
 		updatedAt:            time.Now(),
 		ccbillSubscriptionId: &ccbillSubscriptionId,
@@ -123,7 +116,7 @@ func (c *AccountClubSupporterSubscription) NextBillingDate() time.Time {
 	return c.nextBillingDate
 }
 
-func (c *AccountClubSupporterSubscription) BillingAmount() int64 {
+func (c *AccountClubSupporterSubscription) BillingAmount() uint64 {
 	return c.billingAmount
 }
 
@@ -195,7 +188,15 @@ func (c *AccountClubSupporterSubscription) MarkExpired(expiredAt time.Time) erro
 	return nil
 }
 
-func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *cancellation.Reason) error {
+func (c *AccountClubSupporterSubscription) Cancel(cancellationReason *CancellationReason) error {
+
+	id := cancellationReason.ID()
+	c.cancellationReasonId = &id
+
+	return c.MarkCancelled(time.Now())
+}
+
+func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Principal, cancellationReason *CancellationReason) error {
 
 	if !requester.IsStaff() {
 		if err := requester.BelongsToAccount(c.accountId); err != nil {
@@ -203,10 +204,7 @@ func (c *AccountClubSupporterSubscription) RequestCancel(requester *principal.Pr
 		}
 	}
 
-	id := cancellationReason.ID()
-	c.cancellationReasonId = &id
-
-	return c.MarkCancelled(time.Now())
+	return c.Cancel(cancellationReason)
 }
 
 func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Principal, days int) error {
@@ -220,6 +218,7 @@ func (c *AccountClubSupporterSubscription) RequestExtend(requester *principal.Pr
 }
 
 func (c *AccountClubSupporterSubscription) UpdateBillingDate(nextBillingDate time.Time) error {
+	c.lastBillingDate = c.nextBillingDate
 	c.nextBillingDate = nextBillingDate
 	c.failedAt = nil
 	c.ccbillErrorText = nil
@@ -236,11 +235,11 @@ func (c *AccountClubSupporterSubscription) MakeReactivated(nextBillingDate time.
 }
 
 func (c *AccountClubSupporterSubscription) CanView(requester *principal.Principal) error {
-	return CanViewAccountClubSupporterSubscription(requester, c.accountId)
+	return CanViewAccountClubSupporterSubscription(requester, &c.accountId, nil)
 }
 
 func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId, status string,
-	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount int64, billingCurrency string, paymentMethod *PaymentMethod,
+	supporterSince, lastBillingDate, nextBillingDate time.Time, billingAmount uint64, billingCurrency string, paymentMethod *PaymentMethod,
 	ccbillSubscriptionId *string, cancelledAt *time.Time, createdAt time.Time, updatedAt time.Time, cancellationReasonId *string, expiredAt *time.Time,
 	failedAt *time.Time, ccbillErrorText, ccbillErrorCode *string, billingFailureNextRetryDate *time.Time,
 ) *AccountClubSupporterSubscription {
@@ -270,13 +269,27 @@ func UnmarshalAccountClubSupporterSubscriptionFromDatabase(id, accountId, clubId
 	}
 }
 
-func CanViewAccountClubSupporterSubscription(requester *principal.Principal, accountId string) error {
+func CanViewAccountClubSupporterSubscription(requester *principal.Principal, accountId, clubId *string) error {
 	if requester.IsStaff() {
 		return nil
 	}
 
-	if err := requester.BelongsToAccount(accountId); err != nil {
-		return err
+	if accountId == nil && clubId == nil {
+		return principal.ErrNotAuthorized
+	}
+
+	if accountId != nil {
+		if err := requester.BelongsToAccount(*accountId); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	if clubId != nil {
+		if !requester.IsStaff() {
+			return principal.ErrNotAuthorized
+		}
 	}
 
 	return nil

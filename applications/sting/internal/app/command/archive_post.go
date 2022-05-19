@@ -30,11 +30,7 @@ func (h ArchivePostHandler) Handle(ctx context.Context, cmd ArchivePost) (*post.
 		return nil, err
 	}
 
-	if err := pst.CanArchive(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.ArchivePost(ctx, pst.ID()); err != nil {
+	if err := h.event.ArchivePost(ctx, cmd.Principal, pst); err != nil {
 		return nil, err
 	}
 

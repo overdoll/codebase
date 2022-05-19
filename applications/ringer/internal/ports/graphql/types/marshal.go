@@ -105,6 +105,7 @@ func MarshalClubPaymentToGraphQL(ctx context.Context, result *payment.ClubPaymen
 		AccountTransaction: &AccountTransaction{ID: relay.NewID(AccountTransaction{}, result.AccountTransactionId())},
 		DestinationClub:    &Club{ID: relay.NewID(Club{}, result.DestinationClubId())},
 		SourceAccount:      &Account{ID: relay.NewID(Account{}, result.SourceAccountId())},
+		CreatedAt:          result.CreatedAt(),
 	}
 }
 
@@ -197,7 +198,7 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 		clubEvents = append(clubEvents, &ClubPayoutEvent{
 			ID:        relay.NewID(ClubPayoutEvent{}, e.Id()),
 			Error:     e.Error(),
-			Timestamp: e.Timestamp(),
+			CreatedAt: e.CreatedAt(),
 		})
 	}
 
@@ -215,7 +216,7 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 			ID: relay.NewID(Account{}, result.PayoutAccountId()),
 		},
 		DepositDate: result.DepositDate(),
-		CreatedAt:   result.Timestamp(),
+		CreatedAt:   result.CreatedAt(),
 	}
 }
 

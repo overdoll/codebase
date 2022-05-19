@@ -3,30 +3,25 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"time"
 )
 
 type CCBillCustomerDataUpdateInput struct {
-	SubscriptionId string `json:"subscriptionId"`
-	ClientAccnum   string `json:"clientAccnum"`
-	ClientSubacc   string `json:"clientSubacc"`
-	Timestamp      string `json:"timestamp"`
-	Address1       string `json:"address1"`
-	City           string `json:"city"`
-	State          string `json:"state"`
-	Country        string `json:"country"`
-	PostalCode     string `json:"postalCode"`
-	LastName       string `json:"lastName"`
-	FirstName      string `json:"firstName"`
-	Email          string `json:"email"`
-	PhoneNumber    string `json:"phoneNumber"`
-	IpAddress      string `json:"ipAddress"`
-	ReservationId  string `json:"reservationId"`
-	PaymentType    string `json:"paymentType"`
-	CardType       string `json:"cardType"`
-	Last4          string `json:"last4"`
-	Bin            string `json:"bin"`
-	ExpDate        string `json:"expDate"`
-	PaymentAccount string `json:"paymentAccount"`
+	SubscriptionId string
+	Timestamp      time.Time
+	AddressLine1   string
+	City           string
+	State          string
+	Country        string
+	PostalCode     string
+	LastName       string
+	FirstName      string
+	Email          string
+	PhoneNumber    string
+	CardType       string
+	Last4          string
+	Bin            string
+	ExpDate        string
 }
 
 func CCBillCustomerDataUpdate(ctx workflow.Context, input CCBillCustomerDataUpdateInput) error {
@@ -47,7 +42,7 @@ func CCBillCustomerDataUpdate(ctx workflow.Context, input CCBillCustomerDataUpda
 			Email:                input.Email,
 			LastName:             input.LastName,
 			PhoneNumber:          input.PhoneNumber,
-			AddressLine1:         input.Address1,
+			AddressLine1:         input.AddressLine1,
 			City:                 input.City,
 			Country:              input.Country,
 			State:                input.State,

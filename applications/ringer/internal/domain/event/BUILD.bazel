@@ -11,5 +11,6 @@ go_library(
     deps = [
         "//applications/ringer/internal/domain/payout",
         "//libraries/money",
+        "//libraries/principal",
     ],
 )

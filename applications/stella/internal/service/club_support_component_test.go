@@ -15,6 +15,7 @@ func TestClubSupport(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, uuid.New().String())
@@ -26,14 +27,14 @@ func TestClubSupport(t *testing.T) {
 	// do a new supporter post grpc call
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.NewSupporterPost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.NewSupporterPost, mock.Anything)
 
 	_, err := grpcClient.NewSupporterPost(context.Background(), &stella.NewSupporterPostRequest{
 		ClubId: clb.ID(),
 	})
 	require.NoError(t, err, "no error for new supporter post")
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
 		Run(
@@ -46,8 +47,6 @@ func TestClubSupport(t *testing.T) {
 
 	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
 
 	clubViewer = getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")

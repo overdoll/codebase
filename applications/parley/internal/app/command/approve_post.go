@@ -19,12 +19,11 @@ type ApprovePostHandler struct {
 	pr    post_audit_log.Repository
 	mr    moderator.Repository
 	event event.Repository
-	eva   EvaService
 	sting StingService
 }
 
-func NewApprovePostHandler(pr post_audit_log.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService) ApprovePostHandler {
-	return ApprovePostHandler{sting: sting, eva: eva, pr: pr, mr: mr, event: event}
+func NewApprovePostHandler(pr post_audit_log.Repository, mr moderator.Repository, event event.Repository, sting StingService) ApprovePostHandler {
+	return ApprovePostHandler{sting: sting, pr: pr, mr: mr, event: event}
 }
 
 func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
@@ -41,11 +40,7 @@ func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
 		return err
 	}
 
-	if err := postModerator.CanApprovePost(cmd.Principal); err != nil {
-		return err
-	}
-
-	if err := h.event.ApprovePost(ctx, cmd.Principal, cmd.PostId); err != nil {
+	if err := h.event.ApprovePost(ctx, cmd.Principal, postModerator, cmd.PostId); err != nil {
 		return err
 	}
 

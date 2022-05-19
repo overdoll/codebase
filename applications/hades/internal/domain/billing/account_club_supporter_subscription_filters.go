@@ -1,11 +1,12 @@
 package billing
 
 type AccountClubSupporterSubscriptionFilters struct {
-	accountId string
+	accountId *string
+	clubId    *string
 	status    []SupportStatus
 }
 
-func NewAccountClubSupporterSubscriptionFilters(accountId string, status []string) (*AccountClubSupporterSubscriptionFilters, error) {
+func NewAccountClubSupporterSubscriptionFilters(accountId, clubId *string, status []string) (*AccountClubSupporterSubscriptionFilters, error) {
 
 	var newStatus []SupportStatus
 
@@ -20,11 +21,16 @@ func NewAccountClubSupporterSubscriptionFilters(accountId string, status []strin
 
 	return &AccountClubSupporterSubscriptionFilters{
 		accountId: accountId,
+		clubId:    clubId,
 	}, nil
 }
 
-func (e *AccountClubSupporterSubscriptionFilters) AccountId() string {
+func (e *AccountClubSupporterSubscriptionFilters) AccountId() *string {
 	return e.accountId
+}
+
+func (e *AccountClubSupporterSubscriptionFilters) ClubId() *string {
+	return e.clubId
 }
 
 func (e *AccountClubSupporterSubscriptionFilters) Status() []SupportStatus {

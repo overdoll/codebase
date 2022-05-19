@@ -24,6 +24,7 @@ type Commands struct {
 	AccountDeleted                            command.AccountDeletedHandler
 	ClubSuspended                             command.ClubSuspendedHandler
 	ClubOverChargebackThreshold               command.ClubOverChargebackThresholdHandler
+	ClubSupporterSubscriptionDuplicate        command.ClubSupporterSubscriptionDuplicateHandler
 }
 
 type Queries struct{}

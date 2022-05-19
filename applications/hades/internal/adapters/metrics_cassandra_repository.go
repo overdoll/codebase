@@ -49,7 +49,7 @@ type clubTransactionMetric struct {
 	Bucket    int        `db:"bucket"`
 	Timestamp gocql.UUID `db:"timestamp"`
 	Id        string     `db:"id"`
-	Amount    int64      `db:"amount"`
+	Amount    uint64     `db:"amount"`
 	Currency  string     `db:"currency"`
 }
 
@@ -57,7 +57,7 @@ var clubTransactionMetricsTable = table.New(table.Metadata{
 	Name: "club_transaction_metrics",
 	Columns: []string{
 		"club_id",
-		"timestamp",
+		"created_at",
 		"bucket",
 		"currency",
 
@@ -95,19 +95,19 @@ type clubTransactionMetricsBuckets struct {
 type clubTransactionMetrics struct {
 	ClubId    string    `db:"club_id"`
 	Bucket    int       `db:"bucket"`
-	Timestamp time.Time `db:"timestamp"`
+	CreatedAt time.Time `db:"created_at"`
 	Currency  string    `db:"currency"`
 
-	TotalTransactionsCount        int64      `db:"total_transactions_count"`
-	TotalTransactionsAmount       int64      `db:"total_transactions_amount"`
+	TotalTransactionsCount        uint64     `db:"total_transactions_count"`
+	TotalTransactionsAmount       uint64     `db:"total_transactions_amount"`
 	TotalTransactionsLastUpdateId gocql.UUID `db:"total_transactions_last_update_id"`
 
-	ChargebackTransactionsCount        int64      `db:"chargeback_transactions_count"`
-	ChargebackTransactionsAmount       int64      `db:"chargeback_transactions_amount"`
+	ChargebackTransactionsCount        uint64     `db:"chargeback_transactions_count"`
+	ChargebackTransactionsAmount       uint64     `db:"chargeback_transactions_amount"`
 	ChargebackTransactionsLastUpdateId gocql.UUID `db:"chargeback_transactions_last_update_id"`
 
-	RefundTransactionsCount        int64      `db:"refund_transactions_count"`
-	RefundTransactionsAmount       int64      `db:"refund_transactions_amount"`
+	RefundTransactionsCount        uint64     `db:"refund_transactions_count"`
+	RefundTransactionsAmount       uint64     `db:"refund_transactions_amount"`
 	RefundTransactionsLastUpdateId gocql.UUID `db:"refund_transactions_last_update_id"`
 }
 
@@ -152,6 +152,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	// first, create transaction record
 	if err := r.session.Query(table.Insert()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
@@ -176,6 +177,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	if met == nil {
 
 		if err := r.session.Query(clubTransactionMetricsBucketsTable.Insert()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubTransactionMetricsBuckets{ClubId: metric.ClubId(), Bucket: bucket}).
 			ExecRelease(); err != nil {
@@ -185,7 +187,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		target := clubTransactionMetrics{
 			ClubId:                             metric.ClubId(),
 			Bucket:                             bucket,
-			Timestamp:                          metric.Timestamp().Time(),
+			CreatedAt:                          metric.Timestamp().Time(),
 			Currency:                           metric.Currency().String(),
 			TotalTransactionsCount:             0,
 			TotalTransactionsAmount:            0,
@@ -199,9 +201,10 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		}
 
 		applied, err := r.session.Query(clubTransactionMetricsTable.InsertBuilder().Unique().ToCql()).
+			WithContext(ctx).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(target).
-			ExecCAS()
+			ExecCASRelease()
 
 		if err != nil {
 			return fmt.Errorf("failed to insert club transaction metric: %v", err)
@@ -216,8 +219,8 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 	type metricsCount struct {
 		MaxTimestamp *gocql.UUID `db:"system.max(timestamp)"`
-		Count        int64       `db:"count"`
-		Amount       int64       `db:"system.sum(amount)"`
+		Count        uint64      `db:"count"`
+		Amount       uint64      `db:"system.sum(amount)"`
 	}
 
 	var res metricsCount
@@ -229,12 +232,13 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		CountAll().
 		Max("timestamp").
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
 			Bucket:    bucket,
 			Timestamp: newInsertTimestamp,
 		}).
-		Get(&res); err != nil {
+		GetRelease(&res); err != nil {
 		return fmt.Errorf("failed to count: %v", err)
 	}
 
@@ -278,8 +282,9 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	// apply the count
 	applied, err := metricsBuilder.
 		Query(r.session).
+		WithContext(ctx).
 		BindStruct(metricsStruct).
-		ExecCAS()
+		ExecCASRelease()
 
 	if err != nil {
 		return fmt.Errorf("failed to update count: %v", err)
@@ -297,12 +302,13 @@ func (r MetricsCassandraRepository) getClubTransactionMetrics(ctx context.Contex
 	var met clubTransactionMetrics
 
 	if err := r.session.Query(clubTransactionMetricsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetrics{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
 		}).
-		Get(&met); err != nil {
+		GetRelease(&met); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, gocql.ErrNotFound
@@ -324,7 +330,7 @@ func (r MetricsCassandraRepository) GetClubTransactionMetrics(ctx context.Contex
 
 	return metrics.UnmarshalClubTransactionMetricsFromDatabase(
 		met.ClubId,
-		met.Timestamp,
+		met.CreatedAt,
 		met.Currency,
 		met.TotalTransactionsCount,
 		met.ChargebackTransactionsCount,
@@ -339,11 +345,12 @@ func (r MetricsCassandraRepository) getClubTransactionMetricsBuckets(ctx context
 	var buckets []clubTransactionMetricsBuckets
 
 	if err := r.session.Query(clubTransactionMetricsBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetricsBuckets{
 			ClubId: clubId,
 		}).
-		Select(&buckets); err != nil {
+		SelectRelease(&buckets); err != nil {
 		return nil, fmt.Errorf("failed to get club transaction metric buckets: %v", err)
 	}
 
@@ -373,22 +380,17 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 	// iterate through all buckets starting from x bucket until we have enough values
 	for _, bucketId := range buckets {
 
-		var builder *qb.SelectBuilder
-
-		info := map[string]interface{}{}
-
-		builder = qb.Select(clubTransactionMetricsTable.Name()).
-			Where(qb.Eq("bucket"), qb.Eq("club_id"))
-
-		info["bucket"] = bucketId
-		info["club_id"] = clubId
-
 		var met clubTransactionMetrics
 
-		if err := builder.
+		if err := qb.Select(clubTransactionMetricsTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("club_id")).
 			Query(r.session).
-			BindMap(info).
-			Get(&met); err != nil {
+			WithContext(ctx).
+			BindStruct(clubTransactionMetrics{
+				Bucket: bucketId,
+				ClubId: clubId,
+			}).
+			GetRelease(&met); err != nil {
 
 			// if we didn't find any transaction metric, skip this iteration
 			if err == gocql.ErrNotFound {
@@ -400,7 +402,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 
 		res := metrics.UnmarshalClubTransactionMetricsFromDatabase(
 			met.ClubId,
-			met.Timestamp,
+			met.CreatedAt,
 			met.Currency,
 			met.TotalTransactionsCount,
 			met.ChargebackTransactionsCount,
@@ -410,7 +412,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 			met.TotalTransactionsAmount,
 		)
 
-		res.Node = paging.NewNode(met.Timestamp)
+		res.Node = paging.NewNode(met.CreatedAt)
 		results = append(results, res)
 
 		if len(results) >= cursor.GetLimit() {
@@ -427,12 +429,13 @@ func (r MetricsCassandraRepository) IsClubAlreadySuspended(ctx context.Context, 
 
 	// first, create transaction record
 	if err := r.session.Query(clubChargebackSuspensionsTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
 		}).
-		Get(&suspensionChargeback); err != nil {
+		GetRelease(&suspensionChargeback); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return false, nil
@@ -448,6 +451,7 @@ func (r MetricsCassandraRepository) AddClubAlreadySuspended(ctx context.Context,
 
 	if err := clubChargebackSuspensionsTable.InsertBuilder().
 		Query(r.session).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,

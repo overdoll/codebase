@@ -139,6 +139,7 @@ func TestModeratePost_remove(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -148,7 +149,7 @@ func TestModeratePost_remove(t *testing.T) {
 	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RemovePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePost, mock.Anything)
 
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{
@@ -159,10 +160,7 @@ func TestModeratePost_remove(t *testing.T) {
 
 	require.NoError(t, err, "no error removing post")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "remove post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "remove post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	logs := auditLogsForModeratorAccount(t, client, accountId)
 
@@ -192,6 +190,7 @@ func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountModerator(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -209,7 +208,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	var rejectPost RejectPost
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
 		ClubId:    postId,
@@ -227,10 +226,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	require.NoError(t, err, "no error rejecting post")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "reject post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "reject post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	logs := auditLogsForModeratorAccount(t, client, accountId)
 
@@ -256,9 +252,9 @@ func TestModeratePost_reject(t *testing.T) {
 }
 
 func TestModeratePost_reject_with_infraction(t *testing.T) {
-	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountModerator(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -273,7 +269,7 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 	postModeratorQueue := accountPostModeratorQueue(t, client, accountId)
 	require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 1, "should be in queue")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.RejectPost, workflows.RejectPostInput{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
 		AccountId: accountId,
 		PostId:    postId,
 		ClubId:    postId,
@@ -292,10 +288,7 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 
 	require.NoError(t, err, "no error rejecting a post with infraction")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted(), "reject post workflow correct")
-	require.NoError(t, env.GetWorkflowError(), "reject post workflow no error")
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 
@@ -350,17 +343,17 @@ func accountPostModeratorQueue(t *testing.T, client *graphql.Client, accountId s
 }
 
 func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
-	t.Parallel()
 
 	// clear moderators table, and add a new moderator that will be used for this test
 	accountId := uuid.New().String()
 	clearModeratorsTableAndSeedModerator(t, accountId)
+	mockAccountModerator(t, accountId)
 
 	grpcClient := getGrpcClient(t)
 
 	postId := uuid.New().String()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.PutPostIntoModeratorQueue, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.PutPostIntoModeratorQueue, mock.Anything)
 
 	res, err := grpcClient.PutPostIntoModeratorQueueOrPublish(context.Background(), &parley.PutPostIntoModeratorQueueOrPublishRequest{
 		PostId: postId,
@@ -369,7 +362,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 	require.NoError(t, err, "no error putting post into moderator queue or publishing")
 	require.True(t, res.PutIntoReview, "should have been put into review")
 
-	env := getWorkflowEnvironment(t)
+	env := getWorkflowEnvironment()
 
 	// during our delayed callback, we want to make sure the post is being "moderated"
 	env.RegisterDelayedCallback(func() {
@@ -382,7 +375,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 		require.Len(t, postModeratorQueue.Entities, 1, "should have found 1 entity")
 		require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 1, "should have found 1 item in queue")
 
-		approveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ApprovePost, mock.Anything)
+		approveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ApprovePost, mock.Anything)
 
 		// now, go through the motion of actually approving our post
 		var approvePost ApprovePost
@@ -395,10 +388,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 		require.NoError(t, err, "no error approving post")
 
-		envApprove := getWorkflowEnvironment(t)
-		approveWorkflowExecution.FindAndExecuteWorkflow(t, envApprove)
-		require.True(t, envApprove.IsWorkflowCompleted(), "approve post workflow correct")
-		require.NoError(t, envApprove.GetWorkflowError(), "approve post workflow no error")
+		approveWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 		// make sure it shows up in the moderator logs as well
 		logs := auditLogsForModeratorAccount(t, client, accountId)
@@ -418,9 +408,6 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 	}, time.Hour*24)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
-
-	require.True(t, env.IsWorkflowCompleted(), "put post into moderator queue workflow complete")
-	require.NoError(t, env.GetWorkflowError(), "put post into moderator queue workflow no error")
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 

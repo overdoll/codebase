@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/shurcooL/graphql"
-	"go.temporal.io/sdk/mocks"
+	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
 	"os"
+	"overdoll/applications/hades/internal/adapters"
+	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/ports/graphql/types"
 	"overdoll/applications/hades/internal/service"
@@ -32,10 +34,6 @@ const HadesGrpcClientAddr = "localhost:6247"
 
 const HadesGraphqlClientAddr = "http://:6666/api/graphql"
 
-var (
-	temporalClientMock *mocks.Client
-)
-
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
 	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
@@ -51,11 +49,23 @@ func convertClubIdIdToRelayId(clubId string) relay.ID {
 	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func convertClubMemberIdIdToRelayId(clubId, accountId string) relay.ID {
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ClubMember{}, clubId, accountId))))
+}
+
+func refreshSubscriptionsIndex(t *testing.T) {
+
+	// refresh transactions index so we get the most up-to-date values
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.SubscriptionsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
+	env.RegisterWorkflow(workflows.ClubTransactionMetric)
 
 	return env
 }
@@ -70,11 +80,11 @@ func getGrpcClient(t *testing.T) hades.HadesClient {
 func startService() bool {
 	config.Read("applications/hades")
 
-	application, _, temporalClient := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = temporalClient
+	mockServices(app)
 
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(HadesHttpAddr, srv, func() {})
 
@@ -84,7 +94,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(HadesGrpcAddr, func(server *grpc.Server) {
 		hades.RegisterHadesServer(server, s)

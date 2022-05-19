@@ -9,7 +9,8 @@ import (
 
 type PostReportById struct {
 	Principal *principal.Principal
-	Id        string
+	AccountId string
+	PostId    string
 }
 
 type PostReportByIdHandler struct {
@@ -22,7 +23,7 @@ func NewPostReportByIdHandler(rr report.Repository) PostReportByIdHandler {
 
 func (h PostReportByIdHandler) Handle(ctx context.Context, query PostReportById) (*report.PostReport, error) {
 
-	postReport, err := h.rr.GetPostReportById(ctx, query.Principal, query.Id)
+	postReport, err := h.rr.GetPostReportById(ctx, query.Principal, query.PostId, query.AccountId)
 
 	if err != nil {
 		return nil, err

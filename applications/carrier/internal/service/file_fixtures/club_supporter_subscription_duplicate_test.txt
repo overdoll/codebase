@@ -1,0 +1,29 @@
+********
+overdoll
+********
+
+Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+
+----------------------
+Duplicate Subscription
+----------------------
+
+Hello !
+
+We detected that you subscribed twice to the same club test a club (https://ci.overdoll.dev/test-club).
+
+Billing Details
+
+We have voided your most recent subscription to test a club for the amount 6.99 USD
+
+The charge will eventually disappear from your credit card.
+
+Please contact hello@overdoll.com if you have any questions or concerns, or if this is a mistake.
+
+overdoll Inc.
+
+152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
+
+Terms of Service ( https://www.corpodoll.com/tos/ )
+
+Privacy Policy ( https://www.corpodoll.com/privacy/ )

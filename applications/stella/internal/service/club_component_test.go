@@ -4,10 +4,13 @@ import (
 	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
 )
@@ -83,6 +86,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	grpcClient := getGrpcClient(t)
 
@@ -91,6 +95,8 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.True(t, can.CanDelete, "should be able to delete")
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CreateClub, mock.Anything)
 
 	var createClub CreateClub
 
@@ -104,6 +110,9 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 			Name: fake.Name,
 		},
 	})
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	refreshClubESIndex(t)
 
 	require.NoError(t, err)
 
@@ -144,7 +153,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 club")
 	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
-	require.Equal(t, 3, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
 
 	require.True(t, accountClubs.Entities[0].Account.HasNonTerminatedClubs, "has non terminated clubs")
 }
@@ -172,7 +181,7 @@ func TestCreateClub_edit_slugs(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
-
+	mockAccountNormal(t, testingAccountId)
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
@@ -265,6 +274,7 @@ func TestCreateClub_edit_name(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)
@@ -302,6 +312,7 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 	clb := seedClub(t, testingAccountId)

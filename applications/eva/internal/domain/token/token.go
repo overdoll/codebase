@@ -9,6 +9,7 @@ import (
 	"io"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/uuid"
 	"strings"
 	"time"
 )
@@ -28,6 +29,8 @@ type AuthenticationToken struct {
 	token string
 
 	location *location.Location
+
+	uniqueId string
 }
 
 var (
@@ -80,6 +83,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 		deviceId:   pass.DeviceID(),
 		location:   location,
 		ip:         pass.IP(),
+		uniqueId:   uuid.New().String(),
 	}
 
 	t := &TemporaryState{
@@ -90,7 +94,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 	return ck, t, nil
 }
 
-func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool, userAgent, ip, deviceId string, location *location.Location) *AuthenticationToken {
+func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool, userAgent, ip, deviceId string, location *location.Location, uniqueId string) *AuthenticationToken {
 	return &AuthenticationToken{
 		ip:         ip,
 		token:      token,
@@ -100,6 +104,7 @@ func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool
 		userAgent:  userAgent,
 		location:   location,
 		expiration: time.Minute * 15,
+		uniqueId:   uniqueId,
 	}
 }
 
@@ -113,6 +118,10 @@ func (c *AuthenticationToken) SameDevice(pass *passport.Passport) bool {
 
 func (c *AuthenticationToken) IP() string {
 	return c.ip
+}
+
+func (c *AuthenticationToken) UniqueId() string {
+	return c.uniqueId
 }
 
 func (c *AuthenticationToken) IsSecure(pass *passport.Passport) bool {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/oschwald/geoip2-golang"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/eva/internal/adapters"
@@ -15,9 +15,10 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	"overdoll/libraries/testing_tools/mocks"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	carrierClient, cleanup := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	hadesClient, cleanup2 := clients.NewHadesClient(ctx, os.Getenv("HADES_SERVICE"))
@@ -46,26 +47,47 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
+type ComponentTestApplication struct {
+	App            *app.Application
+	TemporalClient *temporalmocks.Client
+	CarrierClient  *mocks.MockCarrierClient
+	HadesClient    *mocks.MockHadesClient
+	StellaClient   *mocks.MockStellaClient
+	RingerClient   *mocks.MockRingerClient
+	ParleyClient   *mocks.MockParleyClient
+	StingClient    *mocks.MockStingClient
+}
 
-	// mock out carrier so we don't have to send emails in tests
-	// we "send" emails by placing them inside of a redis DB to be read later from tests
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
 
-	temporalClient := &mocks.Client{}
+	carrierClient := &mocks.MockCarrierClient{}
+	hadesClient := &mocks.MockHadesClient{}
+	stellaClient := &mocks.MockStellaClient{}
+	ringerClient := &mocks.MockRingerClient{}
+	parleyClient := &mocks.MockParleyClient{}
+	stingClient := &mocks.MockStingClient{}
 
-	return createApplication(
+	return &ComponentTestApplication{
+		App: createApplication(
 			ctx,
-			NewCarrierServiceMock(),
-			HadesServiceMock{},
-			StellaServiceMock{},
-			RingerServiceMock{},
-			ParleyServiceMock{},
-			StingServiceMock{},
+			adapters.NewCarrierGrpc(carrierClient),
+			adapters.NewHadesGrpc(hadesClient),
+			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewRingerGrpc(ringerClient),
+			adapters.NewParleyGrpc(parleyClient),
+			adapters.NewStingGrpc(stingClient),
 			temporalClient,
 		),
-		func() {
-		},
-		temporalClient
+		TemporalClient: temporalClient,
+		CarrierClient:  carrierClient,
+		HadesClient:    hadesClient,
+		StellaClient:   stellaClient,
+		RingerClient:   ringerClient,
+		ParleyClient:   parleyClient,
+		StingClient:    stingClient,
+	}
 }
 
 func createApplication(
@@ -77,7 +99,7 @@ func createApplication(
 	parley command.ParleyService,
 	sting command.StingService,
 	client client.Client,
-) app.Application {
+) *app.Application {
 
 	bootstrap.NewBootstrap(ctx)
 
@@ -95,14 +117,13 @@ func createApplication(
 	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session)
 	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
-	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
-			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
+			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccount:                               command.NewLockAccountHandler(accountRepo),
@@ -112,10 +133,10 @@ func createApplication(
 			UpdateAccountUsername:                     command.NewUpdateAccountUsernameHandler(accountRepo),
 			RevokeAccountSession:                      command.NewRevokeAccountSessionHandler(sessionRepo),
 			UpdateAccountEmailStatusToPrimary:         command.NewUpdateAccountEmailStatusToPrimaryHandler(accountRepo),
-			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(mfaRepo),
-			GenerateAccountMultiFactorTOTP:            command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
-			EnrollAccountMultiFactorTOTP:              command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
-			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
+			GenerateAccountMultiFactorRecoveryCodes:   command.NewGenerateAccountMultiFactorRecoveryCodesHandler(accountRepo),
+			GenerateAccountMultiFactorTOTP:            command.NewGenerateAccountMultiFactorTOTP(accountRepo),
+			EnrollAccountMultiFactorTOTP:              command.NewEnrollAccountMultiFactorTOTPHandler(accountRepo),
+			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
 
@@ -142,18 +163,17 @@ func createApplication(
 			AccountEmailByEmail:    query.NewAccountEmailByEmailHandler(accountRepo),
 			AccountSessionById:     query.NewAccountSessionByIdHandler(sessionRepo),
 
-			AreAccountMultiFactorRecoveryCodesGenerated: query.NewAreAccountMultiFactorRecoveryCodesGeneratedHandler(mfaRepo),
+			AreAccountMultiFactorRecoveryCodesGenerated: query.NewAreAccountMultiFactorRecoveryCodesGeneratedHandler(accountRepo),
 			AccountSessionsByAccount:                    query.NewAccountSessionsByAccountHandler(sessionRepo),
-			AccountRecoveryCodesByAccount:               query.NewAccountRecoveryCodesByAccountHandler(mfaRepo),
-			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(mfaRepo),
-			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
+			AccountRecoveryCodesByAccount:               query.NewAccountRecoveryCodesByAccountHandler(accountRepo),
+			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(accountRepo),
+			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo),
 			AccountEmailsLimit:                          query.NewAccountEmailsLimitHandler(accountRepo),
 
 			LocationFromIp: query.NewLocationFromIpHandler(locationRepo),
 		},
 		Activities: activities.NewActivitiesHandler(
 			accountRepo,
-			mfaRepo,
 			sessionRepo,
 			hades,
 			stella,

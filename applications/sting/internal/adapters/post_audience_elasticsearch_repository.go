@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -26,41 +27,6 @@ type audienceDocument struct {
 	TotalPosts          int               `json:"total_posts"`
 	CreatedAt           string            `json:"created_at"`
 }
-
-const audienceIndexProperties = `
-{
-	"id": {
-		"type": "keyword"
-	},
-	"slug": {
-		"type": "keyword"
-	},
-	"thumbnail_resource_id": {
-		"type": "keyword"
-	},
-	"standard": {
-		"type": "integer"
-	},
-	"total_likes": {
-		"type": "integer"
-	},
-	"total_posts": {
-		"type": "integer"
-	},
-	"title": ` + localization.ESIndex + `
-	"created_at": {
-		"type": "date"
-	}
-}
-`
-
-const audienceIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": ` + audienceIndexProperties + `
-	}
-}`
 
 const AudienceIndexName = "audience"
 
@@ -138,6 +104,8 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to search audiences: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, fmt.Errorf("failed search audiences: %v", err)
 	}
 
@@ -178,13 +146,15 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Error("failed to index audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return err
 	}
 
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) indexAllAudience(ctx context.Context) error {
+func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -236,35 +206,4 @@ func (r PostsCassandraElasticsearchRepository) indexAllAudience(ctx context.Cont
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) deleteAudienceIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(AudienceIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(AudienceIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(AudienceIndexName).BodyString(audienceIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) DeleteAndRecreateAudienceIndex(ctx context.Context) error {
-
-	if err := r.deleteAudienceIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllAudience(ctx)
 }

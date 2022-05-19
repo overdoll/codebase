@@ -45,9 +45,8 @@ type Queries struct {
 	Rules        query.RulesHandler
 	RuleByPostId query.RuleByPostIdIdHandler
 
-	SearchPostReports          query.SearchPostReportsHandler
-	PostReportById             query.PostReportByIdHandler
-	PostReportByAccountAndPost query.PostReportByAccountAndPostHandler
+	SearchPostReports query.SearchPostReportsHandler
+	PostReportById    query.PostReportByIdHandler
 
 	SearchPostModeratorQueue query.SearchPostModeratorQueueHandler
 

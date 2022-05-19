@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -25,14 +26,18 @@ type UnArchivePost struct {
 func TestArchivePost_and_undo(t *testing.T) {
 	t.Parallel()
 
+	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
-	publishedPost := seedPublishedPost(t, testingAccountId)
+	mockAccountNormal(t, testingAccountId)
+	mockAccountDigestClubOwner(t, testingAccountId, clubId)
+	publishedPost := seedPublishedPost(t, testingAccountId, clubId)
+
 	postId := publishedPost.ID()
 	relayId := convertPostIdToRelayId(postId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.ArchivePost, workflows.ArchivePostInput{PostId: postId})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ArchivePost, workflows.ArchivePostInput{PostId: postId})
 
 	var archivePost ArchivePost
 
@@ -44,17 +49,13 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error archiving a post")
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post := getPost(t, client, postId)
 
 	require.Equal(t, types.PostStateArchived, post.Post.State, "post is in archived state")
 
-	unArchiveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnArchivePost, workflows.UnArchivePostInput{PostId: postId})
+	unArchiveWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnArchivePost, workflows.UnArchivePostInput{PostId: postId})
 
 	var unArchivePost UnArchivePost
 
@@ -66,11 +67,7 @@ func TestArchivePost_and_undo(t *testing.T) {
 
 	require.NoError(t, err, "no error un archiving a post")
 
-	unArchiveEnvironment := getWorkflowEnvironment(t)
-	unArchiveEnvironment.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
-	unArchiveWorkflowExecution.FindAndExecuteWorkflow(t, unArchiveEnvironment)
-	require.True(t, unArchiveEnvironment.IsWorkflowCompleted())
-	require.NoError(t, unArchiveEnvironment.GetWorkflowError())
+	unArchiveWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	post = getPost(t, client, postId)
 

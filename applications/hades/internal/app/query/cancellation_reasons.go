@@ -2,8 +2,7 @@ package query
 
 import (
 	"context"
-	"overdoll/applications/hades/internal/domain/cancellation"
-
+	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/paging"
 )
 
@@ -13,16 +12,16 @@ type CancellationReasons struct {
 }
 
 type CancellationReasonsHandler struct {
-	cr cancellation.Repository
+	br billing.Repository
 }
 
-func NewCancellationReasonsHandler(cr cancellation.Repository) CancellationReasonsHandler {
-	return CancellationReasonsHandler{cr: cr}
+func NewCancellationReasonsHandler(br billing.Repository) CancellationReasonsHandler {
+	return CancellationReasonsHandler{br: br}
 }
 
-func (h CancellationReasonsHandler) Handle(ctx context.Context, query CancellationReasons) ([]*cancellation.Reason, error) {
+func (h CancellationReasonsHandler) Handle(ctx context.Context, query CancellationReasons) ([]*billing.CancellationReason, error) {
 
-	reasons, err := h.cr.GetReasons(ctx, query.Cursor, query.Deprecated)
+	reasons, err := h.br.GetCancellationReasons(ctx, query.Cursor, query.Deprecated)
 
 	if err != nil {
 		return nil, err

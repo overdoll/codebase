@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cql",
+    srcs = ["embed.go"],
+    embedsrcs = ["1608755525914_create_accounts.cql"],
+    importpath = "overdoll/applications/eva/internal/adapters/migrations/cql",
+    visibility = ["//applications/eva:__subpackages__"],
+)

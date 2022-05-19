@@ -14,7 +14,7 @@ type UpcomingClubSupporterSubscriptionRenewals struct {
 	Renewals  []struct {
 		ClubId         string
 		SubscriptionId string
-		Amount         int64
+		Amount         uint64
 		Currency       string
 		BillingDate    time.Time
 	}

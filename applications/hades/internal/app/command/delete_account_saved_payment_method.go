@@ -21,9 +21,5 @@ func NewDeleteAccountSavedPaymentMethodHandler(br billing.Repository) DeleteAcco
 }
 
 func (h DeleteAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd DeleteAccountSavedPaymentMethod) error {
-
-	if err := h.br.DeleteAccountSavedPaymentMethod(ctx, cmd.Principal, cmd.AccountId, cmd.AccountSavedPaymentMethodId); err != nil {
-		return err
-	}
-	return nil
+	return h.br.DeleteAccountSavedPaymentMethod(ctx, cmd.Principal, cmd.AccountId, cmd.AccountSavedPaymentMethodId)
 }

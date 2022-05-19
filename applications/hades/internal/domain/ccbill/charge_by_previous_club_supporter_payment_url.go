@@ -15,7 +15,7 @@ type ChargeByPreviousClubSupporterPaymentUrl struct {
 	accountId            string
 	ccbillSubscriptionId string
 
-	amount   int64
+	amount   uint64
 	currency int
 }
 

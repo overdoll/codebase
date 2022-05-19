@@ -7,7 +7,6 @@ import (
 	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"log"
@@ -26,10 +25,6 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
 	"testing"
-)
-
-var (
-	temporalClientMock *mocks.Client
 )
 
 const LoaderHttpAddr = ":3333"
@@ -102,11 +97,10 @@ func getGrpcClient(t *testing.T) loader.LoaderClient {
 	return loaderClient
 }
 
-func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
+func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
-	newApp, _, _ := service.NewComponentTestApplication(context.Background())
-	env.RegisterActivity(newApp.Activities)
+	env.RegisterActivity(application.App.Activities)
 
 	return env
 }
@@ -114,11 +108,9 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 func startService() bool {
 	config.Read("applications/loader")
 
-	application, _, client := service.NewComponentTestApplication(context.Background())
+	app := service.NewComponentTestApplication(context.Background())
 
-	temporalClientMock = client
-
-	srv := ports.NewHttpServer(&application)
+	srv := ports.NewHttpServer(app.App)
 
 	go bootstrap.InitializeHttpServer(LoaderHttpAddr, srv, func() {})
 
@@ -128,7 +120,7 @@ func startService() bool {
 		return false
 	}
 
-	s := ports.NewGrpcServer(&application)
+	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(LoaderGrpcAddr, func(server *grpc.Server) {
 		loader.RegisterLoaderServer(server, s)
@@ -146,6 +138,8 @@ func startService() bool {
 		log.Printf("could not install webp: %v", err)
 		return false
 	}
+
+	mockServices(app)
 
 	return true
 }

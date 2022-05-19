@@ -30,11 +30,7 @@ func (h UnArchivePostHandler) Handle(ctx context.Context, cmd UnArchivePost) (*p
 		return nil, err
 	}
 
-	if err := pst.CanUnArchive(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.UnArchivePost(ctx, pst.ID()); err != nil {
+	if err := h.event.UnArchivePost(ctx, cmd.Principal, pst); err != nil {
 		return nil, err
 	}
 

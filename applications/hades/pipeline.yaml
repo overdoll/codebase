@@ -25,12 +25,6 @@ steps:
       - name: ringer.component
         paths:
           - ./applications/hades/internal/service/**/coverage.dat
-    setup:
-      dockerfile:
-        - ./applications/hades/docker-compose.ci.yaml
-    network_dependencies:
-      - host: hades
-        port: 8000
     targets:
       - //applications/hades/internal/adapters/...
       - //applications/hades/internal/service/...

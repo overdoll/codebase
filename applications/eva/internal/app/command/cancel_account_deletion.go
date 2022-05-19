@@ -29,11 +29,7 @@ func (h CancelAccountDeletionHandler) Handle(ctx context.Context, cmd CancelAcco
 		return nil, err
 	}
 
-	if err := acc.CanCancelDeletion(cmd.Principal); err != nil {
-		return nil, err
-	}
-
-	if err := h.event.CancelAccountDeletion(ctx, *acc.ScheduledDeletionWorkflowId()); err != nil {
+	if err := h.event.CancelAccountDeletion(ctx, cmd.Principal, acc); err != nil {
 		return nil, err
 	}
 

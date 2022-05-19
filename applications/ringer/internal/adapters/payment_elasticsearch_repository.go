@@ -6,66 +6,13 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 	"time"
 )
-
-const clubPaymentsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"source": {
-					"type": "keyword"
-				},
-				"status": {
-					"type": "keyword"
-				},
-				"settlement_date": {
-					"type": "date"
-				},
-				"source_account_id": {
-					"type": "keyword"
-				},
-				"destination_club_id": {
-					"type": "keyword"
-				},
-				"account_transaction_id": {
-					"type": "keyword"
-				},
-				"currency": {
-					"type": "keyword"
-				},
-				"base_amount": {
-					"type": "integer"
-				},
-				"platform_fee_amount": {
-					"type": "integer"
-				},
-				"final_amount": {
-					"type": "integer"
-				},
-				"is_deduction": {
-					"type": "boolean"
-				},
-				"deduction_source_payment_id": {
-					"type": "keyword"
-				},
-				"club_payout_ids": {
-					"type": "keyword"
-				},
-				"timestamp": {
-					"type": "date"
-				}
-		}
-	}
-}`
 
 type clubPaymentDocument struct {
 	Id                       string    `json:"id"`
@@ -76,12 +23,12 @@ type clubPaymentDocument struct {
 	AccountTransactionId     string    `json:"account_transaction_id"`
 	DestinationClubId        string    `json:"destination_club_id"`
 	Currency                 string    `json:"currency"`
-	BaseAmount               int64     `json:"base_amount"`
-	PlatformFeeAmount        int64     `json:"platform_fee_amount"`
-	FinalAmount              int64     `json:"final_amount"`
+	BaseAmount               uint64    `json:"base_amount"`
+	PlatformFeeAmount        uint64    `json:"platform_fee_amount"`
+	FinalAmount              uint64    `json:"final_amount"`
 	IsDeduction              bool      `json:"is_deduction"`
 	DeductionSourcePaymentId *string   `json:"deduction_source_payment_id"`
-	Timestamp                time.Time `json:"timestamp"`
+	CreatedAt                time.Time `json:"created_at"`
 	ClubPayoutIds            []string  `json:"club_payout_ids"`
 }
 
@@ -110,7 +57,7 @@ func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment,
 		doc.FinalAmount,
 		doc.IsDeduction,
 		doc.DeductionSourcePaymentId,
-		doc.Timestamp,
+		doc.CreatedAt,
 		doc.SettlementDate,
 		doc.ClubPayoutIds,
 	)
@@ -135,7 +82,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocumen
 		FinalAmount:              pay.FinalAmount(),
 		IsDeduction:              pay.IsDeduction(),
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
-		Timestamp:                pay.Timestamp(),
+		CreatedAt:                pay.CreatedAt(),
 		ClubPayoutIds:            pay.ClubPayoutIds(),
 	}, nil
 }
@@ -162,7 +109,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 		}
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -215,7 +162,32 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 	return pays, nil
 }
 
-func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx context.Context) error {
+func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx context.Context, payoutId string, paymentIds []string) error {
+	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
+		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
+		Script(elastic.NewScript(`
+
+		if (ctx._source.club_payout_ids == null) {
+			ctx._source.club_payout_ids = new ArrayList();
+		}
+
+		if (!ctx._source.club_payout_ids.contains(params.payoutId)) { 
+			ctx._source.club_payout_ids.add(params.payoutId) 
+		} 
+
+	`).Param("payoutId", payoutId).Lang("painless")).
+		Do(ctx)
+
+	if err != nil {
+		e, _ := err.(*elastic.Error)
+		zap.S().Errorw("failed to update index append club payments payout id: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
+		return fmt.Errorf("failed to update index append club payments payout id: %v", err)
+	}
+
+	return nil
+}
+
+func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -245,8 +217,8 @@ func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx contex
 				FinalAmount:              pay.FinalAmount,
 				IsDeduction:              pay.IsDeduction,
 				DeductionSourcePaymentId: pay.DeductionSourcePaymentId,
-				Timestamp:                pay.Timestamp,
-				ClubPayoutIds:            nil,
+				CreatedAt:                pay.CreatedAt,
+				ClubPayoutIds:            pay.ClubPayoutIds,
 			}
 
 			_, err := r.client.
@@ -265,28 +237,6 @@ func (r PaymentCassandraElasticsearchRepository) indexAllClubPayments(ctx contex
 	})
 
 	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PaymentCassandraElasticsearchRepository) deleteClubPaymentsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubPaymentsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubPaymentsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubPaymentsIndexName).BodyString(clubPaymentsIndex).Do(ctx); err != nil {
 		return err
 	}
 
@@ -327,13 +277,4 @@ func (r PaymentCassandraElasticsearchRepository) updateIndexClubPaymentsComplete
 	}
 
 	return nil
-}
-
-func (r PaymentCassandraElasticsearchRepository) DeleteAndRecreateClubPaymentsIndex(ctx context.Context) error {
-
-	if err := r.deleteClubPaymentsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubPayments(ctx)
 }

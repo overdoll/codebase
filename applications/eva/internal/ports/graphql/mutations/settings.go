@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -101,12 +100,14 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 		return nil, err
 	}
 
-	if err := r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, command.EnrollAccountMultiFactorTOTP{
+	acc, err := r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, command.EnrollAccountMultiFactorTOTP{
 		Principal: principal.FromContext(ctx),
 		ID:        input.ID,
 		Code:      input.Code,
-	}); err != nil {
-		if err == multi_factor.ErrTOTPCodeInvalid {
+	})
+
+	if err != nil {
+		if err == account.ErrTOTPCodeInvalid {
 			expired := types.EnrollAccountMultiFactorTotpValidationInvalidCode
 			return &types.EnrollAccountMultiFactorTotpPayload{Validation: &expired}, nil
 		}
@@ -114,9 +115,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 		return nil, err
 	}
 
-	enabled := true
-
-	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTotpEnabled: &enabled}, nil
+	return &types.EnrollAccountMultiFactorTotpPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
 }
 
 func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error) {
@@ -250,13 +249,13 @@ func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*type
 		return nil, err
 	}
 
-	if err := r.App.Commands.DisableAccountMultiFactor.Handle(ctx, command.DisableAccountMultiFactor{
+	acc, err := r.App.Commands.DisableAccountMultiFactor.Handle(ctx, command.DisableAccountMultiFactor{
 		Principal: principal.FromContext(ctx),
-	}); err != nil {
+	})
+
+	if err != nil {
 		return nil, err
 	}
 
-	enabled := false
-
-	return &types.DisableAccountMultiFactorPayload{AccountMultiFactorTotpEnabled: &enabled}, nil
+	return &types.DisableAccountMultiFactorPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
 }

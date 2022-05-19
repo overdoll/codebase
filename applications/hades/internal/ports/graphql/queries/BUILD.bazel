@@ -14,7 +14,6 @@ go_library(
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/query",
         "//applications/hades/internal/domain/billing",
-        "//applications/hades/internal/domain/cancellation",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/ports/graphql/types",
         "//libraries/graphql",

@@ -22,7 +22,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, clubId, nil)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.CCBillRenewalSuccess, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CCBillRenewalSuccess, mock.Anything)
 
 	newTransactionId := uuid.New().String()
 
@@ -48,11 +48,10 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 		"transactionId":          newTransactionId,
 	})
 
-	env := getWorkflowEnvironment(t)
-	env.RegisterWorkflow(workflows.ClubTransactionMetric)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
 
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -64,6 +63,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 
 	require.Equal(t, graphql.CurrencyUsd, subscription.BillingCurrency, "USD currency is used")
 	require.Equal(t, 699, subscription.BillingAmount, "correct billing amount")
+	require.Equal(t, "2022-03-28", subscription.LastBillingDate, "correct next billing date")
 	require.Equal(t, "2024-03-28", subscription.NextBillingDate, "correct next billing date")
 
 	accountTransactionsInvoice := getAccountTransactions(t, gqlClient, accountId)
@@ -75,7 +75,7 @@ func TestBillingFlow_RenewalSuccess(t *testing.T) {
 	transaction := accountTransactionsInvoice.Entities[0].Account.Transactions.Edges[0].Node
 
 	require.Equal(t, types.AccountTransactionTypePayment, transaction.Type, "correct transaction type")
-	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.Timestamp.String(), "correct timestamp")
+	require.Equal(t, "2022-02-28 15:21:49 +0000 UTC", transaction.CreatedAt.String(), "correct timestamp")
 	require.Equal(t, 699, transaction.Amount, "correct amount")
 	require.Equal(t, graphql.CurrencyUsd, transaction.Currency, "correct currency")
 

@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"math"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -19,26 +20,26 @@ type ClubTransactionMetrics struct {
 	month int
 	year  int
 
-	totalTransactionsCount int64
-	chargebacksCount       int64
-	refundsCount           int64
+	totalTransactionsCount uint64
+	chargebacksCount       uint64
+	refundsCount           uint64
 
-	totalRefundsAmount      int64
-	totalChargebacksAmount  int64
-	totalTransactionsAmount int64
+	totalRefundsAmount      uint64
+	totalChargebacksAmount  uint64
+	totalTransactionsAmount uint64
 
 	currency money.Currency
 }
 
-func UnmarshalClubTransactionMetricsFromDatabase(clubId string, timestamp time.Time, currency string,
+func UnmarshalClubTransactionMetricsFromDatabase(clubId string, createdAt time.Time, currency string,
 	totalTransactionsCount, chargebacksCount, refundsCount,
-	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount int64,
+	totalRefundsAmount, totalChargebacksAmount, totalTransactionsAmount uint64,
 ) *ClubTransactionMetrics {
 	cr, _ := money.CurrencyFromString(currency)
 	return &ClubTransactionMetrics{
 		clubId:                  clubId,
-		month:                   int(timestamp.Month()),
-		year:                    timestamp.Year(),
+		month:                   int(createdAt.Month()),
+		year:                    createdAt.Year(),
 		totalTransactionsCount:  totalTransactionsCount,
 		chargebacksCount:        chargebacksCount,
 		refundsCount:            refundsCount,
@@ -66,62 +67,42 @@ func (m *ClubTransactionMetrics) Currency() money.Currency {
 }
 
 func (m *ClubTransactionMetrics) ChargebacksCountRatio() float64 {
-
-	if m.totalTransactionsCount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsCount / m.totalTransactionsCount)
+	return toFixed(float64(m.chargebacksCount)/float64(m.totalTransactionsCount), 4)
 }
 
 func (m *ClubTransactionMetrics) ChargebacksAmountRatio() float64 {
-
-	if m.totalChargebacksAmount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsAmount / m.totalChargebacksAmount)
+	return toFixed(float64(m.totalChargebacksAmount)/float64(m.totalTransactionsAmount), 4)
 }
 
 func (m *ClubTransactionMetrics) RefundsAmountRatio() float64 {
-
-	if m.totalRefundsAmount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsAmount / m.totalRefundsAmount)
+	return toFixed(float64(m.totalRefundsAmount)/float64(m.totalTransactionsAmount), 4)
 }
 
 func (m *ClubTransactionMetrics) RefundsCountRatio() float64 {
-
-	if m.refundsCount == 0 {
-		return 0
-	}
-
-	return float64(m.totalTransactionsCount / m.refundsCount)
+	return toFixed(float64(m.refundsCount)/float64(m.totalTransactionsCount), 4)
 }
 
-func (m *ClubTransactionMetrics) TotalTransactions() int64 {
+func (m *ClubTransactionMetrics) TotalTransactions() uint64 {
 	return m.totalTransactionsCount
 }
 
-func (m *ClubTransactionMetrics) ChargebacksCount() int64 {
+func (m *ClubTransactionMetrics) ChargebacksCount() uint64 {
 	return m.chargebacksCount
 }
 
-func (m *ClubTransactionMetrics) RefundsCount() int64 {
+func (m *ClubTransactionMetrics) RefundsCount() uint64 {
 	return m.refundsCount
 }
 
-func (m *ClubTransactionMetrics) TotalTransactionsAmount() int64 {
+func (m *ClubTransactionMetrics) TotalTransactionsAmount() uint64 {
 	return m.totalTransactionsAmount
 }
 
-func (m *ClubTransactionMetrics) RefundsAmount() int64 {
+func (m *ClubTransactionMetrics) RefundsAmount() uint64 {
 	return m.totalRefundsAmount
 }
 
-func (m *ClubTransactionMetrics) ChargebacksAmount() int64 {
+func (m *ClubTransactionMetrics) ChargebacksAmount() uint64 {
 	return m.totalChargebacksAmount
 }
 
@@ -145,4 +126,13 @@ func CanViewClubTransactionMetrics(requester *principal.Principal, clubId string
 	}
 
 	return nil
+}
+
+func round(num float64) int {
+	return int(num + math.Copysign(0.5, num))
+}
+
+func toFixed(num float64, precision int) float64 {
+	output := math.Pow(10, float64(precision))
+	return float64(round(num*output)) / output
 }

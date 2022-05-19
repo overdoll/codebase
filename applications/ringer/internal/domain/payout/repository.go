@@ -29,6 +29,5 @@ type Repository interface {
 	UpdateDepositRequestAmount(ctx context.Context, depositRequestId string, updateFn func(pay *DepositRequest) error) (*DepositRequest, error)
 	GetDepositRequestsForMonth(ctx context.Context, time time.Time) ([]*DepositRequest, error)
 
-	DeleteAndRecreateClubPayoutsIndex(ctx context.Context) error
 	SearchClubPayouts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ClubPayoutsFilters) ([]*ClubPayout, error)
 }

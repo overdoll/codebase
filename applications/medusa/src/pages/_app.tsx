@@ -124,12 +124,8 @@ const MyApp = ({
   )
 }
 
-const componentsToLoad = [Root]
-
 MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   const initialProps = await NextApp.getInitialProps(app)
-
-  componentsToLoad.push(app.Component)
 
   let securityToken
   let environment
@@ -158,12 +154,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
 
   let queries: GetRelayPreloadPropsReturn = {}
 
-  for (let i = 0; i < componentsToLoad.length; i++) {
-    const component = componentsToLoad[i]
-
-    if (component?.getRelayPreloadProps != null) {
-      queries = { ...queries, ...component.getRelayPreloadProps(app.ctx).queries }
-    }
+  if (app.Component?.getRelayPreloadProps != null) {
+    queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
   }
 
   // preload results on the server & client

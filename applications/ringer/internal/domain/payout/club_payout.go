@@ -23,16 +23,16 @@ type ClubPayout struct {
 	depositRequestId   string
 	temporalWorkflowId string
 
-	amount   int64
+	amount   uint64
 	currency money.Currency
 
-	timestamp   time.Time
+	createdAt   time.Time
 	depositDate time.Time
 
 	events []*ClubPayoutEvent
 }
 
-func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod, id, clubId, temporalWorkflowId string, amount int64, currency money.Currency, timestamp time.Time, depositDate *time.Time) (*ClubPayout, error) {
+func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod, id, clubId, temporalWorkflowId string, amount uint64, currency money.Currency, timestamp time.Time, depositDate *time.Time) (*ClubPayout, error) {
 	if depositDate == nil {
 		dt := timestamp.AddDate(0, 0, 15)
 		depositDate = &dt
@@ -48,7 +48,7 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		amount:             amount,
 		depositDate:        *depositDate,
 		currency:           currency,
-		timestamp:          timestamp,
+		createdAt:          timestamp,
 	}, nil
 }
 
@@ -68,7 +68,7 @@ func (p *ClubPayout) TemporalWorkflowId() string {
 	return p.temporalWorkflowId
 }
 
-func (p *ClubPayout) Amount() int64 {
+func (p *ClubPayout) Amount() uint64 {
 	return p.amount
 }
 
@@ -88,8 +88,8 @@ func (p *ClubPayout) DepositDate() time.Time {
 	return p.depositDate
 }
 
-func (p *ClubPayout) Timestamp() time.Time {
-	return p.timestamp
+func (p *ClubPayout) CreatedAt() time.Time {
+	return p.createdAt
 }
 
 func (p *ClubPayout) Events() []*ClubPayoutEvent {
@@ -147,7 +147,11 @@ func (p *ClubPayout) UpdateDepositDate(t time.Time) error {
 	return nil
 }
 
-func (p *ClubPayout) CanCancel() error {
+func (p *ClubPayout) CanCancel(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if p.status != Queued {
 		return errors.New("can only cancel a queued payout")
@@ -156,7 +160,11 @@ func (p *ClubPayout) CanCancel() error {
 	return nil
 }
 
-func (p *ClubPayout) CanRetry() error {
+func (p *ClubPayout) CanRetry(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if p.status != Failed {
 		return errors.New("can only retry a failed payout")
@@ -192,11 +200,11 @@ func UnmarshalClubPayoutFromDatabase(
 	status string,
 	clubId string,
 	currency string,
-	amount int64,
+	amount uint64,
 	depositDate time.Time,
 	accountPayoutMethodId string,
 	depositRequestId string,
-	timestamp time.Time,
+	createdAt time.Time,
 	events []*ClubPayoutEvent,
 	temporalWorkflowId string,
 ) *ClubPayout {
@@ -211,7 +219,7 @@ func UnmarshalClubPayoutFromDatabase(
 		temporalWorkflowId: temporalWorkflowId,
 		amount:             amount,
 		currency:           cr,
-		timestamp:          timestamp,
+		createdAt:          createdAt,
 		depositDate:        depositDate,
 		events:             events,
 	}

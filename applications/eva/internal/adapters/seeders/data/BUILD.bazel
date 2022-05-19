@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "data",
+    srcs = ["embed.go"],
+    embedsrcs = [
+        "account_emails.json",
+        "account_usernames.json",
+        "accounts.json",
+        "emails_by_account.json",
+    ],
+    importpath = "overdoll/applications/eva/internal/adapters/seeders/data",
+    visibility = ["//applications/eva:__subpackages__"],
+)

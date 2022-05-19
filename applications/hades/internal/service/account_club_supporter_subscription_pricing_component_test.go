@@ -25,6 +25,9 @@ func TestAccountClubSupporterSubscriptionPricing(t *testing.T) {
 	accountId := uuid.New().String()
 	clubId := uuid.New().String()
 
+	mockAccountNormal(t, accountId)
+	mockAccountDigest(t, accountId, "")
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

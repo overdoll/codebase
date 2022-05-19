@@ -26,8 +26,9 @@ func (r PostResolver) ViewerReport(ctx context.Context, obj *types.Post) (*types
 		return nil, nil
 	}
 
-	rep, err := r.App.Queries.PostReportByAccountAndPost.Handle(ctx, query.PostReportByAccountAndPost{
+	rep, err := r.App.Queries.PostReportById.Handle(ctx, query.PostReportById{
 		Principal: principal.FromContext(ctx),
+		AccountId: principal.FromContext(ctx).AccountId(),
 		PostId:    obj.ID.GetID(),
 	})
 

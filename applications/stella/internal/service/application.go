@@ -3,24 +3,21 @@ package service
 import (
 	"context"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/mocks"
+	temporalmocks "go.temporal.io/sdk/mocks"
 	"os"
 	"overdoll/applications/stella/internal/adapters"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/command"
 	"overdoll/applications/stella/internal/app/query"
-
 	"overdoll/applications/stella/internal/app/workflows/activities"
+	"overdoll/libraries/testing_tools/mocks"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func()) {
-
-	// bootstrap application
+func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap(ctx)
-
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
@@ -40,30 +37,42 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (app.Application, func(), *mocks.Client) {
-
-	bootstrap.NewBootstrap(ctx)
-
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-
-	temporalClient := &mocks.Client{}
-
-	return createApplication(ctx,
-			// kind of "mock" eva, it will read off a stored database of accounts for testing first before reaching out to eva.
-			// this makes testing easier because we can get reproducible tests with each run
-			EvaServiceMock{adapter: adapters.NewEvaGrpc(evaClient)},
-			LoaderServiceMock{},
-			StingServiceMock{},
-			CarrierServiceMock{},
-			temporalClient,
-		),
-		func() {
-			cleanup()
-		},
-		temporalClient
+type ComponentTestApplication struct {
+	App            *app.Application
+	TemporalClient *temporalmocks.Client
+	EvaClient      *mocks.MockEvaClient
+	CarrierClient  *mocks.MockCarrierClient
+	StingClient    *mocks.MockStingClient
+	LoaderClient   *mocks.MockLoaderClient
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) app.Application {
+func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
+	bootstrap.NewBootstrap(ctx)
+	temporalClient := &temporalmocks.Client{}
+
+	evaClient := &mocks.MockEvaClient{}
+	loaderClient := &mocks.MockLoaderClient{}
+	stingClient := &mocks.MockStingClient{}
+	carrierClient := &mocks.MockCarrierClient{}
+
+	return &ComponentTestApplication{
+		App: createApplication(
+			ctx,
+			adapters.NewEvaGrpc(evaClient),
+			adapters.NewLoaderGrpc(loaderClient),
+			adapters.NewStingGrpc(stingClient),
+			adapters.NewCarrierGrpc(carrierClient),
+			temporalClient,
+		),
+		TemporalClient: temporalClient,
+		EvaClient:      evaClient,
+		LoaderClient:   loaderClient,
+		CarrierClient:  carrierClient,
+		StingClient:    stingClient,
+	}
+}
+
+func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -71,25 +80,23 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	return app.Application{
+	return &app.Application{
 		Commands: app.Commands{
-			DeleteAndRecreateClubsIndex:       command.NewDeleteAndRecreateClubsIndex(clubRepo),
-			DeleteAndRecreateClubMembersIndex: command.NewDeleteAndRecreateClubMembersIndexHandler(clubRepo),
-			CreateClub:                        command.NewCreateClubHandler(clubRepo),
-			AddClubSlugAlias:                  command.NewAddClubSlugAliasHandler(clubRepo),
-			RemoveClubSlugAlias:               command.NewRemoveClubSlugAliasHandler(clubRepo),
-			UpdateClubName:                    command.NewUpdateClubNameHandler(clubRepo),
-			PromoteClubSlugAliasToDefault:     command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo),
-			JoinClub:                          command.NewJoinClubHandler(clubRepo, eventRepo),
-			LeaveClub:                         command.NewLeaveClubHandler(clubRepo, eventRepo),
-			UpdateClubThumbnail:               command.NewUpdateClubThumbnailHandler(clubRepo, loader),
-			SuspendClubOperator:               command.NewSuspendClubOperatorHandler(clubRepo, eventRepo),
-			SuspendClub:                       command.NewSuspendClubHandler(clubRepo, eventRepo),
-			UnSuspendClub:                     command.NewUnSuspendClubHandler(clubRepo, eventRepo),
-			AddClubSupporter:                  command.NewAddClubSupporterHandler(eventRepo),
-			RemoveClubSupporter:               command.NewRemoveClubSupporterHandler(eventRepo),
-			DeleteAccountData:                 command.NewDeleteAccountDataHandler(clubRepo),
-			NewSupporterPost:                  command.NewNewSupporterPostHandler(eventRepo),
+			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
+			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
+			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo),
+			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo),
+			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo),
+			JoinClub:                      command.NewJoinClubHandler(clubRepo, eventRepo),
+			LeaveClub:                     command.NewLeaveClubHandler(clubRepo, eventRepo),
+			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, loader),
+			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, eventRepo),
+			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, eventRepo),
+			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, eventRepo),
+			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
+			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
+			DeleteAccountData:             command.NewDeleteAccountDataHandler(clubRepo),
+			NewSupporterPost:              command.NewNewSupporterPostHandler(eventRepo),
 
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
@@ -111,6 +118,7 @@ func createApplication(ctx context.Context, eva command.EvaService, loader comma
 			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
+			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 		},
 		Activities: activities.NewActivitiesHandler(clubRepo, sting, carrier),
 	}

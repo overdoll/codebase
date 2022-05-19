@@ -4,115 +4,81 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
-	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
 type postReport struct {
-	Id                 string `db:"id"`
-	PostId             string `db:"post_id"`
-	Bucket             int    `db:"bucket"`
-	ReportingAccountId string `db:"reporting_account_id"`
-	RuleId             string `db:"rule_id"`
+	PostId             string    `db:"post_id"`
+	Bucket             int       `db:"bucket"`
+	ReportingAccountId string    `db:"reporting_account_id"`
+	RuleId             string    `db:"rule_id"`
+	CreatedAt          time.Time `db:"created_at"`
 }
 
 var postReportTable = table.New(table.Metadata{
 	Name: "post_reports",
 	Columns: []string{
-		"id",
-		"post_id",
-		"bucket",
-		"reporting_account_id",
-		"rule_id",
-	},
-	PartKey: []string{"id"},
-	SortKey: []string{},
-})
-
-var postReportsByBucketTable = table.New(table.Metadata{
-	Name: "post_reports_by_bucket",
-	Columns: []string{
-		"post_id",
-		"bucket",
-		"id",
-		"reporting_account_id",
-		"rule_id",
-	},
-	PartKey: []string{"bucket"},
-	SortKey: []string{"id"},
-})
-
-var postReportsByAccountAndBucketTable = table.New(table.Metadata{
-	Name: "post_report_by_account_and_bucket",
-	Columns: []string{
-		"bucket",
-		"reporting_account_id",
-		"id",
-		"post_id",
-		"rule_id",
-	},
-	PartKey: []string{"bucket", "reporting_account_id"},
-	SortKey: []string{"id"},
-})
-
-var postReportByPostTable = table.New(table.Metadata{
-	Name: "post_reports_by_post",
-	Columns: []string{
-		"post_id",
-		"bucket",
-		"id",
-		"reporting_account_id",
-		"rule_id",
-	},
-	PartKey: []string{"post_id", "bucket"},
-	SortKey: []string{"id"},
-})
-
-var postReportForAccountAndPostTable = table.New(table.Metadata{
-	Name: "post_report_for_account_and_post",
-	Columns: []string{
 		"post_id",
 		"reporting_account_id",
 		"bucket",
-		"id",
 		"rule_id",
+		"created_at",
 	},
 	PartKey: []string{"post_id", "reporting_account_id"},
 	SortKey: []string{},
 })
 
-type ReportCassandraRepository struct {
+var postReportsByAccountBucketsTable = table.New(table.Metadata{
+	Name: "post_report_by_account_buckets",
+	Columns: []string{
+		"reporting_account_id",
+		"bucket",
+	},
+	PartKey: []string{"reporting_account_id"},
+	SortKey: []string{"bucket"},
+})
+
+var postReportsByAccountTable = table.New(table.Metadata{
+	Name: "post_report_by_account",
+	Columns: []string{
+		"post_id",
+		"reporting_account_id",
+		"bucket",
+		"rule_id",
+		"created_at",
+	},
+	PartKey: []string{"bucket", "reporting_account_id"},
+	SortKey: []string{"post_id"},
+})
+
+type ReportCassandraElasticsearchRepository struct {
 	session gocqlx.Session
+	client  *elastic.Client
 }
 
-func NewReportCassandraRepository(session gocqlx.Session) ReportCassandraRepository {
-	return ReportCassandraRepository{session: session}
+func NewReportCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client) ReportCassandraElasticsearchRepository {
+	return ReportCassandraElasticsearchRepository{session: session, client: client}
 }
 
 func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error) {
 
-	buck, err := bucket.MakeWeeklyBucketFromUUID(report.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &postReport{
-		Id:                 report.ID(),
-		Bucket:             buck,
-		PostId:             report.PostID(),
+		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(report.CreatedAt()),
+		PostId:             report.PostId(),
 		ReportingAccountId: report.ReportingAccountId(),
 		RuleId:             report.RuleId(),
 	}, nil
 }
 
-func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
+func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
 
 	marshalledPostReport, err := marshalPostReportToDatabase(report)
 
@@ -120,76 +86,53 @@ func (r ReportCassandraRepository) CreatePostReport(ctx context.Context, report 
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, _ := postReportTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.Id,
-		marshalledPostReport.PostId,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.RuleId,
+	stmt, names := postReportTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
-	stmt, _ = postReportByPostTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.PostId,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.Id,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.RuleId,
+	stmt, names = postReportsByAccountBucketsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
-	stmt, _ = postReportForAccountAndPostTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.PostId,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.Id,
-		marshalledPostReport.RuleId,
-	)
-
-	stmt, _ = postReportsByBucketTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.PostId,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.Id,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.RuleId,
-	)
-
-	stmt, _ = postReportsByAccountAndBucketTable.Insert()
-
-	batch.Query(stmt,
-		marshalledPostReport.Bucket,
-		marshalledPostReport.ReportingAccountId,
-		marshalledPostReport.Id,
-		marshalledPostReport.PostId,
-		marshalledPostReport.RuleId,
+	stmt, names = postReportsByAccountTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		marshalledPostReport,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("failed to create report log: %v", err)
 	}
 
+	if err := r.indexPostReport(ctx, report); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r ReportCassandraRepository) GetPostReportById(ctx context.Context, requester *principal.Principal, logId string) (*report.PostReport, error) {
+func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*report.PostReport, error) {
 
 	var postRep postReport
 
 	if err := r.session.
 		Query(postReportTable.Get()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postReport{
-			Id: logId,
+			PostId:             postId,
+			ReportingAccountId: accountId,
 		}).
-		Get(&postRep); err != nil {
+		GetRelease(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, report.ErrPostReportNotFound
@@ -199,10 +142,10 @@ func (r ReportCassandraRepository) GetPostReportById(ctx context.Context, reques
 	}
 
 	rep := report.UnmarshalPostReportFromDatabase(
-		postRep.Id,
 		postRep.PostId,
 		postRep.ReportingAccountId,
 		postRep.RuleId,
+		postRep.CreatedAt,
 	)
 
 	if err := rep.CanView(requester); err != nil {
@@ -212,131 +155,49 @@ func (r ReportCassandraRepository) GetPostReportById(ctx context.Context, reques
 	return rep, nil
 }
 
-func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *report.PostReportFilters) ([]*report.PostReport, error) {
+func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(ctx context.Context, accountId string) ([]int, error) {
 
-	var postReports []*report.PostReport
+	var buckets []postReport
 
-	if err := report.CanViewWithFilters(requester, filters); err != nil {
-		return nil, err
-	}
-
-	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(filters.From())
-	endingBucket := 0
-
-	if filters.To() != nil {
-		endingBucket = bucket.MakeWeeklyBucketFromTimestamp(*filters.To())
-	}
-
-	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
-
-		info := map[string]interface{}{
-			"bucket":  bucketId,
-			"post_id": filters.PostId(),
-		}
-
-		var builder *qb.SelectBuilder
-
-		if filters.PostId() != nil {
-			builder = qb.Select(postReportByPostTable.Name()).
-				Where(qb.Eq("bucket"), qb.Eq("post_id"))
-		} else {
-			builder = qb.Select(postReportsByBucketTable.Name()).
-				Where(qb.Eq("bucket"))
-		}
-
-		if err := cursor.BuildCassandra(builder, "id", false); err != nil {
-			return nil, err
-		}
-
-		var results []*postReport
-
-		if err := builder.
-			Query(r.session).
-			BindMap(info).
-			Select(&results); err != nil {
-			return nil, fmt.Errorf("failed to search post reports: %v", err)
-		}
-
-		for _, postRep := range results {
-
-			result := report.UnmarshalPostReportFromDatabase(
-				postRep.Id,
-				postRep.PostId,
-				postRep.ReportingAccountId,
-				postRep.RuleId,
-			)
-
-			result.Node = paging.NewNode(postRep.Id)
-			postReports = append(postReports, result)
-		}
-
-		if len(postReports) >= cursor.GetLimit() {
-			break
-		}
-	}
-
-	return postReports, nil
-}
-
-func (r ReportCassandraRepository) GetPostReportForPostAndAccount(ctx context.Context, requester *principal.Principal, postId, accountId string) (*report.PostReport, error) {
-
-	var postRep postReport
-
-	if err := r.session.
-		Query(postReportForAccountAndPostTable.Get()).
+	if err := r.session.Query(postReportsByAccountBucketsTable.Select()).
+		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(
-			&postReport{
-				PostId:             postId,
-				ReportingAccountId: accountId,
-			},
-		).
-		Get(&postRep); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, report.ErrPostReportNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get report for post: %v", err)
+		BindStruct(postReport{
+			ReportingAccountId: accountId,
+		}).
+		SelectRelease(&buckets); err != nil {
+		return nil, fmt.Errorf("failed to get post reports by account buckets: %v", err)
 	}
 
-	rep := report.UnmarshalPostReportFromDatabase(
-		postRep.Id,
-		postRep.PostId,
-		postRep.ReportingAccountId,
-		postRep.RuleId,
-	)
+	var final []int
 
-	if err := rep.CanView(requester); err != nil {
-		return nil, err
+	for _, b := range buckets {
+		final = append(final, b.Bucket)
 	}
 
-	return rep, nil
+	return final, nil
 }
 
-func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accountId string) error {
+func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Context, accountId string) error {
 
-	startingBucket := bucket.MakeWeeklyBucketFromTimestamp(time.Now())
-	endingBucket := 0
+	buckets, err := r.getPostReportsByAccountBuckets(ctx, accountId)
 
+	if err != nil {
+		return err
+	}
 	// iterate through all buckets starting from x bucket until we have enough values
-	for bucketId := startingBucket; bucketId >= endingBucket; bucketId-- {
+	for _, bucketId := range buckets {
 
-		info := map[string]interface{}{
-			"bucket":               bucketId,
-			"reporting_account_id": accountId,
-		}
-
-		builder := qb.Select(postReportsByAccountAndBucketTable.Name()).
+		builder := qb.Select(postReportsByAccountTable.Name()).
 			Where(qb.Eq("bucket"), qb.Eq("reporting_account_id"))
 
 		var results []*postReport
 
 		if err := builder.
 			Query(r.session).
-			BindMap(info).
-			Select(&results); err != nil {
+			WithContext(ctx).
+			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
+			SelectRelease(&results); err != nil {
 			return fmt.Errorf("failed to search post reports: %v", err)
 		}
 
@@ -352,44 +213,32 @@ func (r ReportCassandraRepository) DeleteAccountData(ctx context.Context, accoun
 			stmt, _ := postReportTable.Delete()
 
 			batch.Query(stmt,
-				postRep.Id,
-			)
-
-			stmt, _ = postReportByPostTable.Delete()
-
-			batch.Query(stmt,
-				postRep.PostId,
-				postRep.Bucket,
-				postRep.Id,
-			)
-
-			stmt, _ = postReportForAccountAndPostTable.Delete()
-
-			batch.Query(stmt,
 				postRep.PostId,
 				postRep.ReportingAccountId,
 			)
 
-			stmt, _ = postReportsByBucketTable.Delete()
-
-			batch.Query(stmt,
-				postRep.Bucket,
-				postRep.Id,
-			)
-
-			stmt, _ = postReportsByAccountAndBucketTable.Delete()
-
-			batch.Query(stmt,
-				postRep.Bucket,
-				postRep.ReportingAccountId,
-				postRep.Id,
-			)
+			if err := r.deletePostReportsIndexById(ctx, postRep.PostId, postRep.ReportingAccountId); err != nil {
+				return err
+			}
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
 			return fmt.Errorf("failed to delete report log: %v", err)
 		}
+	}
 
+	// delete all buckets for this account as well
+	if err := r.session.Query(qb.
+		Delete(postReportsByAccountBucketsTable.Name()).
+		Where(qb.Eq("reporting_account_id")).
+		ToCql()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postReport{
+			ReportingAccountId: accountId,
+		}).
+		SelectRelease(&buckets); err != nil {
+		return fmt.Errorf("failed to delete post reports by account buckets: %v", err)
 	}
 
 	return nil

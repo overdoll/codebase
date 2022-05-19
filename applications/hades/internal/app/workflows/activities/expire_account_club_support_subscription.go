@@ -7,13 +7,13 @@ import (
 )
 
 type ExpireAccountClubSupportSubscriptionInput struct {
-	SubscriptionId string
-	ExpiredAt      time.Time
+	AccountClubSupporterSubscriptionId string
+	ExpiredAt                          time.Time
 }
 
 func (h *Activities) ExpireAccountClubSupportSubscription(ctx context.Context, input ExpireAccountClubSupportSubscriptionInput) error {
 
-	subscription, err := h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, input.SubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
+	subscription, err := h.billing.UpdateAccountClubSupporterSubscriptionStatusOperator(ctx, input.AccountClubSupporterSubscriptionId, func(subscription *billing.AccountClubSupporterSubscription) error {
 		return subscription.MarkExpired(input.ExpiredAt)
 	})
 

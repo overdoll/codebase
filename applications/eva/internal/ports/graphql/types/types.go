@@ -296,8 +296,8 @@ type DeleteAccountPayload struct {
 
 // Payload for disabling account multi factor
 type DisableAccountMultiFactorPayload struct {
-	// TOTP that was removed from this account, if it was removed
-	AccountMultiFactorTotpEnabled *bool `json:"accountMultiFactorTotpEnabled"`
+	// The account that was disabled.
+	Account *Account `json:"account"`
 }
 
 // Input for enrolling the account into TOTP
@@ -312,8 +312,8 @@ type EnrollAccountMultiFactorTotpInput struct {
 type EnrollAccountMultiFactorTotpPayload struct {
 	// Validation for enrolling TOTP
 	Validation *EnrollAccountMultiFactorTotpValidation `json:"validation"`
-	// TOTP that belongs to this account now
-	AccountMultiFactorTotpEnabled *bool `json:"accountMultiFactorTotpEnabled"`
+	// The account that was enrolled.
+	Account *Account `json:"account"`
 }
 
 // Payload of the created account recovery codes

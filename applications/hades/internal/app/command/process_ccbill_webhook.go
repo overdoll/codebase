@@ -47,7 +47,7 @@ func (h ProcessCCBillWebhookHandler) Handle(ctx context.Context, cmd ProcessCCBi
 	case "RenewalFailure": // failure to renew (rebill declined)
 		return h.event.CCBillRenewalFailure(ctx, cmd.Payload)
 	default:
-		fmt.Printf("event not processed: %s", cmd.EventType)
+		fmt.Println(fmt.Sprintf("event not processed: %s", cmd.EventType))
 	}
 
 	return nil

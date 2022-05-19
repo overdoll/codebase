@@ -1,15 +1,15 @@
 package workflows
 
 import (
-	"go.temporal.io/api/enums/v1"
-	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
+	"time"
 )
 
 type AddClubMemberInput struct {
 	ClubId    string
 	AccountId string
+	JoinedAt  time.Time
 }
 
 func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
@@ -23,30 +23,18 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 		activities.AddClubMemberToListInput{
 			ClubId:    input.ClubId,
 			AccountId: input.AccountId,
+			JoinedAt:  input.JoinedAt,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	// spawn a child workflow asynchronously to count the total club member count
-	// will also ensure we only have 1 of this workflow running at any time
-	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdateClubMemberTotalCount_" + input.ClubId,
-		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
-	}
-
-	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
-
-	if err := workflow.ExecuteChildWorkflow(childCtx, UpdateClubMemberTotalCount,
-		UpdateClubMemberTotalCountInput{
-			ClubId: input.ClubId,
+	if err := workflow.ExecuteActivity(ctx, a.AddClubMember,
+		activities.AddClubMemberInput{
+			ClubId:    input.ClubId,
+			AccountId: input.AccountId,
 		},
-	).
-		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		if temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			return nil
-		}
+	).Get(ctx, nil); err != nil {
 		return err
 	}
 

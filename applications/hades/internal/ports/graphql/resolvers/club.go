@@ -69,3 +69,41 @@ func (r ClubResolver) TransactionMetrics(ctx context.Context, obj *types.Club, a
 
 	return types.MarshalClubTransactionMetricsToGraphQLConnection(ctx, results, cursor), nil
 }
+
+func (r ClubResolver) SupporterSubscriptions(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, status []types.AccountClubSupporterSubscriptionStatus) (*types.AccountClubSupporterSubscriptionConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	var newStatus []string
+
+	for _, s := range status {
+		newStatus = append(newStatus, s.String())
+	}
+
+	clubId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchAccountClubSupporterSubscriptions.
+		Handle(
+			ctx,
+			query.SearchAccountClubSupporterSubscriptions{
+				Principal: principal.FromContext(ctx),
+				Cursor:    cursor,
+				ClubId:    &clubId,
+				Status:    newStatus,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalAccountClubSupporterSubscriptionToGraphQLConnection(ctx, results, cursor), nil
+}

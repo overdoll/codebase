@@ -12,9 +12,10 @@ type Repository interface {
 	GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
 
-	CreatePostLike(ctx context.Context, requester *principal.Principal, like *Like) error
-	DeletePostLike(ctx context.Context, requester *principal.Principal, like *Like) error
+	CreatePostLike(ctx context.Context, like *Like) error
+	DeletePostLike(ctx context.Context, like *Like) error
 	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
+	GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*Like, error)
 
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -81,25 +82,20 @@ type Repository interface {
 	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
 	RefreshPostIndex(ctx context.Context) error
-	DeleteAndRecreatePostIndex(ctx context.Context) error
 
 	SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CharacterFilters) ([]*Character, error)
-	DeleteAndRecreateCharactersIndex(ctx context.Context) error
 	GetTotalLikesForCharacterOperator(ctx context.Context, character *Character) (int, error)
 	GetTotalPostsForCharacterOperator(ctx context.Context, character *Character) (int, error)
 
 	SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Audience, error)
-	DeleteAndRecreateAudienceIndex(ctx context.Context) error
 	GetTotalLikesForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 	GetTotalPostsForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 
 	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
-	DeleteAndRecreateSeriesIndex(ctx context.Context) error
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
 
 	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Category, error)
-	DeleteAndRecreateCategoriesIndex(ctx context.Context) error
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)
 	GetTotalPostsForCategoryOperator(ctx context.Context, category *Category) (int, error)
 
@@ -107,5 +103,4 @@ type Repository interface {
 	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
-	DeleteAccountPostLike(ctx context.Context, accountId, postId string) error
 }

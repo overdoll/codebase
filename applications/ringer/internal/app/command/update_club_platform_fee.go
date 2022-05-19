@@ -23,7 +23,7 @@ func NewUpdateClubPlatformFeeHandler(pr payment.Repository) UpdateClubPlatformFe
 func (h UpdateClubPlatformFeeHandler) Handle(ctx context.Context, cmd UpdateClubPlatformFee) (*payment.ClubPlatformFee, error) {
 
 	platformFee, err := h.pr.UpdateClubPlatformFee(ctx, cmd.Principal, cmd.ClubId, func(fee *payment.ClubPlatformFee) error {
-		return fee.UpdatePercent(cmd.FeePercent)
+		return fee.UpdatePercent(uint64(cmd.FeePercent))
 	})
 
 	if err != nil {

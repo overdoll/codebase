@@ -3,15 +3,13 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
+	"time"
 )
 
 type CCBillCancellationInput struct {
-	SubscriptionId string `json:"subscriptionId"`
-	ClientAccnum   string `json:"clientAccnum"`
-	ClientSubacc   string `json:"clientSubacc"`
-	Timestamp      string `json:"timestamp"`
-	Reason         string `json:"reason"`
+	SubscriptionId string
+	Timestamp      time.Time
+	Reason         string
 }
 
 func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) error {
@@ -27,17 +25,16 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 		return err
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
-
-	if err != nil {
-		return err
+	// ignore duplicate subscriptions
+	if subscriptionDetails.Duplicate {
+		return nil
 	}
 
 	// mark as cancelled to tell the user the new state
 	if err := workflow.ExecuteActivity(ctx, a.MarkAccountClubSupporterSubscriptionCancelled,
 		activities.MarkAccountClubSupporterSubscriptionCancelledInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
-			CancelledAt:                        timestamp,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
+			CancelledAt:                        input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
 		return err
@@ -46,7 +43,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 	// send cancellation notification
 	if err := workflow.ExecuteActivity(ctx, a.SendAccountClubSupporterSubscriptionCancellationNotification,
 		activities.SendAccountClubSupporterSubscriptionCancellationNotificationInput{
-			AccountClubSupporterSubscriptionId: input.SubscriptionId,
+			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

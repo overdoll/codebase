@@ -27,14 +27,17 @@ type UnTerminateClub struct {
 func TestTerminateClub_and_unTerminate(t *testing.T) {
 	t.Parallel()
 
-	staffAccountId := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
+
 	regularAccountId := uuid.New().String()
+	mockAccountNormal(t, regularAccountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	clb := seedClub(t, regularAccountId)
 	relayId := convertClubIdToRelayId(clb.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.TerminateClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.TerminateClub, mock.Anything)
 
 	var terminateClub TerminateClub
 	err := client.Mutate(context.Background(), &terminateClub, map[string]interface{}{
@@ -45,10 +48,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error terminating club")
 
-	env := getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	refreshClubESIndex(t)
 
@@ -62,11 +62,16 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	require.True(t, can.CanDelete, "should be able to delete")
 
 	// should not be able to find the club publicly
-	randomUserGraphqlClient := getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+
+	randomUser := uuid.New().String()
+	mockAccountNormal(t, randomUser)
+
+	randomUserGraphqlClient := getGraphqlClientWithAuthenticatedAccount(t, randomUser)
+
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.Nil(t, updatedClb.Club, "club should not be found")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(temporalClientMock, workflows.UnTerminateClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnTerminateClub, mock.Anything)
 
 	var unTerminateClub UnTerminateClub
 	err = client.Mutate(context.Background(), &unTerminateClub, map[string]interface{}{
@@ -77,16 +82,13 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error un terminating")
 
-	env = getWorkflowEnvironment(t)
-	workflowExecution.FindAndExecuteWorkflow(t, env)
-	require.True(t, env.IsWorkflowCompleted())
-	require.NoError(t, env.GetWorkflowError())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Termination, "club is no longer suspended")
 
 	// should be able to find the club again
-	randomUserGraphqlClient = getGraphqlClientWithAuthenticatedAccount(t, uuid.New().String())
+	randomUserGraphqlClient = getGraphqlClientWithAuthenticatedAccount(t, randomUser)
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.NotNil(t, updatedClb.Club, "club should be found")
 }

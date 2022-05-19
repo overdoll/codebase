@@ -3,23 +3,14 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/hades/internal/app/workflows/activities"
-	"overdoll/applications/hades/internal/domain/ccbill"
-	"strconv"
+	"time"
 )
 
 type CCBillVoidInput struct {
-	TransactionId          string `json:"transactionId"`
-	SubscriptionId         string `json:"subscriptionId"`
-	ClientAccnum           string `json:"clientAccnum"`
-	ClientSubacc           string `json:"clientSubacc"`
-	Timestamp              string `json:"timestamp"`
-	Currency               string `json:"currency"`
-	CurrencyCode           string `json:"currencyCode"`
-	Amount                 string `json:"amount"`
-	AccountingCurrency     string `json:"accountingCurrency"`
-	AccountingCurrencyCode string `json:"accountingCurrencyCode"`
-	AccountingAmount       string `json:"accountingAmount"`
-	Reason                 string `json:"reason"`
+	TransactionId  string
+	SubscriptionId string
+	Timestamp      time.Time
+	Reason         string
 }
 
 func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
@@ -40,50 +31,34 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 		return nil
 	}
 
-	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
+	// get details of the transaction, so we know the original id
+	var transactionDetails *activities.GetCCBillTransactionDetailsPayload
 
-	if err != nil {
+	// get subscription details so we know the club
+	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &transactionDetails); err != nil {
 		return err
 	}
 
 	// update void - mark subscription as voided
 	if err := workflow.ExecuteActivity(ctx, a.UpdateVoidClubSubscriptionAccountTransaction,
 		activities.UpdateVoidClubSubscriptionAccountTransactionInput{
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Reason:        input.Reason,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            input.Timestamp,
+			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	currency := input.AccountingCurrency
-
-	if currency == "" {
-		currency = subscriptionDetails.Currency
-	}
-
-	amount := input.AccountingAmount
-
-	if amount == "" {
-		amount = strconv.Itoa(int(subscriptionDetails.Amount))
-	}
-
-	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(amount, currency)
-
-	if err != nil {
 		return err
 	}
 
 	// send a payment indicating a deduction for this club
 	if err := workflow.ExecuteActivity(ctx, a.NewClubSupporterSubscriptionPaymentDeduction,
 		activities.NewClubSupporterSubscriptionPaymentDeductionInput{
-			AccountId:     subscriptionDetails.AccountId,
-			ClubId:        subscriptionDetails.ClubId,
-			TransactionId: input.TransactionId,
-			Timestamp:     timestamp,
-			Amount:        accountingAmount,
-			Currency:      currency,
+			AccountId:            subscriptionDetails.AccountId,
+			ClubId:               subscriptionDetails.ClubId,
+			AccountTransactionId: transactionDetails.TransactionId,
+			Timestamp:            input.Timestamp,
+			Amount:               subscriptionDetails.Amount,
+			Currency:             subscriptionDetails.Currency,
 		},
 	).Get(ctx, nil); err != nil {
 		return err

@@ -16,7 +16,7 @@ type SendUpcomingSubscriptionReminderNotificationResponse struct {
 
 func (h *Activities) SendUpcomingSubscriptionReminderNotification(ctx context.Context, input SendUpcomingSubscriptionReminderNotificationInput) (*SendUpcomingSubscriptionReminderNotificationResponse, error) {
 
-	subscriptions, err := h.billing.GetAccountClubSupporterSubscriptionsByAccountIdOperator(ctx, input.AccountId)
+	subscriptions, err := h.billing.GetAccountActiveClubSupporterSubscriptionsOperator(ctx, input.AccountId)
 
 	if err != nil {
 		return nil, err

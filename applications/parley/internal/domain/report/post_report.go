@@ -3,10 +3,9 @@ package report
 import (
 	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
-	"overdoll/libraries/uuid"
-
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 var (
@@ -16,10 +15,10 @@ var (
 type PostReport struct {
 	*paging.Node
 
-	id                 string
 	reportingAccountId string
 	postId             string
 	ruleId             string
+	createdAt          time.Time
 }
 
 func NewPostReport(requester *principal.Principal, postId string, ruleInstance *rule.Rule) (*PostReport, error) {
@@ -33,28 +32,28 @@ func NewPostReport(requester *principal.Principal, postId string, ruleInstance *
 	}
 
 	return &PostReport{
-		id:                 uuid.New().String(),
 		postId:             postId,
 		reportingAccountId: requester.AccountId(),
 		ruleId:             ruleInstance.ID(),
+		createdAt:          time.Now(),
 	}, nil
 }
 
-func UnmarshalPostReportFromDatabase(id, postId, reportingAccountId string, ruleId string) *PostReport {
+func UnmarshalPostReportFromDatabase(postId, reportingAccountId string, ruleId string, createdAt time.Time) *PostReport {
 	return &PostReport{
-		id:                 id,
 		postId:             postId,
 		ruleId:             ruleId,
+		createdAt:          createdAt,
 		reportingAccountId: reportingAccountId,
 	}
 }
 
-func (m *PostReport) ID() string {
-	return m.id
+func (m *PostReport) PostId() string {
+	return m.postId
 }
 
-func (m *PostReport) PostID() string {
-	return m.postId
+func (m *PostReport) CreatedAt() time.Time {
+	return m.createdAt
 }
 
 func (m *PostReport) ReportingAccountId() string {

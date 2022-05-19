@@ -5,7 +5,6 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/uuid"
 )
 
 type CreateAccountWithAuthenticationToken struct {
@@ -37,7 +36,9 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	instance, err := account.NewAccount(uuid.New().String(), cmd.Username, em)
+	// use the unique id of the token to create the account
+	// this ensures our operations are idempotent
+	instance, err := account.NewAccount(ck.UniqueId(), cmd.Username, em)
 
 	if err != nil {
 		return nil, err

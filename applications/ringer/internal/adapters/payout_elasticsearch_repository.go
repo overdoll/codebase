@@ -13,62 +13,9 @@ import (
 	"time"
 )
 
-const clubPayoutsIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"status": {
-					"type": "keyword"
-				},
-				"deposit_date": {
-					"type": "date"
-				},
-				"club_id": {
-					"type": "keyword"
-				},
-				"currency": {
-					"type": "keyword"
-				},
-				"amount": {
-					"type": "integer"
-				},
-				"payout_account_id": {
-					"type": "keyword"
-				},
-				"deposit_request_id": {
-					"type": "keyword"
-				},
-				"timestamp": {
-					"type": "date"
-				},
-				"temporal_workflow_id": {
-					"type": "keyword"
-				},
-				"events": {
-					"type": "nested",
-					"properties":{
-						"id": {
-							"type": "keyword"
-						},
-						"timestamp": {
-							"type": "date"
-						},
-						"error": {
-							"type": "keyword"
-						}
-					}
-				}
-		}
-	}
-}`
-
 type clubPayoutEventDocument struct {
 	Id        string    `json:"id"`
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"created_at"`
 	Error     string    `json:"error"`
 }
 
@@ -78,10 +25,10 @@ type clubPayoutDocument struct {
 	DepositDate        time.Time                 `json:"deposit_date"`
 	ClubId             string                    `json:"club_id"`
 	Currency           string                    `json:"currency"`
-	Amount             int64                     `json:"amount"`
+	Amount             uint64                    `json:"amount"`
 	PayoutAccountId    string                    `json:"payout_account_id"`
 	DepositRequestId   string                    `json:"deposit_request_id"`
-	Timestamp          time.Time                 `json:"timestamp"`
+	CreatedAt          time.Time                 `json:"created_at"`
 	Events             []clubPayoutEventDocument `json:"events"`
 	TemporalWorkflowId string                    `json:"temporal_workflow_id"`
 }
@@ -103,7 +50,7 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 	for _, evt := range doc.Events {
 		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
 			evt.Id,
-			evt.Timestamp,
+			evt.CreatedAt,
 			evt.Error,
 		))
 	}
@@ -117,7 +64,7 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 		doc.DepositDate,
 		doc.PayoutAccountId,
 		doc.DepositRequestId,
-		doc.Timestamp,
+		doc.CreatedAt,
 		events,
 		doc.TemporalWorkflowId,
 	)
@@ -134,7 +81,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 	for _, e := range pay.Events() {
 		events = append(events, clubPayoutEventDocument{
 			Id:        e.Id(),
-			Timestamp: e.Timestamp(),
+			CreatedAt: e.CreatedAt(),
 			Error:     e.Error(),
 		})
 	}
@@ -148,7 +95,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 		Amount:             pay.Amount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
-		Timestamp:          pay.Timestamp(),
+		CreatedAt:          pay.CreatedAt(),
 		Events:             events,
 		TemporalWorkflowId: pay.TemporalWorkflowId(),
 	}, nil
@@ -163,7 +110,7 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 		return nil, fmt.Errorf("cursor must be present")
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "timestamp", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -236,7 +183,7 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 	return pays, nil
 }
 
-func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.Context) error {
+func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -264,7 +211,7 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 
 				events = append(events, clubPayoutEventDocument{
 					Id:        unmarshal.Id,
-					Timestamp: unmarshal.Timestamp,
+					CreatedAt: unmarshal.CreatedAt,
 					Error:     unmarshal.Error,
 				})
 			}
@@ -278,7 +225,7 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 				Amount:             pay.Amount,
 				PayoutAccountId:    pay.PayoutAccountId,
 				DepositRequestId:   pay.DepositRequestId,
-				Timestamp:          pay.Timestamp,
+				CreatedAt:          pay.CreatedAt,
 				Events:             events,
 				TemporalWorkflowId: pay.TemporalWorkflowId,
 			}
@@ -305,28 +252,6 @@ func (r PayoutCassandraElasticsearchRepository) indexAllClubPayouts(ctx context.
 	return nil
 }
 
-func (r PayoutCassandraElasticsearchRepository) deleteClubPayoutsIndex(ctx context.Context) error {
-
-	exists, err := r.client.IndexExists(ClubPayoutsIndexName).Do(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	if exists {
-		if _, err := r.client.DeleteIndex(ClubPayoutsIndexName).Do(ctx); err != nil {
-			// Handle error
-			return err
-		}
-	}
-
-	if _, err := r.client.CreateIndex(ClubPayoutsIndexName).BodyString(clubPayoutsIndex).Do(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Context, pay *payout.ClubPayout) error {
 
 	pst, err := marshalClubPayoutToDocument(pay)
@@ -347,13 +272,4 @@ func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Cont
 	}
 
 	return nil
-}
-
-func (r PayoutCassandraElasticsearchRepository) DeleteAndRecreateClubPayoutsIndex(ctx context.Context) error {
-
-	if err := r.deleteClubPayoutsIndex(ctx); err != nil {
-		return err
-	}
-
-	return r.indexAllClubPayouts(ctx)
 }

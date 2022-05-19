@@ -2,7 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
-DEPENDENCIES = ["//applications/hades/database:files"] + ["//applications/hades:config.toml"]
+DEPENDENCIES = ["//applications/hades:config.toml"]
 
 go_library(
     name = "internal_lib",
@@ -11,12 +11,14 @@ go_library(
     importpath = "overdoll/applications/hades/internal",
     visibility = ["//visibility:private"],
     deps = [
+        "//applications/hades/internal/adapters/migrations",
+        "//applications/hades/internal/adapters/seeders",
         "//applications/hades/internal/ports",
         "//applications/hades/internal/service",
         "//applications/hades/proto:v1_go_proto",
         "//libraries/bootstrap",
-        "//libraries/commands",
         "//libraries/config",
+        "//libraries/database",
         "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//:go_default_library",
     ],

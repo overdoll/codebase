@@ -2,7 +2,10 @@ package service_test
 
 import (
 	"context"
+	"github.com/stretchr/testify/mock"
+	"overdoll/applications/parley/internal/app/workflows"
 	parley "overdoll/applications/parley/proto"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -49,6 +52,7 @@ func TestReportPost(t *testing.T) {
 	t.Parallel()
 
 	accountId := uuid.New().String()
+	mockAccountStaff(t, accountId)
 
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
@@ -57,6 +61,8 @@ func TestReportPost(t *testing.T) {
 	accountIdRelay := convertAccountIdToRelayId(accountId)
 	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ReportPost, mock.Anything)
 
 	var reportPost ReportPost
 
@@ -68,6 +74,9 @@ func TestReportPost(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error reporting the post")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	refreshReportsIndex(t)
 
 	var reportsOnPost ReportsOnPost
 
@@ -106,6 +115,8 @@ func TestReportPost(t *testing.T) {
 	_, err = grpcClient.DeleteAccountData(context.Background(), &parley.DeleteAccountDataRequest{AccountId: accountId})
 
 	require.NoError(t, err, "no error deleting account data")
+
+	refreshReportsIndex(t)
 
 	err = client.Query(context.Background(), &reportsOnPost, map[string]interface{}{
 		"representations": []_Any{

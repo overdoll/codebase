@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// type is here so we can add any custom functions in the future or if we change UUID type
+// type is here, so we can add any custom functions in the future or if we change UUID type
 
 type UUID struct {
 	ksuid.KSUID
