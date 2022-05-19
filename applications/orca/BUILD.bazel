@@ -60,20 +60,10 @@ nodejs_image(
 )
 
 container_push(
-    name = "publish-testing",
-    format = "Docker",
-    image = ":image",
-    registry = "$(CONTAINER_REGISTRY)",
-    repository = "orca/dev",
-    tag = "$(CONTAINER_TAG)",
-)
-
-container_push(
     name = "publish",
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "orca",
-    skip_unchanged_digest = True,
+    repository = "orca/dev",
     tag = "$(CONTAINER_TAG)",
 )

@@ -1,0 +1,11 @@
+Dockerfile
+.dockerignore
+npm-debug.log
+cypress
+build
+.storybook
+schema
+coverage
+.nyc_output
+.next
+.git

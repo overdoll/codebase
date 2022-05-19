@@ -58,6 +58,6 @@
     "./cache",
     "./cypress",
     "node_modules",
-    "**/__locale/**/*.ts"
+    "**/__locale__/**/*.ts"
   ]
 }

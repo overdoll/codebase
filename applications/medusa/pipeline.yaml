@@ -1,6 +1,7 @@
 frontend_steps:
   check:
     commands:
+      - yarn install --frozen-lockfile
       - yarn run check:tsc
       - yarn run check:eslint
 
@@ -14,7 +15,6 @@ frontend_steps:
 
   push_image:
     commands:
-      - yarn install --frozen-lockfile
       - docker build -t ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT} .
       - docker push ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT}
 
