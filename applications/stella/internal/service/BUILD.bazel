@@ -36,6 +36,7 @@ go_test(
     deps = [
         ":service",
         "//applications/eva/proto:v1_go_proto",
+        "//applications/loader/proto:v1_go_proto",
         "//applications/stella/internal/adapters",
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/domain/club",
