@@ -1,7 +1,7 @@
 workspace(
     name = "overdoll",
     managed_directories = {
-        "@npm": ["node_modules"],
+        "@npm_orca": ["applications/orca/node_modules"],
     },
 )
 
@@ -203,13 +203,13 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 nodejs_image_repos()
 
 yarn_install(
-    name = "npm",
+    name = "npm_orca",
     args = [
         "--target_arch=x64",
         "--target_platform=linux",
     ],
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
+    package_json = "//applications/orca:package.json",
+    yarn_lock = "//applications/orca:yarn.lock",
 )
 
 container_pull(
