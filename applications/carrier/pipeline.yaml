@@ -1,4 +1,4 @@
-services_steps:
+steps:
   build:
     targets:
       - //applications/carrier/internal:internal
@@ -14,9 +14,6 @@ services_steps:
       - //applications/carrier/internal/ports/...
 
   integration_test:
-    setup:
-      dockerfile:
-        - ./applications/carrier/docker-compose.ci.yaml
     coverage:
       - name: carrier.integration
         paths:

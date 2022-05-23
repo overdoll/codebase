@@ -1,4 +1,4 @@
-services_steps:
+steps:
   build:
     targets:
       - //applications/hades/internal:internal
@@ -14,6 +14,9 @@ services_steps:
       - //applications/hades/internal/ports/...
 
   integration_test:
+    pre_hook:
+      - //applications/hades/internal:internal db migrate
+      - //applications/hades/internal:internal db seed
     coverage:
       - name: hades.integration
         paths:

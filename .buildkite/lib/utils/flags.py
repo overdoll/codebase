@@ -29,6 +29,7 @@ def common_build_flags(bep_file, is_test):
         "--experimental_repository_cache_hardlinks",
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
+        "--flaky_test_attempts=default",
     ]
 
     if is_test:

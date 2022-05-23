@@ -1,23 +1,27 @@
 frontend_steps:
   check:
+    workdir: applications/medusa
     commands:
       - yarn install --frozen-lockfile
       - yarn run check:tsc
       - yarn run check:eslint
 
   unit_test:
+    workdir: applications/medusa
     coverage:
       - name: medusa.unit
         paths:
-          - ./applications/medusa/coverage/coverage.dat
+          - ./coverage/coverage.dat
     commands:
       - yarn run jest
 
   push_image:
+    workdir: applications/medusa
     commands:
       - docker build -t ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT} .
       - docker push ${CONTAINER_REGISTRY}/medusa/dev/${BUILDKITE_COMMIT}
 
+steps:
   e2e_test:
     commands:
       - push queries script here!
