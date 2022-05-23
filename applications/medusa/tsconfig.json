@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "incremental": true,
+    "tsBuildInfoFile": "./cache/.tsbuildinfo",
     "jsx": "preserve",
     "moduleResolution": "node",
     "baseUrl": "./",

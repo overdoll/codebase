@@ -5,6 +5,8 @@ go 1.16
 require (
 	github.com/99designs/gqlgen v0.17.2
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
+	github.com/Microsoft/go-winio v0.5.2 // indirect
+	github.com/Microsoft/hcsshim v0.9.3 // indirect
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aws/aws-sdk-go v1.42.52
@@ -12,9 +14,13 @@ require (
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/biter777/countries v1.3.4
 	github.com/bxcodec/faker/v3 v3.6.0
+	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/containerd/containerd v1.6.4 // indirect
 	github.com/corona10/goimagehash v1.0.3
 	github.com/disintegration/gift v1.2.1
+	github.com/docker/distribution v2.8.1+incompatible // indirect
+	github.com/docker/docker v20.10.16+incompatible // indirect
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/frankban/quicktest v1.13.0 // indirect
@@ -37,15 +43,17 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jung-kurt/gofpdf v1.16.2
+	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/moby/sys/mount v0.3.2 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/olivere/elastic/v7 v7.0.31
+	github.com/opencontainers/runc v1.1.2 // indirect
 	github.com/oschwald/geoip2-golang v1.5.0
-	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/otp v1.3.0
 	github.com/scylladb/gocqlx/v2 v2.6.0
@@ -56,6 +64,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/stretchr/testify v1.7.0
+	github.com/testcontainers/testcontainers-go v0.13.0 // indirect
 	github.com/tidwall/gjson v1.12.1
 	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.6.0
@@ -68,15 +77,16 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
+	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
-	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3 // indirect
-	google.golang.org/grpc v1.46.0
+	google.golang.org/genproto v0.0.0-20220523171625-347a074981d8 // indirect
+	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+	gopkg.in/yaml.v3 v3.0.0 // indirect
 	jaytaylor.com/html2text v0.0.0-20211105163654-bc68cce691ba
 )
 

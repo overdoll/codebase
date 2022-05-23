@@ -8,3 +8,6 @@ RUN wget https://github.com/google/go-containerregistry/releases/download/v0.9.0
 RUN tar -xzf go-containerregistry_Linux_x86_64.tar.gz
 RUN rm go-containerregistry_Linux_x86_64.tar.gz
 RUN mv crane /bin
+
+RUN apt install python3-yaml
+RUN python3 -m pip install redis

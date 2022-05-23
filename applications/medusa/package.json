@@ -60,7 +60,7 @@
   "scripts": {
     "start:tsc": "tsc -b -w --preserveWatchOutput",
     "check:tsc": "tsc -b",
-    "check:eslint": "eslint --quiet --cache --cache-file eslint_cache -c .eslintrc.json ./src ./cypress",
+    "check:eslint": "eslint --quiet --cache --cache-location cache/eslint -c .eslintrc.json ./src ./cypress",
     "locale:extract": "lingui extract",
     "locale:compile": "lingui compile",
     "relay": "concurrently --raw --kill-others \"node relay-local-persisting.js\" \"relay-compiler --watch\" ",
@@ -88,6 +88,7 @@
       "last 1 safari version"
     ]
   },
+  "license": "CC-BY-4.0",
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/eslint-parser": "^7.16.5",
@@ -175,6 +176,7 @@
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "node-html-parser": "^5.2.0",
+    "nyc": "^15.1.0",
     "react-svg-loader": "^3.0.3",
     "relay-compiler": "^13.0.2",
     "relay-config": "^10.1.2",

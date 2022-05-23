@@ -1,15 +1,22 @@
 package adapters_test
 
 import (
+	"context"
+	"fmt"
 	"github.com/bxcodec/faker/v3"
 	"github.com/olivere/elastic/v7"
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
 	"testing"
+	"time"
 )
+
+var elasticURI string
 
 // create buckets before running tests
 func seedConfiguration() bool {
@@ -23,10 +30,36 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	// exit tests for now
-	os.Exit(0)
+	ctx := context.Background()
 
-	//os.Exit(m.Run())
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: testcontainers.ContainerRequest{
+			Image:        "docker.elastic.co/elasticsearch/elasticsearch:7.12.1",
+			ExposedPorts: []string{"9200/tcp"},
+			WaitingFor:   wait.ForListeningPort("9200").WithStartupTimeout(time.Minute * 2),
+		},
+		Started: true,
+	})
+
+	defer container.Terminate(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+
+	mappedPort, err := container.MappedPort(ctx, "9200")
+	if err != nil {
+		panic(err)
+	}
+
+	hostIP, err := container.Host(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	elasticURI = fmt.Sprintf("http://%s:%s", hostIP, mappedPort.Port())
+
+	os.Exit(m.Run())
 }
 
 type TestSlug struct {
@@ -48,8 +81,7 @@ func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElastic
 
 	// set up some sort of client that is going to fail when making ES calls
 	client, _ := elastic.NewClient(
-		elastic.SetURL("asdasdasdas-basdurlas-dasdas"),
-		elastic.SetHealthcheck(false),
+		elastic.SetURL(elasticURI),
 	)
 
 	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client)

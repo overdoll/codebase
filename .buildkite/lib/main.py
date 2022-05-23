@@ -4,6 +4,7 @@
 
 import argparse
 import glob
+import json
 import os
 import random
 import shutil
@@ -12,6 +13,7 @@ import tempfile
 import threading
 import urllib.request
 
+import redis
 import sys
 import yaml
 
@@ -145,7 +147,22 @@ def execute_coverage_command(configs):
         exec.execute_command(cmd)
 
 
+def push_all_queries():
+    r = redis.Redis(host='redis', port=6379, db=2)
+
+    f = open('./applications/medusa/src/queries.json')
+    data = json.load(f)
+
+    for i in data:
+        r.mset({["query:" + i]: data[i]})
+
+    f.close()
+
+
 def execute_e2e_tests_commands(configs):
+    # we first need to push all queries into the local redis instance
+    push_all_queries()
+
     # grab all network deps (these services need to be running first),
     # and sort by priority (some services need to be started first)
     deps = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
@@ -316,47 +333,84 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         pipeline.create_step(
-            label=":bazel: Build, Unit & Integration Test Services",
-            commands=[".buildkite/pipeline.sh services_build_test"],
-            platform="docker-compose",
-            cache={
-                "id": "node",
-                "backend": "s3",
-                "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
-                "compress": "true",
-                "paths": [
-                    "applications/orca/node_modules"
-                ],
-                "s3": {
-                    "bucket": "buildkite-runner-cache"
+            label=":typescript: Build & Test Front-End",
+            commands=[".buildkite/pipeline.sh frontend_build_test"],
+            platform="docker",
+            cache=[
+                {
+                    "id": "medusa-node_modules",
+                    "backend": "s3",
+                    "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                    "restore-keys": [
+                        "v1-cache-{{ id }}-",
+                    ],
+                    "compress": "true",
+                    "paths": [
+                        "applications/medusa/node_modules",
+                        "applications/medusa/build/cache"
+                    ],
+                    "s3": {
+                        "bucket": "buildkite-runner-cache"
+                    },
                 },
-            },
-            configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
-                "./.buildkite/config/docker/docker-compose.integration.yaml"]
+                {
+                    "id": "medusa-cache_eslint_typescript",
+                    "backend": "s3",
+                    "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/src' }}-{{ checksum 'applications/medusa/cypress' }}",
+                    "restore-keys": [
+                        "v1-cache-{{ id }}-",
+                    ],
+                    "compress": "true",
+                    "paths": [
+                        "applications/medusa/cache"
+                    ],
+                    "s3": {
+                        "bucket": "buildkite-runner-cache"
+                    },
+                }
+            ],
         )
     )
 
     pipeline_steps.append(
         pipeline.create_step(
-            label=":typescript: Build & Test Front-End",
-            commands=[".buildkite/pipeline.sh frontend_build_test"],
-            platform="docker",
-            cache={
-                "id": "node",
-                "backend": "s3",
-                "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/medusa/yarn.lock' }}",
-                "restore-keys": [
-                    "v1-cache-{{ id }}-{{ runner.os }}-",
-                    "v1-cache-{{ id }}-",
-                ],
-                "compress": "true",
-                "paths": [
-                    "applications/medusa/node_modules"
-                ],
-                "s3": {
-                    "bucket": "buildkite-runner-cache"
+            label=":bazel: Build, Unit & Integration Test Services",
+            commands=[".buildkite/pipeline.sh services_build_test"],
+            platform="docker-compose",
+            cache=[
+                {
+                    "id": "orca-node_modules",
+                    "backend": "s3",
+                    "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
+                    "restore-keys": [
+                        "v1-cache-{{ id }}-",
+                    ],
+                    "compress": "true",
+                    "paths": [
+                        "applications/orca/node_modules"
+                    ],
+                    "s3": {
+                        "bucket": "buildkite-runner-cache"
+                    },
                 },
-            },
+                {
+                    "id": "bazel-repositories",
+                    "backend": "s3",
+                    "key": "v1-cache-{{ id }}-{{ checksum 'repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
+                    "restore-keys": [
+                        "v1-cache-{{ id }}-",
+                    ],
+                    "compress": "true",
+                    "paths": [
+                        "/.bazel_repository_cache"
+                    ],
+                    "s3": {
+                        "bucket": "buildkite-runner-cache"
+                    },
+                },
+            ],
+            configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
 
@@ -436,7 +490,7 @@ def execute_publish_commands(configs):
         # grab our current digest
         digest = exec.execute_command_and_get_output(["crane", "digest", existing_tag])
 
-        new_tag = "{}/{}:{}".format(registry, from_repo, digest)
+        new_tag = "{}/{}@{}".format(registry, from_repo, digest)
         new_tag_with_commit = "{}/{}:{}".format(registry, from_repo, commit)
 
         # then, check
