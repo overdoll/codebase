@@ -438,17 +438,17 @@ def print_project_pipeline():
     )
 
     # publish when the branch is master
-    if os.getenv("BUILDKITE_BRANCH") == "master":
-        pipeline_steps.append("wait")
+    # if os.getenv("BUILDKITE_BRANCH") == "master":
+    pipeline_steps.append("wait")
 
-        # must complete all steps before publishing
-        pipeline_steps.append(
-            pipeline.create_step(
-                label=":aws: Publish Images",
-                commands=[".buildkite/pipeline.sh publish"],
-                platform="docker",
-            )
+    # must complete all steps before publishing
+    pipeline_steps.append(
+        pipeline.create_step(
+            label=":aws: Publish Images",
+            commands=[".buildkite/pipeline.sh publish"],
+            platform="docker",
         )
+    )
 
     print(yaml.dump({"steps": pipeline_steps}))
 
