@@ -1,17 +1,11 @@
 package adapters_test
 
 import (
-	"bytes"
-	"context"
-	"errors"
-	"fmt"
 	"github.com/bxcodec/faker/v3"
 	"github.com/olivere/elastic/v7"
 	"github.com/stretchr/testify/require"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
-	"io"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
@@ -33,58 +27,33 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	ctx := context.Background()
+	handler := http.NotFound
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r)
+	}))
+	defer ts.Close()
 
-	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        "docker.elastic.co/elasticsearch/elasticsearch:7.12.1",
-			ExposedPorts: []string{"9200/tcp"},
-			Env: map[string]string{
-				"ELASTIC_PASSWORD":       "elastic",
-				"xpack.security.enabled": "false",
-				"discovery.type":         "single-node",
-				"bootstrap.memory_lock":  "true",
-				"ES_JAVA_OPTS":           "-Xms512m -Xmx512m",
-			},
-			WaitingFor: wait.ForHTTP("/_cluster/health?wait_for_status=green&timeout=30s").WithPort("9200"),
-		},
-		Started: true,
-	})
+	handler = func(w http.ResponseWriter, r *http.Request) {
 
-	defer container.Terminate(ctx)
-
-	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`
+			{
+			  "_shards": {
+				"total": 1,
+				"failed": 1,
+				"successful": 0
+			  },
+			  "_index": "tttttt",
+			  "_id": "1",
+			  "_version": 1,
+			  "_seq_no": 0,
+			  "_primary_term": 1,
+			  "result": "failed"
+			}
+			`))
 	}
 
-	mappedPort, err := container.MappedPort(ctx, "9200")
-	if err != nil {
-		panic(err)
-	}
-
-	hostIP, err := container.Host(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	elasticURI = fmt.Sprintf("http://%s:%s", hostIP, mappedPort.Port())
-
-	client := &http.Client{}
-	req, err := http.NewRequest(http.MethodPut, elasticURI+"/_cluster/settings", bytes.NewBuffer([]byte("{\n  \"persistent\": {\n    \"action.auto_create_index\": \"false\" \n  }\n}")))
-	if err != nil {
-		panic(err)
-	}
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-
-	if resp.StatusCode != 200 {
-		bodyBytes, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(bodyBytes))
-		panic(errors.New("bad status code for updating cluster settings"))
-	}
+	elasticURI = ts.URL
 
 	os.Exit(m.Run())
 }
@@ -107,9 +76,13 @@ func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchReposit
 func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
 
 	// set up some sort of client that is going to fail when making ES calls
-	client, _ := elastic.NewClient(
+	client, err := elastic.NewSimpleClient(
 		elastic.SetURL(elasticURI),
 	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client)
 }

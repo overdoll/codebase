@@ -125,9 +125,9 @@ http_archive(
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_download_sdk", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("//:repositories.bzl", "go_repositories")
+load("//:go_repositories.bzl", "go_repositories")
 
-# gazelle:repository_macro repositories.bzl%go_repositories
+# gazelle:repository_macro go_repositories.bzl%go_repositories
 go_repositories()
 
 go_rules_dependencies()

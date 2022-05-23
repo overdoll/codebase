@@ -396,7 +396,7 @@ def print_project_pipeline():
                 {
                     "id": "bazel-repositories",
                     "backend": "s3",
-                    "key": "v1-cache-{{ id }}-{{ checksum 'repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
+                    "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
                     "restore-keys": [
                         "v1-cache-{{ id }}-",
                     ],

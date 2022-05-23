@@ -90,7 +90,7 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 
 func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *principal.Principal, club *club.Club, endTime time.Time, reason string) error {
 
-	if err := club.CanSuspend(requester); err != nil {
+	if err := club.CanSuspend(requester, endTime); err != nil {
 		return err
 	}
 
