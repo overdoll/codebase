@@ -30,7 +30,7 @@ def common_build_flags(bep_file, is_test):
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
         "--flaky_test_attempts=default",
-        "--repository_cache=/.bazel_repository_cache"
+        "--repository_cache=/workdir/.bazel_repository_cache"
     ]
 
     if is_test:

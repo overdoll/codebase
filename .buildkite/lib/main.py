@@ -402,7 +402,7 @@ def print_project_pipeline():
                     ],
                     "compress": "true",
                     "paths": [
-                        "/.bazel_repository_cache"
+                        ".bazel_repository_cache"
                     ],
                     "s3": {
                         "bucket": "buildkite-runner-cache"
