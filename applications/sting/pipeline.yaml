@@ -40,3 +40,8 @@ steps:
       - host: sting
         port: 8000
         priority: 0
+
+  publish_image:
+    copy:
+      - from_repo: sting/dev
+        to_repo: sting

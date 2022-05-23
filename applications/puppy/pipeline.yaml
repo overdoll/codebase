@@ -37,3 +37,8 @@ steps:
       - host: puppy
         port: 8000
         priority: 0
+
+  publish_image:
+    copy:
+      - from_repo: puppy/dev
+        to_repo: puppy

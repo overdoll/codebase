@@ -39,3 +39,8 @@ steps:
     artifacts:
       - cypress/**/*
       - cypress/*
+
+  publish_image:
+    copy:
+      - from_repo: medusa/dev
+        to_repo: medusa

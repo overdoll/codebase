@@ -33,3 +33,8 @@ steps:
     setup:
       dockerfile:
         - ./applications/carrier/docker-compose.ci.yaml
+
+  publish_image:
+    copy:
+      - from_repo: carrier/dev
+        to_repo: carrier

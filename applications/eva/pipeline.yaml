@@ -40,3 +40,8 @@ steps:
       - host: eva
         port: 8000
         priority: 0
+
+  publish_image:
+    copy:
+      - from_repo: carrier/dev
+        to_repo: carrier

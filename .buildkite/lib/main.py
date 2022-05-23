@@ -421,12 +421,37 @@ def run_pre_hooks(targets, tmpdir):
 
 
 def execute_publish_commands(configs):
-    tmpdir = tempfile.mkdtemp()
-    try:
-        push_images(configs.get("publish_image", {}).get("targets", []), tmpdir)
-    finally:
-        if tmpdir:
-            shutil.rmtree(tmpdir)
+    publish = configs.get("publish_image", {}).get("copy", [])
+    for img in publish:
+        from_repo = img.get("from_repo")
+        to_repo = img.get("to_repo")
+
+        terminal_print.print_expanded_group(":docker: Copying image from {} to {}".format(from_repo, to_repo))
+
+        commit = os.getenv("BUILDKITE_COMMIT", "")
+        registry = os.getenv("CONTAINER_REGISTRY", "")
+
+        existing_tag = "{}/{}:{}".format(registry, from_repo, commit)
+
+        # grab our current digest
+        digest = exec.execute_command_and_get_output(["crane", "digest", existing_tag])
+
+        new_tag = "{}/{}:{}".format(registry, from_repo, digest)
+        new_tag_with_commit = "{}/{}:{}".format(registry, from_repo, commit)
+
+        # then, check
+        returncode = exec.execute_command(["crane", "digest", new_tag])
+
+        # return code is not 0, it means the digest was not found
+        if returncode != 0:
+            terminal_print.eprint("\033[93m Digest Not Found, Copying Image \033[0m")
+            copy_return = exec.execute_command(["crane", "cp", existing_tag, new_tag_with_commit])
+
+            if copy_return != 0:
+                raise exception.BuildkiteException(
+                    "failed to copy image from {} to {}".format(existing_tag, new_tag_with_commit))
+        else:
+            terminal_print.eprint("\033[92m Digest Found, Skipping Copy \033[0m")
 
 
 def main(argv=None):

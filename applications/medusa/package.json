@@ -60,7 +60,7 @@
   "scripts": {
     "start:tsc": "tsc -b -w --preserveWatchOutput",
     "check:tsc": "tsc -b",
-    "check:eslint": "eslint --quiet -c .eslintrc.json ./src ./cypress",
+    "check:eslint": "eslint --quiet --cache --cache-file eslint_cache -c .eslintrc.json ./src ./cypress",
     "locale:extract": "lingui extract",
     "locale:compile": "lingui compile",
     "relay": "concurrently --raw --kill-others \"node relay-local-persisting.js\" \"relay-compiler --watch\" ",

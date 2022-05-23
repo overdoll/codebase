@@ -40,3 +40,7 @@ steps:
       - host: stella
         port: 8000
         priority: 0
+
+  publish_image:
+    - from_repo: stella/dev
+      to_repo: stella

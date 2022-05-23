@@ -41,3 +41,8 @@ steps:
       - host: hades
         port: 8000
         priority: 0
+
+  publish_image:
+    copy:
+      - from_repo: hades/dev
+        to_repo: hades

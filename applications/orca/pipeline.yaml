@@ -11,3 +11,8 @@ steps:
       - host: orca
         port: 8000
         priority: 0
+
+  publish_image:
+    copy:
+      - from_repo: orca/dev
+        to_repo: orca
