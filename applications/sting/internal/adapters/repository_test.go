@@ -1,19 +1,22 @@
 package adapters_test
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/bxcodec/faker/v3"
 	"github.com/olivere/elastic/v7"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"io"
+	"net/http"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
 	"testing"
-	"time"
 )
 
 var elasticURI string
@@ -36,7 +39,14 @@ func TestMain(m *testing.M) {
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        "docker.elastic.co/elasticsearch/elasticsearch:7.12.1",
 			ExposedPorts: []string{"9200/tcp"},
-			WaitingFor:   wait.ForListeningPort("9200").WithStartupTimeout(time.Minute * 2),
+			Env: map[string]string{
+				"ELASTIC_PASSWORD":       "elastic",
+				"xpack.security.enabled": "false",
+				"discovery.type":         "single-node",
+				"bootstrap.memory_lock":  "true",
+				"ES_JAVA_OPTS":           "-Xms512m -Xmx512m",
+			},
+			WaitingFor: wait.ForHTTP("/_cluster/health?wait_for_status=green&timeout=30s").WithPort("9200"),
 		},
 		Started: true,
 	})
@@ -58,6 +68,23 @@ func TestMain(m *testing.M) {
 	}
 
 	elasticURI = fmt.Sprintf("http://%s:%s", hostIP, mappedPort.Port())
+
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodPut, elasticURI+"/_cluster/settings", bytes.NewBuffer([]byte("{\n  \"persistent\": {\n    \"action.auto_create_index\": \"false\" \n  }\n}")))
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	if resp.StatusCode != 200 {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		fmt.Println(string(bodyBytes))
+		panic(errors.New("bad status code for updating cluster settings"))
+	}
 
 	os.Exit(m.Run())
 }
