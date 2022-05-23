@@ -2,8 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   StaffAccountTransactionSubscriptionFragment$key
 } from '@//:artifacts/StaffAccountTransactionSubscriptionFragment.graphql'
-import StaffClubSupporterSubscriptionPreview
-  from '../../../../../account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
+import StaffAccountClubSupporterSubscriptionPreview
+  from '../../../../../account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptionPreview/StaffAccountClubSupporterSubscriptionPreview'
 import { TableBodyRowLink } from '@//:modules/content/ThemeComponents/Table/Table'
 
 interface Props {
@@ -16,7 +16,7 @@ const Fragment = graphql`
       ... on IAccountClubSupporterSubscription {
         reference
       }
-      ...StaffClubSupporterSubscriptionPreviewFragment
+      ...StaffAccountClubSupporterSubscriptionPreviewFragment
     }
   }
 `
@@ -32,7 +32,7 @@ export default function StaffAccountTransactionSubscription ({ query }: Props): 
       }
     }}
     >
-      <StaffClubSupporterSubscriptionPreview query={data.clubSupporterSubscription} />
+      <StaffAccountClubSupporterSubscriptionPreview query={data.clubSupporterSubscription} />
     </TableBodyRowLink>
   )
 }

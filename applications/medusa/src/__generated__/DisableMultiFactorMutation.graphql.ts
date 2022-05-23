@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<713cb5e38c450bd70f98177ebd050138>>
- * @relayHash 295afab893be13dad8b4d59ba21b9133
+ * @generated SignedSource<<f223771f3cf362a69f70df44b1f44dd2>>
+ * @relayHash a00cddee8171c2359ee52bd1541c53fb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 295afab893be13dad8b4d59ba21b9133
+// @relayRequestID a00cddee8171c2359ee52bd1541c53fb
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DisableMultiFactorMutation$variables = {};
 export type DisableMultiFactorMutationVariables = DisableMultiFactorMutation$variables;
 export type DisableMultiFactorMutation$data = {
   readonly disableAccountMultiFactor: {
-    readonly accountMultiFactorTotpEnabled: boolean | null;
+    readonly account: {
+      readonly multiFactorEnabled: boolean;
+    } | null;
   } | null;
 };
 export type DisableMultiFactorMutationResponse = DisableMultiFactorMutation$data;
@@ -26,33 +28,44 @@ export type DisableMultiFactorMutation = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "DisableAccountMultiFactorPayload",
-    "kind": "LinkedField",
-    "name": "disableAccountMultiFactor",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "accountMultiFactorTotpEnabled",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "multiFactorEnabled",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "DisableMultiFactorMutation",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "DisableAccountMultiFactorPayload",
+        "kind": "LinkedField",
+        "name": "disableAccountMultiFactor",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "account",
+            "plural": false,
+            "selections": [
+              (v0/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -61,10 +74,41 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "DisableMultiFactorMutation",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "DisableAccountMultiFactorPayload",
+        "kind": "LinkedField",
+        "name": "disableAccountMultiFactor",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "account",
+            "plural": false,
+            "selections": [
+              (v0/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "295afab893be13dad8b4d59ba21b9133",
+    "id": "a00cddee8171c2359ee52bd1541c53fb",
     "metadata": {},
     "name": "DisableMultiFactorMutation",
     "operationKind": "mutation",
@@ -73,6 +117,6 @@ return {
 };
 })();
 
-(node as any).hash = "4f0a20523c07a69a21529ae78274f51a";
+(node as any).hash = "de8c255083e9fb8509c28007ef126226";
 
 export default node;

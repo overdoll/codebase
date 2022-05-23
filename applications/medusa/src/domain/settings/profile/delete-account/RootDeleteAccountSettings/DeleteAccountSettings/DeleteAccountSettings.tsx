@@ -86,7 +86,7 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
                   variant='solid'
                 >
                   <Trans>
-                    Details
+                    My Subscriptions
                   </Trans>
                 </LinkButton>
               </Flex>

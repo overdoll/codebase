@@ -22,7 +22,7 @@ const Fragment = graphql`
     amount
     currency
     reason
-    timestamp
+    createdAt
   }
 `
 
@@ -31,7 +31,7 @@ export default function StaffAccountTransactionEvent ({ query }: Props): JSX.Ele
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
-  const timestamp = format(new Date(data.timestamp as Date), dateFormat, { locale })
+  const timestamp = format(new Date(data.createdAt as Date), dateFormat, { locale })
   const price = displayPrice({
     amount: data.amount,
     currency: data.currency,

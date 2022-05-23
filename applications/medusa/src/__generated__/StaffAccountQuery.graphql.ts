@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7c6ab8a6963671ab12c456b46237bc06>>
- * @relayHash 8987f5aacdbe50652246dd8b8a7ff701
+ * @generated SignedSource<<62806373aaf1a7d12e879745f6ad9442>>
+ * @relayHash e21e9610f99dc12b7f90fee48454029e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8987f5aacdbe50652246dd8b8a7ff701
+// @relayRequestID e21e9610f99dc12b7f90fee48454029e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type StaffAccountQuery$variables = {
 export type StaffAccountQueryVariables = StaffAccountQuery$variables;
 export type StaffAccountQuery$data = {
   readonly account: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "StaffAccountClubsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffAccountClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "StaffAccountClubsFragment">;
   } | null;
 };
 export type StaffAccountQueryResponse = StaffAccountQuery$data;
@@ -219,7 +219,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "StaffClubSupporterSubscriptionsFragment"
+            "name": "StaffAccountClubSupporterSubscriptionsFragment"
           },
           {
             "args": null,
@@ -405,7 +405,7 @@ return {
             "args": (v3/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "StaffClubSupporterSubscriptions_clubSupporterSubscriptions",
+            "key": "StaffAccountClubSupporterSubscriptions_clubSupporterSubscriptions",
             "kind": "LinkedHandle",
             "name": "clubSupporterSubscriptions"
           },
@@ -439,13 +439,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "timestamp",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "amount",
                         "storageKey": null
                       },
@@ -454,6 +447,13 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "currency",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "createdAt",
                         "storageKey": null
                       },
                       {
@@ -689,7 +689,7 @@ return {
     ]
   },
   "params": {
-    "id": "8987f5aacdbe50652246dd8b8a7ff701",
+    "id": "e21e9610f99dc12b7f90fee48454029e",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",
@@ -698,6 +698,6 @@ return {
 };
 })();
 
-(node as any).hash = "1c979083cf767a1ca8fb5b6d88543cf8";
+(node as any).hash = "65499bf46130740a6cb928472eb93850";
 
 export default node;

@@ -3,7 +3,8 @@ import { StaffAccountQuery } from '@//:artifacts/StaffAccountQuery.graphql'
 import { HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import { Trans } from '@lingui/macro'
-import StaffClubSupporterSubscriptions from './StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions'
+import StaffAccountClubSupporterSubscriptions
+  from './StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions'
 import StaffTransactions from './StaffTransactions/StaffTransactions'
 import LargeAccountHeader from '../../../../../common/components/LargeAccountHeader/LargeAccountHeader'
 import StaffPermissions from './StaffPermissions/StaffPermissions'
@@ -19,7 +20,7 @@ const Query = graphql`
   query StaffAccountQuery($username: String!) {
     account(username: $username) {
       ...StaffPermissionsFragment
-      ...StaffClubSupporterSubscriptionsFragment
+      ...StaffAccountClubSupporterSubscriptionsFragment
       ...StaffTransactionsFragment
       ...LargeAccountHeaderFragment
       ...ProfilePageButtonFragment
@@ -68,7 +69,7 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
             </Tab>
             <Tab>
               <Trans>
-                Clubs
+                Owned Clubs
               </Trans>
             </Tab>
           </Wrap>
@@ -78,7 +79,7 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
             <StaffPermissions query={queryData.account} />
           </TabPanel>
           <TabPanel>
-            <StaffClubSupporterSubscriptions query={queryData.account} />
+            <StaffAccountClubSupporterSubscriptions query={queryData.account} />
           </TabPanel>
           <TabPanel>
             <StaffTransactions query={queryData.account} />

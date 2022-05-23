@@ -21,7 +21,7 @@ const Fragment = graphql`
   fragment TransactionSettingsCardFragment on AccountTransaction {
     amount
     currency
-    timestamp
+    createdAt
     clubSupporterSubscription {
       ... on IAccountClubSupporterSubscription {
         club {
@@ -54,7 +54,7 @@ export default function TransactionSettingsCard ({
     currency: data.currency,
     locale: locale
   })
-  const timestamp = format(new Date(data.timestamp as Date), dateFormatWithTimeSimple, { locale })
+  const timestamp = format(new Date(data.createdAt as Date), dateFormatWithTimeSimple, { locale })
 
   const colorScheme = getTransactionColorScheme(data.type)
 

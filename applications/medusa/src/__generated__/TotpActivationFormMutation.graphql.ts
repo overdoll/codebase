@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c70801b87eda2cec83598248fc83c9e6>>
- * @relayHash 2aa94deb9b52ae0f585815d12adfac43
+ * @generated SignedSource<<5d493bce9d6bf42c1cff7a31935bd7e3>>
+ * @relayHash 82ee8bac1024c01bae41907fca24f5a1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2aa94deb9b52ae0f585815d12adfac43
+// @relayRequestID 82ee8bac1024c01bae41907fca24f5a1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type EnrollAccountMultiFactorTotpValidation = "INVALID_CODE" | "%future added value";
@@ -24,7 +24,11 @@ export type TotpActivationFormMutationVariables = TotpActivationFormMutation$var
 export type TotpActivationFormMutation$data = {
   readonly enrollAccountMultiFactorTotp: {
     readonly validation: EnrollAccountMultiFactorTotpValidation | null;
-    readonly accountMultiFactorTotpEnabled: boolean | null;
+    readonly account: {
+      readonly id: string;
+      readonly multiFactorEnabled: boolean;
+      readonly multiFactorTotpConfigured: boolean;
+    } | null;
   } | null;
 };
 export type TotpActivationFormMutationResponse = TotpActivationFormMutation$data;
@@ -66,8 +70,33 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "accountMultiFactorTotpEnabled",
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "account",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "multiFactorEnabled",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "multiFactorTotpConfigured",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -92,7 +121,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2aa94deb9b52ae0f585815d12adfac43",
+    "id": "82ee8bac1024c01bae41907fca24f5a1",
     "metadata": {},
     "name": "TotpActivationFormMutation",
     "operationKind": "mutation",
@@ -101,6 +130,6 @@ return {
 };
 })();
 
-(node as any).hash = "3998ef08a40e0cabc4f4966d8e9c8623";
+(node as any).hash = "1194ad327fbefe983bec7b64a18e9df3";
 
 export default node;

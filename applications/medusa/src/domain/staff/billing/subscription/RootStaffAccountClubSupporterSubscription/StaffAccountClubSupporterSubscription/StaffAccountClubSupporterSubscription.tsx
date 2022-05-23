@@ -4,8 +4,8 @@ import {
 } from '@//:artifacts/StaffAccountClubSupporterSubscriptionQuery.graphql'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
-import StaffClubSupporterSubscriptionPreview
-  from '../../../../account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
+import StaffAccountClubSupporterSubscriptionPreview
+  from '../../../../account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptionPreview/StaffAccountClubSupporterSubscriptionPreview'
 import { TableBodyRowBackground } from '@//:modules/content/ThemeComponents/Table/Table'
 import { Trans } from '@lingui/macro'
 import StaffClubSupporterSubscriptionBillingError
@@ -24,7 +24,7 @@ const Query = graphql`
   query StaffAccountClubSupporterSubscriptionQuery($reference: String!) {
     accountClubSupporterSubscription(reference: $reference) {
       __typename
-      ...StaffClubSupporterSubscriptionPreviewFragment
+      ...StaffAccountClubSupporterSubscriptionPreviewFragment
       ... on IAccountClubSupporterSubscription {
         ...StaffClubSupporterSubscriptionBillingErrorFragment
         ...StaffClubSupporterSubscriptionAccountFragment
@@ -49,7 +49,7 @@ export default function StaffAccountClubSupporterSubscription ({ query }: Props)
   return (
     <Stack spacing={4}>
       <TableBodyRowBackground>
-        <StaffClubSupporterSubscriptionPreview query={queryData?.accountClubSupporterSubscription} />
+        <StaffAccountClubSupporterSubscriptionPreview query={queryData?.accountClubSupporterSubscription} />
       </TableBodyRowBackground>
       <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>

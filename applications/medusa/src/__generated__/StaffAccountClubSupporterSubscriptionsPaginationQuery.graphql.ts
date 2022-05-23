@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<548fae5018368bcfd0e7445fa6476381>>
- * @relayHash 699a4da11599331338b95af003ee434a
+ * @generated SignedSource<<93f415b931619836e2c663cc76f8c1b1>>
+ * @relayHash 77c063b2921c3a17c4ec1a969aaa7126
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,25 +9,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 699a4da11599331338b95af003ee434a
+// @relayRequestID 77c063b2921c3a17c4ec1a969aaa7126
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type StaffClubSupporterSubscriptionsPaginationQuery$variables = {
+export type StaffAccountClubSupporterSubscriptionsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   id: string;
 };
-export type StaffClubSupporterSubscriptionsPaginationQueryVariables = StaffClubSupporterSubscriptionsPaginationQuery$variables;
-export type StaffClubSupporterSubscriptionsPaginationQuery$data = {
+export type StaffAccountClubSupporterSubscriptionsPaginationQueryVariables = StaffAccountClubSupporterSubscriptionsPaginationQuery$variables;
+export type StaffAccountClubSupporterSubscriptionsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionsFragment">;
   } | null;
 };
-export type StaffClubSupporterSubscriptionsPaginationQueryResponse = StaffClubSupporterSubscriptionsPaginationQuery$data;
-export type StaffClubSupporterSubscriptionsPaginationQuery = {
-  variables: StaffClubSupporterSubscriptionsPaginationQueryVariables;
-  response: StaffClubSupporterSubscriptionsPaginationQuery$data;
+export type StaffAccountClubSupporterSubscriptionsPaginationQueryResponse = StaffAccountClubSupporterSubscriptionsPaginationQuery$data;
+export type StaffAccountClubSupporterSubscriptionsPaginationQuery = {
+  variables: StaffAccountClubSupporterSubscriptionsPaginationQueryVariables;
+  response: StaffAccountClubSupporterSubscriptionsPaginationQuery$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -91,16 +91,16 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
-  "concreteType": "Account",
+  "concreteType": "Club",
   "kind": "LinkedField",
-  "name": "account",
+  "name": "club",
   "plural": false,
   "selections": [
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "username",
+      "name": "name",
       "storageKey": null
     },
     (v4/*: any*/)
@@ -112,7 +112,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffAccountClubSupporterSubscriptionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -125,7 +125,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "StaffClubSupporterSubscriptionsFragment"
+            "name": "StaffAccountClubSupporterSubscriptionsFragment"
           }
         ],
         "storageKey": null
@@ -138,7 +138,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffAccountClubSupporterSubscriptionsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -158,7 +158,7 @@ return {
                 "args": (v2/*: any*/),
                 "concreteType": "AccountClubSupporterSubscriptionConnection",
                 "kind": "LinkedField",
-                "name": "supporterSubscriptions",
+                "name": "clubSupporterSubscriptions",
                 "plural": false,
                 "selections": [
                   {
@@ -299,12 +299,12 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "StaffClubSupporterSubscriptions_supporterSubscriptions",
+                "key": "StaffAccountClubSupporterSubscriptions_clubSupporterSubscriptions",
                 "kind": "LinkedHandle",
-                "name": "supporterSubscriptions"
+                "name": "clubSupporterSubscriptions"
               }
             ],
-            "type": "Club",
+            "type": "Account",
             "abstractKey": null
           }
         ],
@@ -313,15 +313,15 @@ return {
     ]
   },
   "params": {
-    "id": "699a4da11599331338b95af003ee434a",
+    "id": "77c063b2921c3a17c4ec1a969aaa7126",
     "metadata": {},
-    "name": "StaffClubSupporterSubscriptionsPaginationQuery",
+    "name": "StaffAccountClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "c3fa9f6504eab68bf036c3c4e024032f";
+(node as any).hash = "886ed9ac2b3e0851f9dc51f9338362e4";
 
 export default node;

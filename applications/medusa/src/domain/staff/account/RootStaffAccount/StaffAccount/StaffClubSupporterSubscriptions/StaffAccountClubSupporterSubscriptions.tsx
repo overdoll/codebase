@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay/hooks'
 import {
-  StaffClubSupporterSubscriptionsFragment$key
-} from '@//:artifacts/StaffClubSupporterSubscriptionsFragment.graphql'
+  StaffAccountClubSupporterSubscriptionsFragment$key
+} from '@//:artifacts/StaffAccountClubSupporterSubscriptionsFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { usePaginationFragment } from 'react-relay'
 import { StaffAccountQuery } from '@//:artifacts/StaffAccountQuery.graphql'
@@ -15,35 +15,35 @@ import {
   TableHeaderRow
 } from '@//:modules/content/ThemeComponents/Table/Table'
 import { EmptyBoundary, EmptySubscriptions } from '@//:modules/content/Placeholder'
-import StaffClubSupporterSubscriptionPreview
-  from './StaffClubSupporterSubscription/StaffClubSupporterSubscriptionPreview'
+import StaffAccountClubSupporterSubscriptionPreview
+  from './StaffAccountClubSupporterSubscriptionPreview/StaffAccountClubSupporterSubscriptionPreview'
 
 interface Props {
-  query: StaffClubSupporterSubscriptionsFragment$key
+  query: StaffAccountClubSupporterSubscriptionsFragment$key
 }
 
 const Fragment = graphql`
-  fragment StaffClubSupporterSubscriptionsFragment on Account
+  fragment StaffAccountClubSupporterSubscriptionsFragment on Account
   @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
-  @refetchable(queryName: "StaffClubSupporterSubscriptionsPaginationQuery" ) {
+  @refetchable(queryName: "StaffAccountClubSupporterSubscriptionsPaginationQuery" ) {
     clubSupporterSubscriptions (first: $first, after: $after)
-    @connection(key: "StaffClubSupporterSubscriptions_clubSupporterSubscriptions") {
+    @connection(key: "StaffAccountClubSupporterSubscriptions_clubSupporterSubscriptions") {
       edges {
         node {
           ... on IAccountClubSupporterSubscription {
             reference
           }
-          ...StaffClubSupporterSubscriptionPreviewFragment
+          ...StaffAccountClubSupporterSubscriptionPreviewFragment
         }
       }
     }
   }
 `
 
-export default function StaffClubSupporterSubscriptions ({ query }: Props): JSX.Element {
+export default function StaffAccountClubSupporterSubscriptions ({ query }: Props): JSX.Element {
   const {
     data,
     loadNext,
@@ -93,7 +93,7 @@ export default function StaffClubSupporterSubscriptions ({ query }: Props): JSX.
                 query: { reference: item.node.reference }
               }}
             >
-              <StaffClubSupporterSubscriptionPreview query={item.node} />
+              <StaffAccountClubSupporterSubscriptionPreview query={item.node} />
             </TableBodyRowLink>
           ))}
           <TableBodyRowLoadMore

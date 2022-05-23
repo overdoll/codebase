@@ -42,6 +42,8 @@ export default function CreateClub (props: Props): JSX.Element {
     props.query
   )
 
+  console.log(queryData)
+
   const data = useFragment<CreateClubFragment$key>(Fragment, queryData?.viewer)
 
   const canCreateClub = queryData.viewer != null ? queryData.viewer.clubsCount < queryData.viewer.clubsLimit : false

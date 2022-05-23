@@ -4,12 +4,18 @@ import { clickOnButton, clickOnToggle } from '../../../support/user_actions'
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Settings - Configure Payouts', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
+
+  before(() => {
+    cy.assignArtistRole(username)
+  })
 
   it('fill out payout details', () => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
     cy.visit('/settings/payouts')
-
+    cy.findByText(/You must set up/iu).should('be.visible')
+    cy.enableTwoFactor()
+    cy.visit('/settings/payouts')
     // payout details
     cy.findByText('Enter your payout details').should('not.be.disabled').click()
     cy.url().should('include', '/settings/payouts/details')

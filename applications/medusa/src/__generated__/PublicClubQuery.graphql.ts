@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3f37c30f89685a59f2754ac559341685>>
- * @relayHash c8d3f5dd326d388f42b89a9b7d56af09
+ * @generated SignedSource<<cfe43130982a60440b480fc66ed74230>>
+ * @relayHash bfe82a287db973a7e2bba86b3895d2a6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c8d3f5dd326d388f42b89a9b7d56af09
+// @relayRequestID bfe82a287db973a7e2bba86b3895d2a6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -671,8 +671,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v19/*: any*/),
-              (v15/*: any*/)
+              (v19/*: any*/)
             ],
             "storageKey": null
           },
@@ -876,7 +875,7 @@ return {
     ]
   },
   "params": {
-    "id": "c8d3f5dd326d388f42b89a9b7d56af09",
+    "id": "bfe82a287db973a7e2bba86b3895d2a6",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

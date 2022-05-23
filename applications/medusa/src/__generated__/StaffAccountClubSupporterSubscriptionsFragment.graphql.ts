@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a860b204118b02d731a14baec7505fcc>>
+ * @generated SignedSource<<6d4c8f4c171b5aabdc4cd52c0e4f021e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,27 +10,27 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type StaffClubSupporterSubscriptionsFragment$data = {
-  readonly supporterSubscriptions: {
+export type StaffAccountClubSupporterSubscriptionsFragment$data = {
+  readonly clubSupporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly reference?: string;
-        readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionPreviewFragment">;
       };
     }>;
   };
   readonly id: string;
-  readonly " $fragmentType": "StaffClubSupporterSubscriptionsFragment";
+  readonly " $fragmentType": "StaffAccountClubSupporterSubscriptionsFragment";
 };
-export type StaffClubSupporterSubscriptionsFragment = StaffClubSupporterSubscriptionsFragment$data;
-export type StaffClubSupporterSubscriptionsFragment$key = {
-  readonly " $data"?: StaffClubSupporterSubscriptionsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionsFragment">;
+export type StaffAccountClubSupporterSubscriptionsFragment = StaffAccountClubSupporterSubscriptionsFragment$data;
+export type StaffAccountClubSupporterSubscriptionsFragment$key = {
+  readonly " $data"?: StaffAccountClubSupporterSubscriptionsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionsFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "supporterSubscriptions"
+  "clubSupporterSubscriptions"
 ];
 return {
   "argumentDefinitions": [
@@ -67,18 +67,18 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./StaffClubSupporterSubscriptionsPaginationQuery.graphql'),
+      "operation": require('./StaffAccountClubSupporterSubscriptionsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "StaffClubSupporterSubscriptionsFragment",
+  "name": "StaffAccountClubSupporterSubscriptionsFragment",
   "selections": [
     {
-      "alias": "supporterSubscriptions",
+      "alias": "clubSupporterSubscriptions",
       "args": null,
       "concreteType": "AccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
-      "name": "__StaffClubSupporterSubscriptions_supporterSubscriptions_connection",
+      "name": "__StaffAccountClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
       "plural": false,
       "selections": [
         {
@@ -114,7 +114,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "StaffClubSupporterSubscriptionPreviewFragment"
+                  "name": "StaffAccountClubSupporterSubscriptionPreviewFragment"
                 },
                 {
                   "alias": null,
@@ -172,11 +172,11 @@ return {
       "storageKey": null
     }
   ],
-  "type": "Club",
+  "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "c3fa9f6504eab68bf036c3c4e024032f";
+(node as any).hash = "886ed9ac2b3e0851f9dc51f9338362e4";
 
 export default node;

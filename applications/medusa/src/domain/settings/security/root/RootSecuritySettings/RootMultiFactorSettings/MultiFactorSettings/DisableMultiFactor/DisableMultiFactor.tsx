@@ -31,7 +31,9 @@ const DisableMultiFactorFragmentGQL = graphql`
 const DisableMultiFactorMutationGQL = graphql`
   mutation DisableMultiFactorMutation {
     disableAccountMultiFactor {
-      accountMultiFactorTotpEnabled
+      account {
+        multiFactorEnabled
+      }
     }
   }
 `

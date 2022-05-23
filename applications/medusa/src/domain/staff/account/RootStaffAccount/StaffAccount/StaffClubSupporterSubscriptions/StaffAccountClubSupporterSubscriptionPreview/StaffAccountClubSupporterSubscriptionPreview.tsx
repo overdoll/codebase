@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type {
-  StaffClubSupporterSubscriptionPreviewFragment$key
-} from '@//:artifacts/StaffClubSupporterSubscriptionPreviewFragment.graphql'
+  StaffAccountClubSupporterSubscriptionPreviewFragment$key
+} from '@//:artifacts/StaffAccountClubSupporterSubscriptionPreviewFragment.graphql'
 import StaffAccountActiveClubSupporterSubscriptionPreview
   from './StaffAccountActiveClubSupporterSubscriptionPreview/StaffAccountActiveClubSupporterSubscriptionPreview'
 import StaffAccountCancelledClubSupporterSubscriptionPreview
@@ -10,11 +10,11 @@ import StaffAccountExpiredClubSupporterSubscriptionPreview
   from './StaffAccountExpiredClubSupporterSubscriptionPreview/StaffAccountExpiredClubSupporterSubscriptionPreview'
 
 interface Props {
-  query: StaffClubSupporterSubscriptionPreviewFragment$key
+  query: StaffAccountClubSupporterSubscriptionPreviewFragment$key
 }
 
 const Fragment = graphql`
-  fragment StaffClubSupporterSubscriptionPreviewFragment on AccountClubSupporterSubscription {
+  fragment StaffAccountClubSupporterSubscriptionPreviewFragment on AccountClubSupporterSubscription {
     __typename
     ... on IAccountClubSupporterSubscription {
       id
@@ -31,7 +31,7 @@ const Fragment = graphql`
   }
 `
 
-export default function StaffClubSupporterSubscriptionPreview ({ query }: Props): JSX.Element {
+export default function StaffAccountClubSupporterSubscriptionPreview ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   switch (data.__typename) {

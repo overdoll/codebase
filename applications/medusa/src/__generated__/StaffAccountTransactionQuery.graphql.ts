@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ab0d66d4dc27a2723af0992f45fcd74c>>
- * @relayHash 3420efedeac96f0438a34b358a6de90b
+ * @generated SignedSource<<5838e0f31d2fa321fa7a640d67866996>>
+ * @relayHash 1ac9a621d02ac1c3709c1a08b3a2cb34
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3420efedeac96f0438a34b358a6de90b
+// @relayRequestID 1ac9a621d02ac1c3709c1a08b3a2cb34
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -47,21 +47,21 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "timestamp",
+  "name": "amount",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "amount",
+  "name": "currency",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "currency",
+  "name": "createdAt",
   "storageKey": null
 },
 v5 = {
@@ -293,8 +293,8 @@ return {
             "plural": true,
             "selections": [
               (v5/*: any*/),
+              (v2/*: any*/),
               (v3/*: any*/),
-              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -302,7 +302,7 @@ return {
                 "name": "reason",
                 "storageKey": null
               },
-              (v2/*: any*/),
+              (v4/*: any*/),
               (v6/*: any*/)
             ],
             "storageKey": null
@@ -313,7 +313,7 @@ return {
     ]
   },
   "params": {
-    "id": "3420efedeac96f0438a34b358a6de90b",
+    "id": "1ac9a621d02ac1c3709c1a08b3a2cb34",
     "metadata": {},
     "name": "StaffAccountTransactionQuery",
     "operationKind": "query",

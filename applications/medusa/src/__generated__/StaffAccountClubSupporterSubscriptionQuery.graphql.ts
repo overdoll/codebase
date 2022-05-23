@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7849698b86fd903fc7ebb44f7f822953>>
- * @relayHash 0b7985e8b4b585e3160e509f945c7473
+ * @generated SignedSource<<74938db5a35b059922ad97080e73852b>>
+ * @relayHash 7600017ce6775e3d06d0ac4417f34bfb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0b7985e8b4b585e3160e509f945c7473
+// @relayRequestID 7600017ce6775e3d06d0ac4417f34bfb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,7 +20,7 @@ export type StaffAccountClubSupporterSubscriptionQueryVariables = StaffAccountCl
 export type StaffAccountClubSupporterSubscriptionQuery$data = {
   readonly accountClubSupporterSubscription: {
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment" | "StaffClubSupporterSubscriptionBillingErrorFragment" | "StaffClubSupporterSubscriptionAccountFragment" | "StaffClubSupporterSubscriptionClubFragment" | "StaffSubscriptionOptionsFragment" | "StaffSubscriptionTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionPreviewFragment" | "StaffClubSupporterSubscriptionBillingErrorFragment" | "StaffClubSupporterSubscriptionAccountFragment" | "StaffClubSupporterSubscriptionClubFragment" | "StaffSubscriptionOptionsFragment" | "StaffSubscriptionTransactionsFragment">;
   } | null;
 };
 export type StaffAccountClubSupporterSubscriptionQueryResponse = StaffAccountClubSupporterSubscriptionQuery$data;
@@ -217,13 +217,6 @@ v15 = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "timestamp",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
               "name": "amount",
               "storageKey": null
             },
@@ -232,6 +225,13 @@ v15 = {
               "args": null,
               "kind": "ScalarField",
               "name": "currency",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "createdAt",
               "storageKey": null
             },
             {
@@ -345,7 +345,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "StaffClubSupporterSubscriptionPreviewFragment"
+            "name": "StaffAccountClubSupporterSubscriptionPreviewFragment"
           },
           {
             "kind": "InlineFragment",
@@ -635,7 +635,7 @@ return {
     ]
   },
   "params": {
-    "id": "0b7985e8b4b585e3160e509f945c7473",
+    "id": "7600017ce6775e3d06d0ac4417f34bfb",
     "metadata": {},
     "name": "StaffAccountClubSupporterSubscriptionQuery",
     "operationKind": "query",
@@ -644,6 +644,6 @@ return {
 };
 })();
 
-(node as any).hash = "ba7c9c2813ecca02d50299cae448404a";
+(node as any).hash = "d12f3ed8af79ae665581e9222296dad7";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0e8f0c5e47d60d86830a1f02a74f530>>
+ * @generated SignedSource<<10e9c1c7fa81e34909f9d8e6c7b9985f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,23 +10,23 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type StaffClubSupporterSubscriptionPreviewFragment$data = {
+export type StaffAccountClubSupporterSubscriptionPreviewFragment$data = {
   readonly __typename: string;
   readonly id?: string;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffActiveClubSupporterSubscriptionPreviewFragment" | "StaffCancelledClubSupporterSubscriptionPreviewFragment" | "StaffExpiredClubSupporterSubscriptionPreviewFragment">;
-  readonly " $fragmentType": "StaffClubSupporterSubscriptionPreviewFragment";
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountActiveClubSupporterSubscriptionPreviewFragment" | "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment" | "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment">;
+  readonly " $fragmentType": "StaffAccountClubSupporterSubscriptionPreviewFragment";
 };
-export type StaffClubSupporterSubscriptionPreviewFragment = StaffClubSupporterSubscriptionPreviewFragment$data;
-export type StaffClubSupporterSubscriptionPreviewFragment$key = {
-  readonly " $data"?: StaffClubSupporterSubscriptionPreviewFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffClubSupporterSubscriptionPreviewFragment">;
+export type StaffAccountClubSupporterSubscriptionPreviewFragment = StaffAccountClubSupporterSubscriptionPreviewFragment$data;
+export type StaffAccountClubSupporterSubscriptionPreviewFragment$key = {
+  readonly " $data"?: StaffAccountClubSupporterSubscriptionPreviewFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionPreviewFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "StaffClubSupporterSubscriptionPreviewFragment",
+  "name": "StaffAccountClubSupporterSubscriptionPreviewFragment",
   "selections": [
     {
       "alias": null,
@@ -55,7 +55,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffActiveClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountActiveClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountActiveClubSupporterSubscription",
@@ -67,7 +67,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffCancelledClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountCancelledClubSupporterSubscription",
@@ -79,7 +79,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffExpiredClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountExpiredClubSupporterSubscription",
@@ -90,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isAccountClubSupporterSubscription"
 };
 
-(node as any).hash = "5af107a695b3e70dee416e66a7c8e0e0";
+(node as any).hash = "c27e22104c9389796d4899d454a314ba";
 
 export default node;

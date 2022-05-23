@@ -75,8 +75,7 @@ const Mutation = graphql`
 `
 
 export default function CancelSubscriptionButton ({
-  query,
-  connectionId
+  query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 

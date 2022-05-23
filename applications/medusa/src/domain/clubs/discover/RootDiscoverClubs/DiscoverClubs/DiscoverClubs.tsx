@@ -1,14 +1,13 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
 import { graphql } from 'react-relay'
-import LockedAccountBanner
-  from '../../../../../common/components/AccountInformationBanner/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import { Box, Flex, HStack } from '@chakra-ui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -75,21 +74,29 @@ export default function DiscoverClubs (props: Props): JSX.Element {
             </Flex>
           </Alert>
         )}
-        {noFeed && (
-          <Alert
-            status='info'
-            mb={2}
-          >
-            <HStack spacing={0} align='center'>
-              <AlertIcon />
-              <AlertDescription>
-                <Trans>
-                  Start by joining some clubs and we'll create a personalized feed for you!
-                </Trans>
-              </AlertDescription>
-            </HStack>
-          </Alert>
-        )}
+        {noFeed
+          ? (
+            <Alert
+              status='info'
+              mb={2}
+            >
+              <HStack spacing={0} align='center'>
+                <AlertIcon />
+                <AlertDescription>
+                  <Trans>
+                    Start by joining some clubs and we'll create a personalized feed for you!
+                  </Trans>
+                </AlertDescription>
+              </HStack>
+            </Alert>
+            )
+          : (
+            <BackButton href='/clubs/feed'>
+              <Trans>
+                Go to My Feed
+              </Trans>
+            </BackButton>
+            )}
       </Box>
     </>
   )

@@ -14,9 +14,9 @@ interface Props {
 const Fragment = graphql`
   fragment StaffTransactionCardFragment on AccountTransaction {
     type
-    timestamp
     amount
     currency
+    createdAt
     clubSupporterSubscription {
       ...on IAccountClubSupporterSubscription{
         club {
@@ -53,7 +53,7 @@ export default function StaffTransactionCard ({
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
-  const timestamp = formatDistanceToNow(new Date(data.timestamp as Date), {
+  const timestamp = formatDistanceToNow(new Date(data.createdAt as Date), {
     locale: locale,
     includeSeconds: true,
     addSuffix: true

@@ -13,5 +13,20 @@
     "thumbnail_resource_id": null,
     "has_created_supporter_only_post": true,
     "next_supporter_post_time": "2022-04-08 00:09:01.117"
+  },
+  {
+    "id": "25WqY2AZfmlykwqKhQagxmI9gts",
+    "members_count": 0,
+    "name": {
+      "en": "Second Test Club"
+    },
+    "owner_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "slug": "SecondTestClub",
+    "slug_aliases": [],
+    "suspended": false,
+    "suspended_until": "",
+    "thumbnail_resource_id": null,
+    "has_created_supporter_only_post": true,
+    "next_supporter_post_time": "2022-04-08 00:09:01.117"
   }
 ]

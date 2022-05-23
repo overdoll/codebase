@@ -17,12 +17,6 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment ClubConditionalPostDisplayFragment on Club {
-    slug
-    canSupport
-    viewerIsOwner
-    suspension {
-      __typename
-    }
     posts(first: 1) {
       edges {
         node {

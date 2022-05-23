@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3bea071b714db74fc6dfc3d0802f166>>
+ * @generated SignedSource<<46a24e3e20842a75029ea9cfc669544f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,12 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubConditionalPostDisplayFragment$data = {
-  readonly slug: string;
-  readonly canSupport: boolean;
-  readonly viewerIsOwner: boolean;
-  readonly suspension: {
-    readonly __typename: string;
-  } | null;
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -33,53 +27,12 @@ export type ClubConditionalPostDisplayFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ClubConditionalPostDisplayFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ClubConditionalPostDisplayFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "slug",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "canSupport",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "viewerIsOwner",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ClubSuspension",
-      "kind": "LinkedField",
-      "name": "suspension",
-      "plural": false,
-      "selections": (v0/*: any*/),
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": [
@@ -109,7 +62,15 @@ return {
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
-              "selections": (v0/*: any*/),
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -137,8 +98,7 @@ return {
   "type": "Club",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "eb48318d3fe169f89ee94c75c210d704";
+(node as any).hash = "b1fb63e6c9b2ad5dea9b823e54ba588d";
 
 export default node;

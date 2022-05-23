@@ -41,7 +41,7 @@ const Mutation = graphql`
           amount
           currency
           reason
-          timestamp
+          createdAt
         }
       }
     }

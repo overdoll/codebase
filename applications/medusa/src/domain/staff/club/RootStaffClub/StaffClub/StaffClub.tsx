@@ -12,6 +12,7 @@ import StaffClubPayouts from './StaffClubPayouts/StaffClubPayouts'
 import StaffClubPayments from './StaffClubPayments/StaffClubPayments'
 import StaffClubSuspensions from './StaffClubSuspensions/StaffClubSuspensions'
 import StaffClubTermination from './StaffClubTermination/StaffClubTermination'
+import StaffClubSupporterSubscriptions from './StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions'
 
 interface Props {
   query: PreloadedQuery<StaffClubQuery>
@@ -30,6 +31,7 @@ const Query = graphql`
       ...StaffClubPaymentsFragment
       ...StaffClubSuspensionsFragment
       ...StaffClubTerminationFragment
+      ...StaffClubSupporterSubscriptionsFragment
     }
   }
 `
@@ -69,6 +71,11 @@ export default function StaffClub ({ query }: Props): JSX.Element {
             </Tab>
             <Tab>
               <Trans>
+                Subscriptions
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
                 Payouts
               </Trans>
             </Tab>
@@ -95,6 +102,9 @@ export default function StaffClub ({ query }: Props): JSX.Element {
           </TabPanel>
           <TabPanel>
             <StaffClubOwner query={queryData.club} />
+          </TabPanel>
+          <TabPanel>
+            <StaffClubSupporterSubscriptions query={queryData.club} />
           </TabPanel>
           <TabPanel>
             <StaffClubPayouts query={queryData.club} />

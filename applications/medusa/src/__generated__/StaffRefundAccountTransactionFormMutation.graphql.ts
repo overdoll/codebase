@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f4a3d1b4d172523f9ec6966f45f8cce3>>
- * @relayHash 6b1f485ae194f86f0469c873f3c7d1cb
+ * @generated SignedSource<<2e39785331d2d801950099fab3d05669>>
+ * @relayHash ba633f70942c854dd8494e7cd6bbf5e0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6b1f485ae194f86f0469c873f3c7d1cb
+// @relayRequestID ba633f70942c854dd8494e7cd6bbf5e0
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AccountTransactionType = "CHARGEBACK" | "PAYMENT" | "REFUND" | "VOID" | "%future added value";
@@ -31,7 +31,7 @@ export type StaffRefundAccountTransactionFormMutation$data = {
         readonly amount: number;
         readonly currency: Currency;
         readonly reason: string;
-        readonly timestamp: any;
+        readonly createdAt: any;
       }>;
     } | null;
   } | null;
@@ -96,7 +96,7 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "timestamp",
+  "name": "createdAt",
   "storageKey": null
 };
 return {
@@ -198,7 +198,7 @@ return {
     ]
   },
   "params": {
-    "id": "6b1f485ae194f86f0469c873f3c7d1cb",
+    "id": "ba633f70942c854dd8494e7cd6bbf5e0",
     "metadata": {},
     "name": "StaffRefundAccountTransactionFormMutation",
     "operationKind": "mutation",
@@ -207,6 +207,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ff82c909e60e7cd5b52ed2a7b857610";
+(node as any).hash = "43e3f4c002237b2afcdd5ee9575fb4fa";
 
 export default node;
