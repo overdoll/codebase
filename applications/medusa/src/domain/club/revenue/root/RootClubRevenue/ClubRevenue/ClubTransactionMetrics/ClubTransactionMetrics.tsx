@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { LoadMoreStackTile } from '@//:modules/content/ContentSelection'
 import { usePaginationFragment } from 'react-relay'
 import { ClubRevenueQuery } from '@//:artifacts/ClubRevenueQuery.graphql'
+import ClubTransactionMetric from './ClubTransactionMetric/ClubTransactionMetric'
 
 interface Props {
   query: ClubTransactionMetricsFragment$key
@@ -14,7 +15,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubTransactionMetricsFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 2}
+    first: {type: Int, defaultValue: 1}
     after: {type: String}
   )
   @refetchable(queryName: "ClubTransactionMetricsPaginationQuery" ) {
@@ -22,7 +23,7 @@ const Fragment = graphql`
     @connection (key: "ClubTransactionMetrics_transactionMetrics") {
       edges {
         node {
-          currency
+          ...ClubTransactionMetricFragment
         }
       }
     }
@@ -58,10 +59,16 @@ export default function ClubTransactionMetrics ({ query }: Props): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <Stack spacing={2}>
-        {data.transactionMetrics.edges.map((item, index) => <Box key={index} />)}
+        {data.transactionMetrics.edges.map((item, index) => (
+          <ClubTransactionMetric key={index} query={item.node} />
+        ))}
         <LoadMoreStackTile
           hasNext={hasNext}
-          onLoadNext={() => loadNext(5)}
+          text={(
+            <Trans>
+              Show Older Metrics
+            </Trans>)}
+          onLoadNext={() => loadNext(2)}
           isLoadingNext={isLoadingNext}
         />
       </Stack>

@@ -16,7 +16,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubPayoutsListFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 2}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPayoutsPaginationQuery" ) {
@@ -63,6 +63,11 @@ export default function ClubPayoutsList ({ query }: Props): JSX.Element {
         <Stack spacing={2}>
           {data.payouts.edges.map((item, index) => <ClubPayoutCard key={index} query={item.node} />)}
           <LoadMoreStackTile
+            text={(
+              <Trans>
+                Show Older Payouts
+              </Trans>
+            )}
             hasNext={hasNext}
             onLoadNext={() => loadNext(5)}
             isLoadingNext={isLoadingNext}

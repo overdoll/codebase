@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<98d737d88a25c0dfa0f2f8932e6883f2>>
- * @relayHash 1bb74d001f3b6d87926afc60596106d1
+ * @generated SignedSource<<b43b923681dd18cbc6ef0495f51d1902>>
+ * @relayHash fc9ea6b35d1a94056af40df5a2f95df6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1bb74d001f3b6d87926afc60596106d1
+// @relayRequestID fc9ea6b35d1a94056af40df5a2f95df6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -38,7 +38,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 2,
+    "defaultValue": 1,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -154,7 +154,70 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
+                            "name": "month",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "year",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
                             "name": "currency",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "chargebacksAmountRatio",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "chargebacksAmount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "chargebacksCount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "refundsAmountRatio",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "refundsAmount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "refundsCount",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "totalTransactionsAmount",
                             "storageKey": null
                           },
                           (v3/*: any*/)
@@ -218,7 +281,7 @@ return {
     ]
   },
   "params": {
-    "id": "1bb74d001f3b6d87926afc60596106d1",
+    "id": "fc9ea6b35d1a94056af40df5a2f95df6",
     "metadata": {},
     "name": "ClubTransactionMetricsPaginationQuery",
     "operationKind": "query",
@@ -227,6 +290,6 @@ return {
 };
 })();
 
-(node as any).hash = "93fec832bffb3336ce259d7879e1b5e8";
+(node as any).hash = "0fa38b3f498d157f2379f36e90d8812b";
 
 export default node;

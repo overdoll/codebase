@@ -116,7 +116,7 @@ export default function BenefitsTransition (): JSX.Element {
                     </ListItem>
                     <ListItem colorScheme='green'>
                       <Trans>
-                        Construct a personalized content feed
+                        Create a personalized content feed
                       </Trans>
                     </ListItem>
                   </Stack>

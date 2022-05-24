@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<873e10c2f7efc23c69577570d5324fc5>>
+ * @generated SignedSource<<bd2fefedafb05849c4609e0bb6a101d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,12 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
-export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubTransactionMetricsFragment$data = {
   readonly transactionMetrics: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly currency: Currency;
+        readonly " $fragmentSpreads": FragmentRefs<"ClubTransactionMetricFragment">;
       };
     }>;
   };
@@ -40,7 +39,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 2,
+      "defaultValue": 1,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -98,11 +97,9 @@ return {
               "plural": false,
               "selections": [
                 {
-                  "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "currency",
-                  "storageKey": null
+                  "kind": "FragmentSpread",
+                  "name": "ClubTransactionMetricFragment"
                 },
                 {
                   "alias": null,
@@ -165,6 +162,6 @@ return {
 };
 })();
 
-(node as any).hash = "93fec832bffb3336ce259d7879e1b5e8";
+(node as any).hash = "0fa38b3f498d157f2379f36e90d8812b";
 
 export default node;

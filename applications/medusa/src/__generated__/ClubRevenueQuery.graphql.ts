@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4c3f4cae96664b8b795d02e8a1e140e4>>
- * @relayHash 0b41df491fba677437c21a0b61aba669
+ * @generated SignedSource<<f3121e95351cd1894f2f0bcb1a7c56ad>>
+ * @relayHash 0f111b23b6b9b7e5e74bbb40fbc8788f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0b41df491fba677437c21a0b61aba669
+// @relayRequestID 0f111b23b6b9b7e5e74bbb40fbc8788f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -81,7 +81,7 @@ v7 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 3
+    "value": 2
   }
 ],
 v8 = {
@@ -127,7 +127,7 @@ v11 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 2
+    "value": 1
   }
 ];
 return {
@@ -280,7 +280,7 @@ return {
               },
               (v10/*: any*/)
             ],
-            "storageKey": "payouts(first:3)"
+            "storageKey": "payouts(first:2)"
           },
           {
             "alias": null,
@@ -410,7 +410,70 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "month",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "year",
+                        "storageKey": null
+                      },
                       (v5/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksAmountRatio",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksCount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsAmountRatio",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsCount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "totalTransactionsAmount",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -421,7 +484,7 @@ return {
               },
               (v10/*: any*/)
             ],
-            "storageKey": "transactionMetrics(first:2)"
+            "storageKey": "transactionMetrics(first:1)"
           },
           {
             "alias": null,
@@ -438,7 +501,7 @@ return {
     ]
   },
   "params": {
-    "id": "0b41df491fba677437c21a0b61aba669",
+    "id": "0f111b23b6b9b7e5e74bbb40fbc8788f",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",

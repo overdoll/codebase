@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f7e3d87af13658f38c4c1b33d691aa8c>>
- * @relayHash 516a934c0aff74bbaa3274580a6d3ab5
+ * @generated SignedSource<<375157d09814d3caad7cf35e2e7ab7ba>>
+ * @relayHash a5bc6b1568c5d8673722ad1c4a94a895
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 516a934c0aff74bbaa3274580a6d3ab5
+// @relayRequestID a5bc6b1568c5d8673722ad1c4a94a895
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -212,7 +212,7 @@ v18 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 2
+    "value": 1
   }
 ],
 v19 = {
@@ -729,7 +729,70 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "month",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "year",
+                        "storageKey": null
+                      },
                       (v13/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksAmountRatio",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "chargebacksCount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsAmountRatio",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsAmount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "refundsCount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "totalTransactionsAmount",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -740,7 +803,7 @@ return {
               },
               (v12/*: any*/)
             ],
-            "storageKey": "transactionMetrics(first:2)"
+            "storageKey": "transactionMetrics(first:1)"
           },
           {
             "alias": null,
@@ -970,7 +1033,7 @@ return {
     ]
   },
   "params": {
-    "id": "516a934c0aff74bbaa3274580a6d3ab5",
+    "id": "a5bc6b1568c5d8673722ad1c4a94a895",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",
