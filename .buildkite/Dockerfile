@@ -12,10 +12,10 @@ RUN mkdir /root/.nvm
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash && . $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default
 
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
+RUN cp /root/.nvm/versions/node/v16.5.0/bin/node /usr/bin/node
 
 RUN curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+RUN ln -s /root/.yarn/bin/yarn /usr/bin/yarn
 RUN apt clean
 
 RUN wget https://github.com/google/go-containerregistry/releases/download/v0.9.0/go-containerregistry_Linux_x86_64.tar.gz
