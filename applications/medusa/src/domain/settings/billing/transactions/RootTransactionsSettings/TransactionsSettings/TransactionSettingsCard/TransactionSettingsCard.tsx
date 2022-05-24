@@ -68,7 +68,7 @@ export default function TransactionSettingsCard ({
           query={data?.clubSupporterSubscription?.club?.thumbnail}
         />
         <Heading
-          isTruncated
+          noOfLines={1}
           fontSize='lg'
           color='gray.00'
         >
@@ -77,12 +77,12 @@ export default function TransactionSettingsCard ({
       </HStack>
       <TableBodyRow columns={7}>
         <TableBodyColumn column={3}>
-          <Text w='100%' align='start' isTruncated fontSize='md' color='gray.100'>
+          <Text w='100%' align='start' noOfLines={1} fontSize='md' color='gray.100'>
             {timestamp}
           </Text>
         </TableBodyColumn>
         <TableBodyColumn column={3}>
-          <Text w='100%' align='center' isTruncated fontFamily='mono' fontSize='md' color='gray.100'>
+          <Text w='100%' align='center' noOfLines={1} fontFamily='mono' fontSize='md' color='gray.100'>
             {data.paymentMethod.card.type} **{data.paymentMethod.card.last4}
           </Text>
         </TableBodyColumn>

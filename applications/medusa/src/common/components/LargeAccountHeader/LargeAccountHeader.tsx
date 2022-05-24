@@ -31,7 +31,7 @@ export default function LargeAccountHeader ({ query }: Props): JSX.Element {
         query={data?.avatar}
       />
       <Heading
-        isTruncated
+        noOfLines={1}
         fontSize='3xl'
         color='gray.00'
       >

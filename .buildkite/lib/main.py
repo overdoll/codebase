@@ -348,6 +348,23 @@ def print_project_pipeline():
                         "compress": "true",
                         "paths": [
                             "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                        "continue_on_error": "true"
+                    }
+                },
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-nextjs",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}-{{ checksum 'applications/medusa/src' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
                             "applications/medusa/build/cache"
                         ],
                         "s3": {

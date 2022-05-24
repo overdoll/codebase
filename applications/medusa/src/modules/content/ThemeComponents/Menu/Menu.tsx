@@ -59,8 +59,8 @@ const Menu = ({
           icon={
             <Icon
               icon={NavigationMenuHorizontal}
-              w={ICON_SIZES[size]}
-              h={ICON_SIZES[size]}
+              w={ICON_SIZES[size as string]}
+              h={ICON_SIZES[size as string]}
               fill='gray.200'
             />
           }
