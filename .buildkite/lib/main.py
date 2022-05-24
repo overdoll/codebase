@@ -214,7 +214,7 @@ def execute_check_commands_custom(configs):
     terminal_print.print_expanded_group(":one-does-not-simply: Running checks before tests")
 
     for i in commands:
-        exec.execute_command(i.split())
+        exec.execute_command(['/bin/bash', '-c', i])
 
     os.chdir(cwd)
 
