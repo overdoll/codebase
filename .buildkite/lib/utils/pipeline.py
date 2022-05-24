@@ -45,6 +45,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "CONTAINER_REGISTRY",
         "DOCKER_CONFIG",
         "CODECOV_API_KEY",
+        "BUILDKITE_COMMIT",
     ]
 
     step = {
@@ -54,10 +55,10 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "plugins": [
             {
                 "docker#v3.5.0": {
-                    "always-pull": True,
                     "shell": ["/bin/bash", "-e", "-c"],
                     "environment": format.format_env_vars(additional_env_vars) + vars,
                     "image": DEFAULT_IMAGE,
+                    "user": "root",
                     "volumes": [
                         "/var/run/docker.sock:/var/run/docker.sock",
                     ],
