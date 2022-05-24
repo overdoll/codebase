@@ -50,6 +50,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "AWS_ACCESS_SECRET",
         "AWS_ENDPOINT",
         "AWS_REGION",
+        "FORCE_COLOR=1",
     ]
 
     step = {
@@ -143,7 +144,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_BUILD_AUTHOR",
         "BUILDKITE_PULL_REQUEST",
         "BUILDKITE_AGENT_ID",
-        "CI"
+        "CI",
+        "FORCE_COLOR=1",
     ]
 
     step = {
