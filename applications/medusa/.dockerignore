@@ -2,7 +2,6 @@ Dockerfile
 .dockerignore
 npm-debug.log
 cypress
-build
 .storybook
 schema
 coverage

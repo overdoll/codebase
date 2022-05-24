@@ -62,9 +62,18 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
                     "shell": ["/bin/bash", "-e", "-c"],
                     "environment": format.format_env_vars(additional_env_vars) + vars,
                     "image": DEFAULT_IMAGE,
-                    "user": "root",
+                    "propagate-aws-auth-tokens": True,
+                    "network": "host",
+                    "privileged": True,
+                    "propagate-environment": True,
+                    "propagate-uid-gid": True,
                     "volumes": [
+                        "/etc/group:/etc/group:ro",
+                        "/etc/passwd:/etc/passwd:ro",
+                        "/opt:/opt:ro",
+                        "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
                         "/var/run/docker.sock:/var/run/docker.sock",
+                        "/tmp:/tmp",
                     ],
                 }
 
