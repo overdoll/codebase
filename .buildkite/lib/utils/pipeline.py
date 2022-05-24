@@ -51,29 +51,32 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
-        "plugins": {
-            "docker#v3.5.0": {
-                "always-pull": True,
-                "environment": format.format_env_vars(additional_env_vars) + vars,
-                "image": DEFAULT_IMAGE,
-                "network": "host",
-                "privileged": True,
-                "propagate-environment": True,
-                "propagate-uid-gid": True,
-                "volumes": [
-                    "/etc/group:/etc/group:ro",
-                    "/etc/passwd:/etc/passwd:ro",
-                    "/opt:/opt:ro",
-                    "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
-                    "/var/run/docker.sock:/var/run/docker.sock",
-                    "/tmp:/tmp",
-                ],
+        "plugins": [
+            {
+                "docker#v3.5.0": {
+                    "always-pull": True,
+                    "environment": format.format_env_vars(additional_env_vars) + vars,
+                    "image": DEFAULT_IMAGE,
+                    "network": "host",
+                    "privileged": True,
+                    "propagate-environment": True,
+                    "propagate-uid-gid": True,
+                    "volumes": [
+                        "/etc/group:/etc/group:ro",
+                        "/etc/passwd:/etc/passwd:ro",
+                        "/opt:/opt:ro",
+                        "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
+                        "/var/run/docker.sock:/var/run/docker.sock",
+                        "/tmp:/tmp",
+                    ],
+                }
+
             },
-        },
+        ],
     }
 
     if cache:
-        step["plugins"]["gencer/cache#v2.4.8"] = cache
+        step["plugins"] = step["plugins"] + cache
 
     return step
 
@@ -141,21 +144,23 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
-        "plugins": {
-            "docker-compose#v3.7.0": {
-                "env": format.format_env_vars(additional_env_vars) + vars,
-                "run": "run",
-                "config": configs,
-                "workdir": "/workdir",
-                "skip-checkout": False,
-                "dependencies": True,
-                "build-parallel": True,
-                "upload-container-logs": "always",
-            },
-        },
+        "plugins": [
+            {
+                "docker-compose#v3.7.0": {
+                    "env": format.format_env_vars(additional_env_vars) + vars,
+                    "run": "run",
+                    "config": configs,
+                    "workdir": "/workdir",
+                    "skip-checkout": False,
+                    "dependencies": True,
+                    "build-parallel": True,
+                    "upload-container-logs": "always",
+                },
+            }
+        ],
     }
 
     if cache:
-        step["plugins"]["gencer/cache#v2.4.8"] = cache
+        step["plugins"] = step["plugins"] + cache
 
     return step
