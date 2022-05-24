@@ -3,6 +3,7 @@ Dockerfile
 npm-debug.log
 cypress
 .storybook
+node_modules
 schema
 coverage
 .nyc_output

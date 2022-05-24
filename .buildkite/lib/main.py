@@ -485,6 +485,7 @@ def print_project_pipeline():
             platform="docker-compose",
             artifacts=e2e.get("artifacts", []),
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker-compose.e2e.yaml",
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
