@@ -2,7 +2,7 @@ frontend_steps:
   check:
     workdir: applications/medusa
     commands:
-      - yarn install --prefer-offline --frozen-lockfile
+      - [ ! -d node_modules ] && yarn install --frozen-lockfile
       - yarn run check:tsc
       - yarn run check:eslint
 
@@ -14,6 +14,12 @@ frontend_steps:
           - ./coverage/coverage.dat
     commands:
       - yarn run jest
+
+  build:
+    workdir: applications/medusa
+    commands:
+      - yarn locale:compile
+      - yarn build
 
   push_image:
     workdir: applications/medusa

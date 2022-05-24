@@ -239,6 +239,24 @@ def execute_unit_test_commands(configs):
     os.chdir(cwd)
 
 
+def execute_build_commands_custom(configs):
+    cwd = os.getcwd()
+
+    workdir = configs.get("build", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("build", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":hammer: Running build commands")
+
+    for i in commands:
+        exec.execute_command(i.split())
+
+    os.chdir(cwd)
+
+
 def execute_custom_e2e_commands_custom(configs):
     commands = configs.get("e2e_test", {}).get("commands", [])
 
@@ -258,15 +276,18 @@ def execute_push_images_commands(configs):
 
     commands = configs.get("push_image", {}).get("build", [])
 
-    terminal_print.print_expanded_group(":docker: Pushing images")
-
     for i in commands:
         commit = os.getenv("BUILDKITE_COMMIT", "")
         registry = os.getenv("CONTAINER_REGISTRY", "")
 
         tag = "{}/{}:{}".format(registry, i.get("repo"), commit)
 
+        terminal_print.print_expanded_group(":docker: Building Image {}".format(tag))
+
         exec.execute_command(["docker", "build", "-t", tag, "."])
+
+        terminal_print.print_expanded_group(":docker: Pushing Image {}".format(tag))
+
         exec.execute_command(["docker", "push", tag])
 
     os.chdir(cwd)
@@ -354,15 +375,12 @@ def print_project_pipeline():
             cache=[
                 {
                     "gencer/cache#v2.4.10": {
-                        "id": "medusa-yarn_cache",
+                        "id": "medusa-node_modules",
                         "backend": "s3",
                         "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
-                        "restore-keys": [
-                            "v1-cache-{{ id }}-",
-                        ],
                         "compress": "true",
                         "paths": [
-                            "/usr/local/share/.cache/yarn/v6",
+                            "applications/medusa/node_modules",
                         ],
                         "s3": {
                             "bucket": "buildkite-runner-cache"
