@@ -378,7 +378,7 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         pipeline.create_step(
-            label=":bazel: Build, Unit & Integration Test Services",
+            label=":bazel: Build & Test Services",
             commands=[".buildkite/pipeline.sh services_build_test"],
             platform="docker-compose",
             cache=[
