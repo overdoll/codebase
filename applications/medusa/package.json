@@ -157,7 +157,7 @@
     "cypress-otp": "^1.0.3",
     "cypress-terminal-report": "^3.4.1",
     "cypress-wait-until": "^1.7.1",
-    "eslint": "^7.20.0",
+    "eslint": "^7.21.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-config-standard-jsx": "^10.0.0",
     "eslint-config-standard-react": "^11.0.1",
