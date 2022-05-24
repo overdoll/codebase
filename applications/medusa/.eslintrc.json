@@ -46,6 +46,9 @@
     "relay",
     "testing-library"
   ],
+  "ignorePatterns": [
+    "**/__locale__/**/*.js"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "babelOptions": {

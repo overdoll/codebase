@@ -1,25 +1,5 @@
 version: '3.9'
 services:
-  run:
-    working_dir: /workdir
-    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:4d09a1d8d093fe966682fd53f2ec9199c9177da58f478fd50c226fb70c04410f"
-    user: 2000:2000
-    privileged: true
-    group_add:
-      - 1001
-    volumes:
-      - /etc/group:/etc/group:ro
-      - /etc/passwd:/etc/passwd:ro
-      - /opt:/opt:ro
-      - /var/lib/buildkite-agent:/var/lib/buildkite-agent
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
-      - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
-    depends_on:
-      - bazel_remote_cache
-      - scylla
-      - elasticsearch
-      - redis
 
   bazel_remote_cache:
     image: "buchgr/bazel-remote-cache"

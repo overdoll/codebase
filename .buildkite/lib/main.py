@@ -62,6 +62,9 @@ def wait_for_network_dependencies(targets):
 def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
+    terminal_print.print_collapsed_group(":bazel: Waiting for bazel remote cache to start up")
+    network.wait_for_port("http://bazel_remote_cache", "9090", 180)
+
     try:
         run_flags, json_profile_out_test = flags.calculate_flags(
             "run_flags", "run", tmpdir, test_env_vars
