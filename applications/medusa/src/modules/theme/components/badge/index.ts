@@ -46,7 +46,7 @@ const variantOutline: SystemStyleFunction = (props) => {
 
   if (c === 'gray') {
     const grayColor = transparentize(`${c as string}.100`, 0.7)(theme)
-    const grayColorBorder = mode(grayColor, grayColor)(props) as string
+    const grayColorBorder: string = mode(grayColor, grayColor)(props)
     return {
       color: grayColor,
       boxShadow: `inset 0 0 0px 2px ${grayColorBorder}`
