@@ -45,6 +45,11 @@ const ClubFragment = graphql`
     slug
     viewerMember {
       isSupporter
+      clubSupporterSubscription {
+        ...on IAccountClubSupporterSubscription {
+          reference
+        }
+      }
     }
     canSupport
     viewerIsOwner
@@ -190,10 +195,15 @@ export default function SupportClubButton ({
             size='lg'
             w='100%'
             {...rest}
-            href='/settings/billing/subscriptions'
+            href={clubData?.viewerMember?.clubSupporterSubscription != null
+              ? {
+                  pathname: '/settings/billing/subscription/[reference]',
+                  query: { reference: clubData.viewerMember.clubSupporterSubscription.reference }
+                }
+              : '/settings/billing/subscriptions'}
           >
             <Trans>
-              My Subscriptions
+              Manage Subscription
             </Trans>
           </LinkButton>
           <Text fontSize='md' color='gray.00'>

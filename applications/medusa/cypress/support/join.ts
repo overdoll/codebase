@@ -4,7 +4,6 @@ import { getEmail } from './email'
 import { parse } from 'node-html-parser'
 import _crypto from 'crypto'
 import Cookie from 'cookie'
-import { logout } from './join_actions'
 
 const getGraphqlRequest = (): any => {
   const token = _crypto.randomBytes(64).toString('hex')
@@ -240,7 +239,7 @@ Cypress.Commands.add('createClub', (name: string) => {
 })
 
 Cypress.Commands.add('assignArtistRole', (username: string) => {
-  const getAccountIdByUsername = `query AccountQuery($username: $string!) {
+  const getAccountIdByUsername = `query AccountQuery($username: String!) {
     account(username: $username) {
       id
       username
@@ -257,8 +256,6 @@ Cypress.Commands.add('assignArtistRole', (username: string) => {
     }
   }`
 
-  cy.joinWithNewAccount('0eclipse')
-
   cy
     .request(
       {
@@ -266,9 +263,7 @@ Cypress.Commands.add('assignArtistRole', (username: string) => {
         body: {
           query: getAccountIdByUsername,
           variables: {
-            input: {
-              username: username
-            }
+            username: username
           }
         },
         retryOnNetworkFailure: false
@@ -291,7 +286,6 @@ Cypress.Commands.add('assignArtistRole', (username: string) => {
           }
         ).then(({ body }) => {
           expect(body.data.assignAccountArtistRole.account.isArtist).to.equal(true)
-          logout()
         })
     })
 })

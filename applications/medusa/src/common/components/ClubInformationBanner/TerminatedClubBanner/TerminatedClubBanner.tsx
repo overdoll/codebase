@@ -1,5 +1,4 @@
 import { Box, Flex } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { TerminatedClubBannerFragment$key } from '@//:artifacts/TerminatedClubBannerFragment.graphql'
 import { Trans } from '@lingui/macro'
@@ -36,19 +35,10 @@ export default function TerminatedClubBanner ({ query }: Props): JSX.Element {
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                Club was terminated by {data?.termination?.account?.username}
+                Club was terminated by {data?.termination?.account?.username}. Goodbye.
               </Trans>
             </AlertDescription>
           </Flex>
-          <Button
-            size='sm'
-            colorScheme='orange'
-            variant='solid'
-          >
-            <Trans>
-              Details
-            </Trans>
-          </Button>
         </Flex>
       </Alert>
     </Box>

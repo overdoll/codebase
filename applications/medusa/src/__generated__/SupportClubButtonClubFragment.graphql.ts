@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02a41787240f41247652a8485d26d6d2>>
+ * @generated SignedSource<<ac02e2ce4040f2b927fc06b9ebfc00ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,9 @@ export type SupportClubButtonClubFragment$data = {
   readonly slug: string;
   readonly viewerMember: {
     readonly isSupporter: boolean;
+    readonly clubSupporterSubscription: {
+      readonly reference?: string;
+    } | null;
   } | null;
   readonly canSupport: boolean;
   readonly viewerIsOwner: boolean;
@@ -59,6 +62,31 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "isSupporter",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": null,
+          "kind": "LinkedField",
+          "name": "clubSupporterSubscription",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "reference",
+                  "storageKey": null
+                }
+              ],
+              "type": "IAccountClubSupporterSubscription",
+              "abstractKey": "__isIAccountClubSupporterSubscription"
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -124,6 +152,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "fdab818e1448c096877a8a48b3435cdf";
+(node as any).hash = "c6e8bc44869ff319c3e449a6c6bd9fa3";
 
 export default node;

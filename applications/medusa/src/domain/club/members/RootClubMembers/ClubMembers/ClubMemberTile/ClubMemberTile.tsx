@@ -14,6 +14,7 @@ const Fragment = graphql`
       isDeleted
       ...AccountTileOverlayFragment
     }
+    isSupporter
   }
 `
 
@@ -23,7 +24,7 @@ export default function ClubMemberTile ({ query }: Props): JSX.Element {
   if (data.account.isDeleted) {
     return (
       <GridTile>
-        <AccountTileOverlay query={data.account} />
+        <AccountTileOverlay isSupporter={data.isSupporter} query={data.account} />
       </GridTile>
     )
   }
@@ -35,7 +36,7 @@ export default function ClubMemberTile ({ query }: Props): JSX.Element {
         query: { username: data.account.username }
       }}
       >
-        <AccountTileOverlay query={data.account} />
+        <AccountTileOverlay isSupporter={data.isSupporter} query={data.account} />
       </LinkTile>
     </GridTile>
   )

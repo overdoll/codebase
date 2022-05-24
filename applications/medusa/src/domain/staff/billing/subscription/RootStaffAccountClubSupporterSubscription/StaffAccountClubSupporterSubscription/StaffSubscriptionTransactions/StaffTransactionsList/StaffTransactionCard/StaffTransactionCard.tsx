@@ -3,9 +3,10 @@ import { StaffTransactionCardFragment$key } from '@//:artifacts/StaffTransaction
 import { TableBodyColumn, TableBodyColumnText, TableBodyRow } from '@//:modules/content/ThemeComponents/Table/Table'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import displayPrice from '@//:modules/support/displayPrice'
 import { Badge } from '@chakra-ui/react'
+import { format } from 'date-fns'
+import { dateFormatWithTime } from '@//:modules/constants/format'
 
 interface Props {
   query: StaffTransactionCardFragment$key
@@ -53,11 +54,7 @@ export default function StaffTransactionCard ({
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
-  const timestamp = formatDistanceToNow(new Date(data.createdAt as Date), {
-    locale: locale,
-    includeSeconds: true,
-    addSuffix: true
-  })
+  const timestamp = format(new Date(data.createdAt as Date), dateFormatWithTime, { locale })
   const price = displayPrice({
     amount: data.amount,
     currency: data.currency,

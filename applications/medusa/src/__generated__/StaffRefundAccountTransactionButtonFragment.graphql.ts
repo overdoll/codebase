@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<53cb8c0a4f5d854e67d82d4caf87cdb5>>
+ * @generated SignedSource<<6d0161c53282a2e27c507ba8a7489dee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,14 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffRefundAccountTransactionButtonFragment$data = {
+  readonly clubSupporterSubscription: {
+    readonly account?: {
+      readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment">;
+    };
+  } | null;
+  readonly paymentMethod: {
+    readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodFragment">;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionFormFragment">;
   readonly " $fragmentType": "StaffRefundAccountTransactionButtonFragment";
 };
@@ -27,6 +35,56 @@ const node: ReaderFragment = {
   "name": "StaffRefundAccountTransactionButtonFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "concreteType": null,
+      "kind": "LinkedField",
+      "name": "clubSupporterSubscription",
+      "plural": false,
+      "selections": [
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Account",
+              "kind": "LinkedField",
+              "name": "account",
+              "plural": false,
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "LargeAccountHeaderFragment"
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "type": "IAccountClubSupporterSubscription",
+          "abstractKey": "__isIAccountClubSupporterSubscription"
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentMethod",
+      "kind": "LinkedField",
+      "name": "paymentMethod",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PaymentMethodFragment"
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffRefundAccountTransactionFormFragment"
@@ -36,6 +94,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6e5d2e60c44464852796005f00d080ce";
+(node as any).hash = "189331adf05077093a0780e190570436";
 
 export default node;

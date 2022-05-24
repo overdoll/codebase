@@ -51,47 +51,47 @@ export default function ClubRevenue ({ query }: Props): JSX.Element {
   }
 
   return (
-    <>
-      <ClubInformationBanner query={queryData.club} />
-      <ClubPayoutMethodAlert query={queryData.club} />
-      <Stack spacing={8}>
-        <ClubFullBalance query={queryData.club} />
-        <ClubPayoutsList query={queryData.club} />
-        <ClubTransactionMetrics query={queryData.club} />
-        <Box>
-          <PageSectionWrap>
-            <PageSectionTitle>
-              <Trans>
-                Help
-              </Trans>
-            </PageSectionTitle>
-          </PageSectionWrap>
-          <Stack spacing={2}>
-            <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
-              <PagePanelIcon icon={ClubPeopleGroup} colorScheme='purple' />
-              <PagePanelText
-                title={
-                  <Trans>Club Guidelines</Trans>
-                }
-                description={(
-                  <Trans>Requirements for revenue collection</Trans>
-                )}
-              />
-            </PagePanelWrap>
-            <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
-              <PagePanelIcon icon={PayoutMethod} colorScheme='green' />
-              <PagePanelText
-                title={
-                  <Trans>Payouts Information</Trans>
-                }
-                description={(
-                  <Trans>Information about payouts</Trans>
-                )}
-              />
-            </PagePanelWrap>
-          </Stack>
-        </Box>
+    <Stack spacing={8}>
+      <Stack spacing={2}>
+        <ClubInformationBanner query={queryData.club} />
+        <ClubPayoutMethodAlert query={queryData.club} />
       </Stack>
-    </>
+      <ClubFullBalance query={queryData.club} />
+      <ClubPayoutsList query={queryData.club} />
+      <ClubTransactionMetrics query={queryData.club} />
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              Help
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <Stack spacing={2}>
+          <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
+            <PagePanelIcon icon={ClubPeopleGroup} colorScheme='purple' />
+            <PagePanelText
+              title={
+                <Trans>Club Guidelines</Trans>
+              }
+              description={(
+                <Trans>Requirements for revenue collection</Trans>
+              )}
+            />
+          </PagePanelWrap>
+          <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
+            <PagePanelIcon icon={PayoutMethod} colorScheme='green' />
+            <PagePanelText
+              title={
+                <Trans>Payouts Information</Trans>
+              }
+              description={(
+                <Trans>Information about payouts</Trans>
+              )}
+            />
+          </PagePanelWrap>
+        </Stack>
+      </Box>
+    </Stack>
   )
 }

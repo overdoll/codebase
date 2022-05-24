@@ -21,7 +21,6 @@ interface Props {
 const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
-      id
       viewerIsOwner
       ...ClubPostsFragment
       ...ClubInformationBannerFragment

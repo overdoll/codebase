@@ -114,7 +114,7 @@ const sizes = {
 }
 
 const defaultProps = {
-  size: 'md'
+  size: 'lg'
 }
 
 export default {

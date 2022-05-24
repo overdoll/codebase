@@ -15,9 +15,12 @@ import {
 import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
 import StaffGenerateRefundAmountForAccountTransactionInput
   from './StaffGenerateRefundAmountForAccountTransactionInput/StaffGenerateRefundAmountForAccountTransactionInput'
+import displayPrice from '@//:modules/support/displayPrice'
+import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 
 interface Props {
   query: StaffRefundAccountTransactionFormFragment$key
+  onClose: () => void
 }
 
 interface RefundValues {
@@ -27,6 +30,7 @@ interface RefundValues {
 const Fragment = graphql`
   fragment StaffRefundAccountTransactionFormFragment on AccountTransaction {
     id
+    currency
     ...StaffGenerateRefundAmountForAccountTransactionInputFragment
   }
 `
@@ -37,6 +41,7 @@ const Mutation = graphql`
       accountTransaction {
         id
         type
+        currency
         events {
           amount
           currency
@@ -49,13 +54,15 @@ const Mutation = graphql`
 `
 
 export default function StaffRefundAccountTransactionForm ({
-  query
+  query,
+  onClose
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const [commit, isInFlight] = useMutation<StaffRefundAccountTransactionFormMutation>(Mutation)
 
   const { i18n } = useLingui()
+  const locale = dateFnsLocaleFromI18n(i18n)
 
   const schema = Joi.object({
     amount: Joi
@@ -84,23 +91,34 @@ export default function StaffRefundAccountTransactionForm ({
           ...formValues
         }
       },
-      onCompleted (data) {
-        if (data.refundAccountTransaction == null) {
+      onCompleted (completedData) {
+        if (completedData?.refundAccountTransaction?.accountTransaction == null) {
           notify({
             status: 'error',
             title: t`There was an error issuing a refund for ${formValues.amount}`
           })
           return
         }
+        const refundedAmount = displayPrice({
+          amount: formValues.amount,
+          currency: data.currency as string,
+          locale: locale
+        })
         notify({
           status: 'success',
-          title: t`Successfully refunded ${formValues.amount}`
+          title: t`Successfully refunded ${refundedAmount}`
         })
+        onClose()
       },
       onError () {
+        const refundedAmount = displayPrice({
+          amount: formValues.amount,
+          currency: data.currency as string,
+          locale: locale
+        })
         notify({
           status: 'error',
-          title: t`There was an error issuing a refund for ${formValues.amount}`
+          title: t`There was an error issuing a refund for ${refundedAmount}`
         })
       }
     })

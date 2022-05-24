@@ -44,55 +44,53 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
   }
 
   return (
-    <>
+    <Stack spacing={2}>
       <ClubInformationBanner query={queryData.club} />
-      <Stack spacing={2}>
-        <PagePanelWrap href={{
-          pathname: '/club/[slug]/settings/name',
-          query: { slug: slug as string }
-        }}
-        >
-          <PagePanelIcon icon={Barcode} colorScheme='green' />
-          <PagePanelText
-            title={
-              <Trans>Update Name</Trans>
-            }
-            description={queryData.club.name}
-          />
-        </PagePanelWrap>
-        <PagePanelWrap href={{
-          pathname: '/club/[slug]/settings/aliases',
-          query: { slug: slug as string }
-        }}
-        >
-          <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
-          <PagePanelText
-            title={
-              <Trans>Manage Aliases</Trans>
-            }
-            description={`overdoll.com/${queryData.club.slug}`}
-          />
-        </PagePanelWrap>
-        <PagePanelWrap href={{
-          pathname: '/club/[slug]/settings/thumbnail',
-          query: { slug: slug as string }
-        }}
-        >
-          <ResourceIcon
-            seed={queryData.club.id}
-            h={10}
-            w={10}
-            borderRadius='md'
-            query={queryData.club.thumbnail}
-          />
-          <PagePanelText
-            title={
-              <Trans>Club Thumbnail</Trans>
-            }
-            description={<Trans>Update your club thumbnail</Trans>}
-          />
-        </PagePanelWrap>
-      </Stack>
-    </>
+      <PagePanelWrap href={{
+        pathname: '/club/[slug]/settings/name',
+        query: { slug: slug as string }
+      }}
+      >
+        <PagePanelIcon icon={Barcode} colorScheme='green' />
+        <PagePanelText
+          title={
+            <Trans>Update Name</Trans>
+          }
+          description={queryData.club.name}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap href={{
+        pathname: '/club/[slug]/settings/aliases',
+        query: { slug: slug as string }
+      }}
+      >
+        <PagePanelIcon icon={SeriesIdentifier} colorScheme='teal' />
+        <PagePanelText
+          title={
+            <Trans>Manage Aliases</Trans>
+          }
+          description={`overdoll.com/${queryData.club.slug}`}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap href={{
+        pathname: '/club/[slug]/settings/thumbnail',
+        query: { slug: slug as string }
+      }}
+      >
+        <ResourceIcon
+          seed={queryData.club.id}
+          h={10}
+          w={10}
+          borderRadius='md'
+          query={queryData.club.thumbnail}
+        />
+        <PagePanelText
+          title={
+            <Trans>Club Thumbnail</Trans>
+          }
+          description={<Trans>Update your club thumbnail</Trans>}
+        />
+      </PagePanelWrap>
+    </Stack>
   )
 }

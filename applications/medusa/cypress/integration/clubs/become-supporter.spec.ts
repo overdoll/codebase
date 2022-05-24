@@ -24,6 +24,7 @@ describe('Club - Become Supporter', () => {
   const newPaymentMethodClubName = 'Test Club'
 
   const savedPaymentMethodClub = 'SecondTestClub'
+  const savedPaymentMethodClubName = 'Second Test Club'
 
   it('become supporter with new payment method', () => {
     cy.joinWithNewAccount(username)
@@ -165,16 +166,6 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/No payment methods found/iu).should('be.visible')
   })
 
-  it('view transactions', () => {
-    cy.joinWithNewAccount(username)
-
-    cy.visit('/settings/billing')
-    cy.findByText('Transaction History').should('be.visible').click()
-    cy.url().should('include', '/settings/billing/transactions')
-
-    cy.findByText(newPaymentMethodClubName).should('be.visible')
-  })
-
   it('check that you cant delete account', () => {
     cy.joinWithNewAccount(username)
 
@@ -184,7 +175,47 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/You cannot delete your account until you cancel your subscriptions/iu).should('be.visible')
   })
 
-  it('refund transaction and check that the account can see it', () => {
+  it('refund transaction, club payments, transaction metrics', () => {
+    cy.joinWithExistingAccount('0eclipse')
 
+    // refund transaction
+    cy.visit(`/staff/account/${username}?index=2`)
+    cy.findByText('Payment Transactions').should('be.visible')
+    cy.findAllByText('PAYMENT').first().should('be.visible').click()
+    cy.findByText('CCBill Transaction ID').should('be.visible')
+    clickOnButton(/Manage Transaction/iu)
+    cy.findByText('Refund Transaction').should('be.visible').click()
+    cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
+    clickOnButton('Refund Transaction')
+    cy.findByText(/Successfully refunded/iu).should('be.visible')
+
+    cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
+
+    // see transaction metrics
+    cy.findByText('Transaction Metrics').should('be.visible')
+
+    // go to club payments
+    // TODO see refunded transaction
+    cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
+    clickOnButton('View Payments')
+    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
+    cy.findAllByText('PENDING').first().should('be.visible').click()
+    cy.findByText(/Fee Breakdown/iu).should('be.visible')
+  })
+
+  it('see refunded transaction', () => {
+    cy.joinWithNewAccount(username)
+
+    // expired subscription from refund
+    cy.visit('/settings/billing/subscriptions')
+    cy.findByText('Expired').should('be.visible').click()
+    cy.findByText(savedPaymentMethodClubName).should('be.visible')
+
+    // refunded transaction
+    cy.visit('/settings/billing')
+    cy.findByText('Transaction History').should('be.visible').click()
+    cy.url().should('include', '/settings/billing/transactions')
+    cy.findByText(newPaymentMethodClubName).should('be.visible')
+    cy.findByText(/was refunded to this payment method/iu).should('be.visible')
   })
 })

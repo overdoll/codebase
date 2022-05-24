@@ -125,7 +125,7 @@ export default function StaffClubTerminateForm ({
             colorScheme='orange'
           >
             <Trans>
-              Terminate Club
+              Confirm Terminate Club
             </Trans>
           </FormSubmitButton>
         </Stack>

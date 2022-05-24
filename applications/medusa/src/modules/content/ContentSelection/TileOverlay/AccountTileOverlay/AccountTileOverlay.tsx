@@ -1,12 +1,14 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Badge, Stack, Text } from '@chakra-ui/react'
 import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AccountTileOverlayFragment$key } from '@//:artifacts/AccountTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
 import { ResourceIcon } from '../../../PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: AccountTileOverlayFragment$key
+  isSupporter: boolean
 }
 
 const Fragment = graphql`
@@ -21,7 +23,8 @@ const Fragment = graphql`
 `
 
 export default function AccountTileOverlay ({
-  query
+  query,
+  isSupporter
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -30,12 +33,27 @@ export default function AccountTileOverlay ({
       <ResourceItem seed={data.id} query={null} />
     }
     >
-      <Flex direction='column' align='center' justify='center'>
-        <ResourceIcon seed={data.id} mb={2} query={data.avatar} />
+      <Stack spacing={2} align='center' justify='center'>
+        <ResourceIcon w={10} h={10} seed={data.id} query={data.avatar} />
         <Text fontSize='md' color='gray.00'>
           {data.username}
         </Text>
-      </Flex>
+        {isSupporter
+          ? (
+            <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
+              <Trans>
+                Supporter
+              </Trans>
+            </Badge>
+            )
+          : (
+            <Badge borderRadius='base' fontSize='sm' colorScheme='teal'>
+              <Trans>
+                Member
+              </Trans>
+            </Badge>
+            )}
+      </Stack>
     </TileOverlay>
   )
 }

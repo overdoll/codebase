@@ -1,16 +1,18 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
+import { generateClubName, generateUsernameAndEmail } from '../../../support/generate'
 import { clickOnButton, clickOnToggle } from '../../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Settings - Configure Payouts', () => {
   const [username] = generateUsernameAndEmail()
+  const clubName = generateClubName()
 
   before(() => {
-    cy.assignArtistRole(username)
+    cy.joinWithNewAccount(username)
   })
 
   it('fill out payout details', () => {
+    cy.assignArtistRole(username)
     cy.joinWithNewAccount(username)
     cy.visit('/settings/payouts')
     cy.findByText(/You must set up/iu).should('be.visible')
@@ -58,5 +60,10 @@ describe('Settings - Configure Payouts', () => {
     cy.findByText('Read Agreement').should('be.visible')
     clickOnButton('Back to Payouts Settings')
     cy.findByText('Set up your payout method').should('not.be.disabled')
+
+    // payouts marked as configured in club home
+    cy.createClub(clubName)
+    cy.visit(`/club/${clubName}/home`)
+    cy.findByText('Balance').should('be.visible')
   })
 })

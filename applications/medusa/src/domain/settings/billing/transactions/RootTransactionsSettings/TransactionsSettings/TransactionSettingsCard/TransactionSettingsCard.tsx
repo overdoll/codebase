@@ -22,6 +22,7 @@ const Fragment = graphql`
     amount
     currency
     createdAt
+    totalRefunded
     clubSupporterSubscription {
       ... on IAccountClubSupporterSubscription {
         club {
@@ -51,6 +52,11 @@ export default function TransactionSettingsCard ({
   const locale = dateFnsLocaleFromI18n(i18n)
   const price = displayPrice({
     amount: data.amount,
+    currency: data.currency,
+    locale: locale
+  })
+  const totalRefunded = displayPrice({
+    amount: data.totalRefunded,
     currency: data.currency,
     locale: locale
   })
@@ -94,6 +100,11 @@ export default function TransactionSettingsCard ({
           </Flex>
         </TableBodyColumn>
       </TableBodyRow>
+      {data.type === 'REFUND' && (
+        <Text fontSize='md' color='gray.200'>
+          ${totalRefunded} was refunded to this payment method
+        </Text>
+      )}
     </Stack>
   )
 }

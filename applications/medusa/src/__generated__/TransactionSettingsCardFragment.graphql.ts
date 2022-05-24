@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c16a2344d13cf4aa6a2a3d9b7fcbb441>>
+ * @generated SignedSource<<ba08d03ab6986995e5ee4fff40bff307>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type TransactionSettingsCardFragment$data = {
   readonly amount: number;
   readonly currency: Currency;
   readonly createdAt: any;
+  readonly totalRefunded: number;
   readonly clubSupporterSubscription: {
     readonly club?: {
       readonly id: string;
@@ -74,6 +75,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "createdAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "totalRefunded",
       "storageKey": null
     },
     {
@@ -172,6 +180,6 @@ return {
 };
 })();
 
-(node as any).hash = "6e558620711662234da44219fd2c6d4a";
+(node as any).hash = "f38e7467652bc2eeb98a819a20ac0370";
 
 export default node;

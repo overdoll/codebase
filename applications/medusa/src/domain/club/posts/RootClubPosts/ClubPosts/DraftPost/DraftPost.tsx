@@ -62,8 +62,11 @@ export default function DraftPost ({
       </HStack>
       <GridTile>
         <LinkTile href={{
-          pathname: `/club/[slug]/create-post?post=${data.reference}`,
-          query: { slug: slug }
+          pathname: '/club/[slug]/create-post',
+          query: {
+            slug: slug,
+            post: data.reference
+          }
         }}
         >
           <PostPreviewContent query={data} />

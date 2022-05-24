@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c04c11c6146cf4d5c5d5f312e0dfc53f>>
- * @relayHash 0266ec735a6220acfa0a933fc3b6bff8
+ * @generated SignedSource<<5bc5dafb0a5809cea6fca596eb95ceae>>
+ * @relayHash 5fe266c5570557e2a570b6de430a815b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0266ec735a6220acfa0a933fc3b6bff8
+// @relayRequestID 5fe266c5570557e2a570b6de430a815b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -184,6 +184,13 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "createdAt",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "totalRefunded",
                             "storageKey": null
                           },
                           {
@@ -381,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "0266ec735a6220acfa0a933fc3b6bff8",
+    "id": "5fe266c5570557e2a570b6de430a815b",
     "metadata": {},
     "name": "TransactionsSettingsPaginationQuery",
     "operationKind": "query",

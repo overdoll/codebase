@@ -7,10 +7,10 @@ describe('Visit Public Post', () => {
   const character = 'Susannah Aguilar'
   const series = 'Foreigner On Mars'
   const category = 'Assure'
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
     cy.visit('/TestClub/post/25WqmS7kgwotdDaxQDEa6I4CjuO')
     cy.findByText('Suggested Posts').should('exist')
   })

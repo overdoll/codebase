@@ -23,12 +23,12 @@ const Fragment = graphql`
 export default function ClubInformationBanner ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  if (data.suspension != null) {
-    return <SuspendedClubBanner query={data} />
-  }
-
   if (data.termination != null) {
     return <TerminatedClubBanner query={data} />
+  }
+
+  if (data.suspension != null) {
+    return <SuspendedClubBanner query={data} />
   }
 
   return (

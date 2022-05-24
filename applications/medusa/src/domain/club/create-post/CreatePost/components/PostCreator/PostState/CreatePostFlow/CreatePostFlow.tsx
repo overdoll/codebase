@@ -68,7 +68,8 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
       }
     }
 
-    uppy.on('file-added', callBackFn)
+    // @ts-expect-error
+    uppy.once('file-added', callBackFn)
     return () => {
       uppy.off('file-added', callBackFn)
     }

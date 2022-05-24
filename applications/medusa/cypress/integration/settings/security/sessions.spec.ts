@@ -1,10 +1,10 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
 
 describe('Settings - Add Email', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
   })
 
   it('can see current session', () => {

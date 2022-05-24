@@ -5,7 +5,7 @@ import { clickOnTile, searchForTerm } from '../../../support/user_actions'
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Settings - Curation Profile', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
   const preferenceAudience = 'Standard Audience'
   const preferenceCategory = 'Alter'
@@ -27,7 +27,7 @@ describe('Settings - Curation Profile', () => {
   }
 
   it('fill out the curation profile', () => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
     cy.visit('/settings/preferences')
     cy.waitUntil(() => cy.findByRole('button', { name: /Complete Curation Profile/iu }).should('not.be.disabled').click())
     cy.url().should('include', '/settings/preferences/curation-profile')

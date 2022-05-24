@@ -27,7 +27,7 @@ export default function ClubPayoutMethodAlert ({ query }: Props): JSX.Element {
 
   if (data.owner.lock != null) {
     return (
-      <Alert mb={2} status='warning'>
+      <Alert status='warning'>
         <HStack justify='space-between'>
           <HStack>
             <AlertIcon />
@@ -50,7 +50,7 @@ export default function ClubPayoutMethodAlert ({ query }: Props): JSX.Element {
   if (data.owner.payoutMethod != null) return <></>
 
   return (
-    <Alert mb={2} status='warning'>
+    <Alert status='warning'>
       <HStack justify='space-between'>
         <HStack>
           <AlertIcon />
