@@ -2,7 +2,7 @@ frontend_steps:
   check:
     workdir: applications/medusa
     commands:
-      - run_yarn_install.sh
+      - ./run_yarn_install.sh
       - yarn run check:tsc
       - yarn run check:eslint
 
