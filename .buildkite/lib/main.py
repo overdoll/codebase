@@ -387,9 +387,6 @@ def print_project_pipeline():
                         "id": "orca-node_modules",
                         "backend": "s3",
                         "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
-                        "restore-keys": [
-                            "v1-cache-{{ id }}-",
-                        ],
                         "compress": "true",
                         "paths": [
                             "applications/orca/node_modules"
@@ -404,9 +401,6 @@ def print_project_pipeline():
                         "id": "bazel-repositories",
                         "backend": "s3",
                         "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
-                        "restore-keys": [
-                            "v1-cache-{{ id }}-",
-                        ],
                         "compress": "true",
                         "paths": [
                             "/workdir/.bazel_repository_cache"
