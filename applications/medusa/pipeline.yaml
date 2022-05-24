@@ -2,7 +2,7 @@ frontend_steps:
   check:
     workdir: applications/medusa
     commands:
-      - [ ! -d node_modules ] && yarn install --frozen-lockfile
+      - "[ ! -d node_modules ] && yarn install --frozen-lockfile"
       - yarn run check:tsc
       - yarn run check:eslint
 
