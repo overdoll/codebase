@@ -55,6 +55,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
             {
                 "docker#v3.5.0": {
                     "always-pull": True,
+                    "shell": ["/bin/bash", "-e", "-c"],
                     "environment": format.format_env_vars(additional_env_vars) + vars,
                     "image": DEFAULT_IMAGE,
                     "volumes": [
@@ -138,6 +139,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "plugins": [
             {
                 "docker-compose#v3.7.0": {
+                    "shell": ["/bin/bash", "-e", "-c"],
                     "env": format.format_env_vars(additional_env_vars) + vars,
                     "run": "run",
                     "config": configs,
