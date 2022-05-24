@@ -249,12 +249,27 @@ def execute_custom_e2e_commands_custom(configs):
 
 
 def execute_push_images_commands(configs):
-    commands = configs.get("push_image", {}).get("commands", [])
+    cwd = os.getcwd()
+
+    workdir = configs.get("push_image", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("push_image", {}).get("build", [])
 
     terminal_print.print_expanded_group(":docker: Pushing images")
 
     for i in commands:
-        exec.execute_command(i.split())
+        commit = os.getenv("BUILDKITE_COMMIT", "")
+        registry = os.getenv("CONTAINER_REGISTRY", "")
+
+        tag = "{}/{}:{}".format(registry, i.get("repo"), commit)
+
+        exec.execute_command(["docker", "build", "-t", tag, "."])
+        exec.execute_command(["docker", "push", tag])
+
+    os.chdir(cwd)
 
 
 def execute_push_images(configs):
@@ -339,7 +354,7 @@ def print_project_pipeline():
             cache=[
                 {
                     "gencer/cache#v2.4.10": {
-                        "id": "medusa-node_modules",
+                        "id": "medusa-yarn_cache",
                         "backend": "s3",
                         "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
                         "restore-keys": [
@@ -347,7 +362,7 @@ def print_project_pipeline():
                         ],
                         "compress": "true",
                         "paths": [
-                            "applications/medusa/node_modules",
+                            "/usr/local/share/.cache/yarn/v6",
                         ],
                         "s3": {
                             "bucket": "buildkite-runner-cache"
