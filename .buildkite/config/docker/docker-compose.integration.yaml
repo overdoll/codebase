@@ -23,7 +23,7 @@ services:
 
   bazel_remote_cache:
     image: "buchgr/bazel-remote-cache"
-    user: 2000:2000
+    user: 0:0
     environment:
       - BAZEL_REMOTE_S3_AUTH_METHOD=access_key
       - BAZEL_REMOTE_S3_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
