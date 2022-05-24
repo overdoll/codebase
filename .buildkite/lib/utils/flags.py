@@ -9,7 +9,7 @@ def concurrent_jobs():
 
 
 def concurrent_test_jobs():
-    return str(multiprocessing.cpu_count() // 2)
+    return str(multiprocessing.cpu_count())
 
 
 def get_bazelisk_cache_directory():
@@ -30,7 +30,8 @@ def common_build_flags(bep_file, is_test):
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
         "--flaky_test_attempts=default",
-        "--repository_cache=/workdir/.bazel_repository_cache"
+        "--repository_cache=/workdir/.bazel_repository_cache",
+        "--remote_cache=http://bazel_remote_cache:9092"
     ]
 
     if is_test:

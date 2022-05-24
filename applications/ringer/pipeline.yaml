@@ -15,8 +15,8 @@ steps:
 
   integration_test:
     pre_hook:
-      - //applications/ringer/internal:internal db migrate
-      - //applications/ringer/internal:internal db seed
+      - //applications/ringer/internal:internal -- db migrate
+      - //applications/ringer/internal:internal -- db seed
     coverage:
       - name: ringer.integration
         paths:

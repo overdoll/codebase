@@ -15,8 +15,8 @@ steps:
 
   integration_test:
     pre_hook:
-      - //applications/stella/internal:internal db migrate
-      - //applications/stella/internal:internal db seed
+      - //applications/stella/internal:internal -- db migrate
+      - //applications/stella/internal:internal -- db seed
     coverage:
       - name: stella.integration
         paths:

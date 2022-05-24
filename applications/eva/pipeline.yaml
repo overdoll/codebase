@@ -15,8 +15,8 @@ steps:
 
   integration_test:
     pre_hook:
-      - //applications/eva/internal:internal db migrate
-      - //applications/eva/internal:internal db seed
+      - //applications/eva/internal:internal -- db migrate
+      - //applications/eva/internal:internal -- db seed
     coverage:
       - name: eva.integration
         paths:

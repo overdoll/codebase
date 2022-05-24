@@ -2,7 +2,7 @@ version: '3.9'
 services:
   run:
     working_dir: /workdir
-    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:bce0ac8ff9fc0642f23d70e2e6d97946b6e1dc492e9ea8aeeb3e974581dc05c4"
+    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:24eca1cad501c3325a6bf313fa7989cebbda5732c2b25489a7dd5b78737acdb1"
     user: 2000:2000
     privileged: true
     group_add:
@@ -15,3 +15,20 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
+  bazel_remote_cache:
+    image: "buchgr/bazel-remote-cache"
+    user: 1000:1000
+    environment:
+      - BAZEL_REMOTE_S3_AUTH_METHOD=access_key
+      - BAZEL_REMOTE_S3_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+      - BAZEL_REMOTE_S3_SECRET_ACCESS_KEY=${AWS_ACCESS_SECRET}
+      - BAZEL_REMOTE_S3_BUCKET=bazel-remote-cache
+      - BAZEL_REMOTE_S3_ENDPOINT=s3.us-east-1.amazonaws.com
+    ports:
+      - 9092:9092
+    volumes:
+      - bazel-remote-cache-data:/data
+
+volumes:
+  bazel-remote-cache-data:
+    driver: local
