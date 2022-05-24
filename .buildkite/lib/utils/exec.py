@@ -8,7 +8,7 @@ def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_out
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args, shell=shell, check=fail_if_nonzero, env=os.environ, cwd=cwd
+        args, shell=shell, check=fail_if_nonzero, env=os.environ, cwd=cwd, executable='/bin/bash'
     ).returncode
 
 
@@ -22,6 +22,7 @@ def execute_command_and_get_output(args, shell=False, fail_if_nonzero=True, prin
         stdout=subprocess.PIPE,
         errors="replace",
         universal_newlines=True,
+        executable='/bin/bash'
     )
     if print_output:
         terminal_print.eprint(process.stdout)
