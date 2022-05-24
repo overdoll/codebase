@@ -8,21 +8,20 @@ def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_out
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args, shell=shell, check=fail_if_nonzero, env=os.environ, cwd=cwd, executable='/bin/bash'
+        ['/bin/bash', '-c'] + args, shell=shell, check=fail_if_nonzero, env=os.environ, cwd=cwd,
     ).returncode
 
 
 def execute_command_and_get_output(args, shell=False, fail_if_nonzero=True, print_output=True):
     terminal_print.eprint(" ".join(args))
     process = subprocess.run(
-        args,
+        ['/bin/bash', '-c'] + args,
         shell=shell,
         check=fail_if_nonzero,
         env=os.environ,
         stdout=subprocess.PIPE,
         errors="replace",
         universal_newlines=True,
-        executable='/bin/bash'
     )
     if print_output:
         terminal_print.eprint(process.stdout)
