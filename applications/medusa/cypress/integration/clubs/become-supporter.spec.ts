@@ -76,7 +76,7 @@ describe('Club - Become Supporter', () => {
     })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
   })
 
   it('enable two factor', () => {
@@ -149,7 +149,7 @@ describe('Club - Become Supporter', () => {
     clickOnButton('Subscribe')
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
   })
 
   it('remove saved payment method', () => {

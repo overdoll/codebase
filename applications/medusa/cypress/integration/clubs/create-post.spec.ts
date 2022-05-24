@@ -181,7 +181,7 @@ describe('Club - Create a Post', () => {
     // can remove uploads
     cy.get('button[aria-label="Remove Upload"]').first().click()
     // can exit the flow
-    cy.findByText(/Arrange Uploads/iu).parent().get('button[aria-label="Exit Creator"]').click()
+    cy.findByText('Arrange Uploads').parent().get('button[aria-label="Exit Creator"]').click()
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     cy.findByRole('button', { name: /Yes, exit/iu }).click()
     cy.findByText(/Upload one or more files by/iu).should('be.visible')

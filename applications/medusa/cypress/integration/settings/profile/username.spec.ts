@@ -30,25 +30,6 @@ describe('Settings - Change Username', () => {
 
     cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
     cy.waitUntil(() => cy.findAllByText(new RegExp(newUsername, 'iu')).should('exist'))
-
-    // log out
-    cy.visit('/')
-
-    cy.url().should('include', '/')
-
-    cy.waitUntil(() => cy.get('button[aria-label="Home"]').should('be.visible'))
-
-    cy.waitUntil(() => cy.findByRole('button', { name: /Dropdown Menu/iu }).should('not.be.disabled'))
-
-    cy.findByRole('button', { name: /Dropdown Menu/iu })
-      .click()
-
-    cy.waitUntil(() => cy.findByRole('button', { name: /Log Out/iu }).should('exist'))
-
-    cy.findByRole('button', { name: /Log Out/iu })
-      .click()
-
-    cy.waitUntil(() => cy.findAllByText(/You have been logged out/iu).should('exist'))
   })
 
   it('go to the invite only page as logged in', () => {

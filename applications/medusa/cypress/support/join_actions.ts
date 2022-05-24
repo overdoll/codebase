@@ -26,7 +26,7 @@ export const join = (email: string): void => {
   })
 
   // we dont want to "click" on the link or else the test will break, so we just visit it
-  cy.findByText('authenticate').then(ln => {
+  cy.findByText('Authenticate').then(ln => {
     const url = ln.prop('href')
     cy.visit(url)
   })

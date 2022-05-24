@@ -32,12 +32,6 @@ const RegisterMutationGQL = graphql`
         isModerator
         isStaff
         isArtist
-        deleting {
-          __typename
-        }
-        lock {
-          __typename
-        }
         avatar {
           ...ResourceIconFragment
           ...ResourceItemFragment

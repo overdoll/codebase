@@ -29,7 +29,7 @@ describe('Settings - Add Email', () => {
     // confirm email
     cy.displayLastEmail(startTimestamp, 'Verify Email', newEmail)
 
-    cy.findByText('confirm email').then(ln => {
+    cy.findByText('Confirm Email').then(ln => {
       const url = ln.prop('href')
       cy.visit(url)
     })

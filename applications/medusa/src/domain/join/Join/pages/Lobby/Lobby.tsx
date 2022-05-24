@@ -4,7 +4,6 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { Trans } from '@lingui/macro'
-import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import Head from 'next/head'
 import { MailEnvelope } from '@//:assets/icons'
 import { Timeout } from '@//:types/components'
@@ -69,58 +68,53 @@ export default function Lobby ({
       <Head>
         <title>Waiting for authentication... :: overdoll</title>
       </Head>
-      <Flex align='center' h='100%' position='relative'>
-        <Flex top={0} position='absolute' w='100%' justify='flex-end'>
-          <RevokeTokenButton queryRef={data} />
-        </Flex>
-        <Stack spacing={6}>
-          <Icon
-            icon={MailEnvelope}
-            w={16}
-            h={16}
-            fill='purple.400'
-          />
-          <Box>
-            <Heading
-              textAlign='center'
-              fontSize='xl'
-              color='gray.00'
-              mb={1}
-            >
-              <Trans>
-                Tap on the link you received in your email inbox to continue
-              </Trans>
-            </Heading>
-            <Heading textAlign='center' color='gray.300' fontSize='sm'>
-              <Trans>
-                Make sure to check your spam!
-              </Trans>
-            </Heading>
-          </Box>
-          <Flex
-            justify='center'
-            align='center'
-            wordBreak='break-all'
-            p={3}
-            borderRadius='md'
-            bg='gray.900'
-            w='100%'
+      <Stack spacing={6}>
+        <Icon
+          icon={MailEnvelope}
+          w={16}
+          h={16}
+          fill='purple.400'
+        />
+        <Box>
+          <Heading
+            textAlign='center'
+            fontSize='xl'
+            color='gray.00'
+            mb={1}
           >
-            <Heading
-              textAlign='center'
-              fontSize='md'
-              color='purple.300'
-            >
-              {data.email ?? cookies.token.split(';')[1]}
-            </Heading>
-          </Flex>
-          <QueryErrorBoundary loadQuery={loadQuery}>
-            <Suspense fallback={<></>}>
-              <RefreshLobby searchArguments={searchArguments} />
-            </Suspense>
-          </QueryErrorBoundary>
-        </Stack>
-      </Flex>
+            <Trans>
+              Tap on the link you received in your email inbox to continue
+            </Trans>
+          </Heading>
+          <Heading textAlign='center' color='gray.300' fontSize='sm'>
+            <Trans>
+              Make sure to check your spam!
+            </Trans>
+          </Heading>
+        </Box>
+        <Flex
+          justify='center'
+          align='center'
+          wordBreak='break-all'
+          p={3}
+          borderRadius='md'
+          bg='gray.900'
+          w='100%'
+        >
+          <Heading
+            textAlign='center'
+            fontSize='md'
+            color='purple.300'
+          >
+            {data.email ?? (cookies.token != null ? cookies.token.split(';')[1] : undefined)}
+          </Heading>
+        </Flex>
+        <QueryErrorBoundary loadQuery={loadQuery}>
+          <Suspense fallback={<></>}>
+            <RefreshLobby searchArguments={searchArguments} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </Stack>
     </>
   )
 }

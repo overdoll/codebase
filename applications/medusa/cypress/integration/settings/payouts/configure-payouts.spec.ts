@@ -7,13 +7,18 @@ describe('Settings - Configure Payouts', () => {
   const [username] = generateUsernameAndEmail()
   const clubName = generateClubName()
 
-  before(() => {
+  it('create account', () => {
     cy.joinWithNewAccount(username)
   })
 
-  it('fill out payout details', () => {
+  it('assign artist role', () => {
+    cy.joinWithExistingAccount('0eclipse')
     cy.assignArtistRole(username)
+  })
+
+  it('fill out payout details', () => {
     cy.joinWithNewAccount(username)
+
     cy.visit('/settings/payouts')
     cy.findByText(/You must set up/iu).should('be.visible')
     cy.enableTwoFactor()
@@ -54,16 +59,17 @@ describe('Settings - Configure Payouts', () => {
     clickOnButton('Back to Payouts Settings')
     cy.findByText('Your Payout Method').should('be.visible')
 
+    // payouts marked as configured in club home
+    cy.createClub(clubName)
+    cy.visit(`/club/${clubName}/home`)
+    cy.findByText('Balance').should('be.visible')
+
     // remove payout method
+    cy.visit('/settings/payouts')
     cy.findByText('Update your payout method').should('not.be.disabled').click()
     clickOnButton('Delete Payout Method')
     cy.findByText('Read Agreement').should('be.visible')
     clickOnButton('Back to Payouts Settings')
     cy.findByText('Set up your payout method').should('not.be.disabled')
-
-    // payouts marked as configured in club home
-    cy.createClub(clubName)
-    cy.visit(`/club/${clubName}/home`)
-    cy.findByText('Balance').should('be.visible')
   })
 })

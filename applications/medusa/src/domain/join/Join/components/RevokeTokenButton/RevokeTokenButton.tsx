@@ -8,17 +8,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Text
+  CloseButtonProps,
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import type { RevokeTokenButtonFragment$key } from '@//:artifacts/RevokeTokenButtonFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCookies } from 'react-cookie'
 
-interface Props {
+interface Props extends CloseButtonProps {
   queryRef: RevokeTokenButtonFragment$key
 }
 
@@ -37,7 +38,8 @@ const Mutation = graphql`
 `
 
 export default function RevokeTokenButton ({
-  queryRef
+  queryRef,
+  ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, queryRef)
 
@@ -47,7 +49,7 @@ export default function RevokeTokenButton ({
     onOpen,
     onClose,
     isOpen
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const [revokeToken, isRevokingToken] = useMutation<RevokeTokenButtonMutation>(
     Mutation
@@ -79,6 +81,7 @@ export default function RevokeTokenButton ({
       <CloseButton
         size='lg'
         onClick={onOpen}
+        {...rest}
       >
         <Trans>
           Cancel

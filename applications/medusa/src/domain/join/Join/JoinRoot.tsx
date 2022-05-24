@@ -14,6 +14,8 @@ import PageWrapperDesktop from '../../../common/components/PageWrapperDesktop/Pa
 import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/PlatformBenefitsAdvert'
 import { useCookies } from 'react-cookie'
 import { useUpdateEffect } from 'usehooks-ts'
+import { Flex } from '@chakra-ui/react'
+import RevokeTokenButton from './components/RevokeTokenButton/RevokeTokenButton'
 
 interface Props {
   queryRefs: {
@@ -25,11 +27,6 @@ const JoinTokenStatus = graphql`
   query JoinRootQuery($token: String!) @preloadable {
     viewAuthenticationToken(token: $token)  {
       id
-      ...LobbyFragment
-      ...JoinFragment
-      ...RegisterFragment
-      ...MultiFactorFragment
-      ...GrantFragment
       verified
       token
       sameDevice
@@ -39,6 +36,12 @@ const JoinTokenStatus = graphql`
           __typename
         }
       }
+      ...LobbyFragment
+      ...JoinFragment
+      ...RegisterFragment
+      ...MultiFactorFragment
+      ...GrantFragment
+      ...RevokeTokenButtonFragment
     }
   }
 `
@@ -109,9 +112,14 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
           loadQuery={() => loadQuery({ token: tokenCookie }, { fetchPolicy: 'network-only' })}
         >
           <Suspense fallback={SkeletonStack}>
-            <Lobby
-              queryRef={data}
-            />
+            <Flex align='center' h='100%' position='relative'>
+              <Flex top={0} position='absolute' w='100%' justify='flex-end'>
+                <RevokeTokenButton queryRef={data} />
+              </Flex>
+              <Lobby
+                queryRef={data}
+              />
+            </Flex>
           </Suspense>
         </QueryErrorBoundary>
       )

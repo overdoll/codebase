@@ -30,7 +30,6 @@ const Query = graphql`
       name
       slug
       membersCount
-      canSupport
       backgroundPost: posts(first: 1) {
         edges {
           node {
