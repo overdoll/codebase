@@ -6,7 +6,7 @@ frontend_steps:
       - yarn run check:tsc
       - yarn run check:eslint
       # needed here to ensure we update to a fresh cache when using a restore key
-      - rm v1-cache-medusa-cache_eslint_typescript-*
+      - rm ./v1-cache-medusa-cache_eslint_typescript*
 
   unit_test:
     workdir: applications/medusa
@@ -23,7 +23,7 @@ frontend_steps:
       - yarn locale:compile
       - yarn build
       # needed here to ensure we update to a fresh cache when using a restore key
-      - rm v1-cache-medusa-nextjs-*
+      - rm ./v1-cache-medusa-nextjs*
 
   push_image:
     workdir: applications/medusa

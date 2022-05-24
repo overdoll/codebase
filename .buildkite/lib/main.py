@@ -409,7 +409,7 @@ def print_project_pipeline():
                     "gencer/cache#v2.4.10": {
                         "id": "medusa-cache_eslint_typescript",
                         "backend": "s3",
-                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/src' }}-{{ checksum 'applications/medusa/cypress' }}",
+                        "key": "v1-cache-{{ id }}-$BUILDKITE_COMMIT",
                         "restore-keys": [
                             "v1-cache-{{ id }}-",
                         ],
