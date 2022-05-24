@@ -2,7 +2,7 @@ version: '3.9'
 services:
   run:
     working_dir: /workdir
-    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:24eca1cad501c3325a6bf313fa7989cebbda5732c2b25489a7dd5b78737acdb1"
+    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:5b8dc2e93bfd933648ef232ca2cc7dde400c869aa5c529ac7b755b0d38602afe"
     user: 2000:2000
     privileged: true
     group_add:
