@@ -42,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    - from_repo: stella/dev
-      to_repo: stella
+    copy:
+      - from_repo: stella/dev
+        to_repo: stella
