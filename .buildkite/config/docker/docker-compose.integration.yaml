@@ -32,6 +32,8 @@ services:
       - BAZEL_REMOTE_S3_ENDPOINT=s3.us-east-1.amazonaws.com
       - BAZEL_REMOTE_DIR=/data
       - BAZEL_REMOTE_MAX_SIZE=15
+      - BAZEL_REMOTE_HTTP_ADDRESS=0.0.0.0:8080
+      - BAZEL_REMOTE_GRPC_ADDRESS=0.0.0.0:9092
     ports:
       - 9090:8080
       - 9092:9092
