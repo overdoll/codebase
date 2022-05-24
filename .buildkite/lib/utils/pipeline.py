@@ -67,7 +67,6 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
                     "network": "host",
                     "privileged": True,
                     "propagate-environment": True,
-                    "propagate-uid-gid": True,
                     "volumes": [
                         "/etc/group:/etc/group:ro",
                         "/etc/passwd:/etc/passwd:ro",
