@@ -62,6 +62,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
                     "shell": ["/bin/bash", "-e", "-c"],
                     "environment": format.format_env_vars(additional_env_vars) + vars,
                     "image": DEFAULT_IMAGE,
+                    "user": "root",
                     "propagate-aws-auth-tokens": True,
                     "network": "host",
                     "privileged": True,
