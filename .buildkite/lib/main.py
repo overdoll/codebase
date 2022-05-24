@@ -218,6 +218,10 @@ def execute_check_commands_custom(configs):
 
     os.chdir(cwd)
 
+    # need to clear cache for eslint + typescript to ensure it updates
+    for f in glob.glob("v1-cache-medusa-nextjs*"):
+        os.remove(f)
+
 
 def execute_unit_test_commands(configs):
     cwd = os.getcwd()
@@ -255,6 +259,10 @@ def execute_build_commands_custom(configs):
         exec.execute_command(i.split())
 
     os.chdir(cwd)
+
+    # need to clear cache for nextjs to ensure it's updated
+    for f in glob.glob("v1-cache-medusa-nextjs*"):
+        os.remove(f)
 
 
 def execute_custom_e2e_commands_custom(configs):
