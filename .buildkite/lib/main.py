@@ -392,7 +392,7 @@ def print_project_pipeline():
                     "gencer/cache#v2.4.10": {
                         "id": "medusa-nextjs",
                         "backend": "s3",
-                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}-{{ checksum 'applications/medusa/src' }}",
+                        "key": "v1-cache-{{ id }}-$BUILDKITE_COMMIT",
                         "restore-keys": [
                             "v1-cache-{{ id }}-",
                         ],
