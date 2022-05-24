@@ -31,7 +31,7 @@ def common_build_flags(bep_file, is_test):
         "--sandbox_tmpfs_path=/tmp",
         "--flaky_test_attempts=default",
         "--repository_cache=/workdir/.bazel_repository_cache",
-        "--remote_cache=http://bazel_remote_cache:9090"
+        "--remote_cache=http://bazel_remote_cache:9092"
     ]
 
     if is_test:
