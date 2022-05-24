@@ -2,9 +2,9 @@ frontend_steps:
   check:
     workdir: applications/medusa
     commands:
-      - yarn install --frozen-lockfile
-      - yarn run check:tsc
-      - yarn run check:eslint
+      - /root/.yarn/bin/yarn install --frozen-lockfile
+      - /root/.yarn/bin/yarn run check:tsc
+      - /root/.yarn/bin/yarn run check:eslint
 
   unit_test:
     workdir: applications/medusa
@@ -13,7 +13,7 @@ frontend_steps:
         paths:
           - ./coverage/coverage.dat
     commands:
-      - yarn run jest
+      - /root/.yarn/bin/yarn run jest
 
   push_image:
     workdir: applications/medusa
@@ -23,8 +23,6 @@ frontend_steps:
 
 steps:
   e2e_test:
-    commands:
-      - push queries script here!
     coverage:
       - name: medusa.e2e
         paths:
