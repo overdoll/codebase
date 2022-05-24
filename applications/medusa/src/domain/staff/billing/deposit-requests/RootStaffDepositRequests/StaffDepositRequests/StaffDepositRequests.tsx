@@ -67,12 +67,12 @@ export default function StaffDepositRequests ({ query }: Props): JSX.Element {
       <Alert colorScheme='teal' status='info'>
         <AlertIcon />
         <AlertDescription
-          align='center'
           lineHeight={5}
           fontSize='sm'
         >
           <Trans>
-            You should wait at least 2 days for a deposit request to have all payouts processed correctly.
+            You should wait at least 2 days before fulfilling a deposit request to ensure all payouts have been
+            processed correctly.
           </Trans>
         </AlertDescription>
       </Alert>
