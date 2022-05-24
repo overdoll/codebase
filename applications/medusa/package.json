@@ -69,7 +69,7 @@
     "proxy:prod": "telepresence --swap-deployment medusa --expose 8000 --run yarn run prod",
     "dev": "next -p 8000",
     "prod": "next start -p 8000",
-    "build": "next build",
+    "build": "FORCE_COLOR=1 next build",
     "build:analyze": "ANALYZE=true next build",
     "storybook": "start-storybook -p 6006 -s public,../../development/assets",
     "e2e:open": "cypress open --config-file cypress.json",

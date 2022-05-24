@@ -30,11 +30,8 @@ services:
       - BAZEL_REMOTE_S3_SECRET_ACCESS_KEY=${AWS_ACCESS_SECRET}
       - BAZEL_REMOTE_S3_BUCKET=bazel-remote-cache
       - BAZEL_REMOTE_S3_ENDPOINT=s3.us-east-1.amazonaws.com
+      - BAZEL_REMOTE_DIR=/data
+      - BAZEL_REMOTE_MAX_SIZE=15
     ports:
+      - 9090:8080
       - 9092:9092
-    volumes:
-      - bazel-remote-cache-data:/data
-
-volumes:
-  bazel-remote-cache-data:
-    driver: local
