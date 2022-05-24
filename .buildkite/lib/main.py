@@ -588,6 +588,7 @@ def main(argv=None):
             frontend_config = parse_config.load_configs().get("frontend_steps", {})
             execute_check_commands_custom(frontend_config)
             execute_unit_test_commands(frontend_config)
+            execute_build_commands_custom(frontend_config)
             execute_push_images_commands(frontend_config)
         elif args.subparsers_name == "e2e_test":
             execute_custom_e2e_commands_custom(configs)

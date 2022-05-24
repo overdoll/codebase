@@ -46,6 +46,10 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "DOCKER_CONFIG",
         "CODECOV_API_KEY",
         "BUILDKITE_COMMIT",
+        "AWS_ACCESS_KEY",
+        "AWS_ACCESS_SECRET",
+        "AWS_ENDPOINT",
+        "AWS_REGION",
     ]
 
     step = {
