@@ -338,35 +338,39 @@ def print_project_pipeline():
             platform="docker",
             cache=[
                 {
-                    "id": "medusa-node_modules",
-                    "backend": "s3",
-                    "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
-                    "restore-keys": [
-                        "v1-cache-{{ id }}-",
-                    ],
-                    "compress": "true",
-                    "paths": [
-                        "applications/medusa/node_modules",
-                        "applications/medusa/build/cache"
-                    ],
-                    "s3": {
-                        "bucket": "buildkite-runner-cache"
-                    },
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                            "applications/medusa/build/cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
                 },
                 {
-                    "id": "medusa-cache_eslint_typescript",
-                    "backend": "s3",
-                    "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/src' }}-{{ checksum 'applications/medusa/cypress' }}",
-                    "restore-keys": [
-                        "v1-cache-{{ id }}-",
-                    ],
-                    "compress": "true",
-                    "paths": [
-                        "applications/medusa/cache"
-                    ],
-                    "s3": {
-                        "bucket": "buildkite-runner-cache"
-                    },
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-cache_eslint_typescript",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/src' }}-{{ checksum 'applications/medusa/cypress' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
                 }
             ],
         )
@@ -379,34 +383,38 @@ def print_project_pipeline():
             platform="docker-compose",
             cache=[
                 {
-                    "id": "orca-node_modules",
-                    "backend": "s3",
-                    "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
-                    "restore-keys": [
-                        "v1-cache-{{ id }}-",
-                    ],
-                    "compress": "true",
-                    "paths": [
-                        "applications/orca/node_modules"
-                    ],
-                    "s3": {
-                        "bucket": "buildkite-runner-cache"
-                    },
+                    "gencer/cache#v2.4.10": {
+                        "id": "orca-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            "applications/orca/node_modules"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
                 },
                 {
-                    "id": "bazel-repositories",
-                    "backend": "s3",
-                    "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
-                    "restore-keys": [
-                        "v1-cache-{{ id }}-",
-                    ],
-                    "compress": "true",
-                    "paths": [
-                        ".bazel_repository_cache"
-                    ],
-                    "s3": {
-                        "bucket": "buildkite-runner-cache"
-                    },
+                    "gencer/cache#v2.4.10": {
+                        "id": "bazel-repositories",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            ".bazel_repository_cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
                 },
             ],
             configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
