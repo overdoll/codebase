@@ -3,7 +3,7 @@ frontend_steps:
     workdir: applications/medusa
     commands:
       - yarn install --frozen-lockfile
-      - yarn run check:tsc
+      # - yarn run check:tsc
       - yarn run check:eslint
 
   unit_test:
