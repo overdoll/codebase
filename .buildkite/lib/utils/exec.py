@@ -4,11 +4,14 @@ import subprocess
 from . import terminal_print
 
 
-def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_output=True):
+def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_output=True, env=None):
+    if env == None:
+        env = {}
+
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args=args, shell=shell, check=fail_if_nonzero, env=os.environ, cwd=cwd,
+        args=args, shell=shell, check=fail_if_nonzero, env=os.environ.copy().update(env), cwd=cwd,
     ).returncode
 
 

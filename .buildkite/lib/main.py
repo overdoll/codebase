@@ -71,19 +71,17 @@ def execute_integration_tests_commands(configs):
         )
 
         new_flags = []
-        pre_hook_env = []
 
         additional_test_env = format.format_env_vars(
             configs.get("integration_test", {}).get("setup", {}).get("env", {}))
 
         for env in additional_test_env:
             new_flags += ["--test_env={}".format(env)]
-            pre_hook_env += [env]
 
         for img in configs.get("integration_test", {}).get("pre_hook", []):
             target = img.split()
             bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, target,
-                                    [], env=pre_hook_env)
+                                    [], env=additional_test_env)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars + default_vars
