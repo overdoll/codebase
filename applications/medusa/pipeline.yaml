@@ -34,7 +34,7 @@ steps:
           - ./applications/medusa/coverage/clover.xml
     setup:
       dockerfile:
-        - ./applications/medusa/docker-compose.e2e.yaml
+        - ./applications/medusa/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: medusa
         port: 8000

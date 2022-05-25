@@ -32,7 +32,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/puppy/docker-compose.e2e.yaml
+        - ./applications/puppy/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: puppy
         port: 8000

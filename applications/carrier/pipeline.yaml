@@ -32,7 +32,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/carrier/docker-compose.e2e.yaml
+        - ./applications/carrier/docker-compose.ci.e2e.yaml
 
   publish_image:
     copy:

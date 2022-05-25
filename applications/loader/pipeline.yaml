@@ -35,7 +35,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/loader/docker-compose.e2e.yaml
+        - ./applications/loader/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: loader
         port: 8000

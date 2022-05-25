@@ -35,7 +35,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/hades/docker-compose.e2e.yaml
+        - ./applications/hades/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: hades
         port: 8000

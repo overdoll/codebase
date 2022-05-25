@@ -35,7 +35,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/stella/docker-compose.e2e.yaml
+        - ./applications/stella/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: parley
         port: 8000
