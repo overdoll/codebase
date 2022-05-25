@@ -67,7 +67,7 @@ def execute_integration_tests_commands(configs):
 
     try:
         run_flags, json_profile_out_test = flags.calculate_flags(
-            "run_flags", "run", tmpdir, test_env_vars + default_vars
+            "run_flags", "run", tmpdir, test_env_vars + default_vars, action_env=True
         )
 
         new_flags = []

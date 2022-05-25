@@ -103,7 +103,7 @@ def get_json_profile_flags(out_file):
     ]
 
 
-def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
+def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars, action_env=False):
     json_profile_out = os.path.join(tmpdir, "{}.profile.gz".format(json_profile_key))
     json_profile_flags = get_json_profile_flags(json_profile_out)
 
@@ -112,6 +112,10 @@ def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
     # We have to add --test_env flags to `build`, too, otherwise Bazel
     # discards its analysis cache between `build` and `test`.
     if test_env_vars:
-        flags += ["--test_env={}".format(v) for v in test_env_vars]
+
+        if action_env:
+            flags += ["--action_env={}".format(v) for v in test_env_vars]
+        else:
+            flags += ["--test_env={}".format(v) for v in test_env_vars]
 
     return flags, json_profile_out
