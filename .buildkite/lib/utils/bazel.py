@@ -74,7 +74,7 @@ def execute_bazel_run(
         exec.execute_command(
             ["bazel", "run"]
             + aggregated_flags
-            + [target]
+            + target
         )
     except subprocess.CalledProcessError as e:
         exception.handle_bazel_failure(e, "run")

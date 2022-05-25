@@ -50,11 +50,6 @@ nodejs_binary(
 )
 
 nodejs_image(
-    name = "local-image",
-    binary = ":internal",
-)
-
-nodejs_image(
     name = "image",
     binary = ":internal",
 )

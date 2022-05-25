@@ -68,7 +68,9 @@ def execute_integration_tests_commands(configs):
         )
 
         for img in configs.get("integration_test", {}).get("pre_hook", []):
-            bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, img, [])
+            target = img.split()
+            bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, target,
+                                    [])
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars
@@ -533,16 +535,8 @@ def push_images(targets, tmpdir):
     run_flags += ["--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
 
     for img in targets:
-        bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])
-
-
-def run_pre_hooks(targets, tmpdir):
-    run_flags, json_profile_out_test = flags.calculate_flags(
-        "run_flags", "run", tmpdir, test_env_vars
-    )
-
-    for img in targets:
-        bazel.execute_bazel_run(":bazel: Running pre-hook {}".format(img), run_flags, img, [])
+        target = img.split()
+        bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, target, [])
 
 
 def execute_publish_commands(configs):

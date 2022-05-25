@@ -15,7 +15,7 @@ steps:
 
   integration_test:
     pre_hook:
-      - //applications/parley/internal:internal -- db migrate
+      - //applications/parley/internal:internal -- db migrate keyspace
       - //applications/parley/internal:internal -- db seed
     coverage:
       - name: parley.integration
