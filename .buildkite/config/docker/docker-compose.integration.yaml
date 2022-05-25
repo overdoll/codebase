@@ -16,12 +16,12 @@ services:
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
     depends_on:
-      - bazel_remote_cache
+      - bazel.remote
       - scylla
       - elasticsearch
       - redis
 
-  bazel_remote_cache:
+  bazel.remote:
     image: "buchgr/bazel-remote-cache"
     user: 0:0
     environment:

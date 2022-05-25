@@ -309,6 +309,10 @@ def execute_push_images(configs):
         if tmpdir:
             shutil.rmtree(tmpdir)
 
+    # need to clear cache for bazel to ensure it's updated correctly
+    for f in glob.glob("v1-cache-bazel-repositories*"):
+        os.remove(f)
+
 
 def execute_build_commands(configs):
     terminal_print.print_collapsed_group(":bazel: Waiting for bazel remote cache to start up")
@@ -462,6 +466,9 @@ def print_project_pipeline():
                         "id": "bazel-repositories",
                         "backend": "s3",
                         "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
                         "compress": "true",
                         "paths": [
                             "/workdir/.bazel_repository_cache"
