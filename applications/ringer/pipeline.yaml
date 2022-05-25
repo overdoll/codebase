@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/ringer/internal:internal
+      - //applications/ringer/internal:image
 
   unit_test:
     coverage:

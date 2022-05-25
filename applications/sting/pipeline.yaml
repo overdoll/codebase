@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/sting/internal:internal
+      - //applications/sting/internal:image
 
   unit_test:
     coverage:

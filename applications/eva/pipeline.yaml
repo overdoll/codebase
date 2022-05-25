@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/eva/internal:internal
+      - //applications/eva/internal:image
 
   unit_test:
     coverage:

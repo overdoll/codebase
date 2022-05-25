@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/puppy/internal:internal
+      - //applications/puppy/internal:image
 
   unit_test:
     coverage:

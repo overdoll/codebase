@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/carrier/internal:internal
+      - //applications/carrier/internal:image
 
   unit_test:
     coverage:

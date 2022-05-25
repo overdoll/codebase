@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/orca:internal
+      - //applications/orca:image
 
   push_image:
     targets:
