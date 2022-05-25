@@ -67,6 +67,16 @@ def execute_integration_tests_commands(configs):
             "run_flags", "run", tmpdir, test_env_vars
         )
 
+        new_flags = []
+
+        additional_test_env = format.format_env_vars(
+            configs.get("integration_test", {}).get("setup", {}).get("env", {}))
+
+        for env in additional_test_env:
+            new_flags += ["--test_env={}".format(env)]
+
+        run_flags += new_flags
+
         for img in configs.get("integration_test", {}).get("pre_hook", []):
             target = img.split()
             bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, target,
@@ -82,11 +92,7 @@ def execute_integration_tests_commands(configs):
             target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, stop_request)
         )
 
-        additional_test_env = format.format_env_vars(
-            configs.get("integration_test", {}).get("setup", {}).get("env", {}))
-
-        for env in additional_test_env:
-            test_flags += ["--test_env={}".format(env)]
+        test_flags += new_flags
 
         try:
             upload_thread.start()
