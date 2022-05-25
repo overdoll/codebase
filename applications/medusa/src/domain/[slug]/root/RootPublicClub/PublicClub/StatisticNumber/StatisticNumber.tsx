@@ -27,7 +27,8 @@ export default function StatisticNumber ({
     'primary'
   ]
 
-  const randomColor = colors[memoized.nextInt32([0, 4])]
+  const chosen = useMemo(() => memoized.nextInt32([0, 4]), [text])
+  const randomColor = colors[chosen]
 
   const currentColor: string = colorScheme == null ? randomColor : colorScheme
 
