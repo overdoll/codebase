@@ -8,10 +8,13 @@ def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_out
     if env is None:
         env = {}
 
+    env_copy = os.environ.copy()
+    env_copy.update(dict(env))
+
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args=args, shell=shell, check=fail_if_nonzero, env=dict(os.environ.copy()).update(dict(env)), cwd=cwd,
+        args=args, shell=shell, check=fail_if_nonzero, env=env_copy, cwd=cwd,
     ).returncode
 
 
