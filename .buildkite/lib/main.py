@@ -523,8 +523,7 @@ def print_project_pipeline():
                         ],
                         "s3": {
                             "bucket": "buildkite-runner-cache"
-                        },
-                        "continue_on_error": "true"
+                        }
                     }
                 },
             ],
