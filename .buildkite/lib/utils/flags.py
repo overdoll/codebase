@@ -29,7 +29,7 @@ def common_build_flags(bep_file, is_test):
         "--experimental_repository_cache_hardlinks",
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
-        "--flaky_test_attempts=default",
+        "--flaky_test_attempts=3",
         "--repository_cache=/workdir/.bazel_repository_cache",
         "--remote_cache=grpc://bazel.remote:9092"
     ]
