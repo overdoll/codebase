@@ -4,7 +4,7 @@
 set -eu
 
 # install redis if not available
-if ! python -c "import redis" &>/dev/null; then
+if ! python3 -c "import redis" &>/dev/null; then
   python3 -m pip install redis
 fi
 
