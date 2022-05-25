@@ -30,8 +30,11 @@ import utils.test_logs as test_logs
 
 random.seed()
 
+default_vars = [
+    "HOME"
+]
+
 test_env_vars = [
-    "HOME",
     "CCBILL_FLEXFORMS_URL",
     "CCBILL_SALT_KEY",
     "CCBILL_ACCOUNT_NUMBER",
@@ -64,7 +67,7 @@ def execute_integration_tests_commands(configs):
 
     try:
         run_flags, json_profile_out_test = flags.calculate_flags(
-            "run_flags", "run", tmpdir, test_env_vars
+            "run_flags", "run", tmpdir, test_env_vars + default_vars
         )
 
         new_flags = []
@@ -83,7 +86,7 @@ def execute_integration_tests_commands(configs):
                                     [])
 
         test_flags, json_profile_out_test = flags.calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
+            "test_flags", "test", tmpdir, test_env_vars + default_vars
         )
 
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
@@ -330,7 +333,7 @@ def execute_build_commands(configs):
 
     try:
         build_flags, json_profile_out_build = flags.calculate_flags(
-            "build_flags", "build", tmpdir, test_env_vars
+            "build_flags", "build", tmpdir, default_vars
         )
 
         build_targets = configs.get("build", {}).get("targets", [])
@@ -341,7 +344,7 @@ def execute_build_commands(configs):
             upload_execution_artifacts(json_profile_out_build, tmpdir)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
+            "test_flags", "test", tmpdir, default_vars
         )
 
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
