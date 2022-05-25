@@ -164,7 +164,7 @@ def push_all_queries():
     data = json.load(f)
 
     for i in data:
-        r.mset({["query:" + i]: data[i]})
+        r.mset({"query:" + i: data[i]})
 
     f.close()
 
