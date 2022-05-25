@@ -172,6 +172,7 @@
     "fake-indexeddb": "^3.1.2",
     "get-graphql-schema": "^2.1.2",
     "identity-obj-proxy": "^3.0.0",
+    "ioredis": "^5.0.5",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "node-html-parser": "^5.2.0",
