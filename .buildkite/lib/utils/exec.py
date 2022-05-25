@@ -5,13 +5,13 @@ from . import terminal_print
 
 
 def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_output=True, env=None):
-    if env == None:
+    if env is None:
         env = {}
 
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args=args, shell=shell, check=fail_if_nonzero, env=dict(os.environ.copy()).update(env), cwd=cwd,
+        args=args, shell=shell, check=fail_if_nonzero, env=dict(os.environ.copy()).update(dict(env)), cwd=cwd,
     ).returncode
 
 
