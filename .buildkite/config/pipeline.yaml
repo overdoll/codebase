@@ -3,7 +3,7 @@ steps:
   integration_test:
     setup:
       env:
-        DB_HOST: scylla
+        DB_HOST: "scylla"
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233
         TEMPORAL_NAMESPACE: default
@@ -30,7 +30,7 @@ steps:
         PRIVATE_RESOURCES_URL: https://dcd9vpqfvvgum.cloudfront.net
         OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
         FILES_BUCKET: sandbox-overdoll-files
-        IS_CI: true
+        IS_CI: "true"
         PAXUM_FROM_EMAIL: payer@domain.com
         PAXUM_SANDBOX: "true"
         PAXUM_SHARED_SECRET: "1234567890"
