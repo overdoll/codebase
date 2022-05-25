@@ -392,29 +392,27 @@ def print_project_pipeline():
     if not integration:
         raise exception.BuildkiteException("integration step is empty")
 
-    node_cache = {
-                     "gencer/cache#v2.4.10": {
-                         "id": "medusa-node_modules",
-                         "backend": "s3",
-                         "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
-                         "compress": "true",
-                         "paths": [
-                             "applications/medusa/node_modules",
-                         ],
-                         "s3": {
-                             "bucket": "buildkite-runner-cache"
-                         },
-                         "continue_on_error": "true"
-                     }
-                 },
-
     pipeline_steps.append(
         pipeline.create_step(
             label=":typescript: Build & Test Front-End",
             commands=[".buildkite/pipeline.sh frontend_build_test"],
             platform="docker",
             cache=[
-                node_cache,
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                        "continue_on_error": "true"
+                    }
+                },
                 {
                     "gencer/cache#v2.4.10": {
                         "id": "medusa-nextjs",
@@ -514,7 +512,21 @@ def print_project_pipeline():
             shards=1,
             platform="docker-compose",
             cache=[
-                node_cache
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                        "continue_on_error": "true"
+                    }
+                },
             ],
             artifacts=e2e.get("artifacts", []),
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
