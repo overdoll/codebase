@@ -109,7 +109,7 @@ const joinAndVerify = (email: string): void => {
 
         const root = parse(html)
 
-        const link = root?.querySelector('a')?.getAttribute('href')
+        const link = root?.querySelectorAll('a').find(el => el.textContent.includes('Authenticate'))?.getAttribute('href')
 
         const url = new URL(link as string)
         const query = new URLSearchParams(url.query)
@@ -235,5 +235,133 @@ Cypress.Commands.add('createClub', (name: string) => {
     ).then(({ body }) => {
       expect(body.data.createClub.validation).to.equal(null)
       expect(body.data.createClub.club).to.not.equal(null)
+    })
+})
+
+Cypress.Commands.add('assignArtistRole', (username: string) => {
+  const getAccountIdByUsername = `query AccountQuery($username: String!) {
+    account(username: $username) {
+      id
+      username
+    }
+  }`
+
+  const assignArtistRoleMutation = `mutation ArtistMutation($input: AssignAccountArtistRole!) {
+    assignAccountArtistRole(input: $input) {
+      account {
+        id
+        username
+        isArtist
+      }
+    }
+  }`
+
+  cy
+    .request(
+      {
+        ...getGraphqlRequest(),
+        body: {
+          query: getAccountIdByUsername,
+          variables: {
+            username: username
+          }
+        },
+        retryOnNetworkFailure: false
+      }
+    ).then(({ body }) => {
+      expect(body.data.account).to.not.equal(null)
+      cy
+        .request(
+          {
+            ...getGraphqlRequest(),
+            body: {
+              query: assignArtistRoleMutation,
+              variables: {
+                input: {
+                  accountId: body.data.account.id
+                }
+              }
+            },
+            retryOnNetworkFailure: false
+          }
+        ).then(({ body }) => {
+          expect(body.data.assignAccountArtistRole.account.isArtist).to.equal(true)
+        })
+    })
+})
+
+Cypress.Commands.add('enableTwoFactor', () => {
+  const generateRecoveryCodes = `mutation GenerateRecoveryCodesMutation {
+    generateAccountMultiFactorRecoveryCodes {
+      accountMultiFactorRecoveryCodes {
+        code
+      }
+    }
+  }`
+
+  const generateTotp = `mutation GenerateTotpMutation {
+    generateAccountMultiFactorTotp {
+      multiFactorTotp {
+        id
+        secret
+      }
+    }
+  }`
+
+  const enrollTotp = `mutation EnrollTotpMutation($input: EnrollAccountMultiFactorTotpInput!) {
+    enrollAccountMultiFactorTotp(input: $input) {
+      validation
+      account {
+        multiFactorTotpConfigured
+      }
+    }
+  }`
+
+  cy
+    .request(
+      {
+        ...getGraphqlRequest(),
+        body: {
+          query: generateRecoveryCodes,
+          variables: {}
+        },
+        retryOnNetworkFailure: false
+      }
+    ).then(({ body: recoveryBody }) => {
+      expect(recoveryBody.data.generateAccountMultiFactorRecoveryCodes.accountMultiFactorRecoveryCodes).to.not.equal(null)
+      cy
+        .request(
+          {
+            ...getGraphqlRequest(),
+            body: {
+              query: generateTotp,
+              variables: {}
+            },
+            retryOnNetworkFailure: false
+          }
+        ).then(({ body: generateBody }) => {
+          expect(generateBody.data.generateAccountMultiFactorTotp.multiFactorTotp.secret).to.not.equal(null)
+          cy.task('generateOTP', generateBody.data.generateAccountMultiFactorTotp.multiFactorTotp.secret).then(token => {
+            cy
+              .request(
+                {
+                  ...getGraphqlRequest(),
+                  body: {
+                    query: enrollTotp,
+                    variables: {
+                      input: {
+                        id: generateBody.data.generateAccountMultiFactorTotp.multiFactorTotp.id,
+                        code: token
+                      }
+                    }
+                  },
+                  retryOnNetworkFailure: false
+                }
+              ).then(({ body }) => {
+                expect(body.data.enrollAccountMultiFactorTotp.account.multiFactorTotpConfigured).to.equal(true)
+                expect(body.data.enrollAccountMultiFactorTotp.validation).to.equal(null)
+              })
+          })
+        })
     })
 })
