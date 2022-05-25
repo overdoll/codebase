@@ -67,7 +67,7 @@ def execute_integration_tests_commands(configs):
 
     try:
         run_flags, json_profile_out_test = flags.calculate_flags(
-            "run_flags", "run", tmpdir, test_env_vars + default_vars, action_env=True
+            "run_flags", "run", tmpdir, default_vars
         )
 
         new_flags = []
@@ -77,12 +77,14 @@ def execute_integration_tests_commands(configs):
 
         for env in additional_test_env:
             new_flags += ["--test_env={}".format(env)]
-            run_flags += ["--define={}".format(env)]
+
+        pre_hook_env = []
+        pre_hook_env += ["DB_HOST=scylla", "ELASTICSEARCH_URL=http://elasticsearch:9200", "REDIS_HOST=redis"]
 
         for img in configs.get("integration_test", {}).get("pre_hook", []):
             target = img.split()
             bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, target,
-                                    [])
+                                    [], env=pre_hook_env)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars + default_vars

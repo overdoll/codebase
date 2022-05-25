@@ -60,7 +60,10 @@ def execute_bazel_run(
         additive_flags,
         target,
         incompatible_flags,
+        env=None
 ):
+    if env is None:
+        env = []
     aggregated_flags = flags.compute_flags(
         additive_flags,
         incompatible_flags,
@@ -72,6 +75,7 @@ def execute_bazel_run(
     terminal_print.print_expanded_group(label)
     try:
         exec.execute_command(
+            env +
             ["bazel", "run"]
             + aggregated_flags
             + target
