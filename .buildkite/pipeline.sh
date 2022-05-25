@@ -8,4 +8,8 @@ if ! python3 -c "import redis" &>/dev/null; then
   apt install python3-redis
 fi
 
+if ! python3 -c "import yaml" &>/dev/null; then
+  apt install python3-yaml
+fi
+
 python3 ./.buildkite/lib/main.py "$@"
