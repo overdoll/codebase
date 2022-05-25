@@ -59,7 +59,10 @@ func getGrpcClient(t *testing.T) ringer.RingerClient {
 
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
-	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	suite := new(testsuite.WorkflowTestSuite)
+	suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
+	env := suite.NewTestWorkflowEnvironment()
+
 	env.RegisterActivity(application.App.Activities)
 
 	return env
