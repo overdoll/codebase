@@ -63,7 +63,8 @@ module.exports = withBundleAnalyzer({
   },
   experimental: {
     runtime: 'nodejs',
-    concurrentFeatures: true
+    concurrentFeatures: true,
+    outputStandalone: true
   },
   serverRuntimeConfig: {
     projectRoot: __dirname
