@@ -18,6 +18,9 @@ COPY package.json ./package.json
 COPY --chown=nextjs:nodejs build/standalone ./
 COPY --chown=nextjs:nodejs build/static ./build/static
 
+# Copy queries.json to be used eventually when pushed to redis
+COPY --chown=nextjs:nodejs src/queries.json ./queries.json
+
 USER nextjs
 
 EXPOSE 8000

@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
@@ -134,12 +135,14 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 
 func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
+	workflowId := "CreateClub_" + clb.OwnerAccountId()
+
 	// should only have 1 create club workflow running at a time for any account
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CreateClub_" + clb.OwnerAccountId(),
-		// this will ensure that if we try to create another club, we will error out
-		WorkflowExecutionErrorWhenAlreadyStarted: true,
+		ID:        workflowId,
+		// allow duplicates only if it has failed
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CreateClub, workflows.CreateClubInput{
@@ -148,6 +151,11 @@ func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *prin
 		Name:           clb.Name().TranslateDefault(""),
 		OwnerAccountId: clb.OwnerAccountId(),
 	}); err != nil {
+		return err
+	}
+
+	// wait for club to be created
+	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
 		return err
 	}
 

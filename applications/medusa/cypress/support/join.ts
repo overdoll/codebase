@@ -109,15 +109,17 @@ const joinAndVerify = (email: string): void => {
 
         const root = parse(html)
 
-        const link = root?.querySelector('a')?.getAttribute('href')
+        root?.querySelectorAll('a').forEach(element => {
+          const link = element.getAttribute('href')
+          const url = new URL(link as string)
+          const query = new URLSearchParams(url.query)
+          const token = query.get('token') as string
+          const secret = query.get('secret') as string
 
-        const url = new URL(link as string)
-        const query = new URLSearchParams(url.query)
-
-        const token = query.get('token') as string
-        const secret = query.get('secret') as string
-
-        verifyToken(token, secret)
+          if (token != null && secret != null) {
+            verifyToken(token, secret)
+          }
+        })
       } catch (e) {
         const message = `Failed "${email}" due to ${e as string}`
         throw new Error(message)
