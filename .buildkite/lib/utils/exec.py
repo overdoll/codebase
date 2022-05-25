@@ -11,7 +11,7 @@ def execute_command(args, shell=False, fail_if_nonzero=True, cwd=None, print_out
     if print_output:
         terminal_print.eprint(" ".join(args))
     return subprocess.run(
-        args=args, shell=shell, check=fail_if_nonzero, env=os.environ.copy().update(env), cwd=cwd,
+        args=args, shell=shell, check=fail_if_nonzero, env=dict(os.environ.copy()).update(env), cwd=cwd,
     ).returncode
 
 
