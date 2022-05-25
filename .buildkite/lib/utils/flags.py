@@ -114,7 +114,7 @@ def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars, ac
     if test_env_vars:
 
         if action_env:
-            flags += ["--action_env={}".format(v) for v in test_env_vars]
+            flags += ["--define={}".format(v) for v in test_env_vars]
         else:
             flags += ["--test_env={}".format(v) for v in test_env_vars]
 

@@ -77,7 +77,7 @@ def execute_integration_tests_commands(configs):
 
         for env in additional_test_env:
             new_flags += ["--test_env={}".format(env)]
-            run_flags += ["--action_env={}".format(env)]
+            run_flags += ["--define={}".format(env)]
 
         for img in configs.get("integration_test", {}).get("pre_hook", []):
             target = img.split()
