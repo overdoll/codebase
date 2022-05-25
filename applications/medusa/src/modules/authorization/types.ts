@@ -31,4 +31,5 @@ export interface Authenticated {
   isModerator: boolean
   isLocked: boolean
   isStaff: boolean
+  isArtist: boolean
 }

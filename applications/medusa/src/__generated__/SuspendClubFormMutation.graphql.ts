@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fbabb675e282b212527911e698749ab2>>
- * @relayHash 0c1ff71f83986d1262cd222aef163a3e
+ * @generated SignedSource<<0c93823c5376ad881feaf21a1ec9f39d>>
+ * @relayHash 5d25ec0ecad13f8323320fba45a9659a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0c1ff71f83986d1262cd222aef163a3e
+// @relayRequestID 5d25ec0ecad13f8323320fba45a9659a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SuspendClubInput = {
@@ -26,6 +26,11 @@ export type SuspendClubFormMutation$data = {
       readonly id: string;
       readonly suspension: {
         readonly expires: any;
+      } | null;
+      readonly termination: {
+        readonly account: {
+          readonly username: string;
+        };
       } | null;
     } | null;
   } | null;
@@ -46,47 +51,89 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "SuspendClubPayload",
-    "kind": "LinkedField",
-    "name": "suspendClub",
-    "plural": false,
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ClubSuspension",
+  "kind": "LinkedField",
+  "name": "suspension",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "expires",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "SuspendClubFormMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Club",
+        "args": (v1/*: any*/),
+        "concreteType": "SuspendClubPayload",
         "kind": "LinkedField",
-        "name": "club",
+        "name": "suspendClub",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubSuspension",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "suspension",
+            "name": "club",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
+                "concreteType": "ClubTermination",
+                "kind": "LinkedField",
+                "name": "termination",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Account",
+                    "kind": "LinkedField",
+                    "name": "account",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -96,16 +143,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "SuspendClubFormMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -114,10 +151,59 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "SuspendClubFormMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "SuspendClubPayload",
+        "kind": "LinkedField",
+        "name": "suspendClub",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubTermination",
+                "kind": "LinkedField",
+                "name": "termination",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Account",
+                    "kind": "LinkedField",
+                    "name": "account",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "0c1ff71f83986d1262cd222aef163a3e",
+    "id": "5d25ec0ecad13f8323320fba45a9659a",
     "metadata": {},
     "name": "SuspendClubFormMutation",
     "operationKind": "mutation",
@@ -126,6 +212,6 @@ return {
 };
 })();
 
-(node as any).hash = "5eb5aba8df6ec8e5b39f1d8d6085d8e6";
+(node as any).hash = "2a615a7eafc9aab90d812a820c704bd8";
 
 export default node;

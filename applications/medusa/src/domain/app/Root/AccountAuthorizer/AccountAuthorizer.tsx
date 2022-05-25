@@ -14,8 +14,12 @@ const AccountAuthorizerGQL = graphql`
     lock {
       __typename
     }
+    deleting {
+      __typename
+    }
     isModerator
     isStaff
+    isArtist
   }
 `
 
@@ -31,7 +35,8 @@ export default function AccountAuthorizer ({
         ? {
             isModerator: data.isModerator,
             isStaff: data.isStaff,
-            isLocked: data.lock != null
+            isLocked: data.lock != null || data.deleting != null,
+            isArtist: data.isArtist
           }
         : null
     )), [data])

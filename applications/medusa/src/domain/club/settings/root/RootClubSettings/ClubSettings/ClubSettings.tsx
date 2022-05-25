@@ -6,6 +6,7 @@ import { PagePanelIcon, PagePanelText, PagePanelWrap, ResourceIcon } from '@//:m
 import { Barcode, SeriesIdentifier } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { useRouter } from 'next/router'
+import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -21,6 +22,7 @@ const Query = graphql`
         ...ResourceIconFragment
       }
       viewerIsOwner
+      ...ClubInformationBannerFragment
     }
   }
 `
@@ -43,6 +45,7 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
+      <ClubInformationBanner query={queryData.club} />
       <PagePanelWrap href={{
         pathname: '/club/[slug]/settings/name',
         query: { slug: slug as string }

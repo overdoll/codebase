@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b040ad14185703c96df05cafb07abcca>>
- * @relayHash e3556bae816ab64f8e4237f8ffc61ca1
+ * @generated SignedSource<<f6574b997ddc17d9bd8ff515a55760f9>>
+ * @relayHash 63cbdaacbef37ec22e1cd9e2a6787d82
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e3556bae816ab64f8e4237f8ffc61ca1
+// @relayRequestID 63cbdaacbef37ec22e1cd9e2a6787d82
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type ClubHomeQuery$data = {
     readonly name: string;
     readonly membersCount: number;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubBalanceHeaderFragment" | "ClubSupporterHeaderFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubBalanceHeaderFragment" | "ClubSupporterHeaderFragment" | "ClubInformationBannerFragment">;
   } | null;
 };
 export type ClubHomeQueryResponse = ClubHomeQuery$data;
@@ -120,6 +120,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubSupporterHeaderFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -249,19 +254,81 @@ return {
                 "kind": "ScalarField",
                 "name": "currency",
                 "storageKey": null
-              },
-              (v5/*: any*/)
+              }
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canSupport",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "nextSupporterPostTime",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "username",
+                    "storageKey": null
+                  },
+                  (v5/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "e3556bae816ab64f8e4237f8ffc61ca1",
+    "id": "63cbdaacbef37ec22e1cd9e2a6787d82",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -270,7 +337,7 @@ return {
 };
 })();
 
-(node as any).hash = "65ecbfc0e4115d8885dcc4f0e8074cde";
+(node as any).hash = "d480d64ed7ca9c639ce7b18dd164e91f";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

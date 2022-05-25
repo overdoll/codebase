@@ -4,7 +4,17 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { Box, ButtonProps, Tooltip } from '@chakra-ui/react'
+import {
+  Box,
+  ButtonProps,
+  Popover,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Tooltip
+} from '@chakra-ui/react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { PremiumStar } from '@//:assets/icons'
 import BecomeMemberButton from '../BecomeMemberButton/BecomeMemberButton'
@@ -24,6 +34,7 @@ const ClubFragment = graphql`
     viewerMember {
       isSupporter
     }
+    viewerIsOwner
     slug
   }
 `
@@ -52,6 +63,34 @@ export default function JoinClubFromPage ({
       slug: clubData.slug
     }
   })
+
+  if (clubData.viewerIsOwner) {
+    return (
+      <Box w='100%'>
+        <Popover>
+          <PopoverTrigger>
+            <Button
+              colorScheme='gray'
+              {...rest}
+            >
+              <Trans>
+                Join
+              </Trans>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverCloseButton />
+            <PopoverHeader fontWeight='semibold'>
+              <Trans>You are the owner</Trans>
+            </PopoverHeader>
+            <PopoverBody textAlign='left' fontSize='sm'>Because you are the owner of the club, you are already a member
+              and cannot join nor leave the club.
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+      </Box>
+    )
+  }
 
   if (viewerData == null) {
     return (

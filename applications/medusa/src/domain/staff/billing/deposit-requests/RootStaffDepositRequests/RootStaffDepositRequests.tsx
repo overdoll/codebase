@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type {
@@ -40,6 +40,12 @@ const RootStaffDepositRequests: PageProps<Props> = (props: Props) => {
               Deposit Requests
             </Trans>
           </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans>
+              Deposit requests are created on the first of every month and should always be fulfilled by the 15th of the
+              same month for each relevant provider.
+            </Trans>
+          </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>

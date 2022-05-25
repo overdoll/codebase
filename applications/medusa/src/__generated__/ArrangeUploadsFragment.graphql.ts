@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a22c1c6d81724b7c58cab042b4badcfe>>
+ * @generated SignedSource<<d5f5d52d8c8f31e7bfa85afbcd4a1b9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type ArrangeUploadsFragment$data = {
     };
     readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
   }>;
+  readonly " $fragmentSpreads": FragmentRefs<"ArrangeButtonFragment">;
   readonly " $fragmentType": "ArrangeUploadsFragment";
 };
 export type ArrangeUploadsFragment = ArrangeUploadsFragment$data;
@@ -99,6 +100,11 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ArrangeButtonFragment"
     }
   ],
   "type": "Post",
@@ -106,6 +112,6 @@ return {
 };
 })();
 
-(node as any).hash = "969986fdfcd554b722bd6e458d7f11ae";
+(node as any).hash = "9eaec398ddb5dca9155345505ff939c2";
 
 export default node;

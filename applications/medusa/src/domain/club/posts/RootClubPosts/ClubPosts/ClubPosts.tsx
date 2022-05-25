@@ -4,15 +4,15 @@ import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { Trans } from '@lingui/macro'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { NotFoundClub } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, NotFoundClub } from '@//:modules/content/Placeholder'
 import DraftPost from './DraftPost/DraftPost'
 import PublishedPost from './PublishedPost/PublishedPost'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import ReviewPost from './ReviewPost/ReviewPost'
 import RejectedPost from './RejectedPost/RejectedPost'
 import ArchivedPost from './ArchivedPost/ArchivedPost'
 import RemovedPost from './RemovedPost/RemovedPost'
+import ClubInformationBanner from '../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -21,9 +21,9 @@ interface Props {
 const Query = graphql`
   query ClubPostsQuery($slug: String!, $state: PostState)  {
     club(slug: $slug) {
-      __typename
       viewerIsOwner
       ...ClubPostsFragment
+      ...ClubInformationBannerFragment
     }
   }
 `
@@ -77,58 +77,61 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (data.posts.edges.length < 1) {
-    return (
-      <SmallBackgroundBox>
-        <Trans>
-          No posts found
-        </Trans>
-      </SmallBackgroundBox>
-    )
-  }
-
   return (
-    <GridWrap>
-      {data.posts.edges.map((item, index) => {
-        switch (item.node.state) {
-          case 'DRAFT':
-            return (
-              <DraftPost key={index} query={item.node} />
-            )
-          case 'PUBLISHED':
-            return (
-              <PublishedPost key={index} query={item.node} />
-            )
-          case 'REVIEW':
-            return (
-              <ReviewPost key={index} query={item.node} />
-            )
-          case 'REJECTED':
-            return (
-              <RejectedPost key={index} query={item.node} />
-            )
-          case 'ARCHIVED':
-            return (
-              <ArchivedPost key={index} query={item.node} />
-            )
-          case 'REMOVED':
-            return (
-              <RemovedPost key={index} query={item.node} />
-            )
-          default:
-            return (
-              <GridTile>
-                <PostPreviewContent key={index} query={data} />
-              </GridTile>
-            )
-        }
-      }
-      )}
-      <LoadMoreGridTile
-        hasNext={hasNext}
-        onLoadNext={() => loadNext(4)}
-        isLoadingNext={isLoadingNext}
-      />
-    </GridWrap>
+    <>
+      <ClubInformationBanner query={queryData.club} />
+      <EmptyBoundary
+        fallback={(
+          <SmallBackgroundBox>
+            <Trans>
+              No posts found
+            </Trans>
+          </SmallBackgroundBox>)}
+        condition={data?.posts?.edges.length < 1}
+      >
+        <GridWrap>
+          {data?.posts?.edges.map((item, index) => {
+            switch (item.node.state) {
+              case 'DRAFT':
+                return (
+                  <DraftPost key={index} query={item.node} />
+                )
+              case 'PUBLISHED':
+                return (
+                  <PublishedPost key={index} query={item.node} />
+                )
+              case 'REVIEW':
+                return (
+                  <ReviewPost key={index} query={item.node} />
+                )
+              case 'REJECTED':
+                return (
+                  <RejectedPost key={index} query={item.node} />
+                )
+              case 'ARCHIVED':
+                return (
+                  <ArchivedPost key={index} query={item.node} />
+                )
+              case 'REMOVED':
+                return (
+                  <RemovedPost key={index} query={item.node} />
+                )
+              default:
+                return (
+                  <GridTile>
+                    <PostPreviewContent key={index} query={data} />
+                  </GridTile>
+                )
+            }
+          }
+          )}
+          <LoadMoreGridTile
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(4)}
+            isLoadingNext={isLoadingNext}
+          />
+        </GridWrap>
+      </EmptyBoundary>
+    </>
   )
 }

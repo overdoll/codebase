@@ -12,7 +12,6 @@ import {
   InputBody,
   InputFeedback,
   InputFooter,
-  InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 
@@ -43,31 +42,28 @@ export default function JoinForm ({
 
   return (
     <Form onSubmit={onSubmit} {...methods}>
-      <Stack spacing={6}>
+      <Stack spacing={4}>
         <FormInput
           id='email'
-          size='xl'
+          size='lg'
         >
-          <InputHeader>
-            <Trans>
-              Email
-            </Trans>
-          </InputHeader>
           <InputBody>
-            <TextInput placeholder={
-              i18n._(t`Enter an email`)
-            }
+            <TextInput
+              borderColor='transparent'
+              variant='outline'
+              placeholder={
+                i18n._(t`Enter an email`)
+              }
             />
             <InputFeedback />
           </InputBody>
           <InputFooter />
         </FormInput>
         <FormSubmitButton
-          size='xl'
-          variant='outline'
-          isLoading={loading}
+          size='lg'
+          variant='solid'
           colorScheme='primary'
-          w='100%'
+          isLoading={loading}
         >
           <Trans>
             Continue

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dfc34df61e7772d90c2d3507c3deeb74>>
- * @relayHash 1de536df87e1d2a3b357c003ebd8ae20
+ * @generated SignedSource<<caaab9f7334bd3e13eb3e5a828a1d617>>
+ * @relayHash 7ddbb1634fca0ee27fa2c3696425e1f1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1de536df87e1d2a3b357c003ebd8ae20
+// @relayRequestID 7ddbb1634fca0ee27fa2c3696425e1f1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type ClubsFeedQuery$variables = {};
 export type ClubsFeedQueryVariables = ClubsFeedQuery$variables;
 export type ClubsFeedQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment" | "LockedAccountBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment" | "AccountInformationBannerFragment">;
   } | null;
 };
 export type ClubsFeedQueryResponse = ClubsFeedQuery$data;
@@ -157,7 +157,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "LockedAccountBannerFragment"
+            "name": "AccountInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -436,6 +436,25 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -443,7 +462,7 @@ return {
     ]
   },
   "params": {
-    "id": "1de536df87e1d2a3b357c003ebd8ae20",
+    "id": "7ddbb1634fca0ee27fa2c3696425e1f1",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",
@@ -452,6 +471,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6bf284ffbb203c7a0f1610a9e0bf73b";
+(node as any).hash = "b5ebe556407db342e5665aa9cc58ac60";
 
 export default node;

@@ -11,6 +11,7 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { useRouter } from 'next/router'
 import ClubBalanceHeader from './ClubBalanceHeader/ClubBalanceHeader'
 import ClubSupporterHeader from './ClubSupporterHeader/ClubSupporterHeader'
+import ClubInformationBanner from '../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   query: PreloadedQuery<ClubHomeQuery>
@@ -25,6 +26,7 @@ const Query = graphql`
       ...LargeClubHeaderFragment
       ...ClubBalanceHeaderFragment
       ...ClubSupporterHeaderFragment
+      ...ClubInformationBannerFragment
     }
   }
 `
@@ -54,6 +56,7 @@ export default function ClubHome ({ query }: Props): JSX.Element {
           Manage {queryData.club.name} :: overdoll.com
         </title>
       </Head>
+      <ClubInformationBanner query={queryData.club} />
       <Stack spacing={8}>
         <LargeClubHeader query={queryData.club} />
         <Stack spacing={4}>

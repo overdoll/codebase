@@ -1,14 +1,16 @@
-import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { CompleteFragment$key } from '@//:artifacts/CompleteFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { Icon, PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '@//:assets/icons'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { Icon } from '@//:modules/content/PageLayout'
+import { ArrowButtonRefresh, CheckCircle } from '@//:assets/icons'
 import UAParser from 'ua-parser-js'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
+import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
+import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdvert/AdvertBoxWrapper/AdvertBoxWrapper'
 
 interface Props {
   query: CompleteFragment$key
@@ -39,8 +41,6 @@ export default function Complete ({ query }: Props): JSX.Element {
   // - the app used the token and got an authentication token back, so the state is not in sync
   // - the app did not use the token yet and requires user action
 
-  // TODO do a proper refresh (recall ability?) as another refresh is needed to see the nav bar correctly
-  // TODO invalidate viewer here and replace to home (copy function from join support)
   const refresh = (): void => {
     void router.push('/join')
   }
@@ -48,85 +48,83 @@ export default function Complete ({ query }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Verification Complete :: overdoll</title>
+        <title>Verification complete :: overdoll</title>
       </Head>
-      <PageWrapper>
-        <Icon
-          icon={BadgeCircle}
-          w={100}
-          h={100}
-          fill='green.500'
-          ml='auto'
-          mr='auto'
-          mb={8}
-        />
-        <Heading
-          mb={8}
-          textAlign='center'
-          fontSize='xl'
-          color='gray.00'
-        >
-          <Trans>
-            You have been successfully logged in to the requested device
-          </Trans>
-        </Heading>
-        <Box
-          pt={3}
-          pb={3}
-          borderRadius={5}
-          bg='gray.800'
-        >
+      <BackgroundPatternWrapper>
+        <PageWrapperDesktop>
           <Center>
-            <Text
-              fontSize='lg'
-              color='green.300'
-            >
-              <>
-                {cookieText.browser.name} {cookieText.browser.major},{' '}
-                {cookieText.os.name} {cookieText.os.version}
-              </>
-            </Text>
+            <AdvertBoxWrapper>
+              <Stack justify='center' h='100%' spacing={6}>
+                <Icon
+                  icon={CheckCircle}
+                  w={16}
+                  h={16}
+                  fill='green.400'
+                />
+                <Box>
+                  <Heading
+                    textAlign='center'
+                    fontSize='xl'
+                    color='gray.00'
+                    mb={1}
+                  >
+                    <Trans>
+                      You have been successfully logged in to the requested device
+                    </Trans>
+                  </Heading>
+                  <Heading textAlign='center' color='gray.300' fontSize='sm'>
+                    <Trans>
+                      You may safely close this window
+                    </Trans>
+                  </Heading>
+                </Box>
+                <Flex
+                  justify='center'
+                  align='center'
+                  wordBreak='break-all'
+                  p={3}
+                  borderRadius='md'
+                  bg='gray.900'
+                  w='100%'
+                >
+                  <Heading
+                    textAlign='center'
+                    fontSize='md'
+                    color='green.400'
+                  >
+                    <>
+                      {cookieText.browser.name} {cookieText.browser.major},{' '}
+                      {cookieText.os.name} {cookieText.os.version}
+                    </>
+                  </Heading>
+                </Flex>
+                {data.sameDevice
+                  ? (
+                    <Flex justify='center'>
+                      <Button
+                        size='md'
+                        onClick={refresh}
+                        variant='solid'
+                        colorScheme='green'
+                        rightIcon={<Icon icon={ArrowButtonRefresh} fill='green.900' w={4} h={4} />}
+                      >
+                        <Trans>
+                          I closed the original tab
+                        </Trans>
+                      </Button>
+                    </Flex>)
+                  : (
+                    <Heading textAlign='center' color='gray.100' fontSize='md'>
+                      <Trans>
+                        If you closed the original tab, just open it back up!
+                      </Trans>
+                    </Heading>
+                    )}
+              </Stack>
+            </AdvertBoxWrapper>
           </Center>
-        </Box>
-        <Alert
-          mt={4}
-          borderRadius={5}
-        >
-          <AlertIcon />
-          <AlertDescription>
-            <Trans>
-              You may safely close this window
-            </Trans>
-          </AlertDescription>
-        </Alert>
-        {data.sameDevice
-          ? (
-            <Flex justify='center'>
-              <Button
-                mt={8}
-                size='md'
-                onClick={refresh}
-                variant='link'
-              >
-                <Trans>
-                  I closed the original tab
-                </Trans>
-              </Button>
-            </Flex>)
-          : (
-            <Center mt={4}>
-              <Text
-                align='center'
-                fontSize='md'
-                color='pink.300'
-              >
-                <Trans>
-                  If you closed the original tab, just open it back up!
-                </Trans>
-              </Text>
-            </Center>
-            )}
-      </PageWrapper>
+        </PageWrapperDesktop>
+      </BackgroundPatternWrapper>
     </>
   )
 }

@@ -7,7 +7,7 @@ describe('Settings - Add Email', () => {
   const newEmail = generateEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, currentEmail)
+    cy.joinWithNewAccount(username)
   })
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {
@@ -29,7 +29,7 @@ describe('Settings - Add Email', () => {
     // confirm email
     cy.displayLastEmail(startTimestamp, 'Verify Email', newEmail)
 
-    cy.findByText('confirm email').then(ln => {
+    cy.findByText('Confirm Email').then(ln => {
       const url = ln.prop('href')
       cy.visit(url)
     })

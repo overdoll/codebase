@@ -21,7 +21,8 @@ const Fragment = graphql`
   fragment TransactionSettingsCardFragment on AccountTransaction {
     amount
     currency
-    timestamp
+    createdAt
+    totalRefunded
     clubSupporterSubscription {
       ... on IAccountClubSupporterSubscription {
         club {
@@ -54,7 +55,12 @@ export default function TransactionSettingsCard ({
     currency: data.currency,
     locale: locale
   })
-  const timestamp = format(new Date(data.timestamp as Date), dateFormatWithTimeSimple, { locale })
+  const totalRefunded = displayPrice({
+    amount: data.totalRefunded,
+    currency: data.currency,
+    locale: locale
+  })
+  const timestamp = format(new Date(data.createdAt as Date), dateFormatWithTimeSimple, { locale })
 
   const colorScheme = getTransactionColorScheme(data.type)
 
@@ -68,7 +74,7 @@ export default function TransactionSettingsCard ({
           query={data?.clubSupporterSubscription?.club?.thumbnail}
         />
         <Heading
-          isTruncated
+          noOfLines={1}
           fontSize='lg'
           color='gray.00'
         >
@@ -77,12 +83,12 @@ export default function TransactionSettingsCard ({
       </HStack>
       <TableBodyRow columns={7}>
         <TableBodyColumn column={3}>
-          <Text w='100%' align='start' isTruncated fontSize='md' color='gray.100'>
+          <Text w='100%' align='start' noOfLines={1} fontSize='md' color='gray.100'>
             {timestamp}
           </Text>
         </TableBodyColumn>
         <TableBodyColumn column={3}>
-          <Text w='100%' align='center' isTruncated fontFamily='mono' fontSize='md' color='gray.100'>
+          <Text w='100%' align='center' noOfLines={1} fontFamily='mono' fontSize='md' color='gray.100'>
             {data.paymentMethod.card.type} **{data.paymentMethod.card.last4}
           </Text>
         </TableBodyColumn>
@@ -94,6 +100,11 @@ export default function TransactionSettingsCard ({
           </Flex>
         </TableBodyColumn>
       </TableBodyRow>
+      {data.type === 'REFUND' && (
+        <Text fontSize='md' color='gray.200'>
+          ${totalRefunded} was refunded to this payment method
+        </Text>
+      )}
     </Stack>
   )
 }

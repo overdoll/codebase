@@ -37,7 +37,7 @@ declare global {
        *
        * @example cy.joinWithNewRandomAccount('poisonminion@test.com', 'poisonminion')
        */
-      joinWithNewAccount: (username: string, email: string) => Chainable<Element>
+      joinWithNewAccount: (username: string) => Chainable<Element>
 
       /**
        * For the given email, display the last email that was sent to this email
@@ -58,6 +58,24 @@ declare global {
        * @example cy.createClub('MyClubName')
        */
       createClub: (name: string) => Chainable<Element>
+
+      /**
+       * Assign artist role
+       *
+       * Logs in as a staff member and assigns artist role to the selected user
+       *
+       * @example cy.assignArtistRole('username')
+       */
+      assignArtistRole: (username: string) => Chainable<Element>
+
+      /**
+       * Enable two factor
+       *
+       * Only meant to help bypass tests as the logged in user if a feature requires it
+       *
+       * @example cy.enableTwoFactor()
+       */
+      enableTwoFactor: () => Chainable<Element>
     }
   }
 }

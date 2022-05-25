@@ -1,19 +1,5 @@
 export const logout = (): void => {
-  cy.visit('/')
-
-  cy.url().should('include', '/')
-
-  cy.waitUntil(() => cy.get('button[aria-label="Home"]').should('be.visible'))
-
-  cy.waitUntil(() => cy.findByRole('button', { name: /Dropdown Menu/iu }).should('not.be.disabled'))
-
-  cy.findByRole('button', { name: /Dropdown Menu/iu })
-    .click()
-
-  cy.waitUntil(() => cy.findByRole('button', { name: /Log Out/iu }).should('exist'))
-
-  cy.findByRole('button', { name: /Log Out/iu })
-    .click()
+  cy.visit('/logout')
 
   cy.waitUntil(() => cy.findAllByText(/You have been logged out/iu).should('exist'))
 }
@@ -40,7 +26,7 @@ export const join = (email: string): void => {
   })
 
   // we dont want to "click" on the link or else the test will break, so we just visit it
-  cy.findByText('authenticate').then(ln => {
+  cy.findByText('Authenticate').then(ln => {
     const url = ln.prop('href')
     cy.visit(url)
   })

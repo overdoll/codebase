@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e22c9cd8b676dc54825ff5cf80c3da54>>
+ * @generated SignedSource<<e85d59ec6ac112333f75a5ab5c955e98>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type PayoutsDetailsSettingsFragment$data = {
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountDetailsFragment">;
   } | null;
+  readonly multiFactorTotpConfigured: boolean;
   readonly " $fragmentType": "PayoutsDetailsSettingsFragment";
 };
 export type PayoutsDetailsSettingsFragment = PayoutsDetailsSettingsFragment$data;
@@ -51,12 +52,19 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "multiFactorTotpConfigured",
+      "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "afff0faa79e95ef48d941da282648930";
+(node as any).hash = "58b035ef737e29945264cfa0e7062519";
 
 export default node;

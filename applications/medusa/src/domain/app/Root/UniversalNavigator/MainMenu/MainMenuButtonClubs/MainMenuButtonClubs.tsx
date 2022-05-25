@@ -43,7 +43,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
       colorScheme='primary'
       href='/clubs/feed'
       icon={ClubPeopleGroup}
-      label={i18n._(t`Clubs Feed`)}
+      label={i18n._(t`Your Clubs Feed`)}
     />
   )
 }

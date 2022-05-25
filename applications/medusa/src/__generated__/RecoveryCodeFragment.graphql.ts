@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c87dcf14323d9b3ee7b901d4413485ae>>
+ * @generated SignedSource<<af63341953c93d726f3dcbd1e8f7a552>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RecoveryCodeFragment$data = {
+  readonly id: string;
   readonly token: string;
   readonly " $fragmentType": "RecoveryCodeFragment";
 };
@@ -30,6 +31,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "token",
       "storageKey": null
     }
@@ -38,6 +46,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "dfc6ed9d107afb9db8080d00e8ca0d8d";
+(node as any).hash = "8e4b2ad253caef38a7b3fb02ca08b77b";
 
 export default node;

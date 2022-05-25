@@ -39,7 +39,7 @@ const Fragment = graphql`
 export default function CreateClub (props: Props): JSX.Element {
   const queryData = usePreloadedQuery<CreateClubQuery>(
     Query,
-    props.query
+    props.query,
   )
 
   const data = useFragment<CreateClubFragment$key>(Fragment, queryData?.viewer)

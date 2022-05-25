@@ -68,6 +68,7 @@ export default function PostSupporterContent ({
               justify='center'
               px={8}
               spacing={4}
+              pointerEvents='none'
             >
               <Heading fontSize='lg' color='gray.00' textAlign='center'>
                 <Trans>
@@ -77,6 +78,7 @@ export default function PostSupporterContent ({
               <Can I='interact' a='Club' passThrough>
                 {allowed => (
                   <LinkButton
+                    pointerEvents='auto'
                     href={allowed === false ? `/${clubData.slug}` : `/${clubData.slug}?support=true`}
                     leftIcon={(
                       <Icon

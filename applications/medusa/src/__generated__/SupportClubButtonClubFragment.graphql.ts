@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<38ff3c72c73ee14be3f62485dff56cdc>>
+ * @generated SignedSource<<ac02e2ce4040f2b927fc06b9ebfc00ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,12 @@ export type SupportClubButtonClubFragment$data = {
   readonly slug: string;
   readonly viewerMember: {
     readonly isSupporter: boolean;
+    readonly clubSupporterSubscription: {
+      readonly reference?: string;
+    } | null;
   } | null;
+  readonly canSupport: boolean;
+  readonly viewerIsOwner: boolean;
   readonly supporterSubscriptionPrice: {
     readonly localizedPrice: {
       readonly amount: number;
@@ -58,8 +63,47 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "isSupporter",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": null,
+          "kind": "LinkedField",
+          "name": "clubSupporterSubscription",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "reference",
+                  "storageKey": null
+                }
+              ],
+              "type": "IAccountClubSupporterSubscription",
+              "abstractKey": "__isIAccountClubSupporterSubscription"
+            }
+          ],
+          "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canSupport",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "viewerIsOwner",
       "storageKey": null
     },
     {
@@ -108,6 +152,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d2a6654e15a220047e2d2ed1268ad3c1";
+(node as any).hash = "c6e8bc44869ff319c3e449a6c6bd9fa3";
 
 export default node;

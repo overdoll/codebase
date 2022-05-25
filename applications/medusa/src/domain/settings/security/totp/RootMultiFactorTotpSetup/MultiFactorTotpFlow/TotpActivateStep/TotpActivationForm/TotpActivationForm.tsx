@@ -31,7 +31,11 @@ const Mutation = graphql`
   mutation TotpActivationFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
     enrollAccountMultiFactorTotp(input: $input) {
       validation
-      accountMultiFactorTotpEnabled
+      account {
+        id
+        multiFactorEnabled
+        multiFactorTotpConfigured
+      }
     }
   }
 `
@@ -79,13 +83,6 @@ export default function TotpActivationForm (props: Props): JSX.Element {
           isClosable: true
         })
         props.setIsSuccessful()
-      },
-      updater: (store, payload) => {
-        const viewer = store.getRoot().getLinkedRecord('viewer')
-        if (viewer != null) {
-          viewer
-            .setValue(payload?.enrollAccountMultiFactorTotp?.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
-        }
       },
       onError () {
         notify({

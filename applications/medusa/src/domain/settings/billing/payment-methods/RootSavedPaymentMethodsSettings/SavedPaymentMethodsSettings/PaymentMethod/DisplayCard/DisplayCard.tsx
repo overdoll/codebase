@@ -9,7 +9,7 @@ import {
   CreditCardJCB,
   CreditCardMasterCard,
   CreditCardVisa
-} from '@//:assets/icons'
+} from '@//:assets/logos'
 
 interface Props {
   query: DisplayCardFragment$key

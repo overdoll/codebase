@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a1fdeb4200b06dc5dff3c7f00982e47e>>
+ * @generated SignedSource<<07edc898b304ecdf7d44cfe863db0b34>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffPayoutEventsFragment$data = {
   readonly events: ReadonlyArray<{
     readonly error: string;
-    readonly timestamp: any;
+    readonly createdAt: any;
   }>;
   readonly " $fragmentType": "StaffPayoutEventsFragment";
 };
@@ -48,7 +48,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "timestamp",
+          "name": "createdAt",
           "storageKey": null
         }
       ],
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a0282b5c57e0c83959a07fe8b74651bb";
+(node as any).hash = "428ae1907c6cdce100ec70b1f21188cf";
 
 export default node;

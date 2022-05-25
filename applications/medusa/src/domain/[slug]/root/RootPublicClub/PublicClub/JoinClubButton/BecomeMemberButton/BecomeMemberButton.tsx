@@ -36,13 +36,11 @@ const JoinClubMutation = graphql`
         id
         club {
           id
-          viewerMember {
-            id
-          }
         }
         account {
           id
         }
+        joinedAt
       }
     }
   }
@@ -87,10 +85,14 @@ export default function BecomeMemberButton ({
           title: t`You are now a member of ${clubData.name}!`
         })
       },
-      updater: (store, payload) => {
+      updater: (store) => {
         const node = store.get(clubData.id)
+        const payload = store.getRootField('joinClub').getLinkedRecord('clubMember')
         if (node != null) {
           node.setValue(node.getValue('membersCount') as number + 1, 'membersCount')
+          if (payload != null) {
+            node.setLinkedRecord(payload, 'viewerMember')
+          }
         }
       }
     })

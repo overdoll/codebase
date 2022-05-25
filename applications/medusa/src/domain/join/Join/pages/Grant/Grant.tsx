@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { prepareViewer } from '../../support/support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
@@ -21,11 +21,16 @@ const GrantAction = graphql`
   mutation GrantMutation($input: GrantAccountAccessWithAuthenticationTokenInput!) {
     grantAccountAccessWithAuthenticationToken(input: $input) {
       validation
+      revokedAuthenticationTokenId
       account {
         id
         username
         isModerator
         isStaff
+        isArtist
+        deleting {
+          __typename
+        }
         lock {
           __typename
         }
@@ -79,6 +84,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
             status: 'error',
             title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
           })
+          removeCookie('token')
           return
         }
         notify({
@@ -89,9 +95,11 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationToken?.account?.id != null) {
           const account = store.get(payload?.grantAccountAccessWithAuthenticationToken?.account?.id)
+          store.get(payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
           prepareViewer(store, account)
-          removeCookie('token')
-          void router.push(redirect != null ? redirect : '/')
+          void router.push(redirect != null ? redirect : '/').then(() => {
+            removeCookie('token')
+          })
         }
       },
       onError (data) {
@@ -109,38 +117,31 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       <Head>
         <title>Logging In... :: overdoll</title>
       </Head>
-      <Flex
-        mt={40}
-        h='100%'
-        align='center'
-        justify='center'
-        direction='column'
-      >
+      <Stack align='center' justify='center' h='100%' spacing={6}>
         <Spinner
-          mb={6}
-          thickness='4px'
-          w={20}
-          h={20}
+          thickness='6px'
+          w={16}
+          h={16}
           color='primary.400'
         />
-        <Heading
-          mb={1}
-          size='md'
-          color='gray.00'
-        >
-          <Trans>
-            Logging in
-          </Trans>
-        </Heading>
-        <Text
-          size='sm'
-          color='gray.100'
-        >
-          <Trans>
-            Please wait while we log you in...
-          </Trans>
-        </Text>
-      </Flex>
+        <Box>
+          <Heading
+            textAlign='center'
+            fontSize='xl'
+            color='gray.00'
+            mb={1}
+          >
+            <Trans>
+              Logging in
+            </Trans>
+          </Heading>
+          <Heading textAlign='center' color='gray.300' fontSize='sm'>
+            <Trans>
+              Please wait while we log you in...
+            </Trans>
+          </Heading>
+        </Box>
+      </Stack>
     </>
   )
 }

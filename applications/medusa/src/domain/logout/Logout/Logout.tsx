@@ -6,6 +6,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
+import { prepareViewer } from '../../join/Join/support/support'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -34,9 +35,7 @@ const Logout: PageProps<{}> = () => {
       updater: (store, payload) => {
         if (payload?.revokeAccountAccess?.revokedAccountId != null) {
           const viewer = store.get(payload?.revokeAccountAccess?.revokedAccountId)
-          if (viewer != null) {
-            viewer.invalidateRecord()
-          }
+          prepareViewer(store, viewer)
         }
         void router.push('/')
       },

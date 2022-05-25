@@ -38,7 +38,7 @@ const Mutation = graphql`
 export default function StaffGenerateRefundAmountForAccountTransactionInput ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
   const [generateRefund, isGeneratingRefund] = useMutation<StaffGenerateRefundAmountForAccountTransactionInputMutation>(Mutation)
-  const [refundAmount, setRefundAmount] = useState<StaffGenerateRefundAmountForAccountTransactionInputMutation$data['generateRefundAmountForAccountTransaction']['refundAmount'] | null>(null)
+  const [refundAmount, setRefundAmount] = useState<any>(null)
 
   const { i18n } = useLingui()
   const locale = dateFnsLocaleFromI18n(i18n)
@@ -51,7 +51,9 @@ export default function StaffGenerateRefundAmountForAccountTransactionInput ({ q
         }
       },
       onCompleted (data) {
-        setRefundAmount(data.generateRefundAmountForAccountTransaction.refundAmount)
+        if (data?.generateRefundAmountForAccountTransaction != null) {
+          setRefundAmount(data.generateRefundAmountForAccountTransaction.refundAmount)
+        }
       }
     })
   }, [])

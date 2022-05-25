@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48">
+
+
+    <g transform="matrix(3.4285714285714284,0,0,3.4285714285714284,0,0)">
+        <circle cx="4.5" cy="2" r="2" fill="#000000"></circle>
+        <circle cx="4.5" cy="7" r="2" fill="#000000"></circle>
+        <circle cx="4.5" cy="12" r="2" fill="#000000"></circle>
+        <circle cx="9.5" cy="2" r="2" fill="#000000"></circle>
+        <circle cx="9.5" cy="7" r="2" fill="#000000"></circle>
+        <circle cx="9.5" cy="12" r="2" fill="#000000"></circle>
+    </g>
+</svg>

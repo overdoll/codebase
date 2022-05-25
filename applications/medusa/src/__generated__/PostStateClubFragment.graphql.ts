@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c6945c3f1ff691792378909e99616f7>>
+ * @generated SignedSource<<9f2a3152970772bac41d667d9fb739de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PostStateClubFragment$data = {
   readonly id: string;
   readonly __typename: "Club";
+  readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment">;
   readonly " $fragmentType": "PostStateClubFragment";
 };
 export type PostStateClubFragment = PostStateClubFragment$data;
@@ -40,12 +41,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "id",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubInformationBannerFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "52fbab12cfd52a6ad0bc02693dc39620";
+(node as any).hash = "d6b50942fcc37c6ee120e4af1f9bf9eb";
 
 export default node;

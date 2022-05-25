@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c98eed13404d304b3eeb70ca68ecef0e>>
- * @relayHash 284de0f9501058588e14b14e8c720e07
+ * @generated SignedSource<<e7a5fb09a2163d5456adeb3fa4c01555>>
+ * @relayHash 27dec4029a96f0066b65f3e7f116c27a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 284de0f9501058588e14b14e8c720e07
+// @relayRequestID 27dec4029a96f0066b65f3e7f116c27a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,11 +24,16 @@ export type GrantMutationVariables = GrantMutation$variables;
 export type GrantMutation$data = {
   readonly grantAccountAccessWithAuthenticationToken: {
     readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
+    readonly revokedAuthenticationTokenId: string;
     readonly account: {
       readonly id: string;
       readonly username: string;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isArtist: boolean;
+      readonly deleting: {
+        readonly __typename: string;
+      } | null;
       readonly lock: {
         readonly __typename: string;
       } | null;
@@ -70,49 +75,74 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "revokedAuthenticationTokenId",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
+  "name": "username",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "isModerator",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v9 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
+],
+v10 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountDeleting",
+  "kind": "LinkedField",
+  "name": "deleting",
+  "plural": false,
+  "selections": (v9/*: any*/),
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__typename",
-      "storageKey": null
-    }
-  ],
+  "selections": (v9/*: any*/),
   "storageKey": null
 },
-v8 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -135,6 +165,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -143,11 +174,13 @@ return {
             "name": "account",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v8/*: any*/),
+              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -194,6 +227,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -202,11 +236,13 @@ return {
             "name": "account",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
+              (v8/*: any*/),
+              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -223,7 +259,7 @@ return {
                     "name": "urls",
                     "plural": true,
                     "selections": [
-                      (v8/*: any*/),
+                      (v12/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -242,7 +278,7 @@ return {
                     "name": "videoThumbnail",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/)
+                      (v12/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -260,7 +296,7 @@ return {
                     "name": "processed",
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -273,7 +309,7 @@ return {
     ]
   },
   "params": {
-    "id": "284de0f9501058588e14b14e8c720e07",
+    "id": "27dec4029a96f0066b65f3e7f116c27a",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -282,6 +318,6 @@ return {
 };
 })();
 
-(node as any).hash = "3fd669a64d27c9aa24c350bb0d9d9ba1";
+(node as any).hash = "c715af032cb7ca59b3079bc2a7160c9a";
 
 export default node;

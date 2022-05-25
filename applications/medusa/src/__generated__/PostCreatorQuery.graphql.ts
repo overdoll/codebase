@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8f9caefdaa775d1f5882aa3f23ba4010>>
- * @relayHash 7c694d2e4961908ec910478f9930badb
+ * @generated SignedSource<<90adabb0e859677c07420d9c34e5c306>>
+ * @relayHash 7b84a55951b17c063ee5198bb72e25a2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7c694d2e4961908ec910478f9930badb
+// @relayRequestID 7b84a55951b17c063ee5198bb72e25a2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -26,10 +26,13 @@ export type PostCreatorQuery$data = {
   readonly club: {
     readonly __typename: string;
     readonly suspension: {
-      readonly expires: any;
+      readonly __typename: string;
+    } | null;
+    readonly termination: {
+      readonly __typename: string;
     } | null;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"PostStateClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostStateClubFragment" | "ClubRestrictedFragment">;
   } | null;
 };
 export type PostCreatorQueryResponse = PostCreatorQuery$data;
@@ -72,24 +75,9 @@ v3 = [
     "variableName": "slug"
   }
 ],
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ClubSuspension",
-  "kind": "LinkedField",
-  "name": "suspension",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "expires",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
+v4 = [
+  (v2/*: any*/)
+],
 v5 = {
   "alias": null,
   "args": null,
@@ -219,12 +207,36 @@ return {
         "selections": [
           (v2/*: any*/),
           {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          (v5/*: any*/),
+          {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PostStateClubFragment"
           },
-          (v4/*: any*/),
-          (v5/*: any*/)
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubRestrictedFragment"
+          }
         ],
         "storageKey": null
       }
@@ -312,7 +324,8 @@ return {
                 "kind": "ScalarField",
                 "name": "isSupporterOnly",
                 "storageKey": null
-              }
+              },
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -401,16 +414,65 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v6/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "username",
+                    "storageKey": null
+                  },
+                  (v6/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "7c694d2e4961908ec910478f9930badb",
+    "id": "7b84a55951b17c063ee5198bb72e25a2",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",
@@ -419,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "5c2d4c2e6dde4d338e1cebbd692012d1";
+(node as any).hash = "d222b50fc1a0c6dcfce47bc9c6c26bcd";
 
 export default node;

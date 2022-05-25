@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93314c1552f14f1fad6562b82ce99ce6>>
+ * @generated SignedSource<<ad69e85423c0b445debc348b4a308f9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,9 +14,9 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 import { FragmentRefs } from "relay-runtime";
 export type StaffTransactionCardFragment$data = {
   readonly type: AccountTransactionType;
-  readonly timestamp: any;
   readonly amount: number;
   readonly currency: Currency;
+  readonly createdAt: any;
   readonly clubSupporterSubscription: {
     readonly club?: {
       readonly name: string;
@@ -47,13 +47,6 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "timestamp",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "amount",
       "storageKey": null
     },
@@ -62,6 +55,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "currency",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "createdAt",
       "storageKey": null
     },
     {
@@ -105,6 +105,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b8b06bd2fc825df1c4586349b972caa3";
+(node as any).hash = "a71d2ec6b0623d442d73e7a6ca309ece";
 
 export default node;

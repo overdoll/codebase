@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ccd2cebbb4fbc892f94a6793ab43a832>>
+ * @generated SignedSource<<d48feb4dc618e1179d8ec6e3b5ded22f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,11 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffRefundAccountTransactionFormFragment$data = {
   readonly id: string;
+  readonly currency: Currency;
   readonly " $fragmentSpreads": FragmentRefs<"StaffGenerateRefundAmountForAccountTransactionInputFragment">;
   readonly " $fragmentType": "StaffRefundAccountTransactionFormFragment";
 };
@@ -35,6 +37,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "currency",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffGenerateRefundAmountForAccountTransactionInputFragment"
@@ -44,6 +53,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "30fc2949ce45432e50b9bec5ea00e8f3";
+(node as any).hash = "446037a80804c73677918fa9950e34f2";
 
 export default node;

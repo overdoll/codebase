@@ -31,7 +31,7 @@ describe('Settings - Configure Two-Factor', () => {
   }
 
   before(() => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
     gotoSettingsPage()
 
     // Create recovery codes. Chain parents to get to the button class
@@ -44,7 +44,7 @@ describe('Settings - Configure Two-Factor', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
   })
 
   it('can generate new recovery codes', () => {

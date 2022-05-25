@@ -7,6 +7,8 @@ import { Stack } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { EmptyBoundary, EmptyTransactions } from '@//:modules/content/Placeholder'
 import TransactionSettingsCard from './TransactionSettingsCard/TransactionSettingsCard'
+import AccountInformationBanner
+  from '../../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<TransactionsSettingsQuery>
@@ -16,6 +18,7 @@ const Query = graphql`
   query TransactionsSettingsQuery {
     viewer @required(action: THROW) {
       ...TransactionsSettingsFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -55,24 +58,27 @@ export default function TransactionsSettings (props: Props): JSX.Element {
   )
 
   return (
-    <EmptyBoundary
-      fallback={<EmptyTransactions />}
-      condition={data.transactions.edges.length < 1}
-    >
-      <Stack spacing={2}>
-        {data.transactions.edges.map((item, index) => (
-          <StackTile key={index}>
-            <LargeBackgroundBox w='100%'>
-              <TransactionSettingsCard query={item.node} />
-            </LargeBackgroundBox>
-          </StackTile>
-        ))}
-        <LoadMoreStackTile
-          hasNext={hasNext}
-          onLoadNext={() => loadNext(3)}
-          isLoadingNext={isLoadingNext}
-        />
-      </Stack>
-    </EmptyBoundary>
+    <>
+      <AccountInformationBanner query={queryData.viewer} />
+      <EmptyBoundary
+        fallback={<EmptyTransactions />}
+        condition={data.transactions.edges.length < 1}
+      >
+        <Stack spacing={2}>
+          {data.transactions.edges.map((item, index) => (
+            <StackTile key={index}>
+              <LargeBackgroundBox w='100%'>
+                <TransactionSettingsCard query={item.node} />
+              </LargeBackgroundBox>
+            </StackTile>
+          ))}
+          <LoadMoreStackTile
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(3)}
+            isLoadingNext={isLoadingNext}
+          />
+        </Stack>
+      </EmptyBoundary>
+    </>
   )
 }

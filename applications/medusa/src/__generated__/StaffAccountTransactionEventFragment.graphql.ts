@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1ca3ed2a67a448fe21493b3fd1c6823>>
+ * @generated SignedSource<<72d1db09c4334eca33fec210a48248f9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type StaffAccountTransactionEventFragment$data = {
   readonly amount: number;
   readonly currency: Currency;
   readonly reason: string;
-  readonly timestamp: any;
+  readonly createdAt: any;
   readonly " $fragmentType": "StaffAccountTransactionEventFragment";
 };
 export type StaffAccountTransactionEventFragment = StaffAccountTransactionEventFragment$data;
@@ -55,7 +55,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "timestamp",
+      "name": "createdAt",
       "storageKey": null
     }
   ],
@@ -63,6 +63,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "633d4043dd67ab12f8b656c14c6f5c51";
+(node as any).hash = "5a5c1377660d6ecb55e0d509c6e59b5f";
 
 export default node;

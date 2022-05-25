@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0b57d2d412131861e17489fbd4db03e>>
+ * @generated SignedSource<<503a88e9fcf5a4f1cd4dd72125f8b1ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TotpSubmissionFragment$data = {
+  readonly id: string;
   readonly token: string;
   readonly " $fragmentType": "TotpSubmissionFragment";
 };
@@ -30,6 +31,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "token",
       "storageKey": null
     }
@@ -38,6 +46,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "4e067ae3310dbddaba61bc644fbf6fc8";
+(node as any).hash = "67d60319d46170f56b4b021ade48bbe2";
 
 export default node;

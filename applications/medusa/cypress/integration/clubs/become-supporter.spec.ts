@@ -1,6 +1,5 @@
-import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
+import { generateUsernameAndEmail } from '../../support/generate'
 import { clickOnButton, clickOnToggle } from '../../support/user_actions'
-import { gotoNextStep } from '../../support/flow_builder'
 
 const testCardDetails = {
   firstName: 'Test',
@@ -19,24 +18,17 @@ const testCardDetails = {
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Club - Become Supporter', () => {
-  const [artistUsername, artistEmail] = generateUsernameAndEmail()
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
-  const newPaymentMethodClub = generateClubName()
+  const newPaymentMethodClub = 'TestClub'
+  const newPaymentMethodClubName = 'Test Club'
 
-  const savedPaymentMethodClub = generateClubName()
-
-  before(() => {
-    cy.joinWithNewAccount(artistUsername, artistEmail)
-    cy.createClub(newPaymentMethodClub)
-    cy.createClub(savedPaymentMethodClub)
-  })
-
-  beforeEach(() => {
-    cy.joinWithNewAccount(username, email)
-  })
+  const savedPaymentMethodClub = 'SecondTestClub'
+  const savedPaymentMethodClubName = 'Second Test Club'
 
   it('become supporter with new payment method', () => {
+    cy.joinWithNewAccount(username)
+
     cy.visit(`/${newPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/Your contribution directly supports/iu).should('be.visible')
@@ -84,10 +76,12 @@ describe('Club - Become Supporter', () => {
     })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
   })
 
   it('enable two factor', () => {
+    cy.joinWithNewAccount(username)
+
     // check that they are restricted by two factor
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
@@ -95,31 +89,17 @@ describe('Club - Become Supporter', () => {
     cy.visit('/settings/billing/payment-methods')
     cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
 
-    // generate recovery codes
-    cy.visit('/settings/security/recovery-codes')
-    cy.findByRole('button', { name: /Generate Recovery Codes/ }).click()
-    cy.findByText(/Make sure you save these codes/iu).should('be.visible')
-
-    // enable totp
-    cy.visit('/settings/security/totp')
-    gotoNextStep()
-    cy.get('[aria-label="Copy"]').find('code').invoke('text').then(secret => {
-      // use a plugin to generate a one time password using the secret
-      cy.task('generateOTP', secret).then(token => {
-        gotoNextStep()
-        cy.get('form').findByPlaceholderText('123456').type(token as string)
-        cy.findByRole('button', { name: /Activate/iu }).click()
-        cy.findByText(/Two-factor setup complete/iu).should('exist')
-      })
-    })
+    cy.enableTwoFactor()
   })
 
   it('cancel subscription and update payment method', () => {
+    cy.joinWithNewAccount(username)
+
     cy.visit('/settings/billing')
     cy.findByText('My Subscriptions').should('be.visible').click()
     cy.url().should('include', '/settings/billing/subscriptions')
 
-    cy.findByText(newPaymentMethodClub).should('be.visible').click()
+    cy.findByText(newPaymentMethodClubName).should('be.visible').click()
     cy.findByText('Subscription Details').should('be.visible')
     clickOnButton(/Manage Subscription/iu)
 
@@ -133,13 +113,13 @@ describe('Club - Become Supporter', () => {
     cy.findByText('Cancel Subscription').should('be.visible').click()
     cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
     clickOnButton('Cancel Subscription')
-    cy.findByText(newPaymentMethodClub).should('be.visible')
-    cy.reload()
-    cy.findByText(newPaymentMethodClub).should('be.visible').click()
+    cy.findByText(newPaymentMethodClubName).should('be.visible')
     cy.findByText(/Benefits expire in/iu).should('be.visible')
   })
 
   it('become supporter with saved payment method', () => {
+    cy.joinWithNewAccount(username)
+
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/How will you pay/iu).should('be.visible')
@@ -169,10 +149,12 @@ describe('Club - Become Supporter', () => {
     clickOnButton('Subscribe')
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /My Subscriptions/iu }).should('be.visible')
+    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
   })
 
   it('remove saved payment method', () => {
+    cy.joinWithNewAccount(username)
+
     cy.visit('/settings/billing')
     cy.findByText('Payment Methods').should('be.visible').click()
     cy.url().should('include', '/settings/billing/payment-methods')
@@ -184,11 +166,56 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/No payment methods found/iu).should('be.visible')
   })
 
-  it('view transactions', () => {
+  it('check that you cant delete account', () => {
+    cy.joinWithNewAccount(username)
+
+    cy.visit('/settings/profile')
+    cy.findByText('Delete Account').should('be.visible').click()
+    cy.url().should('include', '/settings/profile/delete-account')
+    cy.findByText(/You cannot delete your account until you cancel your subscriptions/iu).should('be.visible')
+  })
+
+  it('refund transaction, club payments, transaction metrics', () => {
+    cy.joinWithExistingAccount('0eclipse')
+
+    // refund transaction
+    cy.visit(`/staff/account/${username}?index=2`)
+    cy.findByText('Payment Transactions').should('be.visible')
+    cy.findAllByText('PAYMENT').first().should('be.visible').click()
+    cy.findByText('CCBill Transaction ID').should('be.visible')
+    clickOnButton(/Manage Transaction/iu)
+    cy.findByText('Refund Transaction').should('be.visible').click()
+    cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
+    clickOnButton('Refund Transaction')
+    cy.findByText(/Successfully refunded/iu).should('be.visible')
+
+    cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
+
+    // see transaction metrics
+    cy.findByText('Transaction Metrics').should('be.visible')
+
+    // go to club payments
+    // TODO see refunded transaction
+    cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
+    clickOnButton('View Payments')
+    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
+    cy.findAllByText('PENDING').first().should('be.visible').click()
+    cy.findByText(/Fee Breakdown/iu).should('be.visible')
+  })
+
+  it('see refunded transaction', () => {
+    cy.joinWithNewAccount(username)
+
+    // expired subscription from refund
+    cy.visit('/settings/billing/subscriptions')
+    cy.findByText('Expired').should('be.visible').click()
+    cy.findByText(savedPaymentMethodClubName).should('be.visible')
+
+    // refunded transaction
     cy.visit('/settings/billing')
     cy.findByText('Transaction History').should('be.visible').click()
     cy.url().should('include', '/settings/billing/transactions')
-
-    cy.findByText(newPaymentMethodClub).should('be.visible')
+    cy.findByText(newPaymentMethodClubName).should('be.visible')
+    cy.findByText(/was refunded to this payment method/iu).should('be.visible')
   })
 })

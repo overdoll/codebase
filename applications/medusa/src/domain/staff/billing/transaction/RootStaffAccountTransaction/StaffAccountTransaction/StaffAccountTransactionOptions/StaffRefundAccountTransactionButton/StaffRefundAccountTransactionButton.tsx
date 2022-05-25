@@ -10,6 +10,10 @@ import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { SubscriptionIdentifier } from '@//:assets/icons'
 import StaffRefundAccountTransactionForm from './StaffRefundAccountTransaction/StaffRefundAccountTransactionForm'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import LargeAccountHeader from '../../../../../../../../common/components/LargeAccountHeader/LargeAccountHeader'
+import PaymentMethod
+  from '../../../../../../../settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/PaymentMethod/PaymentMethod'
+import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: StaffRefundAccountTransactionButtonFragment$key
@@ -17,6 +21,16 @@ interface Props {
 
 const Fragment = graphql`
   fragment StaffRefundAccountTransactionButtonFragment on AccountTransaction {
+    clubSupporterSubscription {
+      ...on IAccountClubSupporterSubscription {
+        account {
+          ...LargeAccountHeaderFragment
+        }
+      }
+    }
+    paymentMethod {
+      ...PaymentMethodFragment
+    }
     ...StaffRefundAccountTransactionFormFragment
   }
 `
@@ -45,6 +59,7 @@ export default function StaffRefundAccountTransactionButton ({ query }: Props): 
         onClose={onClose}
         motionPreset='none'
         isCentered
+        size='xl'
         preserveScrollBarGap
       >
         <ModalOverlay />
@@ -70,7 +85,15 @@ export default function StaffRefundAccountTransactionButton ({ query }: Props): 
                   </Trans>
                 </AlertDescription>
               </Alert>
-              <StaffRefundAccountTransactionForm query={data} />
+              <Stack spacing={1}>
+                {data?.clubSupporterSubscription?.account != null && (
+                  <LargeAccountHeader query={data?.clubSupporterSubscription?.account} />
+                )}
+                <SmallBackgroundBox bg='gray.900'>
+                  <PaymentMethod query={data.paymentMethod} />
+                </SmallBackgroundBox>
+              </Stack>
+              <StaffRefundAccountTransactionForm onClose={onClose} query={data} />
             </Stack>
           </ModalBody>
         </ModalContent>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9eb3ddaf08b12465807930e3b7efb5c6>>
- * @relayHash e63e26ab8a09d879632b35d04dcb7393
+ * @generated SignedSource<<6b0df248abe0214d0d15f755bd0f09d4>>
+ * @relayHash 81c6ab8588ecbe3cb9431016dc9558ef
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e63e26ab8a09d879632b35d04dcb7393
+// @relayRequestID 81c6ab8588ecbe3cb9431016dc9558ef
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -26,6 +26,7 @@ export type ClubSettingsQuery$data = {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
     readonly viewerIsOwner: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment">;
   } | null;
 };
 export type ClubSettingsQueryResponse = ClubSettingsQuery$data;
@@ -83,6 +84,13 @@ v6 = {
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -118,7 +126,12 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v5/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubInformationBannerFragment"
+          }
         ],
         "storageKey": null
       }
@@ -193,14 +206,64 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "username",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "e63e26ab8a09d879632b35d04dcb7393",
+    "id": "81c6ab8588ecbe3cb9431016dc9558ef",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",
@@ -209,6 +272,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6da08103b23dae1aa779ffdee53e444";
+(node as any).hash = "ac8a42c29577341c07385d7e704c656f";
 
 export default node;

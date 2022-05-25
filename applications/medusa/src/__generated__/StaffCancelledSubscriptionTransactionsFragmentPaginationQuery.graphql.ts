@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a4978556bb9871cfc6a0f91a56e302ae>>
- * @relayHash 727aafbc26c4e205f4e89eb605577479
+ * @generated SignedSource<<6ac49780d8cf063f975b5ae5a7191435>>
+ * @relayHash 8b3cc97d38f766951fd7bddf8d649e82
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 727aafbc26c4e205f4e89eb605577479
+// @relayRequestID 8b3cc97d38f766951fd7bddf8d649e82
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -169,13 +169,6 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "timestamp",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
                             "name": "amount",
                             "storageKey": null
                           },
@@ -184,6 +177,13 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "currency",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "createdAt",
                             "storageKey": null
                           },
                           {
@@ -295,7 +295,7 @@ return {
     ]
   },
   "params": {
-    "id": "727aafbc26c4e205f4e89eb605577479",
+    "id": "8b3cc97d38f766951fd7bddf8d649e82",
     "metadata": {},
     "name": "StaffCancelledSubscriptionTransactionsFragmentPaginationQuery",
     "operationKind": "query",

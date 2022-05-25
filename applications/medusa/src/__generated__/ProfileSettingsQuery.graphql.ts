@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<05feef97164470fe884cefca0a95942c>>
- * @relayHash 6497afcba0337984ed167a337f0655ac
+ * @generated SignedSource<<6a661b3d77d1c14c2d0b4ff524ed0813>>
+ * @relayHash ec3dd342fb43ea066bd28e7a2ebd2ca3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6497afcba0337984ed167a337f0655ac
+// @relayRequestID ec3dd342fb43ea066bd28e7a2ebd2ca3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -27,7 +27,7 @@ export type ProfileSettingsQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LockedAccountBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   };
 };
 export type ProfileSettingsQueryResponse = ProfileSettingsQuery$data;
@@ -63,6 +63,13 @@ v3 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -121,7 +128,7 @@ return {
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "LockedAccountBannerFragment"
+              "name": "AccountInformationBannerFragment"
             }
           ],
           "storageKey": null
@@ -192,18 +199,31 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              },
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v4/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
                 "storageKey": null
               }
             ],
@@ -216,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "id": "6497afcba0337984ed167a337f0655ac",
+    "id": "ec3dd342fb43ea066bd28e7a2ebd2ca3",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",
@@ -225,6 +245,6 @@ return {
 };
 })();
 
-(node as any).hash = "19145bc211e3aa8c545979575b1c5e2f";
+(node as any).hash = "1836cefd1f1d628c41de121f6a0fdae0";
 
 export default node;

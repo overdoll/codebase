@@ -74,7 +74,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
         {characters.map((item, index) => (
           <GridTile key={index}>
             <LinkTile href={{
-              pathname: '/staff/character/[seriesSlug]/[slug]',
+              pathname: '/staff/entity/character/[seriesSlug]/[slug]',
               query: {
                 slug: item.slug,
                 seriesSlug: item.series.slug

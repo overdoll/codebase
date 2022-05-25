@@ -7,9 +7,9 @@ import PostsInfiniteScroll
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import PostSearchButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
-import NewAccountModal from '../NewAccountModal/NewAccountModal'
-import LockedAccountBanner from '../../../../common/components/LockedAccount/LockedAccountBanner/LockedAccountBanner'
 import { Trans } from '@lingui/macro'
+import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -20,8 +20,8 @@ const Query = graphql`
     ...HomeFragment
     viewer {
       ...PostsInfiniteScrollViewerFragment
-      ...NewAccountModalFragment
-      ...LockedAccountBannerFragment
+      ...CurationProfileAlertFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -61,7 +61,8 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <>
-      <LockedAccountBanner query={queryData?.viewer} />
+      <AccountInformationBanner query={queryData?.viewer} />
+      <CurationProfileAlert query={queryData?.viewer} />
       <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
@@ -81,7 +82,6 @@ export default function Home (props: Props): JSX.Element {
           />
         </GlobalVideoManagerProvider>
       </Stack>
-      <NewAccountModal query={queryData.viewer} />
     </>
   )
 }

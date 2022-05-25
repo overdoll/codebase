@@ -24,6 +24,10 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
 
   const { i18n } = useLingui()
 
+  if (stepsHeaders == null) {
+    return <></>
+  }
+
   const icon = stepsHeaders[currentStep].icon
   const title = stepsHeaders[currentStep].title
 

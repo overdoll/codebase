@@ -1,10 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { StaffClubStatusFragment$key } from '@//:artifacts/StaffClubStatusFragment.graphql'
-import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import useCountdown from '@//:modules/hooks/useCountdown'
+import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import StaffClubUnSuspendButton from './StaffClubUnSuspendButton/StaffClubUnSuspendButton'
 import SuspendClubForm from './SuspendClubForm/SuspendClubForm'
 
@@ -17,6 +17,11 @@ const Fragment = graphql`
     suspension {
       expires
     }
+    termination {
+      account {
+        username
+      }
+    }
     ...SuspendClubFormFragment
     ...StaffClubUnSuspendButtonFragment
   }
@@ -25,56 +30,102 @@ const Fragment = graphql`
 export default function StaffClubStatus ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const isSuspended = data.suspension != null
-
-  //
-
   const {
     hasPassed,
     remaining
   } = useCountdown(data?.suspension?.expires)
 
+  const isSuspended = data.suspension != null
+
+  const isTerminated = data.termination != null
+
+  const isDisabled = data.termination != null
+
+  const DetermineHeader = (): JSX.Element => {
+    if (isTerminated) {
+      return (
+        <LargeBackgroundBox>
+          <Heading fontSize='2xl' color='orange.400'>
+            <Trans>
+              Terminated
+            </Trans>
+          </Heading>
+          <Text color='gray.200' fontSize='lg'>
+            <Trans>
+              The club was terminated by {data.termination.account.username}. You won't be able to find the club or its
+              posts on the platform.
+            </Trans>
+          </Text>
+        </LargeBackgroundBox>
+      )
+    }
+
+    if (isSuspended) {
+      return (
+        <LargeBackgroundBox>
+          <Heading fontSize='2xl' color='purple.400'>
+            <Trans>
+              Suspended
+            </Trans>
+          </Heading>
+          {hasPassed
+            ? (
+              <Text color='gray.200' fontSize='lg'>
+                <Trans>
+                  The club is suspended but can be unsuspended by owner
+                </Trans>
+              </Text>
+              )
+            : (
+              <Text color='gray.200' fontSize='lg'>
+                <Trans>
+                  The club is suspended until {remaining}
+                </Trans>
+              </Text>
+              )}
+          <Text color='gray.200' fontSize='lg'>
+            <Trans>
+              The owner cannot post or collect new subscriptions, but the page and content are still accessible.
+            </Trans>
+          </Text>
+        </LargeBackgroundBox>
+      )
+    }
+
+    return (
+      <LargeBackgroundBox>
+        <Heading fontSize='2xl' color='green.400'>
+          <Trans>
+            Active
+          </Trans>
+        </Heading>
+        <Text color='gray.200' fontSize='lg'>
+          <Trans>
+            The club is active and all features are accessible.
+          </Trans>
+        </Text>
+      </LargeBackgroundBox>
+    )
+  }
+
   return (
     <Stack spacing={2}>
-      <SmallBackgroundBox>
-        <Flex w='100%' h='100%' align='center' justify='center'>
-          <Heading color={isSuspended ? 'orange.400' : 'green.400'} fontSize='3xl'>
-            {isSuspended
-              ? (
-                <Trans>
-                  Suspended
-                </Trans>)
-              : (
-                <Trans>
-                  Active
-                </Trans>)}
-          </Heading>
-        </Flex>
-      </SmallBackgroundBox>
-      {isSuspended
+      <DetermineHeader />
+      {(isSuspended && !isTerminated)
         ? (
-          <>
-            <SmallBackgroundBox h={10}>
-              <Flex w='100%' h='100%' align='center' justify='center'>
-                <Text color='gray.00' fontSize='lg'>
-                  {hasPassed ? <Trans>Can be unsuspended</Trans> : remaining}
-                </Text>
-              </Flex>
-            </SmallBackgroundBox>
-            <Collapse>
-              <CollapseButton>
-                <Trans>
-                  Remove Suspension
-                </Trans>
-              </CollapseButton>
-              <CollapseBody>
-                <StaffClubUnSuspendButton query={data} />
-              </CollapseBody>
-            </Collapse>
-          </>)
+          <Collapse>
+            <CollapseButton isDisabled={isDisabled}>
+              <Trans>
+                Remove Suspension
+              </Trans>
+            </CollapseButton>
+            <CollapseBody>
+              <StaffClubUnSuspendButton query={data} />
+            </CollapseBody>
+          </Collapse>)
         : (
           <Collapse>
-            <CollapseButton>
+            <CollapseButton isDisabled={isDisabled}>
               <Trans>
                 Suspend Club
               </Trans>

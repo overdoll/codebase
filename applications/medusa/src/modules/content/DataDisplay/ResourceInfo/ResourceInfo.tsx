@@ -30,7 +30,7 @@ export default function ResourceInfo ({
 
   if (data?.resource == null || !data?.resource?.processed) {
     return (
-      <ResourceItem seed={data.id} h='100%' query={data?.resource} />
+      <ResourceItem seed={data?.id} h='100%' query={data?.resource} />
     )
   }
 
