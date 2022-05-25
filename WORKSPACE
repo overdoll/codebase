@@ -231,4 +231,5 @@ container_pull(
     registry = "docker.io",
     repository = "jrottenberg/ffmpeg",
     tag = "3.4.9-ubuntu1804",
+    digest = "sha256:f6dd19ab7f63498d2fcde3b1ea1be4515d8ca8374f8f9829ca75d3f114cae780",
 )
