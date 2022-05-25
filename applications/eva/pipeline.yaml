@@ -35,7 +35,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/eva/docker-compose.ci.yaml
+        - ./applications/eva/docker-compose.e2e.yaml
     network_dependencies:
       - host: eva
         port: 8000

@@ -314,7 +314,7 @@ def execute_push_images_commands(configs):
 def execute_push_images(configs):
     tmpdir = tempfile.mkdtemp()
     try:
-        push_images(configs.get("push_image", {}).get("commands", []), tmpdir)
+        push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
     finally:
         if tmpdir:
             shutil.rmtree(tmpdir)
