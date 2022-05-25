@@ -4,10 +4,10 @@ import { generateUsernameAndEmail } from '../../../support/generate'
 const chance = new ChanceJS()
 
 describe('Settings - Change Username', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
   })
 
   it('should be able to change username', () => {
@@ -30,5 +30,10 @@ describe('Settings - Change Username', () => {
 
     cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
     cy.waitUntil(() => cy.findAllByText(new RegExp(newUsername, 'iu')).should('exist'))
+  })
+
+  it('go to the invite only page as logged in', () => {
+    cy.visit('/clubs/invite-only')
+    cy.findByText(/overdoll is invite-only/iu)
   })
 })

@@ -1,15 +1,28 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
+import { generateClubName, generateUsernameAndEmail } from '../../../support/generate'
 import { clickOnButton, clickOnToggle } from '../../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Settings - Configure Payouts', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
+  const clubName = generateClubName()
+
+  it('create account', () => {
+    cy.joinWithNewAccount(username)
+  })
+
+  it('assign artist role', () => {
+    cy.joinWithExistingAccount('0eclipse')
+    cy.assignArtistRole(username)
+  })
 
   it('fill out payout details', () => {
-    cy.joinWithNewAccount(username, email)
-    cy.visit('/settings/payouts')
+    cy.joinWithNewAccount(username)
 
+    cy.visit('/settings/payouts')
+    cy.findByText(/You must set up/iu).should('be.visible')
+    cy.enableTwoFactor()
+    cy.visit('/settings/payouts')
     // payout details
     cy.findByText('Enter your payout details').should('not.be.disabled').click()
     cy.url().should('include', '/settings/payouts/details')
@@ -46,7 +59,13 @@ describe('Settings - Configure Payouts', () => {
     clickOnButton('Back to Payouts Settings')
     cy.findByText('Your Payout Method').should('be.visible')
 
+    // payouts marked as configured in club home
+    cy.createClub(clubName)
+    cy.visit(`/club/${clubName}/home`)
+    cy.findByText('Balance').should('be.visible')
+
     // remove payout method
+    cy.visit('/settings/payouts')
     cy.findByText('Update your payout method').should('not.be.disabled').click()
     clickOnButton('Delete Payout Method')
     cy.findByText('Read Agreement').should('be.visible')

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fbd8a6c19fcb90f5341546170e87681d>>
- * @relayHash 474b19f5b546e5f6d4dec13719bce65a
+ * @generated SignedSource<<e40f12ce5189c754ed273f3c10975445>>
+ * @relayHash f17dd06416cc51579217ccbe1dd2701b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 474b19f5b546e5f6d4dec13719bce65a
+// @relayRequestID f17dd06416cc51579217ccbe1dd2701b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,6 +20,7 @@ export type ProfileQueryVariables = ProfileQuery$variables;
 export type ProfileQuery$data = {
   readonly account: {
     readonly id: string;
+    readonly isDeleted: boolean;
     readonly username: string;
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
@@ -59,10 +60,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "isDeleted",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -86,6 +94,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -130,6 +139,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -146,7 +156,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -165,7 +175,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -186,7 +196,7 @@ return {
     ]
   },
   "params": {
-    "id": "474b19f5b546e5f6d4dec13719bce65a",
+    "id": "f17dd06416cc51579217ccbe1dd2701b",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",
@@ -195,7 +205,7 @@ return {
 };
 })();
 
-(node as any).hash = "d4f800b025942ec0f9425cce1afb303e";
+(node as any).hash = "eac112c4e659ff27a1324ed25dd8d48b";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

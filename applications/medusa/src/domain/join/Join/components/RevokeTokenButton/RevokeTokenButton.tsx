@@ -1,6 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useRef } from 'react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,18 +8,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Text
+  CloseButtonProps,
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
-import { SafetyExitDoorLeft } from '@//:assets/icons/navigation'
 import type { RevokeTokenButtonFragment$key } from '@//:artifacts/RevokeTokenButtonFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCookies } from 'react-cookie'
 
-interface Props {
+interface Props extends CloseButtonProps {
   queryRef: RevokeTokenButtonFragment$key
 }
 
@@ -39,7 +38,8 @@ const Mutation = graphql`
 `
 
 export default function RevokeTokenButton ({
-  queryRef
+  queryRef,
+  ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, queryRef)
 
@@ -49,7 +49,7 @@ export default function RevokeTokenButton ({
     onOpen,
     onClose,
     isOpen
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const [revokeToken, isRevokingToken] = useMutation<RevokeTokenButtonMutation>(
     Mutation
@@ -66,22 +66,27 @@ export default function RevokeTokenButton ({
       },
       onCompleted () {
         onClose()
-        removeCookie('token')
+      },
+      updater: (store, payload) => {
+        if (payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId != null) {
+          store.get(payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
+          removeCookie('token')
+        }
       }
     })
   }
 
   return (
     <>
-      <Button
-        leftIcon={<Icon w={4} h={4} icon={SafetyExitDoorLeft} fill='inherit' />}
+      <CloseButton
         size='lg'
         onClick={onOpen}
+        {...rest}
       >
         <Trans>
           Cancel
         </Trans>
-      </Button>
+      </CloseButton>
       <AlertDialog
         preserveScrollBarGap
         isCentered
@@ -93,7 +98,7 @@ export default function RevokeTokenButton ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <Trans>
-              Confirm Cancel Join
+              Confirm Join Cancellation
             </Trans>
           </AlertDialogHeader>
           <AlertDialogCloseButton
@@ -103,9 +108,9 @@ export default function RevokeTokenButton ({
           <AlertDialogBody>
             <Text>
               <Trans>
-                If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the
-                email
-                will be invalidated. Are you sure?
+                If you cancel the joining flow, you'll be brought back to the initial login page and the link sent in
+                the
+                email will be invalidated. Are you sure?
               </Trans>
             </Text>
           </AlertDialogBody>

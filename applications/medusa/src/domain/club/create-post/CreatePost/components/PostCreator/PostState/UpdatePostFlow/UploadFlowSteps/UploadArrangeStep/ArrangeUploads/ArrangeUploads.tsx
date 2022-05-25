@@ -1,13 +1,14 @@
-import { Flex, Stack, Text } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import DraggableContent from './DraggableContent/DraggableContent'
 import { useContext, useEffect, useState } from 'react'
-import { Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../../../../context'
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import ArrangeButton from './ArrangeButton/ArrangeButton'
+import { useToast } from '@//:modules/content/ThemeComponents'
+import { t } from '@lingui/macro'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: ArrangeUploadsFragment$key
@@ -27,6 +28,7 @@ const ArrangeUploadsFragmentGQL = graphql`
       }
       ...DraggableContentFragment
     }
+    ...ArrangeButtonFragment
   }
 `
 
@@ -70,6 +72,8 @@ const SupporterUploadsMutationGQL = graphql`
   }
 `
 
+// TODO find an alternative to the draggable library and replace as it doesn't support react 18
+
 const reorder = (
   list: ArrangeUploadsFragment['content'],
   startIndex: number,
@@ -98,7 +102,7 @@ export default function ArrangeUploads ({
 
   const [displayData, setDisplayData] = useState(data.content)
 
-  const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
+  const notify = useToast()
 
   const onRemoveContent = (id: string): void => {
     removeContent({
@@ -111,8 +115,11 @@ export default function ArrangeUploads ({
       onCompleted () {
         uppy.removeFile(id)
       },
-      onError (data) {
-        console.log(data)
+      onError () {
+        notify({
+          status: 'error',
+          title: t`Error removing content ${id}`
+        })
       }
     })
   }
@@ -126,8 +133,11 @@ export default function ArrangeUploads ({
           isSupporterOnly: isSupporterOnly
         }
       },
-      onError (data) {
-        console.log(data)
+      onError () {
+        notify({
+          status: 'error',
+          title: t`Error marking content ${id} as supporter only`
+        })
       }
     })
   }
@@ -167,50 +177,39 @@ export default function ArrangeUploads ({
     })
   }, [displayData])
 
-  useEffect(() => {
-    setDisplayData(data.content)
-  }, [data.content])
+  useUpdateEffect(() => {
+    if (state.isRearranging === false) {
+      setDisplayData(data.content)
+    }
+  }, [data.content, state.isRearranging])
 
   if (displayData.length < 1) {
     return (
-      <LargeBackgroundBox display='flex' h={100}>
-        <Flex w='100%' align='center' justify='center'>
-          <Text textAlign='center'>
-            <Trans>
-              You'll need to upload at least one file to continue
-            </Trans>
-          </Text>
-        </Flex>
-      </LargeBackgroundBox>
+      <></>
     )
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='upload'>
-        {(provided, snapshot) => (
-          <Stack
-            spacing={2}
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {displayData.map((item, index) => (
-              <DraggableContent
-                dragDisabled={dragDisabled || displayData.length < 2 || isRemovingContent || isSupportingContent}
-                isSupportingContent={isSupportingContent}
-                removeDisabled={displayData.length < 2}
-                key={index}
-                index={index}
-                query={item}
-                onRemove={onRemoveContent}
-                onSupport={onSupporterContent}
-                h={getHeight()}
-              />
-            ))}
-            {provided.placeholder}
-          </Stack>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <Stack spacing={2}>
+      <ArrangeButton isDisabled={isRemovingContent || isSupportingContent} query={data} />
+      <Stack
+        spacing={2}
+      >
+        {displayData.map((item, index) => (
+          <DraggableContent
+            onDragEnd={onDragEnd}
+            dragDisabled={!(state.isRearranging as boolean)}
+            isSupportingContent={isSupportingContent}
+            key={index}
+            index={index}
+            total={data.content.length}
+            query={item}
+            onRemove={onRemoveContent}
+            onSupport={onSupporterContent}
+            h={getHeight()}
+          />
+        ))}
+      </Stack>
+    </Stack>
   )
 }

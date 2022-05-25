@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1c600b6bd341e103d4be6c62e6226002>>
- * @relayHash 1be79f42a9e888b019fb7a4b18deda3e
+ * @generated SignedSource<<4fefcd27e938e02da6f0015b154f595f>>
+ * @relayHash ce7bd0499648db7be6978ba1b6e3e1cb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1be79f42a9e888b019fb7a4b18deda3e
+// @relayRequestID ce7bd0499648db7be6978ba1b6e3e1cb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,8 @@ export type PayoutsSettingsQuery$variables = {};
 export type PayoutsSettingsQueryVariables = PayoutsSettingsQuery$variables;
 export type PayoutsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment">;
+    readonly multiFactorTotpConfigured: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment" | "AccountInformationBannerFragment">;
   };
 };
 export type PayoutsSettingsQueryResponse = PayoutsSettingsQuery$data;
@@ -31,7 +32,21 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "multiFactorTotpConfigured",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -51,6 +66,7 @@ return {
           "name": "viewer",
           "plural": false,
           "selections": [
+            (v0/*: any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
@@ -60,6 +76,11 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "PayoutsMethodSettingsFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "AccountInformationBannerFragment"
             }
           ],
           "storageKey": null
@@ -85,6 +106,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -93,7 +115,7 @@ return {
             "name": "details",
             "plural": false,
             "selections": [
-              (v0/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -130,7 +152,7 @@ return {
                     "name": "emoji",
                     "storageKey": null
                   },
-                  (v0/*: any*/)
+                  (v1/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -145,13 +167,7 @@ return {
             "name": "payoutMethod",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              },
+              (v2/*: any*/),
               {
                 "kind": "TypeDiscriminator",
                 "abstractKey": "__isAccountPayoutMethod"
@@ -159,7 +175,7 @@ return {
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v0/*: any*/),
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -174,14 +190,52 @@ return {
             ],
             "storageKey": null
           },
-          (v0/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "1be79f42a9e888b019fb7a4b18deda3e",
+    "id": "ce7bd0499648db7be6978ba1b6e3e1cb",
     "metadata": {},
     "name": "PayoutsSettingsQuery",
     "operationKind": "query",
@@ -190,7 +244,7 @@ return {
 };
 })();
 
-(node as any).hash = "bfdbd02cd10596d218b9971fad8d3591";
+(node as any).hash = "e8de6838059d08730e403e225726a73e";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

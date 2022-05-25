@@ -1,3 +1,3 @@
-import RootStaffSearchCategories from '../../../../domain/staff/entity/category/search'
+import RootStaffCreateCategory from '../../../../domain/staff/entity/category/create'
 
-export default RootStaffSearchCategories
+export default RootStaffCreateCategory

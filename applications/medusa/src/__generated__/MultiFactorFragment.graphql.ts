@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76121cb2773526774560612c6b69b73d>>
+ * @generated SignedSource<<760294efd5304f4aedd2119269971e9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type MultiFactorFragment$data = {
       readonly totp: boolean;
     } | null;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment" | "RevokeTokenButtonFragment">;
   readonly " $fragmentType": "MultiFactorFragment";
 };
 export type MultiFactorFragment = MultiFactorFragment$data;
@@ -69,12 +69,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RecoveryCodeFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RevokeTokenButtonFragment"
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 
-(node as any).hash = "9044bb2fe2f16fafb720f468de2c0c71";
+(node as any).hash = "750449aa1b50bf138e2530596559ef13";
 
 export default node;

@@ -1,9 +1,8 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { StaffClubQuery } from '@//:artifacts/StaffClubQuery.graphql'
-import { Box, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import StaffClubStatus from './StaffClubStatus/StaffClubStatus'
-import StaffClubInfractions from './StaffClubInfractions/StaffClubInfractions'
 import LargeClubHeader from '../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import { Trans } from '@lingui/macro'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
@@ -11,6 +10,9 @@ import ClubPageButton from '../../../../[slug]/root/RootPublicClub/PublicClub/Cl
 import StaffClubOwner from './StaffClubOwner/StaffClubOwner'
 import StaffClubPayouts from './StaffClubPayouts/StaffClubPayouts'
 import StaffClubPayments from './StaffClubPayments/StaffClubPayments'
+import StaffClubSuspensions from './StaffClubSuspensions/StaffClubSuspensions'
+import StaffClubTermination from './StaffClubTermination/StaffClubTermination'
+import StaffClubSupporterSubscriptions from './StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions'
 
 interface Props {
   query: PreloadedQuery<StaffClubQuery>
@@ -27,6 +29,9 @@ const Query = graphql`
       ...StaffClubOwnerFragment
       ...StaffClubPayoutsFragment
       ...StaffClubPaymentsFragment
+      ...StaffClubSuspensionsFragment
+      ...StaffClubTerminationFragment
+      ...StaffClubSupporterSubscriptionsFragment
     }
   }
 `
@@ -66,6 +71,11 @@ export default function StaffClub ({ query }: Props): JSX.Element {
             </Tab>
             <Tab>
               <Trans>
+                Subscriptions
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
                 Payouts
               </Trans>
             </Tab>
@@ -74,27 +84,39 @@ export default function StaffClub ({ query }: Props): JSX.Element {
                 Payments
               </Trans>
             </Tab>
+            <Tab>
+              <Trans>
+                Suspensions
+              </Trans>
+            </Tab>
+            <Tab>
+              <Trans>
+                Termination
+              </Trans>
+            </Tab>
           </Wrap>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Stack spacing={8}>
-              <Box>
-                <StaffClubStatus query={queryData.club} />
-              </Box>
-              <Box>
-                <StaffClubInfractions query={queryData.club} />
-              </Box>
-            </Stack>
+            <StaffClubStatus query={queryData.club} />
           </TabPanel>
           <TabPanel>
             <StaffClubOwner query={queryData.club} />
+          </TabPanel>
+          <TabPanel>
+            <StaffClubSupporterSubscriptions query={queryData.club} />
           </TabPanel>
           <TabPanel>
             <StaffClubPayouts query={queryData.club} />
           </TabPanel>
           <TabPanel>
             <StaffClubPayments query={queryData.club} />
+          </TabPanel>
+          <TabPanel>
+            <StaffClubSuspensions query={queryData.club} />
+          </TabPanel>
+          <TabPanel>
+            <StaffClubTermination query={queryData.club} />
           </TabPanel>
         </TabPanels>
       </Tabs>

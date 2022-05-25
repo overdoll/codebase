@@ -26,7 +26,7 @@ const Fragment = graphql`
   fragment StaffPayoutEventsFragment on ClubPayout {
     events {
       error
-      timestamp
+      createdAt
     }
   }
 `
@@ -70,7 +70,7 @@ export default function StaffPayoutEvents ({ query }: Props): JSX.Element {
                   {item.error}
                 </TableBodyColumnText>
                 <TableBodyColumnText column={1}>
-                  {format(new Date(item.timestamp as Date), dateFormatWithTime, { locale })}
+                  {format(new Date(item.createdAt as Date), dateFormatWithTime, { locale })}
                 </TableBodyColumnText>
               </TableBodyRow>
             </TableBodyRowBackground>

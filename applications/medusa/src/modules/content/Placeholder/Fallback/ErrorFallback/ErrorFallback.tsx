@@ -31,7 +31,7 @@ export default function ErrorFallback ({
       <Flex w='100%' align='center' justify='space-between'>
         <Flex align='center'>
           <AlertIcon />
-          <AlertDescription noOfLines={1}>
+          <AlertDescription>
             <Trans>
               Error {error?.message}
             </Trans>

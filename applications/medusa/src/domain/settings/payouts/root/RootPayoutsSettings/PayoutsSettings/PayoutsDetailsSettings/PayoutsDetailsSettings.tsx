@@ -16,6 +16,7 @@ const Fragment = graphql`
       id
       ...AccountDetailsFragment
     }
+    multiFactorTotpConfigured
   }
 `
 
@@ -24,7 +25,7 @@ export default function PayoutsDetailsSettings ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <PagePanelWrap href='/settings/payouts/details'>
+      <PagePanelWrap isDisabled={!data.multiFactorTotpConfigured} href='/settings/payouts/details'>
         <PagePanelIcon icon={PayoutDetails} colorScheme='purple' />
         <PagePanelText
           title={

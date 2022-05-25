@@ -1,3 +1,3 @@
-import RootStaffSearchAudiences from '../../../../domain/staff/entity/audience/search'
+import RootStaffSearchCancellationReasons from '../../../../domain/staff/entity/cancellation-reason/search'
 
-export default RootStaffSearchAudiences
+export default RootStaffSearchCancellationReasons

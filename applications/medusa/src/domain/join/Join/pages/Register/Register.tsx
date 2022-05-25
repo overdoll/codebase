@@ -1,10 +1,8 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Link, Stack, Text } from '@chakra-ui/react'
+import { Flex, Link, Stack, Text } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import RegisterForm from './RegisterForm/RegisterForm'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '@//:assets/icons/navigation'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { t, Trans } from '@lingui/macro'
@@ -17,6 +15,8 @@ import Head from 'next/head'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
 import { prepareViewer } from '../../support/support'
+import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
+import { OverdollLogo } from '@//:assets/logos'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -31,9 +31,7 @@ const RegisterMutationGQL = graphql`
         username
         isModerator
         isStaff
-        lock {
-          __typename
-        }
+        isArtist
         avatar {
           ...ResourceIconFragment
           ...ResourceItemFragment
@@ -45,7 +43,9 @@ const RegisterMutationGQL = graphql`
 
 const RegisterFragment = graphql`
   fragment RegisterFragment on AuthenticationToken {
+    id
     token
+    ...RevokeTokenButtonFragment
   }
 `
 
@@ -77,6 +77,11 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         }
       },
       updater: (store, payload) => {
+        if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
+          store.get(data.id)?.invalidateRecord()
+          removeCookie('token')
+        }
+
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
           notify({
             status: 'error',
@@ -103,7 +108,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an issue with registration.`,
+          title: t`There was an issue with registration`,
           isClosable: true
         })
       }
@@ -115,56 +120,50 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       <Head>
         <title>Create Your Account :: overdoll</title>
       </Head>
-      <PageWrapper>
-        <Stack spacing={8}>
+      <Flex w='100%' justify='center' align='center' h='100%' position='relative'>
+        <Flex top={0} position='absolute' w='100%' justify='flex-end'>
+          <RevokeTokenButton queryRef={data} />
+        </Flex>
+        <Stack spacing={6}>
           <Icon
-            icon={BadgeCircle}
-            w={100}
-            h={100}
+            icon={OverdollLogo}
+            w={32}
+            h={32}
             fill='green.500'
-            ml='auto'
-            mr='auto'
           />
-          <Stack spacing={2}>
-            <RegisterForm
-              onSubmit={onSubmit}
-              loading={isInFlight}
-            />
-            <Text color='gray.200' fontSize='md'>
-              <Trans>
-                Creating an account on overdoll means you agree to follow our{' '}
-                <Link
-                  color='gray.100'
-                  fontSize='md'
-                  isExternal
-                  href={COMMUNITY_GUIDELINES}
-                >Community Guidelines
-                </Link>{' '}
-                and understand our{' '}
-                <Link
-                  color='gray.100'
-                  fontSize='md'
-                  isExternal
-                  href={TERMS_OF_SERVICE}
-                >Terms of Service
-                </Link>{' '} and {' '}
-                <Link
-                  color='gray.100'
-                  fontSize='md'
-                  isExternal
-                  href={PRIVACY_POLICY}
-                >Privacy Policy
-                </Link>.
-              </Trans>
-            </Text>
-            <Text color='gray.200' fontSize='md'>
-              <Trans>
-                You must also be at least 18 years of age.
-              </Trans>
-            </Text>
-          </Stack>
+          <RegisterForm
+            onSubmit={onSubmit}
+            loading={isInFlight}
+          />
+          <Text color='gray.200' fontSize='sm'>
+            <Trans>
+              Creating an account on overdoll means you agree to follow our{' '}
+              <Link
+                color='gray.100'
+                fontSize='inherit'
+                isExternal
+                href={COMMUNITY_GUIDELINES}
+              >Community Guidelines
+              </Link>{' '}
+              and understand both our{' '}
+              <Link
+                color='gray.100'
+                fontSize='inherit'
+                isExternal
+                href={TERMS_OF_SERVICE}
+              >Terms of Service
+              </Link>{' '} and {' '}
+              <Link
+                color='gray.100'
+                fontSize='inherit'
+                isExternal
+                href={PRIVACY_POLICY}
+              >Privacy Policy
+              </Link>, which also stipulate you must be at least 18 years of age to register.
+            </Trans>
+          </Text>
         </Stack>
-      </PageWrapper>
+      </Flex>
     </>
   )
 }

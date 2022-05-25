@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8149619a8069f795f072d60057cac6e9>>
- * @relayHash 17094e716078ffe9c0080fc28f798bf2
+ * @generated SignedSource<<9c55d673c56a8c8f6dced01452cbb2b9>>
+ * @relayHash cefdfd48a21816b698443cbe300adf57
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 17094e716078ffe9c0080fc28f798bf2
+// @relayRequestID cefdfd48a21816b698443cbe300adf57
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -30,9 +30,7 @@ export type RegisterMutation$data = {
       readonly username: string;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
-      readonly lock: {
-        readonly __typename: string;
-      } | null;
+      readonly isArtist: boolean;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
@@ -98,19 +96,8 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
-  "concreteType": "AccountLock",
-  "kind": "LinkedField",
-  "name": "lock",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__typename",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "isArtist",
   "storageKey": null
 },
 v8 = {
@@ -274,7 +261,7 @@ return {
     ]
   },
   "params": {
-    "id": "17094e716078ffe9c0080fc28f798bf2",
+    "id": "cefdfd48a21816b698443cbe300adf57",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -283,6 +270,6 @@ return {
 };
 })();
 
-(node as any).hash = "748c30ee0cc6007bfca209a33d48068c";
+(node as any).hash = "54617935d6462b60ac8746700a4ebf8f";
 
 export default node;

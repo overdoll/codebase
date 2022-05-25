@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b6d756f0d688b193fa6eeab9677ecd9>>
+ * @generated SignedSource<<40ff1fadc6aeb4b4ed6a7e8b925c32de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,11 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffClubStatusFragment$data = {
   readonly suspension: {
     readonly expires: any;
+  } | null;
+  readonly termination: {
+    readonly account: {
+      readonly username: string;
+    };
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment" | "StaffClubUnSuspendButtonFragment">;
   readonly " $fragmentType": "StaffClubStatusFragment";
@@ -48,6 +53,35 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "ClubTermination",
+      "kind": "LinkedField",
+      "name": "termination",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Account",
+          "kind": "LinkedField",
+          "name": "account",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "username",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "SuspendClubFormFragment"
@@ -62,6 +96,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6b5d23916dbb71806ed50fd67264985c";
+(node as any).hash = "b52c816524c451a9547a1bcf5a301bf8";
 
 export default node;

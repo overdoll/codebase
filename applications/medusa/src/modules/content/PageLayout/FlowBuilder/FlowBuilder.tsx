@@ -7,7 +7,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 interface BuilderProps {
   stepsArray: string[]
   stepsComponents: StepProps
-  stepsHeaders: HeaderProps
+  stepsHeaders?: HeaderProps
   colorScheme?: string
   defaultStep?: string
 }
@@ -96,13 +96,15 @@ export default function FlowBuilder ({
     calculateCurrentStep(stepsArray[currentIndex - 1])
   }
 
-  const definedHeaders = Object.keys(stepsHeaders).reduce((accum, item) => ({
-    ...accum,
-    [item]: {
-      title: defineMessage({ message: stepsHeaders[item].title }),
-      icon: stepsHeaders[item].icon
-    }
-  }), {})
+  const definedHeaders = stepsHeaders != null
+    ? Object.keys(stepsHeaders).reduce((accum, item) => ({
+      ...accum,
+      [item]: {
+        title: defineMessage({ message: stepsHeaders[item].title }),
+        icon: stepsHeaders[item].icon
+      }
+    }), {})
+    : {}
 
   const contextValue = {
     stepsArray: stepsArray,

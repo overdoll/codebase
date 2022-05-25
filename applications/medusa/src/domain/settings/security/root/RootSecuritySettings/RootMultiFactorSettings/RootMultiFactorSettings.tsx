@@ -33,7 +33,7 @@ const RootMultiFactorSettings: PageProps<Props> = (props: Props) => {
         <PageSectionDescription>
           <Trans>
             Setting up two-factor authentication adds an extra layer of security in case your account is
-            compromised.
+            compromised. Two-factor is required to access some features.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

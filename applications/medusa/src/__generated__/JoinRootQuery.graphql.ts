@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<784a266a1f50db5b1da89b90014c40b1>>
- * @relayHash 6ef3a7f5010c9c62ca1f3063d63fde7c
+ * @generated SignedSource<<cc2fb36048013641feb0cab4344f6b28>>
+ * @relayHash 5351a626541e7f528192f65095164e01
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ef3a7f5010c9c62ca1f3063d63fde7c
+// @relayRequestID 5351a626541e7f528192f65095164e01
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -29,7 +29,7 @@ export type JoinRootQuery$data = {
         readonly __typename: string;
       } | null;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment" | "RevokeTokenButtonFragment">;
   } | null;
 };
 export type JoinRootQueryResponse = JoinRootQuery$data;
@@ -111,31 +111,6 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "LobbyFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "JoinFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "RegisterFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "MultiFactorFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "GrantFragment"
-          },
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
@@ -162,6 +137,36 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LobbyFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RegisterFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MultiFactorFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "GrantFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RevokeTokenButtonFragment"
           }
         ],
         "storageKey": null
@@ -185,7 +190,40 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              (v6/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MultiFactor",
+                "kind": "LinkedField",
+                "name": "multiFactor",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "totp",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "kind": "ClientExtension",
             "selections": [
@@ -197,47 +235,14 @@ return {
                 "storageKey": null
               }
             ]
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AuthenticationTokenAccountStatus",
-            "kind": "LinkedField",
-            "name": "accountStatus",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MultiFactor",
-                "kind": "LinkedField",
-                "name": "multiFactor",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "totp",
-                    "storageKey": null
-                  },
-                  (v7/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v6/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v3/*: any*/),
-          (v5/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "6ef3a7f5010c9c62ca1f3063d63fde7c",
+    "id": "5351a626541e7f528192f65095164e01",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -246,7 +251,7 @@ return {
 };
 })();
 
-(node as any).hash = "392ee420bdbc54739162409b13947857";
+(node as any).hash = "ad40e640a76d7b68e25846759949ccec";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

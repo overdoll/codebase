@@ -8,7 +8,11 @@ interface Props extends ButtonProps {
   isDisabled?: boolean | undefined
 }
 
-export default function FlowBuilderNextButton ({ isDisabled, ...rest }: Props): JSX.Element {
+export default function FlowBuilderNextButton ({
+  isDisabled,
+  children,
+  ...rest
+}: Props): JSX.Element {
   const { nextStep } = useContext(FlowContext)
 
   return (
@@ -20,9 +24,12 @@ export default function FlowBuilderNextButton ({ isDisabled, ...rest }: Props): 
       variant='solid'
       {...rest}
     >
-      <Trans>
-        Next
-      </Trans>
+      {children == null
+        ? (
+          <Trans>
+            Next
+          </Trans>)
+        : children}
     </Button>
   )
 }

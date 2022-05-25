@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Flex, Stack } from '@chakra-ui/react'
+import { Flex, Heading, Stack } from '@chakra-ui/react'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ProcessUploadsFragment$key } from '@//:artifacts/ProcessUploadsFragment.graphql'
@@ -8,11 +8,14 @@ import { useFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import FilePicker from '../../../../../../FilePicker/FilePicker'
-import { FileUpload } from '@//:assets/icons/interface'
+import { FileUpload, WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../../../../context'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import DragOverFileInput from '../../../../../../DragOverFileInput/DragOverFileInput'
+import { ClickableTile } from '@//:modules/content/ContentSelection'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: ProcessUploadsFragment$key
@@ -132,20 +135,49 @@ export default function ProcessUploads ({
   }
 
   if (state.files.length < 1) {
+    if (state.isRearranging === true) {
+      return (
+        <ClickableTile isDisabled>
+          <LargeBackgroundBox>
+            <Stack py={4} align='center' justify='center'>
+              <Icon
+                w={6}
+                h={6}
+                icon={WarningTriangle}
+                fill='orange.400'
+              />
+              <Heading fontSize='lg' color='orange.400'>
+                <Trans>
+                  Cannot upload while rearranging
+                </Trans>
+              </Heading>
+            </Stack>
+          </LargeBackgroundBox>
+        </ClickableTile>
+      )
+    }
+
     return (
-      <FilePicker w='auto' uppy={uppy}>
-        <Flex w='100%' align='center' justify='flex-end'>
-          <Button
-            w='100%'
-            variant='solid'
-            size='md'
-            rightIcon={<Icon h={3} w={3} icon={FileUpload} fill='gray.100' />}
-          >
-            <Trans>
-              Upload Files
-            </Trans>
-          </Button>
-        </Flex>
+      <FilePicker uppy={uppy}>
+        <DragOverFileInput hasText={false} uppy={uppy}>
+          <ClickableTile>
+            <LargeBackgroundBox w='100%'>
+              <Stack py={4} align='center' justify='center'>
+                <Icon
+                  w={6}
+                  h={6}
+                  icon={FileUpload}
+                  fill='gray.100'
+                />
+                <Heading fontSize='lg' color='gray.100'>
+                  <Trans>
+                    Drag and drop or tap to upload
+                  </Trans>
+                </Heading>
+              </Stack>
+            </LargeBackgroundBox>
+          </ClickableTile>
+        </DragOverFileInput>
       </FilePicker>
     )
   }

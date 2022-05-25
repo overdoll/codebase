@@ -10,7 +10,6 @@ import {
   FormSubmitButton,
   InputBody,
   InputFooter,
-  InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
 import { useLingui } from '@lingui/react'
@@ -44,24 +43,23 @@ export default function RegisterForm ({
     <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={6}>
         <FormInput
-          size='xl'
+          size='lg'
           id='username'
         >
-          <InputHeader>
-            <Trans>
-              Username
-            </Trans>
-          </InputHeader>
           <InputBody>
-            <TextInput placeholder={i18n._(t`Enter a username`)} />
+            <TextInput
+              borderColor='transparent'
+              placeholder={i18n._(t`Enter a username`)}
+              variant='outline'
+            />
           </InputBody>
           <InputFooter />
         </FormInput>
         <FormSubmitButton
-          size='xl'
-          variant='outline'
-          isLoading={loading}
+          size='lg'
+          variant='solid'
           colorScheme='green'
+          isLoading={loading}
           w='100%'
         >
           <Trans>

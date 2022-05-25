@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Flex, Stack } from '@chakra-ui/react'
+import { Flex, Stack, Text } from '@chakra-ui/react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import RequiredPrompt from '../../../../../RequiredPrompt/RequiredPrompt'
 import { Trans } from '@lingui/macro'
@@ -60,10 +60,12 @@ export default function UploadAudienceStep (): JSX.Element {
       </QueryErrorBoundary>
       <Flex justify='center'>
         <RequiredPrompt>
-          <Trans>
-            Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We
-            only show a person content they are interested in seeing.
-          </Trans>
+          <Text fontSize='sm' color='gray.100'>
+            <Trans>
+              Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We
+              only show a person content they are interested in seeing.
+            </Trans>
+          </Text>
         </RequiredPrompt>
       </Flex>
     </Stack>

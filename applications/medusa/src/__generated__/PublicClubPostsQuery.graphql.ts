@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ea1f5b5cdfbd8877b0aecdecea609892>>
- * @relayHash a0ff59ca269e4e7da5555a1955a8807e
+ * @generated SignedSource<<808743e9df600069f967daf91fc87a6f>>
+ * @relayHash 29349984bcaecbe1a7c4d9584460f017
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a0ff59ca269e4e7da5555a1955a8807e
+// @relayRequestID 29349984bcaecbe1a7c4d9584460f017
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,7 +31,7 @@ export type PublicClubPostsQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "AccountInformationBannerFragment">;
   } | null;
 };
 export type PublicClubPostsQueryResponse = PublicClubPostsQuery$data;
@@ -249,6 +249,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PostsInfiniteScrollViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -535,6 +540,44 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v10/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v10/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -542,7 +585,7 @@ return {
     ]
   },
   "params": {
-    "id": "a0ff59ca269e4e7da5555a1955a8807e",
+    "id": "29349984bcaecbe1a7c4d9584460f017",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",
@@ -551,6 +594,6 @@ return {
 };
 })();
 
-(node as any).hash = "1f21f9ac05ec520821d8fccd285f3e45";
+(node as any).hash = "386c1fd336371bb67a986476eb61837c";
 
 export default node;

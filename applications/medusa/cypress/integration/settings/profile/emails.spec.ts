@@ -7,7 +7,7 @@ describe('Settings - Add Email', () => {
   const newEmail = generateEmail()
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, currentEmail)
+    cy.joinWithNewAccount(username)
   })
 
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {

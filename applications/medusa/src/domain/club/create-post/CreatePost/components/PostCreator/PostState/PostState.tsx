@@ -14,6 +14,7 @@ import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 import { useRouter } from 'next/router'
+import ClubInformationBanner from '../../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -32,6 +33,7 @@ const ClubFragment = graphql`
   fragment PostStateClubFragment on Club {
     __typename
     id
+    ...ClubInformationBannerFragment
   }
 `
 
@@ -57,35 +59,38 @@ export default function PostState ({
   // If there is no post found from the URL parameter, show create post initiator
   if (postData == null) {
     return (
-      <Stack spacing={4}>
-        <CreatePostFlow clubId={clubData.id} />
-        <Box>
-          <Heading color='gray.00' fontSize='xl'>
-            <Trans>
-              As a reminder of the guidelines
-            </Trans>
-          </Heading>
-          <Box ml={4}>
-            <Text><Trans>All characters must be of legal age</Trans></Text>
-            <Text><Trans>You own the rights to the content you upload</Trans></Text>
-            <Text><Trans>Nothing extremely offensive, shocking, or illegal</Trans></Text>
+      <>
+        <ClubInformationBanner query={clubData} />
+        <Stack spacing={4}>
+          <CreatePostFlow clubId={clubData.id} />
+          <Box>
+            <Heading color='gray.00' fontSize='xl'>
+              <Trans>
+                As a reminder of the guidelines
+              </Trans>
+            </Heading>
+            <Box ml={4}>
+              <Text><Trans>All characters must be of legal age</Trans></Text>
+              <Text><Trans>You own the rights to the content you upload</Trans></Text>
+              <Text><Trans>Nothing extremely offensive, shocking, or illegal</Trans></Text>
+            </Box>
           </Box>
-        </Box>
-        <Box>
-          <Text fontSize='md' color='gray.100'>
-            <Trans>Upstanding netizens will read the{' '}
-              <Link
-                color='teal.400'
-                fontSize='md'
-                isExternal
-                href={CLUB_GUIDELINES}
-              >
-                Club Guidelines
-              </Link>{' '}carefully before posting
-            </Trans>
-          </Text>
-        </Box>
-      </Stack>
+          <Box>
+            <Text fontSize='md' color='gray.100'>
+              <Trans>Upstanding netizens will read the{' '}
+                <Link
+                  color='teal.400'
+                  fontSize='md'
+                  isExternal
+                  href={CLUB_GUIDELINES}
+                >
+                  Club Guidelines
+                </Link>{' '}carefully. Creating and submitting a post also means you agree to these guidelines.
+              </Trans>
+            </Text>
+          </Box>
+        </Stack>
+      </>
     )
   }
 

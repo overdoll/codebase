@@ -11,6 +11,8 @@ import { EmptyBoundary, EmptyPaymentMethods } from '@//:modules/content/Placehol
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import AccountInformationBanner
+  from '../../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<SavedPaymentMethodsSettingsQuery>
@@ -19,8 +21,9 @@ interface Props {
 const Query = graphql`
   query SavedPaymentMethodsSettingsQuery {
     viewer @required(action: THROW) {
-      ...SavedPaymentMethodsSettingsFragment
       isSecure
+      ...SavedPaymentMethodsSettingsFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -63,52 +66,54 @@ export default function SavedPaymentMethodsSettings (props: Props): JSX.Element 
   )
 
   return (
-    <EmptyBoundary
-      fallback={<EmptyPaymentMethods />}
-      condition={data.savedPaymentMethods.edges.length < 1}
-    >
-      <Stack spacing={2}>
-        {!queryData.viewer.isSecure && (
-          <Alert status='warning'>
-            <HStack spacing={4} justify='space-between'>
-              <HStack>
-                <AlertIcon />
-                <AlertDescription>
+    <>
+      <AccountInformationBanner query={queryData.viewer} />
+      <EmptyBoundary
+        fallback={<EmptyPaymentMethods />}
+        condition={data.savedPaymentMethods.edges.length < 1}
+      >
+        <Stack spacing={2}>
+          {!queryData.viewer.isSecure && (
+            <Alert status='warning'>
+              <HStack spacing={4} justify='space-between'>
+                <HStack>
+                  <AlertIcon />
+                  <AlertDescription>
+                    <Trans>
+                      You must enable two-factor authentication before you can use a saved payment method
+                    </Trans>
+                  </AlertDescription>
+                </HStack>
+                <LinkButton
+                  size='sm'
+                  colorScheme='orange'
+                  variant='solid'
+                  href='/settings/security'
+                >
                   <Trans>
-                    You must enable two-factor authentication before you can use a saved payment method
+                    Set Up
                   </Trans>
-                </AlertDescription>
+                </LinkButton>
               </HStack>
-              <LinkButton
-                size='sm'
-                colorScheme='orange'
-                variant='solid'
-                href='/settings/security'
-              >
-                <Trans>
-                  Set Up
-                </Trans>
-              </LinkButton>
-            </HStack>
-          </Alert>
-        )}
-        {data.savedPaymentMethods.edges.map((item, index) => (
-          <StackTile key={index}>
-            <LargeBackgroundBox w='100%'>
-              <HStack h='100%' align='center' spacing={3} justify='space-between'>
-                <PaymentMethod query={item.node.paymentMethod} />
-                <ManageSavedPaymentMethodButton connectionId={data.savedPaymentMethods.__id} query={item.node} />
-              </HStack>
-            </LargeBackgroundBox>
-          </StackTile>
-        ))}
-        <LoadMoreStackTile
-          hasNext={hasNext}
-          onLoadNext={() => loadNext(3)}
-          isLoadingNext={isLoadingNext}
-        />
-      </Stack>
-    </EmptyBoundary>
-
+            </Alert>
+          )}
+          {data.savedPaymentMethods.edges.map((item, index) => (
+            <StackTile key={index}>
+              <LargeBackgroundBox w='100%'>
+                <HStack h='100%' align='center' spacing={3} justify='space-between'>
+                  <PaymentMethod query={item.node.paymentMethod} />
+                  <ManageSavedPaymentMethodButton connectionId={data.savedPaymentMethods.__id} query={item.node} />
+                </HStack>
+              </LargeBackgroundBox>
+            </StackTile>
+          ))}
+          <LoadMoreStackTile
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(3)}
+            isLoadingNext={isLoadingNext}
+          />
+        </Stack>
+      </EmptyBoundary>
+    </>
   )
 }

@@ -12,7 +12,7 @@ import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 
 interface Props {
-  queryRef: {
+  queryRefs: {
     staffCreateRuleQuery: PreloadedQuery<StaffCreateRuleQueryType>
   }
 }
@@ -20,7 +20,7 @@ interface Props {
 const RootStaffCreateRule: PageProps<Props> = (props: Props) => {
   const [queryRef, loadQuery] = useQueryLoader(
     StaffCreateRuleQuery,
-    props.queryRef.staffCreateRuleQuery
+    props.queryRefs.staffCreateRuleQuery
   )
 
   return (

@@ -1,12 +1,11 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
-import { clickOnTile, searchForTerm } from '../../support/user_actions'
-import { arrowDown, space } from '../../support/key_codes'
+import { clickOnButton, clickOnTile, searchForTerm } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Club - Create a Post', () => {
-  const [username, email] = generateUsernameAndEmail()
+  const [username] = generateUsernameAndEmail()
 
   const clubName = generateClubName()
 
@@ -21,7 +20,7 @@ describe('Club - Create a Post', () => {
   const isOnStep = (step: string): void => {
     switch (step) {
       case 'arrange':
-        cy.findByText(/Arrange Uploads/iu).should('exist')
+        cy.findByText('Arrange Uploads').should('exist')
         break
       case 'audience':
         cy.findByText(/Select Audience/iu).should('exist')
@@ -49,13 +48,22 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
-  before(() => {
-    cy.joinWithNewAccount(username, email)
+  it('create account', () => {
+    cy.joinWithNewAccount(username)
+  })
+
+  it('assign artist role', () => {
+    cy.joinWithExistingAccount('0eclipse')
+    cy.assignArtistRole(username)
+  })
+
+  it('create club', () => {
+    cy.joinWithNewAccount(username)
     cy.createClub(clubName)
   })
 
   beforeEach(() => {
-    cy.joinWithNewAccount(username, email)
+    cy.joinWithNewAccount(username)
   })
 
   it('can add audience, categories, characters, and submit post', () => {
@@ -111,8 +119,8 @@ describe('Club - Create a Post', () => {
     // test refresh to save progress as well as URL working for resuming progress and post page for drafts
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    cy.get('button[aria-label="Open Menu"]').click()
-    cy.findByText('Edit Draft').should('be.visible').click()
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
+    cy.findAllByText('Edit Draft').should('be.visible').click()
     isOnStep('arrange')
     cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
     gotoNextStep()
@@ -156,31 +164,24 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.waitUntil(() => cy.get('button[aria-label="Remove Upload"]').should('be.visible'))
 
-    // test dragging and dropping to rearrange uploads
-    // note that this is how react-beautiful-dnd tests the dragging and dropping behaviour
-    // so I guess this is how we're doing it too
-    cy.get('[data-rbd-draggable-context-id="0"]')
-      .first()
-      .focus()
-      .trigger('keydown', {
-        keyCode: space
-      })
-      .trigger('keydown', {
-        keyCode: arrowDown,
-        force: true
-      })
-      .trigger('keydown', {
-        keyCode: space,
-        force: true
-      })
-    saveCurrentStep()
+    // test rearrange
+    clickOnButton('Rearrange Uploads')
+    cy.get('button[aria-label="Down"]').click()
+    clickOnButton('Save Order')
+    clickOnButton('Rearrange Uploads')
+    cy.get('button[aria-label="Up"]').click()
+    clickOnButton('Cancel')
+    clickOnButton('Rearrange Uploads')
+    cy.findByRole('button', { name: 'Save Order' }).should('not.exist')
+    clickOnButton('Cancel')
+
+    gotoNextStep()
     gotoPreviousStep()
 
     // can remove uploads
     cy.get('button[aria-label="Remove Upload"]').first().click()
-    cy.get('button[aria-label="Remove Upload"]').should('not.exist')
     // can exit the flow
-    cy.findByText(/Arrange Uploads/iu).parent().get('button[aria-label="Exit Creator"]').click()
+    cy.findByText('Arrange Uploads').parent().get('button[aria-label="Exit Creator"]').click()
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     cy.findByRole('button', { name: /Yes, exit/iu }).click()
     cy.findByText(/Upload one or more files by/iu).should('be.visible')

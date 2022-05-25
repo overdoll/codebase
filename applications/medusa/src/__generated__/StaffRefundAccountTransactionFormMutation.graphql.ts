@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f4a3d1b4d172523f9ec6966f45f8cce3>>
- * @relayHash 6b1f485ae194f86f0469c873f3c7d1cb
+ * @generated SignedSource<<8f1c8c46ebe468c5e7a387e1640d30a8>>
+ * @relayHash dc84e1128085603f8b1065d8a7ce23b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6b1f485ae194f86f0469c873f3c7d1cb
+// @relayRequestID dc84e1128085603f8b1065d8a7ce23b1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type AccountTransactionType = "CHARGEBACK" | "PAYMENT" | "REFUND" | "VOID" | "%future added value";
@@ -27,11 +27,12 @@ export type StaffRefundAccountTransactionFormMutation$data = {
     readonly accountTransaction: {
       readonly id: string;
       readonly type: AccountTransactionType;
+      readonly currency: Currency;
       readonly events: ReadonlyArray<{
         readonly amount: number;
         readonly currency: Currency;
         readonly reason: string;
-        readonly timestamp: any;
+        readonly createdAt: any;
       }>;
     } | null;
   } | null;
@@ -75,14 +76,14 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "amount",
+  "name": "currency",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "currency",
+  "name": "amount",
   "storageKey": null
 },
 v6 = {
@@ -96,7 +97,7 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "timestamp",
+  "name": "createdAt",
   "storageKey": null
 };
 return {
@@ -124,6 +125,7 @@ return {
             "selections": [
               (v2/*: any*/),
               (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -132,8 +134,8 @@ return {
                 "name": "events",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
                   (v5/*: any*/),
+                  (v4/*: any*/),
                   (v6/*: any*/),
                   (v7/*: any*/)
                 ],
@@ -173,6 +175,7 @@ return {
             "selections": [
               (v2/*: any*/),
               (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -181,8 +184,8 @@ return {
                 "name": "events",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
                   (v5/*: any*/),
+                  (v4/*: any*/),
                   (v6/*: any*/),
                   (v7/*: any*/),
                   (v2/*: any*/)
@@ -198,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "id": "6b1f485ae194f86f0469c873f3c7d1cb",
+    "id": "dc84e1128085603f8b1065d8a7ce23b1",
     "metadata": {},
     "name": "StaffRefundAccountTransactionFormMutation",
     "operationKind": "mutation",
@@ -207,6 +210,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ff82c909e60e7cd5b52ed2a7b857610";
+(node as any).hash = "61cc87c0006d3e3dc30079e8ee03a4c3";
 
 export default node;

@@ -1,3 +1,5 @@
+import { clickOnButton } from '../../support/user_actions'
+
 describe('Visit Public Pages', () => {
   const username = '0eclipse'
 
@@ -5,16 +7,19 @@ describe('Visit Public Pages', () => {
     cy.visit('/')
   })
 
-  it('go to the clubs discover page', () => {
+  it('go to the invite only page as not logged in', () => {
+    cy.visit('/clubs/invite-only')
+    cy.findByText(/overdoll is invite-only/iu)
+  })
+
+  it('go to the clubs discover page as not logged in', () => {
     cy.visit('/clubs/discover')
-    cy.findByPlaceholderText(/Search for a club by name/iu).should('exist')
-    // TODO try joining a club as a not logged in user
+    cy.findByText(/Create an account/iu)
   })
 
   it('go to the help page', () => {
     cy.visit('/help')
     cy.findByText(/Legal/iu).should('exist')
-    // TODO make sure help links work?
   })
 
   it('go to a profile', () => {
@@ -22,5 +27,9 @@ describe('Visit Public Pages', () => {
     cy.findByText(username).should('exist')
   })
 
-  // TODO go to a public post and interact with it (probably a separate test)
+  it('join a club as not logged in', () => {
+    cy.visit('/TestClub')
+    clickOnButton('Join')
+    cy.url().should('include', '/join')
+  })
 })

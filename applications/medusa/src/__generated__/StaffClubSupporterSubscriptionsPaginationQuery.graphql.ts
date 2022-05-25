@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a8f166520bc8a71a961b75af287a13f3>>
- * @relayHash 5d280644db09e870023324c08dc98a52
+ * @generated SignedSource<<548fae5018368bcfd0e7445fa6476381>>
+ * @relayHash 699a4da11599331338b95af003ee434a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5d280644db09e870023324c08dc98a52
+// @relayRequestID 699a4da11599331338b95af003ee434a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -91,16 +91,16 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
-  "concreteType": "Club",
+  "concreteType": "Account",
   "kind": "LinkedField",
-  "name": "club",
+  "name": "account",
   "plural": false,
   "selections": [
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "name",
+      "name": "username",
       "storageKey": null
     },
     (v4/*: any*/)
@@ -158,7 +158,7 @@ return {
                 "args": (v2/*: any*/),
                 "concreteType": "AccountClubSupporterSubscriptionConnection",
                 "kind": "LinkedField",
-                "name": "clubSupporterSubscriptions",
+                "name": "supporterSubscriptions",
                 "plural": false,
                 "selections": [
                   {
@@ -299,12 +299,12 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "StaffClubSupporterSubscriptions_clubSupporterSubscriptions",
+                "key": "StaffClubSupporterSubscriptions_supporterSubscriptions",
                 "kind": "LinkedHandle",
-                "name": "clubSupporterSubscriptions"
+                "name": "supporterSubscriptions"
               }
             ],
-            "type": "Account",
+            "type": "Club",
             "abstractKey": null
           }
         ],
@@ -313,7 +313,7 @@ return {
     ]
   },
   "params": {
-    "id": "5d280644db09e870023324c08dc98a52",
+    "id": "699a4da11599331338b95af003ee434a",
     "metadata": {},
     "name": "StaffClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
@@ -322,6 +322,6 @@ return {
 };
 })();
 
-(node as any).hash = "46e0ddeabda8760f5e780b79aec6b84f";
+(node as any).hash = "c3fa9f6504eab68bf036c3c4e024032f";
 
 export default node;

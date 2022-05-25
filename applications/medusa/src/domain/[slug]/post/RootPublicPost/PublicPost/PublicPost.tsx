@@ -13,6 +13,8 @@ import PostSearchButton
   from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
+import AccountInformationBanner
+  from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -36,6 +38,7 @@ const Query = graphql`
     viewer {
       ...SuggestedPostsViewerFragment
       ...PublicPostPageViewerFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -88,6 +91,7 @@ export default function PublicPost (props: Props): JSX.Element {
           {getCharacterNames()} by {queryData.post.club.name} :: overdoll.com/{queryData.post.club.slug}
         </title>
       </Head>
+      <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={4}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a926c798105b4fa576e45d4f6e527968>>
+ * @generated SignedSource<<ba08d03ab6986995e5ee4fff40bff307>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,8 @@ import { FragmentRefs } from "relay-runtime";
 export type TransactionSettingsCardFragment$data = {
   readonly amount: number;
   readonly currency: Currency;
-  readonly timestamp: any;
+  readonly createdAt: any;
+  readonly totalRefunded: number;
   readonly clubSupporterSubscription: {
     readonly club?: {
       readonly id: string;
@@ -73,7 +74,14 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "timestamp",
+      "name": "createdAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "totalRefunded",
       "storageKey": null
     },
     {
@@ -172,6 +180,6 @@ return {
 };
 })();
 
-(node as any).hash = "4e3e50774da5e9f5e858ec762a32e28f";
+(node as any).hash = "f38e7467652bc2eeb98a819a20ac0370";
 
 export default node;

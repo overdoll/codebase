@@ -47,37 +47,37 @@ export default function PostGalleryPublicSimple ({
           <SwiperSlide
             key={index}
           >
-            <Link
-              href={{
-                pathname: '/[slug]/post/[reference]',
-                query: {
-                  slug: data.club.slug,
-                  reference: data?.reference,
-                  ...(index > 0 && { slide: index })
-                }
-              }}
-              passHref
+            <Flex
+              direction='column'
+              bg='gray.800'
+              w='100%'
+              cursor='pointer'
+              align='center'
+              justify='center'
+              minH={300}
+              maxH={800}
             >
-              <Box as='a'>
-                <Flex
-                  direction='column'
-                  bg='gray.800'
-                  w='100%'
-                  cursor='pointer'
-                  align='center'
-                  justify='center'
-                  minH={300}
-                  maxH={800}
+              <PostSupporterContent
+                query={item}
+                clubQuery={data.club}
+              >
+                <Link
+                  href={{
+                    pathname: '/[slug]/post/[reference]',
+                    query: {
+                      slug: data.club.slug,
+                      reference: data?.reference,
+                      ...(index > 0 && { slide: index })
+                    }
+                  }}
+                  passHref
                 >
-                  <PostSupporterContent
-                    query={item}
-                    clubQuery={data.club}
-                  >
+                  <Box as='a'>
                     <PostMedia controls={{ canControl: false }} query={item.resource} />
-                  </PostSupporterContent>
-                </Flex>
-              </Box>
-            </Link>
+                  </Box>
+                </Link>
+              </PostSupporterContent>
+            </Flex>
           </SwiperSlide>
         )}
       </Swiper>

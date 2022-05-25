@@ -19,17 +19,16 @@ export default function MainMenu (): JSX.Element {
         label={i18n._(t`Home`)}
       />
       <MainMenuButtonClubs />
-      <Can I='create' a='Post'>
-        <MainMenuButtonCreatePost />
-      </Can>
-      <Can not I='create' a='Post'>
+      <Can not I='create' a='Club'>
         <HorizontalNavigation.Button
-          exact
           colorScheme='primary'
-          href='/join'
+          href='/clubs/invite-only'
           icon={ContentBrushPen}
           label={i18n._(t`Create a Post`)}
         />
+      </Can>
+      <Can I='create' a='Post'>
+        <MainMenuButtonCreatePost />
       </Can>
     </>
   )

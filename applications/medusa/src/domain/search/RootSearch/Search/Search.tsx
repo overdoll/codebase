@@ -4,6 +4,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
+import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 
 interface Props {
   query: PreloadedQuery<SearchQuery>
@@ -19,6 +20,7 @@ const Query = graphql`
     ...SearchFragment
     viewer {
       ...PostsInfiniteScrollViewerFragment
+      ...AccountInformationBannerFragment
     }
   }
 `
@@ -61,14 +63,17 @@ export default function Search (props: Props): JSX.Element {
   )
 
   return (
-    <GlobalVideoManagerProvider>
-      <PostsInfiniteScroll
-        hasNext={hasNext}
-        isLoadingNext={isLoadingNext}
-        loadNext={loadNext}
-        query={data.posts}
-        viewerQuery={queryData.viewer}
-      />
-    </GlobalVideoManagerProvider>
+    <>
+      <AccountInformationBanner query={queryData.viewer} />
+      <GlobalVideoManagerProvider>
+        <PostsInfiniteScroll
+          hasNext={hasNext}
+          isLoadingNext={isLoadingNext}
+          loadNext={loadNext}
+          query={data.posts}
+          viewerQuery={queryData.viewer}
+        />
+      </GlobalVideoManagerProvider>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9bf4d12e03a3f6e2affc6111dbc31958>>
+ * @generated SignedSource<<e0e8f0c5e47d60d86830a1f02a74f530>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffClubSupporterSubscriptionPreviewFragment$data = {
   readonly __typename: string;
   readonly id?: string;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffAccountActiveClubSupporterSubscriptionPreviewFragment" | "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment" | "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffActiveClubSupporterSubscriptionPreviewFragment" | "StaffCancelledClubSupporterSubscriptionPreviewFragment" | "StaffExpiredClubSupporterSubscriptionPreviewFragment">;
   readonly " $fragmentType": "StaffClubSupporterSubscriptionPreviewFragment";
 };
 export type StaffClubSupporterSubscriptionPreviewFragment = StaffClubSupporterSubscriptionPreviewFragment$data;
@@ -55,7 +55,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffAccountActiveClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffActiveClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountActiveClubSupporterSubscription",
@@ -67,7 +67,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffAccountCancelledClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffCancelledClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountCancelledClubSupporterSubscription",
@@ -79,7 +79,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment"
+          "name": "StaffExpiredClubSupporterSubscriptionPreviewFragment"
         }
       ],
       "type": "AccountExpiredClubSupporterSubscription",
@@ -90,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isAccountClubSupporterSubscription"
 };
 
-(node as any).hash = "381798169f74908389c34b6edcab6cb3";
+(node as any).hash = "5af107a695b3e70dee416e66a7c8e0e0";
 
 export default node;

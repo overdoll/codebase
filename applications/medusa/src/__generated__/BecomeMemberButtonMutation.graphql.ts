@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a6d18bdff7ddc11cc7945736ea2146fa>>
- * @relayHash ddb71e3866e383b6acf382feba7ef43d
+ * @generated SignedSource<<d98fbcb5fbec5f1ac9c97ae08f2ef027>>
+ * @relayHash e0239e642fdd19aeef27f25d3709f305
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ddb71e3866e383b6acf382feba7ef43d
+// @relayRequestID e0239e642fdd19aeef27f25d3709f305
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type BecomeMemberButtonMutation$variables = {
@@ -22,13 +22,11 @@ export type BecomeMemberButtonMutation$data = {
       readonly id: string;
       readonly club: {
         readonly id: string;
-        readonly viewerMember: {
-          readonly id: string;
-        } | null;
       };
       readonly account: {
         readonly id: string;
       };
+      readonly joinedAt: any;
     } | null;
   } | null;
 };
@@ -93,19 +91,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "club",
             "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ClubMember",
-                "kind": "LinkedField",
-                "name": "viewerMember",
-                "plural": false,
-                "selections": (v2/*: any*/),
-                "storageKey": null
-              }
-            ],
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -116,6 +102,13 @@ v3 = [
             "name": "account",
             "plural": false,
             "selections": (v2/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "joinedAt",
             "storageKey": null
           }
         ],
@@ -143,7 +136,7 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "ddb71e3866e383b6acf382feba7ef43d",
+    "id": "e0239e642fdd19aeef27f25d3709f305",
     "metadata": {},
     "name": "BecomeMemberButtonMutation",
     "operationKind": "mutation",
@@ -152,6 +145,6 @@ return {
 };
 })();
 
-(node as any).hash = "1095e45fb7e9a2856542f57ac26c83f3";
+(node as any).hash = "0b4f0e0c0123393652095b2b9cac3306";
 
 export default node;

@@ -21,7 +21,8 @@ const Fragment = graphql`
   fragment TransactionSettingsCardFragment on AccountTransaction {
     amount
     currency
-    timestamp
+    createdAt
+    totalRefunded
     clubSupporterSubscription {
       ... on IAccountClubSupporterSubscription {
         club {
@@ -54,7 +55,12 @@ export default function TransactionSettingsCard ({
     currency: data.currency,
     locale: locale
   })
-  const timestamp = format(new Date(data.timestamp as Date), dateFormatWithTimeSimple, { locale })
+  const totalRefunded = displayPrice({
+    amount: data.totalRefunded,
+    currency: data.currency,
+    locale: locale
+  })
+  const timestamp = format(new Date(data.createdAt as Date), dateFormatWithTimeSimple, { locale })
 
   const colorScheme = getTransactionColorScheme(data.type)
 
@@ -94,6 +100,11 @@ export default function TransactionSettingsCard ({
           </Flex>
         </TableBodyColumn>
       </TableBodyRow>
+      {data.type === 'REFUND' && (
+        <Text fontSize='md' color='gray.200'>
+          ${totalRefunded} was refunded to this payment method
+        </Text>
+      )}
     </Stack>
   )
 }

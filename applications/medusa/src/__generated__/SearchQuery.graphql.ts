@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a07f324bb7e84ef38b4920b549d1629a>>
- * @relayHash 6a0008234c0a35c292adbfd22d01f386
+ * @generated SignedSource<<49aeeafc553e649e758799d1f1bd16b5>>
+ * @relayHash 5b12057c724f2e70fcf023257fe2dbf9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6a0008234c0a35c292adbfd22d01f386
+// @relayRequestID 5b12057c724f2e70fcf023257fe2dbf9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +23,7 @@ export type SearchQuery$variables = {
 export type SearchQueryVariables = SearchQuery$variables;
 export type SearchQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "AccountInformationBannerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;
 };
@@ -205,6 +205,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PostsInfiniteScrollViewerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AccountInformationBannerFragment"
           }
         ],
         "storageKey": null
@@ -474,6 +479,44 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -481,7 +524,7 @@ return {
     ]
   },
   "params": {
-    "id": "6a0008234c0a35c292adbfd22d01f386",
+    "id": "5b12057c724f2e70fcf023257fe2dbf9",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",
@@ -490,7 +533,7 @@ return {
 };
 })();
 
-(node as any).hash = "beb01a01eb3a882ffe0304afd7ce742b";
+(node as any).hash = "915f3998fc80218f034c347096397a0b";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

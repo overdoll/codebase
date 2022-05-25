@@ -16,6 +16,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
 
 interface SearchProps {
   title: string
@@ -85,6 +86,11 @@ export default function UploadCategoryStep (): JSX.Element {
           </Suspense>
         </QueryErrorBoundary>
       </FlowBuilderScrollableContainer>
+      <SuggestPrompt>
+        <Trans>
+          Have a category suggestion? Send us an email at hello@overdoll.com!
+        </Trans>
+      </SuggestPrompt>
     </Stack>
   )
 }

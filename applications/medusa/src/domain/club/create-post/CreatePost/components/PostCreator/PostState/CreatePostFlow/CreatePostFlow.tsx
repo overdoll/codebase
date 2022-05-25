@@ -11,6 +11,7 @@ import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMuta
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   clubId: string | undefined
 }
@@ -58,16 +59,20 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   }, [clubId])
 
   useEffect(() => {
-    // @ts-expect-error
-    // it's in their documentation but doesn't exist as a type...
-    uppy.once('file-added', file => {
+    const callBackFn = (file): void => {
       if (file.source !== 'already-uploaded') {
         const club = uppy.getState().meta.club
         if (club != null) {
           onCreatePost(club)
         }
       }
-    })
+    }
+
+    // @ts-expect-error
+    uppy.once('file-added', callBackFn)
+    return () => {
+      uppy.off('file-added', callBackFn)
+    }
   }, [uppy])
 
   if (isCreatingPost) {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<309715ccd8b2c174e3a9a99493425c69>>
- * @relayHash f89e9ca6d3c890ce67335e0cc5177fbc
+ * @generated SignedSource<<748cc097853efb3f7caeb027456d42ec>>
+ * @relayHash a86eb3adb3f3d4efa5b6358c3f3f3de6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f89e9ca6d3c890ce67335e0cc5177fbc
+// @relayRequestID a86eb3adb3f3d4efa5b6358c3f3f3de6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type TransactionsSettingsQuery$variables = {};
 export type TransactionsSettingsQueryVariables = TransactionsSettingsQuery$variables;
 export type TransactionsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"TransactionsSettingsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"TransactionsSettingsFragment" | "AccountInformationBannerFragment">;
   };
 };
 export type TransactionsSettingsQueryResponse = TransactionsSettingsQuery$data;
@@ -83,6 +83,11 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "TransactionsSettingsFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "AccountInformationBannerFragment"
             }
           ],
           "storageKey": null
@@ -150,7 +155,14 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "timestamp",
+                        "name": "createdAt",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "totalRefunded",
                         "storageKey": null
                       },
                       {
@@ -338,14 +350,52 @@ return {
             "kind": "LinkedHandle",
             "name": "transactions"
           },
-          (v2/*: any*/)
+          (v2/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountDeleting",
+            "kind": "LinkedField",
+            "name": "deleting",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scheduledDeletion",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "f89e9ca6d3c890ce67335e0cc5177fbc",
+    "id": "a86eb3adb3f3d4efa5b6358c3f3f3de6",
     "metadata": {},
     "name": "TransactionsSettingsQuery",
     "operationKind": "query",
@@ -354,6 +404,6 @@ return {
 };
 })();
 
-(node as any).hash = "d9b064d8bfbdc7e0a45c0ba1cdfcc47a";
+(node as any).hash = "967b31f441772555c00a79f35bef1cc1";
 
 export default node;

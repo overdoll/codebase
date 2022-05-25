@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d13a4bf87e0435eef27beaba6a27dc89>>
+ * @generated SignedSource<<a860b204118b02d731a14baec7505fcc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubSupporterSubscriptionsFragment$data = {
-  readonly clubSupporterSubscriptions: {
+  readonly supporterSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly reference?: string;
@@ -30,7 +30,7 @@ export type StaffClubSupporterSubscriptionsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "clubSupporterSubscriptions"
+  "supporterSubscriptions"
 ];
 return {
   "argumentDefinitions": [
@@ -74,11 +74,11 @@ return {
   "name": "StaffClubSupporterSubscriptionsFragment",
   "selections": [
     {
-      "alias": "clubSupporterSubscriptions",
+      "alias": "supporterSubscriptions",
       "args": null,
       "concreteType": "AccountClubSupporterSubscriptionConnection",
       "kind": "LinkedField",
-      "name": "__StaffClubSupporterSubscriptions_clubSupporterSubscriptions_connection",
+      "name": "__StaffClubSupporterSubscriptions_supporterSubscriptions_connection",
       "plural": false,
       "selections": [
         {
@@ -172,11 +172,11 @@ return {
       "storageKey": null
     }
   ],
-  "type": "Account",
+  "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "46e0ddeabda8760f5e780b79aec6b84f";
+(node as any).hash = "c3fa9f6504eab68bf036c3c4e024032f";
 
 export default node;

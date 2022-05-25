@@ -72,8 +72,8 @@ export default function UploadArrangeStep ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <ProcessUploads query={data} />
       <ArrangeUploads query={data} />
+      <ProcessUploads query={data} />
     </Stack>
   )
 }

@@ -24,6 +24,11 @@ const Mutation = graphql`
         suspension {
           expires
         }
+        termination {
+          account {
+            username
+          }
+        }
       }
     }
   }

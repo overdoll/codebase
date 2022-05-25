@@ -55,13 +55,5 @@ describe('Use Search', () => {
     cy.visit('/TestClub/posts?sort=NEW')
     cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').click()
     cy.url().should('include', 'supporter=FULL')
-
-    // TODO this doesnt work for some reason
-    /*
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').click()
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled')
-    cy.url().should('not.contain', 'supporter=')
-
-     */
   })
 })

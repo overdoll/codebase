@@ -1,102 +1,120 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useEffect, useMemo } from 'react'
+import { Suspense, useEffect } from 'react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { Flex, Heading, Stack, Text } from '@chakra-ui/react'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import { BadgeCircle } from '@//:assets/icons/navigation'
+import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
-import { useCookies } from 'react-cookie'
 import { Trans } from '@lingui/macro'
-import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import Head from 'next/head'
+import { MailEnvelope } from '@//:assets/icons'
+import { Timeout } from '@//:types/components'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+
+import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
+import RefreshLobby from './RefreshLobby/RefreshLobby'
+import { useCookies } from 'react-cookie'
 
 interface Props {
-  refresh: () => void
   queryRef: LobbyFragment$key
+}
+
+interface SearchProps {
+  token: string
 }
 
 const LobbyFragment = graphql`
   fragment LobbyFragment on AuthenticationToken {
+    token
     email
     ...RevokeTokenButtonFragment
   }
 `
 
+let timeout: null | Timeout = null
+
 export default function Lobby ({
-  queryRef,
-  refresh
+  queryRef
 }: Props): JSX.Element {
   const data = useFragment(LobbyFragment, queryRef)
 
   const [cookies] = useCookies<string>(['token'])
 
-  // in case email isn't available, we get our fallback (read from cookie)
-  const email = useMemo(() => {
-    const emailCookie = cookies.token
-
-    if (emailCookie != null) {
-      return emailCookie.split(';')[1]
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      token: data.token
     }
-
-    return ''
-  }, [cookies])
+  })
 
   // poll for result
   useEffect(() => {
     const refreshLoop = (): void => {
-      refresh()
-      setTimeout(refreshLoop, 2000)
+      loadQuery()
+      timeout = setTimeout(refreshLoop, 2000)
     }
 
-    setTimeout(refreshLoop, 2000)
+    timeout = setTimeout(refreshLoop, 2000)
+
+    return () => {
+      if (timeout != null) {
+        clearTimeout(timeout)
+      }
+    }
   }, [])
 
   return (
     <>
       <Head>
-        <title>Waiting For Authentication :: overdoll</title>
+        <title>Waiting for authentication... :: overdoll</title>
       </Head>
-      <PageWrapper>
-        <Stack spacing={8}>
-          <Icon
-            icon={BadgeCircle}
-            w={100}
-            h={100}
-            fill='purple.300'
-            ml='auto'
-            mr='auto'
-          />
+      <Stack spacing={6}>
+        <Icon
+          icon={MailEnvelope}
+          w={16}
+          h={16}
+          fill='purple.400'
+        />
+        <Box>
           <Heading
             textAlign='center'
-            size='md'
+            fontSize='xl'
             color='gray.00'
+            mb={1}
           >
             <Trans>
               Tap on the link you received in your email inbox to continue
             </Trans>
           </Heading>
-          <Flex
-            justify='center'
-            wordBreak='break-all'
-            pt={3}
-            pb={3}
-            pr={2}
-            borderRadius={5}
-            bg='gray.800'
-            w='100%'
+          <Heading textAlign='center' color='gray.300' fontSize='sm'>
+            <Trans>
+              Make sure to check your spam!
+            </Trans>
+          </Heading>
+        </Box>
+        <Flex
+          justify='center'
+          align='center'
+          wordBreak='break-all'
+          p={3}
+          borderRadius='md'
+          bg='gray.900'
+          w='100%'
+        >
+          <Heading
+            textAlign='center'
+            fontSize='md'
+            color='purple.300'
           >
-            <Text
-              fontSize='lg'
-              color='purple.300'
-            >
-              {email ?? data.email}
-            </Text>
-          </Flex>
-          <Flex w='100%' justify='center'>
-            <RevokeTokenButton queryRef={data} />
-          </Flex>
-        </Stack>
-      </PageWrapper>
+            {data.email ?? (cookies.token != null ? cookies.token.split(';')[1] : undefined)}
+          </Heading>
+        </Flex>
+        <QueryErrorBoundary loadQuery={loadQuery}>
+          <Suspense fallback={<></>}>
+            <RefreshLobby searchArguments={searchArguments} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </Stack>
     </>
   )
 }

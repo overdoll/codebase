@@ -35,19 +35,22 @@ export default function PostSlideIndex ({
   const slidesCount = data.content.length
 
   useEffect(() => {
-    swiper.on('activeIndexChange', (swiper) => {
-      setActiveIndex(swiper.activeIndex)
-    })
-    return () => {
-      swiper.off('activeIndexChange')
+    if (swiper != null && !swiper.destroyed) {
+      swiper.on('slideChange', (swiper) => {
+        setActiveIndex(swiper.activeIndex)
+      })
     }
-  })
+    return () => {
+      swiper.off('slideChange')
+    }
+  }, [swiper])
 
   useUpdateEffect(() => {
+    if (swiper == null) return
     if (activeIndex !== 0) {
       swiper.slideTo(slide ?? 0, 50)
     }
-  }, [data.reference])
+  }, [data.reference, swiper])
 
   if (slidesCount <= 1) {
     return <></>

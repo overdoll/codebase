@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4d02c58e333aa3c1a21b6c657e2033c3>>
- * @relayHash c0e97711fcf2c951653c769034820e6c
+ * @generated SignedSource<<9b1e37300025405f671f61c76ee7ce24>>
+ * @relayHash 17ded83d95b97e0af0fcf21db9816850
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c0e97711fcf2c951653c769034820e6c
+// @relayRequestID 17ded83d95b97e0af0fcf21db9816850
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UnSuspendClubInput = {
@@ -25,6 +25,11 @@ export type StaffClubUnSuspendButtonMutation$data = {
       readonly id: string;
       readonly suspension: {
         readonly expires: any;
+      } | null;
+      readonly termination: {
+        readonly account: {
+          readonly username: string;
+        };
       } | null;
     } | null;
   } | null;
@@ -45,47 +50,89 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "UnSuspendClubPayload",
-    "kind": "LinkedField",
-    "name": "unSuspendClub",
-    "plural": false,
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ClubSuspension",
+  "kind": "LinkedField",
+  "name": "suspension",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "expires",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "StaffClubUnSuspendButtonMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Club",
+        "args": (v1/*: any*/),
+        "concreteType": "UnSuspendClubPayload",
         "kind": "LinkedField",
-        "name": "club",
+        "name": "unSuspendClub",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubSuspension",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "suspension",
+            "name": "club",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
+                "concreteType": "ClubTermination",
+                "kind": "LinkedField",
+                "name": "termination",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Account",
+                    "kind": "LinkedField",
+                    "name": "account",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -95,16 +142,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "StaffClubUnSuspendButtonMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -113,10 +150,59 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "StaffClubUnSuspendButtonMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "UnSuspendClubPayload",
+        "kind": "LinkedField",
+        "name": "unSuspendClub",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubTermination",
+                "kind": "LinkedField",
+                "name": "termination",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Account",
+                    "kind": "LinkedField",
+                    "name": "account",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "c0e97711fcf2c951653c769034820e6c",
+    "id": "17ded83d95b97e0af0fcf21db9816850",
     "metadata": {},
     "name": "StaffClubUnSuspendButtonMutation",
     "operationKind": "mutation",
@@ -125,6 +211,6 @@ return {
 };
 })();
 
-(node as any).hash = "2604a4233f38b05408c1f5834b3913e7";
+(node as any).hash = "c7073e2690b6c66518cbd08132f5340d";
 
 export default node;

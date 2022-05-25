@@ -1,13 +1,15 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ProfileQuery } from '@//:artifacts/ProfileQuery.graphql'
 import { graphql } from 'react-relay'
-import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import Head from 'next/head'
+import { Trans } from '@lingui/macro'
+import NotFoundFooter from '../../../../modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -17,6 +19,7 @@ const Query = graphql`
   query ProfileQuery($username: String!) @preloadable {
     account(username: $username) {
       id
+      isDeleted
       username
       avatar {
         ...ResourceIconFragment
@@ -32,8 +35,23 @@ export default function Profile (props: Props): JSX.Element {
     props.query
   )
 
-  if (queryData?.account == null) {
+  if (queryData.account == null) {
     return <NotFoundAccount />
+  }
+
+  if (queryData?.account.isDeleted) {
+    return (
+      <Center>
+        <Stack spacing={8}>
+          <Heading fontSize='2xl' color='gray.00'>
+            <Trans>
+              This account was deleted
+            </Trans>
+          </Heading>
+          <NotFoundFooter />
+        </Stack>
+      </Center>
+    )
   }
 
   return (

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0bc12b99041bd8c0db7793a0e92837c8>>
+ * @generated SignedSource<<449f23f150d1afe58c0d8de26a5cc900>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type JoinClubFromPageFragment$data = {
   readonly viewerMember: {
     readonly isSupporter: boolean;
   } | null;
+  readonly viewerIsOwner: boolean;
   readonly slug: string;
   readonly " $fragmentSpreads": FragmentRefs<"BecomeMemberButtonClubFragment" | "WithdrawMembershipButtonClubFragment">;
   readonly " $fragmentType": "JoinClubFromPageFragment";
@@ -62,6 +63,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "viewerIsOwner",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "slug",
       "storageKey": null
     }
@@ -70,6 +78,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "de09fe6c49bfc71e3104c6fd65e359c7";
+(node as any).hash = "0535c146ab55adc0d4876d53fe3b2ee3";
 
 export default node;

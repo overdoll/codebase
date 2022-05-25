@@ -11,10 +11,13 @@ export default function PageWrapperDesktop ({
   return (
     <Center mt={6}>
       <Box
-        w={['full', 'sm', 'md', 'lg', 'xl', '2xl']}
+        w={['full', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']}
         pl={[1, 0]}
         pr={[1, 0]}
-        mb={6}
+        mb={{
+          base: 24,
+          md: 6
+        }}
         h='100%'
       >
         {children}

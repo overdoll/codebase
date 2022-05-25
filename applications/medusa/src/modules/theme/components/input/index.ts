@@ -11,7 +11,7 @@ const determineBorderWidth = (size): number => {
     case 'md':
       return 2
     case 'lg':
-      return 3
+      return 2
     case 'xl':
       return 3
     default:
