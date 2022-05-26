@@ -57,7 +57,7 @@ describe('Settings - Curation Profile', () => {
     searchForTerm('Search for a category', preferenceCategory)
     clickOnTile(preferenceCategory)
     saveCurrentStep()
-    cy.findByRole('button', { name: /Go home/iu }).should('exist').click()
+    cy.findByRole('button', { name: /Go home/iu }).should('exist')
     cy.visit('/settings/preferences/curation-profile')
     gotoNextStep()
     isOnStep('audience')
