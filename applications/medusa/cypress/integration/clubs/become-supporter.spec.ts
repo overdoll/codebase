@@ -53,7 +53,7 @@ describe('Club - Become Supporter', () => {
       }).as('windowOpen')
     })
     clickOnButton(/Subscribe with CCBill/iu)
-    cy.waitUntil(() => cy.findByText(/CCBill is a designated payment processor/iu).should('be.visible'))
+    cy.findByText(/CCBill is a designated payment processor/iu).should('exist')
 
     // fill out billing details
     cy.get('input[name="firstName"]').type(testCardDetails.firstName)
