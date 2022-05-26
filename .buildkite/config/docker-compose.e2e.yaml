@@ -20,7 +20,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - postgresql:/var/lib/postgresql/data
 
   temporal:
     depends_on:
@@ -40,5 +40,5 @@ services:
     cpus: 1
 
 volumes:
-  postgres:
+  postgresql:
     driver: local
