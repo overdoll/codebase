@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:37
+#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:36
 msgid "Back to Security Settings"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Current Session"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:48
+#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:47
 msgid "Here is a list of devices that have logged into your account. You can tap on one to view the details."
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Session successfully revoked"
 msgstr ""
 
-#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:43
+#: src/domain/settings/security/sessions/RootSessionsSettings/RootSessionsSettings.tsx:42
 msgid "Sessions"
 msgstr ""
 

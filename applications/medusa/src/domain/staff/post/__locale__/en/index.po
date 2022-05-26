@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:109
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:101
 msgid "Actions"
 msgstr ""
 
@@ -21,15 +21,15 @@ msgstr ""
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:133
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:125
 msgid "Club"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:151
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:143
 msgid "Contributor"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:99
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:91
 msgid "Information"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Remove Post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:104
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:96
 msgid "Reports"
 msgstr ""
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:121
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:113
 msgid "State"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Successfully removed post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:169
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:161
 msgid "Tags"
 msgstr ""
 

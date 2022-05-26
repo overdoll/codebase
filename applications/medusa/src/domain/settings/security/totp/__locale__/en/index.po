@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:112
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:109
 msgid "Activate"
 msgstr ""
 
@@ -30,7 +30,11 @@ msgid "Back to Security Settings"
 msgstr ""
 
 #: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:170
-msgid "Back to settings"
+#~ msgid "Back to settings"
+#~ msgstr ""
+
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:169
+msgid "Complete"
 msgstr ""
 
 #: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpAppDownloadStep/TotpAppDownloadStep.tsx:11
@@ -77,11 +81,11 @@ msgstr ""
 msgid "Set up two-factor authentication"
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:161
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:160
 msgid "The next time you login, you'll be asked to enter another 6-digit code using the same device you used to set this up."
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:93
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:90
 msgid "There was an error setting up two-factor authentication"
 msgstr ""
 
@@ -89,11 +93,11 @@ msgstr ""
 msgid "Twilio Authy App"
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:154
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow.tsx:153
 msgid "Two-factor Setup Complete"
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:78
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpActivateStep/TotpActivationForm/TotpActivationForm.tsx:82
 msgid "Two-factor authentication was successfully set up"
 msgstr ""
 

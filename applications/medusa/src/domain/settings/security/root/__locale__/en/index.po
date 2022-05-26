@@ -25,7 +25,7 @@ msgstr ""
 msgid "Authenticator App"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:151
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:153
 msgid "Cancel"
 msgstr ""
 
@@ -33,20 +33,20 @@ msgstr ""
 msgid "Configure authenticator app"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:124
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:126
 msgid "Disable"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:163
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:165
 msgid "Disable Two-Factor"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:100
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:139
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:102
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:141
 msgid "Disable Two-Factor Authentication"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:144
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:146
 msgid "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?"
 msgstr ""
 
@@ -71,10 +71,14 @@ msgid "Sessions"
 msgstr ""
 
 #: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/RootMultiFactorSettings.tsx:34
-msgid "Setting up two-factor authentication adds an extra layer of security in case your account is compromised."
+#~ msgid "Setting up two-factor authentication adds an extra layer of security in case your account is compromised."
+#~ msgstr ""
+
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/RootMultiFactorSettings.tsx:34
+msgid "Setting up two-factor authentication adds an extra layer of security in case your account is compromised. Two-factor is required to access some features."
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:78
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:80
 msgid "There was an error disabling two-factor authentication"
 msgstr ""
 
@@ -82,7 +86,7 @@ msgstr ""
 msgid "Two-factor Authentication"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:62
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:64
 msgid "Two-factor authentication has been disabled for your account"
 msgstr ""
 
@@ -90,6 +94,6 @@ msgstr ""
 msgid "View or regenerate recovery codes"
 msgstr ""
 
-#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:109
+#: src/domain/settings/security/root/RootSecuritySettings/RootMultiFactorSettings/MultiFactorSettings/DisableMultiFactor/DisableMultiFactor.tsx:111
 msgid "Your account role prevents you from disabling two-factor authentication"
 msgstr ""

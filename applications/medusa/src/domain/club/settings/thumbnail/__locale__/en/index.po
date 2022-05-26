@@ -17,7 +17,7 @@ msgstr ""
 msgid "Back to Club Settings"
 msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:42
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:48
 msgid "Change Club Thumbnail"
 msgstr ""
 

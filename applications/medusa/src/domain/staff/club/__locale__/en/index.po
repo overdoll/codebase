@@ -13,92 +13,380 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:124
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:124
 msgid "(Optional) Custom Duration"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:48
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:27
+msgid "15th of {month}"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptionPreview/StaffActiveClubSupporterSubscriptionPreview/StaffActiveClubSupporterSubscriptionPreview.tsx:40
+msgid "ACTIVE"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:71
+msgid "Account"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:98
 msgid "Active"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:60
-msgid "Can be unsuspended"
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:66
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:66
+msgid "Amount"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:109
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptionPreview/StaffCancelledClubSupporterSubscriptionPreview/StaffCancelledClubSupporterSubscriptionPreview.tsx:40
+msgid "CANCELLED"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:60
+#~ msgid "Can be unsuspended"
+#~ msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:72
+msgid "Cancel Active Supporter Subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:86
+msgid "Cancel Supporter Subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:125
+msgid "Cancel all active club supporter subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:77
+msgid "Cancel all active supporter subscriptions. You must first suspend the club so they cannot receive anymore supporter subscriptions. This must only be done in extreme cases where the club owner refuses to post on schedule."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:58
+msgid "Cancel all subscriptions and wait for the benefits to expire"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:114
 msgid "Confirm Suspend Club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:127
+msgid "Confirm Terminate Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:100
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:71
+msgid "Deposit Date"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:86
 msgid "Duration"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/StaffClubInfractions.tsx:33
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptionPreview/StaffExpiredClubSupporterSubscriptionPreview/StaffExpiredClubSupporterSubscriptionPreview.tsx:40
+msgid "EXPIRED"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:31
+msgid "End of {month}"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:81
+msgid "Expires"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:46
+msgid "In the event that you would like to terminate a club off of a platform completely, the suggested order of actions is..."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/StaffClubInfractions.tsx:33
 msgid "Infractions"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/StaffClubInfractions.tsx:44
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:113
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayouts.tsx:55
+msgid "Initiate Payout"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:137
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/StaffClubInfractions.tsx:44
 msgid "Issue Infraction"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:71
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:76
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLog/StaffClubSuspensionLog.tsx:45
 msgid "Issued"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:63
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:81
+msgid "Next/End/Expired Date"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:68
 msgid "No infractions found"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:67
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:67
+msgid "No payout details entered for this account"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:78
+msgid "No payout method set up for this account"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:56
+msgid "No suspension logs found"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:19
+msgid "Now"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:68
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:45
 msgid "Owner"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:66
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:83
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPayments.tsx:59
+msgid "Payments"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:78
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayouts.tsx:67
+msgid "Payouts"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayouts.tsx:49
+msgid "Pending {pendingBalance}"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPayments.tsx:38
+msgid "Platform Fee"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:101
+msgid "Platform Fee %"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:70
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:72
+msgid "Please enter the required hint"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:106
+msgid "Please type <0>{validString}</0> into the input below to confirm that you would like to cancel all of the club's active supporter subscriptions."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:108
+msgid "Please type <0>{validString}</0> into the input below to confirm that you would like to terminate the club."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:76
+msgid "Reason"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:118
 msgid "Remove Suspension"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:76
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:113
+msgid "Remove Termination"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLog/StaffClubSuspensionLog.tsx:67
+msgid "Removed"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:81
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:112
 msgid "Rule"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:88
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:37
+msgid "Select custom deposit date"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:105
+msgid "Select percentage"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:71
+msgid "Settlement Date"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:71
+msgid "Staff"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:23
+msgid "Start of {month}"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:63
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:61
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:61
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:66
+msgid "Status"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:73
+msgid "Subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:90
+msgid "Successfully cancelled all active club supporter subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:76
+msgid "Successfully initiated payout"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:88
 msgid "Successfully issued infraction to club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:72
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:77
 msgid "Successfully suspended club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:51
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:92
+msgid "Successfully terminated club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:56
 msgid "Successfully un-suspended club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:78
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubUnTerminateButton/StaffClubUnTerminateButton.tsx:54
+msgid "Successfully un-terminated club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:77
+msgid "Successfully updated platform fee"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:76
+msgid "Supporting Since"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:129
 msgid "Suspend Club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:44
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:53
+msgid "Suspend the club so they cannot receive new subscribers"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:67
 msgid "Suspended"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:96
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:101
 msgid "Suspension Duration"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:94
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensions.tsx:28
+msgid "Suspension Logs"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:88
+msgid "Suspensions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:98
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:118
+msgid "Terminate Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:63
+msgid "Terminate the club so it becomes inaccessible"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:49
+msgid "Terminated"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:103
+msgid "Terminating a club will make all of its content and public page inaccessible. You must first cancel all supporter subscriptions and wait for them to expire before terminating a club."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:93
+msgid "Termination"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:41
+msgid "Termination Order"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:103
+msgid "The club is active and all features are accessible."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:74
+msgid "The club is suspended but can be unsuspended by owner"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:81
+msgid "The club is suspended until {remaining}"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:54
+msgid "The club was terminated by {0}. You won't be able to find the club or its posts on the platform."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:87
+msgid "The owner cannot post or collect new subscriptions, but the page and content are still accessible."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:96
+msgid "There was an error cancelling all active club supporter subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:82
+msgid "There was an error initiating a payout"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/IssueClubInfractionForm/IssueClubInfractionForm.tsx:94
 msgid "There was an error issuing an infraction"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:78
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:83
 msgid "There was an error suspending the club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:57
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:98
+msgid "There was an error terminating the club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:62
 msgid "There was an error un-suspending club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:72
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubUnTerminateButton/StaffClubUnTerminateButton.tsx:60
+msgid "There was an error un-terminating the club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:83
+msgid "There was an error updating the platform fee"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:66
+msgid "Type"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:77
 msgid "Un-Suspend Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubUnTerminateButton/StaffClubUnTerminateButton.tsx:75
+msgid "Un-Terminate Club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:119
+msgid "Update Club Platform Fee"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPayments.tsx:46
+msgid "Update Platform Fee"
 msgstr ""

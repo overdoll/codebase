@@ -69,7 +69,7 @@ msgstr ""
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:161
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:159
 msgid "Posted on {formattedDate}"
 msgstr ""
 

@@ -13,14 +13,26 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/profile/root/RootProfileSettings/RootProfileSettings.tsx:37
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:52
 msgid "Account"
 msgstr ""
 
-#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:55
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:81
+msgid "Danger Zone"
+msgstr ""
+
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:90
+msgid "Delete Account"
+msgstr ""
+
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:71
 msgid "Manage Emails"
 msgstr ""
 
-#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:46
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:62
 msgid "Manage Username"
+msgstr ""
+
+#: src/domain/settings/profile/root/RootProfileSettings/ProfileSettings/ProfileSettings.tsx:92
+msgid "Permanently delete your account"
 msgstr ""

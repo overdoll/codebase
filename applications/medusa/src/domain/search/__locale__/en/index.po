@@ -12,3 +12,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/domain/search/RootSearch/RootSearch.tsx:43
+msgid "Search"
+msgstr ""

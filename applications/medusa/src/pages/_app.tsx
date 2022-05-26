@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react'
 import theme from '../modules/theme'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { I18nProvider } from '@lingui/react'
-import { i18n as i18nGlobal, setupI18n } from '@lingui/core'
+import { i18n as i18nGlobal } from '@lingui/core'
 import NextApp from 'next/app'
 import Root from '../domain/app'
 import 'swiper/css'
@@ -51,9 +51,8 @@ const MyApp = ({
 
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   const i18n = useMemo(() => {
-    const targetI18n = CanUseDOM ? i18nGlobal : setupI18n()
-    initializeLocaleData(locale, targetI18n)
-    return targetI18n
+    initializeLocaleData(locale, i18nGlobal)
+    return i18nGlobal
   }, [])
 
   const firstRender = useRef(true)
@@ -156,6 +155,15 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
 
   if (app.Component?.getRelayPreloadProps != null) {
     queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
+  }
+
+  // load translation props
+  if (app.Component?.getTranslationProps != null) {
+    const loaded = await app.Component.getTranslationProps(app.ctx).translations
+
+    if (loaded != null) {
+      i18nGlobal.load(app.ctx.locale, loaded)
+    }
   }
 
   // preload results on the server & client

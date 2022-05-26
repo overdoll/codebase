@@ -2,6 +2,10 @@ import RootStaffCreateCategory from './RootStaffCreateCategory/RootStaffCreateCa
 import StaffCreateCategoryQuery from '@//:artifacts/StaffCreateCategoryQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffCreateCategory.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffCreateCategory.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

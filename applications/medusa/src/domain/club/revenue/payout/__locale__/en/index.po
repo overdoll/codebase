@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-05-26 11:05-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:110
+msgid "All of the payments that are associated with this payout."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/RootClubPayout.tsx:48
+msgid "Back to Revenue"
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:105
+msgid "Payments"
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:73
+msgid "Payout Amount"
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:53
+msgid "The payout is processing and will be deposited shortly."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:54
+msgid "The payout is ready and will be processed on the standard payout schedule."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:50
+msgid "The payout was cancelled. The next payout will occur on the standard payout schedule."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:52
+msgid "The payout was not deposited. We will retry a few more times to deposit to your preferred payout method before cancelling the payout."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:51
+msgid "The payout was successfully deposited into your preferred payout method."
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:95
+msgid "The payout will be attempted for deposit to your preferred payout method on this date"
+msgstr ""

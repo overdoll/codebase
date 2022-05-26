@@ -8,3 +8,7 @@ export function dateFnsLocaleFromI18n (i18nv: typeof i18n): Locale {
 export function initializeLocaleData (lang: string, i18nv: typeof i18n): void {
   i18nv.loadLocaleData(lang, { plurals: plurals[lang] })
 }
+
+export function loadTranslations (data: any): void {
+  i18n.load('en', data)
+}

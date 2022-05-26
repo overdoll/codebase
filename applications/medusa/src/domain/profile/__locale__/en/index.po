@@ -32,3 +32,7 @@ msgstr ""
 #: src/domain/profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton.tsx:29
 msgid "Staff"
 msgstr ""
+
+#: src/domain/profile/RootProfile/Profile/Profile.tsx:47
+msgid "This account was deleted"
+msgstr ""

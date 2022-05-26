@@ -73,12 +73,17 @@ export type GetRelayPreloadPropsReturn = Partial<{
   }
 }>
 
+export type GetTranslationPropsReturn = Promise<Partial<{
+  translations: any
+}>>
+
 interface PageContext extends NextPageContext {
   cookies: Cookies
 }
 
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<P> & {
   getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
+  getTranslationProps?: (context: C) => GetTranslationPropsReturn
   getLayout?: (page: JSX.Element) => JSX.Element
 }
 

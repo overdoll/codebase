@@ -2,6 +2,10 @@ import RootRecoveryCodesSetup from './RootRecoveryCodesSetup/RootRecoveryCodesSe
 import RecoveryCodesSetupQuery from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootRecoveryCodesSetup.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootRecoveryCodesSetup.getRelayPreloadProps = () => {
   return {
     queries: {

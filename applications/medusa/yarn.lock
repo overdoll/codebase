@@ -5275,14 +5275,14 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@lingui/babel-plugin-extract-messages@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/babel-plugin-extract-messages/-/babel-plugin-extract-messages-3.13.0.tgz"
-  integrity sha512-akDiMq+CrF3m4ENA3DlEj+XfskZow6SqvrkOUVIStow5kUqcCBow635W7+YAem2TJNxH+CpVgpGV24osiQx+ZQ==
+"@lingui/babel-plugin-extract-messages@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/babel-plugin-extract-messages/-/babel-plugin-extract-messages-3.13.3.tgz#78fa0380760bafbc2e17bb19df1326a21b70f6ab"
+  integrity sha512-s5onRmsR7Y5J8c5yJIZaf1kW+gqV+yece1mYoHHVGlJjEh8id0mksVMj8IrUtkwE4JhUxSCxfRNoloGulaAyqw==
   dependencies:
     "@babel/generator" "^7.11.6"
     "@babel/runtime" "^7.11.2"
-    "@lingui/conf" "^3.13.0"
+    "@lingui/conf" "^3.13.3"
     mkdirp "^1.0.4"
 
 "@lingui/babel-plugin-transform-js@2.9.2":
@@ -5297,24 +5297,24 @@
 
 "@lingui/babel-preset-react@^2.9.2":
   version "2.9.2"
-  resolved "https://registry.npmjs.org/@lingui/babel-preset-react/-/babel-preset-react-2.9.2.tgz"
+  resolved "https://registry.yarnpkg.com/@lingui/babel-preset-react/-/babel-preset-react-2.9.2.tgz#26bf88619b62383caee1210b8cf86965a3a7c33e"
   integrity sha512-M+nfK/83+FnLEr63bBox5DKsSYgwPPmhfiLJAbc2BZBlmF1Nfqv/dHL+d2ynyEKNKCSVts476eDeiOFwv2MTNw==
   dependencies:
     "@lingui/babel-plugin-transform-js" "2.9.2"
     "@lingui/babel-plugin-transform-react" "2.9.2"
 
-"@lingui/cli@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/cli/-/cli-3.13.0.tgz"
-  integrity sha512-hK/7z+hqxT9CSzUQUQEefurbjmZCJldLG9kbSp8mNgJ+XLAv1mWPve79pYCbtMK7M7vbyU4uG0ncnH+pHKFF/w==
+"@lingui/cli@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/cli/-/cli-3.13.3.tgz#b573a62394c1064c82dc7ac868d7c3311d991446"
+  integrity sha512-6AswBsIAn3+JZj9hhqcKjPGpBPnM8m7TT235iQiWHHbq11DDh1l0eH6KTCqCaWW9nIALWgxmI/03zCInRTrzRQ==
   dependencies:
     "@babel/generator" "^7.11.6"
     "@babel/parser" "^7.11.5"
     "@babel/plugin-syntax-jsx" "^7.10.4"
     "@babel/runtime" "^7.11.2"
     "@babel/types" "^7.11.5"
-    "@lingui/babel-plugin-extract-messages" "^3.13.0"
-    "@lingui/conf" "^3.13.0"
+    "@lingui/babel-plugin-extract-messages" "^3.13.3"
+    "@lingui/conf" "^3.13.3"
     babel-plugin-macros "^3.0.1"
     bcp-47 "^1.0.7"
     chalk "^4.1.0"
@@ -5340,10 +5340,10 @@
     pseudolocale "^1.1.0"
     ramda "^0.27.1"
 
-"@lingui/conf@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/conf/-/conf-3.13.0.tgz"
-  integrity sha512-1vl7NEZWMuiM2JCqnvlGmoyqlwB4isSEZrzvKWGAGMRLxMuuKR6PrH1Khgl4x2WRLZxfEysXTe6YR08Ra68irQ==
+"@lingui/conf@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/conf/-/conf-3.13.3.tgz#fa5d27f0c63b1320458e2308d5d069678306c28f"
+  integrity sha512-UmGx/5rtSvb2S+RFYjQGiux5Xh5xvVICss4ONf8eU4Xm8jUvjtErTXVSF3GAhCI2aC/R3bZJZf0uSj7LbsrOiw==
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
@@ -5352,54 +5352,42 @@
     jest-validate "^26.5.2"
     lodash.get "^4.4.2"
 
-"@lingui/conf@^3.13.2":
-  version "3.13.2"
-  resolved "https://registry.npmjs.org/@lingui/conf/-/conf-3.13.2.tgz"
-  integrity sha512-JhiIBxnh2X4QmLP0/+dnTBc7xnZ6qk5MRsQtJqkEOWGFl09CTrha5uPVqjr5MgkmBOQ6Q8+cRYWG+qtJsuUH5A==
-  dependencies:
-    "@babel/runtime" "^7.11.2"
-    "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
-    chalk "^4.1.0"
-    cosmiconfig "^7.0.0"
-    jest-validate "^26.5.2"
-    lodash.get "^4.4.2"
-
-"@lingui/core@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/core/-/core-3.13.0.tgz"
-  integrity sha512-UDmI8UL59rLmQDDjBK8JFMX0+i3+pncl3fWG+tD2cXNJkN+MEBrhECTQ2lsM1tCk09AfiATglPPXm1e0tLxxOw==
+"@lingui/core@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/core/-/core-3.13.3.tgz#cbeb7449090c7fe2625e8f2dae2a73e9f0c173f4"
+  integrity sha512-3rQDIC7PtPfUuZCSNfU0nziWNMlGk3JhpxENzGrlt1M8w5RHson89Mk1Ce/how+hWzFpumCQDWLDDhyRPpydbg==
   dependencies:
     "@babel/runtime" "^7.11.2"
     make-plural "^6.2.2"
     messageformat-parser "^4.1.3"
 
-"@lingui/loader@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/loader/-/loader-3.13.0.tgz"
-  integrity sha512-MuLwM6vVMYH/ilCGunNGIPTvZU9gtjaohU54/bDCRbDJ5teN46UKqFTYqP6TwVWa+AF6hRMcgUprBcQJi7Iw8Q==
+"@lingui/loader@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/loader/-/loader-3.13.3.tgz#27de2611a291a3651f3cfa685edf6d036369dfbf"
+  integrity sha512-YWT2D8SjGCLDC/DfU3GQnuWqWNRWz/1szaj1Nx0hFCGAJZqG7QUWdPoJU06/rq60ePWGSOpbMnpNHCbBE/jY5A==
   dependencies:
     "@babel/runtime" "^7.11.2"
-    "@lingui/cli" "^3.13.0"
-    "@lingui/conf" "^3.13.0"
+    "@lingui/cli" "^3.13.3"
+    "@lingui/conf" "^3.13.3"
     loader-utils "^2.0.0"
     ramda "^0.27.1"
 
-"@lingui/macro@^3.13.2":
-  version "3.13.2"
-  resolved "https://registry.npmjs.org/@lingui/macro/-/macro-3.13.2.tgz"
-  integrity sha512-0BdybZkBq8bl4NrT8txX7k8BodyJ/4uQbMIK0ucPJvQ/6Lhj824CodBq5KuMWpcXoMSxUWjQIkIGr1Fi1ckLGg==
+"@lingui/macro@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-3.13.3.tgz#699b60e6676c3c9e3c9eed6564155fc9e23d6aa8"
+  integrity sha512-nPldmgPGNfGTVW3TTkSZiaPI5jDQKwv/Hfmjzwo/VzfXpcjxoqz0oDGQBx8mbdKcMgpq+g6fV2Y5aCosTazdqg==
   dependencies:
     "@babel/runtime" "^7.11.2"
-    "@lingui/conf" "^3.13.2"
+    "@lingui/conf" "^3.13.3"
     ramda "^0.27.1"
 
-"@lingui/react@^3.13.0":
-  version "3.13.0"
-  resolved "https://registry.npmjs.org/@lingui/react/-/react-3.13.0.tgz"
-  integrity sha512-FS5NqWHh8Ngj1jnF9Yg+lqnIaMT0SjPBzOT6MpiO36tsWNFAdehqM589utvBmaU0eeV+/CyTF02GH6rd4PjMBg==
+"@lingui/react@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@lingui/react/-/react-3.13.3.tgz#e68284b00a1096d112553bd74a361c17810478c5"
+  integrity sha512-sCCI5xMcUY9b6w2lwbwy6iHpo1Fb9TDcjcHAD2KI5JueLH+WWQG66tIHiVAlSsQ+hmQ9Tt+f86H05JQEiDdIvg==
   dependencies:
     "@babel/runtime" "^7.11.2"
-    "@lingui/core" "^3.13.0"
+    "@lingui/core" "^3.13.3"
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
