@@ -99,6 +99,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 
 	query := "https://bill.ccbill.com/jpost/billingApi.cgi?" +
 		"clientAccnum=" + ccbillClientAccnum +
+		"&clientSubacc=" + ccbillClientSubacc +
 		"&username=" + ccbillUsername +
 		"&password=" + ccbillPassword +
 		"&action=chargeByPreviousTransactionId" +

@@ -45,7 +45,7 @@ type response int
 
 func addDatalinkCredentialsToRequest(q url.Values) url.Values {
 	q.Add("clientAccnum", os.Getenv("CCBILL_ACCOUNT_NUMBER"))
-	q.Add("usingSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
+	q.Add("clientSubacc", os.Getenv("CCBILL_SUB_ACCOUNT_NUMBER"))
 	q.Add("username", os.Getenv("CCBILL_DATALINK_USERNAME"))
 	q.Add("password", os.Getenv("CCBILL_DATALINK_PASSWORD"))
 	q.Add("returnXML", "1")
