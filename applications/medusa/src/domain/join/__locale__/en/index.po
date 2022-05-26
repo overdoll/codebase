@@ -38,7 +38,7 @@ msgstr ""
 #~ msgid "Code"
 #~ msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:70
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:68
 msgid "Collect paid supporter revenue"
 msgstr ""
 
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:118
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:116
 msgid "Create a personalized content feed"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:63
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:61
 msgid "Creating adult digital content"
 msgstr ""
 
@@ -90,17 +90,17 @@ msgstr ""
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:113
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:111
 msgid "Find any type of content"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:57
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:130
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:55
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:128
 msgid "For Artists"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:95
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:135
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:93
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:133
 msgid "For Fans"
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:80
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:78
 msgid "Have your content distributed across the platform"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Make sure to check your spam!"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:101
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:99
 msgid "Of adult digital content"
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 msgid "Please wait while we log you in..."
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:75
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:73
 msgid "Post free and/or exclusive content"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Submit Code"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:108
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:106
 msgid "Support your favorite artists"
 msgstr ""
 
@@ -241,5 +241,5 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:22
-msgid "{children}"
-msgstr ""
+#~ msgid "{children}"
+#~ msgstr ""

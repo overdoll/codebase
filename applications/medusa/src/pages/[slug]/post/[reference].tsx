@@ -1,3 +1,3 @@
-import RootPublicPost from '../../../domain/[slug]/post'
+import RootPublicPost from '../../../domain/slug/post'
 
 export default RootPublicPost

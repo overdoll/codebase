@@ -36,7 +36,8 @@ const MyApp = ({
   requestProps,
   securityToken,
   environment,
-  relayStore
+  relayStore,
+  translationProps
 }: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
@@ -52,6 +53,7 @@ const MyApp = ({
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   const i18n = useMemo(() => {
     initializeLocaleData(locale, i18nGlobal)
+    i18nGlobal.load(locale, translationProps)
     return i18nGlobal
   }, [])
 
@@ -157,12 +159,21 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
   }
 
+  let translationProps = {}
+
   // load translation props
   if (app.Component?.getTranslationProps != null) {
-    const loaded = await app.Component.getTranslationProps(app.ctx).translations
+    let data: { translations: any } | null = null
 
-    if (loaded != null) {
-      i18nGlobal.load(app.ctx.locale, loaded.messages)
+    try {
+      data = (await app.Component.getTranslationProps(app.ctx))
+    } catch (e) {
+      data = null
+      console.error(e)
+    }
+
+    if (data != null) {
+      translationProps = { ...translationProps, ...data.translations.messages }
     }
   }
 
@@ -199,7 +210,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     requestProps,
     securityToken,
     environment,
-    relayStore
+    relayStore,
+    translationProps
   }
 
   // do a prepass to collect all queries and wait for them to complete

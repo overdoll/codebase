@@ -20,7 +20,7 @@ describe('Join', () => {
 
     cy.waitUntil(() => cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled'))
 
-    cy.findByPlaceholderText(/Username/iu)
+    cy.findByPlaceholderText(/Enter a username/iu)
       .type(username)
 
     cy.findByRole('button', { name: /Register/iu })

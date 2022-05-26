@@ -53,6 +53,7 @@ export interface CustomAppProps extends AppInitialProps {
   environment: IEnvironment
   requestProps: RequestProps
   securityToken: string
+  translationProps: any
   relayStore: any
 }
 
@@ -60,6 +61,7 @@ export interface CustomPageAppProps extends AppProps {
   Component: PageProps<NextPageContext, any>
   environment: IEnvironment
   requestProps: RequestProps
+  translationProps: any
   securityToken: string
   relayStore: any
 }

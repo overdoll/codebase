@@ -12,3 +12,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/domain/slug/posts/RootPublicClubPosts/RootPublicClubPosts.tsx:54
+msgid "Club Posts Search"
+msgstr ""

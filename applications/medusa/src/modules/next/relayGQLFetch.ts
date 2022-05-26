@@ -1,7 +1,7 @@
 import gcm from '../utilities/gcm'
 
 export const clientFetch = (securityToken) => {
-  return async (data) => {
+  return async (data, kind) => {
     const response = await fetch(
       '/api/graphql',
       {
@@ -15,7 +15,15 @@ export const clientFetch = (securityToken) => {
       }
     )
 
-    return await response.json()
+    const result = await response.json()
+
+    if (Array.isArray(result.errors) && kind === 'mutation') {
+      const error = new Error(JSON.stringify(result.errors))
+      console.log(error)
+      throw error
+    }
+
+    return result
   }
 }
 
