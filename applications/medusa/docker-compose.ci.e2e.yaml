@@ -3,10 +3,7 @@ services:
   medusa:
     image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
     env_file: ../../applications/medusa/.env.ci
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
     depends_on:
       - redis
       - sting
@@ -20,6 +17,7 @@ services:
       - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
       - "traefik.http.routers.medusa.entrypoints=web"
       - "traefik.port=8000"
+    cpus: 4
 
   run:
     volumes:

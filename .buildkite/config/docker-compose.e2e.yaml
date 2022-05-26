@@ -11,16 +11,34 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
   temporal:
     depends_on:
-      - scylla
+      - postgresql
     environment:
-      - DB=cassandra
-      - CASSANDRA_SEEDS=scylla
-      - CASSANDRA_HOST=scylla
-      - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/temporal-sql.yaml
     image: temporalio/auto-setup:1.14.1
     ports:
       - 7233:7233
     volumes:
-      - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
+      - ./services/temporal.yaml:/etc/temporal/config/temporal-sql.yaml
+    cpus: 1
+
+volumes:
+  postgres:
+    driver: local

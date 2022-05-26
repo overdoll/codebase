@@ -12,8 +12,6 @@ services:
       - 3240:8000
       - 3250:8080
     restart: "on-failure:20"
-    mem_limit: 512m
-    mem_reservation: 128M
     cpus: 0.1
 
   run:

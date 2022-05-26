@@ -18,3 +18,4 @@ services:
       - redis
       - temporal
       - traefik
+    cpus: 4
