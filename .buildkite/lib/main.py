@@ -572,7 +572,7 @@ def execute_publish_commands(configs):
         # grab our current digest
         digest = exec.execute_command_and_get_output(["crane", "digest", existing_tag]).rstrip("\n")
 
-        new_tag = "{}/{}@{}".format(registry, from_repo, digest)
+        new_tag = "{}/{}@{}".format(registry, to_repo, digest)
         new_tag_with_commit = "{}/{}:{}".format(registry, from_repo, commit)
 
         # then, check
