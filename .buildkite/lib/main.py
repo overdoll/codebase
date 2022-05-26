@@ -498,47 +498,47 @@ def print_project_pipeline():
     # front-end
     pipeline_steps.append("wait")
 
-    # pipeline_steps.append(
-    #     pipeline.create_step(
-    #         label=':cypress: :chromium: End-to-End Test',
-    #         commands=[".buildkite/pipeline.sh e2e_test"],
-    #         shards=1,
-    #         platform="docker-compose",
-    #         cache=[
-    #             {
-    #                 "gencer/cache#v2.4.10": {
-    #                     "id": "medusa-node_modules",
-    #                     "backend": "s3",
-    #                     "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
-    #                     "compress": "true",
-    #                     "paths": [
-    #                         "applications/medusa/node_modules",
-    #                     ],
-    #                     "s3": {
-    #                         "bucket": "buildkite-runner-cache"
-    #                     }
-    #                 }
-    #             },
-    #         ],
-    #         artifacts=e2e.get("artifacts", []),
-    #         configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
-    #             "./.buildkite/config/docker-compose.e2e.yaml",
-    #             "./.buildkite/config/docker/docker-compose.e2e.yaml"]
-    #     )
-    # )
-    #
-    # # publish when the branch is master
-    # # if os.getenv("BUILDKITE_BRANCH") == "master":
-    # pipeline_steps.append("wait")
-
-    # must complete all steps before publishing
     pipeline_steps.append(
         pipeline.create_step(
-            label=":aws: Publish Images",
-            commands=[".buildkite/pipeline.sh publish"],
-            platform="docker",
+            label=':cypress: :chromium: End-to-End Test',
+            commands=[".buildkite/pipeline.sh e2e_test"],
+            shards=1,
+            platform="docker-compose",
+            cache=[
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        }
+                    }
+                },
+            ],
+            artifacts=e2e.get("artifacts", []),
+            configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker-compose.e2e.yaml",
+                "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
+
+    # publish when the branch is master
+    if os.getenv("BUILDKITE_BRANCH") == "master":
+        pipeline_steps.append("wait")
+
+        # must complete all steps before publishing
+        pipeline_steps.append(
+            pipeline.create_step(
+                label=":aws: Publish Images",
+                commands=[".buildkite/pipeline.sh publish"],
+                platform="docker",
+            )
+        )
 
     print(yaml.dump({"steps": pipeline_steps}))
 
@@ -576,7 +576,7 @@ def execute_publish_commands(configs):
         new_tag_with_commit = "{}/{}:{}".format(registry, from_repo, commit)
 
         # then, check
-        returncode = exec.execute_command(["crane", "digest", new_tag])
+        returncode = exec.execute_command(["crane", "digest", new_tag], fail_if_nonzero=False)
 
         # return code is not 0, it means the digest was not found
         if returncode != 0:
