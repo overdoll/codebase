@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   medusa:
     image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
@@ -20,7 +20,7 @@ services:
       - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
       - "traefik.http.routers.medusa.entrypoints=web"
       - "traefik.port=8000"
-    mem_limit: 1Gi
+    mem_limit: 1g
     mem_reservation: 128M
     cpus: 1
 
