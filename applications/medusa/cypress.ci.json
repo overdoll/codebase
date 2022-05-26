@@ -1,10 +1,5 @@
 {
   "baseUrl": "https://ci.overdoll.dev",
-  "env": {
-    "codeCoverage": {
-      "url": "/api/coverage"
-    }
-  },
   "projectId": "svdd6z",
   "experimentalSessionSupport": true,
   "video": true,

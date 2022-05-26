@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   parley:
     image: $CONTAINER_REGISTRY/parley/dev:$BUILDKITE_COMMIT
@@ -10,10 +10,11 @@ services:
     ports:
       - 3060:8000
       - 3070:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.1
+
   run:
     depends_on:
       - parley

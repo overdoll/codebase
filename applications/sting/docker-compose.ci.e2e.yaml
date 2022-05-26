@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
@@ -12,10 +12,11 @@ services:
     ports:
       - 3040:8000
       - 3050:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.1
+
   run:
     depends_on:
       - sting

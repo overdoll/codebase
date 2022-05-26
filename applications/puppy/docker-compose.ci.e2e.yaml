@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   puppy:
     image: $CONTAINER_REGISTRY/puppy/dev:$BUILDKITE_COMMIT
@@ -14,10 +14,10 @@ services:
       - "traefik.http.routers.puppy.rule=PathPrefix(`/api/graphql`)"
       - "traefik.http.routers.puppy.entrypoints=web"
       - "traefik.port=8000"
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.1
 
   run:
     depends_on:

@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   stella:
     image: $CONTAINER_REGISTRY/stella/dev:$BUILDKITE_COMMIT
@@ -11,10 +11,11 @@ services:
     ports:
       - 3240:8000
       - 3250:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    mem_limit: 512m
+    mem_reservation: 128M
+    cpus: 0.1
+
   run:
     depends_on:
       - stella

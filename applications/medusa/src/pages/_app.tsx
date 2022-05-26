@@ -53,9 +53,13 @@ const MyApp = ({
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   const i18n = useMemo(() => {
     initializeLocaleData(locale, i18nGlobal)
-    i18nGlobal.load(locale, translationProps)
     return i18nGlobal
   }, [])
+
+  // load everytime translation props changes
+  useMemo(() => {
+    i18nGlobal._load(locale, translationProps)
+  }, [translationProps])
 
   const firstRender = useRef(true)
   // Load localization data into lingui

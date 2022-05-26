@@ -20,6 +20,9 @@ services:
       - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
       - "traefik.http.routers.medusa.entrypoints=web"
       - "traefik.port=8000"
+    mem_limit: 1Gi
+    mem_reservation: 128M
+    cpus: 1
 
   run:
     volumes:
