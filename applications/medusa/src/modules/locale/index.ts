@@ -10,5 +10,5 @@ export function initializeLocaleData (lang: string, i18nv: typeof i18n): void {
 }
 
 export function loadTranslations (data: any): void {
-  i18n.load('en', data)
+  i18n.load('en', data.messages)
 }

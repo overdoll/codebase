@@ -162,7 +162,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     const loaded = await app.Component.getTranslationProps(app.ctx).translations
 
     if (loaded != null) {
-      i18nGlobal.load(app.ctx.locale, loaded)
+      i18nGlobal.load(app.ctx.locale, loaded.messages)
     }
   }
 
