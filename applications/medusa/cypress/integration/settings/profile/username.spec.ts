@@ -15,7 +15,7 @@ describe('Settings - Change Username', () => {
     cy.findByText('Manage Username').should('be.visible').click()
     cy.url().should('include', '/settings/profile/username')
 
-    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'), { timeout: 10000 })
+    cy.waitUntil(() => cy.findByRole('button', { name: /Change Username/iu }).should('not.be.disabled'), { timeout: 20000 })
 
     cy.findByRole('button', { name: /Change Username/iu }).click()
 

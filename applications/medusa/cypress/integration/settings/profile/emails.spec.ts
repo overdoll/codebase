@@ -16,7 +16,7 @@ describe('Settings - Add Email', () => {
     cy.findByText('Manage Emails').should('be.visible').click()
     cy.url().should('include', '/settings/profile/emails')
 
-    cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'), { timeout: 10000 })
+    cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'), { timeout: 20000 })
 
     cy.findByRole('button', { name: /Add Email/iu }).click()
 
