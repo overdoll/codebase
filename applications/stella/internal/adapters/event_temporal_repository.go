@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"github.com/spf13/viper"
-	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
@@ -141,8 +140,6 @@ func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *prin
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        workflowId,
-		// allow duplicates only if it has failed
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CreateClub, workflows.CreateClubInput{
