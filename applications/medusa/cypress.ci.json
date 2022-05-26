@@ -2,10 +2,10 @@
   "baseUrl": "https://ci.overdoll.dev",
   "projectId": "svdd6z",
   "experimentalSessionSupport": true,
-  "video": true,
   "videoUploadOnPasses": false,
   "chromeWebSecurity": false,
   "retries": {
     "runMode": 2
-  }
+  },
+  "video": false
 }
