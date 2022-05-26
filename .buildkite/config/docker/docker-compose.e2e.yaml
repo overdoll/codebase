@@ -18,6 +18,3 @@ services:
       - redis
       - temporal
       - traefik
-    mem_limit: 6g
-    mem_reservation: 512M
-    cpus: 4
