@@ -574,7 +574,7 @@ def execute_publish_commands(configs):
         commit = os.getenv("BUILDKITE_COMMIT", "")
         registry = os.getenv("CONTAINER_REGISTRY", "")
 
-        existing_tag = "{}/{}:{}".format(registry, from_repo, commit)
+        existing_tag = "{}/{}:{}".format(registry, from_repo, commit).rstrip("\n")
 
         # grab our current digest
         digest = exec.execute_command_and_get_output(["crane", "digest", existing_tag])

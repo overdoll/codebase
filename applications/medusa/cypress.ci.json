@@ -9,5 +9,8 @@
   "experimentalSessionSupport": true,
   "video": true,
   "videoUploadOnPasses": false,
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "retries": {
+    "runMode": 3
+  }
 }
