@@ -22,8 +22,8 @@ type AccountResolver struct {
 func checkPermissions(ctx context.Context, id relay.ID) error {
 	if principal.FromContext(ctx) == nil {
 
-		if err := passport.FromContext(ctx).AuthenticateAccount(id.GetID()); err != nil {
-			return err
+		if passport.FromContext(ctx).AccountID() != id.GetID() {
+			return passport.ErrNotAuthenticated
 		}
 
 		return nil
