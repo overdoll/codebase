@@ -1,5 +1,5 @@
 import { chakra, HTMLChakraProps } from '@chakra-ui/react'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   fill?: string
@@ -30,10 +30,12 @@ export default function IconPattern ({
     }
   }
 
+  const id = useMemo(() => (Math.random() + 1).toString(36).substring(7), [])
+
   return (
     <chakra.svg w='100%' h='100%'>
       <pattern
-        id='pattern'
+        id={id}
         x='0'
         y='0'
         width={determineZoom()}
@@ -61,7 +63,7 @@ export default function IconPattern ({
           {...rest}
         />
       </pattern>
-      <rect x='0' y='0' width='100%' height='100%' fill='url(#pattern)' />
+      <rect x='0' y='0' width='100%' height='100%' fill={`url(#${id})`} />
     </chakra.svg>
   )
 }

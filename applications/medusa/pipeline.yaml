@@ -3,6 +3,7 @@ frontend_steps:
     workdir: applications/medusa
     commands:
       - ./run_yarn_install.sh
+      - yarn locale:compile
       - yarn run check:tsc
       - yarn run check:eslint
 
@@ -18,7 +19,6 @@ frontend_steps:
   build:
     workdir: applications/medusa
     commands:
-      - yarn locale:compile
       - yarn build
 
   push_image:
