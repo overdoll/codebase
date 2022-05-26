@@ -9,8 +9,8 @@ services:
     ports:
       - 9042:9042
       - 9160:9160
-    mem_limit: 750M
-    mem_reservation: 512M
+    mem_limit: 1g
+    mem_reservation: 1g
     cpus: 1
 
   elasticsearch:
@@ -34,9 +34,9 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-    mem_limit: 512M
+    mem_limit: 1g
     mem_reservation: 512M
-    cpus: 0.5
+    cpus: 1
 
   redis:
     image: "redis:5.0-alpine3.13"
