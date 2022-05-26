@@ -1,7 +1,0 @@
-{
-  "name": "medusa",
-  "schemaPath": "./applications/medusa/schema/schema.graphql",
-  "includes": [
-    "./applications/medusa/**/*"
-  ]
-}

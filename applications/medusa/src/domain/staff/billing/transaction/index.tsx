@@ -2,6 +2,10 @@ import RootStaffAccountTransaction from './RootStaffAccountTransaction/RootStaff
 import StaffAccountTransactionQuery from '@//:artifacts/StaffAccountTransactionQuery.graphql'
 import StaffLayout from '../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffAccountTransaction.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffAccountTransaction.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

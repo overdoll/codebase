@@ -4,6 +4,10 @@ import AccountClubSupporterSubscriptionSettingsQuery
   from '@//:artifacts/AccountClubSupporterSubscriptionSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootAccountClubSupporterSubscriptionSettings.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootAccountClubSupporterSubscriptionSettings.getRelayPreloadProps = (context) => {
   return {
     queries: {

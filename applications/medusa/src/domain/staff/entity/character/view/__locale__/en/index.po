@@ -25,7 +25,7 @@ msgstr ""
 msgid "Change Character Name"
 msgstr ""
 
-#: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:40
+#: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:46
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Character Name"
 msgstr ""
 
-#: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:29
+#: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:30
 #: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:104
 msgid "Character Thumbnail"
 msgstr ""

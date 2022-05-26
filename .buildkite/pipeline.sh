@@ -3,8 +3,12 @@
 # exit immediately on failure, or if an undefined variable is used
 set -eu
 
-# a hack to install the yaml package, if it's not available
-if ! python -c "import yaml" &>/dev/null; then
+# install redis if not available
+if ! python3 -c "import redis" &>/dev/null; then
+  apt install python3-redis
+fi
+
+if ! python3 -c "import yaml" &>/dev/null; then
   apt install python3-yaml
 fi
 

@@ -28,7 +28,9 @@ export default function RandomPattern ({ seed }: Props): JSX.Element {
     }
   ]
 
-  const randomIcon = icons[memoized.nextInt32([0, 2])]
+  const chosen = useMemo(() => memoized.nextInt32([0, 3]), [seed])
+
+  const randomIcon = icons[chosen]
 
   // TODO center it or position randomly so it doesnt look clipped on right/bottom edge
   return (

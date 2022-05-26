@@ -60,7 +60,10 @@ def execute_bazel_run(
         additive_flags,
         target,
         incompatible_flags,
+        env=None
 ):
+    if env is None:
+        env = {}
     aggregated_flags = flags.compute_flags(
         additive_flags,
         incompatible_flags,
@@ -74,7 +77,8 @@ def execute_bazel_run(
         exec.execute_command(
             ["bazel", "run"]
             + aggregated_flags
-            + [target]
+            + target,
+            env=env
         )
     except subprocess.CalledProcessError as e:
         exception.handle_bazel_failure(e, "run")

@@ -11,14 +11,14 @@ import express from 'express'
 
 import http from 'http'
 
-import { DocumentNode, GraphQLSchema, Source, visit } from 'graphql'
+import { DocumentNode, GraphQLSchema, visit } from 'graphql'
 import { GraphQLResponse } from 'apollo-server-types'
 
 import { readFileSync } from 'fs'
 import { join, resolve } from 'path'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
-import { CoreSchema } from '@apollo/core-schema'
+import CoreSchema from '@apollo/core-schema'
 
 const supergraphSdl = readFileSync(join(__dirname, './schema/schema.graphql')).toString()
 
@@ -42,12 +42,8 @@ const typeDefs = gql`
     id: ID!
   }
 `
-
-const toTypeDefs = (name: string): DocumentNode => gql`
-  extend type ${name} implements Node @key(fields: "id") {
-  id: ID! @external
-  }
-`
+/** @noinspection */
+const toTypeDefs = (name: string): DocumentNode => gql` extend type ${name} implements Node @key(fields: "id") { id: ID! @external }`
 
 const resolvers = {
   Node: {
@@ -116,8 +112,8 @@ class NodeGateway extends ApolloGateway {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   createSchemaFromSupergraphSdl (supergraphSdl: string) {
-    const core = CoreSchema.fromSource(
-      new Source(supergraphSdl, 'supergraphSdl')
+    const core = CoreSchema.from(
+      gql(`${supergraphSdl}`)
     )
 
     // Once all real service definitions have been loaded, we need to find all
@@ -250,11 +246,14 @@ function matchQueryMiddleware (req, res, next): void {
         req.body.query = query
       } else {
         res.status(400).send({
-          errors: {
-            path: [],
-            locations: [],
-            message: `cannot find queryId: ${queryId as string}`
-          }
+          data: null,
+          errors: [
+            {
+              path: [],
+              locations: [],
+              message: `cannot find queryId: ${queryId as string}`
+            }
+          ]
         })
         return
       }

@@ -36,7 +36,7 @@ describe('Settings - Configure Two-Factor', () => {
 
     // Create recovery codes. Chain parents to get to the button class
     cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Recovery Codes/ }).click()
+    cy.findByRole('button', { name: /Recovery Codes/ }).click({ force: true })
     cy.waitUntil(() => cy.findByText(/Set up recovery codes/iu).should('exist'))
     cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
     cy.findByText(/Generate new recovery codes/iu).should('exist')
@@ -52,7 +52,7 @@ describe('Settings - Configure Two-Factor', () => {
 
     // Generate new codes and check to see if they are equal to the new ones
     cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Recovery Codes/ }).click()
+    cy.findByRole('button', { name: /Recovery Codes/ }).click({ force: true })
     cy.get('code').invoke('text').then(initialText => {
       cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
       cy.get('code').invoke('text').should('not.equal', initialText)
@@ -63,7 +63,7 @@ describe('Settings - Configure Two-Factor', () => {
     gotoSettingsPage()
 
     cy.waitUntil(() => cy.findByRole('button', { name: /Recovery Codes/ }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Recovery Codes/ }).click()
+    cy.findByRole('button', { name: /Recovery Codes/ }).click({ force: true })
 
     // Store recovery code as if the user "saved" it somewhere
     cy.get('code').invoke('text').then(text => {
@@ -74,7 +74,7 @@ describe('Settings - Configure Two-Factor', () => {
 
     // Set up authenticator app
     cy.waitUntil(() => cy.findByRole('button', { name: /Authenticator App/ }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Authenticator App/ }).click()
+    cy.findByRole('button', { name: /Authenticator App/ }).click({ force: true })
     isOnStep('download')
     gotoNextStep()
     isOnStep('code')

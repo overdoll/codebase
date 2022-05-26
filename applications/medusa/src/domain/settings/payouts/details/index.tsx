@@ -2,6 +2,10 @@ import RootAccountDetailsSettings from './RootAccountDetailsSettings/RootAccount
 import AccountDetailsSettingsQuery from '@//:artifacts/AccountDetailsSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootAccountDetailsSettings.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootAccountDetailsSettings.getRelayPreloadProps = () => {
   return {
     queries: {

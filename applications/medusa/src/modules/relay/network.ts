@@ -30,7 +30,7 @@ export function createNetwork (fetchFnOverride): INetwork {
       extensions: {
         queryId: operation.id
       }
-    })
+    }, operation.operationKind)
   }
 
   async function fetchFn (request: RequestParameters, variables: Variables, cacheConfig: CacheConfig): Promise<GraphQLResponse> {

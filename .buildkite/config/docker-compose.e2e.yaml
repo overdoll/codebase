@@ -1,0 +1,44 @@
+version: '2.2'
+services:
+  traefik:
+    image: traefik:v2.1
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  postgresql:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+
+  temporal:
+    depends_on:
+      - postgresql
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/temporal-sql.yaml
+    image: temporalio/auto-setup:1.14.1
+    ports:
+      - 7233:7233
+    volumes:
+      - ./services/temporal.yaml:/etc/temporal/config/temporal-sql.yaml
+    cpus: 1
+
+volumes:
+  postgresql:
+    driver: local

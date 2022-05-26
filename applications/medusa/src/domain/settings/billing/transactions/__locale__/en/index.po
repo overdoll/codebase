@@ -14,13 +14,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:51
-msgid "A list of charges that occurred for your club supporter subscriptions. <0>CCBill.com *overdoll Inc.</0> will appear on your Cardholder statement."
+#~ msgid "A list of charges that occurred for your club supporter subscriptions. <0>CCBill.com *overdoll Inc.</0> will appear on your Cardholder statement."
+#~ msgstr ""
+
+#: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:50
+msgid "A list of charges that occurred for your club supporter subscriptions. <0>CCBill.com *overdoll Inc</0> will appear on your Cardholder statement."
 msgstr ""
 
-#: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:40
+#: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:39
 msgid "Go back to Billing Settings"
 msgstr ""
 
-#: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:46
+#: src/domain/settings/billing/transactions/RootTransactionsSettings/RootTransactionsSettings.tsx:45
 msgid "Transaction History"
 msgstr ""

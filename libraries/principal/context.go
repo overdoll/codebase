@@ -1,23 +1,26 @@
 package principal
 
-import "context"
+import (
+	"context"
+)
 
-type principalContextType string
+type ContextTypePrincipal string
 
 const (
 	key = "PrincipalContextKey"
 )
 
 func toContext(ctx context.Context, principal *Principal) context.Context {
-	return context.WithValue(ctx, principalContextType(key), principal)
+	return context.WithValue(ctx, ContextTypePrincipal(key), principal)
 }
 
 func FromContext(ctx context.Context) *Principal {
-	raw := ctx.Value(principalContextType(key))
 
-	if raw != nil {
-		return raw.(*Principal)
+	raw, ok := ctx.Value(ContextTypePrincipal(key)).(*Principal)
+
+	if !ok {
+		return nil
 	}
 
-	return nil
+	return raw
 }

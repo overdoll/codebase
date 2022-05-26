@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   hades:
     image: $CONTAINER_REGISTRY/hades/dev:$BUILDKITE_COMMIT
@@ -21,10 +21,9 @@ services:
       - CCBILL_SUB_ACCOUNT_NUMBER=${CCBILL_SUB_ACCOUNT_NUMBER}
       - CCBILL_DATALINK_USERNAME=${CCBILL_DATALINK_USERNAME}
       - CCBILL_DATALINK_PASSWORD=${CCBILL_DATALINK_PASSWORD}
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    cpus: 0.1
+
   run:
     depends_on:
       - hades

@@ -14,9 +14,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:38
-msgid "Clubs Feed"
+#~ msgid "Clubs Feed"
+#~ msgstr ""
+
+#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:45
+msgid "Discover Clubs"
 msgstr ""
 
-#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:44
-msgid "Discover Clubs"
+#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:39
+msgid "Your Clubs Feed"
 msgstr ""

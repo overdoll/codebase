@@ -1,11 +1,6 @@
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
-exports_files([
-    "package.json",
-    "tsconfig.json",
-])
-
 package(default_visibility = ["//visibility:public"])
 
 # gazelle:prefix overdoll

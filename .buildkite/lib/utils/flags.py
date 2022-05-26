@@ -9,7 +9,7 @@ def concurrent_jobs():
 
 
 def concurrent_test_jobs():
-    return str(multiprocessing.cpu_count() // 2)
+    return str(multiprocessing.cpu_count())
 
 
 def get_bazelisk_cache_directory():
@@ -29,6 +29,9 @@ def common_build_flags(bep_file, is_test):
         "--experimental_repository_cache_hardlinks",
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
+        "--flaky_test_attempts=3",
+        "--repository_cache=/workdir/.bazel_repository_cache",
+        "--remote_cache=grpc://bazel.remote:9092"
     ]
 
     if is_test:
@@ -100,7 +103,7 @@ def get_json_profile_flags(out_file):
     ]
 
 
-def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
+def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars, action_env=False):
     json_profile_out = os.path.join(tmpdir, "{}.profile.gz".format(json_profile_key))
     json_profile_flags = get_json_profile_flags(json_profile_out)
 
@@ -109,6 +112,10 @@ def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
     # We have to add --test_env flags to `build`, too, otherwise Bazel
     # discards its analysis cache between `build` and `test`.
     if test_env_vars:
-        flags += ["--test_env={}".format(v) for v in test_env_vars]
+
+        if action_env:
+            flags += ["--define={}".format(v) for v in test_env_vars]
+        else:
+            flags += ["--test_env={}".format(v) for v in test_env_vars]
 
     return flags, json_profile_out

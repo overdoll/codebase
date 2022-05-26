@@ -220,13 +220,13 @@ func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
 	return requester.BelongsToAccount(m.ownerAccountId)
 }
 
-func (m *Club) CanSuspend(requester *principal.Principal) error {
+func (m *Club) CanSuspend(requester *principal.Principal, endTime time.Time) error {
 
 	if !requester.IsStaff() {
 		return principal.ErrNotAuthorized
 	}
 
-	return nil
+	return m.Suspend(endTime)
 }
 
 func (m *Club) CanTerminate(requester *principal.Principal) error {
@@ -235,7 +235,7 @@ func (m *Club) CanTerminate(requester *principal.Principal) error {
 		return principal.ErrNotAuthorized
 	}
 
-	return nil
+	return m.Terminate(requester.AccountId())
 }
 
 func (m *Club) CanUnTerminate(requester *principal.Principal) error {

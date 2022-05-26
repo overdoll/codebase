@@ -1,7 +1,7 @@
 workspace(
     name = "overdoll",
     managed_directories = {
-        "@npm": ["node_modules"],
+        "@npm_orca": ["applications/orca/node_modules"],
     },
 )
 
@@ -125,9 +125,9 @@ http_archive(
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_download_sdk", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("//:repositories.bzl", "go_repositories")
+load("//:go_repositories.bzl", "go_repositories")
 
-# gazelle:repository_macro repositories.bzl%go_repositories
+# gazelle:repository_macro go_repositories.bzl%go_repositories
 go_repositories()
 
 go_rules_dependencies()
@@ -203,13 +203,13 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 nodejs_image_repos()
 
 yarn_install(
-    name = "npm",
+    name = "npm_orca",
     args = [
         "--target_arch=x64",
         "--target_platform=linux",
     ],
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
+    package_json = "//applications/orca:package.json",
+    yarn_lock = "//applications/orca:yarn.lock",
 )
 
 container_pull(
@@ -231,4 +231,5 @@ container_pull(
     registry = "docker.io",
     repository = "jrottenberg/ffmpeg",
     tag = "3.4.9-ubuntu1804",
+    digest = "sha256:f6dd19ab7f63498d2fcde3b1ea1be4515d8ca8374f8f9829ca75d3f114cae780",
 )

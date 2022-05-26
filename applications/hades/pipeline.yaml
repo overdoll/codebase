@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/hades/internal:internal
+      - //applications/hades/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/hades/internal/domain/...
       - //applications/hades/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/hades/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/hades/internal:internal -- db migrate keyspace
+      - //applications/hades/internal:internal -- db seed
     coverage:
       - name: hades.integration
         paths:
@@ -29,10 +28,13 @@ steps:
       - //applications/hades/internal/adapters/...
       - //applications/hades/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/hades/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/hades/docker-compose.ci.yaml
         - ./applications/hades/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: hades
@@ -40,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/hades/internal:publish
+    copy:
+      - from_repo: hades/dev
+        to_repo: hades
