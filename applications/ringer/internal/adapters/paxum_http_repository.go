@@ -29,10 +29,10 @@ func NewPaxumHttpCassandraRepository(client PaxumHttpClient) PaxumHttpCassandraR
 }
 
 func addSandboxDataToRequest(q url.Values) url.Values {
-	//if os.Getenv("PAXUM_SANDBOX") == "true" {
-	q.Add("sandbox", "ON")
-	q.Add("return", "00")
-	//}
+	if os.Getenv("PAXUM_SANDBOX") == "true" {
+		q.Add("sandbox", "ON")
+		q.Add("return", "00")
+	}
 	return q
 }
 
