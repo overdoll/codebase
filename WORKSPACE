@@ -217,6 +217,7 @@ container_pull(
     registry = "docker.io",
     repository = "library/golang",
     tag = "1.16",
+    digest = "sha256:35fa3cfd4ec01a520f6986535d8f70a5eeef2d40fb8019ff626da24989bdd4f1",
 )
 
 container_pull(

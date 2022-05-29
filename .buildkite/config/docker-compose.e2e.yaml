@@ -30,7 +30,7 @@ services:
       - CASSANDRA_SEEDS=scylla
       - CASSANDRA_HOST=scylla
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
-    image: 771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/auto-setup:v1.16.2-patch.1
+    image: 771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/auto-setup:v1.16.2-patch.2
     ports:
       - 7233:7233
     volumes:
