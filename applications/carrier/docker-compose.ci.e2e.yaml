@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   carrier:
     image: $CONTAINER_REGISTRY/carrier/dev:$BUILDKITE_COMMIT
@@ -15,10 +15,8 @@ services:
       - AWS_REGION=${AWS_REGION}
     ports:
       - 5030:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    cpus: 0.1
 
   run:
     depends_on:

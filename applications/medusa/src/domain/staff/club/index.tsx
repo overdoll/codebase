@@ -2,6 +2,10 @@ import RootStaffClub from './RootStaffClub/RootStaffClub'
 import StaffClubQuery from '@//:artifacts/StaffClubQuery.graphql'
 import StaffLayout from '../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffClub.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffClub.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

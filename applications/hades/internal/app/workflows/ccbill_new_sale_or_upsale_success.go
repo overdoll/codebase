@@ -197,7 +197,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 		activities.NewClubSupporterSubscriptionPaymentDepositInput{
 			AccountId:            input.PaymentToken.AccountInitiator.AccountId,
 			ClubId:               input.PaymentToken.CcbillClubSupporter.ClubId,
-			AccountTransactionId: input.TransactionId,
+			AccountTransactionId: uniqueTransactionId,
 			Timestamp:            input.Timestamp,
 			Amount:               input.AccountingRecurringPrice,
 			Currency:             input.AccountingCurrency,

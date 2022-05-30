@@ -2,6 +2,10 @@ import RootStaffCreateAudience from './RootStaffCreateAudience/RootStaffCreateAu
 import StaffCreateAudienceQuery from '@//:artifacts/StaffCreateAudienceQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffCreateAudience.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffCreateAudience.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

@@ -7,7 +7,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 interface BuilderProps {
   stepsArray: string[]
   stepsComponents: StepProps
-  stepsHeaders?: HeaderProps
+  stepsHeaders: HeaderProps
   colorScheme?: string
   defaultStep?: string
 }

@@ -2,6 +2,10 @@ import RootClubPayout from './RootClubPayout/RootClubPayout'
 import ClubPayoutQuery from '@//:artifacts/ClubPayoutQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
 
+RootClubPayout.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootClubPayout.getRelayPreloadProps = (ctx) => {
   const { query: { reference } } = ctx
 

@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2.2'
 services:
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
@@ -11,10 +11,8 @@ services:
     ports:
       - 3020:8000
       - 3030:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 20
+    restart: "on-failure:20"
+    cpus: 0.2
 
   run:
     depends_on:

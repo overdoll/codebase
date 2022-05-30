@@ -6,7 +6,7 @@ import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
 import JoinClubFromTile
-  from '../../../../../[slug]/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
+  from '../../../../../slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 
 interface Props extends ComponentSearchArguments<any> {
 }

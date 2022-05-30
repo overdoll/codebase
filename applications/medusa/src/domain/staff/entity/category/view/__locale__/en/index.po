@@ -21,7 +21,7 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:29
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:30
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:98
 msgid "Category Thumbnail"
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 msgid "Change Category Title"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:40
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:41
 msgid "Change Thumbnail"
 msgstr ""
 

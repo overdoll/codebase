@@ -14,8 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/staff/entity/character/search/RootStaffSearchCharacter/RootStaffSearchCharacter.tsx:36
-msgid "Search Series"
+msgid "Search Characters"
 msgstr ""
+
+#: src/domain/staff/entity/character/search/RootStaffSearchCharacter/RootStaffSearchCharacter.tsx:36
+#~ msgid "Search Series"
+#~ msgstr ""
 
 #: src/domain/staff/entity/character/search/RootStaffSearchCharacter/RootStaffSearchCharacter.tsx:42
 msgid "Search for a character"

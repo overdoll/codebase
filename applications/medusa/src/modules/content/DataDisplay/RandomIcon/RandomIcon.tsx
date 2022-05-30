@@ -33,9 +33,12 @@ export default function RandomIcon ({ seed }: Props): JSX.Element {
     'primary.400'
   ]
 
+  const chosenIcon = useMemo(() => memoized.nextInt32([0, 3]), [seed])
+  const chosenColor = useMemo(() => memoized.nextInt32([0, 6]), [seed])
+
   const randomValues = useConst({
-    icons: memoized.nextInt32([0, 2]),
-    colors: memoized.nextInt32([0, 5])
+    icons: chosenIcon,
+    colors: chosenColor
   })
 
   const randomIcon = icons[randomValues.icons]

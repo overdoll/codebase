@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+func init() {
+	gin.SetMode(gin.ReleaseMode)
+}
+
 func NewGinRouter() *gin.Engine {
 	router := NewRawGinRouter()
 	router.Use(passport.GinPassportRequestMiddleware())
@@ -19,8 +23,6 @@ func NewGinRouter() *gin.Engine {
 func NewRawGinRouter() *gin.Engine {
 
 	router := gin.New()
-
-	gin.SetMode(gin.ReleaseMode)
 
 	if support.IsDebug() {
 		// gin's default loggers are easier to read on the CLI for panic recoveries

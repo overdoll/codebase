@@ -169,7 +169,10 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
-	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	suite := new(testsuite.WorkflowTestSuite)
+	suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
+	env := suite.NewTestWorkflowEnvironment()
+
 	env.RegisterActivity(application.App.Activities)
 	env.RegisterWorkflow(workflows.UpdateTotalPostsForPostTags)
 	env.RegisterWorkflow(workflows.PublishPost)

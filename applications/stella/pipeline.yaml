@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/stella/internal:internal
+      - //applications/stella/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/stella/internal/domain/...
       - //applications/stella/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/stella/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/stella/internal:internal -- db migrate keyspace
+      - //applications/stella/internal:internal -- db seed
     coverage:
       - name: stella.integration
         paths:
@@ -29,6 +28,10 @@ steps:
       - //applications/stella/internal/adapters/...
       - //applications/stella/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/stella/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
@@ -39,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/stella/internal:publish
+    copy:
+      - from_repo: stella/dev
+        to_repo: stella

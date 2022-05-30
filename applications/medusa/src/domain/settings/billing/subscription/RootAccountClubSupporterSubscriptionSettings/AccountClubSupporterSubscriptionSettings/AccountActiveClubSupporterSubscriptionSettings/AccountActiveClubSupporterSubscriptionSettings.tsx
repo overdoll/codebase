@@ -11,7 +11,7 @@ import AccountActiveClubSupporterSubscriptionDetails
   from '../AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import ClubExclusivePosts
-  from '../../../../../../[slug]/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubExclusivePosts/ClubExclusivePosts'
+  from '../../../../../../slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubExclusivePosts/ClubExclusivePosts'
 
 interface Props extends ConnectionProp {
   query: AccountActiveClubSupporterSubscriptionSettingsFragment$key

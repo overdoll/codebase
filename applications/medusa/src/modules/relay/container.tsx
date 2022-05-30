@@ -3,6 +3,7 @@ import { Suspense, useMemo } from 'react'
 import ErrorBoundary from '../operations/ErrorBoundary'
 import { IEnvironment } from 'relay-runtime'
 import { RequestProps } from '@//:types/app'
+import ServerError from '@//:domain/500/ServerError/ServerError'
 
 interface ReactRelayContainerProps {
   requestProps: RequestProps
@@ -17,7 +18,7 @@ export function ReactRelayContainer ({
 }: ReactRelayContainerProps): JSX.Element {
   return (
     <RelayEnvironmentProvider environment={environment}>
-      <ErrorBoundary>
+      <ErrorBoundary fallback={ServerError}>
         <Suspense fallback={null}>
           <Hydrate requestProps={requestProps}>
             {(props) => children(props)}

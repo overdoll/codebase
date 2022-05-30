@@ -135,6 +135,8 @@ func TestBillingFlow_Cancelled_and_Expired(t *testing.T) {
 	mockAccountNormal(t, accountId)
 	mockAccountDigest(t, accountId, clubId)
 
+	refreshSubscriptionsIndex(t)
+
 	// initialize gql client and make sure all the above variables exist
 	gqlClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

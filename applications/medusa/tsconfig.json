@@ -1,8 +1,64 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "incremental": true,
+    "tsBuildInfoFile": "./cache/.tsbuildinfo",
     "jsx": "preserve",
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "sourceMap": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext",
+      "ES6"
+    ],
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": [
+      "react-dom/next",
+      "react/next",
+      "webpack-env",
+      "jest"
+    ],
+    "paths": {
+      "@//:modules/*": [
+        "src/modules/*"
+      ],
+      "@//:artifacts/*": [
+        "src/__generated__/*"
+      ],
+      "@//:types/*": [
+        "src/types/*"
+      ],
+      "@//:assets/*": [
+        "src/assets/*"
+      ],
+      "@//:domain/*": [
+        "src/domain/*"
+      ]
+    }
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    ".nyc_output",
+    "./build",
+    "./coverage",
+    "./cache",
+    "./cypress",
+    "node_modules",
+    "**/__locale__/**"
+  ]
 }

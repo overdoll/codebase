@@ -52,6 +52,7 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
       </Head>
       <Flex align='center' justify='center' h='100%' position='relative'>
         <FlowBuilder
+          stepsHeaders={{}}
           colorScheme='green'
           stepsArray={steps}
           stepsComponents={components}

@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react'
 import theme from '../modules/theme'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { I18nProvider } from '@lingui/react'
-import { i18n as i18nGlobal, setupI18n } from '@lingui/core'
+import { i18n as i18nGlobal } from '@lingui/core'
 import NextApp from 'next/app'
 import Root from '../domain/app'
 import 'swiper/css'
@@ -36,7 +36,8 @@ const MyApp = ({
   requestProps,
   securityToken,
   environment,
-  relayStore
+  relayStore,
+  translationProps
 }: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
@@ -51,10 +52,14 @@ const MyApp = ({
 
   // Set up localization - either grab the value from the server or memoize a new instance for the client
   const i18n = useMemo(() => {
-    const targetI18n = CanUseDOM ? i18nGlobal : setupI18n()
-    initializeLocaleData(locale, targetI18n)
-    return targetI18n
+    initializeLocaleData(locale, i18nGlobal)
+    return i18nGlobal
   }, [])
+
+  // load everytime translation props changes
+  useMemo(() => {
+    i18nGlobal._load(locale, translationProps)
+  }, [translationProps])
 
   const firstRender = useRef(true)
   // Load localization data into lingui
@@ -158,6 +163,24 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
   }
 
+  let translationProps = {}
+
+  // load translation props
+  if (app.Component?.getTranslationProps != null) {
+    let data: { translations: any } | null = null
+
+    try {
+      data = (await app.Component.getTranslationProps(app.ctx))
+    } catch (e) {
+      data = null
+      console.error(e)
+    }
+
+    if (data != null) {
+      translationProps = { ...translationProps, ...data.translations.messages }
+    }
+  }
+
   // preload results on the server & client
   requestProps.preloadedQueryResults = Object.fromEntries(
     // @ts-expect-error
@@ -191,7 +214,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     requestProps,
     securityToken,
     environment,
-    relayStore
+    relayStore,
+    translationProps
   }
 
   // do a prepass to collect all queries and wait for them to complete

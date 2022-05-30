@@ -3,8 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import {
-  StaffGenerateRefundAmountForAccountTransactionInputMutation,
-  StaffGenerateRefundAmountForAccountTransactionInputMutation$data
+  StaffGenerateRefundAmountForAccountTransactionInputMutation
 } from '@//:artifacts/StaffGenerateRefundAmountForAccountTransactionInputMutation.graphql'
 import {
   StaffGenerateRefundAmountForAccountTransactionInputFragment$key

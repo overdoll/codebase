@@ -102,5 +102,5 @@ it('should reset error when pressed', async () => {
 
   // fallback will be visible, but this time the other state will be visible to indicate
   // that the reset actually occurred
-  await waitFor(() => expect(button).toBeVisible())
+  await waitFor(() => expect(screen.getByRole('button')).toBeVisible())
 })

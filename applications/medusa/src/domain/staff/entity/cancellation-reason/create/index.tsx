@@ -2,6 +2,10 @@ import RootStaffCreateCancellationReason from './RootStaffCreateCancellationReas
 import StaffCreateCancellationReasonQuery from '@//:artifacts/StaffCreateCancellationReasonQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffCreateCancellationReason.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffCreateCancellationReason.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

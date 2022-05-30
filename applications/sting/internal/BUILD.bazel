@@ -47,20 +47,10 @@ go_image(
 )
 
 container_push(
-    name = "publish-testing",
-    format = "Docker",
-    image = ":image",
-    registry = "$(CONTAINER_REGISTRY)",
-    repository = "sting/dev",
-    tag = "$(CONTAINER_TAG)",
-)
-
-container_push(
     name = "publish",
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "sting",
-    skip_unchanged_digest = True,
+    repository = "sting/dev",
     tag = "$(CONTAINER_TAG)",
 )

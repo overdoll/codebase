@@ -59,7 +59,10 @@ func getGrpcClient(t *testing.T) ringer.RingerClient {
 
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
-	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+	suite := new(testsuite.WorkflowTestSuite)
+	suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
+	env := suite.NewTestWorkflowEnvironment()
+
 	env.RegisterActivity(application.App.Activities)
 
 	return env
@@ -85,7 +88,9 @@ func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceA
 
 	for i := 0; i < count; i++ {
 
-		env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
+		suite := new(testsuite.WorkflowTestSuite)
+		suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
+		env := suite.NewTestWorkflowEnvironment()
 		env.RegisterActivity(application.App.Activities)
 
 		seedPaymentWithEnv(t, env, accountTransactionId, destinationClubId, sourceAccountId)

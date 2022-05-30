@@ -19,9 +19,7 @@ export default function BenefitsTransition (): JSX.Element {
       <HStack align='center' spacing={3}>
         <Icon flexShrink={0} icon={PremiumStar} fill={`${colorScheme}.200`} w={4} h={4} />
         <Heading fontSize='md' color={`${colorScheme}.200`}>
-          <Trans>
-            {children}
-          </Trans>
+          {children}
         </Heading>
       </HStack>
     )

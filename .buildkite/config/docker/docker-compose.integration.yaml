@@ -1,8 +1,8 @@
-version: '3.9'
+version: '2.2'
 services:
   run:
     working_dir: /workdir
-    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci:v1"
+    image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:4d09a1d8d093fe966682fd53f2ec9199c9177da58f478fd50c226fb70c04410f"
     user: 2000:2000
     privileged: true
     group_add:
@@ -11,7 +11,36 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
       - /opt:/opt:ro
+      - /tmp:/tmp
       - /var/lib/buildkite-agent:/var/lib/buildkite-agent
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
+    depends_on:
+      - bazel.remote
+      - scylla
+      - elasticsearch
+      - redis
+
+  bazel.remote:
+    image: "buchgr/bazel-remote-cache"
+    user: 0:0
+    environment:
+      - BAZEL_REMOTE_S3_AUTH_METHOD=access_key
+      - BAZEL_REMOTE_S3_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+      - BAZEL_REMOTE_S3_SECRET_ACCESS_KEY=${AWS_ACCESS_SECRET}
+      - BAZEL_REMOTE_S3_BUCKET=bazel-remote-cache
+      - BAZEL_REMOTE_S3_ENDPOINT=s3.us-east-1.amazonaws.com
+      - BAZEL_REMOTE_DIR=/data
+      - BAZEL_REMOTE_MAX_SIZE=15
+      - BAZEL_REMOTE_HTTP_ADDRESS=0.0.0.0:8080
+      - BAZEL_REMOTE_GRPC_ADDRESS=0.0.0.0:9092
+    ports:
+      - 9090:8080
+      - 9092:9092
+    volumes:
+      - bazel-remote-cache-data:/data
+
+volumes:
+  bazel-remote-cache-data:
+    driver: local

@@ -102,6 +102,13 @@ CREATE TABLE IF NOT EXISTS club_locked_payout
     primary key ( club_id ),
 );
 
+CREATE TABLE IF NOT EXISTS deposit_requests_unique_inserts
+(
+    bucket        int,
+    payout_method text,
+    primary key ( (bucket, payout_method) ),
+);
+
 CREATE TABLE IF NOT EXISTS deposit_requests
 (
     bucket                int,

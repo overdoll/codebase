@@ -166,6 +166,8 @@ func TestClubPayout(t *testing.T) {
 
 	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
 
+	refreshPaymentsIndex(t)
+
 	balances := getClubBalances(t, gClient, clubId)
 
 	require.Equal(t, 10500, balances.Entities[0].Club.Balance.Amount, "correct club balance")
@@ -196,6 +198,9 @@ func TestClubPayout(t *testing.T) {
 
 	// callback to wait until the real deposit will happen
 	env.RegisterDelayedCallback(func() {
+
+		refreshPaymentsIndex(t)
+
 		// get payments for the club
 		payments := getPayoutsForClub(t, gClient, clubId)
 
@@ -209,6 +214,8 @@ func TestClubPayout(t *testing.T) {
 		require.Equal(t, graphql1.CurrencyUsd, targetPayout.Currency, "correct currency")
 
 		payoutId = targetPayout.Reference
+
+		refreshPaymentsIndex(t)
 
 		pays := getPaymentsForPayout(t, gClient, payoutId)
 

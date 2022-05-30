@@ -1,0 +1,7 @@
+{
+  "name": "medusa",
+  "schemaPath": "./schema/schema.graphql",
+  "includes": [
+    "./**/*"
+  ]
+}

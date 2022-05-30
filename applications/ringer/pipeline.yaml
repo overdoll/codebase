@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/ringer/internal:internal
+      - //applications/ringer/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/ringer/internal/domain/...
       - //applications/ringer/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/ringer/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/ringer/internal:internal -- db migrate keyspace
+      - //applications/ringer/internal:internal -- db seed
     coverage:
       - name: ringer.integration
         paths:
@@ -29,6 +28,10 @@ steps:
       - //applications/ringer/internal/adapters/...
       - //applications/ringer/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/ringer/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
@@ -39,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/ringer/internal:publish
+    copy:
+      - from_repo: ringer/dev
+        to_repo: ringer

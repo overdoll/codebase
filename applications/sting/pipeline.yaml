@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/sting/internal:internal
+      - //applications/sting/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/sting/internal/domain/...
       - //applications/sting/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/sting/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/sting/internal:internal -- db migrate keyspace
+      - //applications/sting/internal:internal -- db seed
     coverage:
       - name: sting.integration
         paths:
@@ -29,6 +28,10 @@ steps:
       - //applications/sting/internal/adapters/...
       - //applications/sting/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/sting/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
@@ -39,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/sting/internal:publish
+    copy:
+      - from_repo: sting/dev
+        to_repo: sting

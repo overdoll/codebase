@@ -1,0 +1,28 @@
+version: '2.2'
+services:
+  medusa:
+    image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
+    env_file: ../../applications/medusa/.env.ci
+    restart: "on-failure:20"
+    depends_on:
+      - redis
+      - sting
+      - eva
+      - traefik
+    expose: [ 8000 ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.entrypoints.web.proxyProtocol.trustedIPs=10.0.0.0/16"
+      - "traefik.entrypoints.web.forwardedHeaders.trustedIPs=10.0.0.0/16"
+      - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.medusa.entrypoints=web"
+      - "traefik.port=8000"
+    cpus: 4
+
+  run:
+    volumes:
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/applications/medusa/e2e/:/workdir/applications/medusa/coverage/
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/video/:/workdir/applications/medusa/cypress/videos/
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/screenshots/:/workdir/applications/medusa/cypress/screenshots/
+    depends_on:
+      - medusa

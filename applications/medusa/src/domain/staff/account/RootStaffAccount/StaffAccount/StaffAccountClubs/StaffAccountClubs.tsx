@@ -51,7 +51,7 @@ export default function StaffAccountClubs ({
         <GridWrap>
           {data.clubs.edges.map((item, index) =>
             <GridTile key={index}>
-              <LinkTile href={`/staff/club/${item.node.slug}`}>
+              <LinkTile href={`/staff/club/${item.node.slug as string}`}>
                 <ClubTileOverlay query={item.node} />
               </LinkTile>
             </GridTile>)}
