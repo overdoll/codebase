@@ -7,8 +7,10 @@
                 <mj-text>
                     <h2>Subscription Cancelled</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>As requested, we have cancelled your subscription for {{.ClubName}} ({{.ClubLink}}).</p>
-                    <p>You will no longer be billed. Your club supporter benefits will expire on {{.ExpirationDate}}.
+                    <p>As requested, we have cancelled your subscription for <strong>{{.ClubName}}</strong> ({{.ClubLink}}).
+                    </p>
+                    <p>You will no longer be billed. Your club supporter benefits will expire on <strong>
+                        {{.ExpirationDate}}</strong>.
                     </p>
                     <p>Should you choose to keep your benefits, you may wait for the subscription to expire and
                         resubscribe directly from the club page.

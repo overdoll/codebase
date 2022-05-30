@@ -7,4 +7,4 @@ parent_path=$(
 cd "$parent_path"
 
 ctlptl delete clusters kind-overdoll
-ctlptl apply -f kind.yaml
+ctlptl apply -f ../../development/local/kind.yaml

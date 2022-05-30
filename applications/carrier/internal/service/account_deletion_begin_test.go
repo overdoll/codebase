@@ -28,7 +28,7 @@ func TestAccountDeletionBegin(t *testing.T) {
 
 	accountId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
-	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email}, nil).Once()
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: accountId}, nil).Once()
 
 	tm, _ := time.Parse(time.RFC3339, "2022-03-01 03:27:56 +0000 UTC")
 

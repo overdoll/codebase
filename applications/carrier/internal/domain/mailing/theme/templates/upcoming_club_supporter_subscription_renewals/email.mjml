@@ -8,19 +8,30 @@
                     <h2>
                         Upcoming Renewals
                     </h2>
-                    <p>
-                        Here are your upcoming subscription renewals for this month
-                    </p>
+                    <p>Hello {{.Username}}!</p>
+                    <p>Here are your upcoming subscription renewals for this month:</p>
                 </mj-text>
-            </mj-column>
-            <mj-column>
-                <mj-text>
-                    <p>
-                        {{.Username}}
-                    </p>
-                </mj-text>
-            </mj-column>
-            <mj-column>
+                <mj-table>
+                    <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:15px 0;">
+                        <th style="padding: 0 15px 0 0;color: white">Name</th>
+                        <th style="padding: 0 0 0 15px;color: white">Amount</th>
+                        <th style="padding: 0 0 0 15px;color: white">Date</th>
+                        <th style="padding: 0 0 0 15px;color: white">Manage</th>
+                    </tr>
+                    {{range $val := .Renewals}}
+                    <tr>
+                        <td style="padding: 0 15px 0 0;color: white">
+                            <a style="color: white;text-decoration: none" href="{{$val.ClubLink}}">{{$val.ClubName}}
+                            </a>
+                        </td>
+                        <td style="padding: 0 15px;color: white">{{$val.FormattedAmount}}</td>
+                        <td style="padding: 0 0 0 15px;color: white">{{$val.BillingDate}}</td>
+                        <td style="padding: 0 0 0 15px;color: white">
+                            <a style="color: white;text-decoration: none" href="{{$val.SubscriptionLink}}">Link</a>
+                        </td>
+                    </tr>
+                    {{end}}
+                </mj-table>
                 <mj-text>
                     <p>You may manage any of these subscriptions, such as cancelling them, using the button below</p>
                 </mj-text>

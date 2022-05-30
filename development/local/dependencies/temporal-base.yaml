@@ -2,7 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 imagePullSecrets:
-  - regcred
+  - name: regcred
 
 # Chart debug mode
 # (eg. disable helm hook delete policy)
@@ -83,7 +83,7 @@ server:
         driver: "cassandra"
 
         cassandra:
-          hosts: [ "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local" ]
+          hosts: [ "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local" ]
           port: 9042
           keyspace: temporal
           user: ""
@@ -99,7 +99,7 @@ server:
         driver: "cassandra"
 
         cassandra:
-          hosts: [ "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local" ]
+          hosts: [ "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local", "simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local" ]
           port: 9042
           keyspace: temporal_visibility
           user: ""
@@ -252,7 +252,7 @@ elasticsearch:
   persistence:
     enabled: false
   imageTag: 7.16.2
-  host: "quick-es-http"
+  host: "quick-es-http.elasticsearch.svc.cluster.local"
   scheme: http
   port: 9200
   version: "v7"

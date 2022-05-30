@@ -7,15 +7,20 @@
                 <mj-text>
                     <h2>Duplicate Subscription</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>We detected that you subscribed twice to the same club {{.ClubName}} ({{.ClubLink}}).</p>
+                    <p>We detected that you subscribed twice to the same club <strong>{{.ClubName}}</strong> ({{.ClubLink}}).
+                    </p>
                 </mj-text>
                 <mj-text>
                     <h4>Billing Details</h4>
-                    <p>We have voided your most recent subscription to {{.ClubName}} for the amount {{.FormattedAmount}}</p>
+                    <p>We have voided your most recent subscription to <strong>{{.ClubName}}</strong> for the amount
+                        <strong>{{.FormattedAmount}}</strong>
+                    </p>
                     <p>The charge will eventually disappear from your credit card.</p>
                 </mj-text>
                 <mj-text>
-                    <p>Please contact hello@overdoll.com if you have any questions or concerns, or if this is a mistake.</p>
+                    <p>Please contact hello@overdoll.com if you have any questions or concerns, or if this is a
+                        mistake.
+                    </p>
                 </mj-text>
             </mj-column>
         </mj-section>

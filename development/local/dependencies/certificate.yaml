@@ -9,7 +9,7 @@ spec:
   issuerRef:
     kind: Issuer
     name: selfsigned
-  commonName: "overdoll.dev"
+  commonName: "overdoll.test"
   isCA: true
   dnsNames:
-    - "overdoll.dev"
+    - "overdoll.test"

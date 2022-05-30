@@ -8,6 +8,8 @@ parent_path=$(
 )
 cd "$parent_path"
 
+cd ../../development/local/dependencies
+
 # Apply Nginx ingress & wait
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
@@ -35,6 +37,10 @@ kubectl wait --for condition=established crd/scyllaoperatorconfigs.scylla.scylla
 kubectl -n scylla-operator rollout status deployment.apps/scylla-operator
 kubectl -n scylla-operator rollout status deployment.apps/webhook-server
 
+# Apply TLS certificate
+kubectl apply -f issuer.yaml
+kubectl apply -f certificate.yaml
+
 kubectl create namespace scylla
 
 kubectl create configmap scylla-config -n scylla --from-file=scylla-config.yaml
@@ -42,20 +48,17 @@ kubectl create configmap scylla-config -n scylla --from-file=scylla-config.yaml
 # Apply scylla cluster
 kubectl apply -f scylla-cluster.yaml
 
+kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-0
+kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-1
+kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-2
+
 # Apply redis
 kubectl apply -f redis.yaml
-
-# Apply TLS certificate
-kubectl apply -f issuer.yaml
-kubectl apply -f certificate.yaml
 
 kubectl create namespace elasticsearch
 
 # Apply elasticsearch
 kubectl apply -f elasticsearch.yaml
-
-# Apply ingress
-kubectl apply -f ingress.yaml
 
 kubectl create namespace temporal
 kubectl config set-context --current --namespace=temporal
@@ -71,3 +74,16 @@ kubectl create secret docker-registry regcred \
 kubectl apply -f temporal.yaml
 
 kubectl config set-context --current --namespace=default
+
+# apply a dummy medusa container to be intercepted
+kubectl apply -f medusa.yaml
+
+# Apply ingress
+kubectl apply -f ingress.yaml
+
+# wait for temporal to be available
+kubectl wait --for=condition=Available --timeout=500s -n temporal deployment/temporal-admintools
+kubectl wait --for=condition=Available --timeout=500s -n temporal deployment/temporal-web
+kubectl wait --for=condition=Available --timeout=500s -n temporal deployment/temporal-frontend
+kubectl wait --for=condition=Available --timeout=500s -n temporal deployment/temporal-matching
+kubectl wait --for=condition=Available --timeout=500s -n temporal deployment/temporal-history

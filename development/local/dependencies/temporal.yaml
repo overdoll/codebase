@@ -57,7 +57,7 @@ data:
       datastores:
         default:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
             consistency:
@@ -69,7 +69,7 @@ data:
             user: ""
         visibility:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
             consistency:
@@ -84,7 +84,7 @@ data:
                 version: "v7"
                 url:
                     scheme: "http"
-                    host: "quick-es-http:9200"
+                    host: "quick-es-http.elasticsearch.svc.cluster.local:9200"
                 username: "elastic"
                 password: "overdoll123"
                 logLevel: "error"
@@ -184,7 +184,7 @@ data:
       datastores:
         default:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
             consistency:
@@ -196,7 +196,7 @@ data:
             user: ""
         visibility:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
             consistency:
@@ -211,7 +211,7 @@ data:
                 version: "v7"
                 url:
                     scheme: "http"
-                    host: "quick-es-http:9200"
+                    host: "quick-es-http.elasticsearch.svc.cluster.local:9200"
                 username: "elastic"
                 password: "overdoll123"
                 logLevel: "error"
@@ -311,7 +311,7 @@ data:
       datastores:
         default:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
             consistency:
@@ -323,7 +323,7 @@ data:
             user: ""
         visibility:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
             consistency:
@@ -338,7 +338,7 @@ data:
                 version: "v7"
                 url:
                     scheme: "http"
-                    host: "quick-es-http:9200"
+                    host: "quick-es-http.elasticsearch.svc.cluster.local:9200"
                 username: "elastic"
                 password: "overdoll123"
                 logLevel: "error"
@@ -438,7 +438,7 @@ data:
       datastores:
         default:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
             consistency:
@@ -450,7 +450,7 @@ data:
             user: ""
         visibility:
           cassandra:
-            hosts: "simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.svc.cluster.local"
+            hosts: "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-1.scylla.svc.cluster.local,simple-cluster-us-east-1-us-east-1a-2.scylla.svc.cluster.local"
             port: 9042
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
             consistency:
@@ -465,7 +465,7 @@ data:
                 version: "v7"
                 url:
                     scheme: "http"
-                    host: "quick-es-http:9200"
+                    host: "quick-es-http.elasticsearch.svc.cluster.local:9200"
                 username: "elastic"
                 password: "overdoll123"
                 logLevel: "error"
@@ -873,7 +873,7 @@ spec:
               initialDelaySeconds: 5
               periodSeconds: 5
       imagePullSecrets:
-        - regcred
+        - name: regcred
 ---
 # Source: temporal/templates/server-deployment.yaml
 apiVersion: apps/v1
@@ -906,7 +906,7 @@ spec:
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: a7b490ade88033e0b0586de93466c33e145650f16b02443f716e5cdd3285af4d
+        checksum/config: 3f6f44913250a03cc8ee5c6449d1b115f743f63c7ea7d87ab744242ab2d6dd9d
         prometheus.io/job: temporal-frontend
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -919,7 +919,7 @@ spec:
         - name: check-elasticsearch-index
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
+          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
       containers:
         - name: temporal-frontend
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/server:v1.16.2-patch.2"
@@ -932,7 +932,7 @@ spec:
             - name: ENABLE_ES
               value: "true"
             - name: ES_SEEDS
-              value: "quick-es-http"
+              value: "quick-es-http.elasticsearch.svc.cluster.local"
             - name: ES_PORT
               value: "9200"
             - name: ES_VERSION
@@ -977,7 +977,7 @@ spec:
           resources:
             {}
       imagePullSecrets:
-        - regcred
+        - name: regcred
       volumes:
         - name: config
           configMap:
@@ -1020,7 +1020,7 @@ spec:
         app.kubernetes.io/component: history
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: a7b490ade88033e0b0586de93466c33e145650f16b02443f716e5cdd3285af4d
+        checksum/config: 3f6f44913250a03cc8ee5c6449d1b115f743f63c7ea7d87ab744242ab2d6dd9d
         prometheus.io/job: temporal-history
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1033,7 +1033,7 @@ spec:
         - name: check-elasticsearch-index
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
+          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
       containers:
         - name: temporal-history
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/server:v1.16.2-patch.2"
@@ -1046,7 +1046,7 @@ spec:
             - name: ENABLE_ES
               value: "true"
             - name: ES_SEEDS
-              value: "quick-es-http"
+              value: "quick-es-http.elasticsearch.svc.cluster.local"
             - name: ES_PORT
               value: "9200"
             - name: ES_VERSION
@@ -1091,7 +1091,7 @@ spec:
           resources:
             {}
       imagePullSecrets:
-        - regcred
+        - name: regcred
       volumes:
         - name: config
           configMap:
@@ -1134,7 +1134,7 @@ spec:
         app.kubernetes.io/component: matching
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: a7b490ade88033e0b0586de93466c33e145650f16b02443f716e5cdd3285af4d
+        checksum/config: 3f6f44913250a03cc8ee5c6449d1b115f743f63c7ea7d87ab744242ab2d6dd9d
         prometheus.io/job: temporal-matching
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1147,7 +1147,7 @@ spec:
         - name: check-elasticsearch-index
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
+          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
       containers:
         - name: temporal-matching
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/server:v1.16.2-patch.2"
@@ -1160,7 +1160,7 @@ spec:
             - name: ENABLE_ES
               value: "true"
             - name: ES_SEEDS
-              value: "quick-es-http"
+              value: "quick-es-http.elasticsearch.svc.cluster.local"
             - name: ES_PORT
               value: "9200"
             - name: ES_VERSION
@@ -1205,7 +1205,7 @@ spec:
           resources:
             {}
       imagePullSecrets:
-        - regcred
+        - name: regcred
       volumes:
         - name: config
           configMap:
@@ -1248,7 +1248,7 @@ spec:
         app.kubernetes.io/component: worker
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: a7b490ade88033e0b0586de93466c33e145650f16b02443f716e5cdd3285af4d
+        checksum/config: 3f6f44913250a03cc8ee5c6449d1b115f743f63c7ea7d87ab744242ab2d6dd9d
         prometheus.io/job: temporal-worker
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1261,7 +1261,7 @@ spec:
         - name: check-elasticsearch-index
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
+          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/temporal_visibility_v1_dev 2>&1 > /dev/null; do echo waiting for elasticsearch index to become ready; sleep 1; done;']
       containers:
         - name: temporal-worker
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/server:v1.16.2-patch.2"
@@ -1274,7 +1274,7 @@ spec:
             - name: ENABLE_ES
               value: "true"
             - name: ES_SEEDS
-              value: "quick-es-http"
+              value: "quick-es-http.elasticsearch.svc.cluster.local"
             - name: ES_PORT
               value: "9200"
             - name: ES_VERSION
@@ -1315,7 +1315,7 @@ spec:
           resources:
             {}
       imagePullSecrets:
-        - regcred
+        - name: regcred
       volumes:
         - name: config
           configMap:
@@ -1421,7 +1421,7 @@ spec:
           command: ['sh', '-c', 'temporal-cassandra-tool create -k temporal --replication-factor 3']
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
@@ -1432,7 +1432,7 @@ spec:
           command: ['sh', '-c', 'temporal-cassandra-tool create -k temporal_visibility --replication-factor 3']
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
@@ -1444,7 +1444,7 @@ spec:
           command: ["temporal-cassandra-tool", "setup-schema", "-v", "0.0"]
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
@@ -1455,13 +1455,13 @@ spec:
           command: ["temporal-cassandra-tool", "setup-schema", "-v", "0.0"]
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
               value: temporal_visibility
       imagePullSecrets:
-        - regcred
+        - name: regcred
 ---
 # Source: temporal/templates/server-job.yaml
 apiVersion: batch/v1
@@ -1505,7 +1505,7 @@ spec:
           command: ['sh', '-c', 'temporal-cassandra-tool update-schema -d /etc/temporal/schema/cassandra/temporal/versioned']
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
@@ -1516,7 +1516,7 @@ spec:
           command: ['sh', '-c', 'temporal-cassandra-tool update-schema -d /etc/temporal/schema/cassandra/visibility/versioned']
           env:
             - name: CASSANDRA_HOST
-              value: simple-cluster-us-east-1-us-east-1a-0.svc.cluster.local
+              value: simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local
             - name: CASSANDRA_PORT
               value: "9042"
             - name: CASSANDRA_KEYSPACE
@@ -1558,16 +1558,16 @@ spec:
       initContainers:
         - name: check-elasticsearch-service
           image: busybox
-          command: ['sh', '-c', 'until nslookup quick-es-http; do echo waiting for elasticsearch service; sleep 1; done;']
+          command: ['sh', '-c', 'until nslookup quick-es-http.elasticsearch.svc.cluster.local; do echo waiting for elasticsearch service; sleep 1; done;']
         - name: check-elasticsearch
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http:9200 2>&1 > /dev/null; do echo waiting for elasticsearch to start; sleep 1; done;']
+          command: ['sh', '-c', 'until curl --silent --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200 2>&1 > /dev/null; do echo waiting for elasticsearch to start; sleep 1; done;']
       containers:
         - name: create-elasticsearch-index
           image: "771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/admin-tools:v1.16.2-patch.2"
           imagePullPolicy: IfNotPresent
           command: ['sh', '-c']
           args:
-            - 'curl -X PUT --fail --user elastic:overdoll123 http://quick-es-http:9200/_template/temporal_visibility_v1_template -H "Content-Type: application/json" --data-binary "@schema/elasticsearch/visibility/index_template_v7.json" 2>&1 &&
-              curl -X PUT --fail --user elastic:overdoll123 http://quick-es-http:9200/temporal_visibility_v1_dev 2>&1'
+            - 'curl -X PUT --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/_template/temporal_visibility_v1_template -H "Content-Type: application/json" --data-binary "@schema/elasticsearch/visibility/index_template_v7.json" 2>&1 &&
+              curl -X PUT --fail --user elastic:overdoll123 http://quick-es-http.elasticsearch.svc.cluster.local:9200/temporal_visibility_v1_dev 2>&1'
