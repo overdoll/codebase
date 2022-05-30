@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: overdoll-crt
+spec:
+  secretName: overdoll-tls-secret
+  duration: 170000h
+  renewBefore: 72h
+  issuerRef:
+    kind: Issuer
+    name: selfsigned
+  commonName: "overdoll.dev"
+  isCA: true
+  dnsNames:
+    - "overdoll.dev"
