@@ -48,25 +48,19 @@ describe('Club - Create a Post', () => {
     cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
   }
 
-  it('create account', () => {
-    cy.joinWithNewAccount(username)
-  })
-
-  it('assign artist role', () => {
-    cy.joinWithExistingAccount('0eclipse')
-    cy.assignArtistRole(username)
-  })
-
-  it('create club', () => {
-    cy.joinWithNewAccount(username)
-    cy.createClub(clubName)
-  })
-
   beforeEach(() => {
     cy.joinWithNewAccount(username)
   })
 
   it('can add audience, categories, characters, and submit post', () => {
+    cy.joinWithNewAccount(username)
+
+    cy.joinWithExistingAccount('0eclipse')
+    cy.assignArtistRole(username)
+
+    cy.joinWithNewAccount(username)
+    cy.createClub(clubName)
+
     gotoClubCreatePost()
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
     isOnStep('arrange')

@@ -25,8 +25,6 @@ const PostFragment = graphql`
     ...PostReportButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
-    ...PostClickableCharactersFragment
-    ...PostClickableCategoriesFragment
     club @required(action: THROW) {
       ...JoinClubFromPostFragment
     }

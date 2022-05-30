@@ -7,16 +7,12 @@ describe('Settings - Configure Payouts', () => {
   const [username] = generateUsernameAndEmail()
   const clubName = generateClubName()
 
-  it('create account', () => {
+  it('fill out payout details', () => {
     cy.joinWithNewAccount(username)
-  })
 
-  it('assign artist role', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.assignArtistRole(username)
-  })
 
-  it('fill out payout details', () => {
     cy.joinWithNewAccount(username)
 
     cy.visit('/settings/payouts')

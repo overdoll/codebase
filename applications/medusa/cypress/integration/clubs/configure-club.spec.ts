@@ -10,26 +10,18 @@ describe('Club - Configure', () => {
 
   const newClubName = generateClubName()
 
-  it('create account', () => {
+  it('visit club settings and change them', () => {
     cy.joinWithNewAccount(username)
-  })
 
-  it('assign artist role', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.assignArtistRole(username)
-  })
 
-  it('create club', () => {
     cy.joinWithNewAccount(username)
     cy.visit('/clubs/create-club')
     cy.findByText('Your Club Name').should('be.visible')
     cy.findByPlaceholderText('The best name you can come up with').type(clubName)
     clickOnButton('Create Club')
     cy.url().should('include', `/club/${clubName}`)
-  })
-
-  it('visit club settings and change them', () => {
-    cy.joinWithNewAccount(username)
 
     // change club name
     cy.visit(`/club/${clubName}/settings`)

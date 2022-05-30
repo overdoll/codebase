@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3487f02a46a8076855f34778a23c11e3>>
- * @relayHash 73d47e206712a26936eb5feb8ee52799
+ * @generated SignedSource<<3df851b4d49aa041ae6c25aed3bb6c2a>>
+ * @relayHash 51d8ea5466b29ca3d04272027680ca35
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 73d47e206712a26936eb5feb8ee52799
+// @relayRequestID 51d8ea5466b29ca3d04272027680ca35
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -219,42 +219,6 @@ v14 = {
 v15 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Category",
-  "kind": "LinkedField",
-  "name": "categories",
-  "plural": true,
-  "selections": [
-    (v7/*: any*/),
-    (v4/*: any*/),
-    (v15/*: any*/),
-    (v13/*: any*/)
-  ],
-  "storageKey": null
-},
-v17 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Series",
-  "kind": "LinkedField",
-  "name": "series",
-  "plural": false,
-  "selections": [
-    (v15/*: any*/),
-    (v4/*: any*/),
-    (v7/*: any*/)
-  ],
-  "storageKey": null
-},
-v18 = {
-  "alias": null,
-  "args": null,
   "concreteType": "PostLike",
   "kind": "LinkedField",
   "name": "viewerLiked",
@@ -265,18 +229,25 @@ v18 = {
   ],
   "storageKey": null
 },
-v19 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
 },
-v20 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "expires",
+  "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
   "storageKey": null
 };
 return {
@@ -430,25 +401,8 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v16/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Character",
-                        "kind": "LinkedField",
-                        "name": "characters",
-                        "plural": true,
-                        "selections": [
-                          (v7/*: any*/),
-                          (v17/*: any*/),
-                          (v3/*: any*/),
-                          (v4/*: any*/),
-                          (v13/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      (v18/*: any*/),
-                      (v19/*: any*/)
+                      (v15/*: any*/),
+                      (v16/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -512,7 +466,7 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  (v20/*: any*/)
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -538,7 +492,20 @@ return {
             "selections": [
               (v3/*: any*/),
               (v7/*: any*/),
-              (v17/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Series",
+                "kind": "LinkedField",
+                "name": "series",
+                "plural": false,
+                "selections": [
+                  (v18/*: any*/),
+                  (v4/*: any*/),
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              },
               (v4/*: any*/),
               (v13/*: any*/)
             ],
@@ -552,9 +519,23 @@ return {
             "storageKey": null
           },
           (v12/*: any*/),
-          (v18/*: any*/),
-          (v19/*: any*/),
-          (v16/*: any*/)
+          (v15/*: any*/),
+          (v16/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "categories",
+            "plural": true,
+            "selections": [
+              (v7/*: any*/),
+              (v4/*: any*/),
+              (v18/*: any*/),
+              (v13/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       },
@@ -590,7 +571,7 @@ return {
             "plural": false,
             "selections": [
               (v6/*: any*/),
-              (v20/*: any*/)
+              (v17/*: any*/)
             ],
             "storageKey": null
           },
@@ -619,7 +600,7 @@ return {
     ]
   },
   "params": {
-    "id": "73d47e206712a26936eb5feb8ee52799",
+    "id": "51d8ea5466b29ca3d04272027680ca35",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

@@ -5,21 +5,15 @@ describe('Suspend/UnSuspend Club', () => {
   const [username] = generateUsernameAndEmail()
   const club = generateClubName()
 
-  it('create account', () => {
+  it('suspend club as staff', () => {
     cy.joinWithNewAccount(username)
-  })
 
-  it('assign artist role', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.assignArtistRole(username)
-  })
 
-  it('create club', () => {
     cy.joinWithNewAccount(username)
     cy.createClub(club)
-  })
 
-  it('suspend club as staff', () => {
     cy.joinWithExistingAccount('0eclipse')
     cy.visit(`/staff/club/${club}`)
     clickOnButton('Suspend Club')

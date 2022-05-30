@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<808743e9df600069f967daf91fc87a6f>>
- * @relayHash 29349984bcaecbe1a7c4d9584460f017
+ * @generated SignedSource<<2690a9de64abfb4ba3ade5796a5ca1ca>>
+ * @relayHash 02585c4569b106978eeca4b1d5964a39
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 29349984bcaecbe1a7c4d9584460f017
+// @relayRequestID 02585c4569b106978eeca4b1d5964a39
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -181,28 +181,6 @@ v15 = {
   "selections": [
     (v13/*: any*/)
   ],
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "thumbnail",
-  "plural": false,
-  "selections": [
-    (v14/*: any*/),
-    (v15/*: any*/),
-    (v12/*: any*/),
-    (v11/*: any*/)
-  ],
-  "storageKey": null
-},
-v17 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
   "storageKey": null
 };
 return {
@@ -378,7 +356,21 @@ return {
                           (v7/*: any*/),
                           (v11/*: any*/),
                           (v8/*: any*/),
-                          (v16/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "thumbnail",
+                            "plural": false,
+                            "selections": [
+                              (v14/*: any*/),
+                              (v15/*: any*/),
+                              (v12/*: any*/),
+                              (v11/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -398,50 +390,6 @@ return {
                             ],
                             "storageKey": null
                           }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Category",
-                        "kind": "LinkedField",
-                        "name": "categories",
-                        "plural": true,
-                        "selections": [
-                          (v11/*: any*/),
-                          (v7/*: any*/),
-                          (v17/*: any*/),
-                          (v16/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Character",
-                        "kind": "LinkedField",
-                        "name": "characters",
-                        "plural": true,
-                        "selections": [
-                          (v11/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Series",
-                            "kind": "LinkedField",
-                            "name": "series",
-                            "plural": false,
-                            "selections": [
-                              (v17/*: any*/),
-                              (v7/*: any*/),
-                              (v11/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          (v8/*: any*/),
-                          (v7/*: any*/),
-                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -585,7 +533,7 @@ return {
     ]
   },
   "params": {
-    "id": "29349984bcaecbe1a7c4d9584460f017",
+    "id": "02585c4569b106978eeca4b1d5964a39",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",
