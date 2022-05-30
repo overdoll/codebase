@@ -1,6 +1,6 @@
 module overdoll
 
-go 1.16
+go 1.18.2
 
 require (
 	github.com/99designs/gqlgen v0.17.2
