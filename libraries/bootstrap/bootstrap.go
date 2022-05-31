@@ -2,10 +2,11 @@ package bootstrap
 
 import (
 	"context"
-	"log"
-	"overdoll/libraries/support"
-
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
+	"log"
+	"os"
+	"overdoll/libraries/support"
 )
 
 func NewBootstrap(ctx context.Context) {
@@ -21,4 +22,11 @@ func NewBootstrap(ctx context.Context) {
 	}
 
 	zap.ReplaceGlobals(logger)
+
+	if err := sentry.Init(sentry.ClientOptions{
+		Dsn:              os.Getenv("SENTRY_DSN"),
+		TracesSampleRate: 0.0,
+	}); err != nil {
+		zap.S().Errorf("Sentry initialization failed: %v\n", err)
+	}
 }

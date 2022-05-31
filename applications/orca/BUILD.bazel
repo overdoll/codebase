@@ -24,6 +24,7 @@ _DEPS = [
     "@npm_orca//@types/node",
     "@npm_orca//node-fetch",
     "@npm_orca//cors",
+    "@npm_orca//@sentry/node"
 ]
 
 _DATA = [

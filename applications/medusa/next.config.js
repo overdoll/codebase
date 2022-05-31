@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs')
+
 const path = require('path')
 const securityHeaders = [
   {
@@ -44,7 +46,7 @@ if (process.env.ANALYZE === 'true') {
   })
 }
 
-module.exports = withBundleAnalyzer({
+const moduleExports = withBundleAnalyzer({
   async headers () {
     return [
       {
@@ -101,3 +103,11 @@ module.exports = withBundleAnalyzer({
     return config
   }
 })
+
+let sentryConfig
+
+if (process.env.UPLOAD_SENTRY_SOURCEMAPS != null) {
+  sentryConfig = { silent: true }
+}
+
+module.exports = withSentryConfig(moduleExports, sentryConfig)

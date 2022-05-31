@@ -1,9 +1,10 @@
 import { ApolloGateway, LocalGraphQLDataSource, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { gql } from 'apollo-server'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloError, ApolloServer } from 'apollo-server-express'
 import Redis from 'ioredis'
 import cors from 'cors'
 import { buildSubgraphSchema } from '@apollo/federation'
+import * as Sentry from '@sentry/node'
 
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
@@ -262,12 +263,16 @@ function matchQueryMiddleware (req, res, next): void {
   })
 }
 
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 0
+})
+
 void (async () => {
   const app = express()
   const httpServer = http.createServer(app)
   const server = new ApolloServer({
     gateway,
-    // @ts-expect-error
     subscriptions: false,
     context: ({
       req,
@@ -278,7 +283,54 @@ void (async () => {
     }),
     // disable playground, add middleware for a custom playground
     playground: false,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        // @ts-ignore
+        requestDidStart (_) {
+          /* Within this returned object, define functions that respond
+             to request-specific lifecycle events. */
+          return {
+            didEncounterErrors (ctx) {
+              // If we couldn't parse the operation, don't
+              // do anything here
+              if (!ctx.operation) {
+                return
+              }
+
+              for (const err of ctx.errors) {
+                // Only report internal server errors,
+                // all errors extending ApolloError should be user-facing
+                if (err instanceof ApolloError) {
+                  continue
+                }
+
+                // Add scoped report details and send to Sentry
+                Sentry.withScope(scope => {
+                  // Annotate whether failing operation was query/mutation/subscription
+                  scope.setTag('kind', ctx.operation.operation)
+
+                  // Log query and variables as extras (make sure to strip out sensitive data!)
+                  scope.setExtra('query', ctx.request.query)
+                  scope.setExtra('variables', ctx.request.variables)
+
+                  if (err.path) {
+                    // We can also add the path as breadcrumb
+                    scope.addBreadcrumb({
+                      category: 'query-path',
+                      message: err.path.join(' > '),
+                      level: 'debug'
+                    })
+                  }
+
+                  Sentry.captureException(err)
+                })
+              }
+            }
+          }
+        }
+      }
+    ],
   })
 
   await server.start()
