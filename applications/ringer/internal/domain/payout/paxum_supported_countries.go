@@ -26,6 +26,7 @@ var paxumSupportedCountries = []countries.CountryCode{
 	countries.Belize,
 	countries.Benin,
 	countries.Bermuda,
+	countries.Ukraine,
 	countries.Bhutan,
 	countries.Bolivia,
 	countries.BosniaAndHerzegovina,

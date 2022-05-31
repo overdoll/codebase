@@ -7,7 +7,8 @@
                 <mj-text>
                     <h2>Account Deletion Request</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>As requested, we have scheduled a deletion of your account on {{.DeletionDate}}.</p>
+                    <p>As requested, we have scheduled a deletion of your account on <strong>{{.DeletionDate}}</strong>.
+                    </p>
                     <p>We will send you one more reminder letting you know that your account is being deleted before
                         fully confirming the action. You may ignore this and subsequent reminders if you are aware of
                         the action.

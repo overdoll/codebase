@@ -6,7 +6,9 @@
             <mj-column>
                 <mj-text>
                     <h2>Club Has No Supporter Posts in 30 Days</h2>
-                    <p>The club {{.ClubName}} ({{.ClubLink}}) has not had a supporter post for almost 30 days.</p>
+                    <p>The club <strong>{{.ClubName}}</strong> ({{.ClubLink}}) has not had a supporter post for almost
+                        30 days.
+                    </p>
                 </mj-text>
             </mj-column>
         </mj-section>

@@ -99,8 +99,6 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CreateClub, mock.Anything)
 
-	env := getWorkflowEnvironment()
-
 	flowRun := &mocks.WorkflowRun{}
 
 	flowRun.
@@ -113,7 +111,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				workflowExecution.FindAndExecuteWorkflow(t, env)
+				workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 				refreshClubESIndex(t)
 			},
 		).

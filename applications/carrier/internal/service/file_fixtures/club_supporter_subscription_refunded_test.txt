@@ -8,15 +8,15 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Refund Issued
 -------------
 
-Hello !
+Hello test user!
 
-As requested, we have refunded the amount 0.10 USD back to your card.
+As requested, we have refunded the amount *0.10 USD* back to your card.
 
-This refund was for your subscription to test a club (https://ci.overdoll.dev/test-club).
+This refund was for your subscription to *test a club* (https://ci.overdoll.dev/test-club).
 
 You may manage your subscription at any time using the button below.
 
-Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscriptions )
+Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscription/25WqY2AZfmlykwqKhQagxmI9gtd )
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 

@@ -7,8 +7,11 @@
                 <mj-text>
                     <h2>Refund Issued</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>As requested, we have refunded the amount {{.FormattedAmount}} back to your card.</p>
-                    <p>This refund was for your subscription to {{.ClubName}} ({{.ClubLink}}).</p>
+                    <p>As requested, we have refunded the amount <strong>{{.FormattedAmount}}</strong> back to your
+                        card.
+                    </p>
+                    <p>This refund was for your subscription to <strong>{{.ClubName}}</strong> ({{.ClubLink}}).
+                    </p>
                     <p>You may manage your subscription at any time using the button below.</p>
                 </mj-text>
                 <mj-button css-class="medium gray" href="{{.SubscriptionLink}}">

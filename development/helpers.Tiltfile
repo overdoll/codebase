@@ -1,11 +1,11 @@
 settings = read_json("../tilt_options.json", default={})
 
-allow_k8s_contexts("autobot")
-#allow_k8s_contexts("overdoll")
+#allow_k8s_contexts("autobot")
+allow_k8s_contexts("kind-overdoll")
 
-#default_registry(settings.get("registry", "localhost:5000"), single_name = "t/dev")
+default_registry(settings.get("registry", "localhost:37393"), single_name = "t/dev")
 #default_registry('ttl.sh/overdoll-adg4tasdfasd')
-default_registry('771779017151.dkr.ecr.us-east-1.amazonaws.com',single_name='autobot/dev')
+#default_registry('771779017151.dkr.ecr.us-east-1.amazonaws.com',single_name='autobot/dev')
 
 # ns = "user-%s" % user
 ns = "default"
@@ -60,10 +60,10 @@ def build_applications(applications, dependencies):
                 "development/service",
                 name=item,
                 values=["development/services/" + item + ".yaml"],
-                set=[
-                    "toleration="+os.getenv("OVERDOLL_DEV_NAMESPACE", ""),
-                    "node="+os.getenv("OVERDOLL_DEV_NODE", ""),
-                ]
+               # set=[
+               #     "toleration="+os.getenv("OVERDOLL_DEV_NAMESPACE", ""),
+               #     "node="+os.getenv("OVERDOLL_DEV_NODE", ""),
+               # ]
             ),
             allow_duplicates=True,
         )

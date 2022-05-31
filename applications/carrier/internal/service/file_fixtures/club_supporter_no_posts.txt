@@ -8,7 +8,7 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Club Has No Supporter Posts in 30 Days
 --------------------------------------
 
-The club test a club (https://ci.overdoll.dev/test-club) has not had a supporter post for almost 30 days.
+The club *test a club* (https://ci.overdoll.dev/test-club) has not had a supporter post for almost 30 days.
 
 overdoll Inc.
 

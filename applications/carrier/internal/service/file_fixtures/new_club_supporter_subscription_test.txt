@@ -8,21 +8,21 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 New Subscription
 ----------------
 
-Hello !
+Hello test user!
 
-Thank you for your purchase. Your order number is #25WqY2AZfmlykwqKhQagxmI9gtd.
+Thank you for your purchase. Your order number is *#25WqY2AZfmlykwqKhQagxmI9gtd*.
 
 Billing Details
 
-Purchase of 0.10 USD to test a club (https://ci.overdoll.dev/test-club).
+Purchase of *0.10 USD* to *test a club* (https://ci.overdoll.dev/test-club).
 
-Your subscription will be active from Jan 01 to Jan 02.
+Your subscription will be active from *Nov 12* to *Nov 13*.
 
-We will renew your subscription automatically every 30 days. Your next renewal is on Jan 02.
+We will renew your subscription automatically every 30 days. Your next renewal is on *Nov 13*.
 
 You may cancel your subscription using the link below at any time.
 
-Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscriptions )
+Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscription/25WqY2AZfmlykwqKhQagxmI9gtd )
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 

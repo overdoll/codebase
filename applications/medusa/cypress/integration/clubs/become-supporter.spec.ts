@@ -69,7 +69,7 @@ describe('Club - Become Supporter', () => {
     cy.get('input[name="cvv2"]').type(testCardDetails.cvv2)
 
     cy.get('[id=placeOrder]').click()
-    cy.url().should('include', Cypress.config().baseUrl as string)
+    cy.url().should('include', '/payment-flow')
     cy.document().then((doc) => {
       // @ts-expect-error
       cy.visit(`/${newPaymentMethodClub}?token=${doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]')?.content as string}`)

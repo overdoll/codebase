@@ -8,7 +8,7 @@
                     <h2>Post Reminder</h2>
                     <p>Hello {{.Username}}!</p>
                     <p>We're sending you an important reminder to let you know that we haven't seen you post any
-                        exclusive supporter content in {{.ElapsedDays}} days for your club {{.ClubName}}
+                        exclusive supporter content in <strong>{{.ElapsedDays}} days</strong> for your club <strong>{{.ClubName}}</strong>
                         ({{.ClubLink}}).
                     </p>
                     <p>Please keep in mind that in order for you to keep your supporters and the ability to collect

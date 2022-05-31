@@ -7,14 +7,18 @@
                 <mj-text>
                     <h2>New Subscription</h2>
                     <p>Hello {{.Username}}!</p>
-                    <p>Thank you for your purchase. Your order number is #{{.SubscriptionId}}.</p>
+                    <p>Thank you for your purchase. Your order number is <strong>#{{.SubscriptionId}}</strong>.
+                    </p>
                 </mj-text>
                 <mj-text>
                     <h4>Billing Details</h4>
-                    <p>Purchase of {{.FormattedAmount}} to {{.ClubName}} ({{.ClubLink}}).</p>
-                    <p>Your subscription will be active from {{.BillingDateStart}} to {{.BillingDateEnd}}.</p>
+                    <p>Purchase of <strong>{{.FormattedAmount}}</strong> to <strong>{{.ClubName}}</strong> ({{.ClubLink}}).
+                    </p>
+                    <p>Your subscription will be active from <strong>{{.BillingDateStart}}</strong> to <strong>
+                        {{.BillingDateEnd}}</strong>.
+                    </p>
                     <p>We will renew your subscription automatically every 30 days. Your next renewal is on
-                        {{.BillingDateEnd}}.
+                        <strong>{{.BillingDateEnd}}</strong>.
                     </p>
                     <p>You may cancel your subscription using the link below at any time.</p>
                 </mj-text>
