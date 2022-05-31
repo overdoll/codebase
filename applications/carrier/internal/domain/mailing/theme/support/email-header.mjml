@@ -5,9 +5,9 @@
         </mj-column>
         <mj-column vertical-align="middle">
             <mj-text align="left" color="#ff2969">
-                <h1>
+                <h2>
                     overdoll
-                </h1>
+                </h2>
             </mj-text>
         </mj-column>
     </mj-group>
