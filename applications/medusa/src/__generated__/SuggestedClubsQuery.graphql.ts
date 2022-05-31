@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<843c1983aa663502ac8673b9042e6d82>>
- * @relayHash 8ee634039f6fbabefd73bc9006736355
+ * @generated SignedSource<<5d63c8bbc6490e26716b3da0b6c8fed1>>
+ * @relayHash 1e54ac2bfc1cb738884b3876a915ce72
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8ee634039f6fbabefd73bc9006736355
+// @relayRequestID 1e54ac2bfc1cb738884b3876a915ce72
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -85,6 +85,20 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -94,7 +108,7 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -208,6 +222,8 @@ return {
                       (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v8/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -258,9 +274,11 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v6/*: any*/),
+                                      (v8/*: any*/),
                                       (v4/*: any*/),
                                       (v5/*: any*/),
+                                      (v6/*: any*/),
+                                      (v7/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -374,7 +392,7 @@ return {
     ]
   },
   "params": {
-    "id": "8ee634039f6fbabefd73bc9006736355",
+    "id": "1e54ac2bfc1cb738884b3876a915ce72",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",

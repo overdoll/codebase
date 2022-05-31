@@ -70,8 +70,8 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
     commit({
       variables: {
         input: {
-          token: data.token
-        }
+          token: data.token,
+        },
       },
       onCompleted (data) {
         if (data.grantAccountAccessWithAuthenticationToken == null) {
@@ -82,14 +82,14 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           notify({
             status: 'error',
-            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
+            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation)),
           })
           removeCookie('token')
           return
         }
         notify({
           status: 'success',
-          title: t`Welcome back!`
+          title: t`Welcome back!`,
         })
       },
       updater: (store, payload) => {
@@ -105,9 +105,9 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error logging you in`
+          title: t`There was an error logging you in`,
         })
-      }
+      },
     })
   }, [])
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6ef1433d917c568c262446b073773eb2>>
- * @relayHash a592c8abacc91dc5b9c07705913b0c15
+ * @generated SignedSource<<f61dab87a2f467fb344820e310bbced2>>
+ * @relayHash b78577512405454ab39695ad7a448439
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a592c8abacc91dc5b9c07705913b0c15
+// @relayRequestID b78577512405454ab39695ad7a448439
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -89,6 +89,20 @@ v6 = [
         "storageKey": null
       }
     ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
     "storageKey": null
   },
   {
@@ -404,7 +418,7 @@ return {
     ]
   },
   "params": {
-    "id": "a592c8abacc91dc5b9c07705913b0c15",
+    "id": "b78577512405454ab39695ad7a448439",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

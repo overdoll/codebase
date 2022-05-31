@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1500bafe39780ad0a43ea6590eb67ec8>>
+ * @generated SignedSource<<109ee65a94e384cb51c48438b6fb362e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ArchivedPostFragment$data = {
+  readonly reference: string;
+  readonly club: {
+    readonly slug: string;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "PostModerateButtonFragment" | "PostUnArchiveButtonFragment">;
   readonly " $fragmentType": "ArchivedPostFragment";
 };
@@ -26,6 +30,31 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ArchivedPostFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -46,6 +75,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "4f7b0079021dbd517deddcf696512255";
+(node as any).hash = "03c3ee2ee3b3a762e1d223120c3900d3";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ca0cdb1a3fa26d3955ff0dd408f68e0d>>
- * @relayHash 5a68eeb55d4e33314bf6e199aa4f3e71
+ * @generated SignedSource<<1e04a34b7ea12a47efc57d818b25a7e5>>
+ * @relayHash 09619b50e418e720443d2a823e5d4368
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5a68eeb55d4e33314bf6e199aa4f3e71
+// @relayRequestID 09619b50e418e720443d2a823e5d4368
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -132,6 +132,20 @@ v12 = {
 v13 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v15 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -141,7 +155,7 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -282,6 +296,8 @@ return {
                                       (v12/*: any*/),
                                       (v13/*: any*/),
                                       (v14/*: any*/),
+                                      (v15/*: any*/),
+                                      (v16/*: any*/),
                                       (v9/*: any*/)
                                     ],
                                     "storageKey": null
@@ -306,9 +322,11 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v14/*: any*/),
+                                      (v16/*: any*/),
                                       (v12/*: any*/),
                                       (v13/*: any*/),
+                                      (v14/*: any*/),
+                                      (v15/*: any*/),
                                       (v9/*: any*/)
                                     ],
                                     "storageKey": null
@@ -420,7 +438,7 @@ return {
     ]
   },
   "params": {
-    "id": "5a68eeb55d4e33314bf6e199aa4f3e71",
+    "id": "09619b50e418e720443d2a823e5d4368",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

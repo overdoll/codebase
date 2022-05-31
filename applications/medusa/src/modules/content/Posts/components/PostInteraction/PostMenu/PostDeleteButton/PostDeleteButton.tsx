@@ -115,7 +115,14 @@ export default function PostDeleteButton ({
                 Cancel
               </Trans>
             </Button>
-            <Button isLoading={isInFlight} onClick={onDelete} ml={3} size='lg' colorScheme='orange' variant='solid'>
+            <Button
+              isLoading={isInFlight}
+              onClick={onDelete}
+              ml={3}
+              size='lg'
+              colorScheme='orange'
+              variant='solid'
+            >
               <Trans>
                 Delete Post
               </Trans>

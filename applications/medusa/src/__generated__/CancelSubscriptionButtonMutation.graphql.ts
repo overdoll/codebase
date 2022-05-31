@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<71dcdd9c399f285aad01d99c2dbe2679>>
- * @relayHash 60b15c8b79a4c42c67fa076ec6bc61fa
+ * @generated SignedSource<<01b828f089c064a75bdb685450bf8714>>
+ * @relayHash 4bf8bb94827056d9548c56ba767bcae1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 60b15c8b79a4c42c67fa076ec6bc61fa
+// @relayRequestID 4bf8bb94827056d9548c56ba767bcae1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -287,6 +287,20 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "width",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "height",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "ResourceUrl",
                             "kind": "LinkedField",
                             "name": "videoThumbnail",
@@ -330,7 +344,7 @@ return {
     ]
   },
   "params": {
-    "id": "60b15c8b79a4c42c67fa076ec6bc61fa",
+    "id": "4bf8bb94827056d9548c56ba767bcae1",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",

@@ -4,7 +4,7 @@ import { Icon } from '../../index'
 
 interface Props {
   icon: FunctionComponent<any>
-  colorScheme?: string
+  colorScheme: string
 }
 
 export default function PagePanelIcon ({
@@ -17,13 +17,13 @@ export default function PagePanelIcon ({
       h={10}
       w={10}
       borderRadius='md'
-      bg={`${colorScheme ?? 'gray'}.400`}
+      bg={`${colorScheme}.300`}
       align='center'
       justify='center'
     >
       <Icon
         icon={icon}
-        fill='gray.00'
+        fill={`${colorScheme}.100`}
       />
     </Flex>
   )

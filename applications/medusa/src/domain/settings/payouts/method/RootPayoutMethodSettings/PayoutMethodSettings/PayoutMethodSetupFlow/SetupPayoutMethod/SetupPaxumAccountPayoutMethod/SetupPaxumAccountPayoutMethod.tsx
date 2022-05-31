@@ -21,6 +21,7 @@ import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { SetupPaxumAccountPayoutMethodMutation } from '@//:artifacts/SetupPaxumAccountPayoutMethodMutation.graphql'
+import LinkInline from '@//:modules/content/ContentHints/LinkInline/LinkInline'
 
 interface EmailValues {
   email: string
@@ -137,6 +138,17 @@ export default function SetupPaxumAccountPayoutMethod (): JSX.Element {
               Once your account is verified, please enter your Paxum email for receiving payments. Entering an
               unverified
               or invalid account email will result in failed payouts and a frozen balance.
+            </Trans>
+          </Text>
+          <Text color='gray.100' fontSize='sm'>
+            <Trans>
+              Please note that while there are no fees for receiving payments, you are subject to fees when withdrawing
+              via local bank account or wire. Please refer to the{' '}
+              <LinkInline
+                href='https://www.paxum.com/fees/personal'
+              >
+                site's Fees page
+              </LinkInline> for more information.
             </Trans>
           </Text>
         </Stack>

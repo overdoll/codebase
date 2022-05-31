@@ -21,16 +21,19 @@ const variantSolid: SystemStyleFunction = (props) => {
 }
 
 const variantSubtle: SystemStyleFunction = (props) => {
-  const { colorScheme: c } = props
+  const {
+    colorScheme: c,
+    theme
+  } = props
 
   if (c === 'gray') {
     return {
-      bg: mode(`${c}.50`, `${c}.700`)(props),
+      bg: mode(`${c}.50`, `${c}.600`)(props),
       color: mode(`${c}.800`, `${c}.100`)(props)
     }
   }
   return {
-    bg: mode(`${c}.100`, `${c}.50`)(props),
+    bg: transparentize(`${c}.200`, 0.2)(theme),
     color: mode(`${c}.800`, `${c}.300`)(props)
   }
 }

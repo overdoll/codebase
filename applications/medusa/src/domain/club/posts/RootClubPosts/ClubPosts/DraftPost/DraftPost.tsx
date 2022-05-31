@@ -35,13 +35,13 @@ export default function DraftPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='space-between'>
+      <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='teal'>
           <Trans>
             DRAFT
           </Trans>
         </Badge>
-        <PostMenu h={5} size='xs'>
+        <PostMenu size='xs'>
           <MenuLinkItem
             href={{
               pathname: '/club/[slug]/create-post',

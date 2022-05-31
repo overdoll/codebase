@@ -23,6 +23,9 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
     ...rest
   } = props
 
+  // TODO commenting out the primary function because adding a hash to the url will break SSR???
+  // TODO need to find a better way to write this with nextjs
+
   const defineHash = hash == null ? 'modal' : hash
 
   const {
@@ -40,6 +43,7 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
 
   const onOpen = (): void => {
     onOpenAction()
+    /*
     const extractedHash = router.asPath.split('#')?.[1]
     if (extractedHash?.includes(defineHash)) return
     void router.push({
@@ -47,6 +51,8 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
       hash: defineHash,
       query: router.query
     }, undefined, { shallow: true })
+
+     */
   }
 
   const onClose = (): void => {

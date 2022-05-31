@@ -23,7 +23,7 @@ export default function Invalid (): JSX.Element {
                   icon={RemoveCross}
                   w={16}
                   h={16}
-                  fill='orange.400'
+                  fill='orange.300'
                 />
                 <Box>
                   <Heading

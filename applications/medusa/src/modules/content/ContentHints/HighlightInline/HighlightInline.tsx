@@ -11,7 +11,7 @@ export default function HighlightInline ({
   colorScheme = 'gray',
   ...rest
 }: Props): JSX.Element {
-  const color = colorScheme == null ? undefined : (colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`)
+  const color = colorScheme == null ? undefined : (colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.300`)
 
   return (
     <Text

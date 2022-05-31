@@ -1,8 +1,7 @@
 import { graphql, useFragment } from 'react-relay'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import type { RejectedPostFragment$key } from '@//:artifacts/RejectedPostFragment.graphql'
@@ -30,13 +29,13 @@ export default function RejectedPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='space-between'>
+      <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
           <Trans>
             Rejected
           </Trans>
         </Badge>
-        <PostMenu h={5} size='xs'>
+        <PostMenu size='xs'>
           <PostDeleteButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

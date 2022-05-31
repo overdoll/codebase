@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6a2b539ad6376cc70bb75377d7e3f3d6>>
- * @relayHash 23e36f4e83bb0c2ee5318f7e4891af72
+ * @generated SignedSource<<1a670018876072bb756498810cf88fe6>>
+ * @relayHash b71aca71c254ad56d3e4586f2acc7370
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 23e36f4e83bb0c2ee5318f7e4891af72
+// @relayRequestID b71aca71c254ad56d3e4586f2acc7370
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -120,6 +120,20 @@ v10 = {
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
       "storageKey": null
     },
     {
@@ -494,7 +508,7 @@ return {
     ]
   },
   "params": {
-    "id": "23e36f4e83bb0c2ee5318f7e4891af72",
+    "id": "b71aca71c254ad56d3e4586f2acc7370",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

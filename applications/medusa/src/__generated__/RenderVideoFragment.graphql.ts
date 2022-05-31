@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<492c71a3233aa6c8c30b57bc89f61954>>
+ * @generated SignedSource<<320b6c1d4958b234bfcf38ea3ef14323>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,8 @@ export type RenderVideoFragment$data = {
   readonly videoThumbnail: {
     readonly url: string;
   } | null;
+  readonly width: number;
+  readonly height: number;
   readonly " $fragmentType": "RenderVideoFragment";
 };
 export type RenderVideoFragment = RenderVideoFragment$data;
@@ -70,6 +72,20 @@ return {
         (v0/*: any*/)
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
+      "storageKey": null
     }
   ],
   "type": "Resource",
@@ -77,6 +93,6 @@ return {
 };
 })();
 
-(node as any).hash = "3040452655292333a42fd32e4adf6d73";
+(node as any).hash = "cf3d76674ab16f5df588b1296b5c1337";
 
 export default node;

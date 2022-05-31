@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<91b79b835ed7e8a2a140dc0c431d173a>>
- * @relayHash 929810581a14b1f0f2c6c1fa87f6177f
+ * @generated SignedSource<<36f37bb6964294cc6cbdc14ebb90d448>>
+ * @relayHash 928ba99cd98f8192d4219c4430f17f04
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 929810581a14b1f0f2c6c1fa87f6177f
+// @relayRequestID 928ba99cd98f8192d4219c4430f17f04
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -115,6 +115,20 @@ v7 = {
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -232,6 +246,8 @@ return {
                                   (v5/*: any*/),
                                   (v7/*: any*/),
                                   (v8/*: any*/),
+                                  (v9/*: any*/),
+                                  (v10/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
@@ -287,6 +303,8 @@ return {
                                 "selections": [
                                   (v7/*: any*/),
                                   (v8/*: any*/),
+                                  (v9/*: any*/),
+                                  (v10/*: any*/),
                                   (v5/*: any*/),
                                   (v4/*: any*/)
                                 ],
@@ -387,7 +405,7 @@ return {
     ]
   },
   "params": {
-    "id": "929810581a14b1f0f2c6c1fa87f6177f",
+    "id": "928ba99cd98f8192d4219c4430f17f04",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

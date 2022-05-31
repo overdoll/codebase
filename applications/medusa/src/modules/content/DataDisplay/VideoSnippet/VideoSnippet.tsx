@@ -3,6 +3,8 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
 import SuspenseImage from '../../../operations/SuspenseImage'
+import { useState } from 'react'
+import ImageError from '../ImageError/ImageError'
 
 interface Props extends HTMLChakraProps<any> {
   innerRef?: () => void
@@ -14,6 +16,8 @@ const Fragment = graphql`
     videoThumbnail {
       url
     }
+    width
+    height
   }
 `
 
@@ -24,10 +28,17 @@ export default function VideoSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  // TODO add a placeholder in case the URL fails to load due to some error
+  const [hasError, setHasError] = useState(false)
+
+  if (hasError) {
+    return (
+      <ImageError />
+    )
+  }
 
   return (
     <SuspenseImage
+      onError={() => setHasError(true)}
       alt='thumbnail'
       w='inherit'
       h='inherit'

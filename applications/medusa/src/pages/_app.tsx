@@ -26,6 +26,9 @@ import prepass from 'react-ssr-prepass'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import Head from 'next/head'
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/source-code-pro/400.css'
 
 let securityTokenCache = ''
 let globalRelayEnvironment

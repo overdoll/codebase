@@ -49,31 +49,49 @@ export default function SingleFileImageUpload ({
   }
 
   useEffect(() => {
-    uppy.on('upload-success', (file, response) => {
+    const callBackFn = (file, response): void => {
       const url = response.uploadURL as string
       const fileId = url.substring(url.lastIndexOf('/') + 1)
       setResponse(fileId)
       setFile(file)
       onChange(fileId)
       setProgress(undefined)
-    })
+    }
+
+    uppy.on('upload-success', callBackFn)
+
+    return () => {
+      uppy.off('upload-success', callBackFn)
+    }
   }, [uppy])
 
   useEffect(() => {
-    uppy.on('upload-progress', (file, progress) => {
+    const callBackFn = (file, progress): void => {
       setProgress(progress.bytesUploaded / progress.bytesTotal)
-    })
+    }
+
+    uppy.on('upload-progress', callBackFn)
+
+    return () => {
+      uppy.off('upload-progress', callBackFn)
+    }
   }, [uppy])
 
   useEffect(() => {
-    uppy.on('file-added', file => {
+    const callBackFn = (file): void => {
       setFile(file)
-    })
+    }
+
+    uppy.on('file-added', callBackFn)
+
+    return () => {
+      uppy.off('file-added', callBackFn)
+    }
   }, [uppy])
 
   // Event for errors
   useEffect(() => {
-    uppy.on('info-visible', () => {
+    const callBackFn = (): void => {
       const info = uppy.getState().info
 
       if (info == null) return
@@ -84,7 +102,13 @@ export default function SingleFileImageUpload ({
         status: 'error',
         title: message
       })
-    })
+    }
+
+    uppy.on('info-visible', callBackFn)
+
+    return () => {
+      uppy.off('info-visible', callBackFn)
+    }
   }, [uppy])
 
   if (file == null) {

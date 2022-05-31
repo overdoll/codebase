@@ -39,14 +39,18 @@ export default function ResourceItem ({
 
   if (!data.processed) {
     return (
-      <Flex w='100%' p={4} align='center' justify='center' h='100%'>
+      <Flex w='100%' p={4} align='center' justify='center' h='100%' {...rest}>
         <Spinner />
       </Flex>
     )
   }
 
   return (
-    <Flex align='center' justify='center' h='100%'>
+    <Flex
+      w='100%'
+      h='100%'
+      {...rest}
+    >
       {data.type === 'IMAGE' &&
         <ImageSnippet query={data} {...rest} />}
       {data.type === 'VIDEO' &&

@@ -15,6 +15,9 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 import { useRouter } from 'next/router'
 import ClubInformationBanner from '../../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import { useUpdateEffect } from 'usehooks-ts'
+import { useContext } from 'react'
+import { UppyContext } from '../../../context'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -79,7 +82,7 @@ export default function PostState ({
             <Text fontSize='md' color='gray.100'>
               <Trans>Upstanding netizens will read the{' '}
                 <Link
-                  color='teal.400'
+                  color='teal.300'
                   fontSize='md'
                   isExternal
                   href={CLUB_GUIDELINES}

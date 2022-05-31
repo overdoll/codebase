@@ -11,4 +11,5 @@ export default function handler (req, res): void {
   res.status(200).json({
     coverage: global.__coverage__ ?? null
   })
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
 }

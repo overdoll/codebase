@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e7a5fb09a2163d5456adeb3fa4c01555>>
- * @relayHash 27dec4029a96f0066b65f3e7f116c27a
+ * @generated SignedSource<<7e545440cf3792b32be4b2773c6c6dba>>
+ * @relayHash 292e971c43cfde25dff1c579020f1a5c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 27dec4029a96f0066b65f3e7f116c27a
+// @relayRequestID 292e971c43cfde25dff1c579020f1a5c
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -273,6 +273,20 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "width",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "height",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "ResourceUrl",
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
@@ -309,7 +323,7 @@ return {
     ]
   },
   "params": {
-    "id": "27dec4029a96f0066b65f3e7f116c27a",
+    "id": "292e971c43cfde25dff1c579020f1a5c",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",

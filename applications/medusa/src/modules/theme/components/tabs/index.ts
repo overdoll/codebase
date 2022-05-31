@@ -193,7 +193,7 @@ const variantSolidRounded: PartsStyleFunction<typeof parts> = (props) => {
       color: mode('gray.600', 'inherit')(props),
       _selected: {
         color: mode('#fff', `${c}.900`)(props),
-        bg: mode(`${c}.600`, `${c}.400`)(props)
+        bg: mode(`${c}.600`, `${c}.300`)(props)
       }
     }
   }

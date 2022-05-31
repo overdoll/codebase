@@ -114,7 +114,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
 
   // Event for errors
   useEffect(() => {
-    const callBackFn = (file): void => {
+    const callBackFn = (): void => {
       const info = uppy.getState().info
 
       if (info == null) return
@@ -131,6 +131,12 @@ export default function PostCreator ({ query }: Props): JSX.Element {
 
     return () => {
       uppy.off('info-visible', callBackFn)
+    }
+  }, [uppy])
+
+  useEffect(() => {
+    return () => {
+      uppy.reset()
     }
   }, [uppy])
 

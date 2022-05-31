@@ -38,13 +38,13 @@ export default function PublishedPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack h='100%' align='center' spacing={3} justify='space-between'>
+      <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
           <Trans>
             Published
           </Trans>
         </Badge>
-        <PostMenu h={5} size='xs'>
+        <PostMenu size='xs'>
           <PostViewButton query={data} />
           <PostCopyLinkButton query={data} />
           <PostArchiveButton query={data} />

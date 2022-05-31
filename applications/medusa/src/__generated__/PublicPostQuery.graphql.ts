@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3df851b4d49aa041ae6c25aed3bb6c2a>>
- * @relayHash 51d8ea5466b29ca3d04272027680ca35
+ * @generated SignedSource<<0339474c1c5f7de1c3237d8663111ab1>>
+ * @relayHash 074761e96f4e74b9fec16f261f529f0a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 51d8ea5466b29ca3d04272027680ca35
+// @relayRequestID 074761e96f4e74b9fec16f261f529f0a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -132,6 +132,20 @@ v10 = {
 v11 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -141,7 +155,7 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "PostContent",
@@ -160,6 +174,8 @@ v12 = {
         (v8/*: any*/),
         (v10/*: any*/),
         (v11/*: any*/),
+        (v12/*: any*/),
+        (v13/*: any*/),
         (v7/*: any*/)
       ],
       "storageKey": null
@@ -182,7 +198,7 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -192,12 +208,14 @@ v13 = {
   "selections": [
     (v10/*: any*/),
     (v11/*: any*/),
+    (v12/*: any*/),
+    (v13/*: any*/),
     (v8/*: any*/),
     (v7/*: any*/)
   ],
   "storageKey": null
 },
-v14 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "ClubMember",
@@ -216,7 +234,7 @@ v14 = {
   ],
   "storageKey": null
 },
-v15 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "PostLike",
@@ -229,21 +247,21 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
 },
-v17 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "expires",
   "storageKey": null
 },
-v18 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -384,7 +402,7 @@ return {
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v2/*: any*/),
-                      (v12/*: any*/),
+                      (v14/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -396,13 +414,13 @@ return {
                           (v4/*: any*/),
                           (v7/*: any*/),
                           (v3/*: any*/),
-                          (v13/*: any*/),
-                          (v14/*: any*/)
+                          (v15/*: any*/),
+                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v15/*: any*/),
-                      (v16/*: any*/)
+                      (v17/*: any*/),
+                      (v18/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -466,12 +484,12 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  (v17/*: any*/)
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v13/*: any*/),
-              (v14/*: any*/),
+              (v15/*: any*/),
+              (v16/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -500,14 +518,14 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v18/*: any*/),
+                  (v20/*: any*/),
                   (v4/*: any*/),
                   (v7/*: any*/)
                 ],
                 "storageKey": null
               },
               (v4/*: any*/),
-              (v13/*: any*/)
+              (v15/*: any*/)
             ],
             "storageKey": null
           },
@@ -518,9 +536,9 @@ return {
             "name": "state",
             "storageKey": null
           },
-          (v12/*: any*/),
-          (v15/*: any*/),
-          (v16/*: any*/),
+          (v14/*: any*/),
+          (v17/*: any*/),
+          (v18/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -531,8 +549,8 @@ return {
             "selections": [
               (v7/*: any*/),
               (v4/*: any*/),
-              (v18/*: any*/),
-              (v13/*: any*/)
+              (v20/*: any*/),
+              (v15/*: any*/)
             ],
             "storageKey": null
           }
@@ -571,7 +589,7 @@ return {
             "plural": false,
             "selections": [
               (v6/*: any*/),
-              (v17/*: any*/)
+              (v19/*: any*/)
             ],
             "storageKey": null
           },
@@ -600,7 +618,7 @@ return {
     ]
   },
   "params": {
-    "id": "51d8ea5466b29ca3d04272027680ca35",
+    "id": "074761e96f4e74b9fec16f261f529f0a",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1894cf4804d9f26ad801caf72b8f81b7>>
- * @relayHash e42cefb788363055038fa6873c63bd36
+ * @generated SignedSource<<e3d38478d5c006911f25176ecd18111e>>
+ * @relayHash aa66e1323dafd3fa22fd394685a8aabd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e42cefb788363055038fa6873c63bd36
+// @relayRequestID aa66e1323dafd3fa22fd394685a8aabd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -117,6 +117,20 @@ v7 = {
 v8 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -126,14 +140,14 @@ v8 = {
   ],
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v10 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -268,6 +282,8 @@ return {
                                       (v7/*: any*/),
                                       (v8/*: any*/),
                                       (v9/*: any*/),
+                                      (v10/*: any*/),
+                                      (v11/*: any*/),
                                       (v4/*: any*/)
                                     ],
                                     "storageKey": null
@@ -291,9 +307,11 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
-                                      (v9/*: any*/),
+                                      (v11/*: any*/),
                                       (v7/*: any*/),
                                       (v8/*: any*/),
+                                      (v9/*: any*/),
+                                      (v10/*: any*/),
                                       (v4/*: any*/)
                                     ],
                                     "storageKey": null
@@ -330,7 +348,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "audience",
                                 "plural": false,
-                                "selections": (v10/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -349,7 +367,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "series",
                                     "plural": false,
-                                    "selections": (v10/*: any*/),
+                                    "selections": (v12/*: any*/),
                                     "storageKey": null
                                   },
                                   (v4/*: any*/)
@@ -363,7 +381,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "categories",
                                 "plural": true,
-                                "selections": (v10/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -450,7 +468,7 @@ return {
     ]
   },
   "params": {
-    "id": "e42cefb788363055038fa6873c63bd36",
+    "id": "aa66e1323dafd3fa22fd394685a8aabd",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
