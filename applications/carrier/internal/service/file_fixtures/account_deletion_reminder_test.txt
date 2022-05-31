@@ -8,15 +8,15 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Account Deletion Reminder
 -------------------------
 
-Hello !
+Hello test user!
 
-We're just letting you know one more time that your account is scheduled to be deleted on January 01
+We're just letting you know one more time that your account is scheduled to be deleted on *November 12*
 
 You may ignore this email if you are aware of this action and we will proceed with the deletion.
 
 Your account can be restored using the link below at any time.
 
-Restore Account ( https://ci.overdoll.dev/settings/account )
+Restore Account ( https://ci.overdoll.dev/settings/profile/delete-account )
 
 overdoll Inc.
 

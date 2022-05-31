@@ -71,7 +71,7 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 			"ClubLink":         clubUrl.String(),
 			"SubscriptionLink": subscriptionUrl.String(),
 			"FormattedAmount":  *formattedCurrency,
-			"BillingDate":      renewal.BillingDate.Format("MM/DD"),
+			"BillingDate":      renewal.BillingDate.Format("01/02"),
 		})
 	}
 

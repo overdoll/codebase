@@ -49,7 +49,7 @@ func (h ClubSuspendedHandler) Handle(ctx context.Context, cmd ClubSuspended) err
 			"Username": acc.Username(),
 			"ClubName": clubDetails.Name(),
 			"ClubLink": clubUrl.String(),
-			"EndTime":  cmd.EndTime.Format(time.RFC1123),
+			"EndTime":  cmd.EndTime.Format("Mon, 02 Jan 2006 15:04:05 MST"),
 		},
 	)
 

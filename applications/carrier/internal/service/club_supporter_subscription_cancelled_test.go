@@ -30,10 +30,10 @@ func TestClubSupporterSubscriptionCancelled(t *testing.T) {
 	clubId := uuid.New().String()
 	email := generateEmail("carrier-" + accountId)
 
-	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: accountId}, nil).Once()
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: "test user"}, nil).Once()
 	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
 
-	tm, _ := time.Parse(time.RFC3339, "2022-03-01 03:27:56 +0000 UTC")
+	tm, _ := time.Parse("2006-01-02T15:04:05.000Z", "2014-11-12T11:45:26.371Z")
 
 	_, err := client.ClubSupporterSubscriptionCancelled(context.Background(), &carrier.ClubSupporterSubscriptionCancelledRequest{
 		Account:        &carrier.Account{Id: accountId},

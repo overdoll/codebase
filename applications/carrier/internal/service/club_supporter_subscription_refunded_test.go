@@ -29,7 +29,7 @@ func TestClubSupporterSubscriptionRefunded(t *testing.T) {
 	clubId := uuid.New().String()
 
 	email := generateEmail("carrier-" + accountId)
-	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: accountId}, nil).Once()
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: "test user"}, nil).Once()
 	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
 
 	_, err := client.ClubSupporterSubscriptionRefunded(context.Background(), &carrier.ClubSupporterSubscriptionRefundedRequest{
