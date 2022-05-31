@@ -3,11 +3,12 @@ package token
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"errors"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/nacl/secretbox"
 	"io"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 	"strings"
@@ -34,11 +35,11 @@ type AuthenticationToken struct {
 }
 
 var (
-	ErrAlreadyVerified = errors.New("token already verified")
-	ErrNotVerified     = errors.New("token not yet verified")
-	ErrInvalidSecret   = errors.New("token secret is invalid")
-	ErrTokenNotFound   = errors.New("token not found")
-	ErrInvalidDevice   = errors.New("token viewed or used on an invalid device")
+	ErrAlreadyVerified = domainerror.NewValidation("token already verified")
+	ErrNotVerified     = domainerror.NewValidation("token not yet verified")
+	ErrInvalidSecret   = domainerror.NewValidation("token secret is invalid")
+	ErrTokenNotFound   = domainerror.NewValidation("token not found")
+	ErrInvalidDevice   = domainerror.NewValidation("token viewed or used on an invalid device")
 )
 
 func NewAuthenticationToken(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {
@@ -46,7 +47,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 	secretKeyBytes := make([]byte, 64)
 	_, err := rand.Read(secretKeyBytes)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrap(err, "failed to create new secret key")
 	}
 
 	secretKeyEncoded := hex.EncodeToString(secretKeyBytes)
@@ -56,7 +57,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 
 	var nonce [24]byte
 	if _, err := io.ReadFull(rand.Reader, nonce[:]); err != nil {
-		return nil, nil, err
+		return nil, nil, errors.Wrap(err, "failed to create nonce")
 	}
 
 	properEmail := strings.ToLower(email)
@@ -222,12 +223,12 @@ func decryptBox(content, secret string) (string, error) {
 
 	secretKeyBytes, err := hex.DecodeString(secret)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to decode string")
 	}
 
 	contentBytes, err := hex.DecodeString(content)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to decode string")
 	}
 
 	var secretKey [32]byte
@@ -248,7 +249,7 @@ func validateEmail(email string) error {
 	err := validator.New().Var(email, "required,email")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

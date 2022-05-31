@@ -2,13 +2,14 @@ package principal
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
 	"overdoll/libraries/passport"
-
-	"github.com/gin-gonic/gin"
+	"overdoll/libraries/support"
 )
 
 type HttpServicePrincipalFunc interface {
@@ -52,6 +53,43 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 
 		if principal != nil {
 			c.Request = c.Request.WithContext(toContext(c.Request.Context(), principal))
+
+			// add principal to context
+			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
+				hub.WithScope(func(scope *sentry.Scope) {
+					scope.SetUser(sentry.User{
+						Email:     principal.Email(),
+						ID:        principal.AccountId(),
+						IPAddress: support.GetIPFromRequest(c.Request),
+						Username:  principal.Username(),
+					})
+
+					var clubExtensions interface{}
+
+					if principal.clubExtension != nil {
+						clubExtensions = map[string]interface{}{
+							"SupportedClubIds":  principal.clubExtension.supportedClubIds,
+							"ClubMembershipIds": principal.clubExtension.clubMembershipIds,
+							"OwnerClubIds":      principal.clubExtension.ownerClubIds,
+						}
+					}
+
+					scope.AddBreadcrumb(&sentry.Breadcrumb{
+						Category: "Principal",
+						Data: map[string]interface{}{
+							"AccountId":     principal.accountId,
+							"Secure":        principal.secure,
+							"Locked":        principal.locked,
+							"Deleting":      principal.deleting,
+							"Roles":         principal.roles,
+							"Username":      principal.username,
+							"Email":         principal.email,
+							"ClubExtension": clubExtensions,
+						},
+						Level: sentry.LevelInfo,
+					}, 1)
+				})
+			}
 		}
 
 		c.Next()

@@ -1,6 +1,8 @@
 package account
 
-import "errors"
+import (
+	"overdoll/libraries/domainerror"
+)
 
 var (
 	Unknown   = Role{""}
@@ -27,5 +29,5 @@ func RoleFromString(s string) (Role, error) {
 		return Artist, nil
 	}
 
-	return Unknown, errors.New("unknown role: " + s)
+	return Unknown, domainerror.NewValidation("unknown role: " + s)
 }

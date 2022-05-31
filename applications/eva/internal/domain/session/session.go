@@ -1,9 +1,9 @@
 package session
 
 import (
-	"errors"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -27,7 +27,7 @@ type Session struct {
 }
 
 var (
-	ErrSessionsNotFound = errors.New("sessions not found")
+	ErrSessionsNotFound = domainerror.NewValidation("sessions not found")
 	defaultDuration     = int64(1209600)
 )
 
@@ -48,7 +48,7 @@ func UnmarshalSessionFromDatabase(id, accountId, device, ip string, created, las
 func NewSession(account *account.Account, userAgent, ip string, location *location.Location) (*Session, error) {
 
 	if account.IsDeleted() {
-		return nil, errors.New("cannot create session for deleted account")
+		return nil, domainerror.NewAuthorization("cannot create session for deleted account")
 	}
 
 	return &Session{
@@ -118,7 +118,7 @@ func (s *Session) CanRevoke(requester *principal.Principal) error {
 	}
 
 	if s.current {
-		return errors.New("cannot revoke current session")
+		return domainerror.NewValidation("cannot revoke current session")
 	}
 
 	return nil

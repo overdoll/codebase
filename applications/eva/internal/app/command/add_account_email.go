@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/confirm_email"
+	"overdoll/libraries/errors"
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/principal"

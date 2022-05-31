@@ -9,9 +9,11 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/support"
 )
 
@@ -21,22 +23,37 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 		// set default error presenter to show 'internal server error'
 		graphAPIHandler.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
-			// notify bug tracker?
+
+			defaultMessage := ""
+
+			switch e.(type) {
+			case *domainerror.Validation:
+				defaultMessage = "validation error"
+			case *domainerror.Authorization:
+				defaultMessage = "not authorized"
+			default:
+				zap.S().Errorw("resolver error", zap.Error(e))
+				defaultMessage = "internal server error"
+				// capture if it's an internal server error
+				if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
+					hub.CaptureException(e)
+				}
+			}
 
 			err := graphql.DefaultErrorPresenter(ctx, e)
-
-			zap.S().Error("resolver failed ", err)
-
 			if !support.IsDebug() {
-				err.Message = "internal server error"
+				err.Message = defaultMessage
 			}
 
 			return err
 		})
 
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-			// notify bug tracker?
-			zap.S().Error("resolver failed ", err)
+			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
+				defer hub.RecoverWithContext(ctx, err)
+			}
+
+			zap.S().Errorw("resolver panic", zap.Any("panic", err))
 			return errors.New("internal server error")
 		})
 

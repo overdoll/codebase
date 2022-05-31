@@ -2,8 +2,10 @@ package adapters
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"go.uber.org/zap"
+	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -195,8 +197,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
 		}
-
-		return nil, fmt.Errorf("failed to get accounts: %v", err)
+		return nil, errors.Wrap(err, "failed to get account by id")
 	}
 
 	var accounts []*account.Account
@@ -241,8 +242,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
 		}
-
-		return nil, fmt.Errorf("failed to get account by email: %v", err)
+		return nil, errors.Wrap(err, "failed to get account by email")
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -275,7 +275,7 @@ func (r AccountCassandraRepository) createUniqueAccountUsername(ctx context.Cont
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
-		return fmt.Errorf("failed to create unique username: %v", err)
+		return errors.Wrap(err, "failed to create unique username")
 	}
 
 	if !applied {
@@ -300,11 +300,11 @@ func (r AccountCassandraRepository) deleteAccountUsername(ctx context.Context, a
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to delete unique username: %v", err)
+		return errors.Wrap(err, "failed to delete unique username")
 	}
 
 	if !applied {
-		return fmt.Errorf("could not delete unique username: %v", err)
+		return errors.New("could not delete unique username")
 	}
 
 	return nil
@@ -325,7 +325,7 @@ func (r AccountCassandraRepository) createUniqueAccountEmail(ctx context.Context
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique email: %v", err)
+		return errors.Wrap(err, "failed to create unique email")
 	}
 
 	if !applied {
@@ -345,7 +345,7 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 	batch.Query(stmt, accountId, email)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.Wrap(err, "failed to delete account email")
 	}
 
 	applied, err := accountEmailTable.
@@ -360,11 +360,11 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.Wrap(err, "failed to delete account email")
 	}
 
 	if !applied {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.New("failed to delete account email")
 	}
 
 	return nil
@@ -447,7 +447,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 			return err2
 		}
 
-		return fmt.Errorf("failed to create account: %v", err)
+		return errors.Wrap(err, "failed to create account")
 	}
 
 	return nil
@@ -477,7 +477,7 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalUserToDatabase(currentUser)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account: %v", err)
+		return nil, errors.Wrap(err, "failed to update account")
 	}
 
 	return currentUser, nil
@@ -534,7 +534,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 			AccountId: accountId,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account emails: %v", err)
+		return errors.Wrap(err, "failed to delete account emails")
 	}
 
 	acc.Email = ""
@@ -554,7 +554,8 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		Consistency(gocql.LocalQuorum).
 		BindStruct(acc).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to update account: %v", err)
+		zap.S().Errorw("failed to update account", zap.Error(err))
+		return errors.Wrap(err, "failed to update account")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -569,7 +570,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 	batch.Query(stmt, accountId)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete multi factor account data: %v", err)
+		return errors.Wrap(err, "failed to delete multi factor account data")
 	}
 
 	return nil
@@ -643,7 +644,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 				return nil, err
 			}
 
-			return nil, fmt.Errorf("failed to update account username: %v", err)
+			return nil, errors.Wrap(err, "failed to update account username")
 		}
 
 		return instance, nil
@@ -672,8 +673,7 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
 		}
-
-		return nil, fmt.Errorf("failed to get account by username: %v", err)
+		return nil, errors.Wrap(err, "failed to get account by username")
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -705,8 +705,7 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
 		}
-
-		return nil, fmt.Errorf("failed to get email by account: %v", err)
+		return nil, errors.Wrap(err, "failed to get email by account")
 	}
 
 	result := account.UnmarshalEmailFromDatabase(accountEmail.Email, accountEmail.AccountId, accountEmail.Status)
@@ -749,8 +748,7 @@ func (r AccountCassandraRepository) GetAccountEmails(ctx context.Context, reques
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
 		}
-
-		return nil, fmt.Errorf("failed to get emails by account: %v", err)
+		return nil, errors.Wrap(err, "failed to get emails by account")
 	}
 
 	var emails []*account.Email
@@ -818,7 +816,7 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 	}
 
 	if newEmail == nil {
-		return nil, nil, errors.New("email not found")
+		return nil, nil, domainerror.NewValidation("email not found")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
@@ -842,7 +840,7 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 	batch.Query(stmt, newEmail.Email(), accountId)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, nil, fmt.Errorf("failed to make email primary: %v", err)
+		return nil, nil, errors.Wrap(err, "failed to make email primary")
 	}
 
 	return acc, newEmail, nil
@@ -879,8 +877,7 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 		if err := r.deleteAccountEmail(ctx, email.AccountId(), email.Email()); err != nil {
 			return err
 		}
-
-		return fmt.Errorf("failed to add account email - cassandra: %v", err)
+		return errors.Wrap(err, "failed to add account email")
 	}
 
 	return nil

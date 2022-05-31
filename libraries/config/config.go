@@ -1,8 +1,12 @@
 package config
 
 import (
+	"github.com/getsentry/sentry-go"
+	"go.uber.org/zap"
+	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/joho/godotenv"
@@ -34,6 +38,14 @@ func Read(root string) {
 			panic(err)
 		}
 	}
+
+	if err := sentry.Init(sentry.ClientOptions{
+		Dsn: os.Getenv("SENTRY_DSN"),
+	}); err != nil {
+		zap.S().Errorf("Sentry initialization failed: %v\n", err)
+	}
+
+	defer sentry.Flush(5 * time.Second)
 }
 
 // GetFilePath - get file path

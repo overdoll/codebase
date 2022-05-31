@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
 	"syscall"
 	"time"
@@ -43,11 +44,13 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			passport.UnaryServerInterceptor(),
 			logUnaryInterceptor,
+			sentry_support.UnaryServerInterceptor(),
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			passport.StreamServerInterceptor(),
 			logStreamInterceptor,
+			sentry_support.StreamServerInterceptor(),
 		),
 	)
 

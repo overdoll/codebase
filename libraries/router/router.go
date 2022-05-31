@@ -1,6 +1,7 @@
 package router
 
 import (
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -32,6 +33,10 @@ func NewRawGinRouter() *gin.Engine {
 		router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
 		router.Use(ginzap.RecoveryWithZap(zap.L(), true))
 	}
+
+	router.Use(sentrygin.New(sentrygin.Options{
+		Repanic: true,
+	}))
 
 	return router
 }

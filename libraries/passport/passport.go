@@ -2,7 +2,7 @@ package passport
 
 import (
 	"context"
-	"errors"
+	"overdoll/libraries/domainerror"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 
 	"sync"
@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	ErrNotAuthenticated = errors.New("not authenticated")
-	errExpired          = errors.New("passport expired")
+	ErrNotAuthenticated = domainerror.NewAuthorization("not authenticated")
+	errExpired          = domainerror.NewAuthorization("passport expired")
 )
 
 type Passport struct {
@@ -31,6 +31,15 @@ func (p *Passport) Authenticated() error {
 	}
 
 	return ErrNotAuthenticated
+}
+
+func (p *Passport) SafeAccountID() string {
+
+	if p.passport.AccountInfo == nil {
+		return ""
+	}
+
+	return p.AccountID()
 }
 
 // AccountID - may throw nil pointer - make sure you check Authenticated() first

@@ -4,6 +4,7 @@ import (
 	"context"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 	"time"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -23,6 +24,8 @@ func NewLoaderClient(ctx context.Context, address string) (loader.LoaderClient, 
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
 		grpc.WithStreamInterceptor(passport.StreamClientInterceptor()),
 		grpc.WithUnaryInterceptor(passport.UnaryClientInterceptor()),
+		grpc.WithUnaryInterceptor(sentry_support.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(sentry_support.StreamClientInterceptor()),
 	)
 
 	if err != nil {
