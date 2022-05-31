@@ -53,6 +53,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 			WorkflowId: input.WorkflowId,
 		},
 	).Get(ctx, &payload); err != nil {
+		logger.Error("failed to update account is deleting payload", "Error", err)
 		return err
 	}
 
@@ -63,6 +64,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 			DeletionDate: payload.DeletionDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account deletion begin notification", "Error", err)
 		return err
 	}
 
@@ -80,6 +82,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 			DeletionDate: payload.DeletionDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account deletion reminder notification", "Error", err)
 		return err
 	}
 
@@ -96,31 +99,37 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 
 	// delete all payment data
 	if err := workflow.ExecuteActivity(ctx, a.HadesDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute hades delete account data", "Error", err)
 		return err
 	}
 
 	// delete all membership data
 	if err := workflow.ExecuteActivity(ctx, a.StellaDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute stella delete account data", "Error", err)
 		return err
 	}
 
 	// delete all account reports/moderation data
 	if err := workflow.ExecuteActivity(ctx, a.ParleyDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute parley delete account data", "Error", err)
 		return err
 	}
 
 	// delete all curation profile / likes
 	if err := workflow.ExecuteActivity(ctx, a.StingDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute sting delete account data", "Error", err)
 		return err
 	}
 
 	// delete any account details / payout details if we have them
 	if err := workflow.ExecuteActivity(ctx, a.RingerDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute ringer delete account data", "Error", err)
 		return err
 	}
 
 	// delete all data associated with the account - multi-factor, any emails, etc...
 	if err := workflow.ExecuteActivity(ctx, a.DeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to execute delete account data", "Error", err)
 		return err
 	}
 
@@ -128,6 +137,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 	var accountDataPayload *activities.GetAccountDataPayload
 
 	if err := workflow.ExecuteActivity(ctx, a.GetAccountData, input.AccountId).Get(ctx, &accountDataPayload); err != nil {
+		logger.Error("failed to get account data", "Error", err)
 		return err
 	}
 
@@ -137,11 +147,13 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update account deleted", "Error", err)
 		return err
 	}
 
 	// delete all sessions, so any logged-in accounts are kicked out
 	if err := workflow.ExecuteActivity(ctx, a.DeleteSessionData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete session data", "Error", err)
 		return err
 	}
 
@@ -152,6 +164,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 			Email:    accountDataPayload.Email,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account deleted notification", "Error", err)
 		return err
 	}
 

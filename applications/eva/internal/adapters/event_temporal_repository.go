@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/eva/internal/app/workflows"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -35,7 +36,7 @@ func (r EventTemporalRepository) DeleteAccount(ctx context.Context, requester *p
 		WorkflowId: workflowId,
 		CanCancel:  true,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute delete account workflow")
 	}
 
 	return nil
@@ -48,7 +49,7 @@ func (r EventTemporalRepository) CancelAccountDeletion(ctx context.Context, requ
 	}
 
 	if err := r.client.CancelWorkflow(ctx, *acc.ScheduledDeletionWorkflowId(), ""); err != nil {
-		return err
+		return errors.Wrap(err, "failed to cancel account deletion workflow")
 	}
 
 	return nil

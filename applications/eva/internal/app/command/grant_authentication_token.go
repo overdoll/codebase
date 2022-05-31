@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/token"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 )
 

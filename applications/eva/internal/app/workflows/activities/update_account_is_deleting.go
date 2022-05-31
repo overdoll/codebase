@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	"overdoll/applications/eva/internal/domain/account"
 	"time"
 )
@@ -23,6 +24,7 @@ func (h *Activities) UpdateAccountIsDeleting(ctx context.Context, input UpdateAc
 	})
 
 	if err != nil {
+		sentry.CurrentHub().CaptureException(err)
 		return nil, err
 	}
 

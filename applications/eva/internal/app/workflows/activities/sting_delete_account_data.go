@@ -2,8 +2,15 @@ package activities
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 )
 
 func (h *Activities) StingDeleteAccountData(ctx context.Context, accountId string) error {
-	return h.sting.DeleteAccountData(ctx, accountId)
+
+	if err := h.sting.DeleteAccountData(ctx, accountId); err != nil {
+		sentry.CurrentHub().CaptureException(err)
+		return err
+	}
+
+	return nil
 }

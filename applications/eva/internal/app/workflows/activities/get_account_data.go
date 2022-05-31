@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 )
 
 type GetAccountDataPayload struct {
@@ -14,6 +15,7 @@ func (h *Activities) GetAccountData(ctx context.Context, accountId string) (*Get
 	acc, err := h.ar.GetAccountById(ctx, accountId)
 
 	if err != nil {
+		sentry.CurrentHub().CaptureException(err)
 		return nil, err
 	}
 

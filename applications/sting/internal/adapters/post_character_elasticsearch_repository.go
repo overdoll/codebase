@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -72,9 +74,7 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return err
+		return errors.Wrap(support.ParseElasticError(err), "failed to index character")
 	}
 
 	return nil

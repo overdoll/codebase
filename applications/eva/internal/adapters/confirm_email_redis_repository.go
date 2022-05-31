@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	"github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/confirm_email"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -87,19 +87,19 @@ func (r ConfirmEmailRedisRepository) GetConfirmEmail(ctx context.Context, reques
 			return nil, account.ErrEmailCodeInvalid
 		}
 
-		return nil, fmt.Errorf("failed to get confirm email - redis: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - redis")
 	}
 
 	val, err = crypt.Decrypt(val)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to get confirm email - decryption: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - decryption")
 	}
 
 	var confirmItem emailConfirmation
 
 	if err := json.Unmarshal([]byte(val), &confirmItem); err != nil {
-		return nil, fmt.Errorf("failed to get confirm email - unmarshal: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - unmarshal")
 	}
 
 	return confirm_email.UnmarshalConfirmEmailFromDatabase(id, confirmItem.Email, confirmItem.AccountId), nil

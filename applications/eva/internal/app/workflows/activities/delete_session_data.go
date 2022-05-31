@@ -2,8 +2,15 @@ package activities
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 )
 
 func (h *Activities) DeleteSessionData(ctx context.Context, accountId string) error {
-	return h.sr.DeleteAccountSessionData(ctx, accountId)
+
+	if err := h.sr.DeleteAccountSessionData(ctx, accountId); err != nil {
+		sentry.CurrentHub().CaptureException(err)
+		return err
+	}
+
+	return nil
 }

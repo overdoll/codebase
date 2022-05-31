@@ -41,8 +41,11 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 			}
 
 			err := graphql.DefaultErrorPresenter(ctx, e)
+
 			if !support.IsDebug() {
 				err.Message = defaultMessage
+			} else {
+				err.Message = defaultMessage + ": " + err.Message
 			}
 
 			return err
