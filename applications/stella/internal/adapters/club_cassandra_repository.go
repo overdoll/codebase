@@ -216,7 +216,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubSuspensionLogs(ctx context.
 	return logs, nil
 }
 
-func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
+func (r ClubCassandraElasticsearchRepository) getClubSlug(ctx context.Context, slug string) (*clubSlugs, error) {
 
 	var b clubSlugs
 
@@ -232,6 +232,17 @@ func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context,
 		}
 
 		return nil, fmt.Errorf("failed to get club by slug: %v", err)
+	}
+
+	return &b, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*club.Club, error) {
+
+	b, err := r.getClubSlug(ctx, slug)
+
+	if err != nil {
+		return nil, err
 	}
 
 	result, err := r.GetClubById(ctx, b.ClubId)
@@ -690,9 +701,9 @@ func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cl
 
 	return nil
 }
-func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Context, club *club.Club) error {
+func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Context, clb *club.Club) error {
 
-	cla, err := marshalClubToDatabase(club)
+	cla, err := marshalClubToDatabase(clb)
 
 	if err != nil {
 		return err

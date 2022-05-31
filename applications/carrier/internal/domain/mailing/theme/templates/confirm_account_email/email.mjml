@@ -8,9 +8,9 @@
                     <h1>
                         Confirm Account Email
                     </h1>
-                    <h5 font-color="#bfbfbf">
+                    <text font-color="#bfbfbf">
                         You requested to add a new email to your account. Please tap the button below to confirm it.
-                    </h5>
+                    </text>
                 </mj-text>
                 <mj-button css-class="large primary" href="{{.Link}}">
                     Confirm Email

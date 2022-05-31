@@ -11,15 +11,15 @@
     </mj-column>
     <mj-group width="100%">
         <mj-column>
-            <mj-text align="center">
-                <a class="link" href="https://www.corpodoll.com/tos/">
+            <mj-text align="center" color="#bfbfbf">
+                <a style="color: #bfbfbf;text-decoration: none" href="https://www.corpodoll.com/tos/">
                     Terms of Service
                 </a>
             </mj-text>
         </mj-column>
         <mj-column>
-            <mj-text align="center">
-                <a class="link" href="https://www.corpodoll.com/privacy/">
+            <mj-text align="center" color="#bfbfbf">
+                <a style="color: #bfbfbf;text-decoration: none" href="https://www.corpodoll.com/privacy/">
                     Privacy Policy
                 </a>
             </mj-text>

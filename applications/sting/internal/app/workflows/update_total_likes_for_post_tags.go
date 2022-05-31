@@ -15,5 +15,9 @@ func UpdateTotalLikesForPostTags(ctx workflow.Context, input UpdateTotalLikesFor
 
 	var a *activities.Activities
 
-	return workflow.ExecuteActivity(ctx, a.UpdateTotalLikesForPostTags, input.PostId).Get(ctx, nil)
+	return workflow.ExecuteActivity(ctx, a.UpdateTotalLikesForPostTags,
+		activities.UpdateTotalLikesForPostTagsInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil)
 }

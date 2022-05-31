@@ -132,6 +132,18 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 	return nil
 }
 
+func (r EventTemporalRepository) WaitForClubToBeReady(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	workflowId := "CreateClub_" + clb.OwnerAccountId()
+
+	// wait for club to be created
+	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
 	workflowId := "CreateClub_" + clb.OwnerAccountId()

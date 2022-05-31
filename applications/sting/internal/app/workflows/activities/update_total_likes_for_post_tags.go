@@ -5,9 +5,13 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId string) error {
+type UpdateTotalLikesForPostTagsInput struct {
+	PostId string
+}
 
-	pendingPost, err := h.pr.GetPostByIdOperator(ctx, postId)
+func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, input UpdateTotalLikesForPostTagsInput) error {
+
+	pendingPost, err := h.pr.GetPostByIdOperator(ctx, input.PostId)
 
 	if err != nil {
 		return err
@@ -37,7 +41,7 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, postId str
 
 	}
 
-	var updatedSeries map[string]bool
+	updatedSeries := make(map[string]bool)
 
 	for _, char := range pendingPost.CharacterIds() {
 

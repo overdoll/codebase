@@ -1,0 +1,83 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/ccbill/
+            pathType: Prefix
+            backend:
+              service:
+                name: hades
+                port:
+                  number: 8000
+    - host: "*.ngrok.io"
+      http:
+        paths:
+          - path: /api/upload/
+            pathType: Prefix
+            backend:
+              service:
+                name: loader
+                port:
+                  number: 8000
+          - path: /api/graphql
+            pathType: Exact
+            backend:
+              service:
+                name: puppy
+                port:
+                  number: 8000
+          - path: /api/ccbill/
+            pathType: Prefix
+            backend:
+              service:
+                name: hades
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: medusa
+                port:
+                  number: 8000
+    - host: overdoll.test
+      http:
+        paths:
+          - path: /api/upload/
+            pathType: Prefix
+            backend:
+              service:
+                name: loader
+                port:
+                  number: 8000
+          - path: /api/graphql
+            pathType: Exact
+            backend:
+              service:
+                name: puppy
+                port:
+                  number: 8000
+          - path: /api/ccbill/
+            pathType: Prefix
+            backend:
+              service:
+                name: hades
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: medusa
+                port:
+                  number: 8000
+  tls:
+    - hosts:
+        - overdoll.test
+      secretName: overdoll-tls-secret
