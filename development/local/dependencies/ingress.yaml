@@ -6,6 +6,15 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
+    - http:
+        paths:
+          - path: /api/ccbill/
+            pathType: Prefix
+            backend:
+              service:
+                name: hades
+                port:
+                  number: 8000
     - host: "*.ngrok.io"
       http:
         paths:

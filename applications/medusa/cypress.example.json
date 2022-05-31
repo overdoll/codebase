@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://DEV_URL_HERE",
+  "baseUrl": "https://overdoll.test",
   "env": {
     "codeCoverage": {
       "url": "/api/coverage"

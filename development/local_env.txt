@@ -17,6 +17,7 @@ To set up a local environment, here are the instructions (from the root of the r
 - `./scripts/local/fresh_installation_setup.sh` for a fresh installation setup (**required**)
 - `tilt up` to start up all the services and get them ready
 - `./scripts/setup_services.sh` to finish services setup, including running all migration files
+- `yarn run push-all-queries` inside the `applications/medusa` service
 
 ## Webhooks
 
