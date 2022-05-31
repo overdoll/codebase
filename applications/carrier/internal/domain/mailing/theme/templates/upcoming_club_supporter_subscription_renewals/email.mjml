@@ -35,7 +35,7 @@
                 <mj-text>
                     <p>You may manage any of these subscriptions, such as cancelling them, using the button below</p>
                 </mj-text>
-                <mj-button css-class="medium gray" href="{{.Link}}">
+                <mj-button css-class="medium gray" href="{{.ManageSubscriptionsLink}}">
                     Manage Subscriptions
                 </mj-button>
                 <mj-text>

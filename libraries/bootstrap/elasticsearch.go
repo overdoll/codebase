@@ -25,7 +25,7 @@ func InitializeElasticSearchSession() *elastic.Client {
 	)
 
 	if err != nil {
-		zap.S().Fatal("es session failed", zap.Error(err))
+		zap.S().Fatalw("es session failed", zap.Error(err))
 	}
 
 	return client

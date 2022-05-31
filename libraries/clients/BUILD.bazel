@@ -25,6 +25,7 @@ go_library(
         "//applications/stella/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/passport",
+        "//libraries/sentry_support",
         "//libraries/temporal_support",
         "@com_github_grpc_ecosystem_go_grpc_middleware//retry",
         "@io_temporal_go_sdk//client",

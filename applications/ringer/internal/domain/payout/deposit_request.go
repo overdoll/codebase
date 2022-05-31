@@ -121,8 +121,9 @@ func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount uint64, c
 		// calculate fees for paxum
 		p.baseAmount += amount
 		// paxum has a fee of $1 for p2p transfers
-		p.estimatedFeeAmount += 100
-		p.totalAmount += amount + 100
+		fee := uint64(100)
+		p.estimatedFeeAmount += fee
+		p.totalAmount += amount + fee
 	}
 
 	return nil

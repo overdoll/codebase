@@ -48,7 +48,7 @@ func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfe
 	q := addSandboxDataToRequest(url.Values{})
 
 	formattedAmount := strconv.FormatFloat(transfer.Amount(), 'f', 2, 64)
-	payoutNote := fmt.Sprintf("overdoll payout to creator. reference #%s", transfer.PayoutId())
+	payoutNote := transfer.Note()
 
 	q.Add("method", "transferFunds")
 	q.Add("fromEmail", os.Getenv("PAXUM_FROM_EMAIL"))

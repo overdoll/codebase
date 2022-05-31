@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -1270,7 +1269,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByCCBillTr
 			return nil, billing.ErrAccountTransactionNotFound
 		}
 
-		return nil, fmt.Errorf("failed to account transaction by ccbill transaction id: %v", err)
+		return nil, errors.Wrap(err, "failed to account transaction by ccbill transaction id")
 	}
 
 	return r.GetAccountTransactionByIdOperator(ctx, transaction.Id)
@@ -1307,7 +1306,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 			return nil, billing.ErrAccountTransactionNotFound
 		}
 
-		return nil, fmt.Errorf("failed to account transaction history: %v", err)
+		return nil, errors.Wrap(err, "failed to account transaction by id")
 	}
 
 	decrypt, err := decryptPaymentMethod(transaction.EncryptedPaymentMethod)
@@ -1323,7 +1322,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 		var unmarshal accountTransactionEvent
 
 		if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to unmarshal account transaction event")
 		}
 
 		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
@@ -1367,7 +1366,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperato
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create account transaction: %v", err)
+		return errors.Wrap(err, "failed to create account transaction")
 	}
 
 	if marshalled.CCBillTransactionId != nil {
@@ -1377,7 +1376,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperato
 			WithContext(ctx).
 			BindStruct(marshalled).
 			ExecRelease(); err != nil {
-			return fmt.Errorf("failed to create account transaction by ccbill transaction id: %v", err)
+			return errors.Wrap(err, "failed to create account transaction by ccbill transaction id")
 		}
 	}
 
@@ -1416,7 +1415,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountTransactionOperato
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account transaction: %v", err)
+		return nil, errors.Wrap(err, "failed to update account transaction")
 	}
 
 	if err := r.indexAccountTransaction(ctx, transaction); err != nil {
@@ -1443,7 +1442,7 @@ func (r BillingCassandraElasticsearchRepository) GetCCBillSubscriptionDetailsByI
 			return nil, billing.ErrCCBillSubscriptionNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get ccbill subscription: %v", err)
+		return nil, errors.Wrap(err, "failed to get ccbill subscription")
 	}
 
 	decrypt, err := decryptPaymentMethod(ccbillSubscription.EncryptedPaymentMethod)
@@ -1489,7 +1488,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		GetRelease(&lockedSub)
 
 	if err != nil && err != gocql.ErrNotFound {
-		return fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
+		return errors.Wrap(err, "failed to get locked account club supporter subscription")
 	}
 
 	if err == nil {
@@ -1503,7 +1502,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 				WithContext(ctx).
 				BindStruct(marshalled).
 				ExecRelease(); err != nil {
-				return fmt.Errorf("failed to create ccbill subscription: %v", err)
+				return errors.Wrap(err, "failed to create ccbill subscription")
 			}
 
 			return billing.ErrAccountClubSupportSubscriptionDuplicate
@@ -1527,11 +1526,11 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 			ExecCASRelease()
 
 		if err != nil {
-			return fmt.Errorf("failed to lock account club supporter subscription: %v", err)
+			return errors.Wrap(err, "failed to lock account club supporter subscription")
 		}
 
 		if !applied {
-			return fmt.Errorf("failed to lock account club supporter subscription")
+			return errors.New("failed to lock account club supporter subscription")
 		}
 	}
 
@@ -1539,7 +1538,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create ccbill subscription: %v", err)
+		return errors.Wrap(err, "failed to create ccbill subscription")
 	}
 
 	return nil
@@ -1570,7 +1569,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateCCBillSubscriptionDetails
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to updated ccbill subscription: %v", err)
+		return nil, errors.Wrap(err, "failed to updated ccbill subscription")
 	}
 
 	return ccbillSubscription, nil

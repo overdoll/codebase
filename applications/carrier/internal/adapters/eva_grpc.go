@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 
 	"overdoll/applications/carrier/internal/domain/identifier"
@@ -24,7 +23,6 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*identifier.Identif
 	})
 
 	if err != nil {
-		zap.S().Errorw("error retrieving account", zap.Error(err))
 		return nil, errors.Wrap(err, "error retrieving account")
 	}
 

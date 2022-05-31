@@ -22,6 +22,7 @@ func Test_TransferFunds_Sandbox(t *testing.T) {
 
 	newTransfer, err := paxum.NewTransfer(
 		"test",
+		"club-name",
 		"test-email@test.com",
 		"somename",
 		"somesurname",

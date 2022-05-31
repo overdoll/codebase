@@ -27,6 +27,6 @@ func NewBootstrap(ctx context.Context) {
 		Dsn:              os.Getenv("SENTRY_DSN"),
 		TracesSampleRate: 0.0,
 	}); err != nil {
-		zap.S().Errorf("Sentry initialization failed: %v\n", err)
+		zap.S().Errorf("sentry initialization failed: %v\n", err)
 	}
 }

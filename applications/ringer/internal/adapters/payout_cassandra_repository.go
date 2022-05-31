@@ -44,6 +44,8 @@ var clubPayoutsTable = table.New(table.Metadata{
 		"club_id",
 		"currency",
 		"amount",
+		"cover_fee_amount",
+		"total_amount",
 		"payout_account_id",
 		"deposit_request_id",
 		"created_at",
@@ -67,6 +69,8 @@ type clubPayout struct {
 	ClubId             string    `db:"club_id"`
 	Currency           string    `db:"currency"`
 	Amount             uint64    `db:"amount"`
+	CoverFeeAmount     uint64    `db:"cover_fee_amount"`
+	TotalAmount        uint64    `db:"total_amount"`
 	PayoutAccountId    string    `db:"payout_account_id"`
 	DepositRequestId   string    `db:"deposit_request_id"`
 	CreatedAt          time.Time `db:"created_at"`
@@ -190,6 +194,8 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 		ClubId:             pay.ClubId(),
 		Currency:           pay.Currency().String(),
 		Amount:             pay.Amount(),
+		CoverFeeAmount:     pay.CoverFeeAmount(),
+		TotalAmount:        pay.TotalAmount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
 		CreatedAt:          pay.CreatedAt(),
@@ -397,6 +403,8 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		clubPay.ClubId,
 		clubPay.Currency,
 		clubPay.Amount,
+		clubPay.CoverFeeAmount,
+		clubPay.TotalAmount,
 		clubPay.DepositDate,
 		clubPay.PayoutAccountId,
 		clubPay.DepositRequestId,

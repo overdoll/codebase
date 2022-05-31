@@ -2,8 +2,8 @@ package activities
 
 import (
 	"context"
-	"github.com/getsentry/sentry-go"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/sentry_support"
 )
 
 type UpdateAccountCancelDeletionInput struct {
@@ -12,12 +12,14 @@ type UpdateAccountCancelDeletionInput struct {
 
 func (h *Activities) UpdateAccountCancelDeletion(ctx context.Context, input UpdateAccountCancelDeletionInput) error {
 
-	_, err := h.ar.UpdateAccountDeleting(ctx, input.AccountId, func(account *account.Account) error {
+	var err error
+	defer sentry_support.CaptureActivityError(ctx, err)
+
+	_, err = h.ar.UpdateAccountDeleting(ctx, input.AccountId, func(account *account.Account) error {
 		return account.MarkUnDeleted()
 	})
 
 	if err != nil {
-		sentry.CurrentHub().CaptureException(err)
 		return err
 	}
 

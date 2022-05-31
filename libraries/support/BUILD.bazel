@@ -18,6 +18,7 @@ go_library(
         "debug.go",
         "generate_unique_id_for_workflow.go",
         "ip.go",
+        "parse_elastic_error.go",
         "rsa.go",
     ],
     importpath = "overdoll/libraries/support",
@@ -25,6 +26,7 @@ go_library(
     deps = [
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
+        "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_scylladb_go_reflectx//:go-reflectx",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@io_temporal_go_sdk//workflow",

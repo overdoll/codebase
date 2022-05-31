@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/getsentry/sentry-go"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 )
 
 func UnaryClientInterceptor(opts ...Option) grpc.UnaryClientInterceptor {
@@ -20,23 +19,16 @@ func UnaryClientInterceptor(opts ...Option) grpc.UnaryClientInterceptor {
 		if hub == nil {
 			hub = sentry.CurrentHub().Clone()
 			ctx = sentry.SetHubOnContext(ctx, hub)
+			hub.WithScope(func(scope *sentry.Scope) {
+				scope.AddBreadcrumb(&sentry.Breadcrumb{
+					Type:     "grpc.client",
+					Category: method,
+					Data:     map[string]interface{}{"payload": req},
+				}, 1)
+			})
 		}
 
-		span := sentry.StartSpan(ctx, "grpc.client")
-		ctx = span.Context()
-		md := metadata.Pairs("sentry-trace", span.ToSentryTrace())
-		ctx = metadata.NewOutgoingContext(ctx, md)
-		defer span.Finish()
-
-		hub.Scope().SetTransaction(method)
-
-		err := invoker(ctx, method, req, reply, cc, callOpts...)
-
-		//if err != nil && o.ReportOn(err) {
-		//	hub.CaptureException(err)
-		//}
-
-		return err
+		return invoker(ctx, method, req, reply, cc, callOpts...)
 	}
 }
 
@@ -53,22 +45,15 @@ func StreamClientInterceptor(opts ...Option) grpc.StreamClientInterceptor {
 		if hub == nil {
 			hub = sentry.CurrentHub().Clone()
 			ctx = sentry.SetHubOnContext(ctx, hub)
+			hub.WithScope(func(scope *sentry.Scope) {
+				scope.AddBreadcrumb(&sentry.Breadcrumb{
+					Type:     "grpc.client",
+					Category: method,
+					Data:     nil,
+				}, 1)
+			})
 		}
 
-		span := sentry.StartSpan(ctx, "grpc.client")
-		ctx = span.Context()
-		md := metadata.Pairs("sentry-trace", span.ToSentryTrace())
-		ctx = metadata.NewOutgoingContext(ctx, md)
-		defer span.Finish()
-
-		hub.Scope().SetTransaction(method)
-
-		clientStream, err := streamer(ctx, desc, cc, method, callOpts...)
-
-		//if err != nil && o.ReportOn(err) {
-		//	hub.CaptureException(err)
-		//}
-
-		return clientStream, err
+		return streamer(ctx, desc, cc, method, callOpts...)
 	}
 }

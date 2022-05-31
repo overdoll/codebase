@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 	"time"
@@ -27,7 +26,7 @@ func (h AccountDeletionBeginHandler) Handle(ctx context.Context, cmd AccountDele
 	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get account")
+		return err
 	}
 
 	link, err := links.CreateCancelAccountDeletionLink()

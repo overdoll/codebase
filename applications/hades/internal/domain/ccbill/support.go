@@ -2,6 +2,7 @@ package ccbill
 
 import (
 	"fmt"
+	"overdoll/libraries/errors"
 	"strconv"
 	"time"
 )
@@ -65,7 +66,7 @@ func ParseCCBillCurrencyAmount(amount string, currency string) (uint64, error) {
 		amt, err := strconv.ParseFloat(amount, 64)
 
 		if err != nil {
-			return 0, err
+			return 0, errors.Wrap(err, fmt.Sprintf("error parsing float %s", amount))
 		}
 
 		return uint64(amt * 100), nil
@@ -73,7 +74,7 @@ func ParseCCBillCurrencyAmount(amount string, currency string) (uint64, error) {
 		amt, err := strconv.ParseInt(amount, 10, 64)
 
 		if err != nil {
-			return 0, err
+			return 0, errors.Wrap(err, fmt.Sprintf("error parsing int %s", amount))
 		}
 
 		return uint64(amt), nil

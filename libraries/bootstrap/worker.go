@@ -7,6 +7,6 @@ import (
 
 func InitializeWorkerServer(srv worker.Worker) {
 	if err := srv.Run(worker.InterruptCh()); err != nil {
-		zap.S().Fatal(err)
+		zap.S().Fatalw("error running worker", zap.Error(err))
 	}
 }

@@ -43,7 +43,7 @@ func InitializeDatabaseSession() gocqlx.Session {
 	session, err := initializeDatabaseSession(keyspace)
 
 	if err != nil {
-		zap.S().Fatal("database session failed", zap.Error(err))
+		zap.S().Fatalw("cassandra session failed", zap.Error(err))
 	}
 
 	return session
@@ -54,7 +54,7 @@ func InitializeDatabaseSessionNoKeyspace() gocqlx.Session {
 	session, err := initializeDatabaseSession("")
 
 	if err != nil {
-		zap.S().Fatal("database session failed", zap.Error(err))
+		zap.S().Fatalw("cassandra session failed", zap.Error(err))
 	}
 
 	return session

@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"github.com/getsentry/sentry-go"
+	"overdoll/libraries/sentry_support"
 	"time"
 )
 
@@ -13,8 +13,10 @@ type AccountDeletionReminderInput struct {
 
 func (h *Activities) AccountDeletionReminder(ctx context.Context, input AccountDeletionReminderInput) error {
 
-	if err := h.carrier.AccountDeletionReminder(ctx, input.AccountId, input.DeletionDate); err != nil {
-		sentry.CurrentHub().CaptureException(err)
+	var err error
+	defer sentry_support.CaptureActivityError(ctx, err)
+
+	if err = h.carrier.AccountDeletionReminder(ctx, input.AccountId, input.DeletionDate); err != nil {
 		return err
 	}
 

@@ -16,10 +16,12 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/passport",
+        "//libraries/sentry_support",
         "//libraries/support",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/credentials",
         "@com_github_aws_aws_sdk_go//aws/session",
+        "@com_github_getsentry_sentry_go//:sentry-go",
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",

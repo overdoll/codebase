@@ -13,7 +13,10 @@ go_library(
     deps = [
         "//applications/eva/proto:v1_go_proto",
         "//applications/stella/proto:v1_go_proto",
+        "//libraries/domainerror",
         "//libraries/passport",
+        "//libraries/support",
+        "@com_github_getsentry_sentry_go//:sentry-go",
         "@com_github_gin_gonic_gin//:gin",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",

@@ -4,7 +4,6 @@ import (
 	"context"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -58,18 +57,18 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	f(grpcServer)
 
-	log.Printf("starting grpc server on %s", addr)
+	zap.S().Infof("starting grpc server on %s", addr)
 
 	listener, err := net.Listen("tcp", addr)
 
 	if err != nil {
-		log.Fatal("net.Listen failed")
+		zap.S().Fatalw("net.Listen failed", zap.Error(err))
 		return
 	}
 
 	go func() {
 		if err := grpcServer.Serve(listener); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			zap.S().Fatalw("failed to serve grpc server", zap.Error(err))
 		}
 	}()
 
@@ -80,7 +79,8 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("shutting down grpc server")
+
+	zap.S().Info("shutting down grpc server")
 	grpcServer.GracefulStop()
 
 	<-ctx.Done()

@@ -19,7 +19,7 @@ func InitializeAWSSession() *session.Session {
 	})
 
 	if err != nil {
-		zap.S().Fatal("aws session failed", zap.Error(err))
+		zap.S().Fatalw("aws session failed", zap.Error(err))
 	}
 
 	return s

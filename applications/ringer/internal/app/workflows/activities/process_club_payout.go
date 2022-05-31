@@ -39,14 +39,21 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 		return nil, err
 	}
 
+	club, err := h.stella.GetClubById(ctx, clubPayout.ClubId())
+
+	if err != nil {
+		return nil, err
+	}
+
 	switch accountMethod.Method() {
 	case payout.Paxum:
 		transfer, err := paxum.NewTransfer(
 			clubPayout.Id(),
+			club.Name(),
 			*accountMethod.PaxumEmail(),
 			accountDetails.FirstName(),
 			accountDetails.LastName(),
-			clubPayout.Amount(),
+			clubPayout.TotalAmount(),
 			clubPayout.Currency(),
 		)
 

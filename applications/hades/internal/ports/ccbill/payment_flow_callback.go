@@ -1,8 +1,9 @@
 package ccbill
 
 import (
-	"fmt"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/command"
@@ -33,7 +34,10 @@ func PaymentFlowCallback(app *app.Application) gin.HandlerFunc {
 				return
 			}
 
-			fmt.Println(err.Error())
+			zap.S().Errorw("error parsing ccbill flexform and generating template", zap.Error(err))
+			if hub := sentry.CurrentHub(); hub != nil {
+				defer hub.CaptureException(err)
+			}
 			c.Data(http.StatusInternalServerError, "text", []byte("error"))
 			return
 		}

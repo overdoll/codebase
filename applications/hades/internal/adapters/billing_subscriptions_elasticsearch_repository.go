@@ -3,13 +3,14 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -48,7 +49,7 @@ func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (
 	err := json.Unmarshal(hit.Source, &doc)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal account club supporter subscription: %v", err)
+		return nil, errors.Wrap(err, "failed to unmarshal account club supporter subscription")
 	}
 
 	decrypted, err := decryptPaymentMethod(doc.EncryptedPaymentMethod)
@@ -135,7 +136,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountActiveClubSupporterSu
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search account active club supporter subscriptions: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search account active club supporter subscriptions")
 	}
 
 	var subscriptions []*billing.AccountClubSupporterSubscription
@@ -164,7 +165,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 		Index(SubscriptionsIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
@@ -202,7 +203,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search account club supporter subscriptions: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search account club supporter subscriptions")
 	}
 
 	var subscriptions []*billing.AccountClubSupporterSubscription
@@ -268,7 +269,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index account club supporter subscription: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index account club supporter subscription")
 			}
 		}
 
@@ -298,7 +299,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountClubSupporterSubscr
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index account club supporter subscription: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index account club supporter subscription")
 	}
 
 	return nil

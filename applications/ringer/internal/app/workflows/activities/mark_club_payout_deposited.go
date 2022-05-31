@@ -27,7 +27,7 @@ func (h *Activities) MarkClubPayoutDeposited(ctx context.Context, input MarkClub
 	}
 
 	return &MarkClubPayoutDepositedPayload{
-		Amount:   pay.Amount(),
+		Amount:   pay.TotalAmount(),
 		Currency: pay.Currency(),
 		ClubId:   pay.ClubId(),
 	}, nil

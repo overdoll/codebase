@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"overdoll/applications/carrier/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/libraries/errors"
@@ -21,7 +20,6 @@ func (s StellaGrpc) GetClub(ctx context.Context, clubId string) (*club.Club, err
 	md, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		zap.S().Errorw("error retrieving club", zap.Error(err))
 		return nil, errors.Wrap(err, "error retrieving club")
 	}
 

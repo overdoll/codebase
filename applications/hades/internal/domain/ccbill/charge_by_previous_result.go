@@ -2,9 +2,9 @@ package ccbill
 
 import (
 	_ "embed"
-	"errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func (t *ChargeByPreviousResult) GenerateTransactionToken() (*string, error) {
 	parsedToken, err := DecryptCCBillPayment(t.paymentToken)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error decrypting ccbill payment")
 	}
 
 	var ccbillTransactionDenied *hades.CCBillTransactionDenied
@@ -71,7 +71,7 @@ func (t *ChargeByPreviousResult) GenerateTransactionToken() (*string, error) {
 	encrypted, err := encryptCCBillTransaction(transaction)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error encrypting ccbill transaction")
 	}
 
 	return encrypted, nil

@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"go.uber.org/zap"
 	"os"
 	"overdoll/libraries/errors"
 
@@ -49,7 +48,6 @@ func (r MailingSESRepository) SendEmail(ctx context.Context, recipient *mailing.
 	_, err := r.client.SendEmail(sesEmailInput)
 
 	if err != nil {
-		zap.S().Errorw("could not send SES email", zap.Error(err))
 		return errors.Wrap(err, "could not send SES email")
 	}
 

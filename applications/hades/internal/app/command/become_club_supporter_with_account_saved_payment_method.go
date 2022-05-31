@@ -2,10 +2,9 @@ package command
 
 import (
 	"context"
-	"errors"
-	errors2 "github.com/pkg/errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -35,7 +34,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
-		return nil, errors2.Wrap(err, "failed to get club by id")
+		return nil, err
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination

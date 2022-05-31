@@ -23,7 +23,10 @@ type ClubPayout struct {
 	depositRequestId   string
 	temporalWorkflowId string
 
-	amount   uint64
+	totalAmount    uint64
+	coverFeeAmount uint64
+	amount         uint64
+
 	currency money.Currency
 
 	createdAt   time.Time
@@ -38,6 +41,12 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		depositDate = &dt
 	}
 
+	var coverFeeAmount uint64
+
+	if accountMethod.Method() == Paxum {
+		coverFeeAmount = 25
+	}
+
 	return &ClubPayout{
 		depositRequestId:   depositRequestId,
 		payoutAccountId:    accountMethod.accountId,
@@ -45,7 +54,9 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		status:             Queued,
 		clubId:             clubId,
 		temporalWorkflowId: temporalWorkflowId,
+		coverFeeAmount:     coverFeeAmount,
 		amount:             amount,
+		totalAmount:        amount + coverFeeAmount,
 		depositDate:        *depositDate,
 		currency:           currency,
 		createdAt:          timestamp,
@@ -68,8 +79,16 @@ func (p *ClubPayout) TemporalWorkflowId() string {
 	return p.temporalWorkflowId
 }
 
+func (p *ClubPayout) CoverFeeAmount() uint64 {
+	return p.coverFeeAmount
+}
+
 func (p *ClubPayout) Amount() uint64 {
 	return p.amount
+}
+
+func (p *ClubPayout) TotalAmount() uint64 {
+	return p.totalAmount
 }
 
 func (p *ClubPayout) Currency() money.Currency {
@@ -201,6 +220,8 @@ func UnmarshalClubPayoutFromDatabase(
 	clubId string,
 	currency string,
 	amount uint64,
+	coverFeeAmount uint64,
+	totalAmount uint64,
 	depositDate time.Time,
 	accountPayoutMethodId string,
 	depositRequestId string,
@@ -218,6 +239,8 @@ func UnmarshalClubPayoutFromDatabase(
 		depositRequestId:   depositRequestId,
 		temporalWorkflowId: temporalWorkflowId,
 		amount:             amount,
+		totalAmount:        totalAmount,
+		coverFeeAmount:     coverFeeAmount,
 		currency:           cr,
 		createdAt:          createdAt,
 		depositDate:        depositDate,

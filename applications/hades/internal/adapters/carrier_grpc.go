@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 
 	carrier "overdoll/applications/carrier/proto"
@@ -29,7 +30,11 @@ func (s CarrierGrpc) ClubSupporterSubscriptionDuplicate(ctx context.Context, acc
 		Payment: &carrier.Payment{Amount: amount, Currency: currency.String()},
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "error sending club supporter subscription duplicate email")
+	}
+
+	return nil
 }
 
 func (s CarrierGrpc) ClubSupporterSubscriptionCancelled(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
@@ -46,7 +51,11 @@ func (s CarrierGrpc) ClubSupporterSubscriptionRefunded(ctx context.Context, subs
 		Refund:       &carrier.Payment{Amount: amount, Currency: currency.String()},
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "error sending club supporter subscription refunded email")
+	}
+
+	return nil
 }
 
 func (s CarrierGrpc) ClubSupporterSubscriptionPaymentFailure(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
@@ -57,7 +66,11 @@ func (s CarrierGrpc) ClubSupporterSubscriptionPaymentFailure(ctx context.Context
 		Subscription: &carrier.Subscription{Id: subscription.Id()},
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "error sending club supporter subscription payment failure email")
+	}
+
+	return nil
 }
 
 func (s CarrierGrpc) UpcomingClubSupporterSubscriptionRenewals(ctx context.Context, accountId string, subscriptions []*billing.AccountClubSupporterSubscription) error {
@@ -78,7 +91,11 @@ func (s CarrierGrpc) UpcomingClubSupporterSubscriptionRenewals(ctx context.Conte
 		Renewals: renewals,
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "error sending upcoming club supporter subscription renewals email")
+	}
+
+	return nil
 }
 
 func (s CarrierGrpc) ClubOverChargebackThreshold(ctx context.Context, clubId string, threshold float64) error {
@@ -88,5 +105,9 @@ func (s CarrierGrpc) ClubOverChargebackThreshold(ctx context.Context, clubId str
 		Threshold: threshold,
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "error sending club over chargeback threshold email")
+	}
+
+	return nil
 }

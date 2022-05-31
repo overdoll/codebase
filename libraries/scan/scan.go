@@ -2,7 +2,7 @@ package scan
 
 import (
 	"context"
-	"log"
+	"go.uber.org/zap"
 	"math"
 	"strings"
 
@@ -84,12 +84,12 @@ func (s *Scan) RunIterator(ctx context.Context, table *table.Table, run func(ite
 
 			if err := run(iter); err != nil {
 				_ = iter.Close()
-				log.Fatalf("error with iterator: %v", err)
+				zap.S().Fatalw("error with iterator", zap.Error(err), zap.String("table", table.Name()))
 				return err
 			}
 
 			if err := iter.Close(); err != nil {
-				log.Fatalf("error with closing iterator: %v", err)
+				zap.S().Fatalw("error with closing iterator", zap.Error(err), zap.String("table", table.Name()))
 				return err
 			}
 		}

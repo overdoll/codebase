@@ -17,6 +17,8 @@ type CheckClubTransactionChargebackMetricPayload struct {
 
 func (h *Activities) CheckClubTransactionChargebackMetric(ctx context.Context, input CheckClubTransactionChargebackMetricInput) (*CheckClubTransactionChargebackMetricPayload, error) {
 
+	var err error
+
 	returnValue := &CheckClubTransactionChargebackMetricPayload{Suspended: false}
 
 	metric, err := h.mr.GetClubTransactionMetrics(ctx, input.ClubId, input.Timestamp)

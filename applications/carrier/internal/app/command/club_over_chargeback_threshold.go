@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"os"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -29,7 +28,7 @@ func (h ClubOverChargebackThresholdHandler) Handle(ctx context.Context, cmd Club
 	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get club")
+		return err
 	}
 
 	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())

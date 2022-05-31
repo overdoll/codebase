@@ -4,8 +4,6 @@ go_library(
     name = "account",
     srcs = [
         "account.go",
-        "account_filters.go",
-        "account_filters_sorting.go",
         "account_role.go",
         "email.go",
         "email_status.go",
@@ -17,6 +15,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/crypt",
+        "//libraries/domainerror",
+        "//libraries/errors",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_go_playground_validator_v10//:validator",

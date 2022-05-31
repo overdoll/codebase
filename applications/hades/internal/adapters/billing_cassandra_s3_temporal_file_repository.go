@@ -2,12 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/gocql/gocql"
+	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"github.com/spf13/viper"
@@ -65,7 +65,7 @@ func (r BillingCassandraS3TemporalFileRepository) unmarshalClubSupportReceipt(ct
 	urlStr, err := req.Presign(15 * time.Minute)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to presign supporter receipt url")
 	}
 
 	return billing.UnmarshalClubSupporterReceiptFromDatabase(urlStr), nil
@@ -89,7 +89,7 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 			return nil, billing.ErrClubSupporterReceiptNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get club supporter receipt from account transaction history: %v", err)
+		return nil, errors.Wrap(err, "failed to get club supporter receipt from account transaction")
 	}
 
 	return &receiptFile, nil
@@ -99,7 +99,7 @@ func (r BillingCassandraS3TemporalFileRepository) waitForClubSupportReceiptWorkf
 
 	// wait for workflow to complete
 	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get workflow for club supporter receipt")
 	}
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
@@ -127,7 +127,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	file, err := os.Open(fileName)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to open receipt file")
 	}
 
 	// upload our new file
@@ -138,7 +138,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to upload receipt file")
 	}
 
 	// update db
@@ -151,7 +151,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 			FilePath: fileKey,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to update club supporter receipt with new file: %v", err)
+		return errors.Wrap(err, "failed to update club supporter receipt with new file")
 	}
 
 	return nil
@@ -195,7 +195,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 				TemporalWorkflowId:        workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
+			return nil, errors.Wrap(err, "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{
@@ -209,7 +209,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 				AccountTransactionEventId: eventId,
 			},
 		); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to start workflow for generating refund receipt")
 		}
 
 		return r.waitForClubSupportReceiptWorkflow(ctx, id, workflowId)
@@ -249,7 +249,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 				TemporalWorkflowId:   workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
+			return nil, errors.Wrap(err, "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{
@@ -258,7 +258,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 		}
 
 		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput{AccountTransactionId: history.Id()}); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to start workflow for generating payment receipt")
 		}
 
 		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), workflowId)
