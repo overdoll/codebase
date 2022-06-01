@@ -1,8 +1,8 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrCharacterNotFound      = errors.New("character not found")
-	ErrCharacterSlugNotUnique = errors.New("character slug is not unique")
+	ErrCharacterNotFound      = domainerror.NewValidation("character not found")
+	ErrCharacterSlugNotUnique = domainerror.NewValidation("character slug is not unique")
 )
 
 type Character struct {
@@ -159,7 +159,7 @@ func validateCharacterName(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

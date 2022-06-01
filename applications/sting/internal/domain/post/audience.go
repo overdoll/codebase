@@ -1,8 +1,8 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrAudienceNotFound      = errors.New("audience not found")
-	ErrAudienceSlugNotUnique = errors.New("audience slug is not unique")
+	ErrAudienceNotFound      = domainerror.NewValidation("audience not found")
+	ErrAudienceSlugNotUnique = domainerror.NewValidation("audience slug is not unique")
 )
 
 type Audience struct {
@@ -172,7 +172,7 @@ func validateAudienceTitle(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

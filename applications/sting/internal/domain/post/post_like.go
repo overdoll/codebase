@@ -1,13 +1,13 @@
 package post
 
 import (
-	"errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/principal"
 	"time"
 )
 
 var (
-	ErrLikeNotFound = errors.New("post like not found")
+	ErrLikeNotFound = domainerror.NewValidation("post like not found")
 )
 
 type Like struct {

@@ -1,8 +1,8 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrCategoryNotFound      = errors.New("category not found")
-	ErrCategorySlugNotUnique = errors.New("category slug is not unique")
+	ErrCategoryNotFound      = domainerror.NewValidation("category not found")
+	ErrCategorySlugNotUnique = domainerror.NewValidation("category slug is not unique")
 )
 
 type Category struct {

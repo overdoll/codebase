@@ -1,8 +1,8 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrSeriesNotFound      = errors.New("series not found")
-	ErrSeriesSlugNotUnique = errors.New("series slug is not unique")
+	ErrSeriesNotFound      = domainerror.NewValidation("series not found")
+	ErrSeriesSlugNotUnique = domainerror.NewValidation("series slug is not unique")
 )
 
 type Series struct {
@@ -152,7 +152,7 @@ func validateSeriesTitle(title string) error {
 	err := validator.New().Var(title, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

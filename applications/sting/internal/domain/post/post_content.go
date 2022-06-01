@@ -3,6 +3,8 @@ package post
 import "overdoll/libraries/principal"
 
 type Content struct {
+	post *Post
+
 	id string
 
 	resourceId string
@@ -16,9 +18,9 @@ func (m *Content) Id() string {
 	return m.id
 }
 
-func (m *Content) ResourceIdRequest(requester *principal.Principal, p *Post) string {
+func (m *Content) ResourceIdRequest(requester *principal.Principal) string {
 
-	if !m.canView(requester, p) {
+	if !m.canView(requester) {
 		return m.resourceIdHidden
 	}
 
@@ -42,9 +44,9 @@ func (m *Content) IsSupporterOnly() bool {
 	return m.isSupporterOnly
 }
 
-func (m *Content) canView(requester *principal.Principal, p *Post) bool {
+func (m *Content) canView(requester *principal.Principal) bool {
 
-	if p.state != Published {
+	if m.post.state != Published {
 		return true
 	}
 
@@ -60,7 +62,7 @@ func (m *Content) canView(requester *principal.Principal, p *Post) bool {
 
 		if requester != nil {
 			// false if check supporter fails
-			if err := requester.CheckSupporter(p.clubId); err != nil {
+			if err := requester.CheckSupporter(m.post.clubId); err != nil {
 				return false
 			}
 
@@ -73,6 +75,6 @@ func (m *Content) canView(requester *principal.Principal, p *Post) bool {
 	return false
 }
 
-func (m *Content) CanViewSupporterOnly(requester *principal.Principal, p *Post) bool {
-	return m.canView(requester, p)
+func (m *Content) CanViewSupporterOnly(requester *principal.Principal) bool {
+	return m.canView(requester)
 }
