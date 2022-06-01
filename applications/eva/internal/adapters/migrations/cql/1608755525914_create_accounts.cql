@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS accounts
     username                       text,
     email                          text,
     roles                          list<text>,
-    verified                       boolean,
     avatar_resource_id             text,
     locked                         boolean,
     locked_until                   timestamp,

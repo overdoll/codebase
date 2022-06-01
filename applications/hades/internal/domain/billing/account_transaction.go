@@ -1,7 +1,7 @@
 package billing
 
 import (
-	"errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrAccountTransactionNotFound = errors.New("account transaction not found")
+	ErrAccountTransactionNotFound = domainerror.NewValidation("account transaction not found")
 )
 
 type AccountTransaction struct {
@@ -180,17 +180,17 @@ func (c *AccountTransaction) GetTotalRefunded() uint64 {
 func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amount uint64) error {
 
 	if !requester.IsStaff() {
-		return errors.New("only staff can issue refunds")
+		return principal.ErrNotAuthorized
 	}
 
 	if c.transaction != Payment && c.transaction != Refund {
-		return errors.New("transaction in incorrect state")
+		return domainerror.NewValidation("transaction in incorrect state")
 	}
 
 	sum := c.GetTotalRefunded()
 
 	if sum+amount > c.amount {
-		return errors.New("over refund threshold")
+		return domainerror.NewValidation("over refund threshold")
 	}
 
 	return nil
@@ -199,11 +199,11 @@ func (c *AccountTransaction) RequestRefund(requester *principal.Principal, amoun
 func (c *AccountTransaction) RequestVoid(requester *principal.Principal) error {
 
 	if c.transaction != Payment {
-		return errors.New("transaction in incorrect state")
+		return domainerror.NewValidation("transaction in incorrect state")
 	}
 
 	if !requester.IsStaff() {
-		return errors.New("only staff can issue voids")
+		return principal.ErrNotAuthorized
 	}
 
 	return nil

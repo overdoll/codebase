@@ -18,7 +18,6 @@ type Account struct {
 	username         string
 	email            string
 	roles            []Role
-	verified         bool
 	avatarResourceId *string
 
 	locked      bool
@@ -46,7 +45,7 @@ var (
 	ErrAccountIsDeleting      = domainerror.NewValidation("cannot updated account in deleting status")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool) *Account {
 
 	var newRoles []Role
 
@@ -60,7 +59,6 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		username:                    username,
 		email:                       email,
 		roles:                       newRoles,
-		verified:                    verified,
 		avatarResourceId:            avatar,
 		deleting:                    isDeleting,
 		scheduledDeletionAt:         scheduledDeletionAt,
@@ -97,10 +95,6 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
-}
-
-func (a *Account) Verified() bool {
-	return a.verified
 }
 
 func (a *Account) AvatarResourceId() *string {
@@ -546,5 +540,5 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 }
 
 func ToPrincipal(acc *Account) *principal.Principal {
-	return principal.NewPrincipal(acc.id, acc.username, acc.email, acc.RolesAsString(), acc.verified, acc.locked, acc.IsSecure(), false)
+	return principal.NewPrincipal(acc.id, acc.username, acc.email, acc.RolesAsString(), acc.locked, acc.IsSecure(), false)
 }

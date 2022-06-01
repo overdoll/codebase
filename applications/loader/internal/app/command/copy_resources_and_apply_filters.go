@@ -2,10 +2,10 @@ package command
 
 import (
 	"context"
-	"errors"
 	"os"
 	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/errors"
 )
 
 type CopyResourcesAndApplyFilters struct {

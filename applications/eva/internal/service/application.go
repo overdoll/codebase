@@ -110,7 +110,7 @@ func createApplication(
 	db, err := geoip2.Open(config.GetFilePath(os.Getenv("GEOIP_DATABASE_LOCATION")))
 
 	if err != nil {
-		zap.S().Fatal("failed to open database", zap.Error(err))
+		zap.S().Fatalw("failed to open database", zap.Error(err))
 	}
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)

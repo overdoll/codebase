@@ -1,14 +1,14 @@
 package ccbill
 
 import (
-	"errors"
 	"os"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/domainerror"
 	"time"
 )
 
 var (
-	ErrFlexFormsPaymentLinkExpired = errors.New("flexforms payment link expired")
+	ErrFlexFormsPaymentLinkExpired = domainerror.NewValidation("flexforms payment link expired")
 )
 
 type FlexFormsPaymentLink struct {

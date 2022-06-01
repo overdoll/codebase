@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/getsentry/sentry-go"
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
@@ -35,8 +36,10 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 				zap.S().Errorw("resolver error", zap.Error(e))
 				defaultMessage = "internal server error"
 				// capture if it's an internal server error
-				if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
-					hub.CaptureException(e)
+				if hub := sentrygin.GetHubFromContext(c); hub != nil {
+					hub.WithScope(func(scope *sentry.Scope) {
+						defer hub.CaptureException(e)
+					})
 				}
 			}
 
@@ -52,8 +55,11 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		})
 
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
-				defer hub.RecoverWithContext(ctx, err)
+
+			if hub := sentrygin.GetHubFromContext(c); hub != nil {
+				hub.WithScope(func(scope *sentry.Scope) {
+					defer hub.RecoverWithContext(ctx, err)
+				})
 			}
 
 			zap.S().Errorw("resolver panic", zap.Any("panic", err))

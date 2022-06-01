@@ -26,7 +26,6 @@ var accountTable = table.New(table.Metadata{
 		"username",
 		"email",
 		"roles",
-		"verified",
 		"avatar_resource_id",
 		"locked",
 		"locked_until",
@@ -46,7 +45,6 @@ type accounts struct {
 	Username                    string     `db:"username"`
 	Email                       string     `db:"email"`
 	Roles                       []string   `db:"roles"`
-	Verified                    bool       `db:"verified"`
 	AvatarResourceId            *string    `db:"avatar_resource_id"`
 	Locked                      bool       `db:"locked"`
 	LockedUntil                 *time.Time `db:"locked_until"`
@@ -120,7 +118,6 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		Username:                    usr.Username(),
 		Roles:                       usr.RolesAsString(),
 		AvatarResourceId:            usr.AvatarResourceId(),
-		Verified:                    usr.Verified(),
 		LockedUntil:                 usr.LockedUntil(),
 		Locked:                      usr.IsLocked(),
 		Deleting:                    usr.IsDeleting(),
@@ -167,7 +164,6 @@ func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id strin
 		accountInstance.Username,
 		accountInstance.Email,
 		accountInstance.Roles,
-		accountInstance.Verified,
 		accountInstance.AvatarResourceId,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
@@ -208,7 +204,6 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.Username,
 			accountInstance.Email,
 			accountInstance.Roles,
-			accountInstance.Verified,
 			accountInstance.AvatarResourceId,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
@@ -420,7 +415,6 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 			Username:                    instance.Username(),
 			Email:                       instance.Email(),
 			Roles:                       instance.RolesAsString(),
-			Verified:                    instance.Verified(),
 			AvatarResourceId:            instance.AvatarResourceId(),
 			Locked:                      instance.Locked(),
 			LockedUntil:                 instance.LockedUntil(),

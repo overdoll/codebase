@@ -5,6 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"go.temporal.io/sdk/client"
 	temporalmocks "go.temporal.io/sdk/mocks"
+	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
@@ -44,7 +45,7 @@ func createApplication(ctx context.Context, client client.Client) *app.Applicati
 	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to parse RSA private key", zap.Error(err))
 	}
 
 	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)

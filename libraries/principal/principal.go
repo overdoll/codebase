@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	ErrNotAuthorized = domainerror.NewAuthorization("not authorized")
+	ErrNotAuthorized = domainerror.NewAuthorization("principal not authorized")
 	ErrLocked        = domainerror.NewAuthorization("account is locked")
 )
 
@@ -21,7 +21,6 @@ type Principal struct {
 	username  string
 	roles     []string
 	email     string
-	verified  bool
 	locked    bool
 	secure    bool
 	deleting  bool
@@ -29,13 +28,12 @@ type Principal struct {
 	clubExtension *ClubExtension
 }
 
-func NewPrincipal(accountId, username, email string, roles []string, verified, locked, secure, deleting bool) *Principal {
+func NewPrincipal(accountId, username, email string, roles []string, locked, secure, deleting bool) *Principal {
 	return &Principal{
 		accountId: accountId,
 		email:     email,
 		username:  username,
 		roles:     roles,
-		verified:  verified,
 		locked:    locked,
 		secure:    secure,
 		deleting:  deleting,
@@ -47,7 +45,6 @@ func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 	return &Principal{
 		accountId: proto.Id,
 		roles:     proto.Roles,
-		verified:  proto.Verified,
 		locked:    proto.Locked,
 		email:     proto.Email,
 		secure:    proto.Secure,
@@ -75,10 +72,6 @@ func (p *Principal) Email() string {
 
 func (p *Principal) Username() string {
 	return p.username
-}
-
-func (p *Principal) IsVerified() bool {
-	return p.verified == true
 }
 
 func (p *Principal) IsLocked() bool {
