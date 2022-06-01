@@ -107,7 +107,9 @@ const moduleExports = withBundleAnalyzer({
 let sentryConfig
 
 if (process.env.UPLOAD_SENTRY_SOURCEMAPS != null) {
-  sentryConfig = { silent: true }
+  sentryConfig = withSentryConfig(moduleExports, { silent: true })
+} else {
+  sentryConfig = withSentryConfig(moduleExports)
 }
 
-module.exports = withSentryConfig(moduleExports, sentryConfig)
+module.exports = sentryConfig

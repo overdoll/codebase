@@ -2,7 +2,6 @@ package resource
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
@@ -12,13 +11,15 @@ import (
 	"io"
 	"math"
 	"os"
+	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/uuid"
 	"strconv"
 )
 
 var (
-	ErrResourceNotFound   = errors.New("resource not found")
-	ErrFileTypeNotAllowed = errors.New("filetype not allowed")
+	ErrResourceNotFound   = domainerror.NewValidation("resource not found")
+	ErrFileTypeNotAllowed = domainerror.NewValidation("filetype not allowed")
 )
 
 // accepted formats
@@ -139,7 +140,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
 	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
-		return nil, fmt.Errorf("uknown file type: %s", kind)
+		return nil, errors.Wrap(err, "uknown file type")
 	}
 
 	var newFileName string
@@ -156,7 +157,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		src, _, err := image.Decode(file)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to decode png %v", err)
+			return nil, errors.Wrap(err, "failed to decode png")
 		}
 
 		newFileExtension = ".webp"
@@ -250,7 +251,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.resourceType = Video
 
 	} else {
-		return nil, fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
+		return nil, errors.New(fmt.Sprintf("invalid resource format: %s", kind.MIME.Value))
 	}
 
 	fileKey := r.itemId + "/" + fileName
@@ -274,7 +275,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	r.processed = true
 
 	if err := file.Close(); err != nil {
-		return nil, fmt.Errorf("failed to close file: %v", err)
+		return nil, errors.Wrap(err, "failed to close file")
 	}
 
 	return moveTargets, nil

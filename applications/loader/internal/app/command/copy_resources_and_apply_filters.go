@@ -5,7 +5,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
-	"overdoll/libraries/errors"
+	"overdoll/libraries/domainerror"
 )
 
 type CopyResourcesAndApplyFilters struct {
@@ -51,7 +51,7 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 	for _, target := range resources {
 
 		if !target.IsProcessed() {
-			return nil, errors.New("resource not processed yet")
+			return nil, domainerror.NewValidation("resource not processed yet")
 		}
 
 		var file *os.File

@@ -1,11 +1,11 @@
 package resource
 
 import (
-	"fmt"
 	"github.com/disintegration/gift"
 	"image"
 	"image/png"
 	"os"
+	"overdoll/libraries/errors"
 )
 
 type ImageFilters struct {
@@ -26,7 +26,7 @@ func (i *ImageFilters) ApplyFilters(file *os.File) (*os.File, error) {
 	src, err := png.Decode(file)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode a file for filters: %s", err)
+		return nil, errors.Wrap(err, "failed to decode a file for filters")
 	}
 
 	// create and apply filters
@@ -50,7 +50,7 @@ func (i *ImageFilters) ApplyFilters(file *os.File) (*os.File, error) {
 
 	// encode the file to png
 	if err := png.Encode(newFile, dst); err != nil {
-		return nil, fmt.Errorf("failed to encode png file: %s", err)
+		return nil, errors.Wrap(err, "failed to encode png file")
 	}
 
 	return newFile, nil

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/uuid"
 )
 
@@ -31,7 +32,7 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 	)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to run process resources workflow")
 	}
 
 	return nil
@@ -52,7 +53,7 @@ func (r EventTemporalRepository) DeleteResources(ctx context.Context, itemId str
 	)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to run delete resources workflow")
 	}
 
 	return nil

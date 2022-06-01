@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/subtle"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -103,7 +104,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	u, err := url.Parse(os.Getenv("ORCA_SERVICE"))
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to parse orca URL", zap.Error(err))
 	}
 
 	// we must create a custom proxy director

@@ -2,8 +2,11 @@ package passport
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/securecookie"
+	"go.uber.org/zap"
 	"net/http"
+	"time"
 )
 
 // passport doesn't care about the storage mechanism of how you store sessions or any other data
@@ -42,7 +45,30 @@ func NewHttpRoundTripper(r repository) http.RoundTripper {
 		repository: r,
 	}
 }
+
 func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+
+	res, err := h.roundTrip(req)
+
+	if err != nil {
+
+		// capture sentry exception
+		if hub := sentry.GetHubFromContext(req.Context()); hub != nil {
+			hub.WithScope(func(scope *sentry.Scope) {
+				hub.CaptureException(err)
+				defer hub.Flush(time.Second)
+			})
+		}
+
+		zap.S().Errorw("failed to roundtrip passport", zap.Error(err))
+
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (h *passportTransport) roundTrip(req *http.Request) (*http.Response, error) {
 
 	sessionId, accountId, err := h.repository.GetSessionDataFromRequest(req)
 
