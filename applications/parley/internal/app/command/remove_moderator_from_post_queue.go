@@ -25,6 +25,7 @@ func (h RemoveModeratorFromPostQueueHandler) Handle(ctx context.Context, cmd Rem
 	_, err := h.mr.GetModerator(ctx, cmd.Principal, cmd.AccountId)
 
 	if err != nil {
+
 		if err == moderator.ErrModeratorNotFound {
 			return nil
 		}

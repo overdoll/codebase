@@ -2,11 +2,11 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -61,7 +61,7 @@ func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create rule reason: %v", err)
+		return errors.Wrap(err, "CreateRule")
 	}
 
 	return nil
@@ -87,7 +87,7 @@ func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cu
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
-		return nil, fmt.Errorf("failed to get rules: %v", err)
+		return nil, errors.Wrap(err, "GetRules")
 	}
 
 	var rulesItems []*rule.Rule
@@ -127,7 +127,7 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 			return nil, rule.ErrRuleNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get rule by id: %v", err)
+		return nil, errors.Wrap(err, "getRuleById")
 	}
 
 	return rule.UnmarshalRuleFromDatabase(
@@ -165,7 +165,7 @@ func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, 
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update rule: %v", err)
+		return nil, errors.Wrap(err, "updateRule")
 	}
 
 	return ruleItem, nil

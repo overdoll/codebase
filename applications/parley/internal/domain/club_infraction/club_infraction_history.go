@@ -1,8 +1,8 @@
 package club_infraction
 
 import (
-	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -28,7 +28,7 @@ var (
 )
 
 var (
-	ErrClubInfractionHistoryNotFound = errors.New("club infraction not found")
+	ErrClubInfractionHistoryNotFound = domainerror.NewValidation("club infraction not found")
 )
 
 func newClubInfraction(issuerAccountId string, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string, customLength time.Time) (*ClubInfractionHistory, error) {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
-	"overdoll/libraries/errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -45,7 +45,7 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	}
 
 	if subscription != nil {
-		return nil, errors.New("existing subscription found")
+		return nil, domainerror.NewValidation("existing subscription found")
 	}
 
 	savedPaymentMethod, err := h.br.GetAccountSavedPaymentMethodByIdOperator(ctx, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId)

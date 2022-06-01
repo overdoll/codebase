@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -34,7 +35,7 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute put post into moderation queue workflow")
 	}
 
 	return nil
@@ -56,7 +57,7 @@ func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute report post workflow")
 	}
 
 	return nil
@@ -80,7 +81,7 @@ func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, reques
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute issue club infraction workflow")
 	}
 
 	return nil
@@ -106,7 +107,7 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute reject post workflow")
 	}
 
 	return nil
@@ -132,7 +133,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post workflow")
 	}
 
 	return nil
@@ -155,7 +156,7 @@ func (r EventTemporalRepository) ApprovePost(ctx context.Context, requester *pri
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute approve post workflow")
 	}
 
 	return nil

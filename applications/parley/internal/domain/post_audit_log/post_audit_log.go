@@ -1,15 +1,15 @@
 package post_audit_log
 
 import (
-	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 )
 
 var (
-	ErrPostAuditLogNotFound = errors.New("post audit log not found")
+	ErrPostAuditLogNotFound = domainerror.NewValidation("post audit log not found")
 )
 
 type PostAuditLog struct {

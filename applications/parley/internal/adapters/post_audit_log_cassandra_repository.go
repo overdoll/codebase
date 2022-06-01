@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2"
@@ -12,6 +11,7 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -180,7 +180,7 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create audit log: %v", err)
+		return errors.Wrap(err, "CreatePostAuditLog failed")
 	}
 
 	return nil
@@ -203,7 +203,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 			return nil, post_audit_log.ErrPostAuditLogNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
+		return nil, errors.Wrap(err, "getPostAuditLogById failed")
 	}
 
 	return post_audit_log.UnmarshalPostAuditLogFromDatabase(
@@ -251,7 +251,7 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 			return nil, rule.ErrRuleNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get post rule id for post: %v", err)
+		return nil, errors.Wrap(err, "GetRuleIdForPost")
 	}
 
 	return &postR.RuleId, nil
@@ -268,7 +268,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogBucketsForAccount(ctx co
 			ModeratorAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to get post audit log buckets: %v", err)
+		return nil, errors.Wrap(err, "getPostAuditLogBucketsForAccount")
 	}
 
 	var final []int
@@ -305,7 +305,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 			WithContext(ctx).
 			BindStruct(postAuditLog{PostId: *filter.PostId()}).
 			SelectRelease(&results); err != nil {
-			return nil, fmt.Errorf("failed to search audit logs for post: %v", err)
+			return nil, errors.Wrap(err, "SearchPostAuditLogs")
 		}
 
 		for _, auditLog := range results {
@@ -327,7 +327,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 	}
 
 	if filter.ModeratorId() == nil {
-		return nil, errors.New("must select either post or moderator for filtering")
+		return nil, domainerror.NewValidation("must select either post or moderator for filtering")
 	}
 
 	buckets, err := r.getPostAuditLogBucketsForAccount(ctx, *filter.ModeratorId())
@@ -364,7 +364,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 			WithContext(ctx).
 			BindStruct(postAuditLog{Bucket: bucketId, ModeratorAccountId: *filter.ModeratorId()}).
 			SelectRelease(&results); err != nil {
-			return nil, fmt.Errorf("failed to search audit logs: %v", err)
+			return nil, errors.Wrap(err, "SearchPostAuditLogs")
 		}
 
 		for _, auditLog := range results {

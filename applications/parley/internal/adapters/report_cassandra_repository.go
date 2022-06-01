@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -10,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -110,7 +110,7 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create report log: %v", err)
+		return errors.Wrap(err, "CreatePostReport")
 	}
 
 	if err := r.indexPostReport(ctx, report); err != nil {
@@ -138,7 +138,7 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 			return nil, report.ErrPostReportNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get report for post: %v", err)
+		return nil, errors.Wrap(err, "GetPostReportById")
 	}
 
 	rep := report.UnmarshalPostReportFromDatabase(
@@ -166,7 +166,7 @@ func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(c
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to get post reports by account buckets: %v", err)
+		return nil, errors.Wrap(err, "getPostReportsByAccountBuckets")
 	}
 
 	var final []int
@@ -198,7 +198,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 			WithContext(ctx).
 			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
 			SelectRelease(&results); err != nil {
-			return fmt.Errorf("failed to search post reports: %v", err)
+			return errors.Wrap(err, "DeleteAccountData")
 		}
 
 		if len(results) == 0 {
@@ -223,7 +223,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return fmt.Errorf("failed to delete report log: %v", err)
+			return errors.Wrap(err, "DeleteAccountData: delete post reports")
 		}
 	}
 
@@ -238,7 +238,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return fmt.Errorf("failed to delete post reports by account buckets: %v", err)
+		return errors.Wrap(err, "DeleteAccountData: delete post reports by account buckets")
 	}
 
 	return nil

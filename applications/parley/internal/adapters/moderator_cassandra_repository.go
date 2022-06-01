@@ -2,7 +2,7 @@ package adapters
 
 import (
 	"context"
-	"fmt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/support"
 	"time"
@@ -96,7 +96,7 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 			return nil, moderator.ErrModeratorNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get moderators: %v", err)
+		return nil, errors.Wrap(err, "failed to get moderators")
 	}
 
 	return moderator.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
@@ -118,7 +118,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 			return nil, moderator.ErrPostModeratorNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get post moderator by post id: %v", err)
+		return nil, errors.Wrap(err, "failed to get post moderator by post id")
 	}
 
 	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt, postModerator.ReassignmentAt), nil
@@ -151,7 +151,7 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create post moderator queue: %v", err)
+		return errors.Wrap(err, "failed to create post moderator queue")
 	}
 
 	return nil
@@ -180,7 +180,7 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 			AccountId: accountId,
 		}).
 		SelectRelease(&postModeratorQueueItems); err != nil {
-		return nil, fmt.Errorf("failed to get post moderators for account: %v", err)
+		return nil, errors.Wrap(err, "failed to get post moderators for account")
 	}
 
 	var postQueue []*moderator.PostModerator
@@ -210,7 +210,7 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 			return nil, moderator.ErrPostModeratorNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
+		return nil, errors.Wrap(err, "failed to get post moderator queue for account")
 	}
 
 	return &item, nil
@@ -251,7 +251,7 @@ func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Co
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete post moderator: %v", err)
+		return errors.Wrap(err, "failed to delete post moderator")
 	}
 
 	return nil
@@ -282,7 +282,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{Bucket: 0}).
 		SelectRelease(&dbModerators); err != nil {
-		return nil, fmt.Errorf("failed to get moderators: %v", err)
+		return nil, errors.Wrap(err, "failed to get moderators")
 	}
 
 	var moderators []*moderator.Moderator
@@ -301,7 +301,7 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(mod)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create moderators: %v", err)
+		return errors.Wrap(err, "failed to create moderators")
 	}
 
 	return nil
@@ -327,7 +327,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update moderators: %v", err)
+		return nil, errors.Wrap(err, "failed to update moderators")
 	}
 
 	return currentMod, nil
@@ -350,7 +350,7 @@ func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, reque
 			Bucket:    0,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to remove moderators: %v", err)
+		return errors.Wrap(err, "failed to remove moderators")
 	}
 
 	return nil
