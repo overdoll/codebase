@@ -19,8 +19,9 @@ import { useRef } from 'react'
 import { useHistoryDisclosure } from '../../../../../../hooks'
 import Button from '../../../../../../form/Button/Button'
 import { useToast } from '../../../../../ThemeComponents'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: PostDeleteButtonFragment$key
 }
 
@@ -31,15 +32,16 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation PostDeleteButtonMutation($input: DeletePostInput!) {
+  mutation PostDeleteButtonMutation($input: DeletePostInput!, $connections: [ID!]!) {
     deletePost(input: $input) {
-      postId
+      postId @deleteEdge(connections: $connections)
     }
   }
 `
 
 export default function PostDeleteButton ({
-  query
+  query,
+  connectionId
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -60,7 +62,8 @@ export default function PostDeleteButton ({
       variables: {
         input: {
           id: data.id
-        }
+        },
+        connections: [connectionId]
       },
       onCompleted () {
         notify({

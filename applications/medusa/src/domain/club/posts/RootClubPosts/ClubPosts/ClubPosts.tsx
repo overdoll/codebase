@@ -37,6 +37,7 @@ const Fragment = graphql`
   @refetchable(queryName: "ClubPostsPaginationQuery" ) {
     posts (first: $first, after: $after, state: $state)
     @connection (key: "ClubPosts_posts") {
+      __id
       edges {
         node {
           state
@@ -94,7 +95,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
             switch (item.node.state) {
               case 'DRAFT':
                 return (
-                  <DraftPost key={index} query={item.node} />
+                  <DraftPost connectionId={data.posts.__id} key={index} query={item.node} />
                 )
               case 'PUBLISHED':
                 return (

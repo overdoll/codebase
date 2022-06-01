@@ -21,7 +21,6 @@ import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { SetupPaxumAccountPayoutMethodMutation } from '@//:artifacts/SetupPaxumAccountPayoutMethodMutation.graphql'
-import LinkInline from '@//:modules/content/ContentHints/LinkInline/LinkInline'
 
 interface EmailValues {
   email: string
@@ -142,13 +141,8 @@ export default function SetupPaxumAccountPayoutMethod (): JSX.Element {
           </Text>
           <Text color='gray.100' fontSize='sm'>
             <Trans>
-              Please note that while there are no fees for receiving payments, you are subject to fees when withdrawing
-              via local bank account or wire. Please refer to the{' '}
-              <LinkInline
-                href='https://www.paxum.com/fees/personal'
-              >
-                site's Fees page
-              </LinkInline> for more information.
+              Make sure that the First and Last name you have entered in your Payout Details match the First and Last
+              name on your Paxum account. Otherwise, any payouts we send will fail.
             </Trans>
           </Text>
         </Stack>

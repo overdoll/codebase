@@ -14,7 +14,7 @@ import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modu
 import Head from 'next/head'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { useRouter } from 'next/router'
-import { prepareViewer } from '../../support/support'
+import { invalidateToken, setViewer } from '../../support/support'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import { OverdollLogo } from '@//:assets/logos'
 
@@ -78,7 +78,8 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       },
       updater: (store, payload) => {
         if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
-          store.get(data.id)?.invalidateRecord()
+          // store.get(data.id)?.invalidateRecord()
+          invalidateToken(store)
           removeCookie('token')
         }
 
@@ -91,13 +92,12 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           return
         }
 
-        if (payload?.createAccountWithAuthenticationToken?.account?.id != null) {
-          const account = store.get(payload?.createAccountWithAuthenticationToken?.account?.id)
-          prepareViewer(store, account)
-          removeCookie('token')
-          flash('new.account', '')
-          void router.push(redirect != null ? redirect : '/')
-        }
+        const rootPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
+        invalidateToken(store)
+        setViewer(store, rootPayload)
+        removeCookie('token')
+        flash('new.account', '')
+        void router.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',
@@ -129,7 +129,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
             icon={OverdollLogo}
             w={32}
             h={32}
-            fill='green.500'
+            fill='green.300'
           />
           <RegisterForm
             onSubmit={onSubmit}

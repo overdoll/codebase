@@ -60,6 +60,8 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
 
   const data = ref.viewAuthenticationToken
 
+  console.log(data)
+
   const multiFactorEnabled = data?.accountStatus?.multiFactor !== null
 
   const authenticationInitiated = !(data == null)

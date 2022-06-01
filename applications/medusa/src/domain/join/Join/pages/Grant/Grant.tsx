@@ -1,7 +1,7 @@
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation, useSubscribeToInvalidationState } from 'react-relay/hooks'
 import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { prepareViewer } from '../../support/support'
+import { invalidateToken, setViewer } from '../../support/support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
@@ -70,8 +70,8 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
     commit({
       variables: {
         input: {
-          token: data.token,
-        },
+          token: data.token
+        }
       },
       onCompleted (data) {
         if (data.grantAccountAccessWithAuthenticationToken == null) {
@@ -82,32 +82,30 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           notify({
             status: 'error',
-            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation)),
+            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
           })
           removeCookie('token')
           return
         }
         notify({
           status: 'success',
-          title: t`Welcome back!`,
+          title: t`Welcome back!`
         })
       },
       updater: (store, payload) => {
-        if (payload?.grantAccountAccessWithAuthenticationToken?.account?.id != null) {
-          const account = store.get(payload?.grantAccountAccessWithAuthenticationToken?.account?.id)
-          store.get(payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
-          prepareViewer(store, account)
-          void router.push(redirect != null ? redirect : '/').then(() => {
-            removeCookie('token')
-          })
-        }
+        // store.get(payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
+        const linkedPayload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
+        invalidateToken(store)
+        setViewer(store, linkedPayload)
+        removeCookie('token')
+        void router.push(redirect != null ? redirect : '/')
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error logging you in`,
+          title: t`There was an error logging you in`
         })
-      },
+      }
     })
   }, [])
 

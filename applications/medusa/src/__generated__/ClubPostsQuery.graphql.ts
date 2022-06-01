@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<49e35e99211f5fa4ef2d9d667fa49004>>
+ * @generated SignedSource<<0c350a830fa5a3ea9476c85b0bc867c8>>
  * @relayHash 1ddf1332d0d69b845d5e3923572b9fb6
  * @lightSyntaxTransform
  * @nogrep
@@ -332,6 +332,18 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": null
