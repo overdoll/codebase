@@ -17,7 +17,6 @@ import { Trans } from '@lingui/macro'
 import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { useCookies } from 'react-cookie'
 import useGrantCleanup from '../../support/useGrantCleanup'
 
 interface Props extends CloseButtonProps {
@@ -57,8 +56,6 @@ export default function RevokeTokenButton ({
   )
 
   const { invalidateGrant } = useGrantCleanup()
-
-  const [, , removeCookie] = useCookies(['token'])
 
   const onRevokeToken = (): void => {
     revokeToken({

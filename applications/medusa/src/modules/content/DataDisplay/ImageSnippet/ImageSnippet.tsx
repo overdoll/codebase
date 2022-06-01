@@ -37,7 +37,7 @@ export default function ImageSnippet ({
             srcSet={item.url}
             type={item.mimeType}
           />
-        )
+        ),
       )}
       <NextImage
         alt='thumbnail'
