@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
+	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -101,7 +102,7 @@ func fromRequest(r *http.Request) *Passport {
 		pass, err := unserializeFromString(value.String())
 
 		if err != nil {
-			panic(err)
+			zap.S().Panicw("failed to unserialize passport", zap.Error(err))
 		}
 
 		return pass

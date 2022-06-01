@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"go.uber.org/zap"
 	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
@@ -144,7 +143,7 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get account: %v", err)
+		return nil, errors.Wrap(err, "failed to get account")
 	}
 
 	return &accountInstance, nil

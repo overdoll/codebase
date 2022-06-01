@@ -13,6 +13,7 @@ type ApprovePostInput struct {
 func ApprovePost(ctx workflow.Context, input ApprovePostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func ApprovePost(ctx workflow.Context, input ApprovePostInput) error {
 			PostId:    input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create approved post audit log", "Error", err)
 		return err
 	}
 
@@ -30,6 +32,7 @@ func ApprovePost(ctx workflow.Context, input ApprovePostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to publish post", "Error", err)
 		return err
 	}
 
@@ -38,6 +41,7 @@ func ApprovePost(ctx workflow.Context, input ApprovePostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to remove post from moderator queue", "Error", err)
 		return err
 	}
 

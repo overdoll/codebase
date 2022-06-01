@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/gocql/gocql"
-	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"github.com/spf13/viper"
@@ -15,6 +14,7 @@ import (
 	"os"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"time"
 )

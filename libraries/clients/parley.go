@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -29,7 +30,7 @@ func NewParleyClient(ctx context.Context, address string) (parley.ParleyClient, 
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new parley client", zap.Error(err))
 	}
 
 	return parley.NewParleyClient(parleyConnection), func() {

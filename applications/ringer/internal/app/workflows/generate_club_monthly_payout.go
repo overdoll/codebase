@@ -67,6 +67,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			PayoutId: payoutId,
 		},
 	).Get(ctx, &readyPayments); err != nil {
+		logger.Error("failed to get ready payments for club and append", "Error", err)
 		return err
 	}
 
@@ -94,6 +95,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			Timestamp:             ts,
 		},
 	).Get(ctx, &depositPayload); err != nil {
+		logger.Error("failed to get or create deposit request", "Error", err)
 		return err
 	}
 
@@ -113,6 +115,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			AccountPayoutMethodId: readyPayments.AccountPayoutMethodId,
 		},
 	).Get(ctx, &createPayload); err != nil {
+		logger.Error("failed to create payout for club", "Error", err)
 		return err
 	}
 
@@ -125,6 +128,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			Currency:  readyPayments.Currency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to append to deposit request", "Error", err)
 		return err
 	}
 
@@ -165,6 +169,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 					DepositDate: *input.FutureTime,
 				},
 			).Get(ctx, nil); err != nil {
+				logger.Error("failed to update club payout deposit date", "Error", err)
 				return err
 			}
 		}
@@ -178,6 +183,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 			PayoutId: payoutId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark club payout as processing", "Error", err)
 		return err
 	}
 
@@ -196,6 +202,7 @@ func GenerateClubMonthlyPayout(ctx workflow.Context, input GenerateClubMonthlyPa
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to process club payout", "Error", err)
 		return err
 	}
 

@@ -3,7 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"github.com/pkg/errors"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"

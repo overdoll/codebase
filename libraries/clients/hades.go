@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	hades "overdoll/applications/hades/proto"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
@@ -29,7 +30,7 @@ func NewHadesClient(ctx context.Context, address string) (hades.HadesClient, fun
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new hades client", zap.Error(err))
 	}
 
 	return hades.NewHadesClient(hadesConnection), func() {

@@ -10,7 +10,9 @@ type ProcessClubPayoutInput struct {
 }
 
 func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error {
+
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -27,6 +29,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 				PayoutId: input.PayoutId,
 			},
 		).Get(ctx, &payload); err != nil {
+			logger.Error("failed to process club payout", "Error", err)
 			return err
 		}
 
@@ -43,6 +46,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 				Error:     *payload.Error,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to add failure to club payout", "Error", err)
 			return err
 		}
 	}
@@ -54,6 +58,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 				PayoutId: input.PayoutId,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to mark club payout failed", "Error", err)
 			return err
 		}
 
@@ -66,6 +71,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to make club payments for payout complete", "Error", err)
 		return err
 	}
 
@@ -78,6 +84,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, &deposit); err != nil {
+		logger.Error("failed to mark club payout deposited", "Error", err)
 		return err
 	}
 
@@ -89,6 +96,7 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			Amount:   deposit.Amount,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to subtract from club balance", "Error", err)
 		return err
 	}
 

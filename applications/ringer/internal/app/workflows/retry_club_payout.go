@@ -14,6 +14,7 @@ type RetryClubPayoutInput struct {
 func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 			PayoutId: input.PayoutId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark club payout processing", "Error", err)
 		return err
 	}
 
@@ -40,6 +42,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to process club payout", "Error", err)
 		return err
 	}
 

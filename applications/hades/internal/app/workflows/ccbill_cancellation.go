@@ -15,6 +15,7 @@ type CCBillCancellationInput struct {
 func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -37,6 +39,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 			CancelledAt:                        input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark account club supporter subscription cancelled", "Error", err)
 		return err
 	}
 
@@ -46,6 +49,7 @@ func CCBillCancellation(ctx workflow.Context, input CCBillCancellationInput) err
 			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account club supporter subscription cancellation notification", "Error", err)
 		return err
 	}
 

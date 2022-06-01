@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"github.com/gocql/gocql"
-	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
@@ -12,6 +11,7 @@ import (
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"

@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	ringer "overdoll/applications/ringer/proto"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
@@ -29,7 +30,7 @@ func NewRingerClient(ctx context.Context, address string) (ringer.RingerClient, 
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new ringer client", zap.Error(err))
 	}
 
 	return ringer.NewRingerClient(ringerConnection), func() {

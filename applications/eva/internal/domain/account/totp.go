@@ -3,6 +3,7 @@ package account
 import (
 	"bytes"
 	"encoding/base64"
+	"go.uber.org/zap"
 	"image/png"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/domainerror"
@@ -37,7 +38,7 @@ func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 	val, err := crypt.Encrypt(secret)
 
 	if err != nil {
-		panic(err)
+		zap.S().Panicw("failed to unmarshal totp", zap.Error(err))
 	}
 
 	return &TOTP{

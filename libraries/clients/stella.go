@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -29,7 +30,7 @@ func NewStellaClient(ctx context.Context, address string) (stella.StellaClient, 
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new stella client", zap.Error(err))
 	}
 
 	return stella.NewStellaClient(stellaConnection), func() {

@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -29,7 +30,7 @@ func NewEvaClient(ctx context.Context, address string) (eva.EvaClient, func()) {
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new eva client", zap.Error(err))
 	}
 
 	return eva.NewEvaClient(evaConnection), func() {

@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
@@ -86,7 +85,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new recovery code set: %v", err)
+		return errors.Wrap(err, "failed to create new recovery code set")
 	}
 
 	return nil

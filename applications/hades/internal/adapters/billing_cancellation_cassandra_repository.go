@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"github.com/gocql/gocql"
-	"github.com/pkg/errors"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )

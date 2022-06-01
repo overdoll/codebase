@@ -27,6 +27,7 @@ type CCBillChargebackInput struct {
 func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -34,6 +35,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -46,6 +48,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &transactionDetails); err != nil {
+		logger.Error("failed to get ccbill transaction details", "Error", err)
 		return err
 	}
 
@@ -66,6 +69,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update chargeback club supporter subscription account transaction", "Error", err)
 		return err
 	}
 
@@ -80,6 +84,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 			Currency:             input.Currency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send new payment deduction", "Error", err)
 		return err
 	}
 
@@ -101,6 +106,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to create club transaction metric", "Error", err)
 		return err
 	}
 

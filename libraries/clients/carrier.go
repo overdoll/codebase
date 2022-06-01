@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -29,7 +30,7 @@ func NewCarrierClient(ctx context.Context, address string) (carrier.CarrierClien
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new carrier client", zap.Error(err))
 	}
 
 	return carrier.NewCarrierClient(carrierConnection), func() {

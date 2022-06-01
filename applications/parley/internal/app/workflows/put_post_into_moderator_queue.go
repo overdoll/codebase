@@ -13,6 +13,7 @@ type PutPostIntoModeratorQueueInput struct {
 func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQueueInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -20,6 +21,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 
 	// get next available moderator
 	if err := workflow.ExecuteActivity(ctx, a.GetNextModerator).Get(ctx, &moderator); err != nil {
+		logger.Error("failed to get next moderator", "Error", err)
 		return err
 	}
 
@@ -29,6 +31,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 			ModeratorId: moderator.ModeratorAccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add post to queue", "Error", err)
 		return err
 	}
 
@@ -45,6 +48,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 				PostId: input.PostId,
 			},
 		).Get(ctx, &hasAssignedModerator); err != nil {
+			logger.Error("failed to check if post is assigned a moderator", "Error", err)
 			return err
 		}
 
@@ -60,6 +64,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 				PostId: input.PostId,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to remove post from moderator queue", "Error", err)
 			return err
 		}
 
@@ -67,6 +72,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 
 		// get next available moderator
 		if err := workflow.ExecuteActivity(ctx, a.GetNextModerator).Get(ctx, &moderator); err != nil {
+			logger.Error("failed to get next moderator", "Error", err)
 			return err
 		}
 
@@ -77,6 +83,7 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 				ModeratorId: moderator.ModeratorAccountId,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to add post to queue", "Error", err)
 			return err
 		}
 	}

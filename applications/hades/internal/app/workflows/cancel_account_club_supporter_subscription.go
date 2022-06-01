@@ -13,6 +13,7 @@ type CancelAccountClubSupporterSubscriptionInput struct {
 func CancelAccountClubSupporterSubscription(ctx workflow.Context, input CancelAccountClubSupporterSubscriptionInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func CancelAccountClubSupporterSubscription(ctx workflow.Context, input CancelAc
 			AccountClubSupporterSubscriptionId: input.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to cancel account club supporter subscription", "Error", err)
 		return err
 	}
 
@@ -32,6 +34,7 @@ func CancelAccountClubSupporterSubscription(ctx workflow.Context, input CancelAc
 			CancellationReasonId:               input.CancellationReasonId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to append cancellation reason", "Error", err)
 		return err
 	}
 

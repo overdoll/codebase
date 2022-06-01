@@ -22,6 +22,7 @@ type ClubTransactionMetricInput struct {
 func ClubTransactionMetric(ctx workflow.Context, input ClubTransactionMetricInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -33,6 +34,7 @@ func ClubTransactionMetric(ctx workflow.Context, input ClubTransactionMetricInpu
 	var gUUID gocql.UUID
 
 	if err := idempotentUUID.Get(&gUUID); err != nil {
+		logger.Error("failed to get idempotent id", "Error", err)
 		return err
 	}
 
@@ -48,6 +50,7 @@ func ClubTransactionMetric(ctx workflow.Context, input ClubTransactionMetricInpu
 			IsChargeback: input.IsChargeback,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create new club transaction metric", "Error", err)
 		return err
 	}
 
@@ -62,6 +65,7 @@ func ClubTransactionMetric(ctx workflow.Context, input ClubTransactionMetricInpu
 				Timestamp: input.Timestamp,
 			},
 		).Get(ctx, &resultPayload); err != nil {
+			logger.Error("failed to check club transaction chargeback metric", "Error", err)
 			return err
 		}
 
@@ -73,6 +77,7 @@ func ClubTransactionMetric(ctx workflow.Context, input ClubTransactionMetricInpu
 					Threshold: resultPayload.ChargebackFloat,
 				},
 			).Get(ctx, nil); err != nil {
+				logger.Error("failed to send club over chargeback threshold notification", "Error", err)
 				return err
 			}
 		}

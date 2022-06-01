@@ -14,6 +14,7 @@ type CCBillExpirationInput struct {
 func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -21,6 +22,7 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -36,6 +38,7 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 			ExpiredAt:                          input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to expire account club supporter subscription", "Error", err)
 		return err
 	}
 
@@ -46,6 +49,7 @@ func CCBillExpiration(ctx workflow.Context, input CCBillExpirationInput) error {
 			ClubId:    subscriptionDetails.ClubId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to remove club supporter", "Error", err)
 		return err
 	}
 

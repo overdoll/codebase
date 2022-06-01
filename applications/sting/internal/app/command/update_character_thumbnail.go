@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 
 	"overdoll/libraries/principal"
@@ -30,7 +29,7 @@ func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateC
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false)
 
 		if err != nil {
-			return errors.Wrap(err, "failed to create or get resources from uploads")
+			return err
 		}
 
 		return character.UpdateThumbnail(cmd.Principal, resourceIds[0])

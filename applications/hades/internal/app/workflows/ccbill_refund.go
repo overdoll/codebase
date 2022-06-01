@@ -27,6 +27,7 @@ type CCBillRefundInput struct {
 func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -34,6 +35,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -47,6 +49,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &transactionDetails); err != nil {
+		logger.Error("failed to get ccbill transaction details", "Error", err)
 		return err
 	}
 
@@ -67,6 +70,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update transaction refunded", "Error", err)
 		return err
 	}
 
@@ -79,6 +83,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Amount:                             input.Amount,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account club supporter subscription refund notification", "Error", err)
 		return err
 	}
 
@@ -93,6 +98,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			Currency:             input.Currency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create new payment deduction", "Error", err)
 		return err
 	}
 
@@ -114,6 +120,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to create new payment deduction", "Error", err)
 		return err
 	}
 

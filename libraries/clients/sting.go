@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -29,7 +30,7 @@ func NewStingClient(ctx context.Context, address string) (sting.StingClient, fun
 	)
 
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to start new sting client", zap.Error(err))
 	}
 
 	return sting.NewStingClient(stingConnection), func() {

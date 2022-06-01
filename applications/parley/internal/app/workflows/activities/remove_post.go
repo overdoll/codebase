@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"github.com/pkg/errors"
 )
 
 type RemovePostInput struct {
@@ -13,7 +12,7 @@ func (h *Activities) RemovePost(ctx context.Context, input RemovePostInput) erro
 
 	// post approved
 	if err := h.sting.RemovePost(ctx, input.PostId); err != nil {
-		return errors.Wrap(err, "failed to remove post")
+		return err
 	}
 
 	return nil

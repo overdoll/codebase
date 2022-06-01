@@ -23,6 +23,7 @@ type ClubPaymentDepositInput struct {
 func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -45,6 +46,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			IsClubSupporterSubscription: input.IsClubSupporterSubscription,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create pending club payment deposit", "Error", err)
 		return err
 	}
 
@@ -54,6 +56,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	if err := workflow.ExecuteActivity(ctx, a.GetClubPaymentDetails,
 		paymentId,
 	).Get(ctx, &pendingPayment); err != nil {
+		logger.Error("failed to get club payment details", "Error", err)
 		return err
 	}
 
@@ -65,11 +68,13 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add to club pending balance", "Error", err)
 		return err
 	}
 
 	// wait until settlement date to settle the payment
 	if err := workflow.Sleep(ctx, pendingPayment.SettlementDate.Sub(workflow.Now(ctx))); err != nil {
+		logger.Error("failed to sleep until settlement date", "Error", err)
 		return err
 	}
 
@@ -79,6 +84,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			PaymentId: paymentId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to make club paymnet ready for payout", "Error", err)
 		return err
 	}
 
@@ -101,6 +107,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to schedule a monthly club payout", "Error", err)
 		return err
 	}
 
@@ -111,6 +118,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to subtract from club pending balance", "Error", err)
 		return err
 	}
 
@@ -122,6 +130,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 			Amount:   pendingPayment.FinalAmount,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add to club balance", "Error", err)
 		return err
 	}
 
