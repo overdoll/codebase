@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -30,7 +31,7 @@ func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string)
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to run publish post workflow")
 	}
 
 	return nil
@@ -48,7 +49,7 @@ func (r EventTemporalRepository) DiscardPost(ctx context.Context, postId string)
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute discard post workflow")
 	}
 
 	return nil
@@ -70,7 +71,7 @@ func (r EventTemporalRepository) DeletePost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute delete post workflow")
 	}
 
 	return nil
@@ -92,7 +93,7 @@ func (r EventTemporalRepository) ArchivePost(ctx context.Context, requester *pri
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute archive post workflow")
 	}
 
 	return nil
@@ -114,7 +115,7 @@ func (r EventTemporalRepository) UnArchivePost(ctx context.Context, requester *p
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute un archive post workflow")
 	}
 
 	return nil
@@ -132,7 +133,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) 
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post workflow")
 	}
 
 	return nil
@@ -151,7 +152,7 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute submit post workflow")
 	}
 
 	return nil
@@ -171,7 +172,7 @@ func (r EventTemporalRepository) AddPostLike(ctx context.Context, like *post.Lik
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute add post like workflow")
 	}
 
 	return nil
@@ -190,7 +191,7 @@ func (r EventTemporalRepository) RemovePostLike(ctx context.Context, like *post.
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post like workflow")
 	}
 
 	return nil
@@ -208,7 +209,7 @@ func (r EventTemporalRepository) DeleteAccountData(ctx context.Context, accountI
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute delete account data workflow")
 	}
 
 	return nil

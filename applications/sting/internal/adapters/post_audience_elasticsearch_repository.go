@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -62,7 +62,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 		Index(AudienceIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -104,9 +104,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search audiences: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed search audiences: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search audiences")
 	}
 
 	var audiences []*post.Audience
@@ -115,10 +113,8 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 		var bd audienceDocument
 
-		err := json.Unmarshal(hit.Source, &bd)
-
-		if err != nil {
-			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
+		if err := json.Unmarshal(hit.Source, &bd); err != nil {
+			return nil, errors.Wrap(err, "failed search audience - unmarshal")
 		}
 
 		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts)
@@ -146,9 +142,7 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return err
+		return errors.Wrap(support.ParseElasticError(err), "failed to index audience")
 	}
 
 	return nil
@@ -194,7 +188,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index audience: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index audience")
 			}
 		}
 

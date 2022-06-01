@@ -3,9 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
@@ -86,7 +84,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		Index(CharacterIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -130,9 +128,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, err
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search characters")
 	}
 
 	var characters []*post.Character
@@ -144,7 +140,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		err := json.Unmarshal(hit.Source, &chr)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to unmarshal character document")
 		}
 
 		newCharacter := post.UnmarshalCharacterFromDatabase(
@@ -232,7 +228,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index characters: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index characters")
 			}
 		}
 

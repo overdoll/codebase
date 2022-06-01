@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -64,9 +64,7 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to index category: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index category")
 	}
 
 	return nil
@@ -78,7 +76,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 		Index(CategoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -120,9 +118,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	response, err := builder.Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search categories: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed to search categories: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search categories")
 	}
 
 	var cats []*post.Category
@@ -134,7 +130,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
+			return nil, errors.Wrap(err, "failed to unmarshal category document")
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(
@@ -192,7 +188,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index categories: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
 			}
 		}
 

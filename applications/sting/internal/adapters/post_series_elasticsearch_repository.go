@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
 
@@ -54,7 +54,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 		Index(SeriesIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -96,9 +96,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed search series: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search series")
 	}
 
 	var meds []*post.Series
@@ -110,7 +108,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 		err := json.Unmarshal(hit.Source, &md)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "failed search series - unmarshal")
 		}
 
 		newMedia := post.UnmarshalSeriesFromDatabase(
@@ -145,9 +143,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to index series: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 	}
 
 	_, err = r.client.UpdateByQuery(CharacterIndexName).
@@ -156,9 +152,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to update index characters: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to update index characters")
 	}
 
 	return nil
@@ -203,7 +197,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index series: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 			}
 		}
 

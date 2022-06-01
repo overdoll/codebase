@@ -2,12 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -92,7 +92,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create post like: %v", err)
+		return errors.Wrap(err, "failed to create post like")
 	}
 
 	return nil
@@ -124,7 +124,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete post like: %v", err)
+		return errors.Wrap(err, "failed to delete post like")
 	}
 
 	return nil
@@ -145,7 +145,7 @@ func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Conte
 			return nil, post.ErrLikeNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get post like by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get post like by id")
 	}
 
 	return post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), nil
@@ -187,7 +187,7 @@ func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx co
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postLikeBucket{LikedAccountId: accountId}).
 		SelectRelease(&pstLike); err != nil {
-		return nil, fmt.Errorf("failed to get post like buckets: %v", err)
+		return nil, errors.Wrap(err, "failed to get post like buckets")
 	}
 
 	var buckets []int
@@ -229,7 +229,7 @@ func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.C
 			WithContext(ctx).
 			BindMap(info).
 			SelectRelease(&postL); err != nil {
-			return nil, fmt.Errorf("failed to get post likes: %v", err)
+			return nil, errors.Wrap(err, "failed to get post likes")
 		}
 
 		for _, l := range postL {

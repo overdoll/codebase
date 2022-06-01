@@ -2,7 +2,7 @@ package adapters
 
 import (
 	"context"
-	"fmt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"strings"
 
@@ -79,7 +79,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx conte
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&categorySlugResults); err != nil {
-		return nil, fmt.Errorf("failed to get category slugs: %v", err)
+		return nil, errors.Wrap(err, "failed to get category slugs")
 	}
 
 	var ids []string
@@ -106,7 +106,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 			return nil, post.ErrCategoryNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get category by slug: %v", err)
+		return nil, errors.Wrap(err, "failed to get category by slug")
 	}
 
 	return r.GetCategoryById(ctx, requester, b.CategoryId)
@@ -129,7 +129,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 		Consistency(gocql.LocalQuorum).
 		Bind(cats).
 		SelectRelease(&categoriesModels); err != nil {
-		return nil, fmt.Errorf("failed to get categories by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get categories by id")
 	}
 
 	for _, cat := range categoriesModels {
@@ -157,7 +157,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx cont
 		WithContext(ctx).
 		BindStruct(categorySlugs{Slug: strings.ToLower(slug), CategoryId: categoryId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to release category slug: %v", err)
+		return errors.Wrap(err, "failed to release category slug")
 	}
 
 	return nil
@@ -182,7 +182,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique category slug: %v", err)
+		return errors.Wrap(err, "failed to create unique category slug")
 	}
 
 	if !applied {
@@ -201,7 +201,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 			return err
 		}
 
-		return err
+		return errors.Wrap(err, "failed to insert category")
 	}
 
 	if err := r.indexCategory(ctx, category); err != nil {
@@ -218,7 +218,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
-			return err
+			return errors.Wrap(err, "failed to delete category")
 		}
 
 		return err
@@ -235,9 +235,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 		return nil, err
 	}
 
-	err = updateFn(category)
-
-	if err != nil {
+	if err = updateFn(category); err != nil {
 		return nil, err
 	}
 
@@ -255,7 +253,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update category: %v", err)
+		return nil, errors.Wrap(err, "failed to update category")
 	}
 
 	if err := r.indexCategory(ctx, category); err != nil {
@@ -296,7 +294,7 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 			return nil, post.ErrCategoryNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get category by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get category by id")
 	}
 
 	return post.UnmarshalCategoryFromDatabase(

@@ -2,9 +2,9 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"overdoll/libraries/errors"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -115,7 +115,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
+func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
@@ -132,7 +132,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context
 		postPending.CategoryIds,
 		postPending.CreatedAt,
 		postPending.PostedAt,
-	), nil
+	)
 }
 
 func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
@@ -149,7 +149,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 		BindStruct(pst).
 		Consistency(gocql.LocalQuorum).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create post: %v", err)
+		return errors.Wrap(err, "failed to create post")
 	}
 
 	if err := r.indexPost(ctx, pending); err != nil {
@@ -161,7 +161,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
-			return err
+			return errors.Wrap(err, "failed to delete post")
 		}
 
 		return err
@@ -178,7 +178,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete post: %v", err)
+		return errors.Wrap(err, "failed to delete post")
 	}
 
 	if err := r.deletePostIndexById(ctx, id); err != nil {
@@ -206,15 +206,11 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 		Consistency(gocql.LocalQuorum).
 		Bind(postIds).
 		SelectRelease(&postsModels); err != nil {
-		return nil, fmt.Errorf("failed to get posts by ids: %v", err)
+		return nil, errors.Wrap(err, "failed to get posts by ids")
 	}
 
 	for _, b := range postsModels {
-		p, err := r.unmarshalPost(ctx, *b)
-		if err != nil {
-			return nil, err
-		}
-		postResults = append(postResults, p)
+		postResults = append(postResults, unmarshalPost(ctx, *b))
 	}
 
 	return postResults, nil
@@ -235,7 +231,7 @@ func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, 
 			return nil, post.ErrNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get post: %v", err)
+		return nil, errors.Wrap(err, "failed to get post")
 	}
 
 	return &postPending, nil
@@ -249,7 +245,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 		return nil, err
 	}
 
-	return r.unmarshalPost(ctx, *postPending)
+	return unmarshalPost(ctx, *postPending), nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {
@@ -263,7 +259,7 @@ func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0}).
 		SelectRelease(&suspendedClub); err != nil {
-		return nil, fmt.Errorf("failed to get suspended clubs: %v", err)
+		return nil, errors.Wrap(err, "failed to get terminated clubs")
 	}
 
 	var ids []string
@@ -283,7 +279,7 @@ func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to add suspended club: %v", err)
+		return errors.Wrap(err, "failed to add terminated club")
 	}
 
 	return nil
@@ -297,7 +293,7 @@ func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete terminated club: %v", err)
+		return errors.Wrap(err, "failed to delete terminated club")
 	}
 
 	return nil
@@ -311,11 +307,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, 
 		return nil, err
 	}
 
-	pst, err := r.unmarshalPost(ctx, *postPending)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := unmarshalPost(ctx, *postPending)
 
 	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
@@ -359,7 +351,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update post: %v", err)
+		return nil, errors.Wrap(err, "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -401,7 +393,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update post: %v", err)
+		return nil, errors.Wrap(err, "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -455,7 +447,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update post: %v", err)
+		return nil, errors.Wrap(err, "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -473,7 +465,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 		return nil, err
 	}
 
-	unmarshalled, err := r.unmarshalPost(ctx, *postPending)
+	unmarshalled := unmarshalPost(ctx, *postPending)
 
 	if err != nil {
 		return nil, err
@@ -494,11 +486,11 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 		ExecCASRelease()
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to update post likes: %v", err)
+		return nil, errors.Wrap(err, "failed to update post likes")
 	}
 
 	if !ok {
-		return nil, fmt.Errorf("failed to update post likes")
+		return nil, errors.New("failed to update post likes")
 	}
 
 	if err := r.indexPost(ctx, unmarshalled); err != nil {

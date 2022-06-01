@@ -2,7 +2,7 @@ package adapters
 
 import (
 	"context"
-	"fmt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"strings"
 
@@ -77,7 +77,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 			return nil, post.ErrSeriesNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get series by slug: %v", err)
+		return nil, errors.Wrap(err, "failed to get series by slug")
 	}
 
 	return &b, nil
@@ -100,7 +100,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&seriesSlugResults); err != nil {
-		return nil, fmt.Errorf("failed to get series slugs: %v", err)
+		return nil, errors.Wrap(err, "failed to get series slugs")
 	}
 
 	var ids []string
@@ -142,7 +142,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 			return nil, post.ErrSeriesNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get media by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get series by id")
 	}
 
 	return post.UnmarshalSeriesFromDatabase(
@@ -173,7 +173,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 		Consistency(gocql.One).
 		Bind(medi).
 		SelectRelease(&mediaModels); err != nil {
-		return nil, fmt.Errorf("failed to get medias by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get series by id")
 	}
 
 	for _, med := range mediaModels {
@@ -197,7 +197,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 		WithContext(ctx).
 		BindStruct(seriesSlug{Slug: strings.ToLower(slug), SeriesId: id}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to release series slug: %v", err)
+		return errors.Wrap(err, "failed to release series slug")
 	}
 
 	return nil
@@ -222,7 +222,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique character slug: %v", err)
+		return errors.Wrap(err, "failed to create unique character slug")
 	}
 
 	if !applied {
@@ -240,7 +240,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 			return err
 		}
 
-		return err
+		return errors.Wrap(err, "failed to insert series")
 	}
 
 	if err := r.indexSeries(ctx, series); err != nil {
@@ -256,7 +256,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 			Consistency(gocql.LocalQuorum).
 			BindStruct(ser).
 			ExecRelease(); err != nil {
-			return err
+			return errors.Wrap(err, "failed to delete series")
 		}
 
 		return err
@@ -289,7 +289,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	if err = updateFn(series); err != nil {
+	if err := updateFn(series); err != nil {
 		return nil, err
 	}
 
@@ -307,7 +307,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update series: %v", err)
+		return nil, errors.Wrap(err, "failed to update series")
 	}
 
 	if err := r.indexSeries(ctx, series); err != nil {
