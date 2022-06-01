@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -22,41 +21,31 @@ type categoryDocument struct {
 	Slug                string            `json:"slug"`
 	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
 
 const CategoryIndexName = "categories"
 
-func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
-
-	parse, err := uuid.Parse(cat.ID())
-
-	if err != nil {
-		return nil, err
-	}
+func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
 
 	return &categoryDocument{
 		Id:                  cat.ID(),
 		Slug:                cat.Slug(),
 		ThumbnailResourceId: cat.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           cat.CreatedAt(),
 		TotalLikes:          cat.TotalLikes(),
 		TotalPosts:          cat.TotalPosts(),
-	}, nil
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
-	cat, err := marshalCategoryToDocument(category)
+	cat := marshalCategoryToDocument(category)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(CategoryIndexName).
 		Id(category.ID()).
@@ -140,6 +129,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 			pst.ThumbnailResourceId,
 			pst.TotalLikes,
 			pst.TotalPosts,
+			pst.CreatedAt,
 		)
 		newCategory.Node = paging.NewNode(hit.Sort)
 
@@ -165,22 +155,16 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 
 		for iter.StructScan(&c) {
 
-			parse, err := uuid.Parse(c.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := categoryDocument{
 				Id:                  c.Id,
 				Slug:                c.Slug,
 				ThumbnailResourceId: c.ThumbnailResourceId,
 				Title:               c.Title,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           c.CreatedAt,
 				TotalLikes:          c.TotalLikes,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(CategoryIndexName).
 				Id(c.Id).

@@ -35,6 +35,7 @@ var clubTable = table.New(table.Metadata{
 		"has_created_supporter_only_post",
 		"terminated",
 		"terminated_by_account_id",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -55,6 +56,7 @@ type clubs struct {
 	HasCreatedSupporterOnlyPost bool              `db:"has_created_supporter_only_post"`
 	Terminated                  bool              `db:"terminated"`
 	TerminatedByAccountId       *string           `db:"terminated_by_account_id"`
+	CreatedAt                   time.Time         `db:"created_at"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -119,7 +121,7 @@ func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *ela
 	return ClubCassandraElasticsearchRepository{session: session, client: client}
 }
 
-func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
+func marshalClubToDatabase(cl *club.Club) *clubs {
 	return &clubs{
 		Id:                          cl.ID(),
 		Slug:                        cl.Slug(),
@@ -135,7 +137,8 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		HasCreatedSupporterOnlyPost: cl.HasCreatedSupporterOnlyPost(),
 		Terminated:                  cl.Terminated(),
 		TerminatedByAccountId:       cl.TerminatedByAccountId(),
-	}, nil
+		CreatedAt:                   cl.CreatedAt(),
+	}
 }
 
 func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx context.Context, suspensionLog *club.SuspensionLog) error {
@@ -300,6 +303,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		b.HasCreatedSupporterOnlyPost,
 		b.Terminated,
 		b.TerminatedByAccountId,
+		b.CreatedAt,
 	), nil
 }
 
@@ -350,6 +354,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			b.HasCreatedSupporterOnlyPost,
 			b.Terminated,
 			b.TerminatedByAccountId,
+			b.CreatedAt,
 		))
 	}
 
@@ -440,7 +445,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 
 	newSlugs := currentClub.SlugAliases()
 
-	pst, err := marshalClubToDatabase(currentClub)
+	pst := marshalClubToDatabase(currentClub)
 
 	newAliasSlugToAdd := ""
 	aliasSlugToRemove := ""
@@ -583,6 +588,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		clb.HasCreatedSupporterOnlyPost,
 		clb.Terminated,
 		clb.TerminatedByAccountId,
+		clb.CreatedAt,
 	)
 
 	if err := updateFn(unmarshalled); err != nil {
@@ -620,11 +626,7 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 		return nil, err
 	}
 
-	pst, err := marshalClubToDatabase(currentClub)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalClubToDatabase(currentClub)
 
 	if err := r.session.
 		Query(clubTable.Update(columns...)).
@@ -702,11 +704,7 @@ func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cl
 }
 func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Context, clb *club.Club) error {
 
-	cla, err := marshalClubToDatabase(clb)
-
-	if err != nil {
-		return err
-	}
+	cla := marshalClubToDatabase(clb)
 
 	if err := r.createUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
 		return err
@@ -717,11 +715,7 @@ func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Con
 
 func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx context.Context, club *club.Club) error {
 
-	cla, err := marshalClubToDatabase(club)
-
-	if err != nil {
-		return err
-	}
+	cla := marshalClubToDatabase(club)
 
 	// if fails, release unique slug
 	if err := r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
@@ -733,11 +727,7 @@ func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx cont
 
 func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
-	cla, err := marshalClubToDatabase(club)
-
-	if err != nil {
-		return err
-	}
+	cla := marshalClubToDatabase(club)
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 

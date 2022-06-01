@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -37,6 +38,9 @@ func NewRawGinRouter() *gin.Engine {
 	router.Use(sentrygin.New(sentrygin.Options{
 		Repanic: true,
 	}))
+
+	// add sentry to our gin middleware using sentry gin
+	router.Use(sentry_support.SentryGinMiddleware())
 
 	return router
 }

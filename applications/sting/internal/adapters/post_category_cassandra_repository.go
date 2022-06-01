@@ -5,6 +5,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"strings"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -22,6 +23,7 @@ var categoryTable = table.New(table.Metadata{
 		"thumbnail_resource_id",
 		"total_likes",
 		"total_posts",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -34,6 +36,7 @@ type category struct {
 	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`
+	CreatedAt           time.Time         `db:"created_at"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -51,7 +54,7 @@ type categorySlugs struct {
 	Slug       string `db:"slug"`
 }
 
-func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
+func marshalCategoryToDatabase(pending *post.Category) *category {
 	return &category{
 		Id:                  pending.ID(),
 		Slug:                pending.Slug(),
@@ -59,7 +62,8 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		ThumbnailResourceId: pending.ThumbnailResourceId(),
 		TotalLikes:          pending.TotalLikes(),
 		TotalPosts:          pending.TotalPosts(),
-	}, nil
+		CreatedAt:           pending.CreatedAt(),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
@@ -140,6 +144,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 			cat.ThumbnailResourceId,
 			cat.TotalLikes,
 			cat.TotalPosts,
+			cat.CreatedAt,
 		))
 	}
 
@@ -165,11 +170,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx cont
 
 func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
 
-	pst, err := marshalCategoryToDatabase(category)
-
-	if err != nil {
-		return err
-	}
+	pst := marshalCategoryToDatabase(category)
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := categorySlugTable.
@@ -239,11 +240,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 		return nil, err
 	}
 
-	pst, err := marshalCategoryToDatabase(category)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalCategoryToDatabase(category)
 
 	if err := r.session.
 		Query(categoryTable.Update(
@@ -304,5 +301,6 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		cat.ThumbnailResourceId,
 		cat.TotalLikes,
 		cat.TotalPosts,
+		cat.CreatedAt,
 	), nil
 }

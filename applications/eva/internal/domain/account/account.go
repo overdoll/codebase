@@ -31,6 +31,8 @@ type Account struct {
 	lastUsernameEdit time.Time
 
 	multiFactorEnabled bool
+
+	createdAt time.Time
 }
 
 var (
@@ -45,7 +47,7 @@ var (
 	ErrAccountIsDeleting      = domainerror.NewValidation("cannot updated account in deleting status")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool, createdAt time.Time) *Account {
 
 	var newRoles []Role
 
@@ -68,6 +70,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, av
 		multiFactorEnabled:          multiFactorEnabled,
 		lastUsernameEdit:            lastUsernameEdit,
 		deleted:                     isDeleted,
+		createdAt:                   createdAt,
 	}
 }
 
@@ -82,6 +85,7 @@ func NewAccount(id, username, email string) (*Account, error) {
 		username:         username,
 		email:            email,
 		lastUsernameEdit: time.Now().Add(time.Duration(-(24 * 30 * 2)) * time.Hour),
+		createdAt:        time.Now(),
 	}, nil
 }
 
@@ -161,6 +165,10 @@ func (a *Account) ScheduledDeletionWorkflowId() *string {
 
 func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
+}
+
+func (a *Account) CreatedAt() time.Time {
+	return a.createdAt
 }
 
 func (a *Account) IsDeleting() bool {
@@ -343,7 +351,7 @@ func validateUsername(username string) error {
 	err := validator.New().Var(username, "required,alphanum,max=25,excludesall= ")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

@@ -74,6 +74,19 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		// introspection is always allowed because these individual services are never actually exposed
 		graphAPIHandler.Use(extension.Introspection{})
 
+		// add sentry data as breadcrumbs
+		graphAPIHandler.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+			oc := graphql.GetOperationContext(ctx)
+			if hub := sentry.GetHubFromContext(ctx); hub != nil {
+				hub.WithScope(func(scope *sentry.Scope) {
+					scope.SetTag("kind", oc.OperationName)
+					scope.SetExtra("query", oc.RawQuery)
+				})
+			}
+
+			return next(ctx)
+		})
+
 		graphAPIHandler.AddTransport(transport.POST{})
 
 		graphAPIHandler.SetQueryCache(lru.New(1000))

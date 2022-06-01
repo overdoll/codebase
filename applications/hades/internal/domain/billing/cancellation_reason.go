@@ -104,7 +104,7 @@ func validateTitle(title string) error {
 	err := validator.New().Var(title, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

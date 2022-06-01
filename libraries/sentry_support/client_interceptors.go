@@ -24,7 +24,7 @@ func UnaryClientInterceptor(opts ...Option) grpc.UnaryClientInterceptor {
 					Type:     "grpc.client",
 					Category: method,
 					Data:     map[string]interface{}{"payload": req},
-				}, 1)
+				}, 10)
 			})
 		}
 
@@ -49,8 +49,7 @@ func StreamClientInterceptor(opts ...Option) grpc.StreamClientInterceptor {
 				scope.AddBreadcrumb(&sentry.Breadcrumb{
 					Type:     "grpc.client",
 					Category: method,
-					Data:     nil,
-				}, 1)
+				}, 10)
 			})
 		}
 

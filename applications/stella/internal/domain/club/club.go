@@ -47,6 +47,8 @@ type Club struct {
 
 	membersCount   int
 	ownerAccountId string
+
+	createdAt time.Time
 }
 
 func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
@@ -63,6 +65,7 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		ownerAccountId:              ownerAccountId,
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		createdAt:                   time.Now(),
 	}
 }
 
@@ -112,10 +115,11 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		ownerAccountId:              requester.AccountId(),
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		createdAt:                   time.Now(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, createdAt time.Time) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -130,6 +134,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		hasCreatedSupporterOnlyPost: hasCreatedSupporterOnlyPost,
 		terminated:                  terminated,
 		terminatedByAccountId:       terminatedByAccountId,
+		createdAt:                   createdAt,
 	}
 }
 
@@ -184,6 +189,10 @@ func (m *Club) TerminatedByAccountId() *string {
 
 func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
+}
+
+func (m *Club) CreatedAt() time.Time {
+	return m.createdAt
 }
 
 func (m *Club) NextSupporterPostTime() *time.Time {

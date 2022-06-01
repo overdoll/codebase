@@ -312,7 +312,8 @@ void (async () => {
 
                   // Log query and variables as extras (make sure to strip out sensitive data!)
                   scope.setExtra('query', ctx.request.query)
-                  scope.setExtra('variables', ctx.request.variables)
+                  // don't log variables as there could very well be sensitive data
+                  // scope.setExtra('variables', ctx.request.variables)
 
                   if (err.path) {
                     // We can also add the path as breadcrumb

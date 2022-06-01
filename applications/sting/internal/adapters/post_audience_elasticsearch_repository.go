@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -25,18 +24,12 @@ type audienceDocument struct {
 	Standard            int               `json:"standard"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 }
 
 const AudienceIndexName = "audience"
 
-func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
-
-	parse, err := uuid.Parse(cat.ID())
-
-	if err != nil {
-		return nil, err
-	}
+func marshalAudienceToDocument(cat *post.Audience) *audienceDocument {
 
 	stnd := 0
 
@@ -49,11 +42,11 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Slug:                cat.Slug(),
 		ThumbnailResourceId: cat.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           cat.CreatedAt(),
 		Standard:            stnd,
 		TotalLikes:          cat.TotalLikes(),
 		TotalPosts:          cat.TotalPosts(),
-	}, nil
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
@@ -117,7 +110,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 			return nil, errors.Wrap(err, "failed search audience - unmarshal")
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt)
 		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)
@@ -128,17 +121,11 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context, audience *post.Audience) error {
 
-	aud, err := marshalAudienceToDocument(audience)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(AudienceIndexName).
 		Id(audience.ID()).
-		BodyJson(aud).
+		BodyJson(marshalAudienceToDocument(audience)).
 		Do(ctx)
 
 	if err != nil {
@@ -164,23 +151,17 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 
 		for iter.StructScan(&m) {
 
-			parse, err := uuid.Parse(m.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := audienceDocument{
 				Id:                  m.Id,
 				Slug:                m.Slug,
 				ThumbnailResourceId: m.ThumbnailResourceId,
 				Title:               m.Title,
 				Standard:            m.Standard,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           m.CreatedAt,
 				TotalLikes:          m.TotalLikes,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(AudienceIndexName).
 				Id(m.Id).

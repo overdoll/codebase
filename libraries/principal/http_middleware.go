@@ -87,7 +87,7 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 							"ClubExtension": clubExtensions,
 						},
 						Level: sentry.LevelInfo,
-					}, 1)
+					}, 10)
 				})
 			}
 		}

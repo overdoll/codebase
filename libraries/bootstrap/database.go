@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/sentry_support"
 	"strings"
 	"time"
 
@@ -25,6 +26,8 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	cluster.Timeout = 20 * time.Second
 	cluster.ConnectTimeout = 20 * time.Second
 	cluster.ReconnectionPolicy = &gocql.ConstantReconnectionPolicy{MaxRetries: 30, Interval: 10 * time.Second}
+	cluster.QueryObserver = &sentry_support.QueryObserver{}
+	cluster.BatchObserver = &sentry_support.BatchObserver{}
 
 	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())

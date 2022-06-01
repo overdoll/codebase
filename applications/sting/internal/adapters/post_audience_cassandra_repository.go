@@ -10,6 +10,7 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
 	"strings"
+	"time"
 )
 
 var audienceTable = table.New(table.Metadata{
@@ -22,6 +23,7 @@ var audienceTable = table.New(table.Metadata{
 		"standard",
 		"total_likes",
 		"total_posts",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -35,6 +37,7 @@ type audience struct {
 	Standard            int               `db:"standard"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`
+	CreatedAt           time.Time         `db:"created_at"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{
@@ -52,7 +55,7 @@ type audienceSlug struct {
 	Slug       string `db:"slug"`
 }
 
-func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
+func marshalAudienceToDatabase(pending *post.Audience) *audience {
 
 	standard := 0
 
@@ -68,7 +71,8 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		ThumbnailResourceId: pending.ThumbnailResourceId(),
 		TotalLikes:          pending.TotalLikes(),
 		TotalPosts:          pending.TotalPosts(),
-	}, nil
+		CreatedAt:           pending.CreatedAt(),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
@@ -151,6 +155,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 			b.Standard,
 			b.TotalLikes,
 			b.TotalPosts,
+			b.CreatedAt,
 		))
 	}
 
@@ -183,6 +188,7 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		b.Standard,
 		b.TotalLikes,
 		b.TotalPosts,
+		b.CreatedAt,
 	), nil
 }
 
@@ -213,6 +219,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 			b.Standard,
 			b.TotalLikes,
 			b.TotalPosts,
+			b.CreatedAt,
 		))
 	}
 
@@ -234,11 +241,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx cont
 
 func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
 
-	aud, err := marshalAudienceToDatabase(audience)
-
-	if err != nil {
-		return err
-	}
+	aud := marshalAudienceToDatabase(audience)
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := audienceSlugTable.
@@ -329,11 +332,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 		return nil, err
 	}
 
-	pst, err := marshalAudienceToDatabase(aud)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalAudienceToDatabase(aud)
 
 	if err := r.session.
 		Query(audienceTable.Update(

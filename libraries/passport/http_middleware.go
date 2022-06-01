@@ -29,7 +29,7 @@ func GinPassportRequestMiddleware() gin.HandlerFunc {
 							"SessionId": pass.SessionID(),
 						},
 						Level: sentry.LevelInfo,
-					}, 1)
+					}, 10)
 				})
 			}
 		}

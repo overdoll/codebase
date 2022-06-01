@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
@@ -24,47 +23,31 @@ type characterDocument struct {
 	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Name                map[string]string `json:"name"`
 	Series              seriesDocument    `json:"series"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
 
 const CharacterIndexName = "characters"
 
-func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-	parse, err := uuid.Parse(char.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	seriesDoc, err := marshalSeriesToDocument(char.Series())
-
-	if err != nil {
-		return nil, err
-	}
-
+func marshalCharacterToDocument(char *post.Character) *characterDocument {
 	return &characterDocument{
 		Id:                  char.ID(),
 		ThumbnailResourceId: char.ThumbnailResourceId(),
 		Name:                localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:                char.Slug(),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           char.CreatedAt(),
 		TotalLikes:          char.TotalLikes(),
 		TotalPosts:          char.TotalPosts(),
-		Series:              *seriesDoc,
-	}, nil
+		Series:              *marshalSeriesToDocument(char.Series()),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Context, character *post.Character) error {
 
-	char, err := marshalCharacterToDocument(character)
+	char := marshalCharacterToDocument(character)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(CharacterIndexName).
 		Id(character.ID()).
@@ -150,6 +133,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 			chr.ThumbnailResourceId,
 			chr.TotalLikes,
 			chr.TotalPosts,
+			chr.CreatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				chr.Series.Id,
 				chr.Series.Slug,
@@ -157,6 +141,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 				chr.Series.ThumbnailResourceId,
 				chr.Series.TotalLikes,
 				chr.Series.TotalPosts,
+				chr.Series.CreatedAt,
 			))
 		newCharacter.Node = paging.NewNode(hit.Sort)
 
@@ -189,24 +174,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				return err
 			}
 
-			parse, err := uuid.Parse(c.Id)
-
-			if err != nil {
-				return err
-			}
-
-			parse2, err := uuid.Parse(m.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := characterDocument{
 				Id:                  c.Id,
 				ThumbnailResourceId: c.ThumbnailResourceId,
 				Name:                c.Name,
 				Slug:                c.Slug,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           c.CreatedAt,
 				TotalLikes:          c.TotalLikes,
 				TotalPosts:          c.TotalPosts,
 				Series: seriesDocument{
@@ -214,13 +187,13 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 					ThumbnailResourceId: m.ThumbnailResourceId,
 					Title:               m.Title,
 					Slug:                m.Slug,
-					CreatedAt:           strconv.FormatInt(parse2.Time().Unix(), 10),
+					CreatedAt:           m.CreatedAt,
 					TotalLikes:          m.TotalLikes,
 					TotalPosts:          c.TotalPosts,
 				},
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(CharacterIndexName).
 				Id(m.Id).

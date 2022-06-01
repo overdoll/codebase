@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -22,30 +21,23 @@ type seriesDocument struct {
 	Slug                string            `json:"slug"`
 	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
 
 const SeriesIndexName = "series"
 
-func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
-
-	parse, err := uuid.Parse(s.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
+func marshalSeriesToDocument(s *post.Series) *seriesDocument {
 	return &seriesDocument{
 		Id:                  s.ID(),
 		Slug:                s.Slug(),
 		ThumbnailResourceId: s.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(s.Title()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           s.CreatedAt(),
 		TotalLikes:          s.TotalLikes(),
 		TotalPosts:          s.TotalPosts(),
-	}, nil
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
@@ -118,6 +110,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 			md.ThumbnailResourceId,
 			md.TotalLikes,
 			md.TotalPosts,
+			md.CreatedAt,
 		)
 		newMedia.Node = paging.NewNode(hit.Sort)
 
@@ -129,13 +122,9 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, series *post.Series) error {
 
-	ss, err := marshalSeriesToDocument(series)
+	ss := marshalSeriesToDocument(series)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(SeriesIndexName).
 		Id(series.ID()).
@@ -174,22 +163,16 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 
 		for iter.StructScan(&m) {
 
-			parse, err := uuid.Parse(m.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := seriesDocument{
 				Id:                  m.Id,
 				Slug:                m.Slug,
 				ThumbnailResourceId: m.ThumbnailResourceId,
 				Title:               m.Title,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           m.CreatedAt,
 				TotalLikes:          m.TotalLikes,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(SeriesIndexName).
 				Id(m.Id).

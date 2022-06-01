@@ -5,6 +5,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"strings"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -23,6 +24,7 @@ var characterTable = table.New(table.Metadata{
 		"series_id",
 		"total_likes",
 		"total_posts",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -36,6 +38,7 @@ type character struct {
 	SeriesId            string            `db:"series_id"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`
+	CreatedAt           time.Time         `db:"created_at"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -55,7 +58,7 @@ type characterSlug struct {
 	Slug        string `db:"slug"`
 }
 
-func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
+func marshalCharacterToDatabase(pending *post.Character) *character {
 	return &character{
 		Id:                  pending.ID(),
 		Slug:                pending.Slug(),
@@ -64,7 +67,8 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 		TotalLikes:          pending.TotalLikes(),
 		TotalPosts:          pending.TotalPosts(),
 		SeriesId:            pending.Series().ID(),
-	}, nil
+		CreatedAt:           pending.CreatedAt(),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
@@ -195,6 +199,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 			char.ThumbnailResourceId,
 			char.TotalLikes,
 			char.TotalPosts,
+			char.CreatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
@@ -202,6 +207,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 				serial.ThumbnailResourceId,
 				serial.TotalLikes,
 				serial.TotalPosts,
+				serial.CreatedAt,
 			),
 		))
 	}
@@ -228,11 +234,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 
 func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
 
-	char, err := marshalCharacterToDatabase(character)
-
-	if err != nil {
-		return err
-	}
+	char := marshalCharacterToDatabase(character)
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := charactersSlugTable.
@@ -318,11 +320,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 		return nil, err
 	}
 
-	pst, err := marshalCharacterToDatabase(char)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalCharacterToDatabase(char)
 
 	if err := r.session.
 		Query(characterTable.Update(
@@ -373,6 +371,7 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		char.ThumbnailResourceId,
 		char.TotalLikes,
 		char.TotalPosts,
+		char.CreatedAt,
 		media,
 	), nil
 }

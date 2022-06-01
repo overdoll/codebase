@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS accounts
     deleted                        boolean,
     last_username_edit             timestamp,
     multi_factor_enabled           boolean,
+    created_at                     timestamp,
     primary key ( id )
 );
 

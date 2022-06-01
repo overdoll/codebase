@@ -5,6 +5,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"strings"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -22,6 +23,7 @@ var seriesTable = table.New(table.Metadata{
 		"thumbnail_resource_id",
 		"total_likes",
 		"total_posts",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -34,6 +36,7 @@ type series struct {
 	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`
+	CreatedAt           time.Time         `db:"created_at"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -51,7 +54,7 @@ type seriesSlug struct {
 	Slug     string `db:"slug"`
 }
 
-func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
+func marshalSeriesToDatabase(pending *post.Series) *series {
 	return &series{
 		Id:                  pending.ID(),
 		Slug:                pending.Slug(),
@@ -59,7 +62,8 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		ThumbnailResourceId: pending.ThumbnailResourceId(),
 		TotalLikes:          pending.TotalLikes(),
 		TotalPosts:          pending.TotalPosts(),
-	}, nil
+		CreatedAt:           pending.CreatedAt(),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
@@ -152,6 +156,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		med.ThumbnailResourceId,
 		med.TotalLikes,
 		med.TotalPosts,
+		med.CreatedAt,
 	), nil
 }
 
@@ -184,6 +189,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 			med.ThumbnailResourceId,
 			med.TotalLikes,
 			med.TotalPosts,
+			med.CreatedAt,
 		))
 	}
 
@@ -205,11 +211,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 
 func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
 
-	ser, err := marshalSeriesToDatabase(series)
-
-	if err != nil {
-		return err
-	}
+	ser := marshalSeriesToDatabase(series)
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := seriesSlugTable.
@@ -293,11 +295,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	pst, err := marshalSeriesToDatabase(series)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalSeriesToDatabase(series)
 
 	if err := r.session.
 		Query(seriesTable.Update(

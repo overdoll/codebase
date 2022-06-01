@@ -81,7 +81,7 @@ func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client)
 	return PostsCassandraElasticsearchRepository{session: session, client: client}
 }
 
-func marshalPostToDatabase(pending *post.Post) (*posts, error) {
+func marshalPostToDatabase(pending *post.Post) *posts {
 
 	var contentResourceIds []string
 	contentSupporterOnly := make(map[string]bool)
@@ -112,7 +112,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		SeriesIds:                       pending.SeriesIds(),
 		CreatedAt:                       pending.CreatedAt(),
 		PostedAt:                        pending.PostedAt(),
-	}, nil
+	}
 }
 
 func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
@@ -137,11 +137,7 @@ func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
 
 func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
-	pst, err := marshalPostToDatabase(pending)
-
-	if err != nil {
-		return err
-	}
+	pst := marshalPostToDatabase(pending)
 
 	if err := r.session.
 		Query(postTable.Insert()).
@@ -336,11 +332,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 		return nil, err
 	}
 
-	pst, err := marshalPostToDatabase(currentPost)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalPostToDatabase(currentPost)
 
 	if err := r.session.
 		Query(postTable.Update(
@@ -379,11 +371,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 		return nil, err
 	}
 
-	pst, err := marshalPostToDatabase(currentPost)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalPostToDatabase(currentPost)
 
 	if err := r.session.
 		Query(postTable.Update(
@@ -433,11 +421,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		return nil, err
 	}
 
-	pst, err := marshalPostToDatabase(currentPost)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalPostToDatabase(currentPost)
 
 	if err := r.session.
 		Query(postTable.Update(

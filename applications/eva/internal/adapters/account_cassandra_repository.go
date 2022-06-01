@@ -34,6 +34,7 @@ var accountTable = table.New(table.Metadata{
 		"deleted",
 		"last_username_edit",
 		"multi_factor_enabled",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -53,6 +54,7 @@ type accounts struct {
 	Deleted                     bool       `db:"deleted"`
 	LastUsernameEdit            time.Time  `db:"last_username_edit"`
 	MultiFactorEnabled          bool       `db:"multi_factor_enabled"`
+	CreatedAt                   time.Time  `db:"created_at"`
 }
 
 var accountUsernameTable = table.New(table.Metadata{
@@ -124,6 +126,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		ScheduledDeletionAt:         usr.ScheduledDeletionAt(),
 		ScheduledDeletionWorkflowId: usr.ScheduledDeletionWorkflowId(),
 		MultiFactorEnabled:          usr.MultiFactorEnabled(),
+		CreatedAt:                   usr.CreatedAt(),
 	}
 }
 
@@ -172,6 +175,7 @@ func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id strin
 		accountInstance.MultiFactorEnabled,
 		accountInstance.LastUsernameEdit,
 		accountInstance.Deleted,
+		accountInstance.CreatedAt,
 	), nil
 }
 
@@ -212,6 +216,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.MultiFactorEnabled,
 			accountInstance.LastUsernameEdit,
 			accountInstance.Deleted,
+			accountInstance.CreatedAt,
 		))
 	}
 
@@ -409,21 +414,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
-		accounts{
-			Id:                          instance.ID(),
-			Username:                    instance.Username(),
-			Email:                       instance.Email(),
-			Roles:                       instance.RolesAsString(),
-			AvatarResourceId:            instance.AvatarResourceId(),
-			Locked:                      instance.Locked(),
-			LockedUntil:                 instance.LockedUntil(),
-			Deleting:                    instance.IsDeleting(),
-			ScheduledDeletionAt:         instance.ScheduledDeletionAt(),
-			ScheduledDeletionWorkflowId: instance.ScheduledDeletionWorkflowId(),
-			Deleted:                     instance.IsDeleted(),
-			LastUsernameEdit:            instance.LastUsernameEdit(),
-			MultiFactorEnabled:          instance.MultiFactorEnabled(),
-		},
+		marshalUserToDatabase(instance),
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -866,7 +857,6 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 			Status:    1,
 		}).
 		ExecRelease(); err != nil {
-
 		if err := r.deleteAccountEmail(ctx, email.AccountId(), email.Email()); err != nil {
 			return err
 		}
