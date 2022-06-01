@@ -2,12 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/payment"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -170,7 +170,7 @@ func (r PaymentCassandraElasticsearchRepository) CreateNewClubPayment(ctx contex
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new club payment: %v", err)
+		return errors.Wrap(err, "failed to create new club payment")
 	}
 
 	if err := r.indexClubPayment(ctx, payment); err != nil {
@@ -192,7 +192,7 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 		if err == gocql.ErrNotFound {
 			return nil, payment.ErrClubPaymentNotFound
 		}
-		return nil, fmt.Errorf("failed to get club payment by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get club payment by id")
 	}
 
 	return payment.UnmarshalClubPaymentFromDatabase(
@@ -242,7 +242,7 @@ func (r PaymentCassandraElasticsearchRepository) GetClubPaymentByAccountTransact
 		WithContext(ctx).
 		BindStruct(clubPayment{AccountTransactionId: accountTransactionId}).
 		GetRelease(&clubPay); err != nil {
-		return nil, fmt.Errorf("failed to get club payment by transaction id: %v", err)
+		return nil, errors.Wrap(err, "failed to get club payment by transaction id")
 	}
 
 	return r.getClubPaymentById(ctx, clubPay.Id)
@@ -262,7 +262,7 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentsCompleted(ctx
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to update club payments completed: %v", err)
+		return errors.Wrap(err, "failed to update club payments completed")
 	}
 
 	if err := r.updateIndexClubPaymentsCompleted(ctx, paymentIds); err != nil {
@@ -286,7 +286,7 @@ func (r PaymentCassandraElasticsearchRepository) RemoveClubPaymentsFromClubReady
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to remove club payments from ready list: %v", err)
+		return errors.Wrap(err, "failed to remove club payments from ready list")
 	}
 
 	return nil
@@ -314,7 +314,7 @@ func (r PaymentCassandraElasticsearchRepository) updateClubPayment(ctx context.C
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club payment status: %v", err)
+		return nil, errors.Wrap(err, "failed to update club payment status")
 	}
 
 	if err := r.indexClubPayment(ctx, pay); err != nil {
@@ -342,7 +342,7 @@ func (r PaymentCassandraElasticsearchRepository) AddClubPaymentToClubReadyList(c
 			},
 		).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to add club payment to club ready list: %v", err)
+		return errors.Wrap(err, "failed to add club payment to club ready list")
 	}
 
 	return nil
@@ -391,7 +391,7 @@ func (r PaymentCassandraElasticsearchRepository) ScanClubReadyPaymentsList(ctx c
 	}
 
 	if err := scanner.Err(); err != nil {
-		return err
+		return errors.Wrap(err, "failed to ScanClubReadyPaymentsList")
 	}
 
 	return nil
@@ -431,7 +431,7 @@ func (r PaymentCassandraElasticsearchRepository) AddClubPaymentsToPayout(ctx con
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return fmt.Errorf("failed to append new club payment to payout: %v", err)
+			return errors.Wrap(err, "failed to append new club payment to payout")
 		}
 
 		// update our index to reflect changes
@@ -480,7 +480,7 @@ func (r PaymentCassandraElasticsearchRepository) ScanClubPaymentsListForPayout(c
 	}
 
 	if err := scanner.Err(); err != nil {
-		return err
+		return errors.Wrap(err, "failed to ScanClubPaymentsListForPayout")
 	}
 
 	if err := scanFn(ids); err != nil {
@@ -510,7 +510,7 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPlatformFee(ctx conte
 			Percent: pay.Percent(),
 		}).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club platform fee: %v", err)
+		return nil, errors.Wrap(err, "failed to update club platform fee")
 	}
 
 	return pay, nil
@@ -530,7 +530,7 @@ func (r PaymentCassandraElasticsearchRepository) getPlatformFeeForClub(ctx conte
 			return payment.NewDefaultPlatformFee(clubId)
 		}
 
-		return nil, fmt.Errorf("failed to get platform fee for club: %v", err)
+		return nil, errors.Wrap(err, "failed to get platform fee for club")
 	}
 
 	return payment.UnmarshalClubPlatformFeeFromDatabase(platformFee.ClubId, platformFee.Percent), nil

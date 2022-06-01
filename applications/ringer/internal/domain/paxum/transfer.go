@@ -1,8 +1,8 @@
 package paxum
 
 import (
-	"errors"
 	"fmt"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 )
 
@@ -17,7 +17,7 @@ type Transfer struct {
 
 func NewTransfer(payoutId string, clubName, email, firstName, lastName string, amount uint64, currency money.Currency) (*Transfer, error) {
 	if currency != money.USD {
-		return nil, errors.New("invalid currency")
+		return nil, domainerror.NewValidation("invalid currency")
 	}
 
 	return &Transfer{

@@ -1,7 +1,7 @@
 package balance
 
 import (
-	"github.com/pkg/errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -38,7 +38,7 @@ func (b *ClubBalance) Amount() int64 {
 func (b *ClubBalance) Add(amount uint64, currency money.Currency) error {
 
 	if currency != b.currency {
-		return errors.New("invalid currency passed")
+		return domainerror.NewValidation("invalid currency passed")
 	}
 
 	b.amount += int64(amount)
@@ -49,7 +49,7 @@ func (b *ClubBalance) Add(amount uint64, currency money.Currency) error {
 func (b *ClubBalance) Deduct(amount uint64, currency money.Currency) error {
 
 	if currency != b.currency {
-		return errors.New("invalid currency passed")
+		return domainerror.NewValidation("invalid currency passed")
 	}
 
 	b.amount -= int64(amount)

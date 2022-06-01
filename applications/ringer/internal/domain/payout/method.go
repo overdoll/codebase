@@ -1,6 +1,8 @@
 package payout
 
-import "errors"
+import (
+	"overdoll/libraries/domainerror"
+)
 
 type Method struct {
 	slug string
@@ -21,5 +23,5 @@ func MethodFromString(s string) (Method, error) {
 		return Paxum, nil
 	}
 
-	return UnknownKind, errors.New("unknown method: " + s)
+	return UnknownKind, domainerror.NewValidation("unknown method: " + s)
 }

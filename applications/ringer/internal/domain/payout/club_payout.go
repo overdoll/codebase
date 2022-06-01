@@ -1,7 +1,7 @@
 package payout
 
 import (
-	"errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrClubPayoutNotFound = errors.New("club payout not found")
+	ErrClubPayoutNotFound = domainerror.NewValidation("club payout not found")
 )
 
 type ClubPayout struct {
@@ -173,7 +173,7 @@ func (p *ClubPayout) CanCancel(requester *principal.Principal) error {
 	}
 
 	if p.status != Queued {
-		return errors.New("can only cancel a queued payout")
+		return domainerror.NewValidation("can only cancel a queued payout")
 	}
 
 	return nil
@@ -186,7 +186,7 @@ func (p *ClubPayout) CanRetry(requester *principal.Principal) error {
 	}
 
 	if p.status != Failed {
-		return errors.New("can only retry a failed payout")
+		return domainerror.NewValidation("can only retry a failed payout")
 	}
 
 	return nil
@@ -199,7 +199,7 @@ func (p *ClubPayout) CanUpdateDepositDate(requester *principal.Principal) error 
 	}
 
 	if p.status != Queued {
-		return errors.New("can only delay a queued payout")
+		return domainerror.NewValidation("can only delay a queued payout")
 	}
 
 	return nil

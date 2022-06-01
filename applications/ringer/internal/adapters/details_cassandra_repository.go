@@ -2,12 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -45,7 +45,7 @@ func (r DetailsCassandraRepository) DeleteAccountDetailsOperator(ctx context.Con
 		WithContext(ctx).
 		BindStruct(accountDetails{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account details: %v", err)
+		return errors.Wrap(err, "failed to delete account details")
 	}
 
 	return nil
@@ -65,25 +65,25 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 			return nil, details.ErrAccountDetailsNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get account details: %v", err)
+		return nil, errors.Wrap(err, "failed to get account details")
 	}
 
 	decryptedFirstName, err := crypt.Decrypt(accDetails.FirstName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt first name")
 	}
 
 	decryptedLastName, err := crypt.Decrypt(accDetails.LastName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt last name")
 	}
 
 	decryptedCountry, err := crypt.Decrypt(accDetails.CountryOfResidence)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt country of residence")
 	}
 
 	return details.UnmarshalAccountDetailsFromDatabase(accDetails.AccountId, decryptedFirstName, decryptedLastName, decryptedCountry), nil
@@ -124,19 +124,19 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 	encryptedFirstName, err := crypt.Encrypt(detail.FirstName())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt first name")
 	}
 
 	encryptedLastName, err := crypt.Encrypt(detail.LastName())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt last name")
 	}
 
 	encryptedCountry, err := crypt.Encrypt(detail.Country().Alpha3())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt country of residence")
 	}
 
 	if err := r.session.
@@ -149,7 +149,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 			CountryOfResidence: encryptedCountry,
 		}).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account details: %v", err)
+		return nil, errors.Wrap(err, "failed to update account details")
 	}
 
 	return detail, nil

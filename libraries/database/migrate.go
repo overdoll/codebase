@@ -31,7 +31,7 @@ func createMigrate(config MigrateConfig) *cobra.Command {
 					q := session.ContextQuery(ctx, config.Keyspace, nil).RetryPolicy(nil)
 
 					if err := q.ExecRelease(); err != nil {
-						zap.S().Fatal("could not create keyspace", zap.Error(err))
+						zap.S().Fatalw("could not create keyspace", zap.Error(err))
 					}
 				}
 			}
@@ -41,7 +41,7 @@ func createMigrate(config MigrateConfig) *cobra.Command {
 			migrate.Callback = config.MigrationCallbacks.Callback
 
 			if err := migrate.FromFS(context.Background(), session, config.MigrationFiles); err != nil {
-				zap.S().Fatal("migrations failed", zap.Error(err))
+				zap.S().Fatalw("migrations failed", zap.Error(err))
 			}
 
 			zap.S().Info("migrations successfully completed!")

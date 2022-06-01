@@ -16,7 +16,7 @@ func (h *Activities) AccountDeletionBegin(ctx context.Context, input AccountDele
 	var err error
 	defer sentry_support.CaptureActivityError(ctx, err)
 
-	if err = h.carrier.AccountDeletionBegin(ctx, input.AccountId, input.DeletionDate); err != nil {
+	if err := h.carrier.AccountDeletionBegin(ctx, input.AccountId, input.DeletionDate); err != nil {
 		return err
 	}
 

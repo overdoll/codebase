@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/ringer/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -20,7 +21,7 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) (*club.Club,
 	res, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "stella: failed to get club by id")
 	}
 
 	return club.UnmarshalClubFromDatabase(clubId, res.Club.Slug, res.Club.Name, res.Club.IsSuspended, res.Club.OwnerAccountId), nil
@@ -31,7 +32,7 @@ func (s StellaGrpc) GetAccountClubPrincipalExtension(ctx context.Context, accoun
 	md, err := s.client.GetAccountClubDigest(ctx, &stella.GetAccountClubDigestRequest{AccountId: accountId})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "stella: failed to get account club digest")
 	}
 
 	return principal.NewClubExtension(md)

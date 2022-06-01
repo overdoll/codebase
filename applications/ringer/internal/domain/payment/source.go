@@ -1,6 +1,8 @@
 package payment
 
-import "errors"
+import (
+	"overdoll/libraries/domainerror"
+)
 
 type Source struct {
 	slug string
@@ -21,5 +23,5 @@ func SourceFromString(s string) (Source, error) {
 		return ClubSupporterSubscription, nil
 	}
 
-	return Unknown, errors.New("unknown source: " + s)
+	return Unknown, domainerror.NewValidation("unknown source: " + s)
 }

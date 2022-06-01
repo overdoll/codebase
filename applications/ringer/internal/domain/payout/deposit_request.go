@@ -1,7 +1,7 @@
 package payout
 
 import (
-	"errors"
+	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrDepositRequestNotFound = errors.New("deposit request not found")
+	ErrDepositRequestNotFound = domainerror.NewValidation("deposit request not found")
 )
 
 type DepositRequest struct {
@@ -101,7 +101,7 @@ func (p *DepositRequest) CanView(requester *principal.Principal) error {
 func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount uint64, currency money.Currency) error {
 
 	if p.currency != currency {
-		return errors.New("deposit cannot take this currency type")
+		return domainerror.NewValidation("deposit cannot take this currency type")
 	}
 
 	foundPayout := false
@@ -114,7 +114,7 @@ func (p *DepositRequest) AppendPayoutAndAmount(payoutId string, amount uint64, c
 	}
 
 	if foundPayout {
-		return errors.New("cannot append payout and amount for existing payout")
+		return domainerror.NewValidation("cannot append payout and amount for existing payout")
 	}
 
 	if p.accountPayoutMethodKind == Paxum {

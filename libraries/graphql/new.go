@@ -26,11 +26,14 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		graphAPIHandler.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
 
 			defaultMessage := ""
+			isSafeToView := false
 
 			switch e.(type) {
 			case *domainerror.Validation:
+				isSafeToView = true
 				defaultMessage = "validation error"
 			case *domainerror.Authorization:
+				isSafeToView = true
 				defaultMessage = "not authorized"
 			default:
 				zap.S().Errorw("resolver error", zap.Error(e))
@@ -45,10 +48,10 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			err := graphql.DefaultErrorPresenter(ctx, e)
 
-			if !support.IsDebug() {
-				err.Message = defaultMessage
-			} else {
+			if isSafeToView || support.IsDebug() {
 				err.Message = defaultMessage + ": " + err.Message
+			} else {
+				err.Message = defaultMessage
 			}
 
 			return err

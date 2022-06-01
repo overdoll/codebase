@@ -3,6 +3,7 @@ package sentry_support
 import (
 	"context"
 	"github.com/getsentry/sentry-go"
+	"time"
 )
 
 func CaptureActivityError(ctx context.Context, err error) {
@@ -17,6 +18,8 @@ func CaptureActivityError(ctx context.Context, err error) {
 		if err != nil {
 			hub.CaptureException(err)
 		}
+
+		defer hub.Flush(time.Second * 2)
 
 	}
 

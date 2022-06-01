@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -10,6 +9,7 @@ import (
 	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/balance"
 	"overdoll/applications/ringer/internal/domain/payment"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 )
@@ -65,7 +65,7 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 			return balance.NewDefaultBalance(clubId)
 		}
 
-		return nil, fmt.Errorf("failed to get balance for club: %v", err)
+		return nil, errors.Wrap(err, "failed to get balance for club")
 	}
 
 	if err := canViewSensitive(ctx, requester, clubId); err != nil {
@@ -92,7 +92,7 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 		WithContext(ctx).
 		BindStruct(clubPayment{Id: paymentId}).
 		GetRelease(&clubPay); err != nil {
-		return nil, fmt.Errorf("failed to get club payment by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get club payment by id")
 	}
 
 	return payment.UnmarshalClubPaymentFromDatabase(
@@ -127,7 +127,7 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 		GetRelease(&b)
 
 	if err != nil && err != gocql.ErrNotFound {
-		return fmt.Errorf("failed to get club balance: %v", err)
+		return errors.Wrap(err, "failed to get club balance")
 	}
 
 	if err == gocql.ErrNotFound {
@@ -148,11 +148,11 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 			ExecCASRelease()
 
 		if err != nil {
-			return fmt.Errorf("failed to create club balance: %v", err)
+			return errors.Wrap(err, "failed to create club balance")
 		}
 
 		if !applied {
-			return fmt.Errorf("failed to insert unique club balance: %v", err)
+			return errors.New("failed to insert unique club balance")
 		}
 	}
 
@@ -172,11 +172,11 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to update balance: %v", err)
+		return errors.Wrap(err, "failed to update balance")
 	}
 
 	if !ok {
-		return fmt.Errorf("failed to execute transaction to update balance: %v", err)
+		return errors.Wrap(err, "failed to execute transaction to update balance")
 	}
 
 	return nil

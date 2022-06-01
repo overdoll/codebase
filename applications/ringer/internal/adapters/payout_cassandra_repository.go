@@ -3,8 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -12,6 +10,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -181,7 +180,7 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 		})
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to marshal club payout event")
 		}
 
 		events = append(events, string(data))
@@ -216,7 +215,7 @@ func (r PayoutCassandraElasticsearchRepository) UpdateAccountPayoutMethod(ctx co
 		}).
 		ExecRelease(); err != nil {
 
-		return fmt.Errorf("failed to update account payout method: %v", err)
+		return errors.Wrap(err, "failed to update account payout method")
 	}
 
 	return nil
@@ -235,7 +234,7 @@ func (r PayoutCassandraElasticsearchRepository) deleteAccountPayoutMethod(ctx co
 			AccountId: payoutMethodId,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account payout method: %v", err)
+		return errors.Wrap(err, "failed to delete account payout method")
 	}
 
 	return nil
@@ -281,7 +280,7 @@ func (r PayoutCassandraElasticsearchRepository) GetAccountPayoutMethodByIdOperat
 			return nil, payout.ErrAccountPayoutMethodNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get account payout method by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get account payout method by id")
 	}
 
 	return payout.UnmarshalAccountPayoutMethodFromDatabase(accountPayout.AccountId, accountPayout.Method, accountPayout.PaxumEmail), nil
@@ -298,7 +297,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 		GetRelease(&lockedPay)
 
 	if err != nil && err != gocql.ErrNotFound {
-		return fmt.Errorf("failed to get club locked payout: %v", err)
+		return errors.Wrap(err, "failed to get club locked payout")
 	}
 
 	if err == nil {
@@ -318,11 +317,11 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 			ExecCASRelease()
 
 		if err != nil {
-			return fmt.Errorf("failed to lock club payout: %v", err)
+			return errors.Wrap(err, "failed to lock club payout")
 		}
 
 		if !applied {
-			return fmt.Errorf("failed to lock club payout")
+			return errors.New("failed to lock club payout")
 		}
 	}
 
@@ -338,7 +337,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
 
-		return fmt.Errorf("failed to insert club payout: %v", err)
+		return errors.Wrap(err, "failed to insert club payout")
 	}
 
 	if err := r.indexClubPayout(ctx, payout); err != nil {
@@ -378,7 +377,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 			return nil, payout.ErrClubPayoutNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get club payout by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get club payout by id")
 	}
 
 	var events []*payout.ClubPayoutEvent
@@ -387,7 +386,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		var unmarshal clubPayoutEvent
 
 		if err := json.Unmarshal([]byte(event), &unmarshal); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to unmarshal club payout event")
 		}
 
 		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
@@ -437,7 +436,7 @@ func (r PayoutCassandraElasticsearchRepository) updateClubPayout(ctx context.Con
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club payout: %v", err)
+		return nil, errors.Wrap(err, "failed to update club payout")
 	}
 
 	if err := r.indexClubPayout(ctx, pay); err != nil {
@@ -461,7 +460,7 @@ func (r PayoutCassandraElasticsearchRepository) UpdateClubPayoutStatus(ctx conte
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubLockedPayout{ClubId: pay.ClubId()}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to release payout lock: %v", err)
+			return nil, errors.Wrap(err, "failed to release payout lock")
 		}
 	}
 
@@ -494,7 +493,7 @@ func (r PayoutCassandraElasticsearchRepository) CanInitiateClubPayout(ctx contex
 			return nil
 		}
 
-		return fmt.Errorf("failed to get payout lock: %v", err)
+		return errors.Wrap(err, "failed to get payout lock")
 	}
 
 	return errors.New("payout is locked - an existing payout is already pending")
@@ -526,11 +525,11 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique deposit request for month: %v", err)
+		return errors.Wrap(err, "failed to create unique deposit request for month")
 	}
 
 	if !applied {
-		return fmt.Errorf("failed to create unique deposit request for month")
+		return errors.Wrap(err, "failed to create unique deposit request for month")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
@@ -557,7 +556,7 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new deposit request: %v", err)
+		return errors.Wrap(err, "failed to create new deposit request")
 	}
 
 	return nil
@@ -576,7 +575,7 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestById(ctx contex
 			return nil, payout.ErrDepositRequestNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get deposit request by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get deposit request by id")
 	}
 
 	return &deposit, nil
@@ -593,7 +592,7 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestBuckets(ctx con
 			Init: 0,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to get deposit request buckets: %v", err)
+		return nil, errors.Wrap(err, "failed to get deposit request buckets")
 	}
 
 	var final []int
@@ -672,7 +671,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequests(ctx context.C
 			WithContext(ctx).
 			BindMap(info).
 			SelectRelease(&results); err != nil {
-			return nil, fmt.Errorf("failed to search deposit requests %v", err)
+			return nil, errors.Wrap(err, "failed to search deposit requests")
 		}
 
 		for _, request := range results {
@@ -712,7 +711,7 @@ func (r PayoutCassandraElasticsearchRepository) GetDepositRequestsForMonth(ctx c
 		WithContext(ctx).
 		BindStruct(&depositRequests{Bucket: bucket.MakeMonthlyBucketFromTimestamp(time)}).
 		SelectRelease(&results); err != nil {
-		return nil, fmt.Errorf("failed to search deposit requests %v", err)
+		return nil, errors.Wrap(err, "failed to search deposit requests")
 	}
 
 	for _, request := range results {
@@ -781,11 +780,11 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 		ExecCASRelease()
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to update deposit request: %v", err)
+		return nil, errors.Wrap(err, "failed to update deposit request")
 	}
 
 	if !applied {
-		return nil, fmt.Errorf("failed to update deposit request")
+		return nil, errors.New("failed to update deposit request")
 	}
 
 	applied, err = depositRequestsByMonthTable.UpdateBuilder(columns...).
@@ -797,11 +796,11 @@ func (r PayoutCassandraElasticsearchRepository) UpdateDepositRequestAmount(ctx c
 		ExecCASRelease()
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to update deposit request by month: %v", err)
+		return nil, errors.Wrap(err, "failed to update deposit request by month")
 	}
 
 	if !applied {
-		return nil, fmt.Errorf("failed to update deposit request by month")
+		return nil, errors.New("failed to update deposit request by month")
 	}
 
 	return depositRequest, nil
