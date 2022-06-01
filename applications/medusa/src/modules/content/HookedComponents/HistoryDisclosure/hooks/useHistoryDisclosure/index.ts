@@ -42,10 +42,13 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
   const router = useRouter()
 
   const onOpen = (): void => {
+    // TODO doing a push wont add to the history stack
+    // void router.push(router.asPath, undefined, { shallow: true })
     onOpenAction()
     /*
     const extractedHash = router.asPath.split('#')?.[1]
     if (extractedHash?.includes(defineHash)) return
+
     void router.push({
       pathname: router.pathname,
       hash: defineHash,
@@ -84,7 +87,11 @@ export default function useHistoryDisclosure (props: UseHistoryDisclosureProps =
   // When it detects that the user clicked the Back button and the modal
   // is still open, it will close the modal for the user
   useUpdateEffect(() => {
-    router.beforePopState(() => {
+    router.beforePopState(({
+      url,
+      as,
+      options
+    }) => {
       if (isOpen) {
         onCloseAction()
       }

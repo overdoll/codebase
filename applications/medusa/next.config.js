@@ -80,7 +80,8 @@ module.exports = withBundleAnalyzer({
     ignoreDuringBuilds: true
   },
   images: {
-    domains: ['dcd9vpqfvvgum.cloudfront.net']
+    domains: ['dcd9vpqfvvgum.cloudfront.net'],
+    minimumCacheTTL: 60
   },
   webpack: (config) => {
     config.module.rules.push({

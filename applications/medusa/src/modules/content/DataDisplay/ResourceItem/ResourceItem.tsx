@@ -52,7 +52,7 @@ export default function ResourceItem ({
       {...rest}
     >
       {data.type === 'IMAGE' &&
-        <ImageSnippet query={data} />}
+        <ImageSnippet cover query={data} />}
       {data.type === 'VIDEO' &&
         <VideoSnippet query={data} />}
     </Flex>

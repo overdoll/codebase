@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:34
+#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:38
 msgid "ARCHIVED"
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:40
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:42
 msgid "DRAFT"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:54
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:56
 msgid "Edit Draft"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "In Review"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/ClubPosts.tsx:86
+#: src/domain/club/posts/RootClubPosts/ClubPosts/ClubPosts.tsx:87
 msgid "No posts found"
 msgstr ""
 
@@ -46,11 +46,11 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/RemovedPost/RemovedPost.tsx:35
+#: src/domain/club/posts/RootClubPosts/ClubPosts/RemovedPost/RemovedPost.tsx:34
 msgid "REMOVED"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:35
+#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:34
 #: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:89
 msgid "Rejected"
 msgstr ""

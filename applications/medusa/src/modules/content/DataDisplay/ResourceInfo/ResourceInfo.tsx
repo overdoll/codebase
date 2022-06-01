@@ -35,7 +35,7 @@ export default function ResourceInfo ({
   }
 
   return (
-    <Flex h='100%' position='relative'>
+    <Flex w='100%' h='100%' position='relative'>
       <ResourceItem seed={data.id} query={data.resource} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
         <Stack align='center' spacing={1}>

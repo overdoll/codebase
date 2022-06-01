@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-06-01 15:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/RootDeleteAccountSettings.tsx:38
+msgid "Back to Profile Settings"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/CancelAccountDeletionButton/CancelAccountDeletionButton.tsx:68
+msgid "Cancel Account Deletion"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountForm/DeleteAccountForm.tsx:127
+msgid "Confirm Delete Account"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:113
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/RootDeleteAccountSettings.tsx:44
+msgid "Delete Account"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:49
+msgid "If you are no longer using your account and would like to delete it, you may do so from this page. We will honor your request and schedule a deletion on your account."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:88
+msgid "My Subscriptions"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountForm/DeleteAccountForm.tsx:70
+msgid "Please enter the required hint"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountForm/DeleteAccountForm.tsx:108
+msgid "Please type <0>{validString}</0> into the input below to confirm that you would like to delete your account."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/CancelAccountDeletionButton/CancelAccountDeletionButton.tsx:59
+msgid "There was an error cancelling the deletion of your account"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountForm/DeleteAccountForm.tsx:98
+msgid "There was an error deleting your account"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:102
+msgid "You cannot delete your account because you currently own a club. Please contact hello@overdoll.com to have your club terminated."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:77
+msgid "You cannot delete your account until you cancel your subscriptions and wait for them to expire"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/CancelAccountDeletionButton/CancelAccountDeletionButton.tsx:53
+msgid "You have cancelled the deletion of your account"
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:133
+msgid "You have requested to delete your account. Unless you cancel the action, your account is scheduled to be deleted on {scheduledDeletion}."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:61
+msgid "You may cancel the deletion of your account at any time before the scheduled deletion date."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:55
+msgid "You will receive a confirmation email and then one more reminder email before your account is fully deleted. This is to ensure that you are the one that actually requested the deletion."
+msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountForm/DeleteAccountForm.tsx:92
+msgid "Your account has been successfully scheduled for deletion"
+msgstr ""

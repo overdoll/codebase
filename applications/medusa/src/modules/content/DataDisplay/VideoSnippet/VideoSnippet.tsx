@@ -3,6 +3,7 @@ import { useFragment } from 'react-relay'
 import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
+import { Box } from '@chakra-ui/react'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   innerRef?: () => void
@@ -14,8 +15,6 @@ const Fragment = graphql`
     videoThumbnail {
       url
     }
-    width
-    height
   }
 `
 
@@ -26,14 +25,19 @@ export default function VideoSnippet ({
   const data = useFragment(Fragment, query)
 
   return (
-    <NextImage
-      alt='thumbnail'
-      width={data.width as any ?? undefined}
-      height={data.height as any ?? undefined}
-      layout={data?.width == null && data?.height == null ? 'fill' : undefined}
-      objectFit={'cover' as any}
-      src={data?.videoThumbnail?.url ?? ''}
-      {...rest}
-    />
+    <Box
+      w='100%'
+      h='100%'
+      position='relative'
+    >
+      <NextImage
+        alt='thumbnail'
+        layout='fill'
+        objectFit='cover'
+        objectPosition='50% 50%'
+        src={data?.videoThumbnail?.url ?? ''}
+        {...rest}
+      />
+    </Box>
   )
 }

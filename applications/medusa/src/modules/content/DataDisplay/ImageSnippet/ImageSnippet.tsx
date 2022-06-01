@@ -7,6 +7,7 @@ import { ImageProps } from 'next/image'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   query: ImageSnippetFragment$key | null
+  cover?: boolean
 }
 
 const Fragment = graphql`
@@ -22,12 +23,16 @@ const Fragment = graphql`
 
 export default function ImageSnippet ({
   query,
+  cover,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
     <Box
+      w='100%'
+      h='100%'
+      position={cover === true ? 'relative' : 'static'}
       as='picture'
     >
       {data?.urls.map((item, index) =>
@@ -37,15 +42,15 @@ export default function ImageSnippet ({
             srcSet={item.url}
             type={item.mimeType}
           />
-        ),
+        )
       )}
       <NextImage
         alt='thumbnail'
-        quality={100}
-        width={data?.width as any ?? undefined}
-        height={data?.height as any ?? undefined}
-        layout={(data?.width == null && data?.height == null) ? 'fill' : undefined}
-        objectFit={'cover' as any}
+        width={cover === true ? undefined : data?.width}
+        height={cover === true ? undefined : data?.height}
+        layout={cover === true ? 'fill' : 'intrinsic'}
+        objectFit='cover'
+        objectPosition='50% 50%'
         src={data?.urls[data?.urls.length - 1]?.url ?? data?.urls[data?.urls.length - 2]?.url ?? ''}
         {...rest}
       />

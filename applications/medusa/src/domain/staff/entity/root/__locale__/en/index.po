@@ -1,0 +1,134 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-06-01 15:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:136
+msgid "Audiences"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:202
+msgid "Cancellation Reasons"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:103
+msgid "Categories"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:37
+msgid "Characters"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:145
+msgid "Create Audience"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:211
+msgid "Create Cancellation Reason"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:112
+msgid "Create Category"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:46
+msgid "Create Character"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:178
+msgid "Create Rule"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:79
+msgid "Create Series"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:214
+msgid "Create a cancellation reason"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:115
+msgid "Create a category"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:49
+msgid "Create a character"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:181
+msgid "Create a rule"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:82
+msgid "Create a series"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:148
+msgid "Create an audience"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:169
+msgid "Rules"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:156
+msgid "Search Audiences"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:222
+msgid "Search Cancellation Reasons"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:123
+msgid "Search Categories"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:57
+msgid "Search Characters"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:189
+msgid "Search Rules"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:90
+msgid "Search Series"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:159
+msgid "Search or manage audiences"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:225
+msgid "Search or manage cancellation reasons"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:126
+msgid "Search or manage categories"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:60
+msgid "Search or manage characters"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:192
+msgid "Search or manage rules"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:93
+msgid "Search or manage series"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:70
+msgid "Series"
+msgstr ""

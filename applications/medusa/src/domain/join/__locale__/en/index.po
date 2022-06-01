@@ -13,23 +13,23 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:91
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:84
 msgid "A recovery code can only contain numbers and letters"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:90
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:83
 msgid "A recovery code must be 8 characters long"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:125
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:121
 msgid "A recovery code was successfully used up to log you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:183
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:175
 msgid "An 8-character recovery code"
 msgstr ""
 
-#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:86
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:83
 msgid "Cancel"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 #~ msgid "Code"
 #~ msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:68
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:52
 msgid "Collect paid supporter revenue"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 #~ msgid "Confirm Cancel Join"
 #~ msgstr ""
 
-#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:100
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:97
 msgid "Confirm Join Cancellation"
 msgstr ""
 
@@ -54,15 +54,15 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:116
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:102
 msgid "Create a personalized content feed"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:61
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:45
 msgid "Creating adult digital content"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:139
+#: src/domain/join/Join/pages/Register/Register.tsx:134
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand both our <1>Terms of Service</1>  and  <2>Privacy Policy</2>, which also stipulate you must be at least 18 years of age to register."
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Enter a username"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:165
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:157
 msgid "Enter an 8-character recovery code"
 msgstr ""
 
@@ -86,37 +86,35 @@ msgstr ""
 msgid "Enter an email"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:156
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:148
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:111
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:97
 msgid "Find any type of content"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:55
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:128
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:39
 msgid "For Artists"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:93
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:133
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:79
 msgid "For Fans"
 msgstr ""
 
-#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:124
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:121
 msgid "Go back"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:78
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:62
 msgid "Have your content distributed across the platform"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:194
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:186
 msgid "I lost access to my device"
 msgstr ""
 
-#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:110
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:107
 msgid "If you cancel the joining flow, you'll be brought back to the initial login page and the link sent in the email will be invalidated. Are you sure?"
 msgstr ""
 
@@ -124,11 +122,11 @@ msgstr ""
 #~ msgid "If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the email will be invalidated. Are you sure?"
 #~ msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:170
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:162
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:134
+#: src/domain/join/Join/pages/Grant/Grant.tsx:124
 msgid "Logging in"
 msgstr ""
 
@@ -136,19 +134,19 @@ msgstr ""
 msgid "Make sure to check your spam!"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:99
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:85
 msgid "Of adult digital content"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:89
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:82
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:139
+#: src/domain/join/Join/pages/Grant/Grant.tsx:129
 msgid "Please wait while we log you in..."
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:73
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:57
 msgid "Post free and/or exclusive content"
 msgstr ""
 
@@ -156,15 +154,15 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:195
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:187
 msgid "Submit"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:184
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:176
 msgid "Submit Code"
 msgstr ""
 
-#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:106
+#: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:92
 msgid "Support your favorite artists"
 msgstr ""
 
@@ -180,15 +178,15 @@ msgstr ""
 msgid "The login link has previously expired or is no longer valid. Please try logging in again."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:108
+#: src/domain/join/Join/pages/Grant/Grant.tsx:98
 msgid "There was an error logging you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:144
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:136
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:135
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:127
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
@@ -196,7 +194,7 @@ msgstr ""
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:111
+#: src/domain/join/Join/pages/Register/Register.tsx:106
 msgid "There was an issue with registration"
 msgstr ""
 
@@ -212,23 +210,23 @@ msgstr ""
 msgid "Waiting for you to click on the email link"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:92
+#: src/domain/join/Join/pages/Grant/Grant.tsx:88
 msgid "Welcome back!"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:115
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:111
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:104
+#: src/domain/join/Join/pages/Register/Register.tsx:99
 msgid "Welcome to overdoll!"
 msgstr ""
 
-#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:136
+#: src/domain/join/Join/components/RevokeTokenButton/RevokeTokenButton.tsx:133
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:161
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:153
 msgid "You can find this code in the same app you used to set up two-factor authentication"
 msgstr ""
 

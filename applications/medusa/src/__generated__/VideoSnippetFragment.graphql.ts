@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08a79b853c2ab68b0e5e38e33146078f>>
+ * @generated SignedSource<<9e2da4294280dac0ab10dddeab15dc96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,8 +14,6 @@ export type VideoSnippetFragment$data = {
   readonly videoThumbnail: {
     readonly url: string;
   } | null;
-  readonly width: number;
-  readonly height: number;
   readonly " $fragmentType": "VideoSnippetFragment";
 };
 export type VideoSnippetFragment = VideoSnippetFragment$data;
@@ -47,26 +45,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "width",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "height",
-      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "0da109bc2ab706d858b84547293ca639";
+(node as any).hash = "44910205c617e3743c77026ad205f34e";
 
 export default node;
