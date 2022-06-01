@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"overdoll/libraries/uuid"
 	"strconv"
 	"time"
@@ -75,7 +75,7 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index club: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index club")
 	}
 
 	return nil
@@ -87,11 +87,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		Index(ClubsIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
-	}
-
-	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -151,7 +147,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search clubs: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search clubs")
 	}
 
 	var brands []*club.Club
@@ -163,7 +159,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		err := json.Unmarshal(hit.Source, &bd)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 		}
 
 		newBrand := club.UnmarshalClubFromDatabase(
@@ -236,7 +232,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index clubs: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index clubs")
 			}
 		}
 

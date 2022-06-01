@@ -2,14 +2,14 @@ package adapters
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -159,7 +159,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx contex
 			SuspendedUntil:      suspensionLog.SuspendedUntil(),
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create club suspension log: %v", err)
+		return errors.Wrap(err, "failed to create club suspension log")
 	}
 
 	return nil
@@ -194,8 +194,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubSuspensionLogs(ctx context.
 			ClubId: clubId,
 		}).
 		SelectRelease(&clubLogs); err != nil {
-
-		return nil, fmt.Errorf("failed to club suspension logs: %v", err)
+		return nil, errors.Wrap(err, "failed to get club suspension logs")
 	}
 
 	var logs []*club.SuspensionLog
@@ -231,7 +230,7 @@ func (r ClubCassandraElasticsearchRepository) getClubSlug(ctx context.Context, s
 			return nil, club.ErrClubNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get club by slug: %v", err)
+		return nil, errors.Wrap(err, "failed to get club by slug")
 	}
 
 	return &b, nil
@@ -273,7 +272,7 @@ func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, b
 			return nil, club.ErrClubNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get club by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get club by id")
 	}
 
 	return &b, nil
@@ -331,7 +330,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 		Consistency(gocql.LocalQuorum).
 		Bind(clubIds).
 		SelectRelease(&databaseClubs); err != nil {
-		return nil, fmt.Errorf("failed to get clubs by ids: %v", err)
+		return nil, errors.Wrap(err, "failed to get clubs by ids")
 	}
 
 	var clbs []*club.Club
@@ -413,7 +412,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, fmt.Errorf("failed to update club slug: %v", err)
+		return nil, errors.Wrap(err, "failed to update club slug")
 	}
 
 	if err := r.indexClub(ctx, currentClub); err != nil {
@@ -482,7 +481,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 	}
 
 	if aliasSlugToRemove == "" && newAliasSlugToAdd == "" {
-		return nil, fmt.Errorf("no removals or additions found")
+		return nil, errors.Wrap(err, "no removals or additions foun")
 	}
 
 	// SLUG ADDITION
@@ -506,7 +505,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 				return nil, err
 			}
 
-			return nil, fmt.Errorf("failed to add club slug alias: %v", err)
+			return nil, errors.Wrap(err, "failed to add club slug alias")
 		}
 
 		return currentClub, nil
@@ -532,7 +531,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 			return nil, err
 		}
 
-		return nil, fmt.Errorf("failed to remove club slug alias: %v", err)
+		return nil, errors.Wrap(err, "failed to remove club slug alias")
 	}
 
 	if err := r.indexClub(ctx, currentClub); err != nil {
@@ -599,11 +598,11 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to update club member count: %v", err)
+		return errors.Wrap(err, "failed to update club member count")
 	}
 
 	if !ok {
-		return fmt.Errorf("failed to update club member count")
+		return errors.New("failed to update club member count")
 	}
 
 	return r.indexClub(ctx, unmarshalled)
@@ -634,7 +633,7 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 		BindStruct(pst).
 		ExecRelease(); err != nil {
 
-		return nil, fmt.Errorf("failed to update club: %v", err)
+		return nil, errors.Wrap(err, "failed to update club")
 	}
 
 	if err := r.indexClub(ctx, currentClub); err != nil {
@@ -661,7 +660,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubsCount(ctx context.C
 			AccountId: accountId,
 		}).
 		GetRelease(&clubsCount); err != nil {
-		return 0, fmt.Errorf("failed to get account clubs by account count: %v", err)
+		return 0, errors.Wrap(err, "failed to get account clubs by account count")
 	}
 
 	return clubsCount.Count, nil
@@ -696,7 +695,7 @@ func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cl
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete club batch: %v", err)
+		return errors.Wrap(err, "failed to delete club batch")
 	}
 
 	return nil
@@ -766,7 +765,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 
 	// execute batch.
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create club batch: %v", err)
+		return errors.Wrap(err, "failed to create club batch")
 	}
 
 	if err := r.indexClub(ctx, club); err != nil {
@@ -787,7 +786,7 @@ func (r ClubCassandraElasticsearchRepository) deleteUniqueClubSlug(ctx context.C
 			ClubId: clubId,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to release club slug: %v", err)
+		return errors.Wrap(err, "failed to release club slug")
 	}
 
 	return nil
@@ -809,7 +808,7 @@ func (r ClubCassandraElasticsearchRepository) createUniqueClubSlug(ctx context.C
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique slug: %v", err)
+		return errors.Wrap(err, "failed to create unique slug")
 	}
 
 	if !applied {
@@ -832,7 +831,7 @@ func (r ClubCassandraElasticsearchRepository) DeleteAccountData(ctx context.Cont
 	}
 
 	if del {
-		return errors.New("cannot delete account data")
+		return domainerror.NewValidation("cannot delete account data")
 	}
 
 	return r.deleteAccountClubMemberships(ctx, accountId)
@@ -851,7 +850,7 @@ func (r ClubCassandraElasticsearchRepository) hasNonTerminatedClubs(ctx context.
 			AccountId: accountId,
 		}).
 		SelectRelease(&clubsData); err != nil {
-		return false, fmt.Errorf("failed to get account clubs by account terminated: %v", err)
+		return false, errors.Wrap(err, "failed to get account clubs by account terminated")
 	}
 
 	hasActiveClubs := false

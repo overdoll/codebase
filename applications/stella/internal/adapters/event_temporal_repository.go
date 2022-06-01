@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -30,7 +31,7 @@ func (r EventTemporalRepository) AddClubMember(ctx context.Context, member *club
 		AccountId: member.AccountId(),
 		JoinedAt:  member.JoinedAt(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute AddClubMember workflow")
 	}
 
 	return nil
@@ -47,7 +48,7 @@ func (r EventTemporalRepository) RemoveClubMember(ctx context.Context, member *c
 		ClubId:    member.ClubId(),
 		AccountId: member.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute RemoveClubMember workflow")
 	}
 
 	return nil
@@ -65,7 +66,7 @@ func (r EventTemporalRepository) AddClubSupporter(ctx context.Context, clubId, a
 		AccountId:   accountId,
 		SupportedAt: supportedAt,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute AddClubSupporter workflow")
 	}
 
 	return nil
@@ -82,7 +83,7 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 		ClubId:    clubId,
 		AccountId: accountId,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute RemoveClubSupporter workflow")
 	}
 
 	return nil
@@ -107,7 +108,7 @@ func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *pri
 		Reason:    reason,
 		EndTime:   endTime,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute SuspendClub workflow")
 	}
 
 	return nil
@@ -126,7 +127,7 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 		Reason:    reason,
 		EndTime:   endTime,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute SuspendClubOperator workflow")
 	}
 
 	return nil
@@ -138,7 +139,7 @@ func (r EventTemporalRepository) WaitForClubToBeReady(ctx context.Context, reque
 
 	// wait for club to be created
 	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return err
+		return errors.Wrap(err, "failed to get workflow WaitForClubToBeReady %s", workflowId)
 	}
 
 	return nil
@@ -160,12 +161,7 @@ func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *prin
 		Name:           clb.Name().TranslateDefault(""),
 		OwnerAccountId: clb.OwnerAccountId(),
 	}); err != nil {
-		return err
-	}
-
-	// wait for club to be created
-	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute CreateClub workflow")
 	}
 
 	return nil
@@ -186,7 +182,7 @@ func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, requester *p
 		ClubId:    clb.ID(),
 		AccountId: requester.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute UnSuspendClub workflow")
 	}
 
 	return nil
@@ -202,7 +198,7 @@ func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId st
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.NewSupporterPost, workflows.NewSupporterPostInput{
 		ClubId: clubId,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute NewSupporterPost workflow")
 	}
 
 	return nil
@@ -223,7 +219,7 @@ func (r EventTemporalRepository) TerminateClub(ctx context.Context, requester *p
 		ClubId:    clb.ID(),
 		AccountId: requester.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute TerminateClub workflow")
 	}
 
 	return nil
@@ -243,7 +239,7 @@ func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, requester 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnTerminateClub, workflows.UnTerminateClubInput{
 		ClubId: clb.ID(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute UnTerminateClub workflow")
 	}
 
 	return nil

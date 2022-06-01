@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"overdoll/libraries/errors"
 	"time"
 
 	carrier "overdoll/applications/carrier/proto"
@@ -24,7 +25,7 @@ func (s CarrierGrpc) ClubSupporterRequiredPostReminder(ctx context.Context, club
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "carrier - failed to send club supporter required post email")
 	}
 
 	return nil
@@ -37,7 +38,7 @@ func (s CarrierGrpc) ClubSupporterNoPosts(ctx context.Context, clubId string) er
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "carrier - failed to send club supporter no posts email")
 	}
 
 	return nil
@@ -51,7 +52,7 @@ func (s CarrierGrpc) ClubSuspended(ctx context.Context, clubId string, endTime t
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "carrier - failed to send club suspended email")
 	}
 
 	return nil

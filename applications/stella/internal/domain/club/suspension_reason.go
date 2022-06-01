@@ -1,6 +1,8 @@
 package club
 
-import "errors"
+import (
+	"overdoll/libraries/domainerror"
+)
 
 type SuspensionReason struct {
 	slug string
@@ -27,5 +29,5 @@ func SuspensionReasonFromString(s string) (SuspensionReason, error) {
 		return Manual, nil
 	}
 
-	return UnknownStatus, errors.New("unknown suspension reason: " + s)
+	return UnknownStatus, domainerror.NewValidation("unknown suspension reason: " + s)
 }
