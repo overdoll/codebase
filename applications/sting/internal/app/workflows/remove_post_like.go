@@ -15,6 +15,7 @@ type RemovePostLikeInput struct {
 func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -24,6 +25,7 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete post like", "Error", err)
 		return err
 	}
 
@@ -32,6 +34,7 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to remove like from post", "Error", err)
 		return err
 	}
 
@@ -51,6 +54,7 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to update total likes for post tags", "Error", err)
 		return err
 	}
 

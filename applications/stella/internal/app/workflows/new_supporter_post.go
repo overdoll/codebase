@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
 )
@@ -15,6 +16,7 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	var a *activities.Activities
+	logger := workflow.GetLogger(ctx)
 
 	var payload *activities.UpdateClubNextSupporterPostTimePayload
 
@@ -25,6 +27,7 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 			Timestamp: workflow.Now(ctx),
 		},
 	).Get(ctx, &payload); err != nil {
+		logger.Error("failed to update club next supporter post time", "Error", err)
 		return err
 	}
 
@@ -32,6 +35,7 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 
 	// here, we cancel the workflow if there was an existing workflow that is responsible for sending notifications
 	if err := workflow.RequestCancelExternalWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
+		logger.Error("failed to cancel notification workflow", "Error", err)
 		return err
 	}
 
@@ -49,8 +53,8 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 		},
 	).
 		GetChildWorkflowExecution().
-		Get(ctx, nil); err != nil {
-		// ignore already started errors
+		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to start club supporter post notifications workflow", "Error", err)
 		return err
 	}
 

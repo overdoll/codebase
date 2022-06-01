@@ -14,6 +14,7 @@ type UnArchivePostInput struct {
 func UnArchivePost(ctx workflow.Context, input UnArchivePostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func UnArchivePost(ctx workflow.Context, input UnArchivePostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to unarchive post", "Error", err)
 		return err
 	}
 
@@ -41,6 +43,7 @@ func UnArchivePost(ctx workflow.Context, input UnArchivePostInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to update total posts for post tags", "Error", err)
 		return err
 	}
 

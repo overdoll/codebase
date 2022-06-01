@@ -15,6 +15,7 @@ type AddClubSupporterInput struct {
 func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -27,6 +28,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, &alreadyAMember); err != nil {
+		logger.Error("failed to check if account is club member", "Error", err)
 		return err
 	}
 
@@ -47,6 +49,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 		).
 			GetChildWorkflowExecution().
 			Get(ctx, nil); err != nil {
+			logger.Error("failed to add club member", "Error", err)
 			return err
 		}
 	}
@@ -59,6 +62,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			SupportedAt: input.SupportedAt,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark club member as supporter", "Error", err)
 		return err
 	}
 

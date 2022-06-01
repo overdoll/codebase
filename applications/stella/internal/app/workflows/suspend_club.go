@@ -17,6 +17,7 @@ type SuspendClubInput struct {
 func SuspendClub(ctx workflow.Context, input SuspendClubInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
@@ -36,6 +37,7 @@ func SuspendClub(ctx workflow.Context, input SuspendClubInput) error {
 			Reason:          input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to suspend club", "Error", err)
 		return err
 	}
 
@@ -45,6 +47,7 @@ func SuspendClub(ctx workflow.Context, input SuspendClubInput) error {
 			EndTime: input.EndTime,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send club suspended notification", "Error", err)
 		return err
 	}
 

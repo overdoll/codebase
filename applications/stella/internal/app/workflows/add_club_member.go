@@ -15,6 +15,7 @@ type AddClubMemberInput struct {
 func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -26,6 +27,7 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 			JoinedAt:  input.JoinedAt,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add club member to list", "Error", err)
 		return err
 	}
 
@@ -35,6 +37,7 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add club member", "Error", err)
 		return err
 	}
 

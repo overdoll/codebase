@@ -14,6 +14,7 @@ type PublishPostInput struct {
 func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to publish post", "Error", err)
 		return err
 	}
 
@@ -41,6 +43,7 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to update total posts for post tags", "Error", err)
 		return err
 	}
 
@@ -50,6 +53,7 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to check post supporter status and send new", "Error", err)
 		return err
 	}
 
