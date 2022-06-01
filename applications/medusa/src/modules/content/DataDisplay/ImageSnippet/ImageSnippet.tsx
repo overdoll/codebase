@@ -1,12 +1,11 @@
-import { Box, HTMLChakraProps, Skeleton } from '@chakra-ui/react'
-import SuspenseImage from '../../../operations/SuspenseImage'
+import { Box } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
-import { useState } from 'react'
-import ImageError from '../ImageError/ImageError'
+import NextImage from '../NextImage/NextImage'
+import { ImageProps } from 'next/image'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   query: ImageSnippetFragment$key | null
 }
 
@@ -27,16 +26,10 @@ export default function ImageSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [hasError, setHasError] = useState(false)
-
-  if (hasError) {
-    return (
-      <ImageError />
-    )
-  }
-
   return (
-    <Box w='100%' h='100%' as='picture'>
+    <Box
+      as='picture'
+    >
       {data?.urls.map((item, index) =>
         (
           <source
@@ -46,15 +39,14 @@ export default function ImageSnippet ({
           />
         )
       )}
-      <SuspenseImage
-        onError={() => setHasError(true)}
+      <NextImage
         alt='thumbnail'
-        w='inherit'
-        h='inherit'
-        objectFit='cover'
-        userSelect='none'
-        src={data?.urls[data?.urls.length - 1].url}
-        fallback={<Skeleton w='100%' h='100%' />}
+        quality={100}
+        width={data?.width as any ?? undefined}
+        height={data?.height as any ?? undefined}
+        layout={(data?.width == null && data?.height == null) ? 'fill' : undefined}
+        objectFit={'cover' as any}
+        src={data?.urls[data?.urls.length - 1]?.url ?? data?.urls[data?.urls.length - 2]?.url ?? ''}
         {...rest}
       />
     </Box>

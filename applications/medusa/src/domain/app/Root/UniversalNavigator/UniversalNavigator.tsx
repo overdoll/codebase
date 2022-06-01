@@ -20,8 +20,6 @@ const UniversalNavigatorGQL = graphql`
 export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 
-  console.log(data)
-
   const MainMenuMemo = useMemo(() => <MainMenu />, [data])
 
   const AlternativeMenuMemo = useMemo(() => <AlternativeMenu queryRef={data} />, [data])

@@ -1,8 +1,7 @@
-import { Box, Flex, Heading, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import SuspenseImage from '@//:modules/operations/SuspenseImage'
-import CopyCodeToClipboard
-  from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import CopyCodeToClipboard from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import NextImage from '@//:modules/content/DataDisplay/NextImage/NextImage'
 
 interface Props {
   secret: string | undefined
@@ -24,10 +23,11 @@ export default function TotpQrCodeStep ({
           align='center'
           justify='center'
         >
-          <SuspenseImage
+          <NextImage
             alt='thumbnail'
+            layout='fill'
             src={image ?? ''}
-            fallback={<Skeleton w='100%' h='100%' />}
+            priority
           />
         </Flex>
       </Flex>

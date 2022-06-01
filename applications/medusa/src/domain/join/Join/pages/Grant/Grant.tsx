@@ -1,7 +1,6 @@
-import { graphql, useFragment, useMutation, useSubscribeToInvalidationState } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { invalidateToken, setViewer } from '../../support/support'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
 import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
@@ -10,8 +9,7 @@ import translateValidation from '@//:modules/validation/translateValidation'
 import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Head from 'next/head'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useRouter } from 'next/router'
+import useGrantCleanup from '../../support/useGrantCleanup'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -53,8 +51,6 @@ const GrantFragment = graphql`
 export default function Grant ({ queryRef }: Props): JSX.Element {
   const [commit] = useMutation<GrantMutation>(GrantAction)
 
-  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
-
   const data = useFragment(GrantFragment, queryRef)
 
   const notify = useToast()
@@ -63,7 +59,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
 
   const [, , removeCookie] = useCookies(['token'])
 
-  const router = useRouter()
+  const { successfulGrant } = useGrantCleanup()
 
   // grant account access
   useEffect(() => {
@@ -93,12 +89,8 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
-        // store.get(payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)?.invalidateRecord()
-        const linkedPayload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
-        invalidateToken(store)
-        setViewer(store, linkedPayload)
-        removeCookie('token')
-        void router.push(redirect != null ? redirect : '/')
+        const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
+        successfulGrant(store, viewerPayload, payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)
       },
       onError (data) {
         notify({

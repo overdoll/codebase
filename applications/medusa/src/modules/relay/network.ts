@@ -12,6 +12,7 @@ export function createNetwork (fetchFnOverride): INetwork {
   })
 
   async function fetchResponse (operation, variables, cacheConfig): Promise<GraphQLResponse> {
+    /*
     const { id } = operation
 
     const isQuery = operation.operationKind === 'query'
@@ -22,6 +23,8 @@ export function createNetwork (fetchFnOverride): INetwork {
         return fromCache
       }
     }
+
+     */
 
     return fetchFnOverride({
       operationName: operation.name,

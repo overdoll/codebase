@@ -18,7 +18,7 @@ import { RevokeTokenButtonMutation } from '@//:artifacts/RevokeTokenButtonMutati
 import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useCookies } from 'react-cookie'
-import { invalidateToken } from '../../support/support'
+import useGrantCleanup from '../../support/useGrantCleanup'
 
 interface Props extends CloseButtonProps {
   queryRef: RevokeTokenButtonFragment$key
@@ -56,6 +56,8 @@ export default function RevokeTokenButton ({
     Mutation
   )
 
+  const { invalidateGrant } = useGrantCleanup()
+
   const [, , removeCookie] = useCookies(['token'])
 
   const onRevokeToken = (): void => {
@@ -68,9 +70,8 @@ export default function RevokeTokenButton ({
       onCompleted () {
         onClose()
       },
-      updater: (store) => {
-        invalidateToken(store)
-        removeCookie('token')
+      updater: (store, payload) => {
+        invalidateGrant(store, payload?.revokeAuthenticationToken?.revokedAuthenticationTokenId)
       }
     })
   }

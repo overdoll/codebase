@@ -2,7 +2,6 @@ export const invalidateToken = (store): void => {
   const token = store.getRoot().getLinkedRecord('viewAuthenticationToken')
   if (token != null) {
     token.invalidateRecord()
-    store.delete(token.getValue('id'))
   }
 }
 
@@ -12,7 +11,6 @@ export const invalidateViewer = (store): void => {
     .getLinkedRecord('viewer')
 
   viewer.invalidateRecord()
-  store.delete(viewer.getValue('id'))
 }
 
 export const setViewer = (store, payload): void => {

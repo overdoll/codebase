@@ -132,6 +132,8 @@ const MyApp = ({
   )
 }
 
+const componentsToLoad = [Root]
+
 MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   const initialProps = await NextApp.getInitialProps(app)
 
@@ -161,6 +163,14 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   }
 
   let queries: GetRelayPreloadPropsReturn = {}
+
+  for (let i = 0; i < componentsToLoad.length; i++) {
+    const component = componentsToLoad[i]
+
+    if (component?.getRelayPreloadProps != null) {
+      queries = { ...queries, ...component.getRelayPreloadProps(app.ctx).queries }
+    }
+  }
 
   if (app.Component?.getRelayPreloadProps != null) {
     queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }

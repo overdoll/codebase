@@ -1,7 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { prepareViewer } from '../../../support/support'
 import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
 import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
 import { t, Trans } from '@lingui/macro'
@@ -20,11 +19,9 @@ import {
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useRouter } from 'next/router'
-import { useCookies } from 'react-cookie'
 import { MobilePhone, WarningTriangle } from '@//:assets/icons'
 import { FlowBuilderNextButton } from '@//:modules/content/PageLayout'
+import useGrantCleanup from '../../../support/useGrantCleanup'
 
 interface CodeValues {
   code: string
@@ -72,10 +69,6 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
 
   const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionMutation>(Mutation)
 
-  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
-
-  const [, , removeCookie] = useCookies<string>(['token'])
-
   const { i18n } = useLingui()
 
   const schema = Joi.object({
@@ -88,11 +81,14 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
     )
   })
 
+  const {
+    successfulGrant,
+    invalidateGrant
+  } = useGrantCleanup()
+
   const { setError } = methods
 
   const notify = useToast()
-
-  const router = useRouter()
 
   const onSubmitTotp = (formData): void => {
     submitTotp({
@@ -117,16 +113,12 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
       },
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.validation === 'TOKEN_INVALID') {
-          store.get(data.id)?.invalidateRecord()
-          removeCookie('token')
+          invalidateGrant(store, data.id)
         }
 
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id != null) {
-          const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id)
-          store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.revokedAuthenticationTokenId)?.invalidateRecord()
-          prepareViewer(store, account)
-          removeCookie('token')
-          void router.push(redirect != null ? redirect : '/')
+          const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
+          successfulGrant(store, viewerPayload, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.revokedAuthenticationTokenId)
         }
       },
       onError () {

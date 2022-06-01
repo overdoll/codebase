@@ -1,12 +1,13 @@
 import { useFragment } from 'react-relay/hooks'
 import type { CurationProfileAlertFragment$key } from '@//:artifacts/CurationProfileAlertFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex, HStack } from '@chakra-ui/react'
+import { Flex, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { useFlash } from '@//:modules/flash'
 import { useEffect } from 'react'
+import Button from '@//:modules/form/Button/Button'
 
 interface Props {
   query: CurationProfileAlertFragment$key | null
@@ -55,31 +56,38 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
         align='center'
         justify='space-between'
       >
-        <HStack spacing={0} align='center'>
-          <AlertIcon />
-          <AlertDescription>
-            <Trans>
-              Set up your curation profile so we can show you personalized content
-            </Trans>
-          </AlertDescription>
-        </HStack>
-        <LinkButton
-          href='/settings/preferences/curation-profile'
-          size='sm'
-          colorScheme='teal'
-          variant='solid'
-        >
-          <Trans>
-            Setup
-          </Trans>
-        </LinkButton>
-        <AlertCloseButton
-          position='absolute'
-          size='sm'
-          right={2}
-          top={2}
-          onClick={() => flush('new.account')}
-        />
+        <Stack spacing={2}>
+          <Stack align='center' justify='center' spacing={1}>
+            <AlertIcon />
+            <AlertDescription textAlign='center'>
+              <Trans>
+                Set up your curation profile so we can show you personalized content
+              </Trans>
+            </AlertDescription>
+          </Stack>
+          <HStack align='center' spacing={1}>
+            <LinkButton
+              href='/settings/preferences/curation-profile'
+              size='sm'
+              colorScheme='teal'
+              variant='solid'
+            >
+              <Trans>
+                Setup
+              </Trans>
+            </LinkButton>
+            <Button
+              size='sm'
+              colorScheme='teal'
+              variant='ghost'
+              onClick={() => flush('new.account')}
+            >
+              <Trans>
+                No thanks
+              </Trans>
+            </Button>
+          </HStack>
+        </Stack>
       </Flex>
     </Alert>
   )

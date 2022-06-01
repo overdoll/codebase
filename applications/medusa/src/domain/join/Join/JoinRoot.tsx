@@ -1,4 +1,10 @@
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import {
+  graphql,
+  PreloadedQuery,
+  usePreloadedQuery,
+  useQueryLoader,
+  useSubscribeToInvalidationState
+} from 'react-relay/hooks'
 import { Suspense, useEffect, useState } from 'react'
 import Register from './pages/Register/Register'
 import Lobby from './pages/Lobby/Lobby'
@@ -60,8 +66,6 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
 
   const data = ref.viewAuthenticationToken
 
-  console.log(data)
-
   const multiFactorEnabled = data?.accountStatus?.multiFactor !== null
 
   const authenticationInitiated = !(data == null)
@@ -77,6 +81,11 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
   // used to track whether there was previously a token grant, so that if
   // an invalid token was returned, we can show an "expired" token page
   const [hadGrant, setHadGrant] = useState<boolean>(false)
+
+  // if token invalidated we want to re-run the query
+  useSubscribeToInvalidationState([data?.id as string], () => {
+    loadQuery({ token: tokenCookie ?? null })
+  })
 
   // when a new join is started, we want to make sure that we save the fact that
   // there was one, so we can tell the user if the login code expired

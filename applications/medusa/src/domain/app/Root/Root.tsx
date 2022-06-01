@@ -1,15 +1,24 @@
 import { ReactNode } from 'react'
-import { graphql, useLazyLoadQuery, useSubscribeToInvalidationState } from 'react-relay/hooks'
+import {
+  graphql,
+  PreloadedQuery,
+  usePreloadedQuery,
+  useQueryLoader,
+  useSubscribeToInvalidationState
+} from 'react-relay/hooks'
 import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
+
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
-import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 interface Props {
   children: ReactNode
+  queryRefs: {
+    rootQuery: PreloadedQuery<RootQueryType>
+  }
 }
 
 const Query = graphql`
@@ -23,21 +32,15 @@ const Query = graphql`
 `
 
 const Root: PageProps<Props> = (props: Props): JSX.Element => {
-  const {
-    searchArguments,
-    loadQuery
-  } = useSearch<{}>({
-    defaultValue: {}
-  })
-
-  const data = useLazyLoadQuery<RootQueryType>(
+  const [queryRef, loadQuery] = useQueryLoader(
     Query,
-    searchArguments.variables,
-    searchArguments.options
+    props.queryRefs.rootQuery
   )
 
+  const data = usePreloadedQuery<RootQueryType>(Query, queryRef as PreloadedQuery<RootQueryType>)
+
   useSubscribeToInvalidationState([data?.viewer?.id as string], () => {
-    loadQuery()
+    loadQuery({})
   })
 
   return (

@@ -79,6 +79,9 @@ module.exports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
+  images: {
+    domains: ['dcd9vpqfvvgum.cloudfront.net']
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,

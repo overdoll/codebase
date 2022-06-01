@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import { invalidateToken, setViewer } from '../../support/support'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import { OverdollLogo } from '@//:assets/logos'
+import useGrantCleanup from '../../support/useGrantCleanup'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -25,6 +26,7 @@ interface Props {
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
     createAccountWithAuthenticationToken(input: $input) {
+      revokedAuthenticationTokenId
       validation
       account {
         id
@@ -56,13 +58,11 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const data = useFragment(RegisterFragment, queryRef)
 
-  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
-
   const notify = useToast()
 
   const { i18n } = useLingui()
 
-  const [, , removeCookie] = useCookies<string>(['token'])
+  const { successfulGrant, invalidateGrant } = useGrantCleanup()
 
   const router = useRouter()
 
@@ -78,9 +78,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       },
       updater: (store, payload) => {
         if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
-          // store.get(data.id)?.invalidateRecord()
-          invalidateToken(store)
-          removeCookie('token')
+          invalidateGrant(store, data.id)
         }
 
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
@@ -91,13 +89,10 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           })
           return
         }
+        const viewerPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
 
-        const rootPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
-        invalidateToken(store)
-        setViewer(store, rootPayload)
-        removeCookie('token')
+        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
         flash('new.account', '')
-        void router.push(redirect != null ? redirect : '/')
 
         notify({
           status: 'success',
