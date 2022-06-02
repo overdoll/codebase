@@ -190,6 +190,10 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 		return err
 	}
 
+	if err := r.clearAccountDigestCache(ctx, member.AccountId()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -282,6 +286,10 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 		if err := r.session.ExecuteBatch(batch); err != nil {
 			return errors.Wrap(err, "failed to delete account club memberships")
 		}
+
+		if err := r.clearAccountDigestCache(ctx, accountId); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -358,6 +366,10 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete member from lists")
+	}
+
+	if err := r.clearAccountDigestCache(ctx, member.AccountId()); err != nil {
+		return err
 	}
 
 	return nil
@@ -458,105 +470,9 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 		return nil, errors.Wrap(err, "failed to update club supporter status")
 	}
 
+	if err := r.clearAccountDigestCache(ctx, clb.MemberAccountId); err != nil {
+		return nil, err
+	}
+
 	return currentClub, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx context.Context, accountId string) ([]string, error) {
-
-	var accountClub []clubMembersByAccount
-
-	if err := clubMembersByAccountTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMembersByAccount{
-			MemberAccountId: accountId,
-		}).
-		SelectRelease(&accountClub); err != nil {
-		return nil, errors.Wrap(err, "failed to get club members by account")
-	}
-
-	var clubIds []string
-	for _, clb := range accountClub {
-		clubIds = append(clubIds, clb.ClubId)
-	}
-
-	return clubIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountClubs(ctx context.Context, accountId string) ([]string, error) {
-
-	var accountClub []accountClubs
-
-	if err := accountClubsTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(accountClubs{
-			AccountId: accountId,
-		}).
-		SelectRelease(&accountClub); err != nil {
-		return nil, errors.Wrap(err, "failed to get account clubs by account")
-	}
-
-	var accountClubIds []string
-
-	for _, c := range accountClub {
-		accountClubIds = append(accountClubIds, c.ClubId)
-	}
-
-	return accountClubIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
-
-	var supportedClubs []*accountSupportedClubs
-
-	if err := accountSupportedClubsTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(accountSupportedClubs{
-			AccountId: accountId,
-		}).
-		SelectRelease(&supportedClubs); err != nil {
-		return nil, errors.Wrap(err, "failed to get account supported clubs")
-	}
-
-	var supportedIds []string
-
-	for _, supported := range supportedClubs {
-		supportedIds = append(supportedIds, supported.ClubId)
-	}
-
-	return supportedIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) GetAccountClubDigestById(ctx context.Context, accountId string) (*club.AccountClubDigest, error) {
-
-	supportedClubIds, err := r.getAccountSupportedClubs(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	accountClubIds, err := r.getAccountClubs(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	accountMembershipClubIds, err := r.getAccountClubMemberships(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return club.UnmarshalAccountClubDigestFromDatabase(supportedClubIds, accountMembershipClubIds, accountClubIds), nil
 }

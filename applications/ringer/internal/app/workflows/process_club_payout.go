@@ -2,11 +2,14 @@ package workflows
 
 import (
 	"go.temporal.io/sdk/workflow"
+	"math/rand"
 	"overdoll/applications/ringer/internal/app/workflows/activities"
+	"time"
 )
 
 type ProcessClubPayoutInput struct {
-	PayoutId string
+	PayoutId      string
+	TotalAttempts int
 }
 
 func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error {
@@ -19,7 +22,24 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 	successfulPayout := false
 
 	const NumberOfAttempts = 3
-	for i := 0; i < NumberOfAttempts; i++ {
+	for input.TotalAttempts != NumberOfAttempts {
+
+		var err error
+
+		switch input.TotalAttempts {
+		case 0:
+			err = workflow.Sleep(ctx, time.Second)
+		case 1:
+			// wait random minute * (between 5 and 15)
+			err = workflow.Sleep(ctx, time.Minute*time.Duration(rand.Intn(15-5)+5))
+		case 2:
+			// wait random minute * (between 30 and 45)
+			err = workflow.Sleep(ctx, time.Minute*time.Duration(rand.Intn(45-30)+30))
+		}
+
+		if err != nil {
+			return err
+		}
 
 		var payload *activities.ProcessClubPayoutPayload
 
@@ -49,6 +69,11 @@ func ProcessClubPayout(ctx workflow.Context, input ProcessClubPayoutInput) error
 			logger.Error("failed to add failure to club payout", "Error", err)
 			return err
 		}
+
+		workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
+			input.TotalAttempts += 1
+			return nil
+		})
 	}
 
 	if !successfulPayout {

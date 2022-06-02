@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -115,10 +116,11 @@ type clubSuspensionLog struct {
 type ClubCassandraElasticsearchRepository struct {
 	session gocqlx.Session
 	client  *elastic.Client
+	cache   *redis.Client
 }
 
-func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client) ClubCassandraElasticsearchRepository {
-	return ClubCassandraElasticsearchRepository{session: session, client: client}
+func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client) ClubCassandraElasticsearchRepository {
+	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache}
 }
 
 func marshalClubToDatabase(cl *club.Club) *clubs {
@@ -772,6 +774,10 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	}
 
 	if err := r.indexClub(ctx, club); err != nil {
+		return err
+	}
+
+	if err := r.clearAccountDigestCache(ctx, cla.OwnerAccountId); err != nil {
 		return err
 	}
 

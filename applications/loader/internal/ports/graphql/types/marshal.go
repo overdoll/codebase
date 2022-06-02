@@ -46,5 +46,6 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 		Height:         res.Height(),
 		VideoDuration:  res.VideoDuration(),
 		VideoThumbnail: videoUrl,
+		Preview:        res.Preview(),
 	}
 }

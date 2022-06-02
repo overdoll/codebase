@@ -42,6 +42,7 @@ var resourcesTable = table.New(table.Metadata{
 		"video_thumbnail_mime_type",
 		"width",
 		"height",
+		"preview",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -62,6 +63,7 @@ type resources struct {
 	VideoThumbnailMimeType string `db:"video_thumbnail_mime_type"`
 	Width                  int    `db:"width"`
 	Height                 int    `db:"height"`
+	Preview                string `db:"preview"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -89,6 +91,7 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.Height,
 		nil,
 		nil,
+		i.Preview,
 	)
 }
 
@@ -209,6 +212,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 		i.Height,
 		urls,
 		videoThumbnail,
+		i.Preview,
 	), nil
 }
 
@@ -237,6 +241,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		Width:                  r.Width(),
 		Height:                 r.Height(),
 		VideoDuration:          r.VideoDuration(),
+		Preview:                r.Preview(),
 	}
 }
 
@@ -404,6 +409,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"video_thumbnail_mime_type",
 			"width",
 			"height",
+			"preview",
 		)
 
 		support.BindStructToBatchStatement(

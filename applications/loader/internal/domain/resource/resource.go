@@ -1,12 +1,16 @@
 package resource
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
+	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"image"
+	"image/png"
 	_ "image/png"
 	"io"
 	"math"
@@ -71,6 +75,8 @@ type Resource struct {
 	mimeTypes    []string
 	sizes        []int
 	resourceType Type
+
+	preview string
 }
 
 func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int) (*Resource, error) {
@@ -121,7 +127,27 @@ func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error)
 		height:        0,
 		width:         0,
 		videoDuration: 0,
+		preview:       "",
 	}, nil
+}
+
+func createPreviewFromFile(r io.Reader) (string, error) {
+	img, err := png.Decode(r)
+
+	if err != nil {
+		return "", err
+	}
+
+	resizedImage := resize.Resize(10, 10, img, resize.Lanczos3)
+
+	buf := new(bytes.Buffer)
+	err = png.Encode(buf, resizedImage)
+
+	if err != nil {
+		return "", err
+	}
+
+	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(buf.Bytes()), nil
 }
 
 // ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
@@ -191,6 +217,16 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.height = cfgSrc.Height
 		r.width = cfgSrc.Width
 
+		_, _ = file.Seek(0, io.SeekStart)
+		preview, err := createPreviewFromFile(file)
+
+		if err != nil {
+			return nil, err
+		}
+
+		r.preview = preview
+		_, _ = file.Seek(0, io.SeekStart)
+
 	} else if kind.MIME.Value == "video/mp4" {
 		mimeTypes = append(mimeTypes, "video/mp4")
 
@@ -248,6 +284,15 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.videoThumbnailMimeType = "image/png"
 		r.videoThumbnail = videoThumb
 		r.resourceType = Video
+
+		preview, err := createPreviewFromFile(file)
+
+		if err != nil {
+			return nil, err
+		}
+
+		r.preview = preview
+		_, _ = file.Seek(0, io.SeekStart)
 
 	} else {
 		return nil, errors.New(fmt.Sprintf("invalid resource format: %s", kind.MIME.Value))
@@ -330,6 +375,10 @@ func (r *Resource) VideoDuration() int {
 	return r.videoDuration
 }
 
+func (r *Resource) Preview() string {
+	return r.preview
+}
+
 func (r *Resource) IsImage() bool {
 	return r.resourceType == Image
 }
@@ -354,7 +403,7 @@ func (r *Resource) FullUrls() []*Url {
 	return r.urls
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
@@ -373,5 +422,6 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		processed:              processed,
 		urls:                   urls,
 		videoThumbnailUrl:      videoThumbnailUrl,
+		preview:                preview,
 	}
 }

@@ -195,6 +195,8 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 		require.True(t, testing_tools.FileExists(downloadUrl), "filtered file exists in bucket and is accessible")
 
+		require.NotEmpty(t, entity.Resource.Preview, "preview is not empty")
+
 		// now, perform hash checks against each file
 		fileName := uuid.New().String() + ".png"
 		err = testing_tools.DownloadFile(fileName, downloadUrl)

@@ -21,6 +21,16 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 		cluster.Keyspace = keyspace
 	}
 
+	username := os.Getenv("DB_USERNAME")
+	password := os.Getenv("DB_PASSWORD")
+
+	if username != "" && password != "" {
+		cluster.Authenticator = gocql.PasswordAuthenticator{
+			Username: username,
+			Password: password,
+		}
+	}
+
 	cluster.CQLVersion = "5.0.1"
 	cluster.ReconnectInterval = 60 * time.Second
 	cluster.Timeout = 20 * time.Second
