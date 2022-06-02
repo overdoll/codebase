@@ -265,7 +265,8 @@ function matchQueryMiddleware (req, res, next): void {
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  tracesSampleRate: 0
+  tracesSampleRate: 0,
+  release: process.env.APP_VERSION,
 })
 
 void (async () => {

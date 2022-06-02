@@ -1,4 +1,5 @@
 const { withSentryConfig } = require('@sentry/nextjs')
+const nextBuildId = require('next-build-id')
 
 const path = require('path')
 const securityHeaders = [
@@ -56,6 +57,7 @@ const moduleExports = withBundleAnalyzer({
       }
     ]
   },
+  generateBuildId: () => nextBuildId({ dir: __dirname }),
   distDir: 'build',
   generateEtags: false,
   poweredByHeader: false,
@@ -108,7 +110,12 @@ let sentryConfig
 
 if (process.env.UPLOAD_SENTRY_SOURCEMAPS != null) {
   sentryConfig = withSentryConfig(moduleExports, { silent: true })
+  moduleExports.sentry = { hideSourceMaps: true }
 } else {
+  moduleExports.sentry = {
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true
+  }
   sentryConfig = withSentryConfig(moduleExports)
 }
 
