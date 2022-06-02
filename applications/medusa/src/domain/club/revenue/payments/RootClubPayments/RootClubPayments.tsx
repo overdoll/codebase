@@ -13,6 +13,7 @@ import ClubPayments from './ClubPayments/ClubPayments'
 import { Trans } from '@lingui/macro'
 import { Box } from '@chakra-ui/react'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryRefs: {
@@ -60,7 +61,7 @@ const RootClubPayments: PageProps<Props> = (props: Props) => {
             </PageSectionDescription>
           </PageSectionWrap>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
-            <Suspense fallback={<SkeletonRectangleGrid />}>
+            <Suspense fallback={<SkeletonStack />}>
               <ClubPayments query={queryRef as PreloadedQuery<ClubPaymentsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>

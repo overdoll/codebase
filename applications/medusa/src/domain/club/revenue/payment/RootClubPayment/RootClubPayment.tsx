@@ -12,6 +12,7 @@ import Head from 'next/head'
 import ClubPayment from './ClubPayment/ClubPayment'
 import { Trans } from '@lingui/macro'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryRefs: {
@@ -50,7 +51,7 @@ const RootClubPayment: PageProps<Props> = (props: Props) => {
           </Trans>
         </BackButton>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string })}>
-          <Suspense fallback={<SkeletonRectangleGrid />}>
+          <Suspense fallback={<SkeletonStack />}>
             <ClubPayment query={queryRef as PreloadedQuery<ClubPaymentQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

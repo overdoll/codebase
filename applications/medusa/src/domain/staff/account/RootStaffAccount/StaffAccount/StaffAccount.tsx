@@ -11,7 +11,6 @@ import StaffPermissions from './StaffPermissions/StaffPermissions'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import ProfilePageButton from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
 import StaffAccountClubs from './StaffAccountClubs/StaffAccountClubs'
-import { NumberParam, useQueryParam } from 'use-query-params'
 
 interface Props {
   query: PreloadedQuery<StaffAccountQuery>
@@ -36,8 +35,6 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
     query
   )
 
-  const [tabIndex] = useQueryParam<number | null | undefined>('index', NumberParam)
-
   if (queryData?.account == null) {
     return <NotFoundAccount />
   }
@@ -52,7 +49,7 @@ export default function StaffAccount ({ query }: Props): JSX.Element {
           <ProfilePageButton query={queryData.account} />
         </Menu>
       </HStack>
-      <Tabs defaultIndex={tabIndex ?? undefined} colorScheme='gray' variant='soft-rounded'>
+      <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Wrap>
             <Tab>

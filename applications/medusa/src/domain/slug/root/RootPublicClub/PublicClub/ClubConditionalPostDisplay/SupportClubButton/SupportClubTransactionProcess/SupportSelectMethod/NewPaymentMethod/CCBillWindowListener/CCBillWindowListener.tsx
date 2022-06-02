@@ -23,7 +23,7 @@ export default function CCBillWindowListener ({
 
   // Only allow messages from a specific window source
   const messageEvent = (event): void => {
-    if (event.origin !== originLink) {
+    if (event.origin !== originLink && event.origin !== '127.0.0.1') {
       return
     }
 

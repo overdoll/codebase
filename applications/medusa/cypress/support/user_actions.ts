@@ -16,3 +16,7 @@ export const clickOnToggle = (placeholder: string | RegExp, expect: boolean): vo
   const expectValue = expect ? 'be.checked' : 'not.be.checked'
   cy.findByText(placeholder).should('be.visible').parent().get('[type="checkbox"]').check({ force: true }).should(expectValue)
 }
+
+export const clickOnTab = (text: string | RegExp): void => {
+  cy.findByRole('tab', { name: text }).should('not.be.disabled').click({ force: true })
+}
