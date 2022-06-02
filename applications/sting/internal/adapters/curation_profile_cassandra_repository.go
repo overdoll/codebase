@@ -51,6 +51,7 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 	if err := r.session.
 		Query(curationProfileTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
 		GetRelease(&personalProfile); err != nil {
@@ -113,6 +114,7 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&curationProfile{
 			AccountId:          profile.AccountId(),
@@ -147,6 +149,7 @@ func (r CurationProfileCassandraRepository) DeleteProfileOperator(ctx context.Co
 	if err := r.session.
 		Query(curationProfileTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
 		ExecRelease(); err != nil {

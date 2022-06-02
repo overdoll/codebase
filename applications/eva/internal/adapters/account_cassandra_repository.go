@@ -136,7 +136,9 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 	if err := r.session.
 		Query(accountTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalOne).
+		Idempotent(true).
 		BindStruct(&accounts{
 			Id: id,
 		}).
@@ -189,6 +191,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalOne).
 		Bind(ids).
 		SelectRelease(&accountInstances); err != nil {
@@ -228,6 +231,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 	if err := r.session.
 		Query(accountEmailTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountEmail{
 			Email: strings.ToLower(email),
@@ -339,6 +343,7 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 
 	batch.Query(stmt, accountId, email)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete account email")
 	}
@@ -413,6 +418,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 		marshalUserToDatabase(instance),
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
 		// do a rollback if this batch statement fails
@@ -456,6 +462,7 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalUserToDatabase(currentUser)).
+		Idempotent(true).
 		ExecRelease(); err != nil {
 		return nil, errors.Wrap(err, "failed to update account")
 	}
@@ -513,6 +520,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
 		}).
+		Idempotent(true).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to delete account emails")
 	}
@@ -533,6 +541,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(acc).
+		Idempotent(true).
 		ExecRelease(); err != nil {
 		zap.S().Errorw("failed to update account", zap.Error(err))
 		return errors.Wrap(err, "failed to update account")
@@ -549,6 +558,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 
 	batch.Query(stmt, accountId)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete multi factor account data")
 	}
@@ -572,9 +582,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 
 	oldUsername := instance.Username()
 
-	err = updateFn(instance)
-
-	if err != nil {
+	if err := updateFn(instance); err != nil {
 		return nil, err
 	}
 
@@ -618,6 +626,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 			},
 		)
 
+		support.MarkBatchIdempotent(batch)
 		if err := r.session.ExecuteBatch(batch); err != nil {
 
 			if err := r.deleteAccountUsername(ctx, instance.ID(), instance.Username()); err != nil {
@@ -645,6 +654,7 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 		Query(accountUsernameTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(&AccountUsername{
 			Username: strings.ToLower(username),
 		}).
@@ -676,6 +686,7 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 		Query(emailByAccountTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
 			Email:     email,
@@ -721,6 +732,7 @@ func (r AccountCassandraRepository) GetAccountEmails(ctx context.Context, reques
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&accountEmails); err != nil {
@@ -819,6 +831,7 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 
 	batch.Query(stmt, newEmail.Email(), accountId)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, nil, errors.Wrap(err, "failed to make email primary")
 	}
@@ -847,6 +860,7 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 		Query(emailByAccountTable.Insert()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(emailByAccount{
 			Email:     email.Email(),
 			AccountId: email.AccountId(),

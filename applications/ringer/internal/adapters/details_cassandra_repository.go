@@ -43,6 +43,7 @@ func (r DetailsCassandraRepository) DeleteAccountDetailsOperator(ctx context.Con
 	if err := r.session.
 		Query(accountDetailsTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(accountDetails{AccountId: accountId}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to delete account details")
@@ -58,6 +59,7 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 	if err := r.session.
 		Query(accountDetailsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(accountDetails{AccountId: accountId}).
 		GetRelease(&accDetails); err != nil {
 
@@ -142,6 +144,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 	if err := r.session.
 		Query(accountDetailsTable.Update("first_name", "last_name", "country_of_residence_iso3166_alpha3")).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountDetails{
 			AccountId:          detail.AccountId(),
 			FirstName:          encryptedFirstName,

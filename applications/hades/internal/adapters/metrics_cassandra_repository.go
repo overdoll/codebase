@@ -153,6 +153,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 	// first, create transaction record
 	if err := r.session.Query(table.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
@@ -178,6 +179,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 
 		if err := r.session.Query(clubTransactionMetricsBucketsTable.Insert()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubTransactionMetricsBuckets{ClubId: metric.ClubId(), Bucket: bucket}).
 			ExecRelease(); err != nil {
@@ -233,6 +235,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		Max("timestamp").
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(clubTransactionMetric{
 			ClubId:    metric.ClubId(),
 			Bucket:    bucket,
@@ -304,6 +307,7 @@ func (r MetricsCassandraRepository) getClubTransactionMetrics(ctx context.Contex
 	if err := r.session.Query(clubTransactionMetricsTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(clubTransactionMetrics{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
@@ -346,6 +350,7 @@ func (r MetricsCassandraRepository) getClubTransactionMetricsBuckets(ctx context
 
 	if err := r.session.Query(clubTransactionMetricsBucketsTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubTransactionMetricsBuckets{
 			ClubId: clubId,
@@ -386,6 +391,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 			Where(qb.Eq("bucket"), qb.Eq("club_id")).
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(clubTransactionMetrics{
 				Bucket: bucketId,
 				ClubId: clubId,
@@ -431,6 +437,7 @@ func (r MetricsCassandraRepository) IsClubAlreadySuspended(ctx context.Context, 
 	if err := r.session.Query(clubChargebackSuspensionsTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
@@ -452,6 +459,7 @@ func (r MetricsCassandraRepository) AddClubAlreadySuspended(ctx context.Context,
 	if err := clubChargebackSuspensionsTable.InsertBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubChargebackSuspensions{
 			ClubId: clubId,

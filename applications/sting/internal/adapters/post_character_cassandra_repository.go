@@ -86,6 +86,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 		Where(qb.In("slug"), qb.In("series_id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		BindMap(map[string]interface{}{
 			"slug":      lowercaseSlugs,
@@ -118,6 +119,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 	if err := r.session.
 		Query(charactersSlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
 			Slug:     strings.ToLower(slug),
@@ -150,6 +152,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		Bind(chars).
 		SelectRelease(&characterModels); err != nil {
@@ -172,6 +175,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(mediaIds).
 		SelectRelease(&mediaModels); err != nil {
@@ -225,6 +229,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 	if err := r.session.
 		Query(charactersSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesId: seriesId}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to release character slug")
@@ -258,6 +263,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 	if err := r.session.
 		Query(characterTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(char).
 		ExecRelease(); err != nil {
@@ -281,6 +287,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		if err := r.session.
 			Query(characterTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(char).
 			ExecRelease(); err != nil {
@@ -328,6 +335,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -348,6 +356,7 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 	if err := r.session.
 		Query(characterTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(character{Id: characterId}).
 		GetRelease(&char); err != nil {

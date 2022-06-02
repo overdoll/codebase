@@ -153,6 +153,8 @@ func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx contex
 	if err := r.session.
 		Query(clubSuspensionLogTable.Insert()).
 		Consistency(gocql.LocalQuorum).
+		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(clubSuspensionLog{
 			ClubId:              suspensionLog.ClubId(),
 			Id:                  suspensionLog.Id(),
@@ -192,6 +194,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubSuspensionLogs(ctx context.
 
 	if err := builder.Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubSuspensionLog{
 			ClubId: clubId,
@@ -225,6 +228,7 @@ func (r ClubCassandraElasticsearchRepository) getClubSlug(ctx context.Context, s
 	if err := r.session.
 		Query(clubSlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		BindStruct(clubSlugs{Slug: strings.ToLower(slug)}).
 		GetRelease(&b); err != nil {
@@ -267,6 +271,7 @@ func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, c
 	if err := r.session.
 		Query(clubTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubs{Id: clubId}).
 		GetRelease(&b); err != nil {
@@ -331,6 +336,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		Bind(clubIds).
 		SelectRelease(&databaseClubs); err != nil {
@@ -416,6 +422,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 	)
 
 	// execute batch.
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, errors.Wrap(err, "failed to update club slug")
 	}
@@ -500,6 +507,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 			Add("slug_aliases").
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindMap(map[string]interface{}{
 				"id":           pst.Id,
 				"slug_aliases": []string{newAliasSlugToAdd},
@@ -526,6 +534,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 		Remove("slug_aliases").
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindMap(map[string]interface{}{
 			"id":           pst.Id,
 			"slug_aliases": []string{aliasSlugToRemove},
@@ -631,6 +640,7 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 	if err := r.session.
 		Query(clubTable.Update(columns...)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -657,6 +667,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubsCount(ctx context.C
 		CountAll().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountClubs{
 			AccountId: accountId,
@@ -696,6 +707,7 @@ func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cl
 	}
 
 	// execute batch.
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete club batch")
 	}
@@ -754,6 +766,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 	}
 
 	// execute batch.
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create club batch")
 	}
@@ -768,15 +781,21 @@ func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, cl
 func (r ClubCassandraElasticsearchRepository) deleteUniqueClubSlug(ctx context.Context, clubId, slug string) error {
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
-	if err := r.session.
+	applied, err := r.session.
 		Query(clubSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
 		BindStruct(clubSlugs{
 			Slug:   strings.ToLower(slug),
 			ClubId: clubId,
 		}).
-		ExecRelease(); err != nil {
+		ExecCASRelease()
+
+	if err != nil {
 		return errors.Wrap(err, "failed to release club slug")
+	}
+
+	if !applied {
+		return errors.New("failed to release club slug")
 	}
 
 	return nil
@@ -835,6 +854,7 @@ func (r ClubCassandraElasticsearchRepository) hasNonTerminatedClubs(ctx context.
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountClubs{
 			AccountId: accountId,

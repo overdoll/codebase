@@ -110,6 +110,7 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 		marshalledPostReport,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "CreatePostReport")
 	}
@@ -128,6 +129,7 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 	if err := r.session.
 		Query(postReportTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postReport{
 			PostId:             postId,
@@ -162,6 +164,7 @@ func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(c
 
 	if err := r.session.Query(postReportsByAccountBucketsTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,
@@ -197,6 +200,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		if err := builder.
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
 			SelectRelease(&results); err != nil {
 			return errors.Wrap(err, "DeleteAccountData")
@@ -234,6 +238,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		Where(qb.Eq("reporting_account_id")).
 		ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,

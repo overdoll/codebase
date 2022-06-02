@@ -91,6 +91,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 		postLike,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create post like")
 	}

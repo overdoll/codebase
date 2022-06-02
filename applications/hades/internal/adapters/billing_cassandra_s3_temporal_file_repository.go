@@ -80,6 +80,7 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id: id,
@@ -146,6 +147,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	if err := r.session.
 		Query(receiptFilesTable.Update("file_path")).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id:       receiptFile.Id,
@@ -189,6 +191,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 			Query(receiptFilesTable.Insert()).
 			Consistency(gocql.LocalQuorum).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(&receiptFiles{
 				Id:                        id,
 				AccountTransactionId:      history.Id(),
@@ -243,6 +246,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(&receiptFiles{
 				Id:                   history.Id(),

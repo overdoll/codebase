@@ -89,6 +89,7 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 	if err := r.session.
 		Query(moderatorTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{AccountId: id, Bucket: 0}).
 		GetRelease(&md); err != nil {
@@ -109,6 +110,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 
 	if err := r.session.Query(postModeratorsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			PostId: postId,
@@ -151,6 +153,7 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 		postModerator,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create post moderator queue")
 	}
@@ -176,6 +179,7 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 
 	if err := builder.Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			AccountId: accountId,
@@ -201,6 +205,7 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 
 	if err := r.session.Query(postModeratorsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			PostId: postId,
@@ -280,6 +285,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	if err := r.session.
 		Query(moderatorTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{Bucket: 0}).
 		SelectRelease(&dbModerators); err != nil {
@@ -299,6 +305,7 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 	if err := r.session.
 		Query(moderatorTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(mod)).
 		ExecRelease(); err != nil {
@@ -325,6 +332,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	if err := r.session.
 		Query(moderatorTable.Update("last_selected")).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod)).
 		ExecRelease(); err != nil {
@@ -345,6 +353,7 @@ func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, reque
 	if err := r.session.
 		Query(moderatorTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{
 			AccountId: accountId,

@@ -181,6 +181,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 	)
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to add member to lis")
 	}
@@ -199,6 +200,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 	if err := r.session.
 		Query(clubMembersTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
 		GetRelease(&clubMem); err != nil {
@@ -221,6 +223,7 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
@@ -275,6 +278,7 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 			},
 		)
 
+		support.MarkBatchIdempotent(batch)
 		if err := r.session.ExecuteBatch(batch); err != nil {
 			return errors.Wrap(err, "failed to delete account club memberships")
 		}
@@ -351,6 +355,7 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	)
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete member from lists")
 	}
@@ -375,6 +380,7 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx
 		CountAll().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
@@ -447,6 +453,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 	}
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, errors.Wrap(err, "failed to update club supporter status")
 	}
@@ -462,6 +469,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx cont
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
@@ -486,6 +494,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubs(ctx context.Contex
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountClubs{
 			AccountId: accountId,
@@ -511,6 +520,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountSupportedClubs(ctx conte
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountSupportedClubs{
 			AccountId: accountId,

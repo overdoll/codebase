@@ -14,7 +14,7 @@ func InitializeElasticSearchSession() *elastic.Client {
 		elastic.SetURL(os.Getenv("ELASTICSEARCH_URL")),
 		elastic.SetRetrier(
 			elastic.NewBackoffRetrier(
-				elastic.NewExponentialBackoff(100*time.Millisecond, 10*time.Second),
+				elastic.NewExponentialBackoff(100*time.Millisecond, 7*time.Second),
 			),
 		),
 		elastic.SetRetryStatusCodes(429, 504),

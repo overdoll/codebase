@@ -90,6 +90,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx conte
 		Where(qb.In("slug")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&audienceSlugResults); err != nil {
@@ -112,6 +113,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 	if err := r.session.
 		Query(audienceSlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(audienceSlug{Slug: strings.ToLower(slug)}).
 		GetRelease(&b); err != nil {
@@ -141,6 +143,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(audienceIds).
 		SelectRelease(&audienceModels); err != nil {
@@ -170,6 +173,7 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 	if err := r.session.
 		Query(audienceTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(audience{Id: audienceId}).
 		GetRelease(&b); err != nil {
@@ -204,6 +208,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 	if err := r.session.
 		Query(audienceTable.SelectAll()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		SelectRelease(&res); err != nil {
 		return nil, errors.Wrap(err, "failed to get audiences")
@@ -232,6 +237,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx cont
 	if err := r.session.
 		Query(audienceSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(audienceSlug{Slug: strings.ToLower(slug), AudienceId: audienceId}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to release audience slug")
@@ -265,6 +271,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 	if err := r.session.
 		Query(audienceTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(aud).
 		ExecRelease(); err != nil {
@@ -287,6 +294,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 		if err := r.session.
 			Query(audienceTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(aud).
 			ExecRelease(); err != nil {
@@ -340,6 +348,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {

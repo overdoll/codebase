@@ -28,6 +28,10 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	cluster.ReconnectionPolicy = &gocql.ConstantReconnectionPolicy{MaxRetries: 30, Interval: 10 * time.Second}
 	cluster.QueryObserver = &sentry_support.QueryObserver{}
 	cluster.BatchObserver = &sentry_support.BatchObserver{}
+	cluster.RetryPolicy = &gocql.ExponentialBackoffRetryPolicy{
+		NumRetries: 5,
+		Max:        time.Second * 7,
+	}
 
 	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())

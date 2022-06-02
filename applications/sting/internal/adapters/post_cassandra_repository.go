@@ -5,6 +5,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -142,6 +143,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 	if err := r.session.
 		Query(postTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(pst).
 		Consistency(gocql.LocalQuorum).
 		ExecRelease(); err != nil {
@@ -154,6 +156,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 		if err := r.session.
 			Query(postTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
@@ -171,6 +174,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 	if err := r.session.
 		Query(postTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
 		ExecRelease(); err != nil {
@@ -199,6 +203,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		Bind(postIds).
 		SelectRelease(&postsModels); err != nil {
@@ -219,12 +224,13 @@ func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, 
 	if err := r.session.
 		Query(postTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
 		GetRelease(&postPending); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrNotFound
+			return nil, domainerror.NewNotFoundError("post", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get post")
@@ -252,6 +258,7 @@ func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.
 		Where(qb.Eq("bucket")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0}).
 		SelectRelease(&suspendedClub); err != nil {
@@ -272,6 +279,7 @@ func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Con
 	if err := r.session.
 		Query(terminatedClubsTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
@@ -286,6 +294,7 @@ func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.
 	if err := r.session.
 		Query(terminatedClubsTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
@@ -340,6 +349,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 			"posted_at",
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -378,6 +388,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -428,6 +439,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status",
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {

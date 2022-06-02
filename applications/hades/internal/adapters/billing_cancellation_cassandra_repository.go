@@ -44,6 +44,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCancellationReason(ctx co
 	if err := r.session.
 		Query(cancellationReasonsTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(reasonItem)).
 		ExecRelease(); err != nil {
@@ -70,6 +71,7 @@ func (r BillingCassandraElasticsearchRepository) GetCancellationReasons(ctx cont
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
@@ -103,6 +105,7 @@ func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx c
 	if err := r.session.
 		Query(cancellationReasonsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&cancellationReason{Id: reasonId, Bucket: 0}).
 		GetRelease(&ruleSingle); err != nil {
@@ -144,6 +147,7 @@ func (r BillingCassandraElasticsearchRepository) updateCancellationReason(ctx co
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(ruleItem)).
 		ExecRelease(); err != nil {

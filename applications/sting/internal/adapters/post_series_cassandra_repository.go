@@ -74,6 +74,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 	if err := r.session.
 		Query(seriesSlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(seriesSlug{Slug: strings.ToLower(slug)}).
 		GetRelease(&b); err != nil {
@@ -102,6 +103,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 		Where(qb.In("slug")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&seriesSlugResults); err != nil {
@@ -139,6 +141,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 	if err := r.session.
 		Query(seriesTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(series{Id: seriesId}).
 		GetRelease(&med); err != nil {
@@ -176,6 +179,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(medi).
 		SelectRelease(&mediaModels); err != nil {
@@ -202,6 +206,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 	if err := r.session.
 		Query(seriesSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(seriesSlug{Slug: strings.ToLower(slug), SeriesId: id}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to release series slug")
@@ -235,6 +240,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 	if err := r.session.
 		Query(seriesTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(ser).
 		ExecRelease(); err != nil {
@@ -256,6 +262,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 		if err := r.session.
 			Query(seriesTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(ser).
 			ExecRelease(); err != nil {
@@ -303,6 +310,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {

@@ -66,6 +66,7 @@ func (r ClubInfractionCassandraRepository) CreateClubInfractionHistory(ctx conte
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
@@ -84,6 +85,7 @@ func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx conte
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
@@ -100,6 +102,7 @@ func (r ClubInfractionCassandraRepository) GetAllClubInfractionHistoryByClubIdOp
 	if err := clubInfractionHistoryTable.SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubInfractionHistory{ClubId: accountId}).
 		SelectRelease(&dbClubInfractionHistory); err != nil {
@@ -145,6 +148,7 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx 
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbClubInfractionHistory); err != nil {
@@ -192,6 +196,7 @@ func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx cont
 	if err := r.session.
 		Query(clubInfractionHistoryTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubInfractionHistory{Id: id, ClubId: userId}).
 		GetRelease(&dbAccountInfractionHistory); err != nil {

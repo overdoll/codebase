@@ -81,6 +81,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx conte
 		Where(qb.In("slug")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&categorySlugResults); err != nil {
@@ -103,6 +104,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 	if err := r.session.
 		Query(categorySlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(categorySlugs{Slug: strings.ToLower(slug)}).
 		GetRelease(&b); err != nil {
@@ -131,6 +133,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		Bind(cats).
 		SelectRelease(&categoriesModels); err != nil {
@@ -161,6 +164,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx cont
 	if err := r.session.
 		Query(categorySlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(categorySlugs{Slug: strings.ToLower(slug), CategoryId: categoryId}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(err, "failed to release category slug")
@@ -194,6 +198,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 	if err := r.session.
 		Query(categoryTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -217,6 +222,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 		if err := r.session.
 			Query(categoryTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
@@ -248,6 +254,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
@@ -284,6 +291,7 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 	if err := r.session.
 		Query(categoryTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(category{Id: categoryId}).
 		GetRelease(&cat); err != nil {

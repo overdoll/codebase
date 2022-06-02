@@ -178,6 +178,7 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 		)
 	}
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "CreatePostAuditLog failed")
 	}
@@ -240,6 +241,7 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 	if err := r.session.
 		Query(postRuleTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postRule{
 			PostId: postId,
@@ -262,6 +264,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogBucketsForAccount(ctx co
 
 	if err := r.session.Query(postAuditLogByModeratorBucketsTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postAuditLogBucket{
 			ModeratorAccountId: accountId,
@@ -302,6 +305,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 		if err := builder.
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(postAuditLog{PostId: *filter.PostId()}).
 			SelectRelease(&results); err != nil {
 			return nil, errors.Wrap(err, "SearchPostAuditLogs")
@@ -361,6 +365,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 		if err := builder.
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(postAuditLog{Bucket: bucketId, ModeratorAccountId: *filter.ModeratorId()}).
 			SelectRelease(&results); err != nil {
 			return nil, errors.Wrap(err, "SearchPostAuditLogs")

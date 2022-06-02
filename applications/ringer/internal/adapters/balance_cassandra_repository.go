@@ -58,6 +58,7 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 	if err := r.session.
 		Query(table.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(clubBalance{ClubId: clubId}).
 		GetRelease(&clubBal); err != nil {
 
@@ -90,6 +91,7 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 	if err := r.session.
 		Query(clubPaymentsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(clubPayment{Id: paymentId}).
 		GetRelease(&clubPay); err != nil {
 		return nil, errors.Wrap(err, "failed to get club payment by id")
@@ -123,6 +125,7 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 	err := r.session.
 		Query(table.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(clubBalance{ClubId: clubId}).
 		GetRelease(&b)
 

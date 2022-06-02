@@ -55,6 +55,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
@@ -84,6 +85,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		)
 	}
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create new recovery code set")
 	}
@@ -103,6 +105,7 @@ func (r AccountCassandraRepository) GetAccountRecoveryCodes(ctx context.Context,
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
@@ -141,6 +144,7 @@ func (r AccountCassandraRepository) HasAccountRecoveryCodes(ctx context.Context,
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
+		Idempotent(true).
 		WithContext(ctx).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
@@ -161,6 +165,7 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
@@ -192,6 +197,7 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 			Code:      foundCode.Code,
@@ -211,6 +217,7 @@ func (r AccountCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorTotpTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorTOTP{
 			AccountId: accountId,
 		}).
@@ -268,6 +275,7 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 		},
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create multi factor account")
 	}
@@ -304,6 +312,7 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 		},
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to delete multi factor account")
 	}

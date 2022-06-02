@@ -254,6 +254,7 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 		)
 	}
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to create resources")
 	}
@@ -315,6 +316,7 @@ func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, it
 		Where(qb.In("item_id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindMap(map[string]interface{}{
 			"item_id": itemId,
 		}).
@@ -362,6 +364,7 @@ func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, item
 		Query(resourcesTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.One).
+		Idempotent(true).
 		BindStruct(resources{ItemId: itemId, ResourceId: resourceId}).
 		GetRelease(&i); err != nil {
 
@@ -410,6 +413,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 		)
 	}
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(err, "failed to update resources")
 	}
@@ -417,11 +421,11 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 	return nil
 }
 
-func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resources []*resource.Resource) error {
+func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)
 
-	for _, target := range resources {
+	for _, target := range resourceItems {
 
 		bucket := os.Getenv("UPLOADS_BUCKET")
 
@@ -471,16 +475,15 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 		}
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
-
-	for _, r := range resources {
-		// remove selected resources
-		stmt, _ := qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()
-		batch.Query(stmt, r.ItemId())
-	}
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to delete resources")
+	for _, resour := range resourceItems {
+		if err := r.session.
+			Query(resourcesTable.Delete()).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(resources{ItemId: resour.ItemId()}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(err, "failed to delete resources")
+		}
 	}
 
 	return nil

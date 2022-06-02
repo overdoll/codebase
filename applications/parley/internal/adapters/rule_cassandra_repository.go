@@ -59,6 +59,7 @@ func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.
 	if err := r.session.
 		Query(rulesTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
@@ -85,6 +86,7 @@ func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cu
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
@@ -120,6 +122,7 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 	if err := r.session.
 		Query(rulesTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&rules{Id: ruleId, Bucket: 0}).
 		GetRelease(&ruleSingle); err != nil {
@@ -163,6 +166,7 @@ func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, 
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
