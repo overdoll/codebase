@@ -43,8 +43,8 @@ const waitForProcessing = (): void => {
 
 Cypress.config('defaultCommandTimeout', 10000)
 
-describe('Club - Create & Manage Post', () => {
-  it('create post, ', () => {
+describe('Create & Manage Posts', () => {
+  it('create post, manage posts, approve post', () => {
     /**
      * Set up the account to use in the tests
      */
@@ -151,6 +151,18 @@ describe('Club - Create & Manage Post', () => {
     cy.findByText(postCategories[1]).should('exist')
     cy.findByText(postCategories[2]).should('exist')
     cy.findByText(postCharacter).should('exist')
+    // add supporter content so we can test that the subscription button appears
+    cy.reload()
+    isOnStep('arrange')
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
+    gotoNextStep()
+    isOnStep('audience')
+    gotoNextStep()
+    isOnStep('category')
+    gotoNextStep()
+    isOnStep('character')
+    gotoNextStep()
+    isOnStep('review')
     // test post submission
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
     cy.findByText(/Submitted for review/iu).should('exist')
@@ -225,5 +237,20 @@ describe('Club - Create & Manage Post', () => {
     cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
     cy.findByText('Un-Archive Post').should('be.visible').click()
     cy.findByText(/Post was un-archived/iu).should('be.visible')
+
+    /**
+     * Check that you can collect subscription revenue from the home page
+     */
+    cy.visit(`/club/${clubName}/home`)
+    cy.findByText(/Post exclusive content at least once by/iu).should('be.visible')
+
+    /**
+     * Check that a new user can subscribe to your club
+     */
+    const [newUsername] = generateUsernameAndEmail()
+    cy.joinWithNewAccount(newUsername)
+    cy.visit(`/${clubName}`)
+    clickOnButton(/Become a Supporter/iu)
+    cy.findByText(/Your contribution directly supports/iu).should('be.visible')
   })
 })

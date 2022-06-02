@@ -2,37 +2,45 @@ import { generateUsernameAndEmail } from '../../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../../support/flow_builder'
 import { clickOnTile, searchForTerm } from '../../../support/user_actions'
 
+const preferenceAudience = 'Standard Audience'
+const preferenceCategory = 'Alter'
+
+const isOnStep = (step: string): void => {
+  switch (step) {
+    case 'age':
+      cy.findByText('Your Age').should('exist')
+      break
+    case 'audience':
+      cy.findByText('Select Audiences').should('exist')
+      break
+    case 'category':
+      cy.findByText('Select Categories').should('exist')
+      break
+    default:
+      break
+  }
+}
+
 Cypress.config('defaultCommandTimeout', 10000)
 
-describe('Settings - Curation Profile', () => {
-  const [username] = generateUsernameAndEmail()
-
-  const preferenceAudience = 'Standard Audience'
-  const preferenceCategory = 'Alter'
-
-  const isOnStep = (step: string): void => {
-    switch (step) {
-      case 'age':
-        cy.findByText('Your Age').should('exist')
-        break
-      case 'audience':
-        cy.findByText('Select Audiences').should('exist')
-        break
-      case 'category':
-        cy.findByText('Select Categories').should('exist')
-        break
-      default:
-        break
-    }
-  }
-
+describe('Curation Profile', () => {
   it('fill out the curation profile', () => {
+    /**
+     * Set up account
+     */
+    const [username] = generateUsernameAndEmail()
     cy.joinWithNewAccount(username)
     cy.visit('/settings/preferences')
+
+    /**
+     * Go to curation profile
+     */
     cy.waitUntil(() => cy.findByRole('button', { name: /Complete Curation Profile/iu }).should('not.be.disabled').click())
     cy.url().should('include', '/settings/preferences/curation-profile')
 
-    // fill out the age section
+    /**
+     * Fill out age section
+     */
     isOnStep('age')
     skipCurrentStep()
     cy.findByText(/Age preference was skipped/iu).should('exist')
@@ -44,7 +52,9 @@ describe('Settings - Curation Profile', () => {
     cy.findByPlaceholderText('Your age').should('have.value', '19')
     saveCurrentStep()
 
-    // fill out the audience section
+    /**
+     * Fill out audience section
+     */
     isOnStep('audience')
     skipCurrentStep()
     isOnStep('category')
@@ -52,7 +62,9 @@ describe('Settings - Curation Profile', () => {
     clickOnTile(preferenceAudience)
     saveCurrentStep()
 
-    // fill out the categories section
+    /**
+     * Fill out category section
+     */
     isOnStep('category')
     searchForTerm('Search for a category', preferenceCategory)
     clickOnTile(preferenceCategory)

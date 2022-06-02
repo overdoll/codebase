@@ -4,7 +4,7 @@ export const searchForTerm = (placeholder: string | RegExp, search: string): voi
 }
 
 export const clickOnTile = (text: string | RegExp): void => {
-  cy.findByText(text).should('not.be.disabled').click()
+  cy.findByText(text).should('not.be.disabled').click({ force: true })
 }
 
 export const clickOnButton = (text: string | RegExp): void => {

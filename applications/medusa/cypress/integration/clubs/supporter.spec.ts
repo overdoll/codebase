@@ -15,24 +15,28 @@ const testCardDetails = {
   cvv2: '301'
 }
 
+const newPaymentMethodClub = 'TestClub'
+const newPaymentMethodClubName = 'Test Club'
+
+const savedPaymentMethodClub = 'SecondTestClub'
+const savedPaymentMethodClubName = 'Second Test Club'
+
 Cypress.config('defaultCommandTimeout', 10000)
 
-describe('Club - Become Supporter', () => {
-  const [username] = generateUsernameAndEmail()
-
-  const newPaymentMethodClub = 'TestClub'
-  const newPaymentMethodClubName = 'Test Club'
-
-  const savedPaymentMethodClub = 'SecondTestClub'
-  const savedPaymentMethodClubName = 'Second Test Club'
-
-  it('become supporter with new payment method', () => {
+describe('Supporter', () => {
+  it('become supporter', () => {
+    /**
+     * Set up supporter account
+     */
+    const [username] = generateUsernameAndEmail()
     cy.joinWithNewAccount(username)
 
+    /**
+     * Become supporter using new payment method
+     */
     cy.visit(`/${newPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/Your contribution directly supports/iu).should('be.visible')
-
     // change currency
     cy.findByText(/Preferred Billing Currency/iu).should('exist').parent().get('select').select('CAD')
     cy.findByText(/CA[$]/u).should('be.visible')
@@ -77,28 +81,23 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
     cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
-  })
 
-  it('enable two factor', () => {
-    cy.joinWithNewAccount(username)
-
-    // check that they are restricted by two factor
+    /**
+     * Enable two factor so you can support using saved payment method
+     */
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
     cy.visit('/settings/billing/payment-methods')
     cy.findByText(/You must enable two-factor authentication/iu).should('be.visible')
-
     cy.enableTwoFactor()
-  })
 
-  it('cancel subscription and update payment method', () => {
-    cy.joinWithNewAccount(username)
-
+    /**
+     * Cancel subscription, update payment method modal
+     */
     cy.visit('/settings/billing')
     cy.findByText('My Subscriptions').should('be.visible').click()
     cy.url().should('include', '/settings/billing/subscriptions')
-
     cy.findByText(newPaymentMethodClubName).should('be.visible').click()
     cy.findByText('Subscription Details').should('be.visible')
     clickOnButton(/Manage Subscription/iu)
@@ -115,11 +114,10 @@ describe('Club - Become Supporter', () => {
     clickOnButton('Cancel Subscription')
     cy.findByText(newPaymentMethodClubName).should('be.visible')
     cy.findByText(/Benefits expire in/iu).should('be.visible')
-  })
 
-  it('become supporter with saved payment method', () => {
-    cy.joinWithNewAccount(username)
-
+    /**
+     * Become supporter using saved payment method
+     */
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/How will you pay/iu).should('be.visible')
@@ -150,11 +148,10 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
     cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
-  })
 
-  it('remove saved payment method', () => {
-    cy.joinWithNewAccount(username)
-
+    /**
+     * Remove saved payment method
+     */
     cy.visit('/settings/billing')
     cy.findByText('Payment Methods').should('be.visible').click()
     cy.url().should('include', '/settings/billing/payment-methods')
@@ -164,19 +161,35 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Delete Payment Method/iu).should('be.visible').click()
     clickOnButton('Delete Saved Payment Method')
     cy.findByText(/No payment methods found/iu).should('be.visible')
-  })
 
-  it('check that you cant delete account', () => {
-    cy.joinWithNewAccount(username)
-
+    /**
+     * Check that you can't delete account with active subscriptions
+     */
     cy.visit('/settings/profile')
     cy.findByText('Delete Account').should('be.visible').click()
     cy.url().should('include', '/settings/profile/delete-account')
     cy.findByText(/You cannot delete your account until you cancel your subscriptions/iu).should('be.visible')
-  })
 
-  it('refund transaction, club payments, transaction metrics', () => {
+    /**
+     * Disable two factor so you can switch between accounts
+     */
+    cy.visit('/settings/security')
+    cy.waitUntil(() => cy.findByRole('button', { name: /Disable/iu }).should('not.be.disabled'))
+    clickOnButton(/Disable/iu)
+    clickOnButton(/Disable Two-factor/iu)
+    cy.findByText(/Disable Two-Factor Authentication/iu).should('not.exist')
+
+    /**
+     * Issue refund on transaction for account as staff, check metrics, check refunds
+     */
     cy.joinWithExistingAccount('0eclipse')
+
+    // go to club payments
+    cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
+    clickOnButton('View Payments')
+    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
+    cy.findAllByText('PENDING').first().should('be.visible').click()
+    cy.findByText(/Fee Breakdown/iu).should('be.visible')
 
     // refund transaction
     cy.visit(`/staff/account/${username}?index=2`)
@@ -190,20 +203,18 @@ describe('Club - Become Supporter', () => {
     cy.findByText(/Successfully refunded/iu).should('be.visible')
 
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
-
     // see transaction metrics
     cy.findByText('Transaction Metrics').should('be.visible')
 
-    // go to club payments
-    // TODO see refunded transaction
+    // go to refunded transaction
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
     clickOnButton('View Payments')
-    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
-    cy.findAllByText('PENDING').first().should('be.visible').click()
+    cy.findAllByText('READY').first().should('be.visible').click()
     cy.findByText(/Deduction Breakdown/iu).should('be.visible')
-  })
 
-  it('see refunded transaction', () => {
+    /**
+     * See refunded transaction as account
+     */
     cy.joinWithNewAccount(username)
 
     // expired subscription from refund

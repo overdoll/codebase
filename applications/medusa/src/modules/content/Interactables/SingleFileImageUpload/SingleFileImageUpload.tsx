@@ -23,7 +23,7 @@ export default function SingleFileImageUpload ({
   onChange,
   isInvalid,
   size = 'sm',
-  isLoading = false
+  isLoading = false,
 }: Props): JSX.Element {
   const initialUppy = useRef<Uppy | undefined>(undefined)
   if (initialUppy.current === undefined) {
@@ -100,7 +100,7 @@ export default function SingleFileImageUpload ({
 
       notify({
         status: 'error',
-        title: message
+        title: message,
       })
     }
 
@@ -122,7 +122,7 @@ export default function SingleFileImageUpload ({
               h={4}
               icon={FileUpload}
               fill={isInvalid ? 'orange.900' : 'gray.100'}
-                       />)}
+            />)}
             size={size}
             w='100%'
             isLoading={isLoading}
@@ -146,7 +146,7 @@ export default function SingleFileImageUpload ({
             h={4}
             icon={RemoveCross}
             fill={isInvalid ? 'orange.900' : 'gray.100'}
-                     />)}
+          />)}
           onClick={removeUpload}
           size={size}
           w='100%'
@@ -165,21 +165,21 @@ export default function SingleFileImageUpload ({
       <Flex align='center' justify='space-between'>
         {progress != null
           ? <Progress
-              colorScheme='primary'
-              w='100%'
-              value={progress}
-              size='lg'
-              mr={4}
-            />
+            colorScheme='primary'
+            w='100%'
+            value={((progress ?? 0) * 100)}
+            size='lg'
+            mr={4}
+          />
           : <Progress
-              colorScheme='primary'
-              w='100%'
-              value={100}
-              size='lg'
-              hasStripe
-              isAnimated
-              mr={4}
-            />}
+            colorScheme='primary'
+            w='100%'
+            value={100}
+            size='lg'
+            hasStripe
+            isAnimated
+            mr={4}
+          />}
         <CloseButton size='sm' isDisabled={isLoading} onClick={removeUpload} />
       </Flex>
     </LargeBackgroundBox>

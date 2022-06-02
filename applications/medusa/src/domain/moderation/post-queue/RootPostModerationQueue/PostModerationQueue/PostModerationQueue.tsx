@@ -14,7 +14,7 @@ import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:mod
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import PostTagsPreview from './PostTagsPreview/PostTagsPreview'
 
 interface Props {
@@ -78,7 +78,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
 
   const currentPost = data?.postModeratorQueue.edges[currentIndex]?.node.post
 
-  const postsConnection = data?.postModeratorQueue?.__id
+  const postsConnection = data.postModeratorQueue.__id
 
   const nextPage = (): void => {
     if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
@@ -86,6 +86,9 @@ export default function PostModerationQueue (props: Props): JSX.Element {
         1,
         {
           onComplete () {
+            if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
+              return
+            }
             setCurrentIndex(x => x + 1)
           }
         }
@@ -142,7 +145,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
       <Flex>
         {currentIndex !== 0 &&
           <IconButton
-            aria-label='go left'
+            aria-label={i18n._(t`Previous Post`)}
             icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.300' />}
             variant='solid'
             mr={2}
@@ -161,7 +164,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
         </SmallBackgroundBox>
         {(currentIndex + 1 !== data.postModeratorQueue?.edges.length || hasNext) &&
           <IconButton
-            aria-label='button right'
+            aria-label={i18n._(t`Load More Posts`)}
             ml={2}
             icon={<Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.300' />}
             variant='solid'

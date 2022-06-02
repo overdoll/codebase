@@ -1,26 +1,27 @@
 import { generateUsernameAndEmail } from '../../../support/generate'
+import { logout } from '../../../support/join_actions'
 
-describe('Settings - Add Email', () => {
-  const [username] = generateUsernameAndEmail()
-
-  beforeEach(() => {
-    cy.joinWithNewAccount(username)
-  })
-
+describe('Sessions Settings', () => {
   it('can see current session', () => {
+    /**
+     * See current session
+     */
+    const [username] = generateUsernameAndEmail()
+    cy.joinWithNewAccount(username)
     cy.visit('/settings/security')
     cy.findByText('Account Sessions').should('be.visible').click()
     cy.url().should('include', '/settings/security/sessions')
-
     cy.findByText(/Here is a list of devices/).should('exist')
     cy.findByText(/Current Session/).should('exist')
-  })
 
-  it('can see a new session and revoke it', () => {
-    cy.visit('/')
+    /**
+     * Logout, see new session, and revoke it
+     */
+    logout()
     cy.clearCookies()
-
     cy.joinWithExistingAccount(username)
+    cy.visit('/')
+
     cy.visit('/settings/security/sessions')
     cy.findByText(/Here is a list of devices/).should('exist')
     cy.findByText(/Last Accessed/iu).should('exist').click()

@@ -80,7 +80,7 @@ module.exports = withBundleAnalyzer({
     ignoreDuringBuilds: true
   },
   images: {
-    domains: ['dcd9vpqfvvgum.cloudfront.net'],
+    domains: ['sandbox-overdoll-resources.s3.amazonaws.com', 'dcd9vpqfvvgum.cloudfront.net', 's3.amazonaws.com'],
     minimumCacheTTL: 60
   },
   webpack: (config) => {

@@ -1,8 +1,6 @@
 import { clickOnButton } from '../../support/user_actions'
 
-describe('Visit Public Pages', () => {
-  const username = '0eclipse'
-
+describe('Pages', () => {
   it('go to the home page', () => {
     cy.visit('/')
   })
@@ -23,6 +21,7 @@ describe('Visit Public Pages', () => {
   })
 
   it('go to a profile', () => {
+    const username = '0eclipse'
     cy.visit(`/profile/${username}`)
     cy.findByText(username).should('exist')
   })
