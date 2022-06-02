@@ -2,14 +2,9 @@ package report
 
 import (
 	"overdoll/applications/parley/internal/domain/rule"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrPostReportNotFound = domainerror.NewValidation("post report not found")
 )
 
 type PostReport struct {

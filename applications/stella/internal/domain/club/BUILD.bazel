@@ -17,6 +17,7 @@ go_library(
     importpath = "overdoll/applications/stella/internal/domain/club",
     visibility = ["//applications/stella:__subpackages__"],
     deps = [
+        "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",

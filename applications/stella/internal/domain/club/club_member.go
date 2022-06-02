@@ -2,7 +2,7 @@ package club
 
 import (
 	"errors"
-	"overdoll/libraries/domainerror"
+	domainerror2 "overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -13,8 +13,8 @@ const (
 )
 
 var (
-	ErrAccountMemberTooManyClubs = domainerror.NewValidation("account is member of too many clubs")
-	ErrClubMemberNotFound        = domainerror.NewValidation("club member not found")
+	ErrAccountMemberTooManyClubs = domainerror2.NewValidation("account is member of too many clubs")
+	ErrClubMemberNotFound        = domainerror2.NewValidation("club member not found")
 )
 
 type Member struct {
@@ -34,7 +34,7 @@ func NewMember(requester *principal.Principal, club *Club, currentClubCount int)
 	}
 
 	if club.ownerAccountId == requester.AccountId() {
-		return nil, domainerror.NewAuthorization("owner cannot become member of own club")
+		return nil, domainerror2.NewAuthorization("owner cannot become member of own club")
 	}
 
 	res, err := IsAccountClubMembershipReached(requester, requester.AccountId(), currentClubCount)
@@ -111,7 +111,7 @@ func (m *Member) CanRevokeClubMembership(requester *principal.Principal, club *C
 	}
 
 	if m.isSupporter {
-		return domainerror.NewValidation("cannot leave club while supporter. cancel subscription and wait until supporter benefits expire")
+		return domainerror2.NewValidation("cannot leave club while supporter. cancel subscription and wait until supporter benefits expire")
 	}
 
 	return nil

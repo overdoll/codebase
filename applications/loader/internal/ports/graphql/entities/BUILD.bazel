@@ -7,9 +7,9 @@ go_library(
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
         "//applications/loader/internal/app",
-        "//applications/loader/internal/domain/resource",
         "//applications/loader/internal/ports/graphql/dataloader",
         "//applications/loader/internal/ports/graphql/types",
+        "//libraries/errors/domainerror",
         "//libraries/graphql/relay",
     ],
 )

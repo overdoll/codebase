@@ -4,9 +4,9 @@ import (
 	"context"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
-	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/passport"
 )
 
@@ -20,7 +20,7 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -65,7 +65,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

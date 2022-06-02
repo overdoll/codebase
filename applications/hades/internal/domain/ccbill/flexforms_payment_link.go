@@ -3,7 +3,7 @@ package ccbill
 import (
 	"os"
 	hades "overdoll/applications/hades/proto"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 )
 

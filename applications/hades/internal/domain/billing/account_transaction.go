@@ -1,15 +1,11 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrAccountTransactionNotFound = domainerror.NewValidation("account transaction not found")
 )
 
 type AccountTransaction struct {

@@ -11,6 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/internal/domain/rule",
+        "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/principal",
     ],

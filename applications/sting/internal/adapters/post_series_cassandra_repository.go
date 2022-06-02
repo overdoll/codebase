@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"strings"
 	"time"
@@ -78,7 +79,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrSeriesNotFound
+			return nil, domainerror.NewNotFoundError("series", slug)
 		}
 
 		return nil, errors.Wrap(err, "failed to get series by slug")
@@ -143,7 +144,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		GetRelease(&med); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrSeriesNotFound
+			return nil, domainerror.NewNotFoundError("series", seriesId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get series by id")

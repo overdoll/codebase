@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/payout"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 

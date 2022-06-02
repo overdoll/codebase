@@ -1,15 +1,10 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrCCBillSubscriptionNotFound = domainerror.NewValidation("ccbill subscription not found")
 )
 
 type CCBillSubscriptionDetails struct {

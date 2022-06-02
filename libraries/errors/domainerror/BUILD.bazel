@@ -4,8 +4,10 @@ go_library(
     name = "domainerror",
     srcs = [
         "authorization.go",
+        "not_found.go",
         "validation.go",
     ],
-    importpath = "overdoll/libraries/domainerror",
+    importpath = "overdoll/libraries/errors/domainerror",
     visibility = ["//visibility:public"],
+    deps = ["//libraries/errors"],
 )

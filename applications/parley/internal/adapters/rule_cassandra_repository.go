@@ -7,6 +7,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -124,7 +125,7 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, rule.ErrRuleNotFound
+			return nil, domainerror.NewNotFoundError("rule", ruleId)
 		}
 
 		return nil, errors.Wrap(err, "getRuleById")

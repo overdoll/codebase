@@ -31,6 +31,6 @@ go_library(
         "//applications/parley/internal/domain/post_audit_log",
         "//applications/parley/internal/domain/report",
         "//applications/parley/internal/domain/rule",
-        "@com_github_pkg_errors//:errors",
+        "//libraries/errors/domainerror",
     ],
 )

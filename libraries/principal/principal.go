@@ -2,7 +2,7 @@ package principal
 
 import (
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 var (

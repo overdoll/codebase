@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 	"go.uber.org/zap"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -143,7 +143,7 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 		GetRelease(&accountInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, domainerror.NewNotFoundError("account", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get account")
@@ -192,10 +192,6 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 		Consistency(gocql.LocalOne).
 		Bind(ids).
 		SelectRelease(&accountInstances); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
-		}
 		return nil, errors.Wrap(err, "failed to get account by id")
 	}
 
@@ -239,7 +235,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 		Get(&accEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, domainerror.NewNotFoundError("account - email", email)
 		}
 		return nil, errors.Wrap(err, "failed to get account by email")
 	}
@@ -587,7 +583,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 
 	if err != nil {
 
-		if err != account.ErrAccountNotFound {
+		if !domainerror.IsNotFoundError(err) {
 			return nil, err
 		}
 
@@ -655,7 +651,7 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 		Get(&accountUsername); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, domainerror.NewNotFoundError("account - username", username)
 		}
 		return nil, errors.Wrap(err, "failed to get account by username")
 	}
@@ -687,7 +683,7 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 		Get(&accountEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, domainerror.NewNotFoundError("account", accountId)
 		}
 		return nil, errors.Wrap(err, "failed to get email by account")
 	}
@@ -730,7 +726,7 @@ func (r AccountCassandraRepository) GetAccountEmails(ctx context.Context, reques
 		SelectRelease(&accountEmails); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, domainerror.NewNotFoundError("account", accountId)
 		}
 		return nil, errors.Wrap(err, "failed to get emails by account")
 	}
@@ -834,7 +830,7 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 	// check to make sure this email is not taken
 	existingAcc, err := r.GetAccountByEmail(ctx, email.Email())
 
-	if err != nil && err != account.ErrAccountNotFound {
+	if err != nil && !domainerror.IsNotFoundError(err) {
 		return err
 	}
 

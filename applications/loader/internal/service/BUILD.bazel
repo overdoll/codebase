@@ -17,6 +17,7 @@ go_library(
         "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//mocks",
+        "@org_uber_go_zap//:zap",
     ],
 )
 

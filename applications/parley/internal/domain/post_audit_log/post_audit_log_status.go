@@ -1,7 +1,7 @@
 package post_audit_log
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type PostAuditLogAction struct {

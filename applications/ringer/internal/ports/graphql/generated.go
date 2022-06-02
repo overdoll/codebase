@@ -123,17 +123,19 @@ type ComplexityRoot struct {
 	}
 
 	ClubPayout struct {
-		Amount        func(childComplexity int) int
-		Club          func(childComplexity int) int
-		CreatedAt     func(childComplexity int) int
-		Currency      func(childComplexity int) int
-		DepositDate   func(childComplexity int) int
-		Events        func(childComplexity int) int
-		ID            func(childComplexity int) int
-		Payments      func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) int
-		PayoutAccount func(childComplexity int) int
-		Reference     func(childComplexity int) int
-		Status        func(childComplexity int) int
+		Amount         func(childComplexity int) int
+		Club           func(childComplexity int) int
+		CoverFeeAmount func(childComplexity int) int
+		CreatedAt      func(childComplexity int) int
+		Currency       func(childComplexity int) int
+		DepositDate    func(childComplexity int) int
+		Events         func(childComplexity int) int
+		ID             func(childComplexity int) int
+		Payments       func(childComplexity int, after *string, before *string, first *int, last *int, status []types.ClubPaymentStatus) int
+		PayoutAccount  func(childComplexity int) int
+		Reference      func(childComplexity int) int
+		Status         func(childComplexity int) int
+		TotalAmount    func(childComplexity int) int
 	}
 
 	ClubPayoutConnection struct {
@@ -618,6 +620,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubPayout.Club(childComplexity), true
 
+	case "ClubPayout.coverFeeAmount":
+		if e.complexity.ClubPayout.CoverFeeAmount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.CoverFeeAmount(childComplexity), true
+
 	case "ClubPayout.createdAt":
 		if e.complexity.ClubPayout.CreatedAt == nil {
 			break
@@ -685,6 +694,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClubPayout.Status(childComplexity), true
+
+	case "ClubPayout.totalAmount":
+		if e.complexity.ClubPayout.TotalAmount == nil {
+			break
+		}
+
+		return e.complexity.ClubPayout.TotalAmount(childComplexity), true
 
 	case "ClubPayoutConnection.edges":
 		if e.complexity.ClubPayoutConnection.Edges == nil {
@@ -1707,6 +1723,12 @@ type ClubPayout implements Node @key(fields: "id") {
 
   """The amount this payout is created in."""
   amount: Int!
+
+  """The amount that will be covered as the cover fee."""
+  coverFeeAmount: Int!
+
+  """The amount, with the cover fee."""
+  totalAmount: Int!
 
   """If a payout failed, an event will be created here."""
   events: [ClubPayoutEvent!]!
@@ -4275,6 +4297,76 @@ func (ec *executionContext) _ClubPayout_amount(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Amount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_coverFeeAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CoverFeeAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ClubPayout_totalAmount(ctx context.Context, field graphql.CollectedField, obj *types.ClubPayout) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ClubPayout",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalAmount, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9211,6 +9303,26 @@ func (ec *executionContext) _ClubPayout(ctx context.Context, sel ast.SelectionSe
 		case "amount":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._ClubPayout_amount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "coverFeeAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_coverFeeAmount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalAmount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._ClubPayout_totalAmount(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

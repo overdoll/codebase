@@ -9,6 +9,7 @@ go_library(
     importpath = "overdoll/applications/parley/internal/domain/rule",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
+        "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",

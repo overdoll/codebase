@@ -11,14 +11,13 @@ import (
 	"io"
 	"math"
 	"os"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/uuid"
 	"strconv"
 )
 
 var (
-	ErrResourceNotFound   = domainerror.NewValidation("resource not found")
 	ErrFileTypeNotAllowed = domainerror.NewValidation("filetype not allowed")
 )
 

@@ -12,6 +12,7 @@ import (
 	bucket2 "overdoll/libraries/bucket"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -641,6 +642,9 @@ func (r BillingCassandraElasticsearchRepository) GetAccountSavedPaymentMethodByI
 		WithContext(ctx).
 		BindStruct(&accountSavedPaymentMethod{AccountId: accountId, Id: id}).
 		GetRelease(&savedPay); err != nil {
+		if err == gocql.ErrNotFound {
+			return nil, domainerror.NewNotFoundError("account saved payment method", accountId+"-"+id)
+		}
 		return nil, err
 	}
 
@@ -839,7 +843,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 		GetRelease(&accountClubSupported); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, domainerror.NewNotFoundError("account club supporter subscription", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get account club support by id")
@@ -1082,7 +1086,7 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		GetRelease(&lockedSub); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, domainerror.NewNotFoundError("account club supporter subscription", accountId+"-"+clubId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get locked account club supporter subscription")
@@ -1098,7 +1102,7 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		}).
 		GetRelease(&accountClubSupported); err != nil {
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, domainerror.NewNotFoundError("account club supporter subscription", lockedSub.AccountClubSupporterSubscriptionId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get account club support by id")
@@ -1199,7 +1203,7 @@ func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterS
 	}
 
 	if len(accountExpired) == 0 {
-		return nil, billing.ErrExpiredAccountClubSupportSubscriptionNotFound
+		return nil, domainerror.NewNotFoundError("expired account club supporter subscription", accountId+"-"+clubId)
 	}
 
 	expired := accountExpired[0]
@@ -1266,7 +1270,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByCCBillTr
 		GetRelease(&transaction); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountTransactionNotFound
+			return nil, domainerror.NewNotFoundError("account transaction (ccbill)", ccbillTransactionId)
 		}
 
 		return nil, errors.Wrap(err, "failed to account transaction by ccbill transaction id")
@@ -1303,7 +1307,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 		GetRelease(&transaction); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountTransactionNotFound
+			return nil, domainerror.NewNotFoundError("account transaction", transactionHistoryId)
 		}
 
 		return nil, errors.Wrap(err, "failed to account transaction by id")
@@ -1439,7 +1443,7 @@ func (r BillingCassandraElasticsearchRepository) GetCCBillSubscriptionDetailsByI
 		GetRelease(&ccbillSubscription); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrCCBillSubscriptionNotFound
+			return nil, domainerror.NewNotFoundError("ccbill subscription details", ccbillSubscriptionId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get ccbill subscription")

@@ -1,6 +1,8 @@
 package billing
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type CardType struct {
 	slug string
@@ -36,5 +38,5 @@ func CardTypeFromString(s string) (CardType, error) {
 		return Other, nil
 	}
 
-	return Unknown, errors.New("unknown card type: " + s)
+	return Unknown, domainerror.NewValidation("unknown card type: " + s)
 }

@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/ringer/internal/domain/event"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"time"
 )

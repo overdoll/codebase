@@ -11,6 +11,8 @@ go_library(
     deps = [
         "//applications/loader/internal/app/workflows",
         "//applications/loader/internal/domain/resource",
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/support",
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",

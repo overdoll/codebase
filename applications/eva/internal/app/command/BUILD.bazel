@@ -42,7 +42,7 @@ go_library(
         "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
-        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/principal",
     ],

@@ -7,6 +7,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
 	"strings"
@@ -116,7 +117,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrAudienceNotFound
+			return nil, domainerror.NewNotFoundError("audience", slug)
 		}
 
 		return nil, errors.Wrap(err, "failed to get audience by slug")
@@ -174,7 +175,7 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrAudienceNotFound
+			return nil, domainerror.NewNotFoundError("audience", audienceId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get audience by id")

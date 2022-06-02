@@ -8,7 +8,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"sort"
 )
 

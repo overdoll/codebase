@@ -2,7 +2,7 @@ package payment
 
 import (
 	"math"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 const (

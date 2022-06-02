@@ -2,7 +2,6 @@ package club_infraction
 
 import (
 	"overdoll/applications/parley/internal/domain/rule"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -25,10 +24,6 @@ type ClubInfractionHistory struct {
 
 var (
 	LengthPeriodSuspensions = []int64{0, 1, 3, 5, 7}
-)
-
-var (
-	ErrClubInfractionHistoryNotFound = domainerror.NewValidation("club infraction not found")
 )
 
 func newClubInfraction(issuerAccountId string, source ClubInfractionHistorySource, clubId string, pastClubInfractionHistory []*ClubInfractionHistory, ruleId string, customLength time.Time) (*ClubInfractionHistory, error) {
@@ -130,7 +125,7 @@ func (m *ClubInfractionHistory) ExpiresAt() time.Time {
 }
 
 func (m *ClubInfractionHistory) CanView(requester *principal.Principal) error {
-	return CanViewClubInfractionHistory(requester)
+	return CanViewClubInfractionHistory(requester, m.clubId)
 }
 
 func (m *ClubInfractionHistory) CanDelete(requester *principal.Principal) error {
@@ -172,13 +167,16 @@ func CanIssueInfraction(requester *principal.Principal, ruleInstance *rule.Rule)
 	return nil
 }
 
-func CanViewClubInfractionHistory(requester *principal.Principal) error {
+func CanViewClubInfractionHistory(requester *principal.Principal, clubId string) error {
 
-	//if !(requester.IsModerator() || requester.IsStaff()) {
-	//	return principal.ErrNotAuthorized
-	//}
+	if !(requester.IsModerator() || requester.IsStaff()) {
 
-	// TODO: get permission for club before checking this
+		if err := requester.CheckClubOwner(clubId); err != nil {
+			return err
+		}
+
+		return nil
+	}
 
 	return nil
 }

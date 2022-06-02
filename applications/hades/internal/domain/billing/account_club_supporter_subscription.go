@@ -1,7 +1,7 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	ErrAccountClubSupportSubscriptionNotFound  = domainerror.NewValidation("account club support subscription not found")
 	ErrAccountClubSupportSubscriptionDuplicate = domainerror.NewValidation("account club support subscription is duplicate")
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/event"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 

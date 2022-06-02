@@ -2,7 +2,7 @@ package passport
 
 import (
 	"context"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 
 	"sync"

@@ -34,6 +34,8 @@ go_library(
     importpath = "overdoll/applications/hades/internal/domain/billing",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/location",
         "//libraries/money",

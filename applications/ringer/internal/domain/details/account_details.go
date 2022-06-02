@@ -2,7 +2,7 @@ package details
 
 import (
 	"github.com/biter777/countries"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 

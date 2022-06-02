@@ -1,7 +1,7 @@
 package club
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type MemberSorting struct {

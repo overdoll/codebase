@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -42,7 +42,7 @@ func (r *QueryResolver) Serial(ctx context.Context, slug string) (*types.Series,
 
 	if err != nil {
 
-		if err == post.ErrSeriesNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

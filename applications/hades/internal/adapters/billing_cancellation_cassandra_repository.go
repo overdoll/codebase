@@ -6,6 +6,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
@@ -107,7 +108,7 @@ func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx c
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrReasonNotFound
+			return nil, domainerror.NewNotFoundError("cancellation reason", reasonId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get cancellation reason by id")

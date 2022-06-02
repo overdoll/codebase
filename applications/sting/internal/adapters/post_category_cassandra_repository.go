@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"strings"
 	"time"
@@ -107,7 +108,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrCategoryNotFound
+			return nil, domainerror.NewNotFoundError("category", slug)
 		}
 
 		return nil, errors.Wrap(err, "failed to get category by slug")
@@ -288,7 +289,7 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		GetRelease(&cat); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrCategoryNotFound
+			return nil, domainerror.NewNotFoundError("category", categoryId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get category by id")

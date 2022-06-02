@@ -1,7 +1,7 @@
 package account
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"strings"
 
 	"overdoll/libraries/paging"

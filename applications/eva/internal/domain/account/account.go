@@ -2,7 +2,7 @@ package account
 
 import (
 	"errors"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -39,7 +39,6 @@ var (
 	ErrUsernameNotUnique      = domainerror.NewValidation("username is not unique")
 	ErrEmailNotUnique         = domainerror.NewValidation("email is not unique")
 	ErrEmailCodeInvalid       = domainerror.NewValidation("email confirmation expired or invalid")
-	ErrAccountNotFound        = domainerror.NewValidation("account not found")
 	ErrAccountPrivileged      = domainerror.NewValidation("account is privileged")
 	ErrMultiFactorRequired    = domainerror.NewValidation("account needs to have multi factor enabled")
 	ErrAccountNoRole          = domainerror.NewValidation("account does not have the assigned role")

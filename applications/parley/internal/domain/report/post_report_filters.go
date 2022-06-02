@@ -1,7 +1,7 @@
 package report
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 )
 

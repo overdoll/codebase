@@ -9,6 +9,7 @@ go_library(
     importpath = "overdoll/applications/ringer/internal/domain/details",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
+        "//libraries/errors/domainerror",
         "//libraries/principal",
         "@com_github_biter777_countries//:countries",
     ],

@@ -1,13 +1,8 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
-)
-
-var (
-	ErrClubSupporterReceiptNotFound = domainerror.NewValidation("club supporter receipt not found")
 )
 
 type ClubSupporterReceipt struct {

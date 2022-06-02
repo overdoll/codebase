@@ -1,7 +1,7 @@
 package payout
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type Status struct {

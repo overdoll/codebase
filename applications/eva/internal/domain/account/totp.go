@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 	"image/png"
 	"overdoll/libraries/crypt"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"github.com/pquerna/otp"

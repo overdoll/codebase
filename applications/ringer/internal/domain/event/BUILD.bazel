@@ -10,6 +10,7 @@ go_library(
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
         "//applications/ringer/internal/domain/payout",
+        "//libraries/errors/domainerror",
         "//libraries/money",
         "//libraries/principal",
     ],

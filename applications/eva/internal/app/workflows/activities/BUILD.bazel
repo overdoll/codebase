@@ -25,6 +25,6 @@ go_library(
         "//applications/eva/internal/app/command",
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/session",
-        "@com_github_getsentry_sentry_go//:sentry-go",
+        "//libraries/sentry_support",
     ],
 )

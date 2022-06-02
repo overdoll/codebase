@@ -88,6 +88,12 @@ type ClubPayout implements Node @key(fields: "id") {
   """The amount this payout is created in."""
   amount: Int!
 
+  """The amount that will be covered as the cover fee."""
+  coverFeeAmount: Int!
+
+  """The amount, with the cover fee."""
+  totalAmount: Int!
+
   """If a payout failed, an event will be created here."""
   events: [ClubPayoutEvent!]!
 

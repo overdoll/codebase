@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"github.com/go-playground/validator/v10"
 	"github.com/yuin/goldmark"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	ErrRuleNotFound   = domainerror.NewValidation("rule not found")
 	ErrRuleDeprecated = domainerror.NewValidation("rule not found")
 )
 

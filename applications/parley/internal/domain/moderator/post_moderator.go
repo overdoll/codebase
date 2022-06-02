@@ -2,15 +2,14 @@ package moderator
 
 import (
 	"overdoll/applications/parley/internal/domain/rule"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
 )
 
 var (
-	ErrInvalidModerator      = domainerror.NewValidation("moderator does not match")
-	ErrPostModeratorNotFound = domainerror.NewValidation("post moderator not found")
+	ErrInvalidModerator = domainerror.NewValidation("moderator does not match")
 )
 
 type PostModerator struct {

@@ -5,7 +5,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type CopyResourcesAndApplyFilters struct {

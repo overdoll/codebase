@@ -1,7 +1,7 @@
 package ccbill
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 var (

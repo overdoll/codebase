@@ -2,7 +2,7 @@ package post
 
 import (
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -12,7 +12,6 @@ import (
 
 var (
 	ErrNotDraft = domainerror.NewValidation("post must be in draft")
-	ErrNotFound = domainerror.NewValidation("post not found")
 )
 
 type Post struct {
@@ -542,7 +541,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 		if err := requester.CheckClubOwner(p.clubId); err != nil {
 
 			if err := requester.BelongsToAccount(p.ContributorId()); err != nil {
-				return ErrNotFound
+				return domainerror.NewNotFoundError("post", p.id)
 			}
 
 			return nil

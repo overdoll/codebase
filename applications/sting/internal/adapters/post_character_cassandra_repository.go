@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"strings"
 	"time"
@@ -125,7 +126,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrCharacterNotFound
+			return nil, domainerror.NewNotFoundError("character", slug)
 		}
 
 		return nil, errors.Wrap(err, "failed to get character by slug")
@@ -352,7 +353,7 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		GetRelease(&char); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrCharacterNotFound
+			return nil, domainerror.NewNotFoundError("character", characterId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get characters by id")

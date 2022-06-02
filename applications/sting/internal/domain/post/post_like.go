@@ -1,7 +1,7 @@
 package post
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"time"
 )

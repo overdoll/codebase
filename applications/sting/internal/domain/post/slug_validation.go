@@ -2,7 +2,7 @@ package post
 
 import (
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 func validateSlug(slug string) error {

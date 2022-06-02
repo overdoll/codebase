@@ -12,6 +12,7 @@ go_library(
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
         "//applications/parley/internal/domain/rule",
+        "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/uuid",

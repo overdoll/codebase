@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/support"
 	"time"
@@ -93,7 +94,7 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 		GetRelease(&md); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrModeratorNotFound
+			return nil, domainerror.NewNotFoundError("moderator", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get moderators")
@@ -115,7 +116,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 		GetRelease(&postModerator); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrPostModeratorNotFound
+			return nil, domainerror.NewNotFoundError("post moderator", postId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get post moderator by post id")
@@ -207,7 +208,7 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 		GetRelease(&item); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrPostModeratorNotFound
+			return nil, domainerror.NewNotFoundError("post moderator", postId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get post moderator queue for account")

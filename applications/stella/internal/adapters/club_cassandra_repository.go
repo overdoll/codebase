@@ -8,8 +8,8 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -230,7 +230,7 @@ func (r ClubCassandraElasticsearchRepository) getClubSlug(ctx context.Context, s
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, club.ErrClubNotFound
+			return nil, domainerror.NewNotFoundError("club", slug)
 		}
 
 		return nil, errors.Wrap(err, "failed to get club by slug")
@@ -254,13 +254,13 @@ func (r ClubCassandraElasticsearchRepository) GetClubBySlug(ctx context.Context,
 	}
 
 	if !result.CanView(requester) {
-		return nil, club.ErrClubNotFound
+		return nil, domainerror.NewNotFoundError("club", result.ID())
 	}
 
 	return result, nil
 }
 
-func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, brandId string) (*clubs, error) {
+func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, clubId string) (*clubs, error) {
 
 	var b clubs
 
@@ -268,11 +268,11 @@ func (r ClubCassandraElasticsearchRepository) getClubById(ctx context.Context, b
 		Query(clubTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(clubs{Id: brandId}).
+		BindStruct(clubs{Id: clubId}).
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, club.ErrClubNotFound
+			return nil, domainerror.NewNotFoundError("club", clubId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get club by id")

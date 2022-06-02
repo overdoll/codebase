@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
-	"overdoll/libraries/domainerror"
+	domainerror2 "overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
 )
 
@@ -29,10 +29,10 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 			isSafeToView := false
 
 			switch e.(type) {
-			case *domainerror.Validation:
+			case *domainerror2.Validation:
 				isSafeToView = true
 				defaultMessage = "validation error"
-			case *domainerror.Authorization:
+			case *domainerror2.Authorization:
 				isSafeToView = true
 				defaultMessage = "not authorized"
 			default:

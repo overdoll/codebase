@@ -1,15 +1,10 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrAccountSavedPaymentMethodNotFound = domainerror.NewValidation("account saved payment method not found")
 )
 
 type SavedPaymentMethod struct {

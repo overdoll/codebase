@@ -15,6 +15,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -86,7 +87,7 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		GetRelease(&receiptFile); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrClubSupporterReceiptNotFound
+			return nil, domainerror.NewNotFoundError("club support receipt", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get club supporter receipt from account transaction")
@@ -171,7 +172,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
 
-	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
+	if err != nil && !domainerror.IsNotFoundError(err) {
 		return nil, err
 	}
 
@@ -230,7 +231,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
 
-	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
+	if err != nil && !domainerror.IsNotFoundError(err) {
 		return nil, err
 	}
 

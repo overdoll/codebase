@@ -11,5 +11,6 @@ go_library(
         "//libraries/passport",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
+        "@org_uber_go_zap//:zap",
     ],
 )

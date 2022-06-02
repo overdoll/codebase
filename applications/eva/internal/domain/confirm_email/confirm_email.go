@@ -3,7 +3,7 @@ package confirm_email
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/crypt"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"strings"

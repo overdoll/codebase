@@ -5,8 +5,8 @@ import (
 	"github.com/graph-gophers/dataloader"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
-	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 )
 
@@ -42,8 +42,8 @@ func accountsByIds(app *app.Application) *dataloader.Loader {
 			}
 
 			// fill array positions with errors where not found in DB
-			for _, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: account.ErrAccountNotFound}
+			for v, ix := range keyOrder {
+				results[ix] = &dataloader.Result{Data: nil, Error: domainerror.NewNotFoundError("account", v)}
 			}
 
 			// return results

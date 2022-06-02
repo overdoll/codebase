@@ -13,6 +13,7 @@ go_library(
     deps = [
         "//applications/loader/internal/domain/event",
         "//applications/loader/internal/domain/resource",
+        "//libraries/errors/domainerror",
         "@com_github_tus_tusd//pkg/handler",
     ],
 )

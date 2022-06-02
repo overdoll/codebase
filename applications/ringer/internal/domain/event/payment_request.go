@@ -1,7 +1,7 @@
 package event
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"time"
 )

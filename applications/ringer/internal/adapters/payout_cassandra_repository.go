@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -374,7 +375,7 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		}).
 		GetRelease(&clubPay); err != nil {
 		if err == gocql.ErrNotFound {
-			return nil, payout.ErrClubPayoutNotFound
+			return nil, domainerror.NewNotFoundError("club payout", payoutId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get club payout by id")

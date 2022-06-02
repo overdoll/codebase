@@ -11,8 +11,8 @@ go_library(
     deps = [
         "//applications/stella/internal/app",
         "//applications/stella/internal/app/query",
-        "//applications/stella/internal/domain/club",
         "//applications/stella/internal/ports/graphql/types",
+        "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_vektah_gqlparser_v2//gqlerror",

@@ -1,14 +1,9 @@
 package payment
 
 import (
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"time"
-)
-
-var (
-	ErrClubPaymentNotFound = domainerror.NewValidation("club payment not found")
 )
 
 type ClubPayment struct {

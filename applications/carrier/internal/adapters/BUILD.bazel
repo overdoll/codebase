@@ -18,6 +18,5 @@ go_library(
         "//libraries/errors",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//service/ses",
-        "@org_uber_go_zap//:zap",
     ],
 )

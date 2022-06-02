@@ -7,6 +7,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
@@ -123,15 +124,15 @@ func (r ClubInfractionCassandraRepository) GetAllClubInfractionHistoryByClubIdOp
 	return infractionHistory, nil
 }
 
-func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*club_infraction.ClubInfractionHistory, error) {
+func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*club_infraction.ClubInfractionHistory, error) {
 
-	if err := club_infraction.CanViewClubInfractionHistory(requester); err != nil {
+	if err := club_infraction.CanViewClubInfractionHistory(requester, clubId); err != nil {
 		return nil, err
 	}
 
 	builder := clubInfractionHistoryTable.SelectBuilder()
 
-	data := &clubInfractionHistory{ClubId: accountId}
+	data := &clubInfractionHistory{ClubId: clubId}
 
 	if cursor != nil {
 		if err := cursor.BuildCassandra(builder, "id", true); err != nil {
@@ -196,7 +197,7 @@ func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx cont
 		GetRelease(&dbAccountInfractionHistory); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, club_infraction.ErrClubInfractionHistoryNotFound
+			return nil, domainerror.NewNotFoundError("club infraction", id)
 		}
 
 		return nil, errors.Wrap(err, "failed to get club infraction history")

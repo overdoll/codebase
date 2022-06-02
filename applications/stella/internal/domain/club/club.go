@@ -2,7 +2,7 @@ package club
 
 import (
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -11,7 +11,6 @@ import (
 )
 
 var (
-	ErrClubNotFound                = domainerror.NewValidation("club not found")
 	ErrClubSlugNotUnique           = domainerror.NewValidation("club slug is not unique")
 	ErrClubSlugMax                 = domainerror.NewValidation("maximum slugs reached for club")
 	ErrAccountTooManyClubs         = domainerror.NewValidation("account has created too many clubs")

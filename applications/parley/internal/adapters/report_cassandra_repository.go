@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -135,7 +136,7 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 		GetRelease(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, report.ErrPostReportNotFound
+			return nil, domainerror.NewNotFoundError("post report", postId+"-"+accountId)
 		}
 
 		return nil, errors.Wrap(err, "GetPostReportById")

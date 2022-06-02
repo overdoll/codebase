@@ -2,15 +2,11 @@ package billing
 
 import (
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
-)
-
-var (
-	ErrReasonNotFound = domainerror.NewValidation("cancellation reason not found")
 )
 
 type CancellationReason struct {

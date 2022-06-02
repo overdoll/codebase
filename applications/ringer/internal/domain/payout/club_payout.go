@@ -1,15 +1,11 @@
 package payout
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrClubPayoutNotFound = domainerror.NewValidation("club payout not found")
 )
 
 type ClubPayout struct {

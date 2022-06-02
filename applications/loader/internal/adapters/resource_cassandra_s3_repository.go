@@ -19,6 +19,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
@@ -365,7 +366,7 @@ func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, item
 		GetRelease(&i); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, resource.ErrResourceNotFound
+			return nil, domainerror.NewNotFoundError("resource", resourceId)
 		}
 
 		return nil, errors.Wrap(err, "failed to get resource by id")

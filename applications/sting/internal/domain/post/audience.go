@@ -2,7 +2,7 @@ package post
 
 import (
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"time"
@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	ErrAudienceNotFound      = domainerror.NewValidation("audience not found")
 	ErrAudienceSlugNotUnique = domainerror.NewValidation("audience slug is not unique")
 )
 

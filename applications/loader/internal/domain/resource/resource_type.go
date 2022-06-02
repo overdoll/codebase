@@ -1,7 +1,7 @@
 package resource
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"strconv"
 )
 

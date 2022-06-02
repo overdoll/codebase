@@ -20,6 +20,7 @@ go_library(
         "//applications/eva/internal/ports/graphql/dataloader",
         "//applications/eva/proto:v1_go_proto",
         "//libraries/clients",
+        "//libraries/errors/domainerror",
         "//libraries/graphql",
         "//libraries/passport",
         "//libraries/principal",

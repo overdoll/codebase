@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/payment"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -190,7 +191,7 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 		BindStruct(clubPayment{Id: paymentId}).
 		GetRelease(&clubPay); err != nil {
 		if err == gocql.ErrNotFound {
-			return nil, payment.ErrClubPaymentNotFound
+			return nil, domainerror.NewNotFoundError("club payment", paymentId)
 		}
 		return nil, errors.Wrap(err, "failed to get club payment by id")
 	}

@@ -2,7 +2,7 @@ package post
 
 import (
 	"github.com/go-playground/validator/v10"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"time"
@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	ErrCharacterNotFound      = domainerror.NewValidation("character not found")
 	ErrCharacterSlugNotUnique = domainerror.NewValidation("character slug is not unique")
 )
 

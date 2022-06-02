@@ -1,7 +1,7 @@
 package club_infraction
 
 import (
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type ClubInfractionHistorySource struct {

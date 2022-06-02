@@ -15,12 +15,13 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/crypt",
-        "//libraries/domainerror",
         "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_go_playground_validator_v10//:validator",
         "@com_github_pquerna_otp//:otp",
         "@com_github_pquerna_otp//totp",
+        "@org_uber_go_zap//:zap",
     ],
 )

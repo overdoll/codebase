@@ -6,8 +6,10 @@ go_library(
     importpath = "overdoll/libraries/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/support",
         "@com_github_joho_godotenv//:godotenv",
         "@com_github_spf13_viper//:viper",
         "@io_bazel_rules_go//go/tools/bazel:go_default_library",
+        "@org_uber_go_zap//:zap",
     ],
 )

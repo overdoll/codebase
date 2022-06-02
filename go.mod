@@ -13,6 +13,7 @@ require (
 	github.com/corona10/goimagehash v1.0.3
 	github.com/disintegration/gift v1.2.1
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
+	github.com/getsentry/sentry-go v0.13.0
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.6.1
@@ -69,7 +70,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/frankban/quicktest v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.3 // indirect
-	github.com/getsentry/sentry-go v0.13.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect

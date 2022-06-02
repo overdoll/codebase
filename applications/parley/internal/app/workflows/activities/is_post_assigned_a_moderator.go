@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type IsPostAssignedAModeratorInput struct {
@@ -15,7 +15,7 @@ func (h *Activities) IsPostAssignedAModerator(ctx context.Context, input IsPostA
 
 	if err != nil {
 
-		if err == moderator.ErrPostModeratorNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return false, nil
 		}
 

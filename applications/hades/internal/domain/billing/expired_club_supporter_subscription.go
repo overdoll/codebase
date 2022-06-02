@@ -1,14 +1,9 @@
 package billing
 
 import (
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrExpiredAccountClubSupportSubscriptionNotFound = domainerror.NewValidation("expired account club support subscription not found")
 )
 
 type ExpiredAccountClubSupporterSubscription struct {

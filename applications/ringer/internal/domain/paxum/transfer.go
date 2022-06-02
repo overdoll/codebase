@@ -2,7 +2,7 @@ package paxum
 
 import (
 	"fmt"
-	"overdoll/libraries/domainerror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 )
 

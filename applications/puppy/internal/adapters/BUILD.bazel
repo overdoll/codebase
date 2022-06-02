@@ -5,5 +5,8 @@ go_library(
     srcs = ["eva_grpc_session_repository.go"],
     importpath = "overdoll/applications/puppy/internal/adapters",
     visibility = ["//applications/puppy:__subpackages__"],
-    deps = ["//applications/eva/proto:v1_go_proto"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//libraries/errors",
+    ],
 )

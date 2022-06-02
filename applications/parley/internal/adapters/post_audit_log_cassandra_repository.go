@@ -8,10 +8,9 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
-	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/bucket"
-	"overdoll/libraries/domainerror"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -200,7 +199,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 		GetRelease(&postAudit); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post_audit_log.ErrPostAuditLogNotFound
+			return nil, domainerror.NewNotFoundError("post audit log", logId)
 		}
 
 		return nil, errors.Wrap(err, "getPostAuditLogById failed")
@@ -248,7 +247,7 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 		GetRelease(&postR); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, rule.ErrRuleNotFound
+			return nil, domainerror.NewNotFoundError("post rule", postId)
 		}
 
 		return nil, errors.Wrap(err, "GetRuleIdForPost")

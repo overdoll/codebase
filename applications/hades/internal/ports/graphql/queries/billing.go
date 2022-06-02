@@ -3,9 +3,9 @@ package queries
 import (
 	"context"
 	"overdoll/applications/hades/internal/app/query"
-	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -25,7 +25,7 @@ func (r QueryResolver) AccountClubSupporterSubscription(ctx context.Context, ref
 
 	if err != nil {
 
-		if err == billing.ErrAccountClubSupportSubscriptionNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -48,7 +48,7 @@ func (r QueryResolver) AccountTransaction(ctx context.Context, reference string)
 
 	if err != nil {
 
-		if err == billing.ErrAccountTransactionNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -71,7 +71,7 @@ func (r QueryResolver) CcbillSubscriptionDetails(ctx context.Context, ccbillSubs
 
 	if err != nil {
 
-		if err == billing.ErrCCBillSubscriptionNotFound {
+		if domainerror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

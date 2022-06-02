@@ -29,10 +29,12 @@ go_library(
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/club",
         "//applications/hades/internal/domain/event",
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/location",
         "//libraries/money",
         "//libraries/passport",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
+        "@org_uber_go_zap//:zap",
     ],
 )
