@@ -9,6 +9,7 @@ import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import PostUnArchiveButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton'
+import PostViewButton from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton'
 
 interface Props {
   query: ArchivedPostFragment$key
@@ -23,6 +24,7 @@ const Fragment = graphql`
     ...PostPreviewContentFragment
     ...PostModerateButtonFragment
     ...PostUnArchiveButtonFragment
+    ...PostViewButtonFragment
   }
 `
 
@@ -40,6 +42,7 @@ export default function ArchivedPost ({
           </Trans>
         </Badge>
         <PostMenu size='xs'>
+          <PostViewButton query={data} />
           <PostUnArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

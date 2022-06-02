@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<232c6fa631ce0084ffd660c294c486d6>>
- * @relayHash e41d896db6bebcfcf9b6ab20ec236166
+ * @generated SignedSource<<fefdbf20116726bcd246cd07a6614995>>
+ * @relayHash 145af7cbdfa8c80bffc779d015d8e319
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e41d896db6bebcfcf9b6ab20ec236166
+// @relayRequestID 145af7cbdfa8c80bffc779d015d8e319
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -34,6 +34,8 @@ export type RefreshProcessContentQuery$data = {
           readonly mimeType: string;
           readonly url: string;
         }>;
+        readonly width: number;
+        readonly height: number;
       };
     }>;
   } | null;
@@ -138,6 +140,20 @@ v10 = {
     (v8/*: any*/)
   ],
   "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -178,7 +194,9 @@ return {
                   (v6/*: any*/),
                   (v7/*: any*/),
                   (v9/*: any*/),
-                  (v10/*: any*/)
+                  (v10/*: any*/),
+                  (v11/*: any*/),
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -231,6 +249,8 @@ return {
                   (v7/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
+                  (v11/*: any*/),
+                  (v12/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -244,7 +264,7 @@ return {
     ]
   },
   "params": {
-    "id": "e41d896db6bebcfcf9b6ab20ec236166",
+    "id": "145af7cbdfa8c80bffc779d015d8e319",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -253,6 +273,6 @@ return {
 };
 })();
 
-(node as any).hash = "94b7ad4738f2e381333ef8cb266236e1";
+(node as any).hash = "5494cbc1b61bbc4dba7d14b34301944c";
 
 export default node;

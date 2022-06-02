@@ -33,6 +33,8 @@ const Query = graphql`
             mimeType
             url
           }
+          width
+          height
         }
       }
     }

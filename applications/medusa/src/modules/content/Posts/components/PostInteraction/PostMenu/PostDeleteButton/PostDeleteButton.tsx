@@ -68,14 +68,14 @@ export default function PostDeleteButton ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post was removed successfully`
+          title: t`Post was deleted successfully`
         })
         onClose()
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error removing the post`
+          title: t`There was an error deleting the post`
         })
       }
     })
@@ -100,7 +100,7 @@ export default function PostDeleteButton ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <Trans>
-              Delete Post
+              Delete Post Confirmation
             </Trans>
           </AlertDialogHeader>
           <AlertDialogCloseButton
