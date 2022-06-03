@@ -1,7 +1,6 @@
 package ccbill
 
 import (
-	"github.com/getsentry/sentry-go"
 	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -24,9 +23,7 @@ func PaymentFlow(app *app.Application) gin.HandlerFunc {
 			}
 
 			if hub := sentrygin.GetHubFromContext(c); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					hub.CaptureException(err)
-				})
+				hub.CaptureException(err)
 			}
 
 			c.Data(http.StatusInternalServerError, "text", []byte("error"))

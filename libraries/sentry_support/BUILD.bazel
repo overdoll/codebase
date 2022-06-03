@@ -3,9 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "sentry_support",
     srcs = [
+        "before_send_hook.go",
         "capture_activity_error.go",
         "cassandra_observer.go",
         "client_interceptors.go",
+        "elastic_observer.go",
         "propagator.go",
         "sentry_gin_middleware.go",
         "server_interceptors.go",
@@ -23,5 +25,6 @@ go_library(
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",
         "@org_uber_go_zap//:zap",
+        "@org_uber_go_zap//zapcore",
     ],
 )

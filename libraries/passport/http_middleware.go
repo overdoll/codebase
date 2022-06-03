@@ -19,28 +19,25 @@ func GinPassportRequestMiddleware() gin.HandlerFunc {
 
 			// add sentry data to context
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
+				passportData := map[string]interface{}{
+					"ip":        pass.IP(),
+					"userAgent": pass.UserAgent(),
+					"deviceId":  pass.DeviceID(),
+				}
 
-					passportData := map[string]interface{}{
-						"IP":        pass.IP(),
-						"UserAgent": pass.UserAgent(),
-						"DeviceId":  pass.DeviceID(),
-					}
+				if err := pass.Authenticated(); err == nil {
+					passportData["sessionId"] = pass.SessionID()
+					passportData["accountId"] = pass.AccountID()
+				}
 
-					if err := pass.Authenticated(); err == nil {
-						passportData["SessionId"] = pass.SessionID()
-						passportData["AccountId"] = pass.AccountID()
-					}
+				hub.Scope().SetExtra("passport", passportData)
 
-					scope.SetExtra("passport", passportData)
-
-					scope.AddBreadcrumb(&sentry.Breadcrumb{
-						Category: "transport.passport",
-						Type:     "default",
-						Message:  fmt.Sprintf("passport transport with device id %s", pass.DeviceID()),
-						Level:    sentry.LevelInfo,
-					}, 10)
-				})
+				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+					Category: "context.passport",
+					Type:     "default",
+					Message:  fmt.Sprintf("passport context with device id %s", pass.DeviceID()),
+					Level:    sentry.LevelInfo,
+				}, 10)
 			}
 		}
 

@@ -57,43 +57,40 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 
 			// add principal to context
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					scope.SetUser(sentry.User{
-						Email:     principal.Email(),
-						ID:        principal.AccountId(),
-						IPAddress: support.GetIPFromRequest(c.Request),
-						Username:  principal.Username(),
-					})
-
-					var clubExtensions interface{}
-
-					if principal.clubExtension != nil {
-						clubExtensions = map[string]interface{}{
-							"SupportedClubIds":  principal.clubExtension.supportedClubIds,
-							"ClubMembershipIds": principal.clubExtension.clubMembershipIds,
-							"OwnerClubIds":      principal.clubExtension.ownerClubIds,
-						}
-					}
-
-					scope.SetExtra("principal", map[string]interface{}{
-						"AccountId":     principal.accountId,
-						"Secure":        principal.secure,
-						"Locked":        principal.locked,
-						"Deleting":      principal.deleting,
-						"Roles":         principal.roles,
-						"Username":      principal.username,
-						"Email":         principal.email,
-						"ClubExtension": clubExtensions,
-					})
-
-					scope.AddBreadcrumb(&sentry.Breadcrumb{
-						Category: "transport.principal",
-						Type:     "default",
-						Message:  fmt.Sprintf("principal transport with account id %s", principal.accountId),
-						Level:    sentry.LevelInfo,
-					}, 10)
-
+				hub.Scope().SetUser(sentry.User{
+					Email:     principal.Email(),
+					ID:        principal.AccountId(),
+					IPAddress: support.GetIPFromRequest(c.Request),
+					Username:  principal.Username(),
 				})
+
+				var clubExtensions interface{}
+
+				if principal.clubExtension != nil {
+					clubExtensions = map[string]interface{}{
+						"supportedClubIds":  principal.clubExtension.supportedClubIds,
+						"clubMembershipIds": principal.clubExtension.clubMembershipIds,
+						"ownerClubIds":      principal.clubExtension.ownerClubIds,
+					}
+				}
+
+				hub.Scope().SetExtra("principal", map[string]interface{}{
+					"accountId":     principal.accountId,
+					"secure":        principal.secure,
+					"locked":        principal.locked,
+					"deleting":      principal.deleting,
+					"roles":         principal.roles,
+					"username":      principal.username,
+					"email":         principal.email,
+					"clubExtension": clubExtensions,
+				})
+
+				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+					Category: "context.principal",
+					Type:     "default",
+					Message:  fmt.Sprintf("principal context with account id %s", principal.accountId),
+					Level:    sentry.LevelInfo,
+				}, 10)
 			}
 		}
 

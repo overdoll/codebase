@@ -1,7 +1,6 @@
 package ccbill
 
 import (
-	"github.com/getsentry/sentry-go"
 	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -37,9 +36,7 @@ func PaymentFlowCallback(app *app.Application) gin.HandlerFunc {
 
 			zap.S().Errorw("error parsing ccbill flexform and generating template", zap.Error(err))
 			if hub := sentrygin.GetHubFromContext(c); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					hub.CaptureException(err)
-				})
+				hub.CaptureException(err)
 			}
 			c.Data(http.StatusInternalServerError, "text", []byte("error"))
 			return

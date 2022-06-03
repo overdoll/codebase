@@ -53,9 +53,7 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 
 		// capture sentry exception
 		if hub := sentry.GetHubFromContext(req.Context()); hub != nil {
-			hub.WithScope(func(scope *sentry.Scope) {
-				hub.CaptureException(err)
-			})
+			hub.CaptureException(err)
 		}
 
 		zap.S().Errorw("failed to roundtrip passport", zap.Error(err))

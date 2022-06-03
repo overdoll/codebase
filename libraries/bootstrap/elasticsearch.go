@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/sentry_support"
 	"time"
 
 	"github.com/olivere/elastic/v7"
@@ -9,7 +10,6 @@ import (
 )
 
 func InitializeElasticSearchSession() *elastic.Client {
-
 	client, err := elastic.NewClient(
 		elastic.SetURL(os.Getenv("ELASTICSEARCH_URL")),
 		elastic.SetRetrier(
@@ -18,6 +18,7 @@ func InitializeElasticSearchSession() *elastic.Client {
 			),
 		),
 		elastic.SetRetryStatusCodes(429, 504),
+		elastic.SetHttpClient(sentry_support.NewElasticObserverHttpClient()),
 		// USEFUL FOR DEBUGGING QUERIES!
 		//elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
 		//elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),

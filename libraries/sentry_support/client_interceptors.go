@@ -18,13 +18,11 @@ func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		if hub == nil {
 			hub = sentry.CurrentHub().Clone()
 			ctx = sentry.SetHubOnContext(ctx, hub)
-			hub.WithScope(func(scope *sentry.Scope) {
-				scope.AddBreadcrumb(&sentry.Breadcrumb{
-					Type:     "grpc.client",
-					Category: method,
-					Data:     map[string]interface{}{"payload": req},
-				}, 10)
-			})
+			hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+				Type:     "grpc.client",
+				Category: method,
+				Data:     map[string]interface{}{"payload": req},
+			}, 10)
 		}
 
 		return invoker(ctx, method, req, reply, cc, callOpts...)
@@ -43,12 +41,10 @@ func StreamClientInterceptor() grpc.StreamClientInterceptor {
 		if hub == nil {
 			hub = sentry.CurrentHub().Clone()
 			ctx = sentry.SetHubOnContext(ctx, hub)
-			hub.WithScope(func(scope *sentry.Scope) {
-				scope.AddBreadcrumb(&sentry.Breadcrumb{
-					Type:     "grpc.client",
-					Category: method,
-				}, 10)
-			})
+			hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+				Type:     "grpc.client",
+				Category: method,
+			}, 10)
 		}
 
 		return streamer(ctx, desc, cc, method, callOpts...)

@@ -12,18 +12,17 @@ type QueryObserver struct {
 
 func (q *QueryObserver) ObserveQuery(ctx context.Context, observed gocql.ObservedQuery) {
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
-		hub.WithScope(func(scope *sentry.Scope) {
-			level := "info"
-			if observed.Err != nil {
-				level = "error"
-			}
-			scope.AddBreadcrumb(&sentry.Breadcrumb{
-				Type:     "query",
-				Category: "cassandra.query",
-				Message:  fmt.Sprintf("%s took %s", observed.Statement, observed.End.Sub(observed.Start).String()),
-				Level:    sentry.Level(level),
-			}, 10)
-		})
+
+		level := "info"
+		if observed.Err != nil {
+			level = "error"
+		}
+		hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+			Type:     "query",
+			Category: "cassandra.query",
+			Message:  fmt.Sprintf("%s took %s", observed.Statement, observed.End.Sub(observed.Start).String()),
+			Level:    sentry.Level(level),
+		}, 10)
 	}
 }
 
@@ -32,28 +31,26 @@ type BatchObserver struct {
 
 func (q *BatchObserver) ObserveBatch(ctx context.Context, observed gocql.ObservedBatch) {
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
-		hub.WithScope(func(scope *sentry.Scope) {
-			level := "info"
-			if observed.Err != nil {
-				level = "error"
-			}
+		level := "info"
+		if observed.Err != nil {
+			level = "error"
+		}
 
-			totalTime := observed.End.Sub(observed.Start).String()
+		totalTime := observed.End.Sub(observed.Start).String()
 
-			msg := ""
+		msg := ""
 
-			if len(observed.Statements) > 1 {
-				msg = fmt.Sprintf("%s + %s more took %s", observed.Statements[0], len(observed.Statements)-1, totalTime)
-			} else {
-				msg = fmt.Sprintf("%s took %s", observed.Statements[0], totalTime)
-			}
+		if len(observed.Statements) > 1 {
+			msg = fmt.Sprintf("%s + %s more took %s", observed.Statements[0], len(observed.Statements)-1, totalTime)
+		} else {
+			msg = fmt.Sprintf("%s took %s", observed.Statements[0], totalTime)
+		}
 
-			scope.AddBreadcrumb(&sentry.Breadcrumb{
-				Type:     "query",
-				Category: "cassandra.batch",
-				Message:  msg,
-				Level:    sentry.Level(level),
-			}, 10)
-		})
+		hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+			Type:     "query",
+			Category: "cassandra.batch",
+			Message:  msg,
+			Level:    sentry.Level(level),
+		}, 10)
 	}
 }

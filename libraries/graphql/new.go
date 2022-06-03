@@ -40,9 +40,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 				defaultMessage = "internal server error"
 				// capture if it's an internal server error
 				if hub := sentry.GetHubFromContext(ctx); hub != nil {
-					hub.WithScope(func(scope *sentry.Scope) {
-						hub.CaptureException(unwrappedError)
-					})
+					hub.CaptureException(unwrappedError)
 				}
 			}
 
@@ -60,9 +58,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 
 			if hub := sentry.GetHubFromContext(ctx); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					defer hub.RecoverWithContext(ctx, err)
-				})
+				defer hub.RecoverWithContext(ctx, err)
 			}
 
 			zap.S().Errorw("resolver panic", zap.Any("panic", err))
@@ -78,10 +74,8 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		graphAPIHandler.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 			oc := graphql.GetOperationContext(ctx)
 			if hub := sentry.GetHubFromContext(ctx); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					scope.SetTag("kind", oc.OperationName)
-					scope.SetExtra("query", oc.RawQuery)
-				})
+				hub.Scope().SetTag("kind", oc.OperationName)
+				hub.Scope().SetExtra("query", oc.RawQuery)
 			}
 
 			return next(ctx)

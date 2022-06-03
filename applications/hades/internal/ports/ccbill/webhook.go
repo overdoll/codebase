@@ -2,7 +2,6 @@ package ccbill
 
 import (
 	"bytes"
-	"github.com/getsentry/sentry-go"
 	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -73,9 +72,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		}); err != nil {
 			zap.S().Errorw("ccbill webhook failed", zap.Error(err))
 			if hub := sentrygin.GetHubFromContext(c); hub != nil {
-				hub.WithScope(func(scope *sentry.Scope) {
-					hub.CaptureException(err)
-				})
+				hub.CaptureException(err)
 			}
 			c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 			return
